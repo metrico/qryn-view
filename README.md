@@ -32,7 +32,8 @@ will start on ``http://localhost:3000``
 - go to ``./src/environment/env.dev.js``
 
 - change api endpoint under ``DEV_ENV.apiUrl``
-  
+
+- **optional:** enable [cors](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) on chrome for working with local API. 
 
 ### Basics
 
