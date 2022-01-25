@@ -1,0 +1,60 @@
+.query-bar {
+    background: none;
+
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    font-family: sans-serif;
+}
+.query-bar-input {
+    background: $black-quoise;
+    outline:none;
+    border:none;
+    color: orange;
+    margin:3px;
+    padding:3px 6px;
+    font-size: 1em;
+    font-family: monospace;
+    border-radius: 4px;
+    flex: 1;
+    border:1px solid transparent;
+    transition:.2s all;
+
+    &:focus {
+        border:1px solid $dark-quoise;
+        color:$dark-quoise-hover;
+    }
+}
+.show-log-browser {
+    margin: 3px;
+    padding: 5px 8px;
+    border-radius: 3px;
+   color:$dark-quoise;
+    font-size: 0.85em;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    text-overflow: ellipsis;
+    border:1px solid transparent;
+    transition: 0.2s all;
+    &:hover {
+       
+        border:1px solid $dark-quoise-hover;
+      
+    }
+}
+button.show-logs {
+    
+        background:$dark-quoise;
+        cursor:pointer;
+        color:white;
+        outline:none;
+        border:none;
+        border-radius:4px;
+        font-weight:bold;
+        margin:3px;
+        transition:.25s all;
+        &:hover {
+            background:$dark-quoise-hover;
+        }
+}

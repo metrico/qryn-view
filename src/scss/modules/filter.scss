@@ -1,0 +1,25 @@
+.filter {
+    background: $grey-medium;
+    margin-right: 15px;
+
+    padding: 1rem;
+    border-radius: 3px;
+    @include box-shadow(1);
+
+    input {
+        &::-webkit-input-placeholder {
+            opacity: 0.25;
+        }
+    }
+
+
+}
+.query-bar-container {
+    width: 100%;
+    display: flex;
+    padding: 3px;
+    margin: 5px 0px;
+    margin-left: 0px;
+    background: #8a8a8a50;
+    border-radius: 3px;
+}
