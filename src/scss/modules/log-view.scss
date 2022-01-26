@@ -6,7 +6,7 @@
     border-radius: 3px;
     position: relative;
     flex: 1;
-    padding: 0.5rem;
+    padding: 1rem;
 
     &::-webkit-scrollbar {
         width: 10px;
@@ -15,6 +15,11 @@
     &::-webkit-scrollbar-thumb {
         border-radius: 10px;
         background: $grey-light;
+    }
+    .logs-box {
+        display:flex;
+        min-height: min-content;
+        flex-direction: column;
     }
 
     .line {
@@ -26,6 +31,9 @@
         border-left: 4px solid rgba(255, 166, 0, 0.597);
         padding-left: 0.5rem;
         margin-left: 0.25rem;
+        &:hover {
+            background:black;
+        }
 
         p {
             display: inline-block;

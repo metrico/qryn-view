@@ -7,7 +7,13 @@ export default (state, action) => {
         case "SET_LOGS":
             return { ...state, logs: action.logs };
         case "SET_LABEL_VALUES":
-            return {...state, labelValues: action.labelValues};
+            return { ...state, labelValues: action.labelValues };
+        case "SET_START_TIME":
+            return { ...state, start: action.start };
+        case "SET_STOP_TIME":
+            return { ...state, stop: action.stop };
+            case "SET_QUERY_LIMIT":
+                return { ...state, limit: action.limit };
         default:
             return { ...state };
     }

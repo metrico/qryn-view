@@ -14,6 +14,12 @@ class LogSearch extends Component {
     constructor(props) {
         super(props);
         props.dispatch(loadLabels());
+        this.state = {
+            start:props.start,
+            stop:props.stop,
+            limit:props.limit
+
+        }
     }
     // here we contain the filter that has the labels and the searchlogs
     // logView has the man container
@@ -27,6 +33,9 @@ class LogSearch extends Component {
                     labelValues={this.props.labelValues}
                     searchLogs={this.searchLogs}
                     searchLabelValues={this.searchLabelValues}
+                    start={this.props.start}
+                    stop={this.props.stop}
+                    limit={this.props.limit}
                 />
 
                 <LogView />
@@ -34,9 +43,11 @@ class LogSearch extends Component {
         );
     }
 
-    searchLogs = (query, endpoint, year, month) => {
+    searchLogs = (query, time,limit) => {
+        console.log(this.state.start,this.state.stop)
+        console.log(this.props.start)
         this.props
-            .dispatch(loadLogs(query, endpoint, year, month))
+            .dispatch(loadLogs(query, [this.state.start,this.state.stop], limit))
             ?.catch((error) => {
                 toast.error(
                     "Failed to Load Logs from query " + query + "\n" + error
@@ -58,6 +69,10 @@ const mapStateToProps = (state) => {
     return {
         labels: state.labels,
         labelValues: state.labelValues,
+        start: state.start,
+        stop: state.stop,
+        limit: state.limit
+        
     };
 };
 

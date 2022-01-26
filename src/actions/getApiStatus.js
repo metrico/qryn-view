@@ -36,8 +36,8 @@ export default function() {
                 resolve();
             }).catch((e) => {
                 console.log(e)
-                var error = new Error(response?.statusText)
-                error.response = response
+               // var error = new Error(response?.statusText)
+              //  error.response = response
                 throw error
                 reject();
             });

@@ -20,6 +20,8 @@ export default class Filter extends Component {
         this.state = {
             label: props.label || "",
             labelValues: props.labelValues || [],
+            start: props.start,
+            stop: props.stop,
             endpoint: "", // this is actually api endpoint to make the call
             year: moment().year(),
             labelValue: "",
@@ -121,6 +123,8 @@ export default class Filter extends Component {
         // this.state label === query on this search
         this.props.searchLogs(
            query,
+           [this.props.start,this.props.stop],
+           this.props.limit
           //  this.state.endpoint,
            // this.state.year,
            // this.state.month

@@ -12,7 +12,8 @@ export default () => {
             messages: [],
         },
         loading: false,
-        year:1,
-        month:1
+        start:new Date('2018-01-01T00:00:00.000Z'),
+        stop:new Date('2022-02-01T00:00:00.000Z'),
+        limit: 100
     }
 }

@@ -23,13 +23,18 @@ export const ValueTags = (props) => {
 
 }
 class LogView extends Component {
-    static LOAD_LIMIT = 100;
+
     constructor(props) {
         super(props)
+        console.log(props)
         this.state = {
             limitLoad: this.props.limitLoad || this.LOAD_LIMIT,
-            messages: this.props.messages || []
+            limit: props.limit || 100,
+            messages:props.messages||[],
+            loading:false
         }
+     
+
     }
     onTagsShow = (show) => {
         return (show ? {
@@ -39,9 +44,13 @@ class LogView extends Component {
     render() {
         LowLight.registerLanguage('js', json)
         return (
-            <div className={"log-view"}>
+            <div className="log-view">
+                <div className="logs-box">
 
-                {this.getLogs().map((value, key) => (
+
+
+                
+                {this.getLogs() && this.getLogs().map((value, key) => (
                     <div
                         key={key}
                         className="line"
@@ -68,13 +77,13 @@ class LogView extends Component {
                     </div>
                 ))}
 
-                {this.getLogs().length > 0 && this.state.limitLoad && (
+                {this.getLogs().length > 0 && this.state.limitLoad  && this.state.messages > this.state.limit && (
                     <Button
                         className="load-all"
                         raised="true"
                         theme="primary"
                         onClick={() =>
-                            this.setState({ ...this.state, limitLoad: false })
+                            this.setState({...this.state,limitLoad:false})
                         }
                     >
                         Load all
@@ -87,17 +96,18 @@ class LogView extends Component {
                         id="progress"
                     />
                 )}
+                </div>
             </div>
         );
     }
 
     getLogs = () => {
         // subscribe to changes into lines
-
-        if (this.state.limitLoad) {
-            return this.props?.messages
+console.log(this.props)
+        if (this.state.limitLoad ) {
+            return this.prop?.messages
                 ?.slice(
-                    this.props.messages.length - LogView.LOAD_LIMIT,
+                    this.props.messages.length - this.state.limit,
                     this.props.messages.length
                 )
                 .reverse();
@@ -120,6 +130,9 @@ class LogView extends Component {
 const mapStateToProps = (state) => {
     return {
         messages: state.logs.messages,
+        start: state.start,
+        stop: state.stop,
+        limit: state.limit,
         loading: state.loading,
     };
 };
