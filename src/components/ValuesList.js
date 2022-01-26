@@ -113,11 +113,8 @@ export const ValuesList = (props) => {
                         <div div className="values-container-column">
                             {labelsSelected?.map((labelSelected, key) => (
                                 <div className="values-column" key={key}>
-                                    <div
-                                        className="values-column-title"
-                                  
-                                
-                                    > <span>
+                                    <div className="values-column-title"> 
+                                    <span>
                                         {labelSelected?.name}{" "}
                                        
                                             ({labelSelected?.values?.length})
@@ -135,15 +132,8 @@ export const ValuesList = (props) => {
                                                     <small
                                                         key={key}
                                                         className="label-value"
-                                                        style={styleValue(
-                                                            value
-                                                        )}
-                                                        onClick={(e) =>
-                                                            onLabelValueClick(
-                                                                e,
-                                                                value
-                                                            )
-                                                        }
+                                                        style={styleValue( value )}
+                                                        onClick={(e) => onLabelValueClick( e,value )}
                                                     >
                                                         {value.name}
                                                     </small>

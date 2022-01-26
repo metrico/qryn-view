@@ -1,47 +1,68 @@
-import React, { Component, useEffect } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Button, CircularProgress } from "react-md";
 import moment from "moment";
 import LowLight from "react-lowlight";
 import json from 'highlight.js/lib/languages/json'
 
+
+export const ValueTags = (props) => {
+
+    const getTags = (tags) => {
+        return Object.entries(tags).map(
+            ([key, value], k) => (
+                <div className="value-tags" key={k}>
+                    <span>{key}</span>
+                    <span>{value}</span>
+                </div>
+            )
+        )
+    }
+
+    return getTags(props.tags)
+
+}
 class LogView extends Component {
     static LOAD_LIMIT = 100;
-
-    state = {
-        limitLoad: true,
-    };
+    constructor(props) {
+        super(props)
+        this.state = {
+            limitLoad: this.props.limitLoad || this.LOAD_LIMIT,
+            messages: this.props.messages || []
+        }
+    }
+    onTagsShow = (show) => {
+        return (show ? {
+            display: 'flex'
+        } : { display: 'none' })
+    }
     render() {
         LowLight.registerLanguage('js', json)
         return (
             <div className={"log-view"}>
-              
+
                 {this.getLogs().map((value, key) => (
                     <div
                         key={key}
                         className="line"
-                        onClick={ e => {this.onShowTags(value)} }
-                        
+                        onClick={e => this.onShowTags(value)}
+
                     >
                         <span id={value.timestamp} className="timestamp">
                             {this.formatDate(value.timestamp)}{" "}
                         </span>
 
                         <LowLight language='js' value={value.text} />
-                        {value.tags && value.showTags && (
-                            <div className="value-tags-container">
-                          
-                   
-                                {value.tags &&
-                                    value.showTags &&
-                                    Object.entries(value.tags).map(
-                                        ([key, value], k) => (
-                                            <div className="value-tags" key={k}>
-                                                <span>{key}</span>
-                                                <span>{value}</span>
-                                            </div>
-                                        )
-                                    )}
+
+                        {value.tags && (
+                            <div className="value-tags-container"
+                                style={this.onTagsShow(value.showLabels)}
+                            >
+                                <ValueTags
+                                    tags={value.tags}
+                                />
+
+
                             </div>
                         )}
                     </div>
@@ -85,9 +106,10 @@ class LogView extends Component {
         }
     };
 
-    onShowTags = (log) => {
-
-        return log.showTags = !log.showTags;
+    onShowTags = (value) => {
+        const logs = value
+        this.setState({ ...this.state, logs })
+        value.showLabels = !value.showLabels;
     }
 
     formatDate = (timestamp) => {
