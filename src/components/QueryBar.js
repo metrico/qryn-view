@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Button } from "react-md";
-
 export const QueryBar = (props) => {
     const [query, setQuery] = useState(props.query);
     const [browserActive, setBrowserActive] = useState(props.browserActive)

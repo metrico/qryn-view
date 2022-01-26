@@ -1,17 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Card } from "react-md";
+import { Legend } from "./Legend";
 
-export const Legend = (props) => {
-    const { title, text } = props;
-    return (
-        <div className="legend-container">
-            <p className="legend-title">{title}</p>
-            <small className="legend-text">
-                {text}
-            </small>
-        </div>
-    );
-};
+
 export const ValuesList = (props) => {
     // dispatch event from click
     // dispatch => value selected
@@ -20,8 +10,6 @@ export const ValuesList = (props) => {
     const [filteredValue, setFilteredValue] = useState("");
 
     const [labelsSelected, setLabelsSelected] = useState([]);
-
-    const [filteredPlaceholder, setFilteredPlaceholder] = useState("");
     const [valueHeader, setValueHeader] = useState(props.valueHeader);
     const [labelValue, setLabelValue] = useState(props.labelValue);
     const [label, setLabel] = useState("");
@@ -70,7 +58,6 @@ export const ValuesList = (props) => {
     };
     const onLabelValueClick = (e, value) => {
         value.selected = !value.selected;
-        console.log(value);
         props.onLabelValueChange(value);
     };
 
@@ -122,7 +109,6 @@ export const ValuesList = (props) => {
                         ))}
                 </div>
                 {labelsSelected.length && (
-                    /** here map labels into columns */
                     <div className="values-container">
                         <div div className="values-container-column">
                             {labelsSelected?.map((labelSelected, key) => (

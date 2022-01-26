@@ -1,7 +1,7 @@
 /**
  * @class {LRUCache}
  * Add LRU (last-recently used cache eviction strategy)
- *
+ * default LRU has not maxEntries option => added this for setting up as a performance option
  *
  */
 

@@ -1,18 +1,10 @@
-import React, { Component, useEffect } from "react";
-import {
-    AutoComplete,
-    TextField,
-    Button,
-    Select,
-    Form,
-    ExpansionList,
-    ExpansionPanel,
-} from "react-md";
-
+import React, { Component } from "react";
 import moment from "moment";
 import { QueryBar } from "./QueryBar";
 import { ValuesList } from "./ValuesList";
 
+
+// !label model, pass to interface on TS
 export class SelectableLabel {
     name = "";
     selected = false;
@@ -75,8 +67,6 @@ export default class Filter extends Component {
     }
     // this is not added to the main redux app state, only on local
     onValuesDisplay = (e) => {
-      //  e.preventDefault()
-        console.log(this.state)
         const listDisplay = !this.state.listDisplay
         this.setState({...this.state,listDisplay})
     }
@@ -84,21 +74,16 @@ export default class Filter extends Component {
         this.setState({ [state]: value });
     }
     onLabelChange = (value) => {
-        // value.selected = !value.selected;
-        console.log(value);
+
         this.handleChange("label", value);
         this.getValueList();
-        //   this.props.setLabelChange(value)
         const query = buildSelector(this.props.labels);
         this.setState({ ...this.state, query });
         this.props.searchLabelValues(value, this.props.labels);
     };
     onEndpointChange = (event) => {
         event.preventDefault();
-        //  console.log(value)
-        console.log(this.state);
         this.handleChange("endpoint", event.target.value);
-        //   this.setState({...this.state, endpoint: value});
     };
 
     onYearChange = (value) => {
@@ -110,7 +95,7 @@ export default class Filter extends Component {
             ...this.state,
             month: moment().month(value).format("M"),
         });
-        console.log(this.state);
+ 
     };
     onLabelValueChange = (value) => {
         this.handleChange("labelValue", value);
@@ -118,7 +103,7 @@ export default class Filter extends Component {
         this.setState({ ...this.state, query });
     };
     onQuerychange = (value) => {
-        console.log(value)
+     
         this.setState({...this.state,value})
     }
     getValueList() {
@@ -130,10 +115,6 @@ export default class Filter extends Component {
     }
 
     onSubmit = (event) => {
-      //  event.preventDefault();
-        // console.log(this.state)
-        // console.log(this.props.labels)
-        console.log(event)
 
         const query = event//buildSelector(this.props.labels);
         this.setState({ ...this.state,query});
@@ -151,7 +132,7 @@ export function buildSelector(labels) {
     const selectedLabels = [];
     for (const label of labels) {
         if (label.selected && label.values && label.values.length > 0) {
-            console.log(label);
+      
             const selectedValues = label.values
                 .filter((value) => value.selected)
                 .map((value) => value.name);
