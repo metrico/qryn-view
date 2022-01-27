@@ -26,13 +26,15 @@
         padding: 0.3rem;
         color: white;
         font-size: 13px;
-        //   min-height: 24px;
+        cursor:pointer;
         margin-bottom: 4px;
-        border-left: 4px solid rgba(255, 166, 0, 0.597);
+        border-left: 4px solid #ffa60098;
         padding-left: 0.5rem;
         margin-left: 0.25rem;
+        transition:.2s all;
         &:hover {
             background:black;
+            border-left-color:orange;
         }
 
         p {

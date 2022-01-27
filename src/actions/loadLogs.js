@@ -8,13 +8,7 @@ export default function (label, time, limit) {
     // add start - stop
     const [startTs, stopTs] = time;
 
-    const parsedTime =
-        "&start=" +
-        startTs.getTime() +
-        "000000" +
-        "&end=" +
-        stopTs.getTime() +
-        "000000";
+    const parsedTime = "&start=" + startTs.getTime() + "000000" + "&end=" + stopTs.getTime() +"000000";
     return function (dispatch, getState) {
         return new Promise((resolve, reject) => {
             dispatch(setLoading(true));
@@ -38,14 +32,6 @@ export default function (label, time, limit) {
                         "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                 },
             };
-
-            // get the server config
-            //* add an env preconfigured on application
-
-            // let server = endpoint ? endpoint : "http://localhost:3100";
-
-            //let queryUrl = `${server}/loki/api/v1/query_range?query=`+label;
-            // let queryUrl = `${server}/loki/api/v1/query_range?query=`+query;
             const url = `${DEV_ENV.apiUrl}/loki/api/v1/query_range?query=${query}&limit=${limit}${parsedTime}`;
             console.log(url);
             // *trying with this url and this query

@@ -121,14 +121,28 @@ export default class Filter extends Component {
         const query = event//buildSelector(this.props.labels);
         this.setState({ ...this.state,query});
         // this.state label === query on this search
-        this.props.searchLogs(
-           query,
-           [this.props.start,this.props.stop],
-           this.props.limit
-          //  this.state.endpoint,
-           // this.state.year,
-           // this.state.month
-        );
+        if(query !== '{}' || query !== '') {
+            this.props.searchLogs(
+                query,
+                [this.props.start,this.props.stop],
+                this.props.limit
+               //  this.state.endpoint,
+                // this.state.year,
+                // this.state.month
+             );
+        } else {
+            // queryError:
+            // type: 
+            // value: 
+            // message: 
+            // this.props.setQueryError(
+            //     'search-query',
+            //     query,
+            //     'Please make a log query'
+            // )
+            console.log('Please make a log query',query)
+        }
+  
     };
 }
 

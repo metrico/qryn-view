@@ -3,9 +3,11 @@ export const QueryBar = (props) => {
     const [query, setQuery] = useState(props.query);
     const [browserActive, setBrowserActive] = useState(props.browserActive)
     const queryText = useCallback(() => query, [query]);
-
+    const [queryValid, setQueryValid] = useState(false)
+// validate query after submit
     useEffect(() => {
         setQuery(props.query);
+        setQueryValid(onQueryValid(props.query))
     }, [props.query]);
     useEffect(() => {
         setBrowserActive(props.browserActive)
@@ -23,12 +25,16 @@ export const QueryBar = (props) => {
     };
     const handleChange = (e) => {
         const qr = e.target.value;
+        setQueryValid(onQueryValid(qr))
         setQuery(qr);
     };
     const onBrowserActive = () => {
         return !browserActive ? ({
             'borderColor':'#11abab'
         }) : ({})
+    }
+    const onQueryValid = (query) => {
+       return query !== '{' && query !== '}' && query !== '{}' && query !== ''
     }
     return (
         <div className="query-bar-container">
@@ -39,6 +45,7 @@ export const QueryBar = (props) => {
             </span>
 
             <input
+               
                 className="query-bar-input"
                 placeholder="Enter a cLoki Query"
 
@@ -46,6 +53,7 @@ export const QueryBar = (props) => {
                 value={query}
             />
             <button
+               disabled={!queryValid}
                 type="submit"
                 onClick={(e) => onSubmit(e)}
                 className="show-logs"
@@ -57,8 +65,5 @@ export const QueryBar = (props) => {
 };
 
 // this should have:
-// an input as a query bar
-// a search query button
-// a search query history select
-// ! create a button from own library
-// TODO: research about creating libraries on react
+//! a search query history select
+
