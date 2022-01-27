@@ -5,26 +5,22 @@
  * - api status
  * - api selector
  */
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Logo from "./cloki-logo.png";
-import * as moment from "moment";
+
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DateTimePicker from "@mui/lab/DateTimePicker";
-import MobileDateTimePicker from "@mui/lab/MobileDateTimePicker";
-import DesktopDateTimePicker from "@mui/lab/DesktopDateTimePicker";
-import Stack from "@mui/material/Stack";
+
+
 import { setStopTime, setStartTime, setQueryLimit } from "../actions";
+import { DateRangePicker } from "../plugins/daterangepicker";
+import isDate from "date-fns/isDate";
 
 export const StatusBar = (props) => {
-    const [start, setStart] = useState();
-    const onInputChange = (e) => {
-        console.log(e);
-        console.log(Date.parse(e.target.value));
-        setStart(e.target.value);
-    };
+
     return (
         <div className="status-bar">
             <img src={Logo} height="28px" />
@@ -40,7 +36,18 @@ export default function ResponsiveDateTimePickers() {
     const stopTs = useSelector((store) => store.stop);
     const queryLimit = useSelector((store) => store.limit);
     const dispatch = useDispatch();
-
+    const [open,setOpen] = useState(false)
+    const handleInputClick = (e) => {
+        e.preventDefault()
+        setOpen(!open)
+    }
+    const handleInputChange = (e,type) => {
+        e.preventDefault()
+        const value = e.target.value
+        if(isDate(value)) {
+            dispatch([type](value))
+        }
+    }
     const pickerStyle = {
         display: "flex",
     };
@@ -57,20 +64,23 @@ export default function ResponsiveDateTimePickers() {
 
                 <span className="label">Limit</span>
                 <input
+                   
                     value={queryLimit}
                     onChange={(newQueryLimit) => {
                         dispatch(setQueryLimit(newQueryLimit.target.value));
                     }}
                 />
                 </div>
-         <div className="selector">     
+         <div className="selector"  >     
               <span className="label">Start</span>
                 <DateTimePicker
                 
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => <TextField onClick={handleInputClick} 
+                    onChange={ e => { handleInputChange(e,'setStartTime')} }
+                    {...params} />}
                     value={startTs}
                     onChange={(newStart) => {
-                        dispatch(setStartTime(newStart));
+                       if(isDate(newStart)) dispatch(setStartTime(newStart));
                     }}
                 />
 
@@ -78,16 +88,28 @@ export default function ResponsiveDateTimePickers() {
           <div className="selector">
           <span className="label">End</span>
                 <DateTimePicker
-                  
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => <TextField
+                        onChange={ e => { handleInputChange(e,'setStopTime')} }
+                        onClick={handleInputClick} {...params} 
+                        
+                        />}
                     value={stopTs}
                     onChange={(newStop) => {
-                        dispatch(setStopTime(newStop));
+                        if(isDate(newStop)) dispatch(setStopTime(newStop));
                     }}
                 />
           </div>
-          
+
+    
             </div>
+            <DateRangePicker
+                    open={open}
+                    initialDateRange={{dateStart:startTs,dateEnd:stopTs}}
+                    onChange={({dateStart,dateEnd}) => {
+                        if(isDate(dateStart)) dispatch(setStartTime(dateStart))
+                        if(isDate(dateEnd)) dispatch(setStopTime(dateEnd))
+                    }}
+                />
         </LocalizationProvider>
     );
 }

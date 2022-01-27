@@ -29,7 +29,7 @@ export default function () {
             }).then((response) => {
                 return response.json();
             }).then((json) => {
-                console.log('labels', json);
+            
                 if(json.data.length > 0) {
                     const labels = json?.data.map(label => ({
                         name:label,

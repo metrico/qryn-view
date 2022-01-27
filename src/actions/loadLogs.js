@@ -33,45 +33,33 @@ export default function (label, time, limit) {
                 },
             };
             const url = `${DEV_ENV.apiUrl}/loki/api/v1/query_range?query=${query}&limit=${limit}${parsedTime}`;
-            console.log(url);
-            // *trying with this url and this query
-
-            console.log("try", url, query);
-            // fetch => query, options
 
             fetch(url, options)
                 // get response from api
 
                 .then((response) => {
-                    console.log("raw", response);
+             
 
                     if (response.status >= 200 && response.status < 300) {
-                        console.log(response.status);
+                  
                         return response.json();
                     } else {
-                        // set the error response
-                        /**
-                         * dispatch(responseError(response.error))
-                         */
-                        // var error = new Error(response.statusText);
-                        // error.response = response;
-                        // throw error;
-                        console.log("response");
+
                         dispatch(setLoading(false));
                     }
                 })
 
                 .then((json) => {
-                    console.log("got", json);
+                
                     var messages = [];
-                    console.log(json);
+                 
                     if (json?.status === "success") {
-                        console.log("SUCCESS");
+                    
                     } else {
                         console.log(json.data.response);
                     }
                     var data = json.data.result; // array
-                    console.log(data);
+             
                     data.forEach((element) => {
                         element.values.forEach((log) => {
                             const [ts, text] = log;

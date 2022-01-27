@@ -18,27 +18,24 @@ export default function() {
 
             fetch(`${DEV_ENV.apiUrl}/loki/api/v1/ready`, options
             ).then((response) => {
-                if(response) console.log(response)
+       
                 if ((response?.status >= 200 && response?.status < 300) || response?.status == "success") {
 
                     return response
                 } else {
                     var error = new Error(response.statusText)
-                    error.response = response
-                    throw error
+               console.log(error)
                 }
             }).then((response) => {
                 return response.json();
             }).then((json) => {
-                console.log('labels', json);
+           
                 dispatch(setApiStatus(json.data));
 
                 resolve();
             }).catch((e) => {
                 console.log(e)
-               // var error = new Error(response?.statusText)
-              //  error.response = response
-                throw error
+            
                 reject();
             });
         });

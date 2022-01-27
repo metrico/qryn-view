@@ -26,7 +26,6 @@ class LogView extends Component {
 
     constructor(props) {
         super(props)
-        console.log(props)
         this.state = {
             limitLoad: this.props.limitLoad || this.LOAD_LIMIT,
             limit: props.limit || 100,
@@ -80,7 +79,7 @@ class LogView extends Component {
                 {this.getLogs().length > 0 && this.state.limitLoad  && this.state.messages > this.state.limit && (
                     <Button
                         className="load-all"
-                        raised="true"
+                   
                         theme="primary"
                         onClick={() =>
                             this.setState({...this.state,limitLoad:false})
@@ -102,8 +101,6 @@ class LogView extends Component {
     }
 
     getLogs = () => {
-        // subscribe to changes into lines
-console.log(this.props)
         if (this.state.limitLoad ) {
             return this.prop?.messages
                 ?.slice(

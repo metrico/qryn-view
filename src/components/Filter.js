@@ -2,17 +2,7 @@ import React, { Component } from "react";
 import moment from "moment";
 import { QueryBar } from "./QueryBar";
 import { ValuesList } from "./ValuesList";
-
-
-// !label model, pass to interface on TS
-export class SelectableLabel {
-    name = "";
-    selected = false;
-    loading = false;
-    values = [];
-    hidden = false;
-    facets = 0;
-}
+import { DateRangePicker } from "../plugins/daterangepicker";
 
 export default class Filter extends Component {
     constructor(props) {
@@ -23,30 +13,20 @@ export default class Filter extends Component {
             start: props.start,
             stop: props.stop,
             endpoint: "", // this is actually api endpoint to make the call
-            year: moment().year(),
             labelValue: "",
             query: "",
             listDisplay: false,
+            open: true,
+            dateRange: [props.start, props.stop],
         };
-        // check for current date ( year /month  and set as initial value)
-        // set this on redux state
-        // gotta make the separation of data of labels (prefetch) <- check for this on api
 
-        /**
-         * this.state = {
-         * labels: [], // selectableLabel
-         * searchTerm: '', // query line
-         * status: 'Ready',
-         * error: '',
-         * validationStatus:''
-         * }
-         */
         this.handleChange = this.handleChange.bind(this);
     }
 
     render() {
         return (
             <div>
+     
                 <QueryBar
                     className="query-bar-placeholder"
                     query={this.state.query}
@@ -67,16 +47,16 @@ export default class Filter extends Component {
             </div>
         );
     }
-    // this is not added to the main redux app state, only on local
+
     onValuesDisplay = (e) => {
-        const listDisplay = !this.state.listDisplay
-        this.setState({...this.state,listDisplay})
-    }
+        const listDisplay = !this.state.listDisplay;
+        this.setState({ ...this.state, listDisplay });
+    };
     handleChange(state, value) {
         this.setState({ [state]: value });
     }
+ 
     onLabelChange = (value) => {
-
         this.handleChange("label", value);
         this.getValueList();
         const query = buildSelector(this.props.labels);
@@ -97,7 +77,6 @@ export default class Filter extends Component {
             ...this.state,
             month: moment().month(value).format("M"),
         });
- 
     };
     onLabelValueChange = (value) => {
         this.handleChange("labelValue", value);
@@ -105,9 +84,9 @@ export default class Filter extends Component {
         this.setState({ ...this.state, query });
     };
     onQuerychange = (value) => {
-     
-        this.setState({...this.state,value})
-    }
+        this.setState({ ...this.state, value });
+    };
+    
     getValueList() {
         // this will be facetlabels
         const lB = this.state.labelValues;
@@ -117,32 +96,19 @@ export default class Filter extends Component {
     }
 
     onSubmit = (event) => {
-
-        const query = event//buildSelector(this.props.labels);
-        this.setState({ ...this.state,query});
-        // this.state label === query on this search
-        if(query !== '{}' || query !== '') {
+        const query = event; 
+        this.setState({ ...this.state, query });
+        if (query !== "{}" || query !== "") {
             this.props.searchLogs(
                 query,
-                [this.props.start,this.props.stop],
+                [this.props.start, this.props.stop],
                 this.props.limit
-               //  this.state.endpoint,
-                // this.state.year,
-                // this.state.month
-             );
+
+            );
         } else {
-            // queryError:
-            // type: 
-            // value: 
-            // message: 
-            // this.props.setQueryError(
-            //     'search-query',
-            //     query,
-            //     'Please make a log query'
-            // )
-            console.log('Please make a log query',query)
+
+            console.log("Please make a log query", query);
         }
-  
     };
 }
 
@@ -150,7 +116,6 @@ export function buildSelector(labels) {
     const selectedLabels = [];
     for (const label of labels) {
         if (label.selected && label.values && label.values.length > 0) {
-      
             const selectedValues = label.values
                 .filter((value) => value.selected)
                 .map((value) => value.name);

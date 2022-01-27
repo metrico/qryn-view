@@ -17,7 +17,6 @@ export const QueryBar = (props) => {
     }, [props.browserActive]);
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log(query);
         props.onSubmit(query);
     };
     const valueDisplay = (e) => {

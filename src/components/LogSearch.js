@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import loadLabelValues from "../actions/loadLabelValues";
 import { StatusBar } from "./StatusBar";
+import { setStartTime,setStopTime } from "../actions"
 
 // here should be the api endpoint selector on a menu
 class LogSearch extends Component {
@@ -26,13 +27,16 @@ class LogSearch extends Component {
     render() {
         return (
             <div className="log-search">
-                <StatusBar />
+                <StatusBar
+                    dateRangeChange={this.dateRangeChange}
+                />
                 <ToastContainer />
                 <Filter
                     labels={this.props.labels}
                     labelValues={this.props.labelValues}
                     searchLogs={this.searchLogs}
                     searchLabelValues={this.searchLabelValues}
+                
                     start={this.props.start}
                     stop={this.props.stop}
                     limit={this.props.limit}
@@ -44,8 +48,6 @@ class LogSearch extends Component {
     }
 
     searchLogs = (query, time,limit) => {
-        console.log(this.state.start,this.state.stop)
-        console.log(this.props.start)
         this.props
             .dispatch(loadLogs(query, [this.state.start,this.state.stop], limit))
             ?.catch((error) => {
@@ -54,6 +56,10 @@ class LogSearch extends Component {
                 );
             });
     };
+    dateRangeChange = ([start,stop]) => {
+        this.props.dispatch(setStartTime(start));
+        this.props.dispatch(setStopTime(stop));
+    }
     searchLabelValues = (label, labelList) => {
         this.props
             .dispatch(loadLabelValues(label, labelList))

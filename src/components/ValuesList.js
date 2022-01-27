@@ -5,7 +5,6 @@ import { Legend } from "./Legend";
 export const ValuesList = (props) => {
     // dispatch event from click
     // dispatch => value selected
-    console.log(props);
     const [labelList, setLabelList] = useState(props.labelList);
     const [filteredValue, setFilteredValue] = useState("");
 
@@ -110,7 +109,7 @@ export const ValuesList = (props) => {
                 </div>
                 {labelsSelected.length && (
                     <div className="values-container">
-                        <div div className="values-container-column">
+                        <div className="values-container-column">
                             {labelsSelected?.map((labelSelected, key) => (
                                 <div className="values-column" key={key}>
                                     <div className="values-column-title"> 
