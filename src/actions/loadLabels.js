@@ -1,4 +1,4 @@
-import { DEV_ENV } from "../environment/env.dev";
+import { environment } from "../environment/env.dev";
 import setLabels from "./setLabels";
 
 // gets the labels from api
@@ -17,7 +17,7 @@ export default function () {
                 }
             };
 
-            fetch(`${DEV_ENV.apiUrl}/loki/api/v1/labels`, options
+            fetch(`${environment.apiUrl}/loki/api/v1/labels`, options
             ).then((response) => {
                 if ((response.status >= 200 && response.status < 300) || response.status == "success") {
                     return response

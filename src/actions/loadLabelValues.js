@@ -1,4 +1,4 @@
-import { DEV_ENV } from "../environment/env.dev";
+import { environment } from "../environment/env.dev";
 import setLabelValues from "./setLabelValues";
 import setLoading from "./setLoading";
 
@@ -17,7 +17,7 @@ export default function (label, labelList) {
                     "Content-Type": "application/json",
                 },
             };
-            const url = `${DEV_ENV.apiUrl}/loki/api/v1/label/${label.name}/values`;
+            const url = `${environment.apiUrl}/loki/api/v1/label/${label.name}/values`;
             fetch(url, options)
                 .then((response) => {
                     if (

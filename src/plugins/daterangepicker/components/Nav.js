@@ -5,7 +5,8 @@ import {
 	Typography,
 	Divider,
 	createStyles,
-	withStyles
+	withStyles,
+	IconButton
 } from "@material-ui/core";
 import { format, differenceInCalendarMonths } from "date-fns";
 import ArrowRightAlt from "@material-ui/icons/ArrowRightAlt";
@@ -13,6 +14,7 @@ import Month from "./Month";
 import Ranges from "./Ranges";
 import { MARKERS } from "..";
 
+import CloseIcon from '@mui/icons-material/Close';
 const styles = (theme) =>
 	createStyles({
 		header: {
@@ -63,6 +65,18 @@ const PickerNav= props => {
         elevation={5} >
 			<Grid container direction="row" wrap="nowrap">
 				<Grid>
+					<Grid container>
+						<Grid item>
+						<IconButton
+						onClick={props.onClose}
+						aria-label="close">
+						<CloseIcon/>
+						</IconButton>
+						</Grid>
+				
+					</Grid>
+					
+					
 					<Grid container className={classes.header} alignItems="center">
 						<Grid item className={classes.headerItem}>
 							<Typography 

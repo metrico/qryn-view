@@ -103,20 +103,18 @@ export const ValuesList = (props) => {
                                 style={styleValue(value)}
                                 onClick={(e) => onValueClick(e, value)}
                             >
-                                {value.name}
+                                {value.name} 
                             </small>
                         ))}
-                </div>
-                {labelsSelected.length && (
+                </div> 
+                { labelsSelected && (
                     <div className="values-container">
                         <div className="values-container-column">
                             {labelsSelected?.map((labelSelected, key) => (
                                 <div className="values-column" key={key}>
                                     <div className="values-column-title"> 
                                     <span>
-                                        {labelSelected?.name}{" "}
-                                       
-                                            ({labelSelected?.values?.length})
+                                        {labelSelected?.name} ({labelSelected?.values?.length})
                                         </span>
                                         <span className="close-column"
                                               onClick={(e) =>

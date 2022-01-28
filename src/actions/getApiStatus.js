@@ -1,4 +1,4 @@
-import { DEV_ENV } from '../environment/env.dev';
+import { environment } from '../environment/env.dev';
 import setApiStatus from './setApiStatus'
 
 export default function() {
@@ -16,7 +16,7 @@ export default function() {
                 }
             };
 
-            fetch(`${DEV_ENV.apiUrl}/loki/api/v1/ready`, options
+            fetch(`${environment.apiUrl}/loki/api/v1/ready`, options
             ).then((response) => {
        
                 if ((response?.status >= 200 && response?.status < 300) || response?.status == "success") {

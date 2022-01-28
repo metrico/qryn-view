@@ -1,6 +1,6 @@
 import setLogs from "./setLogs";
 import setLoading from "./setLoading";
-import { DEV_ENV } from "../environment/env.dev";
+import { environment } from "../environment/env.dev";
 // load logs function
 import { useSelector, useDispatch } from "react-redux";
 
@@ -32,7 +32,7 @@ export default function (label, time, limit) {
                         "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                 },
             };
-            const url = `${DEV_ENV.apiUrl}/loki/api/v1/query_range?query=${query}&limit=${limit}${parsedTime}`;
+            const url = `${environment.apiUrl}/loki/api/v1/query_range?query=${query}&limit=${limit}${parsedTime}`;
 
             fetch(url, options)
                 // get response from api

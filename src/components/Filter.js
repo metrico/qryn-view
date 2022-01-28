@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import moment from "moment";
 import { QueryBar } from "./QueryBar";
 import { ValuesList } from "./ValuesList";
-import { DateRangePicker } from "../plugins/daterangepicker";
-
 export default class Filter extends Component {
     constructor(props) {
         super(props);

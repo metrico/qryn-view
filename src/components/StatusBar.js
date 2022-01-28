@@ -48,6 +48,15 @@ export default function ResponsiveDateTimePickers() {
             dispatch([type](value))
         }
     }
+    const initialDateRange = () => {
+        if(isDate(startTs) && isDate(stopTs)){
+            return {dateStart:startTs, dateEnd:stopTs}
+        } 
+    }
+    const isOpen = (e) => {
+        e.preventDefault()
+        setOpen(!open)
+    }
     const pickerStyle = {
         display: "flex",
     };
@@ -104,7 +113,8 @@ export default function ResponsiveDateTimePickers() {
             </div>
             <DateRangePicker
                     open={open}
-                    initialDateRange={{dateStart:startTs,dateEnd:stopTs}}
+                    isOpen={isOpen}
+                    initialDateRange={initialDateRange()}
                     onChange={({dateStart,dateEnd}) => {
                         if(isDate(dateStart)) dispatch(setStartTime(dateStart))
                         if(isDate(dateEnd)) dispatch(setStopTime(dateEnd))

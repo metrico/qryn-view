@@ -36,7 +36,7 @@
     align-items: center;
     text-overflow: ellipsis;
     border:1px solid transparent;
-    transition: 0.2s all;
+    transition: 0.25s all;
     &:hover {
        
         border:1px solid $dark-quoise-hover;
@@ -56,5 +56,9 @@ button.show-logs {
         transition:.25s all;
         &:hover {
             background:$dark-quoise-hover;
+        }
+        &:disabled {
+            background:rgb(67, 67, 67);
+            cursor: not-allowed;
         }
 }

@@ -44,13 +44,12 @@ export const QueryBar = (props) => {
             </span>
 
             <input
-               
                 className="query-bar-input"
                 placeholder="Enter a cLoki Query"
-
                 onChange={handleChange}
                 value={query}
             />
+            
             <button
                disabled={!queryValid}
                 type="submit"
