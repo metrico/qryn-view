@@ -1,0 +1,108 @@
+.log-view {
+    background: $black-quoise;
+
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-radius: 3px;
+    position: relative;
+    flex: 1;
+    padding: 1rem;
+
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: $grey-light;
+    }
+    .logs-box {
+        display:flex;
+        min-height: min-content;
+        flex-direction: column;
+    }
+
+    .line {
+        padding: 0.3rem;
+        color: white;
+        font-size: 13px;
+        cursor:pointer;
+        margin-bottom: 4px;
+        border-left: 4px solid #ffa60098;
+        padding-left: 0.5rem;
+        margin-left: 0.25rem;
+        transition:.2s all;
+        &:hover {
+            background:black;
+            border-left-color:orange;
+        }
+
+        p {
+            display: inline-block;
+        }
+
+        img {
+            height: 16px;
+            width: auto;
+            padding: 0 3px;
+        }
+
+        .timestamp {
+            position: relative;
+            color: $grey-lighter;
+            margin-right: 0.25rem;
+
+            &:hover {
+                color: $grey-lighter;
+            }
+        }
+
+        &:last-child {
+            //  border: 0;
+        }
+    }
+
+    .load-all {
+        width: 100%;
+    }
+
+    .progress {
+        position: absolute;
+        top: 50px;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+}
+.value-tags-container {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    border:1px solid rgba(128, 128, 128, 0.466);
+    margin:.75rem;
+    margin-top:1rem;
+    border-radius:4px;
+    padding:6px;
+    max-width:450px;
+    .value-tags {
+        font-family: monospace;
+        font-size: 0.95em;
+        display: flex;
+        margin: 2px;
+        padding: 2px;
+        flex: 1;
+        justify-content: space-between;
+      
+        span {
+            padding:4px;
+            display:flex;
+            flex:1;
+       
+            color:#cccccd
+        }
+        &:hover {
+            background:black;
+        }
+    }
+}
+

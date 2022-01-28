@@ -1,0 +1,39 @@
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+}
+.status-selectors {
+    display: flex;
+    align-items: center;
+    .selector {
+        margin-left: 10px;
+        .label {
+            flex: 1;
+            color: gray;
+
+            padding: 6px 6px;
+            margin: 5px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: #12121267;
+            border-radius: 4px;
+        }
+    }
+    & div {
+        display: flex;
+        align-items: center;
+    }
+}
+.date-selector {
+    input {
+        color: orange;
+        background: #121212;
+        border: none;
+        margin: 3px;
+        padding: 3px 6px;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+}

@@ -1,0 +1,6 @@
+@use "@react-md/theme/dist/color-palette" as *;
+@forward "react-md" with (
+  $rmd-theme-light: false,
+  $rmd-theme-primary: $rmd-teal-500,
+  $rmd-theme-secondary: $rmd-deep-orange-a-400
+);
