@@ -42,7 +42,9 @@
     "eject": "react-scripts eject",
     "start": "npx webpack-dev-server",
     "build": "webpack --mode production && cp public/* dist/",
-    "deploy": "cd dist && git add --all && git commit -m 'Deploying changes' && git push origin gh-pages && cd .."
+    "deploy": "cd dist && git add --all && git commit -m 'Deploying changes' && git push origin gh-pages && cd ..",
+    "wp-prod" :"webpack --config config/webpack.prod.js",
+    "wp-dev":"webpack serve --config config/webpack.dev.js"
   },
   "eslintConfig": {
     "extends": [
