@@ -7,7 +7,7 @@
  */
 import React, { useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Logo from "./cloki-logo.png";
+import Logo from "../assets/cloki-logo.png";
 
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";

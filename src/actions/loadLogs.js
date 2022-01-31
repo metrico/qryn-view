@@ -26,12 +26,12 @@ export default function (label, time, limit) {
                     headers: {
                       "Content-Type": "application/javascript",
                       //"Content-Type": "application/x-www-form-urlencoded;",
-                      "Origin": "http://localhost:3000/",
+                      "Origin": "http://localhost:8080/",
                       "Access-Control-Request-Method": "GET",
                       "Access-Control-Request-Headers": "X-Requested-With"
                     }
                   };
-            const url = `/loki/api/v1/query_range?query=${query}&limit=${limit}${parsedTime}&step=100`;
+            const url = `http://localhost:3100/loki/api/v1/query_range?query=${query}&limit=${limit}${parsedTime}&step=100`;
 
             fetch(url, options)
                 // get response from api

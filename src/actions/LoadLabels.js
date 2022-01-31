@@ -7,16 +7,19 @@ export default function () {
         return new Promise((resolve, reject) => {
             const headers = new Headers();
             headers.append("Content-Type", "application/json");
-            headers.append("Origin", "http://localhost:3000");
-            headers.append("Access-Control-Request-Method", "POST");
-            //  headers.append('Access-Control-Allow-Origin','http://localhost:3000')
+         
+            headers.append("Origin", "http://localhost:8080/");
+            headers.append("Access-Control-Allow-Origin","*")
+            headers.append("Access-Control-Request-Method", "GET");
+            headers.append("Access-Control-Request-Headers","Content-Type")
+        
             const options = {
                 method: "GET",
                 headers:headers,
                 mode: "cors",
             };
 
-            fetch(`/loki/api/v1/labels`, options)
+            fetch(`http://localhost:3100/loki/api/v1/labels`, options)
                 .then((response) => {
     
                     if (
@@ -31,11 +34,10 @@ export default function () {
                     }
                 })
                 .then((response) => {
-                    console.log(response.json)
+                 
                     return response.json();
                 })
                 .then((json) => {
-                    console.log(json);
                     if (json.data.length > 0) {
                         const labels = json?.data.map((label) => ({
                             name: label,

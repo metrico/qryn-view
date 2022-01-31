@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Filter from "./Filter";
 import LogView from "./LogView";
 import { connect } from "react-redux";
-import loadLabels from "../actions/loadLabels";
+import loadLabels from "../actions/LoadLabels";
 import loadLogs from "../actions/loadLogs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";

@@ -10,14 +10,15 @@ export default function (label, labelList) {
                 method: "GET",
                 mode: "cors",
                 headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    origin: "http://localhost:3000",
+    
+                    "Origin": "http://localhost:8080",
                     "Access-Control-Allow-Headers":
                         "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
                     "Content-Type": "application/json",
                 },
             };
-            const url = `/loki/api/v1/label/${label.name}/values`;
+            
+            const url = `http://localhost:3100/loki/api/v1/label/${label.name}/values`;
             fetch(url, options)
                 .then((response) => {
                     if (
