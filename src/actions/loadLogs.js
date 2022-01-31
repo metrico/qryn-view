@@ -2,7 +2,6 @@ import setLogs from "./setLogs";
 import setLoading from "./setLoading";
 import { environment } from "../environment/env.dev";
 // load logs function
-import { useSelector, useDispatch } from "react-redux";
 
 export default function (label, time, limit) {
     // add start - stop
@@ -24,15 +23,15 @@ export default function (label, time, limit) {
 
             let options = {
                 method: "GET",
-                mode: "cors",
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    origin: "http://localhost:3000",
-                    "Access-Control-Allow-Headers":
-                        "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
-                },
-            };
-            const url = `${environment.apiUrl}/loki/api/v1/query_range?query=${query}&limit=${limit}${parsedTime}`;
+                    headers: {
+                      "Content-Type": "application/javascript",
+                      //"Content-Type": "application/x-www-form-urlencoded;",
+                      "Origin": "http://localhost:3000/",
+                      "Access-Control-Request-Method": "GET",
+                      "Access-Control-Request-Headers": "X-Requested-With"
+                    }
+                  };
+            const url = `/loki/api/v1/query_range?query=${query}&limit=${limit}${parsedTime}&step=100`;
 
             fetch(url, options)
                 // get response from api

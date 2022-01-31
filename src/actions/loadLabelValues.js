@@ -17,7 +17,7 @@ export default function (label, labelList) {
                     "Content-Type": "application/json",
                 },
             };
-            const url = `${environment.apiUrl}/loki/api/v1/label/${label.name}/values`;
+            const url = `/loki/api/v1/label/${label.name}/values`;
             fetch(url, options)
                 .then((response) => {
                     if (

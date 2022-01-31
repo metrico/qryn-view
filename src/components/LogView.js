@@ -1,10 +1,9 @@
 import React, { Component, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Button, CircularProgress } from "react-md";
+import { Button, CircularProgress } from "@mui/material";
 import moment from "moment";
 import LowLight from "react-lowlight";
 import json from 'highlight.js/lib/languages/json'
-
 
 export const ValueTags = (props) => {
 
@@ -79,8 +78,6 @@ class LogView extends Component {
                 {this.getLogs().length > 0 && this.state.limitLoad  && this.state.messages > this.state.limit && (
                     <Button
                         className="load-all"
-                   
-                        theme="primary"
                         onClick={() =>
                             this.setState({...this.state,limitLoad:false})
                         }
@@ -91,7 +88,6 @@ class LogView extends Component {
                 {this.props.loading && (
                     <CircularProgress
                         className="progress"
-                        scale={10}
                         id="progress"
                     />
                 )}

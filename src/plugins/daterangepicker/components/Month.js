@@ -1,142 +1,175 @@
-
 import {
-	Paper,
-	Grid,
-	Typography,
-	createStyles,
-	withStyles,
-    createTheme,
+    Paper,
+    Grid,
+    Typography,
     ThemeProvider,
-   
-} from "@material-ui/core";
-
-import { getDate, isSameMonth, isToday, format, isWithinInterval } from "date-fns";
+	createTheme
+} from "@mui/material";
+import {withStyles,createStyles} from '@mui/styles'
 import {
-	chunks,
-	getDaysInMonth,
-	isStartOfRange,
-	isEndOfRange,
-	inDateRange,
-	isRangeSameDay
+    getDate,
+    isSameMonth,
+    isToday,
+    format,
+    isWithinInterval,
+} from "date-fns";
+import {
+    chunks,
+    getDaysInMonth,
+    isStartOfRange,
+    isEndOfRange,
+    inDateRange,
+    isRangeSameDay,
 } from "../utils";
 import Heading from "./Heading";
 import Day from "./Day";
-const NAVIGATION_ACTION = {Previous:-1,Next:1}
+import { WEEK_DAYS } from "../consts";
 
-const WEEK_DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-
-const styles = (theme) =>
-	createStyles({
-		root: {
-			width: 290,
-            background: '#262626'
-		},
-		weekDaysContainer: {
-			marginTop: 10,
-			paddingLeft: 30,
-			paddingRight: 30
-		},
-		daysContainer: {
-			paddingLeft: 15,
-			paddingRight: 15,
-			marginTop: 15,
-			marginBottom: 20,
-          
-		
-}
-	});
+const NAVIGATION_ACTION = { Previous: -1, Next: 1 };
 
 const theme = createTheme({
     palette: {
-        type: 'dark'
+        mode: 'dark'
     }
 })
-const Month = props => {
-	const {
-		classes,
-		helpers,
-		handlers,
-		value: date,
-		dateRange,
-		marker,
-		setValue: setDate,
-		minDate,
-		maxDate
-	} = props;
+const styles = (theme) =>
+    createStyles({
+        root: {
+            width: 290,
+            background: '#262626'
+        },
+        weekDaysContainer: {
+            marginTop: 10,
+            paddingLeft: 30,
+            paddingRight: 30
+        },
+        daysContainer: {
+            paddingLeft: 15,
+            paddingRight: 15,
+            marginTop: 15,
+            marginBottom: 20,
 
-	const [back, forward] = props.navState;
-	return (
+
+        }
+    });
+const Month = (props) => {
+    const {
+        classes,
+        helpers,
+        handlers,
+        value: date,
+        dateRange,
+        marker,
+        setValue: setDate,
+        minDate,
+        maxDate,
+    } = props;
+
+    const [back, forward] = props.navState;
+
+    return (
         <ThemeProvider theme={theme}>
-  <Paper square elevation={0} className={classes.root}>
-			<Grid container>
-				<Heading
-					date={date}
-					setDate={setDate}
-					nextDisabled={!forward}
-					prevDisabled={!back}
-					onClickPrevious={() =>
-						handlers.onMonthNavigate(marker, NAVIGATION_ACTION.Previous)
-					}
-					onClickNext={() => handlers.onMonthNavigate(marker, NAVIGATION_ACTION.Next)}
-				/>
+            <Paper square elevation={0} className={classes.root}>
+                <Grid container>
+                    <Heading
+                        date={date}
+                        setDate={setDate}
+                        nextDisabled={!forward}
+                        prevDisabled={!back}
+                        onClickPrevious={() =>
+                            handlers.onMonthNavigate(
+                                marker,
+                                NAVIGATION_ACTION.Previous
+                            )
+                        }
+                        onClickNext={() =>
+                            handlers.onMonthNavigate(
+                                marker,
+                                NAVIGATION_ACTION.Next
+                            )
+                        }
+                    />
 
-				<Grid
-					item
-					container
-					direction="row"
-					justifyContent="space-between"
-					className={classes.weekDaysContainer}>
-					{WEEK_DAYS.map(day => (
-						<Typography  color="textSecondary" key={day} variant="caption">
-							{day}
-						</Typography>
-					))}
-				</Grid>
+                    <Grid
+                        item
+                        container
+                        direction="row"
+                        justifyContent="space-between"
+                        className={classes.weekDaysContainer}
+                    >
+                        {WEEK_DAYS.map((day) => (
+                            <Typography
+                               
+                                key={day}
+                                variant="caption"
+                            >
+                                {day}
+                            </Typography>
+                        ))}
+                    </Grid>
 
-				<Grid
-					item
-					container
-					direction="column"
-					justifyContent="space-between"
-					className={classes.daysContainer}>
-					{chunks(getDaysInMonth(date), 7).map((week, idx) => (
-						<Grid key={idx} container direction="row" justifyContent="center">
-							{week.map(day => {
-								const isStart = isStartOfRange(dateRange, day);
-								const isEnd = isEndOfRange(dateRange, day);
-								const isRangeOneDay = isRangeSameDay(dateRange);
-								const highlighted =
-									inDateRange(dateRange, day) || helpers.inHoverRange(day);
+                    <Grid
+                        item
+                        container
+                        direction="column"
+                        justifyContent="space-between"
+                        className={classes.daysContainer}
+                    >
+                        {chunks(getDaysInMonth(date), 7).map((week, idx) => (
+                            <Grid
+                                key={idx}
+                                container
+                                direction="row"
+                                justifyContent="center"
+                            >
+                                {week.map((day) => {
+                                    const isStart = isStartOfRange(
+                                        dateRange,
+                                        day
+                                    );
+                                    const isEnd = isEndOfRange(dateRange, day);
+                                    const isRangeOneDay =
+                                        isRangeSameDay(dateRange);
+                                    const highlighted =
+                                        inDateRange(dateRange, day) ||
+                                        helpers.inHoverRange(day);
 
-								return (
-									<Day
-										key={format(day, "mm-dd-yyyy")}
-										filled={isStart || isEnd}
-										outlined={isToday(day)}
-										highlighted={highlighted && !isRangeOneDay}
-										disabled={
-											!isSameMonth(date, day) ||
-											!isWithinInterval(day, {
-												start: minDate,
-												end: maxDate
-											})
-										}
-										startOfRange={isStart && !isRangeOneDay}
-										endOfRange={isEnd && !isRangeOneDay}
-										onClick={() => handlers.onDayClick(day)}
-										onHover={() => handlers.onDayHover(day)}
-										value={getDate(day)}
-									/>
-								);
-							})}
-						</Grid>
-					))}
-				</Grid>
-			</Grid>
-		</Paper>
-</ThemeProvider>
-		
-	);
+                                    return (
+                                        <Day
+                                            key={format(day, "mm-dd-yyyy")}
+                                            filled={isStart || isEnd}
+                                            outlined={isToday(day)}
+                                            highlighted={
+                                                highlighted && !isRangeOneDay
+                                            }
+                                            disabled={
+                                                !isSameMonth(date, day) ||
+                                                !isWithinInterval(day, {
+                                                    start: minDate,
+                                                    end: maxDate,
+                                                })
+                                            }
+                                            startOfRange={
+                                                isStart && !isRangeOneDay
+                                            }
+                                            endOfRange={isEnd && !isRangeOneDay}
+                                            onClick={() =>
+                                                handlers.onDayClick(day)
+                                            }
+                                            onHover={() =>
+                                                handlers.onDayHover(day)
+                                            }
+                                            value={getDate(day)}
+                                        />
+                                    );
+                                })}
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Grid>
+            </Paper>
+        </ThemeProvider>
+    );
 };
 
 export default withStyles(styles)(Month);
