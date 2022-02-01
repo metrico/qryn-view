@@ -17,45 +17,53 @@ export default function () {
                 method: "GET",
                 headers:headers,
                 mode: "cors",
+               
             };
+try{
+ 
+    fetch(`http://localhost:3100/loki/api/v1/labels`, options)
+    .then((response) => {
 
-            fetch(`http://localhost:3100/loki/api/v1/labels`, options)
-                .then((response) => {
-    
-                    if (
-                        (response.status >= 200 && response.status < 300) ||
-                        response.status === "success"
-                    ) {
-                        return response;
-                    } else {
-                        var error = new Error(response.statusText);
-                        error.response = response;
-                        throw error;
-                    }
-                })
-                .then((response) => {
-                 
-                    return response.json();
-                })
-                .then((json) => {
-                    if (json.data.length > 0) {
-                        const labels = json?.data.map((label) => ({
-                            name: label,
-                            selected: false,
-                            loading: false,
-                            values: [],
-                            hidden: false,
-                            facets: 0,
-                        }));
-                        labels && dispatch(setLabels(labels || []));
-                    }
+        if (
+            (response.status >= 200 && response.status < 300) ||
+            response.status === "success"
+        ) {
+            return response;
+        } else {
+            console.log(response)
+           var error = new Error(response.statusText);
+            error.response = response;
+            console.log(typeof response)
+           throw error;
+        }
+    })
+    .then((response) => {
+     
+        return response.json();
+    })
+    .then((json) => {
+        if (json.data.length > 0) {
+            const labels = json?.data.map((label) => ({
+                name: label,
+                selected: false,
+                loading: false,
+                values: [],
+                hidden: false,
+                facets: 0,
+            }));
+            labels && dispatch(setLabels(labels || []));
+        }
 
-                    resolve();
-                })
-                .catch((e) => {
-                    console.log(e);
-                    reject();
-                });
+        resolve();
+    })
+    .catch((e) => {
+        console.log(e);
+        reject();
+    });
+}catch(e) {
+    console.log(e.error)
+}
+       
         });
     };
 }
