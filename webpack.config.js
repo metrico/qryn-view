@@ -38,9 +38,7 @@ module.exports = {
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                use: {
                     loader: "babel-loader",
-                },
             },
             {
                 test: /\.s?css$/,
@@ -48,7 +46,7 @@ module.exports = {
             },
             {
                 test: /\.html$/i,
-                use: { loader: "html-loader" },
+               loader: "html-loader" ,
             },
         ],
     },

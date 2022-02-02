@@ -96,11 +96,14 @@ export default class Filter extends Component {
     onSubmit = (event) => {
         const query = event; 
         this.setState({ ...this.state, query });
+      
         if (query !== "{}" || query !== "") {
+            console.log("PROPS",this.props)
             this.props.searchLogs(
                 query,
                 [this.props.start, this.props.stop],
-                this.props.limit
+                this.props.limit,
+                this.props.step
 
             );
         } else {

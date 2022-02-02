@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
+
+
 export const QueryBar = (props) => {
     const [query, setQuery] = useState(props.query);
     const [browserActive, setBrowserActive] = useState(props.browserActive)
@@ -27,6 +29,7 @@ export const QueryBar = (props) => {
         setQueryValid(onQueryValid(qr))
         setQuery(qr);
     };
+
     const onBrowserActive = () => {
         return !browserActive ? ({
             'borderColor':'#11abab'
@@ -49,6 +52,8 @@ export const QueryBar = (props) => {
                 onChange={handleChange}
                 value={query}
             />
+            
+   
             
             <button
                disabled={!queryValid}

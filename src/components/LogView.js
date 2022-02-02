@@ -116,7 +116,7 @@ class LogView extends Component {
     }
 
     formatDate = (timestamp) => {
-        return moment(timestamp).format("YYYY-MM-DD HH:mm:ss UTC");
+        return moment(timestamp).format("YYYY-MM-DD HH:mm:ss SSS UTC");
     };
 }
 
