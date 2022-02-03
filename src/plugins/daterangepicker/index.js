@@ -19,7 +19,7 @@ import { theme } from "./components/styles";
 import { ThemeProvider } from "@emotion/react";
 
 const DateRangePickerMain = (props) => {
-    const today = new Date();
+    const today = Date.now();
     const {
         open,
         onChange,

@@ -35,7 +35,7 @@ export default function loadLabels() {
                         hidden: false,
                         facets: 0,
                     }));
-                    labels && dispatch(setLabels(labels || []));
+                    dispatch(setLabels(labels || []));
                     dispatch(setLoading(false))
                 }
 
