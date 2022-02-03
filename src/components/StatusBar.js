@@ -13,11 +13,10 @@ import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DateTimePicker from "@mui/lab/DateTimePicker";
-
-
 import { setStopTime, setStartTime, setQueryLimit, setQueryStep } from "../actions";
 import { DateRangePicker } from "../plugins/daterangepicker";
 import isDate from "date-fns/isDate";
+
 export const StatusBar = (props) => {
 
     return (
@@ -81,13 +80,6 @@ export function ResponsiveDateTimePickers() {
         e.preventDefault()
         setOpen(!open)
     }
-    const pickerStyle = {
-        display: "flex",
-    };
-
-    const pickerMargin = {
-        "margin-left": "10px",
-    };
 
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -115,7 +107,6 @@ export function ResponsiveDateTimePickers() {
                             {...params} />}
                         value={startTs}
                         onChange={(newStart) => {
-                            console.log(startTs)
                             if (isDate(newStart)) dispatch(setStartTime(newStart));
                         }}
                     />
@@ -132,7 +123,6 @@ export function ResponsiveDateTimePickers() {
                         />}
                         value={stopTs}
                         onChange={(newStop) => {
-
                             if (isDate(newStop)) dispatch(setStopTime(newStop));
                         }}
                     />
@@ -140,12 +130,12 @@ export function ResponsiveDateTimePickers() {
 
 
             </div>
+            
             <DateRangePicker
                 open={open}
                 isOpen={isOpen}
                 initialDateRange={initialDateRange()}
                 onChange={({ dateStart, dateEnd }) => {
-                    console.log(dateStart, dateEnd)
                     if (isDate(dateStart)) dispatch(setStartTime(dateStart))
                     if (isDate(dateEnd)) dispatch(setStopTime(dateEnd))
                 }}

@@ -56,7 +56,7 @@ class LogView extends Component {
 
                     >
                         <span id={value.timestamp} className="timestamp">
-                            {this.formatDate(value.timestamp)}{" "}
+                            {this.formatDate(value.timestamp)}
                         </span>
 
                         <LowLight language='js' value={value.text} />
@@ -116,7 +116,7 @@ class LogView extends Component {
     }
 
     formatDate = (timestamp) => {
-        return moment(timestamp).format("YYYY-MM-DD HH:mm:ss SSS UTC");
+        return moment(parseInt(timestamp)).format("YYYY-MM-DD HH:mm:ss.SSS UTC");
     };
 }
 

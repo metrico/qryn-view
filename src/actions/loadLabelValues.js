@@ -28,7 +28,9 @@ export default function loadLaebelValues(label, labelList) {
     };
 
     return function (dispatch) {
+
         dispatch(setLoading(true))
+        
         axios.get(`${url}/loki/api/v1/label/${label.name}/values`, options)
             ?.then(response => {
                 if (response?.data?.data) {

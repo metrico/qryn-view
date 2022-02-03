@@ -17,13 +17,16 @@ export const QueryBar = (props) => {
             
         };
     }, [props.browserActive]);
+
     const onSubmit = (e) => {
         e.preventDefault();
         props.onSubmit(query);
     };
+
     const valueDisplay = (e) => {
         props.onValuesDisplay(e);
     };
+    
     const handleChange = (e) => {
         const qr = e.target.value;
         setQueryValid(onQueryValid(qr))
@@ -36,7 +39,7 @@ export const QueryBar = (props) => {
         }) : ({})
     }
     const onQueryValid = (query) => {
-       return query !== '{' && query !== '}' && query !== '{}' && query !== ''
+       return query !== '{' && query !== '}' && query !== '{}' && query !== '' // TODO: make a proper query validation
     }
     return (
         <div className="query-bar-container">
@@ -52,8 +55,6 @@ export const QueryBar = (props) => {
                 onChange={handleChange}
                 value={query}
             />
-            
-   
             
             <button
                disabled={!queryValid}
