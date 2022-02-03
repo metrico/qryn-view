@@ -35,9 +35,17 @@ will start on ``http://localhost:3000``
 
 - go to ``./src/environment/env.dev.js``
 
-- change api endpoint under ``environment.apiUrl``
+### Environment Variables:
 
-- **optional:** enable [cors](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) on chrome for working with local API. 
+- ``HOST`` default: `` 0.0.0.0``
+- ``PORT`` default: ``8080``
+- ``API_URL`` default: ``http://localhost:3100``
+
+```bash
+~/$ HOST=localhost PORT=8080 API_URL=http://localhost:3100 npm start
+```
+
+
 
 ### Basics
 
