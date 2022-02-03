@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
+
+
 export const QueryBar = (props) => {
     const [query, setQuery] = useState(props.query);
     const [browserActive, setBrowserActive] = useState(props.browserActive)
@@ -15,25 +17,29 @@ export const QueryBar = (props) => {
             
         };
     }, [props.browserActive]);
+
     const onSubmit = (e) => {
         e.preventDefault();
         props.onSubmit(query);
     };
+
     const valueDisplay = (e) => {
         props.onValuesDisplay(e);
     };
+    
     const handleChange = (e) => {
         const qr = e.target.value;
         setQueryValid(onQueryValid(qr))
         setQuery(qr);
     };
+
     const onBrowserActive = () => {
         return !browserActive ? ({
             'borderColor':'#11abab'
         }) : ({})
     }
     const onQueryValid = (query) => {
-       return query !== '{' && query !== '}' && query !== '{}' && query !== ''
+       return query !== '{' && query !== '}' && query !== '{}' && query !== '' // TODO: make a proper query validation
     }
     return (
         <div className="query-bar-container">
