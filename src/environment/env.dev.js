@@ -3,7 +3,7 @@
 export const environment = {
     production: false,
     environment: 'dev',
-    apiUrl: 'http://localhost:3100'
+    apiUrl:process.env.API_URL || 'http://localhost:3100'
 
   };
   

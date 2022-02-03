@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import moment from "moment";
 import { QueryBar } from "./QueryBar";
 import { ValuesList } from "./ValuesList";
 import { queryBuilder } from "../helpers/querybuilder";
@@ -11,7 +10,6 @@ export default class Filter extends Component {
             labelValues: props.labelValues || [],
             start: props.start,
             stop: props.stop,
-            endpoint: "", // this is actually api endpoint to make the call
             labelValue: "",
             query: "",
             listDisplay: false,
@@ -67,16 +65,7 @@ export default class Filter extends Component {
         this.handleChange("endpoint", event.target.value);
     };
 
-    onYearChange = (value) => {
-        this.setState({ ...this.state, year: value });
-    };
 
-    onMonthChange = (value) => {
-        this.setState({
-            ...this.state,
-            month: moment().month(value).format("M"),
-        });
-    };
     onLabelValueChange = (value) => {
         this.handleChange("labelValue", value);
         const query = queryBuilder(this.props.labels);

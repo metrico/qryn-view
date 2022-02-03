@@ -1,6 +1,8 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const Dotenv = require('dotenv-webpack')
 const webpack = require("webpack");
+console.log(process.env)
 module.exports = {
     mode: "development",
     entry: "./src/index.js",
@@ -15,6 +17,12 @@ module.exports = {
             template: "./public/index.html",
         }),
         new webpack.HotModuleReplacementPlugin(),
+        new Dotenv({
+            prefix:'process.env.',
+            expand: true,
+            ignoreStub: true,
+            systemvars:true
+        })
     ],
    // devtool: "inline-source-map",
     module: {
@@ -54,10 +62,11 @@ module.exports = {
         extensions: [".js", ".jsx", ".scss", ".json",".css"],
     },
     devServer: {
+
         static: path.resolve(__dirname, "public"),
 
-        host: "0.0.0.0",
-        port: 8080,
+        host:  process.env.HOST || "0.0.0.0",
+        port: process.env.PORT ||  8080,
 
         allowedHosts: ["localhost:3100"],
         headers: {
