@@ -17,7 +17,7 @@
         background: $grey-light;
     }
     .logs-box {
-        display:flex;
+        display: flex;
         min-height: min-content;
         flex-direction: column;
     }
@@ -26,15 +26,14 @@
         padding: 0.3rem;
         color: white;
         font-size: 13px;
-        cursor:pointer;
+        cursor: pointer;
         margin-bottom: 4px;
-        border-left: 4px solid #ffa60098;
+        //border-left: 4px solid #ffa60098;
         padding-left: 0.5rem;
         margin-left: 0.25rem;
-        transition:.2s all;
+        transition: 0.2s all;
         &:hover {
-            background:black;
-            border-left-color:orange;
+            background: black;
         }
 
         p {
@@ -49,16 +48,8 @@
 
         .timestamp {
             position: relative;
-            color: $grey-lighter;
+            color: $dirty-white;
             margin-right: 0.25rem;
-
-            &:hover {
-                color: $grey-lighter;
-            }
-        }
-
-        &:last-child {
-            //  border: 0;
         }
     }
 
@@ -75,15 +66,15 @@
     }
 }
 .value-tags-container {
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    border:1px solid rgba(128, 128, 128, 0.466);
-    margin:.75rem;
-    margin-top:1rem;
-    border-radius:4px;
-    padding:6px;
-    max-width:450px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(128, 128, 128, 0.466);
+    margin: 0.75rem;
+    margin-top: 1rem;
+    border-radius: 4px;
+    padding: 6px;
+    max-width: 450px;
     .value-tags {
         font-family: monospace;
         font-size: 0.95em;
@@ -92,17 +83,45 @@
         padding: 2px;
         flex: 1;
         justify-content: space-between;
-      
+
         span {
-            padding:4px;
-            display:flex;
-            flex:1;
-       
-            color:#cccccd
+            padding: 4px;
+            display: flex;
+            flex: 1;
+
+            color: #cccccd;
         }
         &:hover {
-            background:black;
+            background: black;
         }
     }
 }
 
+.log-line {
+    font-size: 0.95em;
+    font-family: monospace;
+    color: #e7e9e9;
+}
+
+.critical {
+    border-left: 4px solid $loglevel-critical;
+}
+
+.error {
+    border-left: 4px solid $loglevel-error;
+}
+.warning {
+    border-left: 4px solid $loglevel-warning;
+}
+.info {
+    border-left: 4px solid $loglevel-info;
+}
+.debug {
+    border-left: 4px solid $loglevel-debug;
+}
+.trace {
+    border-left: 4px solid $loglevel-trace;
+}
+.unknown {
+    border-left: 4px solid $loglevel-unknown;
+}

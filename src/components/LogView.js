@@ -2,9 +2,15 @@ import React, { Component, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Button, CircularProgress } from "@mui/material";
 import moment from "moment";
-import LowLight from "react-lowlight";
-import json from 'highlight.js/lib/languages/json'
 
+const TAGS_LEVEL = {
+    critical: ['emerg', 'fatal', 'alert', 'crit', 'critical'],
+    error: ['err', 'eror', 'error', 'warning'],
+    warning: ['warn', 'warning'],
+    info: ['info', 'information', 'notice'],
+    debug: ['dbug', 'debug'],
+    trace: ['trace']
+}
 export const ValueTags = (props) => {
 
     const getTags = (tags) => {
@@ -39,11 +45,19 @@ class LogView extends Component {
             display: 'flex'
         } : { display: 'none' })
     }
+
+    getLogColor = (tags) => {
+        if (tags?.['level']) {
+            return Object.keys(TAGS_LEVEL).find(level => TAGS_LEVEL[level].includes(tags.level))
+
+        } else { return 'unknown' }
+
+    }
     render() {
-        LowLight.registerLanguage('js', json)
+
         return (
             <div className="log-view">
-                <div className="logs-box">
+                <div className={`logs-box`}>
 
 
 
@@ -51,15 +65,15 @@ class LogView extends Component {
                     {this.getLogs() && this.getLogs().map((value, key) => (
                         <div
                             key={key}
-                            className="line"
+                            className={`line ${this.getLogColor(value.tags)}`}
                             onClick={e => this.onShowTags(value)}
 
                         >
                             <span id={value.timestamp} className="timestamp">
                                 {this.formatDate(value.timestamp)}
                             </span>
+                            <span className="log-line">{value.text}</span>
 
-                            <LowLight language='js' value={value.text} />
 
                             {value.tags && (
                                 <div className="value-tags-container"

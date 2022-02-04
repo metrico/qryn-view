@@ -38,6 +38,8 @@ export const QueryBar = (props) => {
             'borderColor':'#11abab'
         }) : ({})
     }
+
+
     const onQueryValid = (query) => {
        return query !== '{' && query !== '}' && query !== '{}' && query !== '' // TODO: make a proper query validation
     }

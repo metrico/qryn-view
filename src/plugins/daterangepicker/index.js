@@ -89,9 +89,6 @@ export function DateRangePickerMain(props) {
        
     }, [rangeOpen]);
 
-    //  useEffect(()=> {
-    // dispatch(setRangeOpen(isComponentVisible))
-    //  },[isComponentVisible])
     const setFirstMonthValidated = (date) => {
         if (isBefore(date, secondMonth)) {
             setFirstMonth(date);
@@ -190,12 +187,19 @@ export function DateRangePickerMain(props) {
         onMonthNavigate,
     };
 
+    const openButtonHandler = (e) => {
+        e.preventDefault()
+        if(rangeOpen === true) {
+           onClose(e)
+        } else {
+           setIsComponentVisible(true)
+        }
+    }
+
     return (
         <div>
             <button style={dateButtonStyles}
-                onClick={() => {
-                    dispatch(setRangeOpen(!rangeOpen));
-                }}
+                onClick={openButtonHandler}
             ><AccessTimeOutlinedIcon 
             style={{
                 fontSize:'1.15em',
@@ -208,7 +212,7 @@ export function DateRangePickerMain(props) {
                 {isValid(buttonStop)
                     ? format(buttonStop, "yyyy/MM/dd HH:mm:ss")
                     : buttonStop}
-            </button>
+            </button> 
 
             { isComponentVisible ? (
                 <div tabIndex="0" ref={ref}>
