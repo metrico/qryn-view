@@ -39,6 +39,12 @@ export const QueryBar = (props) => {
         }) : ({})
     }
 
+    const handleInputKeyDown = (e) => {
+        if(e.code === 'Enter' && e.ctrlKey || e.code === 'Enter'){
+            onSubmit(e)
+        }
+    }
+
 
     const onQueryValid = (query) => {
        return query !== '{' && query !== '}' && query !== '{}' && query !== '' // TODO: make a proper query validation
@@ -56,6 +62,8 @@ export const QueryBar = (props) => {
                 placeholder="Enter a cLoki Query"
                 onChange={handleChange}
                 value={query}
+                tabIndex='0'
+                onKeyDown={handleInputKeyDown}
             />
             
             <button
