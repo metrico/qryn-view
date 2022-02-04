@@ -40,12 +40,12 @@ const styles = (theme) =>
 
 		},
 		applyButton: {
-			color: '#11abab',
-			background: '#5454543b',
-			border: '1px solid #11abab',
-			padding: '3px 6px',
+			color: 'white',
+			background: '#4f4f4f',
+			border: '1px solid #4f4f4f',
+			padding: '6px 8px',
 			borderRadius: '3px',
-			marginLeft: '3px',
+			marginLeft: '10px',
 			cursor: 'pointer'
 		}
 	});
@@ -78,8 +78,8 @@ const PickerNav = props => {
 	const dispatch = useDispatch()
 	const [editedStartDate, setEditedStartDate] = useState(dateRange.dateStart)
 	const [editedEndDate, setEditedEndDate] = useState(dateRange.dateEnd)
-	
-	
+
+
 	useEffect(() => {
 		setEditedStartDate(startTs)
 	}, [startTs])
@@ -91,27 +91,27 @@ const PickerNav = props => {
 
 
 	const handleStopInputChange = (event) => {
-	event.preventDefault()
-	const value = event.target.value
+		event.preventDefault()
+		const value = event.target.value
 
-	setEditedEndDate(value)
+		setEditedEndDate(value)
 
 	}
 	const handleStartInputChange = (event) => {
 		event.preventDefault()
 		const value = event.target.value
-	
+
 		setEditedStartDate(value)
-	
-		}
+
+	}
 
 
 	const onTimeRangeSet = (e) => {
 		e.preventDefault()
-		
+
 		const startDate = new Date(editedStartDate)
 		const endDate = new Date(editedEndDate)
-	
+
 		if (isDate(startDate)) {
 
 			dispatch(setStartTime(startDate));
@@ -127,6 +127,10 @@ const PickerNav = props => {
 	}
 	const getEditedEndDate = () => {
 		return isValid(editedEndDate) ? format(editedEndDate, 'yyy-MM-dd HH:mm:ss') : editedEndDate
+	}
+	const dateTimeBarStyle = {
+		display: 'flex',
+		alignItems: 'center'
 	}
 	return (
 		<ThemeProvider theme={theme}>
@@ -144,23 +148,40 @@ const PickerNav = props => {
 									aria-label="close">
 									<CloseIcon />
 								</IconButton>
+			
 
-								<input
+								<div className='status-selectors'>
+									<div className="selector">
+										<span className='label'>From</span>
+										<input
+ 											className='date-time-range'
+											value={getEditedStartDate()}
+											onChange={handleStartInputChange}
+										/>
+									</div>
 
-									value={getEditedStartDate()}
-									onChange={handleStartInputChange}
-								/>
-
-								<input
-									value={getEditedEndDate()}
-									onChange={handleStopInputChange}
-
-								/>
-								<button
-									className={classes.applyButton}
-									onClick={onTimeRangeSet}
+									<div className='selector'>
+										<span className='label'>To</span>
+										<input className='date-time-range'
+											value={getEditedEndDate()}
+											onChange={handleStopInputChange}
+										/>
+									</div>
+									<button
+									className={ classes.applyButton}
+									onClick={e => {
+										onTimeRangeSet(e)
+										props.onClose(e)
+									}}
 
 								>Apply Time Range</button>
+								</div>
+
+
+
+							
+
+
 							</Grid>
 
 						</Grid>
