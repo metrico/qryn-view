@@ -36,6 +36,7 @@ export function StatusBarInput(props) {
         <div className="selector">
             <span className="label">{label}</span>
             <input
+            className="limit"
                 value={value}
                 onChange={(newValue) => {
                     dispatch(dispatchAction(newValue.target.value));
@@ -83,6 +84,9 @@ export function ResponsiveDateTimePickers() {
 
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <div className="status-options">
+
+            
             <div className="status-selectors">
 
                 <StatusBarInput
@@ -97,40 +101,12 @@ export function ResponsiveDateTimePickers() {
                     value={queryStep}
                     dispatchAction={setQueryStep}
                 />
-
-                <div className="selector"  >
-                    <span className="label">Start</span>
-                    <DateTimePicker
-                        ampm={false}
-                        renderInput={(params) => <TextField onClick={handleInputClick}
-                            onChange={e => { handleInputChange(e, 'setStartTime') }}
-                            {...params} />}
-                        value={startTs}
-                        onChange={(newStart) => {
-                            if (isDate(newStart)) dispatch(setStartTime(newStart));
-                        }}
-                    />
-
-                </div>
-                <div className="selector">
-                    <span className="label">End</span>
-                    <DateTimePicker
-                        ampm={false}
-                        renderInput={(params) => <TextField
-                            onChange={e => { handleInputChange(e, 'setStopTime') }}
-                            onClick={handleInputClick} {...params}
-
-                        />}
-                        value={stopTs}
-                        onChange={(newStop) => {
-                            if (isDate(newStop)) dispatch(setStopTime(newStop));
-                        }}
-                    />
-                </div>
-
+     
+  
+            
 
             </div>
-            
+     
             <DateRangePicker
                 open={open}
                 isOpen={isOpen}
@@ -140,6 +116,7 @@ export function ResponsiveDateTimePickers() {
                     if (isDate(dateEnd)) dispatch(setStopTime(dateEnd))
                 }}
             />
+            </div>
         </LocalizationProvider>
     );
 }

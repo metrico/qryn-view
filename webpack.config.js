@@ -2,7 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const Dotenv = require('dotenv-webpack')
 const webpack = require("webpack");
-console.log(process.env)
+
 module.exports = {
     mode: "development",
     entry: "./src/index.js",

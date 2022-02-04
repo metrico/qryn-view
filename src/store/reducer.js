@@ -15,7 +15,7 @@ export default (state, action) => {
         case "SET_QUERY_LIMIT":
                 return { ...state, limit: action.limit };
         case "SET_RANGE_OPEN":
-                return { ...state, rangeOpen: action.open};
+                return { ...state, rangeOpen: action.rangeOpen};
         case "SET_QUERY_STEP":
                 return { ...state, step: action.step};
         default:

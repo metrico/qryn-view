@@ -71,7 +71,7 @@ export default function loadLogs(label, time, limit, step, direction) {
         axios
             .get(getUrl, options)
             ?.then((response) => {
-                console.log(response)
+            
                 if (response?.data?.data) {
                     let messages = [];
                     const result = response?.data?.data.result; // array

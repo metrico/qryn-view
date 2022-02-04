@@ -1,4 +1,3 @@
-//import { VERSION } from "../VERSION";
 
 export const environment = {
     production: false,

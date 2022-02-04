@@ -3,6 +3,10 @@
     justify-content: space-between;
     padding: 5px 10px;
 }
+.status-options {
+    display:flex;
+    align-items:center;
+}
 .status-selectors {
     display: flex;
     align-items: center;
@@ -35,5 +39,8 @@
         padding: 3px 6px;
         font-size: 13px;
         border-radius: 3px;
+        &.limit {
+            width:50px;
+        }
     }
 }
