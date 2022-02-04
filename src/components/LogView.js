@@ -48,7 +48,7 @@ class LogView extends Component {
 
     getLogColor = (tags) => {
         if (tags?.['level']) {
-            return Object.keys(TAGS_LEVEL).find(level => TAGS_LEVEL[level].includes(tags.level))
+            return Object.keys(TAGS_LEVEL).find(level => TAGS_LEVEL[level].includes((tags.level).toLowerCase()))
 
         } else { return 'unknown' }
 
@@ -111,15 +111,17 @@ class LogView extends Component {
     }
 
     getLogs = () => {
+       
         if (this.state.limitLoad) {
-            return this.prop?.messages
+           
+            return this.prop?.messages?.sort((a,b) => (a.timestamp < b.timestamp) ? 1 : -1)
                 ?.slice(
                     this.props.messages.length - this.state.limit,
                     this.props.messages.length
                 )
                 .reverse();
         } else {
-            return this.props.messages.reverse();
+            return this.props.messages?.sort((a,b) => (a.timestamp < b.timestamp) ? 1 : -1);
         }
     };
 
