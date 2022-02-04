@@ -68,7 +68,7 @@ module.exports = {
         host:  process.env.HOST || "0.0.0.0",
         port: process.env.PORT ||  8080,
 
-        allowedHosts: ["localhost:3100"],
+        allowedHosts: ["all"],
         headers: {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods":
