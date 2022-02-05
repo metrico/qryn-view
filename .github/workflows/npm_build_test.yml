@@ -49,6 +49,4 @@ jobs:
       env:
         GHR_COMPRESS: zip
         GHR_PATH: build/
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_REF: ${{steps.version.outputs.newTag || "latest" }}
-        
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
