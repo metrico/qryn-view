@@ -20,7 +20,10 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v2
+    - name: 'Checkout source code'
+      uses: 'actions/checkout@v2'
+      with:
+        ref: ${{ github.ref }}
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
