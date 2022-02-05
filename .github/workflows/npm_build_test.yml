@@ -21,6 +21,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: 'Automated Version Bump'
+      if: github.event_name != 'pull_request'
+      id: version
+      uses: 'phips28/gh-action-bump-version@master'
+      with:
+        tag-prefix: 'v'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: 'version check'
+      if: github.event_name != 'pull_request'
+      run: echo ${{steps.version.outputs.version}}
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
@@ -34,5 +45,5 @@ jobs:
     - uses: actions/upload-artifact@v2
       if: github.event_name != 'pull_request'
       with:
-        name: latest-build
+        name: latest-build-${{steps.version.outputs.version}}
         path: build
