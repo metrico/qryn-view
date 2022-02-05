@@ -23,7 +23,7 @@ export const StatusBar = (props) => {
 
     return (
         <div className="status-bar">
-            <img src={Logo} height="28px" />
+            <img src={Logo} height="28px" className="logo" />
             <div className="date-selector">
                 <ResponsiveDateTimePickers />
             </div>
