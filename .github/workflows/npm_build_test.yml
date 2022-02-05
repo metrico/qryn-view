@@ -31,8 +31,12 @@ jobs:
       env:
         CI: false
 #    - run: npm test
-    - name: Update release
-      uses: johnwbyrd/update-release@v1.0.0
+    - uses: papeloto/action-zip@v1
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        files: build/static
+        files: build/ README.md LICENSE
+        recursive: true
+        dest: cloki-ui-static.zip
+    - uses: actions/upload-artifact@v1
+      with:
+        name: cloki-ui-static
+        path: ${{ github.workspace }}/cloki-ui-static.zip
