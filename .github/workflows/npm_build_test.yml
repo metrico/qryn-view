@@ -31,3 +31,8 @@ jobs:
       env:
         CI: false
 #    - run: npm test
+    - name: Update release
+      uses: johnwbyrd/update-release@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        files: ./dist/*
