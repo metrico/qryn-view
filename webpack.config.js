@@ -12,6 +12,9 @@ module.exports = {
         publicPath: "/",
        
     },
+    performance: {
+      hints: false
+    },
     plugins: [
         new HtmlWebpackPlugin({
             template: "./public/index.html",
