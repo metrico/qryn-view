@@ -31,12 +31,7 @@ jobs:
       env:
         CI: false
 #    - run: npm test
-    - uses: papeloto/action-zip@v1
+    - uses: actions/upload-artifact@v2
       with:
-        files: build/ README.md LICENSE
-        recursive: true
-        dest: cloki-ui-static.zip
-    - uses: actions/upload-artifact@v1
-      with:
-        name: cloki-ui-static
-        path: ${{ github.workspace }}/cloki-ui-static.zip
+        name: latest-build
+        path: build
