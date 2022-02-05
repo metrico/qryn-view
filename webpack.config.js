@@ -24,7 +24,7 @@ module.exports = {
             systemvars:true
         })
     ],
-   // devtool: "inline-source-map",
+    devtool: false,
     module: {
         rules: [
             {
