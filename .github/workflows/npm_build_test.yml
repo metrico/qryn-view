@@ -21,18 +21,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: 'Automated Version Bump'
-      if: github.event_name != 'pull_request'
-      id: version
-      uses: 'phips28/gh-action-bump-version@master'
-      with:
-        tag-prefix: 'v'
-        skip-tag:  'true'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: 'version check'
-      if: github.event_name != 'pull_request'
-      run: echo "version ${{steps.version.outputs.version}}"
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
@@ -43,8 +31,27 @@ jobs:
       env:
         CI: false
 #    - run: npm test
-    - uses: actions/upload-artifact@v2
+    - name: 'Automated Version Bump'
       if: github.event_name != 'pull_request'
+      id: version-bump
+      uses: 'phips28/gh-action-bump-version@master'
       with:
-        name: latest-build-${{steps.version.outputs.version}}
-        path: build/
+        tag-prefix: 'v'
+        skip-tag: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: 'Output Check'
+      if: github.event_name != 'pull_request'
+      env:
+        NEW_TAG: ${{ steps.version-bump.outputs.newTag }}
+        run: echo "new tag $NEW_TAG"
+    - name: Release
+      uses: fnkr/github-action-ghr@v1
+      if: github.event_name != 'pull_request'
+      env:
+        GITHUB_REF: ${{ steps.version-bump.outputs.newTag }}
+        GHR_COMPRESS: zip
+        GHR_PATH: build/
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GHR_DELETE: true
+        GHR_REPLACE: true
