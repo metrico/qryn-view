@@ -40,7 +40,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start": "npx webpack-dev-server",
-    "build": "webpack --mode production",
+    "build": "webpack --mode production"
   },
   "eslintConfig": {
     "extends": [
