@@ -27,11 +27,12 @@ jobs:
       uses: 'phips28/gh-action-bump-version@master'
       with:
         tag-prefix: 'v'
+        skip-tag:  'true'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: 'version check'
       if: github.event_name != 'pull_request'
-      run: echo ${{steps.version.outputs.version}}
+      run: echo "version ${{steps.version.outputs.version}}"
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
@@ -46,4 +47,4 @@ jobs:
       if: github.event_name != 'pull_request'
       with:
         name: latest-build-${{steps.version.outputs.version}}
-        path: build
+        path: build/
