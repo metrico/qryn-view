@@ -40,8 +40,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start": "npx webpack-dev-server",
-    "build": "webpack --mode production && cp public/* dist/",
-    "deploy": "cd dist && git add --all && git commit -m 'Deploying changes' && git push origin gh-pages && cd .."
+    "build": "webpack --mode production",
   },
   "eslintConfig": {
     "extends": [
