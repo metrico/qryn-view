@@ -45,9 +45,9 @@ jobs:
     - run: npm test
     - uses: papeloto/action-zip@v1
       if: github.event_name != 'pull_request'
-        with:
-          files: build/ README.md
-          dest: dist.zip
+      with:
+        files: build/ README.md
+        dest: dist.zip
     - name: Upload release binaries
       if: github.event_name != 'pull_request'
       uses: boxpositron/upload-multiple-releases@1.0.7
