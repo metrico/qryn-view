@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+
 import {
     addMonths,
     isSameDay,
@@ -10,36 +11,24 @@ import {
     addYears,
     max,
     min,
+    format,
+    isValid,
 } from "date-fns";
 
 import Nav from "./components/Nav";
-import { defaultRanges } from "./defaults";
-import { parseOptionalDate } from "./utils";
+import { defaultRanges, getValidatedMonths, parseOptionalDate } from "./utils";
+import { MARKERS } from "./consts";
+import { theme } from "./components/styles";
+import { ThemeProvider } from "@emotion/react";
+import { setRangeOpen } from "../../actions";
+import { useSelector, useDispatch } from "react-redux";
+import useOutsideRef from "./hooks/useOutsideRef";
 
-export const MARKERS = {
-    FIRST_MONTH: Symbol("firstMonth"),
-    SECOND_MONTH: Symbol("secondMonth"),
-};
-
-const getValidatedMonths = (range, minDate, maxDate) => {
-    let { dateStart, dateEnd } = range;
-    if (dateStart && dateEnd) {
-        const newStart = max([dateStart, minDate]);
-        const newEnd = min([dateEnd, maxDate]);
-
-        return [
-            newStart,
-            isSameMonth(newStart, newEnd) ? addMonths(newStart, 1) : newEnd,
-        ];
-    } else {
-        return [dateStart, dateEnd];
-    }
-};
-
-const DateRangePickerImpl = (props) => {
-    const today = new Date();
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+export function DateRangePickerMain(props) {
+    const today = Date.now();
     const {
-		open,
+        open,
         onChange,
         initialDateRange,
         minDate,
@@ -57,16 +46,31 @@ const DateRangePickerImpl = (props) => {
 
     const [dateRange, setDateRange] = useState({ ...initialDateRange });
     const [hoverDay, setHoverDay] = useState();
+
     const [firstMonth, setFirstMonth] = useState(intialFirstMonth || today);
     const [secondMonth, setSecondMonth] = useState(
         initialSecondMonth || addMonths(firstMonth, 1)
     );
+    const dispatch = useDispatch();
+    const startTs = useSelector((store) => store.start);
+    const stopTs = useSelector((store) => store.stop);
+    const [buttonStart, setButtonStart] = useState(startTs)
+    const [buttonStop, setButtonStop] = useState(stopTs)
 
-	const [dateOpen, setDateOpen] = useState(true)
-	useEffect(() => {
-		setDateOpen(props.open)
+        useEffect(()=> {
+          
+            setButtonStart(startTs)
+        },[startTs])
 
-	}, [props.open]);
+
+        useEffect(()=>{
+            setButtonStop(stopTs)
+        },[stopTs])
+
+    const rangeOpen = useSelector((store) => store.rangeOpen);
+
+    const [dateOpen, setDateOpen] = useState(true);
+
     useEffect(() => {
         const { dateStart, dateEnd } = props.initialDateRange;
         if (isDate(dateStart) && isDate(dateEnd)) {
@@ -74,10 +78,17 @@ const DateRangePickerImpl = (props) => {
         }
     }, [props.initialDateRange]);
 
-
     const { dateStart, dateEnd } = dateRange;
 
-    // handlers
+
+    const { ref, isComponentVisible, setIsComponentVisible } =
+        useOutsideRef(true);
+
+    useEffect(() => {
+        setIsComponentVisible(rangeOpen);
+       
+    }, [rangeOpen]);
+
     const setFirstMonthValidated = (date) => {
         if (isBefore(date, secondMonth)) {
             setFirstMonth(date);
@@ -133,11 +144,10 @@ const DateRangePickerImpl = (props) => {
         }
     };
     const onClose = (e) => {
-      e.preventDefault();
-	  setDateOpen(!dateOpen)
-	  props.isOpen(e)
-
-      
+     
+        e.preventDefault();
+        dispatch(setRangeOpen(false));
+        props.isOpen(e);
     };
 
     // helpers
@@ -153,6 +163,19 @@ const DateRangePickerImpl = (props) => {
             })
         );
     };
+    const dateButtonStyles = {
+        border:'none',
+        height:'21px',
+        background:'#121212',
+        color:'orange',
+        padding:'3px 6px',
+        borderRadius:'3px',
+        fontSize:'.85em',
+        display:'flex',
+        alignItems:'center',
+        marginLeft:'20px'
+
+    }
 
     const helpers = {
         inHoverRange,
@@ -164,22 +187,54 @@ const DateRangePickerImpl = (props) => {
         onMonthNavigate,
     };
 
-    return ( dateOpen ) ? (
-        <Nav
-            dateRange={dateRange}
-            minDate={minDateValid}
-            maxDate={maxDateValid}
-            ranges={definedRanges}
-            firstMonth={firstMonth}
-            secondMonth={secondMonth}
-            setFirstMonth={setFirstMonthValidated}
-            setSecondMonth={setSecondMonthValidated}
-            setDateRange={setDateRangeValidated}
-            helpers={helpers}
-            handlers={handlers}
-            onClose={onClose}
-        />
-    ) : null;
-};
+    const openButtonHandler = (e) => {
+        e.preventDefault()
+        if(rangeOpen === true) {
+           onClose(e)
+        } else {
+           setIsComponentVisible(true)
+        }
+    }
 
-export const DateRangePicker = DateRangePickerImpl;
+    return (
+        <div>
+            <button style={dateButtonStyles}
+                onClick={openButtonHandler}
+            ><AccessTimeOutlinedIcon 
+            style={{
+                fontSize:'1.15em',
+                marginRight:'3px'
+            }} />
+                {isValid(buttonStart)
+                    ? format(buttonStart, "yyyy/MM/dd HH:mm:ss")
+                    : buttonStart}{" "}
+                -{" "}
+                {isValid(buttonStop)
+                    ? format(buttonStop, "yyyy/MM/dd HH:mm:ss")
+                    : buttonStop}
+            </button> 
+
+            { isComponentVisible ? (
+                <div tabIndex="0" ref={ref}>
+                    <ThemeProvider theme={theme}>
+                        <Nav
+                            dateRange={dateRange}
+                            minDate={minDateValid}
+                            maxDate={maxDateValid}
+                            ranges={definedRanges}
+                            firstMonth={firstMonth}
+                            secondMonth={secondMonth}
+                            setFirstMonth={setFirstMonthValidated}
+                            setSecondMonth={setSecondMonthValidated}
+                            setDateRange={setDateRangeValidated}
+                            helpers={helpers}
+                            handlers={handlers}
+                            onClose={onClose}
+                        />
+                    </ThemeProvider>
+                </div>
+            ) : null}
+        </div>
+    );
+}
+export const DateRangePicker = DateRangePickerMain;

@@ -75,7 +75,20 @@ export const ValuesList = (props) => {
                     <Legend 
                     title="1. Select labels to search in" 
                     text="Which labels would you like to consider for your search?" />
-         
+            <div className="valuelist-content">
+                    {labelList&&
+                        labelList.map((value, key) => (
+                            <small
+                                title={value.name}
+                                key={key}
+                                id={value.name}
+                                style={styleValue(value)}
+                                onClick={(e) => onValueClick(e, value)}
+                            >
+                                {value.name} 
+                            </small>
+                        ))}
+                </div> 
                 <div className="valuelist-filter">
                 <div className="valuelist-filter-title">
                 <Legend 
@@ -93,20 +106,7 @@ export const ValuesList = (props) => {
                     />
                 </div>
                 </div>
-                <div className="valuelist-content">
-                    {labelList&&
-                        labelList.map((value, key) => (
-                            <small
-                                title={value.name}
-                                key={key}
-                                id={value.name}
-                                style={styleValue(value)}
-                                onClick={(e) => onValueClick(e, value)}
-                            >
-                                {value.name} 
-                            </small>
-                        ))}
-                </div> 
+             
                 { labelsSelected && (
                     <div className="values-container">
                         <div className="values-container-column">

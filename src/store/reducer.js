@@ -12,8 +12,12 @@ export default (state, action) => {
             return { ...state, start: action.start };
         case "SET_STOP_TIME":
             return { ...state, stop: action.stop };
-            case "SET_QUERY_LIMIT":
+        case "SET_QUERY_LIMIT":
                 return { ...state, limit: action.limit };
+        case "SET_RANGE_OPEN":
+                return { ...state, rangeOpen: action.rangeOpen};
+        case "SET_QUERY_STEP":
+                return { ...state, step: action.step};
         default:
             return { ...state };
     }
