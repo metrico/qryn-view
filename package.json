@@ -1,7 +1,7 @@
 {
   "name": "cloki-view",
   "author": "joel@qxip.net",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.7.1",
