@@ -45,7 +45,7 @@ jobs:
     - run: npm test
     - run: ls -alF
     - name: Upload release binaries
-      uses: boxpositron/upload-multiple-releases@1.0.6
+      uses: boxpositron/upload-multiple-releases@1.0.7
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
