@@ -44,19 +44,15 @@ jobs:
         CI: false
     - run: npm test
     - run: ls -alF
-    - name: create release
-      id: createrelease
-      if: github.event_name != 'pull_request'
-      uses: gregoranders/nodejs-create-release@v0.0.13
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag: ${{steps.version.outputs.newTag}}
-        name: cloki-view-${{steps.version.outputs.newTag}} Release
-        target: ${{ github.ref }}
     - name: Upload release binaries
-      uses: alexellis/upload-assets@0.2.2
+      uses: boxpositron/upload-multiple-releases@1.0.6
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        asset_paths: '["./build/*"]'
+        release_config: |
+            build/*
+        tag_name: ${{steps.version.outputs.newTag}}
+        release_name: cloki-view-${{steps.version.outputs.newTag}}
+        draft: false
+        prerelease: false
+        overwrite: true
