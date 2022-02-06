@@ -43,10 +43,10 @@ jobs:
       env:
         CI: false
 #    - run: npm test
-    - name: Release
-      uses: fnkr/github-action-ghr@v1.3
-      if: github.event_name != 'pull_request'
-      env:
-        GHR_COMPRESS: zip
-        GHR_PATH: build/
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+#    - name: Release
+#      uses: fnkr/github-action-ghr@v1.3
+#      if: github.event_name != 'pull_request'
+#      env:
+#        GHR_COMPRESS: zip
+#        GHR_PATH: build/
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
