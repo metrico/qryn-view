@@ -42,7 +42,8 @@ jobs:
     - run: npm run build --if-present
       env:
         CI: false
-#    - run: npm test
+    - run: npm test
+    - run: ls -alF
 #    - name: Release
 #      uses: fnkr/github-action-ghr@v1.3
 #      if: github.event_name != 'pull_request'
