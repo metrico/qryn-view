@@ -43,14 +43,19 @@ jobs:
       env:
         CI: false
     - run: npm test
-    - run: ls -alF
+    - uses: papeloto/action-zip@v1
+      if: github.event_name != 'pull_request'
+        with:
+          files: build/ README.md
+          dest: dist.zip
     - name: Upload release binaries
+      if: github.event_name != 'pull_request'
       uses: boxpositron/upload-multiple-releases@1.0.7
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         release_config: |
-            build/*
+            dist.zip
         tag_name: ${{steps.version.outputs.newTag}}
         release_name: cloki-view-${{steps.version.outputs.newTag}}
         draft: false
