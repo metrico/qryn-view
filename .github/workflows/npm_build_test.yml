@@ -53,4 +53,11 @@ jobs:
       with:
         tag: ${{steps.version.outputs.newTag}}
         name: cloki-view-${{steps.version.outputs.newTag}} Release
-        target: ${{ github.ref }}       
+        target: ${{ github.ref }}
+    - name: Upload release binaries
+      uses: alexellis/upload-assets@0.2.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        asset_paths: '["./build/*"]'
+        ref: ${{steps.version.outputs.newTag}}
