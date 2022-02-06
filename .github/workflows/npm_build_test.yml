@@ -43,7 +43,7 @@ jobs:
       env:
         CI: false
     - run: npm test
-    - uses: papeloto/action-zip@v1
+    - uses: vimtor/action-zip@v1
       if: github.event_name != 'pull_request'
       with:
         files: build/ README.md
