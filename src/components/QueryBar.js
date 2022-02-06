@@ -78,6 +78,3 @@ export const QueryBar = (props) => {
     );
 };
 
-// this should have:
-//! a search query history select
-

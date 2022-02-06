@@ -40,7 +40,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start": "npx webpack-dev-server",
-    "build": "webpack --mode production"
+    "build-old": "webpack --mode production",
+    "build": "webpack --config webpack.config.prod.js --mode=production"
   },
   "eslintConfig": {
     "extends": [
@@ -81,7 +82,7 @@
     "sass": "^1.49.0",
     "sass-loader": "^12.4.0",
     "style-loader": "^3.3.1",
-    "terser-webpack-plugin": "^5.3.0",
+    "terser-webpack-plugin": "^5.3.1",
     "url-loader": "^4.1.1",
     "webpack": "^5.67.0",
     "webpack-cli": "^4.9.2",
