@@ -71,7 +71,7 @@ jobs:
         source-directory: 'build'
         target-directory: 'view'
         target-branch: master
-        destination-github-username: 'metrico'
+        destination-github-username: 'lmangani'
         destination-repository-name: 'cloki'
         user-email: lorenzo.mangani@gmail.com
         commit-message: Upgrade view to ${{steps.version.outputs.newTag}}
