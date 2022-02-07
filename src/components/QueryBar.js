@@ -41,7 +41,7 @@ export const QueryBar = (props) => {
     }
 
     const handleInputKeyDown = (e) => {
-        if(e.code === 'Enter' && e.ctrlKey || e.code === 'Enter'){
+        if(e.code === 'Enter' && e.ctrlKey ){
             onSubmit(e)
         }
     }
