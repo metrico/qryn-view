@@ -32,7 +32,7 @@ class LogView extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            limitLoad: this.props.limitLoad || this.LOAD_LIMIT,
+            limitLoad: this.props.limitLoad  || false,
             limit: props.limit || 100,
             messages: props.messages || [],
             loading: false
@@ -44,6 +44,13 @@ class LogView extends Component {
         return (show ? {
             display: 'flex'
         } : { display: 'none' })
+    }
+
+    onShowTags = (e,value) => {
+        e.preventDefault()
+        value.showLabels = !value.showLabels;
+        const logs = value
+        this.setState({ ...this.state, logs })
     }
 
     getLogColor = (tags) => {
@@ -66,7 +73,7 @@ class LogView extends Component {
                         <div
                             key={key}
                             className={`line ${this.getLogColor(value.tags)}`}
-                            onClick={e => this.onShowTags(value)}
+                            onClick={e => this.onShowTags(e,value)}
 
                         >
                             <span id={value.timestamp} className="timestamp">
@@ -125,11 +132,7 @@ class LogView extends Component {
         }
     };
 
-    onShowTags = (value) => {
-        const logs = value
-        this.setState({ ...this.state, logs })
-        value.showLabels = !value.showLabels;
-    }
+
 
     formatDate = (timestamp) => {
         return moment(parseInt(timestamp)).format("YYYY-MM-DD HH:mm:ss.SSS UTC");
