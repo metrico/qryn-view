@@ -74,4 +74,4 @@ jobs:
         destination-github-username: 'metrico'
         destination-repository-name: 'cloki'
         user-email: lorenzo.mangani@gmail.com
-        commit-message: Autopublish View v${{steps.version.outputs.newTag}}
+        commit-message: Upgrade view to ${{steps.version.outputs.newTag}}
