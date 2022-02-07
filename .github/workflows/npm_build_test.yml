@@ -65,12 +65,12 @@ jobs:
       if: github.event_name != 'pull_request'
       uses: cpina/github-action-push-to-another-repository@main
       env:
-        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        API_TOKEN_GITHUB: ${{ secrets.GITHUB_TOKEN }}
       with:
         source-directory: 'build'
         target-directory: 'view'
         target-branch: master
         destination-github-username: 'metrico'
         destination-repository-name: 'cloki'
-        user-email: github-actions@qxip.net
+        user-email: lorenzo.mangani@gmail.com
         commit-message: Autopublish View v${{steps.version.outputs.newTag}}
