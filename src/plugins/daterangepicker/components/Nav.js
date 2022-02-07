@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import {
-	Paper,
-	Grid,
-	Typography,
-	Divider,
-	IconButton,
-	createTheme,
-	ThemeProvider
-} from "@mui/material";
-import { withStyles, createStyles } from '@mui/styles'
+
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import { createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
+import createStyles from '@mui/styles/createStyles';
+import { withStyles } from '@mui/styles'
 import { format, differenceInCalendarMonths, isValid, isDate } from "date-fns";
 import ArrowRightAlt from "@mui/icons-material/ArrowRightAlt";
 import Month from "./Month";
@@ -148,13 +148,13 @@ const PickerNav = props => {
 									aria-label="close">
 									<CloseIcon />
 								</IconButton>
-			
+
 
 								<div className='status-selectors'>
 									<div className="selector">
 										<span className='label'>From</span>
 										<input
- 											className='date-time-range'
+											className='date-time-range'
 											value={getEditedStartDate()}
 											onChange={handleStartInputChange}
 										/>
@@ -168,18 +168,18 @@ const PickerNav = props => {
 										/>
 									</div>
 									<button
-									className={ classes.applyButton}
-									onClick={e => {
-										onTimeRangeSet(e)
-										props.onClose(e)
-									}}
+										className={classes.applyButton}
+										onClick={e => {
+											onTimeRangeSet(e)
+											props.onClose(e)
+										}}
 
-								>Apply Time Range</button>
+									>Apply Time Range</button>
 								</div>
 
 
 
-							
+
 
 
 							</Grid>

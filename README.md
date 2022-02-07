@@ -35,7 +35,7 @@ cLoki-view is a smart and minimal data explorer developed in React/JS and design
 
 will serve the UI on ``http://localhost:3000``
 
-#### :busstop:  **Important:** change api endpoint:
+#### :busstop:  **Important:** set api endpoint:
 
 - go to ``./src/environment/env.dev.js``
 

@@ -4,20 +4,23 @@ import LogView from "./LogView";
 import { connect } from "react-redux";
 import loadLabels from "../actions/LoadLabels";
 import loadLogs from "../actions/loadLogs";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
 import loadLabelValues from "../actions/loadLabelValues";
 import { StatusBar } from "./StatusBar";
 import { setStartTime, setStopTime } from "../actions"
+import {environment} from '../environment/env.dev'
+import { setApiUrl } from "../actions/setApiUrl";
 
-// here should be the api endpoint selector on a menu
 class LogSearch extends Component {
     constructor(props) {
         super(props);
-        props.dispatch(loadLabels());
         this.state = {
-            ...props
+            ...props,
+            apiUrl: environment.apiUrl
+           
         }
+        
+        props.dispatch(setApiUrl(this.state.apiUrl))
+        props.dispatch(loadLabels(this.state.apiUrl));
     }
     render() {
         return (
@@ -25,7 +28,7 @@ class LogSearch extends Component {
                 <StatusBar
                     dateRangeChange={this.dateRangeChange}
                 />
-                <ToastContainer />
+            
                 <Filter
                     {...this.props}
                     searchLogs={this.searchLogs}
@@ -37,14 +40,12 @@ class LogSearch extends Component {
         );
     }
 
-    searchLogs = (query, time, limit, step) => {
+    searchLogs = (query, time, limit, step, apiUrl) => {
 
         this.props
-            .dispatch(loadLogs(query, time, limit, step))
+            .dispatch(loadLogs(query, time, limit, step,apiUrl))
             ?.catch((error) => {
-                toast.error(
-                    "Failed to Load Logs from query " + query + "\n" + error
-                );
+              console.log(error)
             });
     };
     dateRangeChange = ([start, stop]) => {
@@ -55,9 +56,7 @@ class LogSearch extends Component {
         this.props
             .dispatch(loadLabelValues(label, labelList))
             ?.catch((error) => {
-                toast.error(
-                    "Failed To Load Values from Label " + label + "\n" + error
-                );
+          console.log(error)
             });
     };
 }
