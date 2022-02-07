@@ -61,3 +61,17 @@ jobs:
         draft: false
         prerelease: false
         overwrite: true
+    - name: Push to Mothership
+      if: github.event_name != 'pull_request'
+      uses: cpina/github-action-push-to-another-repository@main
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.GH_PUSH }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        source-directory: 'build'
+        target-directory: 'view'
+        target-branch: master
+        destination-github-username: 'metrico'
+        destination-repository-name: 'cloki'
+        user-email: lorenzo.mangani@gmail.com
+        commit-message: Upgrade view to ${{steps.version.outputs.newTag}}
