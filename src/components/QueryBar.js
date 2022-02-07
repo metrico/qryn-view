@@ -1,30 +1,31 @@
 import React, { useState, useEffect, useCallback } from "react";
-
+import {useSelector, useDispatch} from 'react-redux'
+import { setLabelsBrowserOpen } from "../actions/setLabelsBrowserOpen";
 
 export const QueryBar = (props) => {
     const [query, setQuery] = useState(props.query);
-    const [browserActive, setBrowserActive] = useState(props.browserActive)
     const queryText = useCallback(() => query, [query]);
     const [queryValid, setQueryValid] = useState(false)
+    const dispatch = useDispatch()
+    const labelsBrowserOpen = useSelector(( state ) => state.labelsBrowserOpen)
+
+
 // validate query after submit
     useEffect(() => {
         setQuery(props.query);
         setQueryValid(onQueryValid(props.query))
     }, [props.query]);
-    useEffect(() => {
-        setBrowserActive(props.browserActive)
-        return () => {
-            
-        };
-    }, [props.browserActive]);
 
     const onSubmit = (e) => {
+        dispatch(setLabelsBrowserOpen(false))
         e.preventDefault();
         props.onSubmit(query);
     };
 
-    const valueDisplay = (e) => {
-        props.onValuesDisplay(e);
+    const onValueDisplay = (e) => {
+        e.preventDefault()
+        const isOpen = labelsBrowserOpen ? false : true;
+        dispatch(setLabelsBrowserOpen(isOpen))
     };
     
     const handleChange = (e) => {
@@ -34,7 +35,7 @@ export const QueryBar = (props) => {
     };
 
     const onBrowserActive = () => {
-        return !browserActive ? ({
+        return !labelsBrowserOpen ? ({
             'borderColor':'#11abab'
         }) : ({})
     }
@@ -53,7 +54,7 @@ export const QueryBar = (props) => {
         <div className="query-bar-container">
             <span 
             style={onBrowserActive()}
-            className={"show-log-browser"} onClick={(e) => valueDisplay(e)}>
+            className={"show-log-browser"} onClick={onValueDisplay}>
                 log browser
             </span>
 
@@ -69,7 +70,7 @@ export const QueryBar = (props) => {
             <button
                disabled={!queryValid}
                 type="submit"
-                onClick={(e) => onSubmit(e)}
+                onClick={onSubmit}
                 className="show-logs"
             >
                 Show Logs

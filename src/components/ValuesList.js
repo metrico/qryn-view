@@ -1,54 +1,68 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Legend } from "./Legend";
+import { useSelector, useDispatch } from "react-redux";
+import loadLabels from "../actions/LoadLabels";
+import RefreshIcon from '@mui/icons-material/Refresh';
 
+
+export const LabelsFetchError = () => {
+    const labelError = useSelector( state => state.apiErrors)
+    console.log(labelError)
+    return (
+        <>{
+ labelError.length > 0 && (
+                <div className="label-error">
+              <span> {labelError}</span> 
+             </div>
+ )
+        }
+ 
+        </>
+          
+        
+      
+    )
+}
 
 export const ValuesList = (props) => {
-    // dispatch event from click
-    // dispatch => value selected
     const [labelList, setLabelList] = useState(props.labelList);
     const [filteredValue, setFilteredValue] = useState("");
-
     const [labelsSelected, setLabelsSelected] = useState([]);
     const [valueHeader, setValueHeader] = useState(props.valueHeader);
-    const [labelValue, setLabelValue] = useState(props.labelValue);
     const [label, setLabel] = useState("");
-    const [hidden, setHidden] = useState("props.hidden");
-/**
- * TODO: FILTER VALUES INSIDE LABELS
- */
+    const dispatch = useDispatch()
+    const apiUrlValue = useSelector((store) => store.apiUrl)
+    const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen)
+
+    /**
+     * TODO: FILTER VALUES INSIDE LABELS
+     */
     const filterValues = useCallback(
-        () => 
+        () =>
 
             labelList.filter((label) => {
                 return label?.name
                     ?.toLowerCase()
                     .includes(filteredValue.toLowerCase());
             }
-        
-          ),
+
+            ),
         [JSON.stringify(labelList), filteredValue]
     );
 
     useEffect(() => {
         setLabelList(props.labelList);
-        return () => {};
+        return () => { };
     }, [props.labelList]);
 
-    useEffect(() => {
-        setHidden(props.hidden);
 
-        return () => {};
-    }, [props.hidden]);
-
-    useEffect(() => {
-        setLabelValue(props.labelValue);
-        return () => {};
-    }, [props.labelValue]);
-
+    const handleRefresh = (e) => {
+        e.preventDefault()
+        dispatch(loadLabels(apiUrlValue))
+    }
     const onValueClick = (e, value) => {
         value.selected = !value.selected;
         setLabel(value);
-
         const selected = filterValues().filter((f) => f.selected);
         setLabelsSelected(selected);
         e.preventDefault();
@@ -63,33 +77,46 @@ export const ValuesList = (props) => {
     const styleValue = (value) => {
         if (value.selected) {
             return {
-                'borderColor':'#11abab',
+                'borderColor': '#11abab',
                 color: "#11abab",
             };
         } else return {};
     };
-    return (
-        <div className="labels-container" hidden={hidden}>
+    return (labelsBrowserOpen &&
+        <div className="labels-container">
             <div className="valuesList">
                 <div className="valuelist-title">
-                    <Legend 
-                    title="1. Select labels to search in" 
-                    text="Which labels would you like to consider for your search?" />
-            <div className="valuelist-content">
-                    {labelList&&
-                        labelList.map((value, key) => (
-                            <small
-                                title={value.name}
-                                key={key}
-                                id={value.name}
-                                style={styleValue(value)}
-                                onClick={(e) => onValueClick(e, value)}
-                            >
-                                {value.name} 
-                            </small>
-                        ))}
-                </div> 
-                <div className="valuelist-filter">
+                    <Legend
+                        title="Select labels to search in"
+                        text="Which labels would you like to consider for your search?" />
+                        <LabelsFetchError />
+                    <div className="valuelist-content">
+
+                        <button
+                            className="refresh-button"
+                            onClick={handleRefresh}
+                            title={'Refresh Labels List'}
+                        >
+                            <RefreshIcon
+                                fontSize="small"
+                            />
+                        </button>
+                        {labelList &&
+                            labelList.map((value, key) => (
+                                <small
+                                    title={value.name}
+                                    key={key}
+                                    id={value.name}
+                                    style={styleValue(value)}
+                                    onClick={(e) => onValueClick(e, value)}
+                                >
+                                    {value.name}
+                                </small>
+                            ))}
+
+                    </div>
+
+                    {/* <div className="valuelist-filter">
                 <div className="valuelist-filter-title">
                 <Legend 
                     title=" 2. Find values for the selected labels" 
@@ -104,20 +131,21 @@ export const ValuesList = (props) => {
                         autoComplete="off"
                         onChange={(e) => setFilteredValue(e.target.value)}
                     />
+                </div> */}
+
                 </div>
-                </div>
-             
-                { labelsSelected && (
+
+                {labelsSelected && (
                     <div className="values-container">
                         <div className="values-container-column">
                             {labelsSelected?.map((labelSelected, key) => (
                                 <div className="values-column" key={key}>
-                                    <div className="values-column-title"> 
-                                    <span>
-                                        {labelSelected?.name} ({labelSelected?.values?.length})
+                                    <div className="values-column-title">
+                                        <span>
+                                            {labelSelected?.name} ({labelSelected?.values?.length})
                                         </span>
                                         <span className="close-column"
-                                              onClick={(e) =>
+                                            onClick={(e) =>
                                                 onValueClick(e, labelSelected)
                                             }
                                         >close</span>
@@ -129,8 +157,8 @@ export const ValuesList = (props) => {
                                                     <small
                                                         key={key}
                                                         className="label-value"
-                                                        style={styleValue( value )}
-                                                        onClick={(e) => onLabelValueClick( e,value )}
+                                                        style={styleValue(value)}
+                                                        onClick={(e) => onLabelValueClick(e, value)}
                                                     >
                                                         {value.name}
                                                     </small>

@@ -20,5 +20,8 @@ export default () => {
         limit: 100,
         step: 100,
         rangeOpen: false,
+        labelsBrowserOpen: true,
+        apiErrors:'',
+        apiUrl: '',
     }
 }

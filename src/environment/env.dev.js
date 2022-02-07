@@ -1,8 +1,9 @@
 
+const defaultEnv = process.env.API_URL || window.location.protocol + '//' + window.location.host
 export const environment = {
     production: false,
     environment: 'dev',
-    apiUrl:process.env.API_URL || 'http://localhost:3100'
+    apiUrl: defaultEnv ||  'http://localhost:3100'
 
   };
   
