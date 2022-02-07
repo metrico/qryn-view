@@ -42,11 +42,22 @@ jobs:
     - run: npm run build --if-present
       env:
         CI: false
-#    - run: npm test
-    - name: Release
-      uses: fnkr/github-action-ghr@v1.3
+    - run: npm test
+    - uses: vimtor/action-zip@v1
       if: github.event_name != 'pull_request'
+      with:
+        files: build/ README.md
+        dest: dist.zip
+    - name: Upload release binaries
+      if: github.event_name != 'pull_request'
+      uses: boxpositron/upload-multiple-releases@1.0.7
       env:
-        GHR_COMPRESS: zip
-        GHR_PATH: build/
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_config: |
+            dist.zip
+        tag_name: ${{steps.version.outputs.newTag}}
+        release_name: cloki-view-${{steps.version.outputs.newTag}}
+        draft: false
+        prerelease: false
+        overwrite: true
