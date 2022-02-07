@@ -1,4 +1,3 @@
-//* builds query with labels and values
 
 export function queryBuilder(labels) {
     const selectedLabels = [];

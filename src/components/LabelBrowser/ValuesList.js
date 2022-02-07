@@ -1,26 +1,26 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Legend } from "./Legend";
 import { useSelector, useDispatch } from "react-redux";
-import loadLabels from "../actions/LoadLabels";
 import RefreshIcon from '@mui/icons-material/Refresh';
+import loadLabels from "../../actions/LoadLabels";
 
 
 export const LabelsFetchError = () => {
-    const labelError = useSelector( state => state.apiErrors)
+    const labelError = useSelector(state => state.apiErrors)
     console.log(labelError)
     return (
         <>{
- labelError.length > 0 && (
+            labelError.length > 0 && (
                 <div className="label-error">
-              <span> {labelError}</span> 
-             </div>
- )
+                    <span> {labelError}</span>
+                </div>
+            )
         }
- 
+
         </>
-          
-        
-      
+
+
+
     )
 }
 
@@ -28,7 +28,6 @@ export const ValuesList = (props) => {
     const [labelList, setLabelList] = useState(props.labelList);
     const [filteredValue, setFilteredValue] = useState("");
     const [labelsSelected, setLabelsSelected] = useState([]);
-    const [valueHeader, setValueHeader] = useState(props.valueHeader);
     const [label, setLabel] = useState("");
     const dispatch = useDispatch()
     const apiUrlValue = useSelector((store) => store.apiUrl)
@@ -37,18 +36,19 @@ export const ValuesList = (props) => {
     /**
      * TODO: FILTER VALUES INSIDE LABELS
      */
-    const filterValues = useCallback(
-        () =>
+    // const filterValues = useCallback(
+    //     () =>
 
-            labelList.filter((label) => {
-                return label?.name
-                    ?.toLowerCase()
-                    .includes(filteredValue.toLowerCase());
-            }
+    //         labelList.filter((label) => {
+    //             console.log(label,filteredValue,"filtered")
+    //             return label?.name
+    //                 ?.toLowerCase()
+    //                 .includes(filteredValue.toLowerCase());
+    //         }
 
-            ),
-        [JSON.stringify(labelList), filteredValue]
-    );
+    //         ),
+    //     [JSON.stringify(labelList), filteredValue]
+    // );
 
     useEffect(() => {
         setLabelList(props.labelList);
@@ -61,11 +61,12 @@ export const ValuesList = (props) => {
         dispatch(loadLabels(apiUrlValue))
     }
     const onValueClick = (e, value) => {
+        e.preventDefault();
         value.selected = !value.selected;
         setLabel(value);
-        const selected = filterValues().filter((f) => f.selected);
+        const selected = labelList.filter((f) => f.selected);
         setLabelsSelected(selected);
-        e.preventDefault();
+       
         //   setFilteredPlaceholder(value);
         props.onValueChange(value);
     };
@@ -89,7 +90,7 @@ export const ValuesList = (props) => {
                     <Legend
                         title="Select labels to search in"
                         text="Which labels would you like to consider for your search?" />
-                        <LabelsFetchError />
+                    <LabelsFetchError />
                     <div className="valuelist-content">
 
                         <button
@@ -138,7 +139,7 @@ export const ValuesList = (props) => {
                 {labelsSelected && (
                     <div className="values-container">
                         <div className="values-container-column">
-                            {labelsSelected?.map((labelSelected, key) => (
+                            {labelsSelected.map((labelSelected, key) => (
                                 <div className="values-column" key={key}>
                                     <div className="values-column-title">
                                         <span>

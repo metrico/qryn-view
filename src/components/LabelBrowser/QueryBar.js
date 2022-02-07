@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {useSelector, useDispatch} from 'react-redux'
-import { setLabelsBrowserOpen } from "../actions/setLabelsBrowserOpen";
+import { setLabelsBrowserOpen } from "../../actions/setLabelsBrowserOpen";
 
 export const QueryBar = (props) => {
     const [query, setQuery] = useState(props.query);
-    const queryText = useCallback(() => query, [query]);
     const [queryValid, setQueryValid] = useState(false)
     const dispatch = useDispatch()
     const labelsBrowserOpen = useSelector(( state ) => state.labelsBrowserOpen)
