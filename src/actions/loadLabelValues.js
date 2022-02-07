@@ -3,14 +3,14 @@ import { environment } from "../environment/env.dev";
 import setLabelValues from "./setLabelValues";
 import setLoading from "./setLoading";
 
-export default function loadLaebelValues(label, labelList) {
+export default function loadLaebelValues(label, labelList, apiUrl) {
 
     if (label?.length <= 0 && label.lsList.length <= 0) {
         console.log('Labels Error')
         return;
     };
 
-    const url = environment.apiUrl;
+    const url = apiUrl;
 
     const origin = window.location.origin
 

@@ -28,7 +28,7 @@ class LogSearch extends Component {
                 <StatusBar
                     dateRangeChange={this.dateRangeChange}
                 />
-            
+   
                 <Filter
                     {...this.props}
                     searchLogs={this.searchLogs}
@@ -54,7 +54,7 @@ class LogSearch extends Component {
     }
     searchLabelValues = (label, labelList) => {
         this.props
-            .dispatch(loadLabelValues(label, labelList))
+            .dispatch(loadLabelValues(label, labelList,this.props.apiUrl))
             ?.catch((error) => {
           console.log(error)
             });
