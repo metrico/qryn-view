@@ -7,7 +7,7 @@ import loadLabels from "../../actions/LoadLabels";
 
 export const LabelsFetchError = () => {
     const labelError = useSelector(state => state.apiErrors)
-    console.log(labelError)
+  
     return (
         <>{
             labelError.length > 0 && (

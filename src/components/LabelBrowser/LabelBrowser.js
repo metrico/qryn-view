@@ -33,7 +33,6 @@ export default class LabelBrowser extends Component {
     }
  
     onLabelChange = (value) => {
-      console.log(value)
         const query = queryBuilder(this.props.labels);
         this.setState({ ...this.state, query });
         this.props.searchLabelValues(value, this.props.labels);
@@ -63,6 +62,7 @@ export default class LabelBrowser extends Component {
         } else {
 
             console.log("Please make a log query", query);
+            
         }
     };
 }

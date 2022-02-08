@@ -26,7 +26,7 @@ export default function loadLabels(apiUrl) {
         
         axios.get(`${url}/loki/api/v1/labels`, options)
             ?.then((response) => {
-                console.log(response, 'RESPONSE')
+
                 if(response?.data?.data === []) console.log('no labels found')
                 if (response?.data?.data?.length > 0) {
 
@@ -47,19 +47,19 @@ export default function loadLabels(apiUrl) {
             }).catch(error => {
                 
                 dispatch(setLoading(false))
-                console.log(JSON.stringify(error))
+            
                 if( ((error.stack).includes('Invalid URL'))) {
                  
                     dispatch(setApiError('Invalid URL, Please adjust your API URL'));
-                    
+
                 }
                 else if(error?.response?.status === 404) {
                     dispatch(setApiError('API not found, please adjust API URL'));
-                    console.log(`${error.config.url} not found`)
+                 
 
                 
                 } else {
-                    console.log('Error fetching API: ', error)
+                 
                     dispatch(setApiError('Error fetching labels from API'))
                 
                 }
