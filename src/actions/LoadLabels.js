@@ -2,8 +2,9 @@ import axios from "axios";
 import setLabels from "./setLabels";
 import setLoading from "./setLoading";
 import { setApiError } from "./setApiError";
+
 export default function loadLabels(apiUrl) {
-    
+
     const origin = window.location.origin;
     const url = apiUrl
     const headers = {
@@ -25,6 +26,7 @@ export default function loadLabels(apiUrl) {
         
         axios.get(`${url}/loki/api/v1/labels`, options)
             ?.then((response) => {
+                console.log(response, 'RESPONSE')
                 if(response?.data?.data === []) console.log('no labels found')
                 if (response?.data?.data?.length > 0) {
 
@@ -43,25 +45,25 @@ export default function loadLabels(apiUrl) {
                 }
 
             }).catch(error => {
+                
                 dispatch(setLoading(false))
-                if(error.response) {
-                    console.error(error.response.data)
-                    console.log(error.response.status)
-                    console.log(error.response.header)
-                    dispatch(setApiError('Error fetching labels from API'))
-                    dispatch(setLoading(false))
-                } else if(error.request) {
-                    console.error(error.request)
-                    dispatch(setApiError('Error fetching labels from API'))
-                    dispatch(setLoading(false))
-                } else {
-                    console.error('Error fetching API: ', error)
-                    dispatch(setApiError('Error fetching labels from API'))
-                    dispatch(setLoading(false))
+                console.log(JSON.stringify(error))
+                if( ((error.stack).includes('Invalid URL'))) {
+                 
+                    dispatch(setApiError('Invalid URL, Please adjust your API URL'));
+                    
                 }
-         
-                dispatch(setApiError('Error fetching labels from API'))
-                dispatch(setLoading(false))
+                else if(error?.response?.status === 404) {
+                    dispatch(setApiError('API not found, please adjust API URL'));
+                    console.log(`${error.config.url} not found`)
+
+                
+                } else {
+                    console.log('Error fetching API: ', error)
+                    dispatch(setApiError('Error fetching labels from API'))
+                
+                }
+             
             })
     }
 }
