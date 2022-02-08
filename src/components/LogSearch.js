@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Filter from "./Filter";
 import LogView from "./LogView";
 import { connect } from "react-redux";
 import loadLabels from "../actions/LoadLabels";
@@ -9,6 +8,7 @@ import { StatusBar } from "./StatusBar";
 import { setStartTime, setStopTime } from "../actions"
 import {environment} from '../environment/env.dev'
 import { setApiUrl } from "../actions/setApiUrl";
+import LabelBrowser from "./LabelBrowser/LabelBrowser";
 
 class LogSearch extends Component {
     constructor(props) {
@@ -22,14 +22,15 @@ class LogSearch extends Component {
         props.dispatch(setApiUrl(this.state.apiUrl))
         props.dispatch(loadLabels(this.state.apiUrl));
     }
+  
     render() {
         return (
             <div className="log-search">
                 <StatusBar
                     dateRangeChange={this.dateRangeChange}
                 />
-            
-                <Filter
+   
+                <LabelBrowser
                     {...this.props}
                     searchLogs={this.searchLogs}
                     searchLabelValues={this.searchLabelValues}
@@ -54,7 +55,7 @@ class LogSearch extends Component {
     }
     searchLabelValues = (label, labelList) => {
         this.props
-            .dispatch(loadLabelValues(label, labelList))
+            .dispatch(loadLabelValues(label, labelList,this.props.apiUrl))
             ?.catch((error) => {
           console.log(error)
             });

@@ -3,7 +3,7 @@ import setLabels from "./setLabels";
 import setLoading from "./setLoading";
 import { setApiError } from "./setApiError";
 export default function loadLabels(apiUrl) {
-
+    
     const origin = window.location.origin;
     const url = apiUrl
     const headers = {
@@ -28,7 +28,7 @@ export default function loadLabels(apiUrl) {
                 if(response?.data?.data === []) console.log('no labels found')
                 if (response?.data?.data?.length > 0) {
 
-                    const labels = response?.data?.data.map((label) => ({
+                    const labels = response?.data?.data.sort().map((label) => ({
                         name: label,
                         selected: false,
                         loading: false,

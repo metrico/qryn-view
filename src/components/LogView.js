@@ -32,7 +32,7 @@ class LogView extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            limitLoad: this.props.limitLoad || this.LOAD_LIMIT,
+            limitLoad: this.props.limitLoad || false,
             limit: props.limit || 100,
             messages: props.messages || [],
             loading: false
@@ -44,6 +44,13 @@ class LogView extends Component {
         return (show ? {
             display: 'flex'
         } : { display: 'none' })
+    }
+
+    onShowTags = (e, value) => {
+        e.preventDefault()
+        value.showLabels = !value.showLabels;
+        const logs = value
+        this.setState({ ...this.state, logs })
     }
 
     getLogColor = (tags) => {
@@ -58,22 +65,16 @@ class LogView extends Component {
         return (
             <div className="log-view">
                 <div className={`logs-box`}>
-
-
-
-
                     {this.getLogs() && this.getLogs().map((value, key) => (
                         <div
                             key={key}
                             className={`line ${this.getLogColor(value.tags)}`}
-                            onClick={e => this.onShowTags(value)}
-
+                            onClick={e => this.onShowTags(e, value)}
                         >
                             <span id={value.timestamp} className="timestamp">
                                 {this.formatDate(value.timestamp)}
                             </span>
                             <span className="log-line">{value.text}</span>
-
 
                             {value.tags && (
                                 <div className="value-tags-container"
@@ -82,23 +83,10 @@ class LogView extends Component {
                                     <ValueTags
                                         tags={value.tags}
                                     />
-
-
                                 </div>
                             )}
                         </div>
                     ))}
-
-                    {this.getLogs().length > 0 && this.state.limitLoad && this.state.messages > this.state.limit && (
-                        <Button
-                            className="load-all"
-                            onClick={() =>
-                                this.setState({ ...this.state, limitLoad: false })
-                            }
-                        >
-                            Load all
-                        </Button>
-                    )}
                     {this.props.loading && (
                         <CircularProgress
                             className="progress"
@@ -111,25 +99,10 @@ class LogView extends Component {
     }
 
     getLogs = () => {
-       
-        if (this.state.limitLoad) {
-           
-            return this.prop?.messages?.sort((a,b) => (a.timestamp < b.timestamp) ? 1 : -1)
-                ?.slice(
-                    this.props.messages.length - this.state.limit,
-                    this.props.messages.length
-                )
-                .reverse();
-        } else {
-            return this.props.messages?.sort((a,b) => (a.timestamp < b.timestamp) ? 1 : -1);
-        }
-    };
 
-    onShowTags = (value) => {
-        const logs = value
-        this.setState({ ...this.state, logs })
-        value.showLabels = !value.showLabels;
-    }
+            return this.props.messages?.sort((a, b) => (a.timestamp < b.timestamp) ? 1 : -1);
+        
+    };
 
     formatDate = (timestamp) => {
         return moment(parseInt(timestamp)).format("YYYY-MM-DD HH:mm:ss.SSS UTC");
