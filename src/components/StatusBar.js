@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Logo from "../assets/cloki-logo.png";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -9,6 +9,8 @@ import isDate from "date-fns/isDate";
 import { setApiUrl } from "../actions/setApiUrl";
 import LinkIcon from '@mui/icons-material/Link';
 import loadLabels from "../actions/LoadLabels";
+import { setApiError } from "../actions/setApiError";
+
 export const StatusBar = () => {
 
     return (
@@ -49,6 +51,15 @@ export function ApiSelector() {
     const [editedUrl, setEditedUrl] = useState(apiUrl)
     const [apiSelectorOpen, setApiSelectorOpen] = useState(false)
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        if(apiError){
+            dispatch(setApiError('API URL Error, please adjust API URL'))
+        }
+        
+    }, []);
+   
+
     const handleApiUrlOpen = (e) => {
         e.preventDefault()
         apiSelectorOpen ? setApiSelectorOpen(false) : setApiSelectorOpen(true)

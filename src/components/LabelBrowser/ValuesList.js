@@ -6,11 +6,11 @@ import loadLabels from "../../actions/LoadLabels";
 
 
 export const LabelsFetchError = () => {
-    const labelError = useSelector(state => state.apiErrors)
+    const labelError = useSelector((store) => store.apiErrors)
   
     return (
         <>{
-            labelError.length > 0 && (
+            labelError !=='' && (
                 <div className="label-error">
                     <span> {labelError}</span>
                 </div>
@@ -32,6 +32,7 @@ export const ValuesList = (props) => {
     const dispatch = useDispatch()
     const apiUrlValue = useSelector((store) => store.apiUrl)
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen)
+    const apiError = useSelector((store) => store.apiErrors)
 
     /**
      * TODO: FILTER VALUES INSIDE LABELS
@@ -102,7 +103,7 @@ export const ValuesList = (props) => {
                                 fontSize="small"
                             />
                         </button>
-                        {labelList &&
+                        {labelList && apiError === '' &&
                             labelList.map((value, key) => (
                                 <small
                                     title={value.name}

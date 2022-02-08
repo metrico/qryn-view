@@ -20,7 +20,8 @@ class LogSearch extends Component {
         }
         
         props.dispatch(setApiUrl(this.state.apiUrl))
-        props.dispatch(loadLabels(this.state.apiUrl));
+
+        props.dispatch(loadLabels(this.state.apiUrl))
     }
   
     render() {
