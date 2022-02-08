@@ -75,3 +75,8 @@ jobs:
         destination-repository-name: 'cloki'
         user-email: lorenzo.mangani@gmail.com
         commit-message: Upgrade view to ${{steps.version.outputs.newTag}}
+    - name: Deploy to gh-pages 🚀
+      uses: JamesIves/github-pages-deploy-action@v4.2.3
+      with:
+        branch: gh-pages
+        folder: build
