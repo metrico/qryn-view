@@ -87,17 +87,6 @@ class LogView extends Component {
                             )}
                         </div>
                     ))}
-
-                    {this.getLogs().length > 0 && this.state.limitLoad && this.state.messages > this.state.limit && (
-                        <Button
-                            className="load-all"
-                            onClick={() =>
-                                this.setState({ ...this.state, limitLoad: false })
-                            }
-                        >
-                            Load all
-                        </Button>
-                    )}
                     {this.props.loading && (
                         <CircularProgress
                             className="progress"
@@ -111,17 +100,8 @@ class LogView extends Component {
 
     getLogs = () => {
 
-        if (this.state.limitLoad) {
-
-            return this.props?.messages?.sort((a, b) => (a.timestamp < b.timestamp) ? 1 : -1)
-                ?.slice(
-                    this.props.messages.length - this.state.limit,
-                    this.props.messages.length
-                )
-                .reverse();
-        } else {
             return this.props.messages?.sort((a, b) => (a.timestamp < b.timestamp) ? 1 : -1);
-        }
+        
     };
 
     formatDate = (timestamp) => {
