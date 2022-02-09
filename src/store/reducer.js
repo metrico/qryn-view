@@ -17,7 +17,9 @@ export default (state, action) => {
         case "SET_RANGE_OPEN":
                 return { ...state, rangeOpen: action.rangeOpen};
         case "SET_BROWSER_OPEN":
-            return {...state, labelsBrowserOpen: action.labelsBrowserOpen}
+            return {...state, labelsBrowserOpen: action.labelsBrowserOpen};
+        case "SET_QUERY" :
+            return {...state, query: action.query};
         case "SET_QUERY_STEP":
                 return { ...state, step: action.step};
         case "SET_API_URL":

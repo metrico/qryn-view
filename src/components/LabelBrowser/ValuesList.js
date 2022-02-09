@@ -3,7 +3,9 @@ import { Legend } from "./Legend";
 import { useSelector, useDispatch } from "react-redux";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import loadLabels from "../../actions/LoadLabels";
-
+import { queryBuilder } from "./helpers/querybuilder";
+import { setQuery }  from "../../actions"
+import loadLabelValues from "../../actions/loadLabelValues"
 
 export const LabelsFetchError = () => {
     const labelError = useSelector((store) => store.apiErrors)
@@ -25,12 +27,14 @@ export const LabelsFetchError = () => {
 }
 
 export const ValuesList = (props) => {
-    const [labelList, setLabelList] = useState(props.labelList);
-    const [filteredValue, setFilteredValue] = useState("");
+    const labels = useSelector( state => state.labels)
+   // const labelValues = useSelector(state => state.labelValues)
+    const [labelList, setLabelList] = useState(labels);
+  //  const [filteredValue, setFilteredValue] = useState("");
     const [labelsSelected, setLabelsSelected] = useState([]);
     const [label, setLabel] = useState("");
     const dispatch = useDispatch()
-    const apiUrlValue = useSelector((store) => store.apiUrl)
+    const apiUrl = useSelector((store) => store.apiUrl)
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen)
     const apiError = useSelector((store) => store.apiErrors)
 
@@ -41,7 +45,6 @@ export const ValuesList = (props) => {
     //     () =>
 
     //         labelList.filter((label) => {
-    //             console.log(label,filteredValue,"filtered")
     //             return label?.name
     //                 ?.toLowerCase()
     //                 .includes(filteredValue.toLowerCase());
@@ -51,29 +54,65 @@ export const ValuesList = (props) => {
     //     [JSON.stringify(labelList), filteredValue]
     // );
 
+
     useEffect(() => {
-        setLabelList(props.labelList);
-        return () => { };
-    }, [props.labelList]);
+        setLabelList(labels); // LABELS
+      
+    }, [labels]);
 
-
+    useEffect(() => {
+        
+    }, [labelsSelected]);
     const handleRefresh = (e) => {
         e.preventDefault()
-        dispatch(loadLabels(apiUrlValue))
+        dispatch(loadLabels(apiUrl))
     }
-    const onValueClick = (e, value) => {
+
+
+
+// onvaluechange
+const onLabelChange = (value) => {
+    const query = queryBuilder(labelList);
+    dispatch(setQuery(query))
+    //this.setState({ ...this.state, query });
+   dispatch(loadLabelValues(value, labelList,apiUrl)) ;
+   // loads label values into labelList
+};
+
+
+    const onLabelOpen = (e, value) => {
         e.preventDefault();
         value.selected = !value.selected;
-        setLabel(value);
+      //  setLabel(value);
         const selected = labelList.filter((f) => f.selected);
         setLabelsSelected(selected);
        
-        //   setFilteredPlaceholder(value);
-        props.onValueChange(value);
+    //   setFilteredPlaceholder(value);
+
+    const query = queryBuilder(labelList);
+    dispatch(setQuery(query))
+
+    //this.setState({ ...this.state, query });
+
+   dispatch(loadLabelValues(value, labelList,apiUrl)) ;
+   // loads label values into labelList
+
     };
+
+
     const onLabelValueClick = (e, value) => {
+        e.preventDefault()
         value.selected = !value.selected;
-        props.onLabelValueChange(value);
+        onLabelValueChange();
+    };
+
+    const selectedList = () => {
+        return labelsSelected.length > 0
+    }
+    const onLabelValueChange = () => {
+
+        const query = queryBuilder(labels);
+       dispatch(setQuery(query))
     };
 
     const styleValue = (value) => {
@@ -103,14 +142,14 @@ export const ValuesList = (props) => {
                                 fontSize="small"
                             />
                         </button>
-                        {labelList && apiError === '' &&
+                        {labelList  &&
                             labelList.map((value, key) => (
                                 <small
                                     title={value.name}
                                     key={key}
                                     id={value.name}
                                     style={styleValue(value)}
-                                    onClick={(e) => onValueClick(e, value)}
+                                    onClick={(e) => onLabelOpen(e, value)}
                                 >
                                     {value.name}
                                 </small>
@@ -137,24 +176,23 @@ export const ValuesList = (props) => {
 
                 </div>
 
-                {labelsSelected && (
+                {selectedList() && (
                     <div className="values-container">
                         <div className="values-container-column">
                             {labelsSelected.map((labelSelected, key) => (
                                 <div className="values-column" key={key}>
                                     <div className="values-column-title">
                                         <span>
-                                            {labelSelected?.name} ({labelSelected?.values?.length})
+                                            {labelSelected.name} ({labelSelected.values.length})
                                         </span>
                                         <span className="close-column"
                                             onClick={(e) =>
-                                                onValueClick(e, labelSelected)
+                                                onLabelOpen(e, labelSelected)
                                             }
                                         >close</span>
                                     </div>
                                     <div className="valuelist-content column">
-                                        {labelSelected.values.length &&
-                                            labelSelected.values.map(
+                                        { labelSelected?.values?.map(
                                                 (value, key) => (
                                                     <small
                                                         key={key}

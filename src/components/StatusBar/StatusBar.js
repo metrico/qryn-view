@@ -1,17 +1,24 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Logo from "../assets/cloki-logo.png";
+import Logo from "./assets/cloki-logo.png";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { setStopTime, setStartTime, setQueryLimit, setQueryStep } from "../actions";
-import { DateRangePicker } from "../plugins/daterangepicker";
+import { setStopTime, setStartTime, setQueryLimit, setQueryStep } from "../../actions";
+import { DateRangePicker } from "../../plugins/daterangepicker";
 import isDate from "date-fns/isDate";
-import { setApiUrl } from "../actions/setApiUrl";
+import { setApiUrl } from "../../actions/setApiUrl";
 import LinkIcon from '@mui/icons-material/Link';
-import loadLabels from "../actions/LoadLabels";
-import { setApiError } from "../actions/setApiError";
+import loadLabels from "../../actions/LoadLabels";
+import { setApiError } from "../../actions/setApiError";
+import { updateStateFromQueryParams } from "./helpers/updateStateFromQueryParams";
 
-export const StatusBar = () => {
+
+export default function StatusBar() {
+
+// update state from query params
+// auto submit if &submit=true
+
+    updateStateFromQueryParams()
 
     return (
         <div className="status-bar">
@@ -53,12 +60,18 @@ export function ApiSelector() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if(apiError){
+        dispatch(loadLabels(editedUrl))
+
+    }, [apiUrl]);
+
+
+    useEffect(() => {
+        if (apiError) {
             dispatch(setApiError('API URL Error, please adjust API URL'))
         }
-        
+
     }, []);
-   
+
 
     const handleApiUrlOpen = (e) => {
         e.preventDefault()
@@ -70,7 +83,9 @@ export function ApiSelector() {
         setEditedUrl(e.target.value)
     }
     const onUrlSubmit = (e) => {
+
         dispatch(setApiUrl(editedUrl))
+
         dispatch(loadLabels(editedUrl))
     }
 

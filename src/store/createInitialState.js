@@ -1,4 +1,6 @@
 import * as moment from 'moment';
+import { environment } from '../environment/env.dev';
+
 export default () => {
     return {
         labels: [],
@@ -7,9 +9,7 @@ export default () => {
         timeRange:[],
         query:'',
         queryValue:'',
-        logs: {
-            messages: [],
-        },
+        logs: [],
         loading: false,
         start:new Date(moment(Date.now()).subtract(5,"minutes").format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
         stop:new Date(moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
@@ -20,6 +20,6 @@ export default () => {
         rangeOpen: false,
         labelsBrowserOpen: true,
         apiErrors:'',
-        apiUrl: '',
+        apiUrl: environment.apiUrl,
     }
 }

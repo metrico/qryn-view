@@ -3,6 +3,7 @@ import { environment } from "../environment/env.dev";
 import setLogs from "./setLogs";
 import setLoading from "./setLoading";
 
+
 // *query : LogQl Query
 // *limit : Limit of returned lines
 // *start : The start time for the query as a nanosecond Unix epoch. Defaults to one hour ago
@@ -10,12 +11,11 @@ import setLoading from "./setLoading";
 // *step : Resolution step width in either a duration [1s, 5s, 5m etc] or number of seconds
 // *direction : Determines sort order of logs. Either forward or backward. Default is backward
 
-// time: [start,end]
+// *time: [start,end]
 
 export default function loadLogs(label, time, limit, step, apiUrl) {
     // const step = 120
     // const direction = 'backward'
-
     const origin = window.location.origin;
     const url = apiUrl;
     const [startTs, stopTs] = time;
@@ -45,7 +45,7 @@ export default function loadLogs(label, time, limit, step, apiUrl) {
             : ts;
     const mapStreams = (streams, messages, type) => {
         streams.forEach((stream) => {
-            stream.values.forEach((log) => {
+            stream.values.forEach((log,i) => {
                 let [ts, text] = log;
                 messages.push({
                     type,
@@ -58,6 +58,7 @@ export default function loadLogs(label, time, limit, step, apiUrl) {
                             : {},
                     showTs: true,
                     showLabels: false,
+                    id:i+ts
                 });
             });
         });
@@ -78,9 +79,9 @@ export default function loadLogs(label, time, limit, step, apiUrl) {
 
                     mapStreams(result, messages, type);
 
-                    const resp = { messages };
+                 
 
-                    dispatch(setLogs(resp));
+                    dispatch(setLogs(messages));
                     dispatch(setLoading(false));
                 }
             })

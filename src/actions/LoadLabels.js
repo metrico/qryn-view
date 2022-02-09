@@ -13,6 +13,7 @@ export default function loadLabels(apiUrl) {
         "Access-Control-Allow-Origin": origin,
         "Access-Control-Allow-Headers": ["Access-Control-Request-Headers", "Content-Type"],
         "Content-Type": "application/json",
+
     }
 
     const options = {
@@ -25,8 +26,9 @@ export default function loadLabels(apiUrl) {
 
         dispatch(setLoading(true))
       
-        axios.get(`${url}/loki/api/v1/labels`, options)
+        axios.get(`${url.trim()}/loki/api/v1/labels`, options)
             ?.then((response) => {
+           
                 dispatch(setLoading(false))
                 if(response?.data?.data === []) console.log('no labels found')
                 if (response?.data?.data?.length > 0) {
@@ -39,14 +41,14 @@ export default function loadLabels(apiUrl) {
                         hidden: false,
                         facets: 0,
                     }));
-
+                   
                     dispatch(setLabels(labels || []));
                  
                     dispatch(setApiError(''))
                 }
 
             }).catch(error => {
-         
+                console.log(error)
                 dispatch(setLoading(false))
                 const {message,status} = errorHandler(url, error)
                 dispatch(setApiError(message || status + 'Error'))
