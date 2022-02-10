@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-export default () => {
+const initialState = () => {
     return {
         labels: [],
         labelValues:[],
@@ -13,6 +13,7 @@ export default () => {
         loading: false,
         start:new Date(moment(Date.now()).subtract(5,"minutes").format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
         stop:new Date(moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
+        label: '',
         messages:[],
         limitLoad:false,
         limit: 1000,
@@ -23,3 +24,4 @@ export default () => {
         apiUrl: '',
     }
 }
+export default initialState;
