@@ -28,24 +28,28 @@ export default function loadLabels(apiUrl) {
       
         axios.get(`${url.trim()}/loki/api/v1/labels`, options)
             ?.then((response) => {
-           
-                dispatch(setLoading(false))
-                if(response?.data?.data === []) console.log('no labels found')
-                if (response?.data?.data?.length > 0) {
+        if(response){
+            console.log(response)
+            dispatch(setLoading(false))
+            if(response?.data?.data === []) console.log('no labels found')
+            if (response?.data?.data?.length > 0) {
 
-                    const labels = response?.data?.data.sort().map((label) => ({
-                        name: label,
-                        selected: false,
-                        loading: false,
-                        values: [],
-                        hidden: false,
-                        facets: 0,
-                    }));
-                   
-                    dispatch(setLabels(labels || []));
-                 
-                    dispatch(setApiError(''))
-                }
+                const labels = response?.data?.data.sort().map((label) => ({
+                    name: label,
+                    selected: false,
+                    loading: false,
+                    values: [],
+                    hidden: false,
+                    facets: 0,
+                }));
+               
+                dispatch(setLabels(labels || []));
+             
+                dispatch(setApiError(''))
+            }
+
+        }
+            
 
             }).catch(error => {
                 console.log(error)
