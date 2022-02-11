@@ -169,9 +169,10 @@ export function StatusBarSelectors() {
                     onChange={({ dateStart, dateEnd, label }) => {
                         const isStart = isDate(dateStart);
                         const isEnd = isDate(dateEnd)
+                        const isLabel = typeof label !== 'undefined';
                         if (isStart) dispatch(setStartTime(dateStart))
                         if (isEnd) dispatch(setStopTime(dateEnd))
-                        if (isStart && isEnd) dispatch(setTimeRangeLabel(label))
+                        if (isLabel) dispatch(setTimeRangeLabel(label))
                     }}
                     // here
                 />
