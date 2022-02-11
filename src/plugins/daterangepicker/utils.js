@@ -176,16 +176,6 @@ export const getDefaultRanges = (date) => [
 		label: "Last 7 Days",
 		dateStart: addWeeks(date, -1),
 		dateEnd: date
-	},
-	{
-		label: "This Month",
-		dateStart: startOfMonth(date),
-		dateEnd: endOfMonth(date)
-	},
-	{
-		label: "Last Month",
-		dateStart: startOfMonth(addMonths(date, -1)),
-		dateEnd: endOfMonth(addMonths(date, -1))
 	}
 ];
 
