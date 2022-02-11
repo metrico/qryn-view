@@ -4,7 +4,6 @@ import ListItemText  from '@mui/material/ListItemText'
 import { isSameRange } from "../utils";
 
 const Ranges = props => {
-    console.log(props)
 	return (
 		<List>
 			{props.ranges.map((range, idx) => (

@@ -9,7 +9,7 @@ import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
 import createStyles from '@mui/styles/createStyles';
 import { withStyles } from '@mui/styles'
-import { format, differenceInCalendarMonths, isValid, isDate, issame, isSameSecond } from "date-fns";
+import { format, differenceInCalendarMonths, isValid, isDate, isSameSecond } from "date-fns";
 import ArrowRightAlt from "@mui/icons-material/ArrowRightAlt";
 import Month from "./Month";
 import Ranges from "./Ranges";
@@ -89,7 +89,6 @@ const PickerNav = props => {
 	}, [stopTs])
 
 
-    console.log(dateRange)
 	const handleStopInputChange = (event) => {
 		event.preventDefault()
 		const value = event.target.value

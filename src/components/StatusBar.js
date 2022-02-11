@@ -10,7 +10,8 @@ import { setApiError } from "../actions/setApiError";
 import { setApiUrl } from "../actions/setApiUrl";
 import Logo from "../assets/cloki-logo.png";
 import { DateRangePicker } from "../plugins/daterangepicker";
-import { findRange } from "../plugins/daterangepicker/utils";
+import { DATE_TIME_RANGE } from '../plugins/daterangepicker/consts';
+import { findRange, findRangeByLabel } from "../plugins/daterangepicker/utils";
 
 export const StatusBar = () => {
 
@@ -118,9 +119,23 @@ export function StatusBarSelectors() {
     const [open, setOpen] = useState(false)
 
     const initialDateRange = () => {
-        if (isDate(startTs) && isDate(stopTs)) {
-            return { dateStart: startTs, dateEnd: stopTs }
-        }
+        try {
+            const ls = JSON.parse(localStorage.getItem(DATE_TIME_RANGE));
+            if (ls.label !== "") {
+                const range = findRangeByLabel(ls.label)
+                ls.dateStart = range.dateStart;
+                ls.dateEnd = range.dateEnd;
+            }else {
+                ls.dateStart = new Date(ls.dateStart);
+                ls.dateEnd = new Date(ls.dateEnd);
+            }
+            return ls;            
+        } catch (e) {
+            console.error(e);
+            if (isDate(startTs) && isDate(stopTs)) {
+                return { dateStart: startTs, dateEnd: stopTs }
+            }
+        } 
     }
     const isOpen = (e) => {
         e.preventDefault()
@@ -151,12 +166,12 @@ export function StatusBarSelectors() {
                     open={open}
                     isOpen={isOpen}
                     initialDateRange={initialDateRange()}
-                    onChange={({ dateStart, dateEnd }) => {
+                    onChange={({ dateStart, dateEnd, label }) => {
                         const isStart = isDate(dateStart);
                         const isEnd = isDate(dateEnd)
                         if (isStart) dispatch(setStartTime(dateStart))
                         if (isEnd) dispatch(setStopTime(dateEnd))
-                        if (isStart && isEnd) dispatch(setTimeRangeLabel(findRange({dateStart: dateStart, dateEnd: dateEnd})))
+                        if (isStart && isEnd) dispatch(setTimeRangeLabel(label))
                     }}
                     // here
                 />

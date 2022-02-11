@@ -13,7 +13,7 @@ const initialState = () => {
         loading: false,
         start:new Date(moment(Date.now()).subtract(5,"minutes").format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
         stop:new Date(moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
-        label: '',
+        label: 'Last 5 minutes',
         messages:[],
         limitLoad:false,
         limit: 1000,

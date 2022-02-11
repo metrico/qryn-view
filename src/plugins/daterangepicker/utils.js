@@ -70,13 +70,11 @@ export const isRangeSameDay = ({ dateStart, dateEnd }) => {
 };
 
 export const findRange = (dateRange) => {
-    return getDefaultRanges(new Date()).find(range => {
-        const is = isSameRange(dateRange, range)
-        console.log(is, dateRange, range)
-        return is
-    }).label;
+    return getDefaultRanges(new Date()).find(range =>  isSameRange(dateRange, range))?.label;
 }
-
+export const findRangeByLabel = (label) => {
+    return getDefaultRanges(new Date()).find(range => range.label === label);
+}
 export const parseOptionalDate = (date, defaultValue) => {
 	if (date instanceof Date) {
 		const parsed = toDate(date);
@@ -99,12 +97,11 @@ export const generateYears = (relativeTo, count) => {
 };
 
 export const isSameRange = (first, second) => {
-	const { dateStart: fStart, dateEnd: fEnd } = first;
-	const { dateStart: sStart, dateEnd: sEnd } = second;
-	if (fStart && sStart && fEnd && sEnd) {
-        if (isSameMinute(fStart, sStart) && isSameMinute(fEnd, sEnd)) {
-            console.log(first, second, isSameMinute(fStart, sStart) && isSameMinute(fEnd, sEnd));
-        }
+	const { dateStart: fStart, dateEnd: fEnd, label: fLabel } = first;
+	const { dateStart: sStart, dateEnd: sEnd, label: sLabel } = second;
+    if (fLabel === sLabel) {
+        return true;
+    } else if (fStart && sStart && fEnd && sEnd) {
 		return isSameMinute(fStart, sStart) && isSameMinute(fEnd, sEnd);
 	}
 	return false;
