@@ -4,7 +4,7 @@ import { setQuery  } from "../../actions";
 import loadLogs from "../../actions/loadLogs"
 import { setLabelsBrowserOpen } from "../../actions/setLabelsBrowserOpen";
 
-export const QueryBar = (props) => {
+export const QueryBar = () => {
     //const [query, setQuery] = useState(props.query);
    
     const dispatch = useDispatch()
@@ -33,8 +33,8 @@ export const QueryBar = (props) => {
     
     const handleChange = (e) => {
         const qr = e.target.value;
-        setQueryValid(onQueryValid(qr))
-        setQueryInput(qr);
+    //    setQueryValid(onQueryValid(qr))
+      //  setQueryInput(qr);
         dispatch(setQuery(qr))
     };
 

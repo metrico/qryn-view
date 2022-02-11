@@ -26,6 +26,8 @@ export default (state, action) => {
             return { ...state, apiUrl: action.apiUrl};
         case "SET_API_ERRORS":
             return {...state, apiErrors: action.apiErrors};
+        case "SET_URL_QUERY_PARAMS":
+            return {...state, urlQueryParams: action.urlQueryParams};
         default:
             return { ...state };
     }

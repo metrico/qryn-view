@@ -20,6 +20,7 @@ export default () => {
         rangeOpen: false,
         labelsBrowserOpen: true,
         apiErrors:'',
+        urlQueryParams:'',
         apiUrl: environment.apiUrl,
     }
 }

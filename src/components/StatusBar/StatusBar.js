@@ -15,10 +15,7 @@ import { updateStateFromQueryParams } from "./helpers/updateStateFromQueryParams
 
 export default function StatusBar() {
 
-// update state from query params
-// auto submit if &submit=true
-
-    updateStateFromQueryParams()
+ updateStateFromQueryParams()
 
     return (
         <div className="status-bar">
@@ -35,17 +32,25 @@ export default function StatusBar() {
 };
 
 export function StatusBarInput(props) {
+
     const { label, value, dispatchAction, type } = props
     const dispatch = useDispatch()
+
+
+
+    const handleStatusInputChange = (e) => {
+
+    dispatch(dispatchAction(e.target.value))
+} 
+      
+    
     return (
         <div className="selector">
             <span className="label">{label}</span>
             <input
                 className={type}
                 value={value}
-                onChange={(newValue) => {
-                    dispatch(dispatchAction(newValue.target.value));
-                }}
+                onChange={handleStatusInputChange}
             />
 
         </div>
@@ -64,13 +69,19 @@ export function ApiSelector() {
 
     }, [apiUrl]);
 
+    useEffect(()=>{
+        setEditedUrl(apiUrl)
+        dispatch((setApiUrl(apiUrl)))
+        dispatch((loadLabels(apiUrl)))
+    },[apiUrl])
+
 
     useEffect(() => {
         if (apiError) {
             dispatch(setApiError('API URL Error, please adjust API URL'))
         }
 
-    }, []);
+    }, [apiError]);
 
 
     const handleApiUrlOpen = (e) => {
@@ -129,7 +140,7 @@ export function StatusBarSelectors() {
     const queryLimit = useSelector((store) => store.limit);
     const queryStep = useSelector((store) => store.step);
     const dispatch = useDispatch();
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState()
 
     const initialDateRange = () => {
         if (isDate(startTs) && isDate(stopTs)) {
