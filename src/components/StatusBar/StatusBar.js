@@ -63,26 +63,37 @@ export function ApiSelector() {
     const [editedUrl, setEditedUrl] = useState(apiUrl)
     const [apiSelectorOpen, setApiSelectorOpen] = useState(false)
     const dispatch = useDispatch()
+    const [isError,setIsError] = useState(true)
 
-    useEffect(() => {
-        dispatch(loadLabels(editedUrl))
 
-    }, [apiUrl]);
 
     useEffect(()=>{
         setEditedUrl(apiUrl)
         dispatch((setApiUrl(apiUrl)))
-        dispatch((loadLabels(apiUrl)))
+      
     },[apiUrl])
 
 
     useEffect(() => {
-        if (apiError) {
+        if (isError) {
             dispatch(setApiError('API URL Error, please adjust API URL'))
+            setApiSelectorOpen(true)
+        } else {
+            setApiSelectorOpen(false)
+            setIsError(false)
+        }
+     
+
+    }, [isError]);
+
+    useEffect(()=> {
+        if(apiError.length > 0) {
+            setIsError(true)
+            setApiSelectorOpen(true)
+          
         }
 
-    }, [apiError]);
-
+    },[apiError])
 
     const handleApiUrlOpen = (e) => {
         e.preventDefault()
@@ -97,7 +108,7 @@ export function ApiSelector() {
 
         dispatch(setApiUrl(editedUrl))
 
-        dispatch(loadLabels(editedUrl))
+       
     }
 
     return (
@@ -112,7 +123,7 @@ export function ApiSelector() {
                         fontSize="small"
                     />
                 </button>
-                {apiSelectorOpen || apiError !== '' ? (
+                {apiSelectorOpen ? (
                     <div className="selector">
                         <span className="label">API URL</span>
                         <input

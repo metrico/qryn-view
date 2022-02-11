@@ -4,15 +4,15 @@ import { useSelector, useDispatch } from "react-redux";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import loadLabels from "../../actions/LoadLabels";
 import { queryBuilder } from "./helpers/querybuilder";
-import { setQuery }  from "../../actions"
+import { setQuery } from "../../actions"
 import loadLabelValues from "../../actions/loadLabelValues"
 
 export const LabelsFetchError = () => {
     const labelError = useSelector((store) => store.apiErrors)
-  
+
     return (
         <>{
-            labelError !=='' && (
+            labelError !== '' && (
                 <div className="label-error">
                     <span> {labelError}</span>
                 </div>
@@ -27,10 +27,10 @@ export const LabelsFetchError = () => {
 }
 
 export const ValuesList = (props) => {
-    const labels = useSelector( state => state.labels)
-   // const labelValues = useSelector(state => state.labelValues)
+    const labels = useSelector(state => state.labels)
+    // const labelValues = useSelector(state => state.labelValues)
     const [labelList, setLabelList] = useState(labels);
-  //  const [filteredValue, setFilteredValue] = useState("");
+    //  const [filteredValue, setFilteredValue] = useState("");
     const [labelsSelected, setLabelsSelected] = useState([]);
     const [label, setLabel] = useState("");
     const dispatch = useDispatch()
@@ -54,15 +54,17 @@ export const ValuesList = (props) => {
     //     [JSON.stringify(labelList), filteredValue]
     // );
 
+    useEffect(() => {
+        dispatch(loadLabels(apiUrl))
+   
+    }, [apiUrl])
+
 
     useEffect(() => {
         setLabelList(labels); // LABELS
-      
+
     }, [labels]);
 
-    useEffect(() => {
-        
-    }, [labelsSelected]);
     const handleRefresh = (e) => {
         e.preventDefault()
         dispatch(loadLabels(apiUrl))
@@ -70,32 +72,32 @@ export const ValuesList = (props) => {
 
 
 
-// onvaluechange
-const onLabelChange = (value) => {
-    const query = queryBuilder(labelList);
-    dispatch(setQuery(query))
-    //this.setState({ ...this.state, query });
-   dispatch(loadLabelValues(value, labelList,apiUrl)) ;
-   // loads label values into labelList
-};
+    // onvaluechange
+    const onLabelChange = (value) => {
+        const query = queryBuilder(labelList);
+        dispatch(setQuery(query))
+        //this.setState({ ...this.state, query });
+        dispatch(loadLabelValues(value, labelList, apiUrl));
+        // loads label values into labelList
+    };
 
 
     const onLabelOpen = (e, value) => {
         e.preventDefault();
         value.selected = !value.selected;
-      //  setLabel(value);
+        //  setLabel(value);
         const selected = labelList.filter((f) => f.selected);
         setLabelsSelected(selected);
-       
-    //   setFilteredPlaceholder(value);
 
-    const query = queryBuilder(labelList);
-    dispatch(setQuery(query))
+        //   setFilteredPlaceholder(value);
 
-    //this.setState({ ...this.state, query });
+        const query = queryBuilder(labelList);
+        dispatch(setQuery(query))
 
-   dispatch(loadLabelValues(value, labelList,apiUrl)) ;
-   // loads label values into labelList
+        //this.setState({ ...this.state, query });
+
+        dispatch(loadLabelValues(value, labelList, apiUrl));
+        // loads label values into labelList
 
     };
 
@@ -112,7 +114,7 @@ const onLabelChange = (value) => {
     const onLabelValueChange = () => {
 
         const query = queryBuilder(labels);
-       dispatch(setQuery(query))
+        dispatch(setQuery(query))
     };
 
     const styleValue = (value) => {
@@ -142,7 +144,7 @@ const onLabelChange = (value) => {
                                 fontSize="small"
                             />
                         </button>
-                        {labelList  &&
+                        {labelList &&
                             labelList.map((value, key) => (
                                 <small
                                     title={value.name}
@@ -192,18 +194,18 @@ const onLabelChange = (value) => {
                                         >close</span>
                                     </div>
                                     <div className="valuelist-content column">
-                                        { labelSelected?.values?.map(
-                                                (value, key) => (
-                                                    <small
-                                                        key={key}
-                                                        className="label-value"
-                                                        style={styleValue(value)}
-                                                        onClick={(e) => onLabelValueClick(e, value)}
-                                                    >
-                                                        {value.name}
-                                                    </small>
-                                                )
-                                            )}
+                                        {labelSelected?.values?.map(
+                                            (value, key) => (
+                                                <small
+                                                    key={key}
+                                                    className="label-value"
+                                                    style={styleValue(value)}
+                                                    onClick={(e) => onLabelValueClick(e, value)}
+                                                >
+                                                    {value.name}
+                                                </small>
+                                            )
+                                        )}
                                     </div>
                                 </div>
                             ))}

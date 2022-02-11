@@ -52,6 +52,7 @@ export default function loadLabels(apiUrl) {
                 dispatch(setLoading(false))
                 const {message,status} = errorHandler(url, error)
                 dispatch(setApiError(message || status + 'Error'))
+                dispatch(setLabels([]))
              
             })
     }
