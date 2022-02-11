@@ -6,6 +6,7 @@ import { setApiUrl } from "../../../actions/setApiUrl";
 import { useQuery } from './useQuery';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { environment } from '../../../environment/env.dev';
 
 export function updateStateFromQueryParams() {
     const [submit, setSubmit] = useState(false)
@@ -32,7 +33,9 @@ export function updateStateFromQueryParams() {
     const apiUrl = useSelector(store => store.apiUrl)
     const query = useSelector(store => store.query)
     const { hash } = useLocation()
-
+    if (apiUrl === '') {
+        dispatch(setApiUrl(environment.apiUrl))
+    }
 
     // Update from UI
     useEffect(() => {

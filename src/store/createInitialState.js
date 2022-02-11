@@ -21,6 +21,6 @@ export default () => {
         labelsBrowserOpen: true,
         apiErrors:'',
         urlQueryParams:'',
-        apiUrl: environment.apiUrl,
+        apiUrl:'',
     }
 }

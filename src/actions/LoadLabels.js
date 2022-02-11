@@ -5,7 +5,6 @@ import { setApiError } from "./setApiError";
 import { errorHandler } from "./errorHandler";
 
 export default function loadLabels(apiUrl) {
-    const isDebug = process.env.DEBUG
     const origin = window.location.origin;
     const url = apiUrl
     const headers = {
@@ -29,7 +28,6 @@ export default function loadLabels(apiUrl) {
         axios.get(`${url.trim()}/loki/api/v1/labels`, options)
             ?.then((response) => {
         if(response){
-          if(isDebug)  console.log(response)
             dispatch(setLoading(false))
             if(response?.data?.data === []) console.log('no labels found')
             if (response?.data?.data?.length > 0) {
