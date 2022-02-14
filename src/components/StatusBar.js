@@ -11,7 +11,7 @@ import { setApiUrl } from "../actions/setApiUrl";
 import Logo from "../assets/cloki-logo.png";
 import { DateRangePicker } from "../plugins/daterangepicker";
 import { DATE_TIME_RANGE } from '../plugins/daterangepicker/consts';
-import { findRange, findRangeByLabel } from "../plugins/daterangepicker/utils";
+import {  findRangeByLabel } from "../plugins/daterangepicker/utils";
 
 export const StatusBar = () => {
 
@@ -59,7 +59,7 @@ export function ApiSelector() {
             dispatch(setApiError('API URL Error, please adjust API URL'))
         }
         
-    }, []);
+    }, [dispatch, apiError]);
    
 
     const handleApiUrlOpen = (e) => {
@@ -121,17 +121,17 @@ export function StatusBarSelectors() {
     const initialDateRange = () => {
         try {
             const ls = JSON.parse(localStorage.getItem(DATE_TIME_RANGE));
-            if (ls.label !== "") {
-                const range = findRangeByLabel(ls.label)
+            if (ls?.label !== "" && typeof ls.label !== 'undefined') {
+                const range = findRangeByLabel(ls?.label)
                 ls.dateStart = range.dateStart;
                 ls.dateEnd = range.dateEnd;
             }else {
                 ls.dateStart = new Date(ls.dateStart);
                 ls.dateEnd = new Date(ls.dateEnd);
+
             }
             return ls;            
         } catch (e) {
-            console.error(e);
             if (isDate(startTs) && isDate(stopTs)) {
                 return { dateStart: startTs, dateEnd: stopTs }
             }

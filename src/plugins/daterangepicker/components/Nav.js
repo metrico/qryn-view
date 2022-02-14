@@ -14,7 +14,7 @@ import ArrowRightAlt from "@mui/icons-material/ArrowRightAlt";
 import Month from "./Month";
 import Ranges from "./Ranges";
 import CloseIcon from '@mui/icons-material/Close';
-import { MARKERS } from "../consts";
+import { DATE_TIME_RANGE, MARKERS } from "../consts";
 import { useDispatch, useSelector } from "react-redux";
 import { setStartTime, setStopTime } from "../../../actions";
 
@@ -70,24 +70,11 @@ const PickerNav = props => {
 		helpers,
 		handlers
 	} = props;
-
 	const canNavigateCloser = differenceInCalendarMonths(secondMonth, firstMonth) >= 2;
 	const commonProps = { dateRange, minDate, maxDate, helpers, handlers };
-	const startTs = useSelector((store) => store.start);
-	const stopTs = useSelector((store) => store.stop);
 	const dispatch = useDispatch()
 	const [editedStartDate, setEditedStartDate] = useState(dateRange.dateStart)
 	const [editedEndDate, setEditedEndDate] = useState(dateRange.dateEnd)
-
-
-	useEffect(() => {
-		setEditedStartDate(startTs)
-	}, [startTs])
-
-	useEffect(() => {
-		setEditedEndDate(stopTs)
-	}, [stopTs])
-
 
 	const handleStopInputChange = (event) => {
 		event.preventDefault()
@@ -98,32 +85,35 @@ const PickerNav = props => {
 	}
 	const handleStartInputChange = (event) => {
 		event.preventDefault()
-		const value = event.target.value
-
-		setEditedStartDate(value)
-
+		const value = event.target.value;
+		setEditedStartDate(value);
 	}
 
 
 	const onTimeRangeSet = (e) => {
 		e.preventDefault()
-
-		const startDate = new Date(editedStartDate)
+        const startDate = new Date(editedStartDate)
 		const endDate = new Date(editedEndDate)
-
 		if (isDate(startDate) && !isSameSecond(dateRange.dateStart, startDate)) {
 			dispatch(setStartTime(startDate));
 		}
 		if (isValid(endDate) && !isSameSecond(dateRange.dateEnd, endDate)) {
 			dispatch(setStopTime(endDate));
 		}
-
+		if (isValid(endDate) && isDate(startDate) && (!isSameSecond(dateRange.dateStart, startDate) || !isSameSecond(dateRange.dateEnd, endDate))) {
+            setDateRange({dateStart: startDate, dateEnd: endDate})
+            saveDateRange({dateStart: startDate, dateEnd: endDate});
+		}
 	}
+    
+    const saveDateRange = (range) => {
+        localStorage.setItem(DATE_TIME_RANGE, JSON.stringify(range));
+    }
 	const getEditedStartDate = () => {
-		return isValid(editedStartDate) ? format(editedStartDate, 'yyy-MM-dd HH:mm:ss') : editedStartDate
+		return isValid(dateRange.dateStart) ? format(dateRange.dateStart, 'yyy-MM-dd HH:mm:ss') : dateRange.dateStart
 	}
 	const getEditedEndDate = () => {
-		return isValid(editedEndDate) ? format(editedEndDate, 'yyy-MM-dd HH:mm:ss') : editedEndDate
+		return isValid(dateRange.dateEnd) ? format(dateRange.dateEnd, 'yyy-MM-dd HH:mm:ss') : dateRange.dateEnd
 	}
 	const dateTimeBarStyle = {
 		display: 'flex',

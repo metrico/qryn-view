@@ -13,14 +13,15 @@ import {
     min,
     format,
     isValid,
+    isSameMinute,
 } from "date-fns";
 
 import Nav from "./components/Nav";
 import { defaultRanges, getDefaultRanges, getValidatedMonths, parseOptionalDate } from "./utils";
-import { MARKERS } from "./consts";
+import { DATE_TIME_RANGE, MARKERS } from "./consts";
 import { theme } from "./components/styles";
 import { ThemeProvider } from "@emotion/react";
-import { setRangeOpen } from "../../actions";
+import { setRangeOpen, setStartTime, setTimeRangeLabel, setStopTime } from "../../actions";
 import { useSelector, useDispatch } from "react-redux";
 import useOutsideRef from "./hooks/useOutsideRef";
 
@@ -50,14 +51,8 @@ export function DateRangePickerMain(props) {
     );
     const dispatch = useDispatch();
 
-
     const rangeOpen = useSelector((store) => store.rangeOpen);
-    useEffect(() => {
-        const { dateStart, dateEnd } = props.initialDateRange;
-        if (isDate(dateStart) && isDate(dateEnd)) {
-            setDateRange(props.initialDateRange);
-        }
-    }, [props.initialDateRange]);
+    const range = useSelector((store) => ({dateStart: store.start, dateEnd: store.stop, label: store.label}))
     const { dateStart, dateEnd } = dateRange;
 
     const { ref, isComponentVisible, setIsComponentVisible } =
@@ -67,7 +62,6 @@ export function DateRangePickerMain(props) {
         setIsComponentVisible(rangeOpen);
        
     }, [rangeOpen]);
-
     const setFirstMonthValidated = (date) => {
         if (isBefore(date, secondMonth)) {
             setFirstMonth(date);
@@ -82,7 +76,6 @@ export function DateRangePickerMain(props) {
 
     const setDateRangeValidated = (range) => {
         let {label, dateStart: newStart, dateEnd: newEnd } = range;
-
         if (newStart && newEnd) {
             range.label = label
             range.dateStart = newStart = max([newStart, minDateValid]);
@@ -97,12 +90,13 @@ export function DateRangePickerMain(props) {
         }
     };
     const saveDateRange = (range) => {
-        localStorage.setItem("dateTimeRange", JSON.stringify(range));
+        localStorage.setItem(DATE_TIME_RANGE, JSON.stringify(range));
     }
     const onDayClick = (day) => {
         if (dateStart && !dateEnd && !isBefore(day, dateStart)) {
             const newRange = { dateStart, dateEnd: day };
             onChange(newRange);
+            saveDateRange(newRange);
             setDateRange(newRange);
         } else {
             setDateRange({ dateStart: day, dateEnd: undefined });
@@ -178,7 +172,6 @@ export function DateRangePickerMain(props) {
            setIsComponentVisible(true)
         }
     }
-
     return (
         <div>
             <button style={dateButtonStyles}
