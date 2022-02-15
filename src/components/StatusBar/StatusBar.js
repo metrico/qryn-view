@@ -65,22 +65,18 @@ export function ApiSelector() {
     const [apiSelectorOpen, setApiSelectorOpen] = useState(false)
     const dispatch = useDispatch()
     const [isError, setIsError] = useState(true)
-    const [uriParams,setUriParams] = useState('')
-    const {hash} = useLocation()
+    const [uriParams, setUriParams] = useState('')
+    const { hash } = useLocation()
 
-    useEffect(()=>{
+    useEffect(() => {
         setEditedUrl(apiUrl)
-    },[])
+    }, [])
 
     useEffect(() => {
         setEditedUrl(apiUrl)
 
     }, [apiUrl])
 
-    useEffect(()=>{
-       const params = new URLSearchParams(hash.replace("#",""))
-       const apiParam = params.get("apiUrl")
-    },[hash])
 
     useEffect(() => {
         if (isError) {
@@ -156,6 +152,7 @@ export function StatusBarSelectors() {
     const stopTs = useSelector((store) => store.stop);
     const queryLimit = useSelector((store) => store.limit);
     const queryStep = useSelector((store) => store.step);
+    const [copied, setCopied] = useState(false)
     const dispatch = useDispatch();
     const [open, setOpen] = useState()
 
@@ -168,13 +165,38 @@ export function StatusBarSelectors() {
         e.preventDefault()
         setOpen(!open)
     }
-
+    const shareLink = (e) => {
+        e.preventDefault()
+        navigator.clipboard.writeText(window.location.href).then(function () {
+            setCopied(true)
+            setTimeout(() => {
+                setCopied(false)
+            }, 1500)
+        }, function (err) {
+            console.log('error on copy', err)
+        })
+    }
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <div className="status-options">
 
 
                 <div className="status-selectors">
+                    {copied && (
+                        <span className="copied-warning">Link Copied To Clipboard</span>
+                    )}
+                    <button
+                        className="url-copy"
+                        title="Copy Link"
+                        onClick={shareLink}
+                    >
+                        <LinkIcon
+                            fontSize="small"
+                        />
+
+                        <span>Copy Link</span>
+
+                    </button>
                     <StatusBarInput
                         label={'Limit'}
                         value={queryLimit}
