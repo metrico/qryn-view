@@ -8,14 +8,14 @@ import { DateRangePicker } from "../../plugins/daterangepicker";
 import isDate from "date-fns/isDate";
 import { setApiUrl } from "../../actions/setApiUrl";
 import LinkIcon from '@mui/icons-material/Link';
-import loadLabels from "../../actions/LoadLabels";
+// import loadLabels from "../../actions/LoadLabels";
 import { setApiError } from "../../actions/setApiError";
-import { updateStateFromQueryParams } from "./helpers/updateStateFromQueryParams";
+// import { updateStateFromQueryParams } from "./helpers/updateStateFromQueryParams";
 
 
 export default function StatusBar() {
 
- updateStateFromQueryParams()
+// updateStateFromQueryParams()
 
     return (
         <div className="status-bar">

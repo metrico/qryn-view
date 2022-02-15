@@ -22,7 +22,7 @@ export const QueryBar = () => {
     useEffect(() => {
         setQueryInput(query);
         setQueryValid(onQueryValid(query))
-    }, [query]);
+    }, [query,queryInput]);
 
 
     const onValueDisplay = (e) => {
@@ -35,6 +35,7 @@ export const QueryBar = () => {
         const qr = e.target.value;
     //    setQueryValid(onQueryValid(qr))
       //  setQueryInput(qr);
+      setQueryInput(qr)
         dispatch(setQuery(qr))
     };
 
