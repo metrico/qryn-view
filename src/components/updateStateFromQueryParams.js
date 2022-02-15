@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { setUrlQueryParams } from '../actions/setUrlQueryParams';
 import { setUrlLocation } from '../actions/setUrlLocation';
-import { setQuery, setStopTime, setStartTime, setQueryLimit, setQueryStep, setApiUrl, setIsSubmit } from '../actions';
+import { setQuery, setStopTime, setStartTime, setQueryLimit, setQueryStep, setApiUrl} from '../actions';
 import { environment } from '../environment/env.dev';
 export function updateStateFromQueryParams() {
     const { hash } = useLocation()
@@ -17,7 +17,6 @@ export function updateStateFromQueryParams() {
     const step = useSelector(store => store.step)
     const apiUrl = useSelector(store => store.apiUrl)
     const query = useSelector(store => store.query)
-    const isSubmit = useSelector(store => store.isSubmit)
 
     const STORE_KEYS = {
         apiUrl,
@@ -26,7 +25,6 @@ export function updateStateFromQueryParams() {
         limit,
         step,
         end: stop,
-        isSubmit
     }
 
     const STORE_ACTIONS = {
@@ -36,14 +34,12 @@ export function updateStateFromQueryParams() {
         limit: setQueryLimit,
         step: setQueryStep,
         end: setStopTime,
-        isSubmit: setIsSubmit
     };
 
     const STRING_VALUES = [
         'limit',
         'step',
         'apiUrl',
-        'isSubmit'
     ];
 
     const QUERY_VALUE = 'query'

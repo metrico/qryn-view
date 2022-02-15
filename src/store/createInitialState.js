@@ -29,7 +29,6 @@ export default () => {
         urlQueryParams: externalState || {},
         urlLocation: '',
         apiUrl: externalState.apiUrl || environment.apiUrl || '',
-        isSubmit:  true, 
     }
     if (debug) console.log('🚧 LOGIC/ INITIAL STATE ::: ', state)
     return state

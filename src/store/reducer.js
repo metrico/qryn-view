@@ -30,8 +30,6 @@ export default (state, action) => {
             return {...state, urlQueryParams: action.urlQueryParams};
         case "SET_URL_LOCATION":
             return {...state, urlLocation: action.urlLocation};
-        case "SET_IS_SUBMIT":
-            return {...state, isSubmit: action.isSubmit};
         default:
             return { ...state };
     }

@@ -3,21 +3,13 @@ import { useSelector, useDispatch } from "react-redux";
 import Logo from "./assets/cloki-logo.png";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { setStopTime, setStartTime, setQueryLimit, setQueryStep, setIsSubmit } from "../../actions";
+import { setStopTime, setStartTime, setQueryLimit, setQueryStep} from "../../actions";
 import { DateRangePicker } from "../../plugins/daterangepicker";
 import isDate from "date-fns/isDate";
 import { setApiUrl } from "../../actions/setApiUrl";
 import LinkIcon from '@mui/icons-material/Link';
-import Checkbox from '@mui/material/Checkbox';
-// import loadLabels from "../../actions/LoadLabels";
-import { setApiError } from "../../actions/setApiError";
-import { useLocation } from "react-router-dom";
-// import { updateStateFromQueryParams } from "./helpers/updateStateFromQueryParams";
-
 
 export default function StatusBar() {
-
-    // updateStateFromQueryParams()
 
     return (
         <div className="status-bar">
@@ -37,11 +29,7 @@ export function StatusBarInput(props) {
 
     const { label, value, dispatchAction, type } = props
     const dispatch = useDispatch()
-
-
-
     const handleStatusInputChange = (e) => {
-
         dispatch(dispatchAction(e.target.value))
     }
 
@@ -66,8 +54,6 @@ export function ApiSelector() {
     const [apiSelectorOpen, setApiSelectorOpen] = useState(false)
     const dispatch = useDispatch()
     const [isError, setIsError] = useState(true)
-    const [uriParams, setUriParams] = useState('')
-    const { hash } = useLocation()
 
     useEffect(() => {
         setEditedUrl(apiUrl)
@@ -81,7 +67,6 @@ export function ApiSelector() {
 
     useEffect(() => {
         if (isError) {
-            //   dispatch(setApiError('API URL Error, please adjust API URL'))
             setApiSelectorOpen(true)
         } else {
             setApiSelectorOpen(false)
@@ -156,17 +141,7 @@ export function StatusBarSelectors() {
     const [copied, setCopied] = useState(false)
     const dispatch = useDispatch();
     const [open, setOpen] = useState()
-    const [copyOpen, setCopyOpen] = useState(false)
-    const [isSubmit, setIsSubmit] = useState(true)
-
-
-    const handleIsSubmitChange = () => {
-
-
-        setIsSubmit(!isSubmit)
-      //  console.log(isSubmit)
-       // dispatch(setIsSubmit(!isSubmit))
-    }
+  
     const initialDateRange = () => {
         if (isDate(startTs) && isDate(stopTs)) {
             return { dateStart: startTs, dateEnd: stopTs }
@@ -209,15 +184,6 @@ export function StatusBarSelectors() {
                         <span>Copy Link</span>
 
                     </button>
-                    <label>
-                    <Checkbox 
-          label="submit"
-         value={isSubmit}
-         onChange={handleIsSubmitChange}
-         fontSize={'small'}
-         defaultChecked
-       /> submit
-                    </label>
 
                     <StatusBarInput
                         label={'Limit'}
