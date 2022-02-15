@@ -10,12 +10,13 @@ import { setApiUrl } from "../../actions/setApiUrl";
 import LinkIcon from '@mui/icons-material/Link';
 // import loadLabels from "../../actions/LoadLabels";
 import { setApiError } from "../../actions/setApiError";
+import { useLocation } from "react-router-dom";
 // import { updateStateFromQueryParams } from "./helpers/updateStateFromQueryParams";
 
 
 export default function StatusBar() {
 
-// updateStateFromQueryParams()
+    // updateStateFromQueryParams()
 
     return (
         <div className="status-bar">
@@ -40,10 +41,10 @@ export function StatusBarInput(props) {
 
     const handleStatusInputChange = (e) => {
 
-    dispatch(dispatchAction(e.target.value))
-} 
-      
-    
+        dispatch(dispatchAction(e.target.value))
+    }
+
+
     return (
         <div className="selector">
             <span className="label">{label}</span>
@@ -63,37 +64,43 @@ export function ApiSelector() {
     const [editedUrl, setEditedUrl] = useState(apiUrl)
     const [apiSelectorOpen, setApiSelectorOpen] = useState(false)
     const dispatch = useDispatch()
-    const [isError,setIsError] = useState(true)
-
-
+    const [isError, setIsError] = useState(true)
+    const [uriParams,setUriParams] = useState('')
+    const {hash} = useLocation()
 
     useEffect(()=>{
         setEditedUrl(apiUrl)
-        dispatch((setApiUrl(apiUrl)))
-      
-    },[apiUrl])
+    },[])
 
+    useEffect(() => {
+        setEditedUrl(apiUrl)
+
+    }, [apiUrl])
+
+    useEffect(()=>{
+       const params = new URLSearchParams(hash.replace("#",""))
+       const apiParam = params.get("apiUrl")
+    },[hash])
 
     useEffect(() => {
         if (isError) {
-            dispatch(setApiError('API URL Error, please adjust API URL'))
+            //   dispatch(setApiError('API URL Error, please adjust API URL'))
             setApiSelectorOpen(true)
         } else {
             setApiSelectorOpen(false)
             setIsError(false)
         }
-     
 
     }, [isError]);
 
-    useEffect(()=> {
-        if(apiError.length > 0) {
+    useEffect(() => {
+        if (apiError.length > 0) {
             setIsError(true)
             setApiSelectorOpen(true)
-          
+
         }
 
-    },[apiError])
+    }, [apiError])
 
     const handleApiUrlOpen = (e) => {
         e.preventDefault()
@@ -105,10 +112,9 @@ export function ApiSelector() {
         setEditedUrl(e.target.value)
     }
     const onUrlSubmit = (e) => {
+        console.log(apiUrl, "API URL CHANGE")
 
         dispatch(setApiUrl(editedUrl))
-
-       
     }
 
     return (

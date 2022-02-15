@@ -10,7 +10,9 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import { setUrlQueryParams } from '../actions/setUrlQueryParams';
 import { setUrlLocation } from '../actions/setUrlLocation';
 import { setQuery, setStopTime, setStartTime, setQueryLimit, setQueryStep, setApiUrl } from '../actions';
-import { parse } from 'date-fns';
+import { environment } from '../environment/env.dev';
+import { useRef } from 'react';
+// import { parse } from 'date-fns';
 // import { environment } from '../../../environment/env.dev';
 
 
@@ -44,10 +46,12 @@ export function updateStateFromQueryParams() {
 
     const { hash } = useLocation()
     const dispatch = useDispatch()
+   
+
 
     const urlQueryParams = useSelector(store => store.urlQueryParams)
 
-    const urlLocation = useSelector(store => store.urlLocation)
+    const urlLocation = useSelector(store => store.urlLocation) // useLocation to compare with actual hash
 
     const start = useSelector(store => store.start)
     const stop = useSelector(store => store.stop)
@@ -62,9 +66,9 @@ export function updateStateFromQueryParams() {
         start,
         limit,
         step,
-        end : stop
+        end: stop
     }
-
+    const [editing, setEditing] = useState(false)
     const STORE_ACTIONS = {
         apiUrl: setApiUrl,
         query: setQuery,
@@ -87,17 +91,27 @@ export function updateStateFromQueryParams() {
         'end'
     ]
 
+    const encodeTs = (ts) => {
+       // console.log(ts)
+        return ts.getTime() + "000000" 
+    }
+
+    const decodeTs = (ts) => {
+        const reduced = parseInt(ts) / 1000
+        return new Date(moment(reduced).format("YYYY-MM-DDTHH:mm:ss.SSSZ"))
+    }
 
     useEffect(() => {
+
         const urlFromHash = new URLSearchParams(hash.replace("#", ""))
-        
+
         // !if there is some params set them first on UI
+
         if (hash.length > 0) {
-            console.log('larger than zero!')
             const startParams = urlQueryParams;
 
             for (let [key, value] of urlFromHash.entries()) {
-                startParams[key] = value
+                startParams[key] = value;
             }
             if (Object.keys(startParams).length > 0) {
 
@@ -105,43 +119,131 @@ export function updateStateFromQueryParams() {
 
                 dispatch(setUrlLocation(hash))
                 Object.keys(startParams).forEach(param => {
-                if(STRING_VALUES.includes(param) && startParams[param] !== ''){
-                    dispatch(STORE_ACTIONS[param](startParams[param]))
-                } else if(QUERY_VALUE === param && startParams[param] !== '') {
-                    const parsedQuery = decodeURIComponent(startParams[param])
-                    dispatch(STORE_ACTIONS[param](parsedQuery))
-                } else if(TIME_VALUES.includes(param) && startParams[param] !=='') {
-                    const croppedTime = ((startParams[param]).toString()).trim(0,13)
-                    const paramDate = new Date(moment(croppedTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ"))
-                    dispatch(STORE_ACTIONS[param](paramDate))
-                }
+                    if (STRING_VALUES.includes(param) && startParams[param] !== '') {
+                        dispatch(STORE_ACTIONS[param](startParams[param]))
+                    } else if (QUERY_VALUE === param && startParams[param] !== '') {
+                        const parsedQuery = decodeURIComponent(startParams[param])
+                        dispatch(STORE_ACTIONS[param](parsedQuery))
+                    } else if (TIME_VALUES.includes(param) && startParams[param] !== '') {
+                        const croppedTime = ((startParams[param])) / 1000000
+                    //    console.log(croppedTime, "cropped time")
+                        const paramDate = new Date(moment(croppedTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ"))
+                    //    console.log(paramDate)
+                        dispatch(STORE_ACTIONS[param](paramDate))
+                    }
 
                 })
 
             }
-
-
+          //  dispatch(setUrlLocation(urlQueryParams))
         }
         // if there is no params set the starting ones on url
-        else {
-            const allParams = [...STRING_VALUES,...QUERY_VALUE,...TIME_VALUES]
 
+        else {
+            dispatch(setApiUrl(environment.apiUrl))
+        //    console.log("UPDATED CHANGES FROM INIT")
+            const allParams = STRING_VALUES.concat(TIME_VALUES)
+            allParams.push(QUERY_VALUE)
             allParams.forEach(param => {
-                if(STRING_VALUES.includes(param)) {
+            //    console.log(param)
+                if (STRING_VALUES.includes(param, "PARAM")) {
                     urlFromHash.set(param, STORE_KEYS[param].toString())
+                } else if (TIME_VALUES.includes(param)) {
+                //    console.log(param)
+                    const time_value = STORE_KEYS[param].getTime() * 1000000
+                 //   console.log(STORE_KEYS[param], "key" )
+
+                    urlFromHash.set(param, time_value.toString())
+                } else if (QUERY_VALUE === param) {
+                    const parsed = encodeURIComponent(STORE_KEYS[param]).toString()
+                    urlFromHash.set(param, parsed.toString())
                 }
             })
-            console.log(urlFromHash)
-           window.location.hash = urlFromHash
+
+            window.location.hash = urlFromHash
+          //  dispatch(setUrlLocation(urlFromHash))
 
         }
-
-
-
 
     }, [])
 
+    // update URL params on UI update
 
+    useEffect(() => {
+
+     //   console.log(hash, "HASH")
+        if (hash.length > 0) {
+            const paramsFromHash = new URLSearchParams(hash.replace("#", ""))
+            let previousParams = {}
+            for (let [key, value] of paramsFromHash.entries()) {
+                previousParams[key] = value
+            }
+            Object.keys(STORE_KEYS).forEach(store_key => {
+                if (STRING_VALUES.includes(store_key)
+                    && previousParams[store_key]
+                    !== STORE_KEYS[store_key]
+                    
+                    ) {
+                      //  console.log(store_key)
+
+                    const updated = STORE_KEYS[store_key].toString().trim()
+                    paramsFromHash.set(store_key, updated)
+
+                } else if (
+                    QUERY_VALUE === store_key &&
+                    previousParams[store_key] !==
+                    encodeURIComponent(STORE_KEYS[store_key])
+                ) {
+                    const queryUpdated = encodeURIComponent(STORE_KEYS[store_key].toString())
+                    paramsFromHash.set(store_key, queryUpdated)
+                } else if (
+                    TIME_VALUES.includes(store_key) &&
+                    previousParams[store_key] !==
+                    encodeTs(STORE_KEYS[store_key])
+                ) {
+
+                    const encodedTs = encodeTs(STORE_KEYS[store_key])
+                    paramsFromHash.set(store_key, encodedTs)
+                }
+
+            })
+            window.location.hash = paramsFromHash
+          //  dispatch(setUrlLocation(paramsFromHash))
+        }
+    }, [STORE_KEYS])
+
+
+
+
+// track for editing from UI SIDE
+    // useEffect(()=> {
+    //     // set previous UI values
+    //     // check for previous (stored or on init) 
+    //     const previousStored = STORE_KEYS
+    //     const paramsFromHash = new URLSearchParams(hash.replace("#",""))
+
+    //     const actualParams = {}
+    //     for(let [key,value] of paramsFromHash.entries()) {
+    //         actualParams[key] = value
+
+    //     }
+    //     Object.keys(actualParams).forEach(actual_param => {
+
+    //         if(STRING_VALUES.includes(actual_param) &&
+
+    //         actualParams[actual_param] !== previousStored[actual_param] 
+            
+    //         ) {
+    //             dispatch(STORE_ACTIONS[actual_param](actual_param,actualParams[actual_param]))
+    //          // STORE_KEYS[actual_param] = actual_param
+    //         }
+
+    //     })
+
+    // },[hash])
+
+
+    // update URL params on UI update
 
     console.log(hash)
     //     const [submit, setSubmit] = useState(false)
@@ -261,6 +363,7 @@ export function updateStateFromQueryParams() {
     //         }
 
     //     },[])
+    // process all changes at the end
 }
 
 
