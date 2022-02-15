@@ -4,7 +4,7 @@ import  StatusBar  from "./StatusBar/StatusBar";
 import LabelBrowser from "./LabelBrowser/LabelBrowser"
 import { updateStateFromQueryParams } from "./updateStateFromQueryParams";
 export default function MainView() {
-updateStateFromQueryParams()
+  updateStateFromQueryParams()
     return (
         <div className="log-search">
 
@@ -13,7 +13,7 @@ updateStateFromQueryParams()
         <LabelBrowser/>
 
         <LogView />
-        
+
     </div>
     )
 }

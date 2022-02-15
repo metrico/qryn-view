@@ -34,7 +34,9 @@ export const ValuesList = (props) => {
     const [labelsSelected, setLabelsSelected] = useState([]);
     const [label, setLabel] = useState("");
     const dispatch = useDispatch()
+    const debug = useSelector((store) => store.debug)
     const apiUrl = useSelector((store) => store.apiUrl)
+    if(debug) console.log('🚧 LOGIC/LabelBrowser/ValuesList', apiUrl)
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen)
     const apiError = useSelector((store) => store.apiErrors)
 
@@ -56,7 +58,7 @@ export const ValuesList = (props) => {
 
     useEffect(() => {
         dispatch(loadLabels(apiUrl))
-   
+
     }, [apiUrl])
 
 
@@ -161,11 +163,11 @@ export const ValuesList = (props) => {
 
                     {/* <div className="valuelist-filter">
                 <div className="valuelist-filter-title">
-                <Legend 
-                    title=" 2. Find values for the selected labels" 
+                <Legend
+                    title=" 2. Find values for the selected labels"
                     text="Choose the label values that you would like to use for the query. Use the search field to find values across selected labels." />
-               
-                    
+
+
                     </div>
                     <input
                         id="filteredValue"

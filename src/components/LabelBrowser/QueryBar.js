@@ -6,7 +6,7 @@ import { setLabelsBrowserOpen } from "../../actions/setLabelsBrowserOpen";
 
 export const QueryBar = () => {
     //const [query, setQuery] = useState(props.query);
-   
+
     const dispatch = useDispatch()
     const labelsBrowserOpen = useSelector(( store ) => store.labelsBrowserOpen)
     const stop = useSelector(store => store.stop)
@@ -17,7 +17,7 @@ export const QueryBar = () => {
     const query = useSelector( (store) => store.query)
     const [queryInput, setQueryInput] = useState(query)
     const [queryValid, setQueryValid] = useState(false)
-  
+
 
     useEffect(() => {
         setQueryInput(query);
@@ -30,7 +30,7 @@ export const QueryBar = () => {
         const isOpen = labelsBrowserOpen ? false : true;
         dispatch(setLabelsBrowserOpen(isOpen))
     };
-    
+
     const handleChange = (e) => {
         const qr = e.target.value;
     //    setQueryValid(onQueryValid(qr))
@@ -55,23 +55,24 @@ export const QueryBar = () => {
         e.preventDefault();
         dispatch(setLabelsBrowserOpen(false))
         dispatch(setQuery(queryInput))
-    
+
         if (query !== "{}" || query !== "") {
             dispatch(loadLogs( query, [start, stop], limit, step, apiUrl ))
-    
+
         } else {
-    
+
             console.log("Please make a log query", query);
-            
+
         }
     };
 
     const onQueryValid = (query) => {
        return query !== '{' && query !== '}' && query !== '{}' && query !== '' // TODO: make a proper query validation
     }
+
     return (
         <div className="query-bar-container">
-            <span 
+            <span
             style={onBrowserActive()}
             className={"show-log-browser"} onClick={onValueDisplay}>
                 log browser
@@ -85,7 +86,7 @@ export const QueryBar = () => {
                 tabIndex='0'
                 onKeyDown={handleInputKeyDown}
             />
-            
+
             <button
                disabled={!queryValid}
                 type="submit"
@@ -97,4 +98,3 @@ export const QueryBar = () => {
         </div>
     );
 };
-
