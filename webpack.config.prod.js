@@ -12,7 +12,6 @@ module.exports = {
         filename: "bundle.js",
         publicPath: "auto",
         clean: true,
-       
     },
     module: {
         rules: [
