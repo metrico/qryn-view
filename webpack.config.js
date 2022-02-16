@@ -67,7 +67,7 @@ module.exports = {
     devServer: {
 
         static: path.resolve(__dirname, "public"),
-
+        historyApiFallback: true,
         host:  process.env.HOST || "0.0.0.0",
         port: process.env.PORT ||  4500,
 

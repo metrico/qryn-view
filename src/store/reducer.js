@@ -19,13 +19,19 @@ const reducer =  (state, action) => {
         case "SET_RANGE_OPEN":
                 return { ...state, rangeOpen: action.rangeOpen};
         case "SET_BROWSER_OPEN":
-            return {...state, labelsBrowserOpen: action.labelsBrowserOpen}
+            return {...state, labelsBrowserOpen: action.labelsBrowserOpen};
+        case "SET_QUERY" :
+            return {...state, query: action.query};
         case "SET_QUERY_STEP":
                 return { ...state, step: action.step};
         case "SET_API_URL":
             return { ...state, apiUrl: action.apiUrl};
         case "SET_API_ERRORS":
             return {...state, apiErrors: action.apiErrors};
+        case "SET_URL_QUERY_PARAMS":
+            return {...state, urlQueryParams: action.urlQueryParams};
+        case "SET_URL_LOCATION":
+            return {...state, urlLocation: action.urlLocation};
         default:
             return { ...state };
     }
