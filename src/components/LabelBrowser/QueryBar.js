@@ -38,7 +38,7 @@ export const QueryBar = () => {
         dispatch(setIsSubmit(false))
        },200)
     
-   } else if( !queryValid(query) && isSubmit === "true") {
+   } else if( !onQueryValid(query) && isSubmit === "true") {
     dispatch(setIsSubmit(false))
    }
 
