@@ -59,10 +59,11 @@ export const QueryBar = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        dispatch(setLabelsBrowserOpen(false))
+        
         dispatch(setQuery(queryInput))
 
-        if (query !== "{}" || query !== "") {
+        if (onQueryValid(query)) {
+            dispatch(setLabelsBrowserOpen(false))
             dispatch(loadLogs(query, [start, stop], limit, step, apiUrl))
 
         } else {
