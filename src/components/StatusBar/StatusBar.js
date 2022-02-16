@@ -4,14 +4,13 @@ import Logo from "./assets/cloki-logo.png";
 import LinkIcon from '@mui/icons-material/Link';
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { setQueryLimit, setQueryStep, setStartTime, setStopTime, setTimeRangeLabel } from "../actions";
-import { DateRangePicker } from "../../plugins/daterangepicker";
+import { setQueryLimit, setQueryStep, setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
 import isDate from "date-fns/isDate";
 import { setApiUrl } from "../../actions/setApiUrl";
-import { setApiError } from "../actions/setApiError";
-import { DateRangePicker } from "../plugins/daterangepicker";
-import { DATE_TIME_RANGE } from '../plugins/daterangepicker/consts';
-import {  findRangeByLabel } from "../plugins/daterangepicker/utils";
+import { setApiError } from "../../actions/setApiError";
+import { DateRangePicker } from "../../plugins/daterangepicker";
+import { DATE_TIME_RANGE } from '../../plugins/daterangepicker/consts';
+import {  findRangeByLabel } from "../../plugins/daterangepicker/utils";
 
 
 export default function StatusBar() {

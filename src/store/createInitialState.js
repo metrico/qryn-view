@@ -44,7 +44,7 @@ function setDebug (envSetting) {
 }
 
 
-export function stateFromQueryParams () {
+function stateFromQueryParams () {
 
   if (debug) console.group('🚧 LOGIC/InitialState/FromQuery')
 
@@ -80,4 +80,3 @@ export function stateFromQueryParams () {
     return {}
   }
 }
-export default initialState;
