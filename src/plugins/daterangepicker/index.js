@@ -100,6 +100,7 @@ export function DateRangePickerMain(props) {
             onChange(newRange);
             saveDateRange(newRange);
             setDateRange(newRange);
+            onClose();
         } else {
             setDateRange({ dateStart: day, dateEnd: undefined });
         }
@@ -123,15 +124,9 @@ export function DateRangePickerMain(props) {
             }
         }
     };
-    // const onClose = (e) => {
-     
-    //     e?.preventDefault();
-    //     dispatch(setRangeOpen(false));
-    //     props.isOpen(e);
-    // };
     const {query, start, stop, limit, step, apiUrl} = useSelector((store) => store)
-    const onClose = (e) => {
-        e.preventDefault();        
+    const onClose = (e = null) => {
+        e?.preventDefault();        
         if (onQueryValid(query)) {
             dispatch(setLabelsBrowserOpen(false))
             dispatch(loadLogs(query, [start, stop], limit, step, apiUrl))
