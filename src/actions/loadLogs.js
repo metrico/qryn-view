@@ -71,19 +71,16 @@ export default function loadLogs(label, time, limit, step, apiUrl) {
         axios
             .get(getUrl, options)
             ?.then((response) => {
-            
                 if (response?.data?.data) {
                     let messages = [];
                     const result = response?.data?.data.result; // array
                     const type = response?.data?.data?.resultType;
 
                     mapStreams(result, messages, type);
-
-                 
-
                     dispatch(setLogs(messages || []));
                     dispatch(setLoading(false));
                 }
+                dispatch(setLoading(false));
             })
             .catch((error) => {
                 dispatch(setLoading(false));
