@@ -55,9 +55,16 @@ export const ValuesList = (props) => {
 
     useEffect(() => {
         dispatch(loadLabels(apiUrl))
+     //   setLabelList(labels)
 
-    }, [apiUrl])
+    }, [apiUrl]);
 
+
+    useEffect(() => {
+        setLabelList(labels); // LABELS
+
+    }, [labels]);
+    
     const handleRefresh = (e) => {
         e.preventDefault()
         dispatch(loadLabels(apiUrl))
@@ -126,7 +133,7 @@ export const ValuesList = (props) => {
                             />
                         </button>
                         {labelList &&
-                            labelList.map((value, key) => (
+                            labelList?.map((value, key) => (
                                 <small
                                     title={value.name}
                                     key={key}
