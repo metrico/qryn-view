@@ -6,7 +6,6 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  useRoutes
 } from 'react-router-dom';
 
 ReactDOM.render(

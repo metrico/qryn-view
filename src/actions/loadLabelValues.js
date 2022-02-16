@@ -1,5 +1,4 @@
 import axios from "axios";
-import { environment } from "../environment/env.dev";
 import { errorHandler } from "./errorHandler";
 import { setApiError } from "./setApiError";
 import setLabels from "./setLabels";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Legend } from "./Legend";
 import { useSelector, useDispatch } from "react-redux";
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -28,17 +28,14 @@ export const LabelsFetchError = () => {
 
 export const ValuesList = (props) => {
     const labels = useSelector(state => state.labels)
-    // const labelValues = useSelector(state => state.labelValues)
     const [labelList, setLabelList] = useState(labels);
-    //  const [filteredValue, setFilteredValue] = useState("");
     const [labelsSelected, setLabelsSelected] = useState([]);
-    const [label, setLabel] = useState("");
     const dispatch = useDispatch()
     const debug = useSelector((store) => store.debug)
     const apiUrl = useSelector((store) => store.apiUrl)
     if(debug) console.log('🚧 LOGIC/LabelBrowser/ValuesList', apiUrl)
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen)
-    const apiError = useSelector((store) => store.apiErrors)
+
     const CLOSE = "close"
     /**
      * TODO: FILTER VALUES INSIDE LABELS
@@ -61,28 +58,10 @@ export const ValuesList = (props) => {
 
     }, [apiUrl])
 
-
-    useEffect(() => {
-        setLabelList(labels); // LABELS
-
-    }, [labels]);
-
     const handleRefresh = (e) => {
         e.preventDefault()
         dispatch(loadLabels(apiUrl))
     }
-
-
-
-    // onvaluechange
-    const onLabelChange = (value) => {
-        const query = queryBuilder(labelList);
-        dispatch(setQuery(query))
-        //this.setState({ ...this.state, query });
-        dispatch(loadLabelValues(value, labelList, apiUrl));
-        // loads label values into labelList
-    };
-
 
     const onLabelOpen = (e, value) => {
         e.preventDefault();

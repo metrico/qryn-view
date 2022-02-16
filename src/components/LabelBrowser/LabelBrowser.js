@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import { QueryBar } from "./QueryBar";
 import { ValuesList } from "./ValuesList";
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Logo from "./assets/cloki-logo.png";
 import LinkIcon from '@mui/icons-material/Link';
@@ -7,7 +7,6 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { setIsSubmit, setQueryLimit, setQueryStep, setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
 import isDate from "date-fns/isDate";
 import { setApiUrl } from "../../actions/setApiUrl";
-import { setApiError } from "../../actions/setApiError";
 import { DateRangePicker } from "../../plugins/daterangepicker";
 import { DATE_TIME_RANGE } from '../../plugins/daterangepicker/consts';
 import {  findRangeByLabel } from "../../plugins/daterangepicker/utils";
@@ -18,11 +17,11 @@ export default function StatusBar() {
     return (
         <div className="status-bar">
             <div className="logo-section">
-                <img src={Logo} height="28px" className="logo" />
+                <img src={Logo} alt={"cLoki View"} height={"28px"} className={"logo"} />
                 <ApiSelector />
             </div>
 
-            <div className="date-selector">
+            <div className={"date-selector"}>
                 <StatusBarSelectors />
             </div>
         </div>
@@ -141,7 +140,6 @@ export function StatusBarSelectors() {
     const stopTs = useSelector((store) => store.stop);
     const queryLimit = useSelector((store) => store.limit);
     const queryStep = useSelector((store) => store.step);
-    const isSubmit = useSelector((store) => store.isSubmit)
     const [copied, setCopied] = useState(false)
     const dispatch = useDispatch();
     const [open, setOpen] = useState()

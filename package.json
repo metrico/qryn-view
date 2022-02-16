@@ -35,7 +35,8 @@
     "eject": "react-scripts eject",
     "start": "npx webpack-dev-server",
     "build-old": "webpack --mode production",
-    "build": "webpack --config webpack.config.prod.js --mode=production"
+    "webpack-build":"webpack --config webpack.config.prod.js --mode=production",
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": [

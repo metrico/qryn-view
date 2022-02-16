@@ -1,5 +1,4 @@
 import axios from "axios";
-import { environment } from "../environment/env.dev";
 import setLogs from "./setLogs";
 import setLoading from "./setLoading";
 

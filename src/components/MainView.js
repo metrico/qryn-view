@@ -2,9 +2,9 @@
 import  LogView  from "./LogView";
 import  StatusBar  from "./StatusBar/StatusBar";
 import LabelBrowser from "./LabelBrowser/LabelBrowser"
-import { updateStateFromQueryParams } from "./updateStateFromQueryParams";
+import { UpdateStateFromQueryParams } from "./UpdateStateFromQueryParams";
 export default function MainView() {
-  updateStateFromQueryParams()
+  UpdateStateFromQueryParams()
     return (
         <div className="log-search">
 

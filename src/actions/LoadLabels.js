@@ -1,4 +1,4 @@
-import axios, { Axios } from "axios";
+import axios from "axios";
 import setLabels from "./setLabels";
 import setLoading from "./setLoading";
 import { setApiError } from "./setApiError";

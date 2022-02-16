@@ -1,12 +1,12 @@
 import * as moment from 'moment'
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { setUrlQueryParams } from '../actions/setUrlQueryParams';
 import { setUrlLocation } from '../actions/setUrlLocation';
 import { setQuery, setStopTime, setStartTime, setQueryLimit, setQueryStep, setApiUrl, setIsSubmit} from '../actions';
 import { environment } from '../environment/env.dev';
-export function updateStateFromQueryParams() {
+export function UpdateStateFromQueryParams() {
     const { hash } = useLocation()
 
     const dispatch = useDispatch()
@@ -56,11 +56,6 @@ export function updateStateFromQueryParams() {
 
     const encodeTs = (ts) => {
         return ts.getTime() + "000000"
-    }
-
-    const decodeTs = (ts) => {
-        const reduced = parseInt(ts) / 1000
-        return new Date(moment(reduced).format("YYYY-MM-DDTHH:mm:ss.SSSZ"))
     }
 
     useEffect(() => {
