@@ -13,17 +13,20 @@ import {
     min,
     format,
     isValid,
+    isSameMinute,
 } from "date-fns";
 
 import Nav from "./components/Nav";
-import { defaultRanges, getValidatedMonths, parseOptionalDate } from "./utils";
-import { MARKERS } from "./consts";
+import { defaultRanges, getDefaultRanges, getValidatedMonths, parseOptionalDate } from "./utils";
+import { DATE_TIME_RANGE, MARKERS } from "./consts";
 import { theme } from "./components/styles";
 import { ThemeProvider } from "@emotion/react";
-import { setRangeOpen } from "../../actions";
+import { setRangeOpen, setStartTime, setTimeRangeLabel, setStopTime } from "../../actions";
 import { useSelector, useDispatch } from "react-redux";
 import useOutsideRef from "./hooks/useOutsideRef";
 
+import loadLogs from "../../actions/loadLogs"
+import { setLabelsBrowserOpen } from "../../actions/setLabelsBrowserOpen";
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 export function DateRangePickerMain(props) {
     const today = Date.now();
@@ -33,9 +36,8 @@ export function DateRangePickerMain(props) {
         initialDateRange,
         minDate,
         maxDate,
-        definedRanges = defaultRanges,
+        definedRanges = getDefaultRanges,
     } = props;
-
     const minDateValid = parseOptionalDate(minDate, addYears(today, -10));
     const maxDateValid = parseOptionalDate(maxDate, addYears(today, 10));
     const [intialFirstMonth, initialSecondMonth] = getValidatedMonths(
@@ -43,41 +45,17 @@ export function DateRangePickerMain(props) {
         minDateValid,
         maxDateValid
     );
-
     const [dateRange, setDateRange] = useState({ ...initialDateRange });
     const [hoverDay, setHoverDay] = useState();
-
     const [firstMonth, setFirstMonth] = useState(intialFirstMonth || today);
     const [secondMonth, setSecondMonth] = useState(
         initialSecondMonth || addMonths(firstMonth, 1)
     );
     const dispatch = useDispatch();
-    const startTs = useSelector((store) => store.start);
-    const stopTs = useSelector((store) => store.stop);
-    const [buttonStart, setButtonStart] = useState(startTs)
-    const [buttonStop, setButtonStop] = useState(stopTs)
-
-        useEffect(()=> {
-          
-            setButtonStart(startTs)
-        },[startTs])
-
-
-        useEffect(()=>{
-            setButtonStop(stopTs)
-        },[stopTs])
 
     const rangeOpen = useSelector((store) => store.rangeOpen);
-
-    useEffect(() => {
-        const { dateStart, dateEnd } = props.initialDateRange;
-        if (isDate(dateStart) && isDate(dateEnd)) {
-            setDateRange(props.initialDateRange);
-        }
-    }, [props.initialDateRange]);
-
+    const range = useSelector((store) => ({dateStart: store.start, dateEnd: store.stop, label: store.label}))
     const { dateStart, dateEnd } = dateRange;
-
 
     const { ref, isComponentVisible, setIsComponentVisible } =
         useOutsideRef(true);
@@ -86,7 +64,6 @@ export function DateRangePickerMain(props) {
         setIsComponentVisible(rangeOpen);
        
     }, [rangeOpen]);
-
     const setFirstMonthValidated = (date) => {
         if (isBefore(date, secondMonth)) {
             setFirstMonth(date);
@@ -100,11 +77,13 @@ export function DateRangePickerMain(props) {
     };
 
     const setDateRangeValidated = (range) => {
-        let { dateStart: newStart, dateEnd: newEnd } = range;
+        let {label, dateStart: newStart, dateEnd: newEnd } = range;
         if (newStart && newEnd) {
+            range.label = label
             range.dateStart = newStart = max([newStart, minDateValid]);
             range.dateEnd = newEnd = min([newEnd, maxDateValid]);
             setDateRange(range);
+            saveDateRange(range);
             onChange(range);
             setFirstMonth(newStart);
             setSecondMonth(
@@ -112,12 +91,16 @@ export function DateRangePickerMain(props) {
             );
         }
     };
-
+    const saveDateRange = (range) => {
+        localStorage.setItem(DATE_TIME_RANGE, JSON.stringify(range));
+    }
     const onDayClick = (day) => {
         if (dateStart && !dateEnd && !isBefore(day, dateStart)) {
             const newRange = { dateStart, dateEnd: day };
             onChange(newRange);
+            saveDateRange(newRange);
             setDateRange(newRange);
+            onClose();
         } else {
             setDateRange({ dateStart: day, dateEnd: undefined });
         }
@@ -141,13 +124,22 @@ export function DateRangePickerMain(props) {
             }
         }
     };
-    const onClose = (e) => {
-     
-        e.preventDefault();
+    const {query, start, stop, limit, step, apiUrl} = useSelector((store) => store)
+    const onClose = (e = null) => {
+        e?.preventDefault();        
+        if (onQueryValid(query)) {
+            dispatch(setLabelsBrowserOpen(false))
+            dispatch(loadLogs(query, [start, stop], limit, step, apiUrl))
+        } else {
+            console.log("Please make a log query", query);
+        }
         dispatch(setRangeOpen(false));
         props.isOpen(e);
-    };
 
+    };
+    const onQueryValid = (query) => {
+        return query !== '{' && query !== '}' && query !== '{}' && query !== '' // TODO: make a proper query validation
+    }
     // helpers
     const inHoverRange = (day) => {
         return (
@@ -189,11 +181,12 @@ export function DateRangePickerMain(props) {
         e.preventDefault()
         if(rangeOpen === true) {
            onClose(e)
+           setIsComponentVisible(false)
         } else {
-           setIsComponentVisible(true)
+            dispatch(setRangeOpen(true))
+            setIsComponentVisible(true)
         }
     }
-
     return (
         <div>
             <button style={dateButtonStyles}
@@ -203,23 +196,29 @@ export function DateRangePickerMain(props) {
                 fontSize:'1.15em',
                 marginRight:'3px'
             }} />
-                {isValid(buttonStart)
-                    ? format(buttonStart, "yyyy/MM/dd HH:mm:ss")
-                    : buttonStart}{" "}
-                -{" "}
-                {isValid(buttonStop)
-                    ? format(buttonStop, "yyyy/MM/dd HH:mm:ss")
-                    : buttonStop}
+
+                {dateRange.label ?
+                dateRange.label :
+                (isValid(dateRange.dateStart)
+                    ? format(dateRange.dateStart, "yyyy/MM/dd HH:mm:ss")
+                    : dateRange.dateStart)
+                +"-"+ 
+                (isValid(dateRange.dateEnd)
+                    ? format(dateRange.dateEnd, "yyyy/MM/dd HH:mm:ss")
+                    : typeof dateRange.dateEnd !== 'undefined' ?
+                    dateRange.dateEnd : ''
+                    )
+                }
             </button> 
 
             { isComponentVisible ? (
-                <div tabIndex="0" ref={ref}>
+                <div tabIndex={"0"} ref={ref}>
                     <ThemeProvider theme={theme}>
                         <Nav
                             dateRange={dateRange}
                             minDate={minDateValid}
                             maxDate={maxDateValid}
-                            ranges={definedRanges}
+                            ranges={getDefaultRanges(new Date())}
                             firstMonth={firstMonth}
                             secondMonth={secondMonth}
                             setFirstMonth={setFirstMonthValidated}

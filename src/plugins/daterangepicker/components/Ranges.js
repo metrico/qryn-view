@@ -7,7 +7,7 @@ const Ranges = props => {
 	return (
 		<List>
 			{props.ranges.map((range, idx) => (
-				<ListItem button key={idx} onClick={() => props.setRange(range)}>
+				<ListItem button key={idx} onClick={() => {props.setRange(range); props.onClose()}}>
 					<ListItemText
 						primaryTypographyProps={{
 							variant: "body2",

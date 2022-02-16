@@ -1,7 +1,7 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Button, CircularProgress } from "@mui/material";
-import moment from "moment";
+import { CircularProgress } from "@mui/material";
+import * as moment from "moment";
 
 const TAGS_LEVEL = {
     critical: ['emerg', 'fatal', 'alert', 'crit', 'critical'],
@@ -16,7 +16,7 @@ export const ValueTags = (props) => {
     const getTags = (tags) => {
         return Object.entries(tags).map(
             ([key, value], k) => (
-                <div className="value-tags" key={k}>
+                <div className={"value-tags"} key={k}>
                     <span>{key}</span>
                     <span>{value}</span>
                 </div>
@@ -63,7 +63,7 @@ class LogView extends Component {
     render() {
 
         return (
-            <div className="log-view">
+            <div className={"log-view"}>
                 <div className={`logs-box`}>
                     {this.getLogs() && this.getLogs().map((value, key) => (
                         <div
@@ -71,13 +71,13 @@ class LogView extends Component {
                             className={`line ${this.getLogColor(value.tags)}`}
                             onClick={e => this.onShowTags(e, value)}
                         >
-                            <span id={value.timestamp} className="timestamp">
+                            <span id={value.timestamp} className={"timestamp"}>
                                 {this.formatDate(value.timestamp)}
                             </span>
-                            <span className="log-line">{value.text}</span>
+                            <span className={"log-line"}>{value.text}</span>
 
                             {value.tags && (
-                                <div className="value-tags-container"
+                                <div className={"value-tags-container"}
                                     style={this.onTagsShow(value.showLabels)}
                                 >
                                     <ValueTags
@@ -89,8 +89,8 @@ class LogView extends Component {
                     ))}
                     {this.props.loading && (
                         <CircularProgress
-                            className="progress"
-                            id="progress"
+                            className={"progress"}
+                            id={"progress"}
                         />
                     )}
                 </div>
@@ -111,7 +111,7 @@ class LogView extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        messages: state.logs.messages,
+        messages: state.logs,
         start: state.start,
         stop: state.stop,
         limit: state.limit,

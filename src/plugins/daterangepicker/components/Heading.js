@@ -34,7 +34,7 @@ const Heading = ({
 
 	return (
 		<ThemeProvider theme={theme}>
-			<Grid container justifyContent="space-between" >
+			<Grid container justifyContent={"space-between"} >
 				<Grid item className={classes.iconContainer}>
 					<IconButton
 
