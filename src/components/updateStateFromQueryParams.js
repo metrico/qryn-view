@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { setUrlQueryParams } from '../actions/setUrlQueryParams';
 import { setUrlLocation } from '../actions/setUrlLocation';
-import { setQuery, setStopTime, setStartTime, setQueryLimit, setQueryStep, setApiUrl} from '../actions';
+import { setQuery, setStopTime, setStartTime, setQueryLimit, setQueryStep, setApiUrl, setIsSubmit} from '../actions';
 import { environment } from '../environment/env.dev';
 export function updateStateFromQueryParams() {
     const { hash } = useLocation()
@@ -16,6 +16,7 @@ export function updateStateFromQueryParams() {
     const limit = useSelector(store => store.limit)
     const step = useSelector(store => store.step)
     const apiUrl = useSelector(store => store.apiUrl)
+    const isSubmit = useSelector(store => store.isSubmit)
     const query = useSelector(store => store.query)
 
     const STORE_KEYS = {
@@ -25,6 +26,7 @@ export function updateStateFromQueryParams() {
         limit,
         step,
         end: stop,
+        isSubmit
     }
 
     const STORE_ACTIONS = {
@@ -34,6 +36,7 @@ export function updateStateFromQueryParams() {
         limit: setQueryLimit,
         step: setQueryStep,
         end: setStopTime,
+        isSubmit: setIsSubmit
     };
 
     const STRING_VALUES = [
@@ -48,6 +51,8 @@ export function updateStateFromQueryParams() {
         'start',
         'end'
     ]
+
+    const BOOLEAN_VALUES = 'isSubmit'
 
     const encodeTs = (ts) => {
         return ts.getTime() + "000000"
@@ -84,6 +89,8 @@ export function updateStateFromQueryParams() {
                         const croppedTime = ((startParams[param])) / 1000000
                         const paramDate = new Date(moment(croppedTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ"))
                         dispatch(STORE_ACTIONS[param](paramDate))
+                    } else if (BOOLEAN_VALUES.includes(param) && typeof param === 'boolean') {
+                        dispatch(STORE_ACTIONS[param](startParams[param]))
                     }
 
                 })
@@ -95,6 +102,7 @@ export function updateStateFromQueryParams() {
 
             const allParams = STRING_VALUES.concat(TIME_VALUES)
             allParams.push(QUERY_VALUE)
+            allParams.push(BOOLEAN_VALUES)
             allParams.forEach(param => {
 
                 if (STRING_VALUES.includes(param, "PARAM")) {
@@ -108,6 +116,8 @@ export function updateStateFromQueryParams() {
                 } else if (QUERY_VALUE === param) {
                     const parsed = encodeURIComponent(STORE_KEYS[param]).toString()
                     urlFromHash.set(param, parsed.toString())
+                } else if(BOOLEAN_VALUES === param && typeof param === 'boolean') {
+                    urlFromHash.set(param,param.toString())
                 }
             })
 
@@ -148,6 +158,13 @@ export function updateStateFromQueryParams() {
 
                     const encodedTs = encodeTs(STORE_KEYS[store_key])
                     paramsFromHash.set(store_key, encodedTs)
+                } else if(
+                    BOOLEAN_VALUES === store_key && 
+                    previousParams[store_key] !==
+                    STORE_KEYS[store_key] 
+                    
+                ) {
+                    paramsFromHash.set(store_key,STORE_KEYS[store_key])
                 }
             })
             window.location.hash = paramsFromHash

@@ -7,3 +7,4 @@ export * from "./setRangeOpen";
 export * from "./setTimeRangeLabel"
 export * from "./setApiUrl";
 export * from "./setQuery";
+export * from "./setIsSubmit";

@@ -30,6 +30,7 @@ export default () => {
         urlQueryParams: externalState || {},
         urlLocation: '',
         apiUrl: externalState.apiUrl || environment.apiUrl || '',
+        isSubmit: externalState.isSubmit || false,
     }
     if (debug) console.log('🚧 LOGIC/ INITIAL STATE ::: ', state)
     return state
@@ -66,7 +67,11 @@ function stateFromQueryParams () {
       } else if (key === 'query') {
         const parsedQuery = decodeURIComponent(value)
         startParams[key] = parsedQuery
-      } else {
+      } else if(key === 'isSubmit') {
+        startParams[key] = value
+      } 
+      
+      else {
         console.log(startParams[key],value)
         startParams[key] = value;
       }
