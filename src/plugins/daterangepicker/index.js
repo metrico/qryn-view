@@ -168,8 +168,10 @@ export function DateRangePickerMain(props) {
         e.preventDefault()
         if(rangeOpen === true) {
            onClose(e)
+           setIsComponentVisible(false)
         } else {
-           setIsComponentVisible(true)
+            dispatch(setRangeOpen(true))
+            setIsComponentVisible(true)
         }
     }
     return (
@@ -190,7 +192,9 @@ export function DateRangePickerMain(props) {
                 +"-"+ 
                 (isValid(dateRange.dateEnd)
                     ? format(dateRange.dateEnd, "yyyy/MM/dd HH:mm:ss")
-                    : dateRange.dateEnd)
+                    : typeof dateRange.dateEnd !== 'undefined' ?
+                    dateRange.dateEnd : ''
+                    )
                 }
             </button> 
 

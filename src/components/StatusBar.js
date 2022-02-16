@@ -138,7 +138,7 @@ export function StatusBarSelectors() {
         } 
     }
     const isOpen = (e) => {
-        e.preventDefault()
+        e?.preventDefault()
         setOpen(!open)
     }
 
