@@ -36,7 +36,7 @@
     "start": "npx webpack-dev-server",
     "build-old": "webpack --mode production",
     "webpack-build":"webpack --config webpack.config.prod.js --mode=production",
-    "build": "react-scripts build"
+    "build": "CI=false && react-scripts build"
   },
   "eslintConfig": {
     "extends": [
