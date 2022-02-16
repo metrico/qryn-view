@@ -90,10 +90,11 @@ export const parseOptionalDate = (date, defaultValue) => {
 };
 
 export const generateYears = (relativeTo, count) => {
+
 	const half = Math.floor(count / 2);
 	return Array(count)
-		.fill(0)
-		.map((y, i) => relativeTo.getFullYear() - half + i); // TODO: make part of the state
+		?.fill(0)
+		?.map((y, i) => relativeTo?.getFullYear() - half + i); // TODO: make part of the state
 };
 
 export const isSameRange = (first, second) => {

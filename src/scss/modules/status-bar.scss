@@ -43,7 +43,7 @@
             width: 50px;
         }
         &.url {
-            width:150px;
+            width:175px;
         }
         &.date-time-range {
             width: 120px;
@@ -69,7 +69,7 @@
         font-size: 13px;
         border-radius: 3px;
         &.url {
-            width:150px;
+            width:175px;
         }
     }
     button {
@@ -100,4 +100,47 @@
 .logo-section {
     display:flex;
     align-items: center;
+}
+
+.url-copy {
+    
+        display:flex;
+        align-items: center;
+        height:20px;
+        font-size: 18px;
+        border:none;
+        margin: 3px;
+        padding: 5px 8px;
+        border-radius: 3px;
+        background: #7b7b7b3b;
+       // color: #d1d1d1;
+       color:orange;
+        font-size: 0.9em;
+        cursor: pointer;
+        align-items: center;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        transition: 0.2s all;
+        span {
+            margin-left:4px;
+            text-transform:uppercase;
+            font-size: .85em;
+            color: #d1d1d1;
+        }
+     &:hover {
+         background:#9e9e9e3b;
+     }
+    
+}
+
+.copied-warning {
+transition:.2s all;
+  color:orange;
+  font-size:.8em;
+  text-transform: uppercase;
+  margin-right:10px;
+}
+.submit-checkbox {
+    color:red;
+    background-color: green;
 }

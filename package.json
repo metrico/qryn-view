@@ -1,7 +1,7 @@
 {
   "name": "cloki-view",
   "author": "joel@qxip.net",
-  "version": "0.3.6",
+  "version": "0.3.8",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.7.1",
@@ -23,7 +23,8 @@
     "react-dom": "^17.0.2",
     "react-lowlight": "^3.0.0",
     "react-redux": "^7.2.6",
-    "react-scripts": "5.0.0",
+    "react-router-dom": "^6.2.1",
+    "react-scripts": "^5.0.0",
     "redux-thunk": "^2.4.1"
   },
   "scripts": {
