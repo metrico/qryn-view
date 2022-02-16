@@ -212,7 +212,7 @@ export function DateRangePickerMain(props) {
             </button> 
 
             { isComponentVisible ? (
-                <div tabIndex="0" ref={ref}>
+                <div tabIndex={"0"} ref={ref}>
                     <ThemeProvider theme={theme}>
                         <Nav
                             dateRange={dateRange}

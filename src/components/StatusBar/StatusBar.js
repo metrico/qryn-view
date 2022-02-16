@@ -56,7 +56,7 @@ export function ApiSelector() {
     const [apiSelectorOpen, setApiSelectorOpen] = useState(false)
     const dispatch = useDispatch()
     const [isError, setIsError] = useState(true)
-
+    const API_URL = "API URL"
     useEffect(() => {
         setEditedUrl(apiUrl)
     }, [])
@@ -102,28 +102,28 @@ export function ApiSelector() {
     }
 
     return (
-        <div className="status-selectors">
-            <div className="api-url-selector">
+        <div className={"status-selectors"}>
+            <div className={"api-url-selector"}>
                 <button
-                    title="Set API URL"
-                    className="api-url-selector-toggle"
+                    title={"Set API URL"}
+                    className={"api-url-selector-toggle"}
                     onClick={handleApiUrlOpen}
                 >
                     <LinkIcon
-                        fontSize="small"
+                        fontSize={"small"}
                     />
                 </button>
                 {apiSelectorOpen ? (
-                    <div className="selector">
-                        <span className="label">API URL</span>
+                    <div className={"selector"}>
+                        <span className={"label"}>{API_URL}</span>
                         <input
-                            className="url"
+                            className={"url"}
                             value={editedUrl}
                             onChange={handleIntputChange} />
                         <button
 
                             onClick={onUrlSubmit}
-                        >save</button>
+                        >{"save"}</button>
                     </div>
 
                 ) : null}
@@ -143,7 +143,7 @@ export function StatusBarSelectors() {
     const [copied, setCopied] = useState(false)
     const dispatch = useDispatch();
     const [open, setOpen] = useState()
-
+    const LINK_COPIED = "Link Copied To Clipboard"
     const initialDateRange = () => {
         try {
             const ls = JSON.parse(localStorage.getItem(DATE_TIME_RANGE));
@@ -187,24 +187,24 @@ export function StatusBarSelectors() {
     }
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <div className="status-options">
+            <div className={"status-options"}>
 
 
-                <div className="status-selectors">
+                <div className={"status-selectors"}>
                     {copied && (
-                        <span className="copied-warning">Link Copied To Clipboard</span>
+                        <span className={"copied-warning"}>{LINK_COPIED}</span>
                     )}
 
                     <button
-                        className="url-copy"
-                        title="Copy Link"
+                        className={"url-copy"}
+                        title={"Copy Link"}
                         onClick={shareLink}
                     >
                         <LinkIcon
-                            fontSize="small"
+                            fontSize={"small"}
                         />
 
-                        <span>Copy Link</span>
+                        <span>{"Copy Link"}</span>
 
                     </button>
 

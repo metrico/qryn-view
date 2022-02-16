@@ -42,7 +42,7 @@ const Day = props => {
 						!props.disabled && props.filled && classes.contrast,
                         props.disabled && classes.inactive
 					)}
-					variant="body2">
+					variant={"body2"}>
 					{props.value}
 				</Typography>
 			</IconButton>

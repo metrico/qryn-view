@@ -6,7 +6,7 @@ import { UpdateStateFromQueryParams } from "./UpdateStateFromQueryParams";
 export default function MainView() {
   UpdateStateFromQueryParams()
     return (
-        <div className="log-search">
+        <div className={"log-search"}>
 
         <StatusBar/>
 

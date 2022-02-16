@@ -5,7 +5,7 @@ export default function LabelBrowser(){
 
     return (
         <div>
-        <QueryBar className="query-bar-placeholder"/>
+        <QueryBar className={"query-bar-placeholder"}/>
 
         <ValuesList />
 

@@ -93,15 +93,15 @@ const Month = (props) => {
                     <Grid
                         item
                         container
-                        direction="row"
-                        justifyContent="space-between"
+                        direction={"row"}
+                        justifyContent={"space-between"}
                         className={classes.weekDaysContainer}
                     >
                         {WEEK_DAYS.map((day) => (
                             <Typography
                                
                                 key={day}
-                                variant="caption"
+                                variant={"caption"}
                             >
                                 {day}
                             </Typography>
@@ -111,16 +111,16 @@ const Month = (props) => {
                     <Grid
                         item
                         container
-                        direction="column"
-                        justifyContent="space-between"
+                        direction={"column"}
+                        justifyContent={"space-between"}
                         className={classes.daysContainer}
                     >
                         {chunks(getDaysInMonth(date), 7).map((week, idx) => (
                             <Grid
                                 key={idx}
                                 container
-                                direction="row"
-                                justifyContent="center"
+                                direction={"row"}
+                                justifyContent={"center"}
                             >
                                 {week.map((day) => {
                                     const isStart = isStartOfRange(

@@ -130,7 +130,7 @@ const PickerNav = props => {
 			<Paper
 				className={classes.container}
 				elevation={5} >
-				<Grid container direction="row" wrap="nowrap">
+				<Grid container direction={"row"} wrap={"nowrap"}>
 					<Grid>
 						<Grid container>
 							<Grid item>
@@ -139,24 +139,24 @@ const PickerNav = props => {
 									onClick={e => {
                                         props.onClose(e)
                                     }}
-									aria-label="close">
+									aria-label={"close"}>
 									<CloseIcon />
 								</IconButton>
 
 
-								<div className='status-selectors'>
-									<div className="selector">
-										<span className='label'>From</span>
+								<div className={'status-selectors'}>
+									<div className={"selector"}>
+										<span className={'label'}>{"From"}</span>
 										<input
-											className='date-time-range'
+											className={'date-time-range'}
 											value={getEditedStartDate()}
 											onChange={handleStartInputChange}
 										/>
 									</div>
 
-									<div className='selector'>
-										<span className='label'>To</span>
-										<input className='date-time-range'
+									<div className={'selector'}>
+										<span className={'label'}>{'To'}</span>
+										<input className={'date-time-range'}
 											value={getEditedEndDate()}
 											onChange={handleStopInputChange}
 										/>
@@ -168,7 +168,7 @@ const PickerNav = props => {
 											props.onClose(e)
 										}}
 
-									>Apply Time Range</button>
+									>{"Apply Time Range"}</button>
 								</div>
 
 
@@ -181,11 +181,11 @@ const PickerNav = props => {
 						</Grid>
 
 
-						<Grid container className={classes.header} alignItems="center">
+						<Grid container className={classes.header} alignItems={"center"}>
 							<Grid item className={classes.headerItem}>
 								<Typography
 
-									variant="subtitle1">
+									variant={"subtitle1"}>
 									{dateRange?.dateStart && isValid(dateRange?.dateStart) ? format(dateRange?.dateStart, "MMMM dd, yyyy") : "Start Date"}
 								</Typography>
 							</Grid>
@@ -195,13 +195,13 @@ const PickerNav = props => {
 							<Grid item className={classes.headerItem}>
 								<Typography
 
-									variant="subtitle1">
+									variant={"subtitle1"}>
 									{dateRange?.dateEnd && isValid(dateRange?.dateEnd) ? format(dateRange?.dateEnd, "MMMM dd, yyyy") : "End Date"}
 								</Typography>
 							</Grid>
 						</Grid>
 						<Divider />
-						<Grid container direction="row" justifyContent="center" wrap="nowrap">
+						<Grid container direction={"row"} justifyContent={"center"} wrap={"nowrap"}>
 							<Month
 								{...commonProps}
 								value={firstMonth}

@@ -107,14 +107,14 @@ export const ValuesList = (props) => {
         } else return {};
     };
     return (labelsBrowserOpen &&
-        <div className="labels-container">
-            <div className="valuesList">
-                <div className="valuelist-title">
+        <div className={"labels-container"}>
+            <div className={"valuesList"}>
+                <div className={"valuelist-title"}>
                     <Legend
-                        title="Select labels to search in"
-                        text="Which labels would you like to consider for your search?" />
+                        title={"Select labels to search in"}
+                        text={"Which labels would you like to consider for your search?"} />
                     <LabelsFetchError />
-                    <div className="valuelist-content">
+                    <div className={"valuelist-content"}>
 
                         <button
                             className={"refresh-button"}
@@ -122,7 +122,7 @@ export const ValuesList = (props) => {
                             title={'Refresh Labels List'}
                         >
                             <RefreshIcon
-                                fontSize="small"
+                                fontSize={"small"}
                             />
                         </button>
                         {labelList &&
