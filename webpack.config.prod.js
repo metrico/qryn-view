@@ -2,7 +2,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const isDevelopment = process.env.NODE_ENV === 'development'
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const Dotenv = require('dotenv-webpack')
-const webpack = require('webpack')
 const path = require("path")
 const TerserPlugin = require('terser-webpack-plugin')
 module.exports = {
@@ -63,10 +62,6 @@ module.exports = {
             template: './public/index.html',
             filename: './index.html',
           
-        }),
-        new webpack.IgnorePlugin({
-            resourceRegExp: /^\.\/locale$/,
-            contextRegExp: /moment$/,
         }),
         new MiniCssExtractPlugin({
             filename: isDevelopment ? '[name].css' : '[name].[hash].css',

@@ -17,6 +17,7 @@
     "axios": "^0.25.0",
     "date-fns": "^2.28.0",
     "env-cmd": "^10.1.0",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -35,7 +36,7 @@
     "eject": "react-scripts eject",
     "start": "npx webpack-dev-server",
     "build-old": "webpack --mode production",
-    "webpack-build":"webpack --config webpack.config.prod.js --mode=production",
+    "webpack-build": "webpack --config webpack.config.prod.js --mode=production",
     "build": "CI=false && react-scripts build"
   },
   "eslintConfig": {

@@ -21,10 +21,6 @@ module.exports = {
             template: "./public/index.html",
         }),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.IgnorePlugin({
-            resourceRegExp: /^\.\/locale$/,
-            contextRegExp: /moment$/,
-        }),
         new Dotenv({
             prefix:'process.env.',
             expand: true,
