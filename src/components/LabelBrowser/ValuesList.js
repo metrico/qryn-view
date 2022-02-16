@@ -39,7 +39,7 @@ export const ValuesList = (props) => {
     if(debug) console.log('🚧 LOGIC/LabelBrowser/ValuesList', apiUrl)
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen)
     const apiError = useSelector((store) => store.apiErrors)
-
+    const CLOSE = "close"
     /**
      * TODO: FILTER VALUES INSIDE LABELS
      */
@@ -138,7 +138,7 @@ export const ValuesList = (props) => {
                     <div className="valuelist-content">
 
                         <button
-                            className="refresh-button"
+                            className={"refresh-button"}
                             onClick={handleRefresh}
                             title={'Refresh Labels List'}
                         >
@@ -181,26 +181,26 @@ export const ValuesList = (props) => {
                 </div>
 
                 {selectedList() && (
-                    <div className="values-container">
-                        <div className="values-container-column">
+                    <div className={"values-container"}>
+                        <div className={"values-container-column"}>
                             {labelsSelected.map((labelSelected, key) => (
-                                <div className="values-column" key={key}>
-                                    <div className="values-column-title">
+                                <div className={"values-column"} key={key}>
+                                    <div className={"values-column-title"}>
                                         <span>
                                             {labelSelected.name} ({labelSelected.values.length})
                                         </span>
-                                        <span className="close-column"
+                                        <span className={"close-column"}
                                             onClick={(e) =>
                                                 onLabelOpen(e, labelSelected)
                                             }
-                                        >close</span>
+                                        >{CLOSE}</span>
                                     </div>
-                                    <div className="valuelist-content column">
+                                    <div className={"valuelist-content column"}>
                                         {labelSelected?.values?.map(
                                             (value, key) => (
                                                 <small
                                                     key={key}
-                                                    className="label-value"
+                                                    className={"label-value"}
                                                     style={styleValue(value)}
                                                     onClick={(e) => onLabelValueClick(e, value)}
                                                 >

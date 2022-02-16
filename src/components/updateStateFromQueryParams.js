@@ -1,4 +1,4 @@
-import moment from 'moment'
+import * as moment from 'moment'
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
