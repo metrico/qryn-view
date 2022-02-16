@@ -1,6 +1,6 @@
 import React, { useState, useEffect,/* useCallback */ } from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import { setQuery } from "../../actions";
+import { setIsSubmit, setQuery } from "../../actions";
 import loadLogs from "../../actions/loadLogs"
 import { setLabelsBrowserOpen } from "../../actions/setLabelsBrowserOpen";
 
@@ -16,16 +16,33 @@ export const QueryBar = () => {
     const step = useSelector(store => store.step)
     const apiUrl = useSelector(store => store.apiUrl)
     const query = useSelector((store) => store.query)
+    const isSubmit = useSelector(store => store.isSubmit)
     const [queryInput, setQueryInput] = useState(query)
     const [queryValid, setQueryValid] = useState(false)
 
-
-    // force a query to be run after load of component
-    if (debug) console.log('🚧 LOGIC/QueryBar/', typeof query, query.length)
-    if (query.length > 1) {
-        if (debug) console.log('🚧 LOGIC/QueryBar/ dispatch ', query !== "{}", query.length > 0, query !== "{}" || query.length > 1)
-        dispatch(loadLogs(query, [start, stop], limit, step, apiUrl))
+    const onQueryValid = (query) => {
+        return query !== '{' && query !== '}' && query !== '{}' && query !== '' // TODO: make a proper query validation
     }
+
+ 
+    useEffect(()=>{
+   // force a query to be run after load of component
+   if (debug) console.log('🚧 LOGIC/QueryBar/', typeof query, query.length)
+
+   if (onQueryValid(query && isSubmit === "true") ) {
+       if (debug) console.log('🚧 LOGIC/QueryBar/ dispatch ', query !== "{}", query.length > 0, query !== "{}" || query.length > 1)
+     
+       dispatch(loadLogs(query, [start, stop], limit, step, apiUrl))
+    
+       setTimeout(()=>{
+        dispatch(setIsSubmit(false))
+       },200)
+    
+   } else if( !onQueryValid(query) && isSubmit === "true") {
+    dispatch(setIsSubmit(false))
+   }
+
+    },[])
 
     useEffect(() => {
         setQueryInput(query);
@@ -59,10 +76,11 @@ export const QueryBar = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        dispatch(setLabelsBrowserOpen(false))
+        
         dispatch(setQuery(queryInput))
 
-        if (query !== "{}" || query !== "") {
+        if (onQueryValid(query)) {
+            dispatch(setLabelsBrowserOpen(false))
             dispatch(loadLogs(query, [start, stop], limit, step, apiUrl))
 
         } else {
@@ -72,9 +90,7 @@ export const QueryBar = () => {
         }
     };
 
-    const onQueryValid = (query) => {
-        return query !== '{' && query !== '}' && query !== '{}' && query !== '' // TODO: make a proper query validation
-    }
+
 
     return (
         <div className="query-bar-container">

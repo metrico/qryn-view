@@ -81,7 +81,7 @@ export default function loadLogs(label, time, limit, step, apiUrl) {
 
                  
 
-                    dispatch(setLogs(messages));
+                    dispatch(setLogs(messages || []));
                     dispatch(setLoading(false));
                 }
             })

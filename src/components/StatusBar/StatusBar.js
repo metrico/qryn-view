@@ -4,7 +4,7 @@ import Logo from "./assets/cloki-logo.png";
 import LinkIcon from '@mui/icons-material/Link';
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { setQueryLimit, setQueryStep, setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
+import { setIsSubmit, setQueryLimit, setQueryStep, setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
 import isDate from "date-fns/isDate";
 import { setApiUrl } from "../../actions/setApiUrl";
 import { setApiError } from "../../actions/setApiError";
@@ -36,7 +36,6 @@ export function StatusBarInput(props) {
     const handleStatusInputChange = (e) => {
         dispatch(dispatchAction(e.target.value))
     }
-
 
     return (
         <div className="selector">
@@ -142,6 +141,7 @@ export function StatusBarSelectors() {
     const stopTs = useSelector((store) => store.stop);
     const queryLimit = useSelector((store) => store.limit);
     const queryStep = useSelector((store) => store.step);
+    const isSubmit = useSelector((store) => store.isSubmit)
     const [copied, setCopied] = useState(false)
     const dispatch = useDispatch();
     const [open, setOpen] = useState()
@@ -171,14 +171,21 @@ export function StatusBarSelectors() {
     }
     const shareLink = (e) => {
         e.preventDefault()
+       const setSubmit = dispatch(setIsSubmit(true)) 
+      setTimeout(()=>{
         navigator.clipboard.writeText(window.location.href).then(function () {
             setCopied(true)
             setTimeout(() => {
                 setCopied(false)
+                dispatch(setIsSubmit(false))
             }, 1500)
         }, function (err) {
             console.log('error on copy', err)
         })
+      },200)
+            
+        
+
     }
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
