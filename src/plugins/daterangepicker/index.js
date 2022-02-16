@@ -25,6 +25,8 @@ import { setRangeOpen, setStartTime, setTimeRangeLabel, setStopTime } from "../.
 import { useSelector, useDispatch } from "react-redux";
 import useOutsideRef from "./hooks/useOutsideRef";
 
+import loadLogs from "../../actions/loadLogs"
+import { setLabelsBrowserOpen } from "../../actions/setLabelsBrowserOpen";
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 export function DateRangePickerMain(props) {
     const today = Date.now();
@@ -121,12 +123,28 @@ export function DateRangePickerMain(props) {
             }
         }
     };
-    const onClose = (e) => {
+    // const onClose = (e) => {
      
-        e.preventDefault();
+    //     e?.preventDefault();
+    //     dispatch(setRangeOpen(false));
+    //     props.isOpen(e);
+    // };
+    const {query, start, stop, limit, step, apiUrl} = useSelector((store) => store)
+    const onClose = (e) => {
+        e.preventDefault();        
+        if (onQueryValid(query)) {
+            dispatch(setLabelsBrowserOpen(false))
+            dispatch(loadLogs(query, [start, stop], limit, step, apiUrl))
+        } else {
+            console.log("Please make a log query", query);
+        }
         dispatch(setRangeOpen(false));
         props.isOpen(e);
+
     };
+    const onQueryValid = (query) => {
+        return query !== '{' && query !== '}' && query !== '{}' && query !== '' // TODO: make a proper query validation
+    }
     // helpers
     const inHoverRange = (day) => {
         return (
