@@ -6,8 +6,14 @@ name: Node.js CI
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - '**/README.md'
+      - '**/workflows/*.yml'
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - '**/README.md'
+      - '**/workflows/*.yml'
 
 jobs:
   build:
