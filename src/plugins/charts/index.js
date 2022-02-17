@@ -2,55 +2,114 @@
 import './jquery-loader'
 import ReactFlot from 'react-flot';
 import 'react-flot/flot/jquery.flot.time.min';
-import { useDispatch,  useSelector} from 'react-redux';
-import 'react-flot/flot/jquery.flot.time.min';
-import * as moment from 'moment'
-function ClokiChart (props) {
+import { useDispatch, useSelector } from 'react-redux';
 
 
-    const matrixData = useSelector( store => store.matrixData)
-    const spliced = matrixData
-    console.log(matrixData)
+function ClokiChart(props) {
 
 
-    const formatLabel = (labels) => {
-        return "{" + Object.entries(labels).map(([key,value]) => (
-            `${key}="${value}"`
-        )).join(",") + "}"
-        }
-    const formatTs = (values) => {
-    //    console.log(values)
-    //    const vals = []
-    //     const formatted = new Date(moment(values[0]).format("YYYY-MM-DDTHH:mm:ss.SSSZ"))
-    //     return [formatted,values[1]]
-return values.map((ts,value)=> {
-    const formatted = new Date(moment(ts).format("YYYY-MM-DDTHH:mm:ss.SSSZ"))
-    return [formatted,value]
-})
-    }
-    const dataParsed = spliced.map(m => ({data:m.values,label:formatLabel(m.metric)}))
-// console.log(dataParsed)
-    const options = {
-      xaxis:{
-        
+  const matrixData = useSelector(store => store.matrixData)
+  const chartLimit = useSelector(store => store.limit)
+  const spliced = matrixData.length > chartLimit ? matrixData.splice(0, chartLimit) : matrixData;
+  console.log(matrixData)
+
+
+  const formatLabel = (labels) => {
+    return "{" + Object.entries(labels).map(([key, value]) => (
+      `${key}="${value}"`
+    )).join(",") + "}"
+  }
+  const jQ = window.jQuery;
+
+  const formatTs = (values) => {
+
+    return values.map(([ts,val])=>([ts*1000,val]))
+
+  }
+  const dataParsed = spliced.map(m => ({ data: formatTs(m.values), label: formatLabel(m.metric) }))
+  // console.log(dataParsed)
+  const options = {
+    xaxis: {
+      show: true,
+      mode: "time",
+    
+      timeformat: "%Y/%m/%d %H:%M:%S",
+
+
+    },
+    grid: {
+      show: true,
+      aboveData: true,
+      color: '#999',
+      clickable: true,
+      hoverable: true,
+      autoHighlight: true,
+      mouseActiveRadius:10,
+      borderWidth: 0,
+
+    },
+    tooltip: {
+      show: true,
+      cssClass:'floatTip',                 //false
+
+      //"%s | X: %x | Y: %y"              // null
+      shifts: {
+        x: 10,                          //10
+        y: 20,                       //20
       },
-      series: {
-        lines: {show:true, lineWidth:1},
-        point:{show:true, 
-          fill:false,
-          points:{radius:8,
-          symbol:"circle"
-        }},
-       shadowSize:0
-      }
-  
+      defaultTheme: false,               //true
+      lines: true,               //false
+
+    },
+    interaction: {
+      redrawOverlayInterval: 1,
+    },
+    legend: {
+      show: true,
+
+      position: "ne",
+      backgroundOpacity: 0,
+      container: jQ("#label-container")
+
+
+    },
+    series: {
+      lines: { show: false, lineWidth: 1 },
+      bars: { show: true, barWidth: 1 },
+      points: { show: true, radius: 0 },
+
+      shadowSize: 0
+    },
+    markings: {
+      clickable:true
     }
-    return (
-        <div>
- 
-          <ReactFlot id="product-chart" options={options} data={dataParsed} width="100%" height="800px" />
-        </div>
-      );
+
+  }
+
+//   jQ("#product-chart").bind("plotclick", function (event, pos, item) {
+//     console.log("You clicked at " + pos.x + ", " + pos.y);
+//     // axis coordinates for other axes, if present, are in pos.x2, pos.x3, ...
+//     // if you need global screen coordinates, they are pos.pageX, pos.pageY
+
+//     if (item) {
+//        console.log(item.series, item.datapoint);
+       
+//     }
+// });
+  return (
+    <div>
+
+      <ReactFlot id="product-chart" options={options} data={dataParsed} width="100%" height="222px" />
+      <div
+        style={{
+          display: 'flex',
+          fontSize: '.95em',
+          color: 'orange',
+          fontFamily: 'monospace'
+        }}
+        id={"label-container"}></div>
+    </div>
+  );
 }
 
 export default ClokiChart;
