@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { CircularProgress } from "@mui/material";
 import * as moment from "moment";
+import ClokiChart from "../plugins/charts";
 
 const TAGS_LEVEL = {
     critical: ['emerg', 'fatal', 'alert', 'crit', 'critical'],
@@ -35,6 +36,7 @@ class LogView extends Component {
             limitLoad: this.props.limitLoad || false,
             limit: props.limit || 100,
             messages: props.messages || [],
+            matrixData: props.matrixData || [],
             loading: false
         }
 
@@ -65,7 +67,7 @@ class LogView extends Component {
         return (
             <div className={"log-view"}>
                 <div className={`logs-box`}>
-                    {this.getLogs() && this.getLogs().map((value, key) => (
+                    {/* {this.state.this.getLogs() && this.getLogs().map((value, key) => (
                         <div
                             key={key}
                             className={`line ${this.getLogColor(value.tags)}`}
@@ -86,7 +88,9 @@ class LogView extends Component {
                                 </div>
                             )}
                         </div>
-                    ))}
+                    ))} */}
+
+                    <ClokiChart/>
                     {this.props.loading && (
                         <CircularProgress
                             className={"progress"}
@@ -116,6 +120,7 @@ const mapStateToProps = (state) => {
         stop: state.stop,
         limit: state.limit,
         loading: state.loading,
+        matrixData: state.matrixData
     };
 };
 

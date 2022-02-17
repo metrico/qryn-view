@@ -1,8 +1,8 @@
 import axios from "axios";
 import setLogs from "./setLogs";
 import setLoading from "./setLoading";
-
 import store from '../store/store'
+import setMatrixData from "./setMatrixData";
 
 // *query : LogQl Query
 // *limit : Limit of returned lines
@@ -77,6 +77,9 @@ export default function loadLogs() {
                     const type = response?.data?.data?.resultType;
 
                     mapStreams(result, messages, type);
+                    if(type==='matrix') {
+                        dispatch(setMatrixData(result))
+                    }
                     dispatch(setLogs(messages || []));
                     dispatch(setLoading(false));
                 }

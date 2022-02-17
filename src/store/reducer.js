@@ -34,6 +34,8 @@ const reducer =  (state, action) => {
             return {...state, urlLocation: action.urlLocation};
             case "SET_IS_SUBMIT":
                 return {...state, isSubmit: action.isSubmit};
+        case "SET_MATRIX_DATA":
+            return {...state, matrixData: action.matrixData};
         default:
             return { ...state };
     }
