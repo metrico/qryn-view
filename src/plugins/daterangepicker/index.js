@@ -100,6 +100,7 @@ export function DateRangePickerMain(props) {
             onChange(newRange);
             saveDateRange(newRange);
             setDateRange(newRange);
+            dispatch(setTimeRangeLabel(''))
             onClose();
         } else {
             setDateRange({ dateStart: day, dateEnd: undefined });
