@@ -15,8 +15,9 @@ import Month from "./Month";
 import Ranges from "./Ranges";
 import CloseIcon from '@mui/icons-material/Close';
 import { DATE_TIME_RANGE, MARKERS } from "../consts";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setStartTime, setStopTime, setTimeRangeLabel } from "../../../actions";
+import { findRangeByLabel } from '../utils';
 
 const styles = (theme) =>
 	createStyles({
@@ -75,7 +76,14 @@ const PickerNav = props => {
 	const dispatch = useDispatch()
 	const [editedStartDate, setEditedStartDate] = useState(dateRange.dateStart)
 	const [editedEndDate, setEditedEndDate] = useState(dateRange.dateEnd)
-
+	const [rangeLabel] = useState(dateRange.label)
+    useEffect(() => {
+        if (rangeLabel) {
+            const newRange = findRangeByLabel(rangeLabel);
+            setEditedStartDate(newRange.dateStart);
+            setEditedEndDate(newRange.dateEnd);
+        } 
+    },[setEditedEndDate, setEditedStartDate, rangeLabel])
 	const handleStopInputChange = (event, isBlur) => {
 		event.preventDefault()
 		const value = new Date(event.target.value);
