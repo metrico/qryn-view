@@ -115,7 +115,11 @@ const PickerNav = props => {
             dispatch(setTimeRangeLabel(''))
             setDateRange({dateStart: startDate, dateEnd: endDate})
             saveDateRange({dateStart: startDate, dateEnd: endDate});
-		}
+            props.onClose(e)
+		} else if (!isValidInterval) {
+            // TODO: Add a warning/error on screen when we get to it
+            console.error('Invalid time range')
+        }
 	}
     
     const saveDateRange = (range) => {
@@ -174,7 +178,6 @@ const PickerNav = props => {
 										className={classes.applyButton}
 										onClick={e => {
 											onTimeRangeSet(e)
-											props.onClose(e)
 										}}
 
 									>{"Apply Time Range"}</button>
