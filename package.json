@@ -1,5 +1,10 @@
 {
   "name": "cloki-view",
+  "description": "LogQL UI for cLoki",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/metrico/cloki-view.git"
+  },
   "author": "joel@qxip.net",
   "version": "0.3.16",
   "private": true,
