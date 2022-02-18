@@ -7,6 +7,7 @@ import { queryBuilder } from "./helpers/querybuilder";
 import { setQuery } from "../../actions"
 import loadLabelValues from "../../actions/loadLabelValues"
 
+import Tooltip from '@mui/material/Tooltip';
 export const LabelsFetchError = () => {
     const labelError = useSelector((store) => store.apiErrors)
 
@@ -184,14 +185,17 @@ export const ValuesList = (props) => {
                                     <div className={"valuelist-content column"}>
                                         {labelSelected?.values?.map(
                                             (value, key) => (
-                                                <small
-                                                    key={key}
-                                                    className={"label-value"}
-                                                    style={styleValue(value)}
-                                                    onClick={(e) => onLabelValueClick(e, value)}
-                                                >
-                                                    {value.name}
-                                                </small>
+                                                <Tooltip title={value.name} placement="bottom">
+                                                    <small
+                                                        key={key}
+                                                        className={"label-value"}
+                                                        style={styleValue(value)}
+                                                        onClick={(e) => onLabelValueClick(e, value)}
+                                                    >
+                                                        {value.name}
+                                                    </small>
+                                                </Tooltip>
+                                                
                                             )
                                         )}
                                     </div>
