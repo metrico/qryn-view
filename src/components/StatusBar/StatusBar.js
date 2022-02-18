@@ -12,6 +12,8 @@ import { DATE_TIME_RANGE } from '../../plugins/daterangepicker/consts';
 import {  findRangeByLabel } from "../../plugins/daterangepicker/utils";
 import { UpdateStateFromQueryParams } from "../UpdateStateFromQueryParams";
 
+import loadLabels from "../../actions/LoadLabels";
+
 export default function StatusBar() {
 
     return (
@@ -98,6 +100,7 @@ export function ApiSelector() {
     const onUrlSubmit = (e) => {
         console.log(apiUrl, "API URL CHANGE")
 
+        console.log(dispatch(loadLabels(editedUrl)))
         dispatch(setApiUrl(editedUrl))
         const condition = true;
         if (condition) {
