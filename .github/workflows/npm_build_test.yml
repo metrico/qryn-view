@@ -76,7 +76,7 @@ jobs:
       with:
         source-directory: 'build'
         target-directory: 'view'
-        target-branch: upgrade-view-${{steps.version.outputs.newTag}}
+        target-branch: master:upgrade-view-${{steps.version.outputs.newTag}}
         destination-github-username: 'lmangani'
         destination-repository-name: 'cloki'
         user-email: lorenzo.mangani@gmail.com
@@ -87,9 +87,9 @@ jobs:
       with:
         github-token: ${{ secrets.GH_PUSH }}
         from-branch: upgrade-view-${{steps.version.outputs.newTag}}
-        to-branch: master
+        to-branch: 'master'
         repository-owner: lmangani
-        repository: cloki
+        repository: 'cloki'
     - name: Deploy to gh-pages 🚀
       if: github.event_name != 'pull_request'
       uses: JamesIves/github-pages-deploy-action@v4.2.3
