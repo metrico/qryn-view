@@ -81,15 +81,6 @@ jobs:
         destination-repository-name: 'cloki'
         user-email: lorenzo.mangani@gmail.com
         commit-message: Upgrade view to ${{steps.version.outputs.newTag}}
-    - name: Open PR in Mothership
-      if: github.event_name != 'pull_request'
-      uses: rematocorp/open-pull-request-action@v1
-      with:
-        github-token: ${{ secrets.GH_PUSH }}
-        from-branch: upgrade-view-${{steps.version.outputs.newTag}}
-        to-branch: 'master'
-        repository-owner: lmangani
-        repository: 'cloki'
     - name: Deploy to gh-pages 🚀
       if: github.event_name != 'pull_request'
       uses: JamesIves/github-pages-deploy-action@v4.2.3
