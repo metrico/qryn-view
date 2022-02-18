@@ -76,7 +76,7 @@ jobs:
       with:
         source-directory: 'build'
         target-directory: 'view'
-        target-branch: master:upgrade-view-${{steps.version.outputs.newTag}}
+        target-branch: 'view'
         destination-github-username: 'lmangani'
         destination-repository-name: 'cloki'
         user-email: lorenzo.mangani@gmail.com
