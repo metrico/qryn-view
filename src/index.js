@@ -7,7 +7,11 @@ import {
   Routes,
   Route,
 } from 'react-router-dom';
+import requestInterceptor from './helpers/request.inteceptor';
+import axios from 'axios';
+import errorInterceptor from './helpers/error.interceptor';
 
+errorInterceptor(axios)
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>

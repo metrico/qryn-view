@@ -12,6 +12,7 @@ import { DATE_TIME_RANGE } from '../../plugins/daterangepicker/consts';
 import {  findRangeByLabel } from "../../plugins/daterangepicker/utils";
 import { UpdateStateFromQueryParams } from "../UpdateStateFromQueryParams";
 
+import store from '../../store/store'
 import loadLabels from "../../actions/LoadLabels";
 
 export default function StatusBar() {
@@ -58,7 +59,7 @@ export function ApiSelector() {
     const [apiSelectorOpen, setApiSelectorOpen] = useState(false)
     const dispatch = useDispatch()
     const [isError, setIsError] = useState(true)
-    const API_URL = "API URL"
+    const API_URL = "API URL";
     useEffect(() => {
         setEditedUrl(apiUrl)
     }, [])
@@ -85,7 +86,6 @@ export function ApiSelector() {
             setApiSelectorOpen(true)
 
         }
-
     }, [apiError])
 
     const handleApiUrlOpen = (e = null) => {
@@ -98,12 +98,10 @@ export function ApiSelector() {
         setEditedUrl(e.target.value)
     }
     const onUrlSubmit = (e) => {
-        console.log(apiUrl, "API URL CHANGE")
-
-        console.log(dispatch(loadLabels(editedUrl)))
         dispatch(setApiUrl(editedUrl))
-        const condition = true;
-        if (condition) {
+        dispatch(loadLabels(apiUrl))
+        const isError = store.getState().apiErrors.length === 0;
+        if (isError) {
             handleApiUrlOpen()
         }
     }
