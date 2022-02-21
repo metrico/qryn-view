@@ -1,115 +1,226 @@
+import "./jquery-loader";
+import ReactFlot from "react-flot";
+import "react-flot/flot/jquery.flot.time.min";
+import "react-flot/flot/jquery.flot.selection.min";
+import "react-flot/flot/jquery.flot.crosshair.min";
+import loadLogs from "../../actions/loadLogs";
+import { useDispatch } from "react-redux";
 
-import './jquery-loader'
-import ReactFlot from 'react-flot';
-import 'react-flot/flot/jquery.flot.time.min';
-import { useDispatch, useSelector } from 'react-redux';
+import { setStartTime, setStopTime } from "../../actions";
 
+import * as moment from "moment";
+import { useState, useEffect, useRef } from "react";
 
-function ClokiChart(props) {
+export const ChartLabelList = ({ labels }) => {
+    return (
+        <div
+            style={{
+                display: "flex",
+                flexWrap: "wrap",
+            }}
+        >
+            {labels.length &&
+                labels.map((val, idx) => (
+                    <div
+                        key={idx}
+                        style={{
+                            fontSize: "12px",
+                            color: "#999",
+                            fontFamily: "sans-serif",
+                            display: "flex",
+                            alignItems: "center",
+                            margin: "2px",
+                            padding: "4px",
+                        }}
+                    >
+                        <div
+                            style={{
+                                height: "4px",
+                                width: "16px",
+                                marginRight: "8px",
+                                background: val.color,
+                            }}
+                        >
+                            {" "}
+                        </div>
+                        <span>{val.label}</span>
+                    </div>
+                ))}
+        </div>
+    );
+};
 
+function ClokiChart({ matrixData, chartLimit }) {
+    const chartRef = useRef(null);
+    const $q = window.jQuery;
+    const dispatch = useDispatch();
 
-  const matrixData = useSelector(store => store.matrixData)
-  const chartLimit = useSelector(store => store.limit)
-  const spliced = matrixData.length > chartLimit ? matrixData.splice(0, chartLimit) : matrixData;
-  console.log(matrixData)
+    const [chartData, setChartData] = useState(
+        getDataParsed(matrixData)(chartLimit)
+    );
+    const [labels, setLabels] = useState([]);
 
+    const [element, setElement] = useState(chartRef.current);
 
-  const formatLabel = (labels) => {
-    return "{" + Object.entries(labels).map(([key, value]) => (
-      `${key}="${value}"`
-    )).join(",") + "}"
-  }
-  const jQ = window.jQuery;
+    const options = {
+        xaxis: {
+            show: true,
+            mode: "time",
+            timeformat: "%H:%M:%S", // set this one on custom settings
+        },
+        grid: {
+            show: true,
+            aboveData: true,
+            color: "#999",
+            clickable: true,
+            hoverable: true,
+            autoHighlight: true,
+            mouseActiveRadius: 30,
+            borderWidth: 0,
+        },
+        legend: {
+            show: false,
+        },
+        tooltip: {
+            show: true,
+            cssClass: "floatTip",
+            shifts: {
+                x: 10,
+                y: 20,
+            },
+            defaultTheme: false,
+            lines: true,
+        },
+        interaction: {
+            redrawOverlayInterval: 1,
+        },
 
-  const formatTs = (values) => {
+        series: {
+            lines: { show: true, lineWidth: 1, shadowSize: 0 },
+            bars: { show: false, barWidth: 100, shadowSize: 0 },
+            points: { show: false, radius: 3, shadowSize: 0 },
+        },
+        markings: {
+            clickable: true,
+        },
 
-    return values.map(([ts,val])=>([ts*1000,val]))
+        selection: {
+            mode: "x",
+        },
+    };
 
-  }
-  const dataParsed = spliced.map(m => ({ data: formatTs(m.values), label: formatLabel(m.metric) }))
-  // console.log(dataParsed)
-  const options = {
-    xaxis: {
-      show: true,
-      mode: "time",
-    
-      timeformat: "%Y/%m/%d %H:%M:%S",
+    const [chartOptions, setChartOptions] = useState(options);
 
-
-    },
-    grid: {
-      show: true,
-      aboveData: true,
-      color: '#999',
-      clickable: true,
-      hoverable: true,
-      autoHighlight: true,
-      mouseActiveRadius:10,
-      borderWidth: 0,
-
-    },
-    tooltip: {
-      show: true,
-      cssClass:'floatTip',                 //false
-
-      //"%s | X: %x | Y: %y"              // null
-      shifts: {
-        x: 10,                          //10
-        y: 20,                       //20
-      },
-      defaultTheme: false,               //true
-      lines: true,               //false
-
-    },
-    interaction: {
-      redrawOverlayInterval: 1,
-    },
-    legend: {
-      show: true,
-
-      position: "ne",
-      backgroundOpacity: 0,
-      container: jQ("#label-container")
-
-
-    },
-    series: {
-      lines: { show: false, lineWidth: 1 },
-      bars: { show: true, barWidth: 1 },
-      points: { show: true, radius: 0 },
-
-      shadowSize: 0
-    },
-    markings: {
-      clickable:true
+    function formatLabel(labels) {
+        return (
+            "{" +
+            Object.entries(labels)
+                .map(([key, value]) => `${key}="${value}"`)
+                .join(",") +
+            "}"
+        );
     }
 
-  }
+    function formatTs(values) {
+        return values.map(([ts, val]) => [ts * 1000, val]);
+    }
 
-//   jQ("#product-chart").bind("plotclick", function (event, pos, item) {
-//     console.log("You clicked at " + pos.x + ", " + pos.y);
-//     // axis coordinates for other axes, if present, are in pos.x2, pos.x3, ...
-//     // if you need global screen coordinates, they are pos.pageX, pos.pageY
+    function getSplicedData(data) {
+        return function (limit) {
+            return data.length > limit ? data.splice(0, limit) : data;
+        };
+    }
+    function getDataParsed(data) {
+        return function (limit) {
+            const spliced = getSplicedData(data)(limit);
+            return spliced.map((m) => ({
+                data: formatTs(m.values),
+                label: formatLabel(m.metric),
+                isVisible: true,
+            }));
+        };
+    }
+ 
+    function setRanges(event, ranges) {
+        const element = $q(chartRef.current);
+        event.preventDefault();
 
-//     if (item) {
-//        console.log(item.series, item.datapoint);
-       
-//     }
-// });
-  return (
-    <div>
+        try {
+            let plot = $q.plot(
+                element,
+                chartData,
+                $q.extend(true, {}, options, {
+                    xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+                })
+            );
 
-      <ReactFlot id="product-chart" options={options} data={dataParsed} width="100%" height="222px" />
-      <div
-        style={{
-          display: 'flex',
-          fontSize: '.95em',
-          color: 'orange',
-          fontFamily: 'monospace'
-        }}
-        id={"label-container"}></div>
-    </div>
-  );
+            const fromTime = ranges.xaxis.from;
+            const toTime = ranges.xaxis.to;
+
+            const fromTs = new Date(
+                moment(parseInt(fromTime)).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+            );
+            const toTs = new Date(
+                moment(parseInt(toTime)).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+            );
+
+            dispatch(setStopTime(toTs));
+            dispatch(setStartTime(fromTs));
+            dispatch(loadLogs());
+        } catch (e) {
+            console.log("error on chart redraw", e);
+        }
+    }
+
+    // first chart load
+    useEffect(() => {
+        setElement(chartRef.current);
+        setLabels(chartData.map(({ label }) => label));
+        $q(chartRef.current).bind("plotselected", setRanges);
+        drawChart();
+    }, []);
+
+    // detect changes on chart data
+    useEffect(() => {
+        setChartOptions(options);
+        setChartData(getDataParsed(matrixData)(chartLimit));
+        setElement(chartRef.current);
+        drawChart();
+
+        return () => {
+            if (element !== null) {
+                $q(element).unbind("plotselected", setRanges);
+            }
+        };
+    }, [matrixData, chartLimit]);
+
+    function drawChart() {
+        try {
+            $q.plot(chartRef.current, chartData, chartOptions);
+            // get  generated colors
+            const chartPlotted =
+                chartRef.current[
+                    Object.keys(chartRef.current)[3]
+                ].plot.getData();
+            setLabels(chartPlotted);
+        } catch (e) {
+            console.log("error drawing chart", e);
+        }
+    }
+
+    return (
+        <div>
+            <div
+                ref={chartRef}
+                id={"chart-container"}
+                style={{
+                    width: "100%",
+                    height: "220px",
+                }}
+            ></div>
+            <ChartLabelList labels={labels} />
+        </div>
+    );
 }
 
 export default ClokiChart;

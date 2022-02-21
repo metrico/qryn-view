@@ -1,4 +1,4 @@
-import React, { useState, useEffect,/* useCallback */ } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { setIsSubmit, setQuery } from "../../actions";
 import loadLogs from "../../actions/loadLogs"
@@ -10,11 +10,6 @@ export const QueryBar = () => {
     const dispatch = useDispatch()
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen)
     const debug = useSelector(store => store.debug)
-    const stop = useSelector(store => store.stop)
-    const start = useSelector(store => store.start)
-    const limit = useSelector(store => store.limit)
-    const step = useSelector(store => store.step)
-    const apiUrl = useSelector(store => store.apiUrl)
     const query = useSelector((store) => store.query)
     const isSubmit = useSelector(store => store.isSubmit)
     const [queryInput, setQueryInput] = useState(query)
@@ -82,7 +77,7 @@ export const QueryBar = () => {
 
         if (onQueryValid(query)) {
             dispatch(setLabelsBrowserOpen(false))
-            dispatch(loadLogs(query, [start, stop], limit, step, apiUrl))
+            dispatch(loadLogs())
 
         } else {
 

@@ -11,11 +11,9 @@ import setMatrixData from "./setMatrixData";
 // *step : Resolution step width in either a duration [1s, 5s, 5m etc] or number of seconds
 // *direction : Determines sort order of logs. Either forward or backward. Default is backward
 
-// *time: [start,end]
 
 export default function loadLogs() {
-    // const step = 120
-    // const direction = 'backward'
+
     const {query: label, start: startTs, stop: stopTs, limit, step, apiUrl} = store.getState();
     const origin = window.location.origin;
     const url = apiUrl;
@@ -75,12 +73,17 @@ export default function loadLogs() {
                     let messages = [];
                     const result = response?.data?.data.result; // array
                     const type = response?.data?.data?.resultType;
-
-                    mapStreams(result, messages, type);
-                    if(type==='matrix') {
-                        dispatch(setMatrixData(result))
+                    if(type==='streams'){
+                      mapStreams(result, messages, type);
+                        dispatch(setMatrixData([]))
+                        dispatch(setLogs(messages || []));
+                        dispatch(setLoading(false));
                     }
-                    dispatch(setLogs(messages || []));
+                   
+                    if(type==='matrix') {
+                        dispatch(setMatrixData(result || []))
+                        dispatch(setLoading(false))
+                    }
                     dispatch(setLoading(false));
                 }
                 dispatch(setLoading(false));

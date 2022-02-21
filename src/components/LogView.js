@@ -47,7 +47,12 @@ class LogView extends Component {
             display: 'flex'
         } : { display: 'none' })
     }
-
+    getMatrixForChart = () => {
+        return this.props.matrixData
+    }
+    getLimit = () => {
+        return this.props.limit
+    }
     onShowTags = (e, value) => {
         e.preventDefault()
         value.showLabels = !value.showLabels;
@@ -67,30 +72,40 @@ class LogView extends Component {
         return (
             <div className={"log-view"}>
                 <div className={`logs-box`}>
-                    {/* {this.state.this.getLogs() && this.getLogs().map((value, key) => (
-                        <div
-                            key={key}
-                            className={`line ${this.getLogColor(value.tags)}`}
-                            onClick={e => this.onShowTags(e, value)}
-                        >
-                            <span id={value.timestamp} className={"timestamp"}>
-                                {this.formatDate(value.timestamp)}
-                            </span>
-                            <span className={"log-line"}>{value.text}</span>
+                    {this.getLogs().length > 0 && this.getMatrixForChart().length < 1 ? (
+                        this.getLogs().map((value, key) => (
+                            <div
+                                key={key}
+                                className={`line ${this.getLogColor(value.tags)}`}
+                                onClick={e => this.onShowTags(e, value)}
+                            >
+                                <span id={value.timestamp} className={"timestamp"}>
+                                    {this.formatDate(value.timestamp)}
+                                </span>
+                                <span className={"log-line"}>{value.text}</span>
+    
+                                {value.tags && (
+                                    <div className={"value-tags-container"}
+                                        style={this.onTagsShow(value.showLabels)}
+                                    >
+                                        <ValueTags
+                                            tags={value.tags}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        )
 
-                            {value.tags && (
-                                <div className={"value-tags-container"}
-                                    style={this.onTagsShow(value.showLabels)}
-                                >
-                                    <ValueTags
-                                        tags={value.tags}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    ))} */}
+                    )   ): (null)}
 
-                    <ClokiChart/>
+
+                    {this.getMatrixForChart().length > 0 ? (
+                        <ClokiChart
+                        chartLimit={this.getLimit()}
+                        matrixData={this.getMatrixForChart()}
+                        />
+                    ) : (null)}
+
                     {this.props.loading && (
                         <CircularProgress
                             className={"progress"}
@@ -104,8 +119,8 @@ class LogView extends Component {
 
     getLogs = () => {
 
-            return this.props.messages?.sort((a, b) => (a.timestamp < b.timestamp) ? 1 : -1);
-        
+        return this.props.messages?.sort((a, b) => (a.timestamp < b.timestamp) ? 1 : -1);
+
     };
 
     formatDate = (timestamp) => {
