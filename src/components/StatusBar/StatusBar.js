@@ -4,7 +4,7 @@ import Logo from "./assets/cloki-logo.png";
 import LinkIcon from '@mui/icons-material/Link';
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { setIsSubmit, setQueryLimit, setQueryStep, setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
+import { setApiError, setIsSubmit, setQueryLimit, setQueryStep, setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
 import isDate from "date-fns/isDate";
 import { setApiUrl } from "../../actions/setApiUrl";
 import { DateRangePicker } from "../../plugins/daterangepicker";
@@ -98,6 +98,7 @@ export function ApiSelector() {
         setEditedUrl(e.target.value)
     }
     const onUrlSubmit = (e) => {
+        dispatch(setApiError(''))
         dispatch(setApiUrl(editedUrl))
         dispatch(loadLabels(apiUrl))
         const isError = store.getState().apiErrors.length === 0;
