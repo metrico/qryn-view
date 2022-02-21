@@ -6,10 +6,12 @@ import "react-flot/flot/jquery.flot.crosshair.min";
 import loadLogs from "../../actions/loadLogs";
 import { useDispatch } from "react-redux";
 
-import { setStartTime, setStopTime } from "../../actions";
+import { setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
 
 import * as moment from "moment";
+
 import { useState, useEffect, useRef } from "react";
+import { format } from "date-fns";
 
 export const ChartLabelList = ({ labels }) => {
     return (
@@ -163,10 +165,16 @@ function ClokiChart({ matrixData, chartLimit }) {
             const toTs = new Date(
                 moment(parseInt(toTime)).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
             );
+          const fromLabel =  format(fromTs, "yyyy/MM/dd HH:mm:ss")
+          const toLabel = format(toTs, "yyyy/MM/dd HH:mm:ss")
 
+            const timeRangeLabel = `${fromLabel}-${toLabel}`
             dispatch(setStopTime(toTs));
             dispatch(setStartTime(fromTs));
+
+            dispatch(setTimeRangeLabel(timeRangeLabel))
             dispatch(loadLogs());
+
         } catch (e) {
             console.log("error on chart redraw", e);
         }
