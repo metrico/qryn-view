@@ -105,7 +105,7 @@ class LogView extends Component {
                         matrixData={this.getMatrixForChart()}
                         />
                     ) : (null)}
-                        {this.getLogs().length < 1 && this.getMatrixForChart().length < 1(
+                        {this.getLogs().length < 1 && this.getMatrixForChart().length < 1 &&(
                         <div
                         style={{
                             color:"white",

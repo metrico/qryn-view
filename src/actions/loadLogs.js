@@ -18,7 +18,6 @@ export default function loadLogs() {
     // const step = 120
     // const direction = 'backward'
     const localStore = store.getState();
-    console.log(localStore)
     const {query: label, limit, step, apiUrl, label: rangeLabel} = localStore;
     let { start: startTs, stop: stopTs } = localStore;
 
@@ -101,6 +100,7 @@ export default function loadLogs() {
                     dispatch(setLoading(false));
                 } else {
                     dispatch(setLogs([]))
+                    dispatch(setMatrixData([]))
                     dispatch(setLoading(false))
                 }
 

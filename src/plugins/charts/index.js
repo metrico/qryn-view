@@ -5,60 +5,11 @@ import "react-flot/flot/jquery.flot.selection.min";
 import "react-flot/flot/jquery.flot.crosshair.min";
 import loadLogs from "../../actions/loadLogs";
 import { useDispatch } from "react-redux";
-
 import { setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
-
 import * as moment from "moment";
-
 import { useState, useEffect, useRef } from "react";
 import { format } from "date-fns";
-
-export const ChartLabelList = (props) => {
-console.log(props)
-
-    const handleLabelClick = (val) => {
-        console.log(val)
-
-       
-    }
-    return (
-        <div
-            style={{
-                display: "flex",
-                flexWrap: "wrap",
-            }}
-        >
-            {props.labels.length &&
-                props.labels.map((val, idx) => (
-                    <div
-                        key={idx}
-                        style={{
-                            fontSize: "12px",
-                            color: "#999",
-                            fontFamily: "sans-serif",
-                            display: "flex",
-                            alignItems: "center",
-                            margin: "2px",
-                            padding: "4px",
-                        }}
-                        onClick={ e => handleLabelClick(val)}
-                    >
-                        <div
-                            style={{
-                                height: "4px",
-                                width: "16px",
-                                marginRight: "8px",
-                                background: val.color,
-                            }}
-                        >
-                            {" "}
-                        </div>
-                        <span>{val.label}</span>
-                    </div>
-                ))}
-        </div>
-    );
-};
+import { ChartLabelList } from "./ChartLabelList";
 
 function ClokiChart({ matrixData, chartLimit }) {
     const chartRef = useRef(null);
@@ -188,8 +139,28 @@ function ClokiChart({ matrixData, chartLimit }) {
         }
     }
 
-    function onLabelClick (e){
-        console.log(e)
+    function onLabelClick (e,v){
+        const dataSet = e.map(m =>{
+            if(m.isVisible) {
+                return {...m , 
+                lines : {...m.lines, show:false},
+                bars: {...m.bars, show:false},
+                points: {...m.points, show:false}
+                } 
+            } else { return m}
+        })
+        if(dataSet.length > 0 && !v.isVisible) {
+
+            let plot = $q.plot(element,dataSet,chartOptions)
+          const colorLabels = plot.getData()
+          setLabels(colorLabels);
+        } else {
+
+            let plot = $q.plot(element,chartData,chartOptions)
+           const colorLabels = plot.getData()
+            setLabels(colorLabels);
+        }
+       
     }
     // first chart load
     useEffect(() => {

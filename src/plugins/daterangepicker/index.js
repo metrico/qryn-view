@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
     addMonths,
@@ -58,14 +58,10 @@ export function DateRangePickerMain(props) {
     const range = useSelector((store) => ({dateStart: store.start, dateEnd: store.stop, label: store.label}))
 
 useEffect(()=>{
-   console.log(range.label)
     setTimeLabel(range.label)
-    
-    //setTimeLabel(range.label)
 },[range])
 
 
-    console.log(range)
     const { dateStart, dateEnd } = dateRange;
 
     const { ref, isComponentVisible, setIsComponentVisible } =
@@ -76,8 +72,6 @@ useEffect(()=>{
        
     }, [rangeOpen]);
 
-
-   
 
     const setFirstMonthValidated = (date) => {
         if (isBefore(date, secondMonth)) {
