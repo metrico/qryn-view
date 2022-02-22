@@ -10,7 +10,7 @@ import { setApiUrl } from "../../actions/setApiUrl";
 import { DateRangePicker } from "../../plugins/daterangepicker";
 import { DATE_TIME_RANGE } from '../../plugins/daterangepicker/consts';
 import {  findRangeByLabel } from "../../plugins/daterangepicker/utils";
-
+import { UpdateStateFromQueryParams } from "../UpdateStateFromQueryParams";
 
 export default function StatusBar() {
 
@@ -158,8 +158,9 @@ export function StatusBarSelectors() {
             }else {
                 ls.dateStart = new Date(ls.dateStart);
                 ls.dateEnd = new Date(ls.dateEnd);
-
             }
+            
+            UpdateStateFromQueryParams()
             return ls;
         } catch (e) {
             if (isDate(startTs) && isDate(stopTs)) {

@@ -13,7 +13,14 @@ import * as moment from "moment";
 import { useState, useEffect, useRef } from "react";
 import { format } from "date-fns";
 
-export const ChartLabelList = ({ labels }) => {
+export const ChartLabelList = (props) => {
+console.log(props)
+
+    const handleLabelClick = (val) => {
+        console.log(val)
+
+       
+    }
     return (
         <div
             style={{
@@ -21,8 +28,8 @@ export const ChartLabelList = ({ labels }) => {
                 flexWrap: "wrap",
             }}
         >
-            {labels.length &&
-                labels.map((val, idx) => (
+            {props.labels.length &&
+                props.labels.map((val, idx) => (
                     <div
                         key={idx}
                         style={{
@@ -34,6 +41,7 @@ export const ChartLabelList = ({ labels }) => {
                             margin: "2px",
                             padding: "4px",
                         }}
+                        onClick={ e => handleLabelClick(val)}
                     >
                         <div
                             style={{
@@ -142,7 +150,7 @@ function ClokiChart({ matrixData, chartLimit }) {
             }));
         };
     }
- 
+
     function setRanges(event, ranges) {
         const element = $q(chartRef.current);
         event.preventDefault();
@@ -165,8 +173,8 @@ function ClokiChart({ matrixData, chartLimit }) {
             const toTs = new Date(
                 moment(parseInt(toTime)).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
             );
-          const fromLabel =  format(fromTs, "yyyy/MM/dd HH:mm:ss")
-          const toLabel = format(toTs, "yyyy/MM/dd HH:mm:ss")
+            const fromLabel = format(fromTs, "yyyy/MM/dd HH:mm:ss")
+            const toLabel = format(toTs, "yyyy/MM/dd HH:mm:ss")
 
             const timeRangeLabel = `${fromLabel}-${toLabel}`
             dispatch(setStopTime(toTs));
@@ -180,6 +188,9 @@ function ClokiChart({ matrixData, chartLimit }) {
         }
     }
 
+    function onLabelClick (e){
+        console.log(e)
+    }
     // first chart load
     useEffect(() => {
         setElement(chartRef.current);
@@ -198,21 +209,22 @@ function ClokiChart({ matrixData, chartLimit }) {
         return () => {
             if (element !== null) {
                 $q(element).unbind("plotselected", setRanges);
+
+
             }
         };
     }, [matrixData, chartLimit]);
 
     function drawChart() {
+        let plot;
         try {
-            $q.plot(chartRef.current, chartData, chartOptions);
+            plot = $q.plot(chartRef.current, chartData, chartOptions);
             // get  generated colors
-            const chartPlotted =
-                chartRef.current[
-                    Object.keys(chartRef.current)[3]
-                ].plot.getData();
-            setLabels(chartPlotted);
+            const colorLabels = plot.getData()
+            setLabels(colorLabels);
         } catch (e) {
             console.log("error drawing chart", e);
+
         }
     }
 
@@ -226,7 +238,10 @@ function ClokiChart({ matrixData, chartLimit }) {
                     height: "220px",
                 }}
             ></div>
-            <ChartLabelList labels={labels} />
+            <ChartLabelList
+            
+            onLabelClick={onLabelClick}
+            labels={labels} />
         </div>
     );
 }
