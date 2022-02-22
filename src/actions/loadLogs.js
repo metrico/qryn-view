@@ -66,7 +66,7 @@ export default function loadLogs() {
                             : {},
                     showTs: true,
                     showLabels: false,
-                    id:i+ts
+                    id:i+ts 
                 });
             });
         });
@@ -81,13 +81,18 @@ export default function loadLogs() {
             ?.then((response) => {
                 if (response?.data?.data) {
                     let messages = [];
-                    const result = response?.data?.data.result; // array
+                    const result = response?.data?.data?.result; // array
                     const type = response?.data?.data?.resultType;
-
+                   if(result && result.length > 0) {
                     mapStreams(result, messages, type);
-                    dispatch(setLogs(messages || []));
+                   }
+                    dispatch(setLogs(messages));
+                    dispatch(setLoading(false));
+                } else {
+                    dispatch(setLogs([]))
                     dispatch(setLoading(false));
                 }
+
                 dispatch(setLoading(false));
             })
             .catch((error) => {

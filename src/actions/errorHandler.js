@@ -4,7 +4,7 @@ export const errorHandler = (url, error) => {
     if (response?.statusText) {
         const status = response?.status;
         return {
-            message: "API " + response.statusText + " Please adjust API URL",
+            message: "API " + response.statusText + ", Please adjust API URL",
             status,
         };
     } else if (!url.includes(window.location.protocol)) {

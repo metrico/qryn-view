@@ -87,6 +87,30 @@ class LogView extends Component {
                             )}
                         </div>
                     ))}
+                    {this.getLogs().length < 1 && (
+                        <div
+                        style={{
+                            color:"white",
+                            display:"flex",
+                            alignItems:"center",
+                            justifyContent:"center",
+                            width:"100%",
+                            height:"175px"
+                        }}
+                        >
+                            <span
+                            style={{
+                                fontSize:"1em",
+                                color:"#aaa",
+                                fontWeight:"lighter",
+                                letterSpacing:"1px"
+                            }}
+                            >
+                            Please Adjust Search Parameters and Click on Show Logs 
+                            </span>
+                        
+                            </div>
+                    )}
                     {this.props.loading && (
                         <CircularProgress
                             className={"progress"}
@@ -99,7 +123,7 @@ class LogView extends Component {
     }
 
     getLogs = () => {
-
+        
             return this.props.messages?.sort((a, b) => (a.timestamp < b.timestamp) ? 1 : -1);
         
     };
