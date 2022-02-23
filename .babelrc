@@ -2,7 +2,8 @@
     "plugins": [
         "transform-class-properties",
         "react-hot-loader/babel",
-        "syntax-dynamic-import"
+        "syntax-dynamic-import",
+        "@babel/plugin-transform-runtime"
     ],
     "presets": [
     

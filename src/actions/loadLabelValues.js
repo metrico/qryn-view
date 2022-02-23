@@ -1,14 +1,14 @@
 import axios from "axios";
 import { errorHandler } from "./errorHandler";
 import { setApiError } from "./setApiError";
-import setLabels from "./setLabels";
+import { setLabels } from "./setLabels";
 import setLabelValues from "./setLabelValues";
 import setLoading from "./setLoading";
 
 
-export default function loadLaebelValues(label, labelList, apiUrl) {
-    if (label?.length <= 0 && label.lsList.length <= 0) {
-        return;
+export default function loadLabelValues(label, labelList, apiUrl) {
+    if (!label || (label?.length <= 0 && label.lsList.length <= 0)) {
+        return () => {};
     };
 
     const url = apiUrl;
@@ -28,11 +28,10 @@ export default function loadLaebelValues(label, labelList, apiUrl) {
 
     };
 
-    return function (dispatch) {
-
+    return async (dispatch) => {
         dispatch(setLoading(true))
 
-        axios.get(`${url}/loki/api/v1/label/${label.name}/values`, options)
+        await axios.get(`${url}/loki/api/v1/label/${label.name}/values`, options)
             ?.then(response => {
                 if (response?.data?.data) {
                     const values = response?.data?.data?.map?.((value) => ({
@@ -62,7 +61,7 @@ export default function loadLaebelValues(label, labelList, apiUrl) {
                 const { message } = errorHandler(url, error)
                 dispatch(setApiError(message))
 
-                console.log(error)
+                console.err(error)
             })
     }
 
