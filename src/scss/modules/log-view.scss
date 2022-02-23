@@ -1,12 +1,12 @@
 .log-view {
-    background: $black-quoise;
-
+    background: #262626;
+    margin: 6px 8px;
     overflow-y: scroll;
     overflow-x: hidden;
-    border-radius: 3px;
     position: relative;
     flex: 1;
-    padding: 1rem;
+    border-radius: 3px;
+    padding: 0.5rem;
 
     &::-webkit-scrollbar {
         width: 10px;
@@ -99,7 +99,7 @@
 .log-line {
     font-size: 0.95em;
     font-family: monospace;
-    color: #e7e9e9;
+    color: #ddd;
 }
 
 .critical {
