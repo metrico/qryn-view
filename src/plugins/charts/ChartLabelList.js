@@ -90,7 +90,7 @@ export const ChartLabelList = (props) => {
                     >
                         <ColorLabel color={val.color} />
                         {val.label}
-                        <SearchButton />
+                        {/* <SearchButton /> */}
                     </ChartLabel>
                 ))}
         </LabelsContainer>
