@@ -74,10 +74,12 @@ export default function loadLogs() {
             });
         });
     };
-
+  
     //const mapMatrix
     return function (dispatch) {
         dispatch(setLoading(true));
+        dispatch(setLogs([]))
+        dispatch(setMatrixData([]))
 
         axios
             .get(getUrl, options)

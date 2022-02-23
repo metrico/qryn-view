@@ -4,7 +4,7 @@ import "react-flot/flot/jquery.flot.time.min";
 import "react-flot/flot/jquery.flot.selection.min";
 import "react-flot/flot/jquery.flot.crosshair.min";
 import loadLogs from "../../actions/loadLogs";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
 import * as moment from "moment";
 import { useState, useEffect, useRef } from "react";
@@ -15,7 +15,7 @@ function ClokiChart({ matrixData, chartLimit }) {
     const chartRef = useRef(null);
     const $q = window.jQuery;
     const dispatch = useDispatch();
-
+ const query = useSelector(store => store.query)
     const [chartData, setChartData] = useState(
         getDataParsed(matrixData)(chartLimit)
     );
@@ -57,7 +57,7 @@ function ClokiChart({ matrixData, chartLimit }) {
         },
 
         series: {
-            lines: { show: true, lineWidth: 1, shadowSize: 0 },
+            lines: { show: true, lineWidth: 1.5, shadowSize: 0 },
             bars: { show: false, barWidth: 100, shadowSize: 0 },
             points: { show: false, radius: 3, shadowSize: 0 },
         },
@@ -107,6 +107,7 @@ function ClokiChart({ matrixData, chartLimit }) {
         event.preventDefault();
 
         try {
+        
             let plot = $q.plot(
                 element,
                 chartData,
@@ -114,26 +115,27 @@ function ClokiChart({ matrixData, chartLimit }) {
                     xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
                 })
             );
+            setTimeout(()=>{
+                const fromTime = ranges.xaxis.from;
+                const toTime = ranges.xaxis.to;
+    
+                const fromTs = new Date(
+                    moment(parseInt(fromTime)).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+                );
+                const toTs = new Date(
+                    moment(parseInt(toTime)).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+                );
+                const fromLabel = format(fromTs, "yyyy/MM/dd HH:mm:ss")
+                const toLabel = format(toTs, "yyyy/MM/dd HH:mm:ss")
+    
+                const timeRangeLabel = `${fromLabel}-${toLabel}`
+                dispatch(setStopTime(toTs));
+                dispatch(setStartTime(fromTs));
+    
+                dispatch(setTimeRangeLabel(timeRangeLabel))
+                dispatch(loadLogs());
 
-            const fromTime = ranges.xaxis.from;
-            const toTime = ranges.xaxis.to;
-
-            const fromTs = new Date(
-                moment(parseInt(fromTime)).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-            );
-            const toTs = new Date(
-                moment(parseInt(toTime)).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-            );
-            const fromLabel = format(fromTs, "yyyy/MM/dd HH:mm:ss")
-            const toLabel = format(toTs, "yyyy/MM/dd HH:mm:ss")
-
-            const timeRangeLabel = `${fromLabel}-${toLabel}`
-            dispatch(setStopTime(toTs));
-            dispatch(setStartTime(fromTs));
-
-            dispatch(setTimeRangeLabel(timeRangeLabel))
-            dispatch(loadLogs());
-
+            },400)
         } catch (e) {
             console.log("error on chart redraw", e);
         }
@@ -184,7 +186,7 @@ function ClokiChart({ matrixData, chartLimit }) {
 
             }
         };
-    }, [matrixData, chartLimit]);
+    }, [matrixData]);
 
     function drawChart() {
         let plot;
