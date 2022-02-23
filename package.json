@@ -1,7 +1,12 @@
 {
   "name": "cloki-view",
+  "description": "LogQL UI for cLoki",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/metrico/cloki-view.git"
+  },
   "author": "joel@qxip.net",
-  "version": "0.3.13",
+  "version": "0.3.19",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.7.1",
