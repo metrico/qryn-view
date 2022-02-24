@@ -42,16 +42,8 @@ function ClokiChart({ matrixData }) {
         legend: {
             show: false,
         },
-        tooltip: {
-            show: true,
-            cssClass: "floatTip",
-            shifts: {
-                x: 10,
-                y: 20,
-            },
-            defaultTheme: false,
-            lines: true,
-        },
+   
+        
         interaction: {
             redrawOverlayInterval: 1,
         },
@@ -73,7 +65,7 @@ function ClokiChart({ matrixData }) {
     const barSeries = {
         lines: { show: false, lineWidth: 1.5, shadowSize: 0 },
         bars: { show: true, barWidth: 100, shadowSize: 0 },
-        points: { show: false, radius: 2, shadowSize: 0 },
+        points: { show: true, radius: 0, shadowSize: 0 },
     };
 
     const lineSeries = {
@@ -88,6 +80,69 @@ function ClokiChart({ matrixData }) {
     };
 
     const [chartOptions, setChartOptions] = useState(options);
+
+    $q.fn.UseTooltip = function () {
+        let previousPoint = null;
+
+        $q(this).bind("plothover", function (event, pos, item) {
+            if (item) {
+                if (previousPoint !== item.dataIndex) {
+                    $q("#tooltip").remove();
+                    const tooltipTemplate = `
+                    <div style="${
+                        "display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #666;padding:6px"
+                    }">
+                    <p>${moment(item.datapoint[0]).format(
+                        "YYYY-MM-DDTHH:mm:ss.SSSZ"
+                    )}</p>
+                    <p>
+                  Value: ${item.datapoint[1]}</p>
+                    </div>
+                   <div style="padding:3px">
+                    <p style="display:flex;align-items:center">
+                    <span style="background:${
+                        item.series.color
+                    };height:6px;width:24px;pading:3px;border-radius:1px;margin:4px" ></span>
+                    ${item.series.label}</p>
+                    </div>
+                    `;
+                    const labelLength = item.series.label.length;
+                    showTooltip(
+                        item.pageX,
+                        item.pageY,
+                        tooltipTemplate,
+                        labelLength
+                    ); 
+                }
+            } else {
+                $q("#tooltip").remove();
+                previousPoint = null;
+            }
+        });
+    };
+
+    function showTooltip(x, y, contents, length) {
+        let wWidth = window.innerWidth;
+        let posX = x + 20;
+        if (x * 2 > wWidth) {
+            posX = x - length * 6 - 28;
+        }
+        $q(`<div id="tooltip">` + contents + `</div>`)
+            .css({
+                position: "absolute",
+                display: "none",
+                top: y,
+                left: posX,
+                padding: "6px",
+                "font-size": "12px",
+                size: "10",
+                "border-radius": "6px 6px 6px 6px",
+                "background-color": "#333",
+                color: "#aaa",
+            })
+            .appendTo("body")
+            .fadeIn(200);
+    }
 
     function getSeriesFromChartType(type) {
         switch (type) {
@@ -144,6 +199,10 @@ function ClokiChart({ matrixData }) {
             }));
         }
     }
+    /**
+     *
+     * Set chart types
+     */
     function setBarChart() {
         const element = $q(chartRef.current);
         const data = isSpliced ? chartData : allData;
@@ -163,9 +222,10 @@ function ClokiChart({ matrixData }) {
             setChartType("bar");
             setTypeToLocal("bar");
         } catch (e) {
-            console.log(e);
+            console.log(data,e);
         }
     }
+
     function setPointsChart() {
         const element = $q(chartRef.current);
         const data = isSpliced ? chartData : allData;
@@ -206,6 +266,10 @@ function ClokiChart({ matrixData }) {
             console.log(e);
         }
     }
+    /**
+     *
+     *  Chart from selection (Set start and end times and redraw)
+     */
     function setRanges(event, ranges) {
         const element = $q(chartRef.current);
         const data = isSpliced ? chartData : allData;
@@ -246,6 +310,10 @@ function ClokiChart({ matrixData }) {
             console.log("error on chart redraw", e);
         }
     }
+    /**
+     *
+     *Isolate Series clicking label
+     */
 
     function onLabelClick(e, v) {
         const dataSet = e.map((m) => {
@@ -286,25 +354,34 @@ function ClokiChart({ matrixData }) {
         }
     }
 
+    // Init
     useEffect(() => {
         setElement(chartRef.current);
         setLabels(chartData.map(({ label }) => label));
         $q(chartRef.current).bind("plotselected", setRanges);
         setChartData(getDataParsed(isSpliced));
-        drawChart();
+
+ 
     }, []);
 
+    // On data update or splicing / showing all data
     useEffect(() => {
         setChartOptions(chartOptions);
         setElement(chartRef.current);
+
+        drawChartFromData();
+    }, [matrixData, isSpliced]);
+
+    function drawChartFromData() {
         if (isSpliced) {
             drawChart(chartData);
         } else {
             drawChart(allData);
         }
-    }, [matrixData, isSpliced]);
+    }
 
     function drawChart(data) {
+       if(data?.length){
         try {
             let plot = $q.plot(
                 chartRef.current,
@@ -316,17 +393,22 @@ function ClokiChart({ matrixData }) {
             // get  generated colors
             const colorLabels = plot.getData();
             setLabels(colorLabels);
+            $q(chartRef.current).UseTooltip();
         } catch (e) {
-            console.log("error drawing chart", e);
+            console.log("error drawing chart",data);
         }
+       }
+     
     }
 
     const handleNoLimitData = (e) => {
         setIsSpliced(false);
     };
+
     const handleLimitData = (e) => {
         setIsSpliced(true);
     };
+
     return (
         <div>
             <div

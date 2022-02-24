@@ -5,9 +5,10 @@ import styled from "@emotion/styled";
 
 
 const LabelsContainer = styled("div")`
-    display: flex;
+   position:absolute;
+   display: flex;
     flex-wrap: wrap;
-    height: ${props => props.divHeight}px;
+    max-height: calc(100% - 300px);
     overflow-y: auto;
     &::-webkit-scrollbar {
         width: 10px;
