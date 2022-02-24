@@ -36,6 +36,8 @@ const reducer =  (state, action) => {
                 return {...state, isSubmit: action.isSubmit};
         case "SET_MATRIX_DATA":
             return {...state, matrixData: action.matrixData};
+        case "SET_CHART_TYPE":
+            return {...state, chartType: action.setChartType};
         default:
             return { ...state };
     }

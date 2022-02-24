@@ -4,22 +4,23 @@ import "react-flot/flot/jquery.flot.time.min";
 import "react-flot/flot/jquery.flot.selection.min";
 import "react-flot/flot/jquery.flot.crosshair.min";
 import loadLogs from "../../actions/loadLogs";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
 import * as moment from "moment";
 import { useState, useEffect, useRef } from "react";
 import { format } from "date-fns";
 import { ChartLabelList } from "./ChartLabelList";
+
 function ClokiChart({ matrixData }) {
+    const APP_NAME = "cloki_view";
+    const LOCAL_CHART_TYPE = `${APP_NAME}_chart_type`;
     const chartRef = useRef(null);
     const $q = window.jQuery;
     const dispatch = useDispatch();
     const [isSpliced, setIsSpliced] = useState(true);
     const [chartData, setChartData] = useState(getDataParsed(isSpliced));
     const [allData, getAllData] = useState(getDataParsed(false));
-
     const [labels, setLabels] = useState([]);
-
     const [element, setElement] = useState(chartRef.current);
 
     const options = {
@@ -69,8 +70,49 @@ function ClokiChart({ matrixData }) {
         },
     };
 
+    const barSeries = {
+        lines: { show: false, lineWidth: 1.5, shadowSize: 0 },
+        bars: { show: true, barWidth: 100, shadowSize: 0 },
+        points: { show: false, radius: 2, shadowSize: 0 },
+    };
+
+    const lineSeries = {
+        lines: { show: true, lineWidth: 1.5, shadowSize: 0 },
+        bars: { show: false, barWidth: 100, shadowSize: 0 },
+        points: { show: false, radius: 2, shadowSize: 0 },
+    };
+    const pointSeries = {
+        lines: { show: false, lineWidth: 1.5, shadowSize: 0 },
+        bars: { show: false, barWidth: 100, shadowSize: 0 },
+        points: { show: true, radius: 2, shadowSize: 0 },
+    };
+
     const [chartOptions, setChartOptions] = useState(options);
 
+    function getSeriesFromChartType(type) {
+        switch (type) {
+            case "bar":
+                return barSeries;
+
+            case "line":
+                return lineSeries;
+
+            case "points":
+                return pointSeries;
+
+            default:
+                return lineSeries;
+        }
+    }
+
+    function getTypeFromLocal() {
+        return localStorage.getItem(LOCAL_CHART_TYPE);
+    }
+
+    function setTypeToLocal(type) {
+        localStorage.setItem(LOCAL_CHART_TYPE, type);
+    }
+    const [chartType, setChartType] = useState(getTypeFromLocal() || "line");
     function formatLabel(labels) {
         return (
             "{" +
@@ -102,17 +144,80 @@ function ClokiChart({ matrixData }) {
             }));
         }
     }
+    function setBarChart() {
+        const element = $q(chartRef.current);
+        const data = isSpliced ? chartData : allData;
+        const chartBarSeries = {
+            series: barSeries,
+        };
 
+        try {
+            let plot = $q.plot(
+                element,
+                data,
+                $q.extend(true, {}, chartOptions, chartBarSeries)
+            );
+
+            const colorLabels = plot.getData();
+            setLabels(colorLabels);
+            setChartType("bar");
+            setTypeToLocal("bar");
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    function setPointsChart() {
+        const element = $q(chartRef.current);
+        const data = isSpliced ? chartData : allData;
+        const chartPointsSeries = {
+            series: pointSeries,
+        };
+        try {
+            let plot = $q.plot(
+                element,
+                data,
+                $q.extend(true, {}, chartOptions, chartPointsSeries)
+            );
+            const colorLabels = plot.getData();
+            setLabels(colorLabels);
+            setChartType("points");
+            setTypeToLocal("points");
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    function setLineChart() {
+        const element = $q(chartRef.current);
+        const data = isSpliced ? chartData : allData;
+        const chartLineSeries = {
+            series: lineSeries,
+        };
+        try {
+            let plot = $q.plot(
+                element,
+                data,
+                $q.extend(true, {}, chartOptions, chartLineSeries)
+            );
+            const colorLabels = plot.getData();
+            setLabels(colorLabels);
+            setChartType("line");
+            setTypeToLocal("line");
+        } catch (e) {
+            console.log(e);
+        }
+    }
     function setRanges(event, ranges) {
         const element = $q(chartRef.current);
+        const data = isSpliced ? chartData : allData;
         event.preventDefault();
 
         try {
             let plot = $q.plot(
                 element,
-                chartData,
-                $q.extend(true, {}, options, {
+                data,
+                $q.extend(true, {}, chartOptions, {
                     xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+                    series: getSeriesFromChartType(chartType),
                 })
             );
             setTimeout(() => {
@@ -156,17 +261,30 @@ function ClokiChart({ matrixData }) {
             }
         });
         if (dataSet.length > 0 && !v.isVisible) {
-            let plot = $q.plot(element, dataSet, chartOptions);
+            let plot = $q.plot(
+                element,
+                dataSet,
+
+                $q.extend(true, {}, chartOptions, {
+                    series: getSeriesFromChartType(chartType),
+                })
+            );
+
             const colorLabels = plot.getData();
             setLabels(colorLabels);
         } else {
             const data = isSpliced ? chartData : allData;
-            let plot = $q.plot(element, data, chartOptions);
+            let plot = $q.plot(
+                element,
+                data,
+                $q.extend(true, {}, chartOptions, {
+                    series: getSeriesFromChartType(chartType),
+                })
+            );
             const colorLabels = plot.getData();
             setLabels(colorLabels);
         }
     }
-
 
     useEffect(() => {
         setElement(chartRef.current);
@@ -176,9 +294,8 @@ function ClokiChart({ matrixData }) {
         drawChart();
     }, []);
 
-
     useEffect(() => {
-        setChartOptions(options);
+        setChartOptions(chartOptions);
         setElement(chartRef.current);
         if (isSpliced) {
             drawChart(chartData);
@@ -187,10 +304,15 @@ function ClokiChart({ matrixData }) {
         }
     }, [matrixData, isSpliced]);
 
-
     function drawChart(data) {
         try {
-            let plot = $q.plot(chartRef.current, data, chartOptions);
+            let plot = $q.plot(
+                chartRef.current,
+                data,
+                $q.extend(true, {}, chartOptions, {
+                    series: getSeriesFromChartType(chartType),
+                })
+            );
             // get  generated colors
             const colorLabels = plot.getData();
             setLabels(colorLabels);
@@ -207,25 +329,98 @@ function ClokiChart({ matrixData }) {
     };
     return (
         <div>
-            <div style={{
-                display:'flex',
-                alignItems:'center',
-                justifyContent:'center',
-                fontSize:'.95rem',
-                cursor:'pointer'
-            }}>
-                {isSpliced ? (
-                    <div onClick={handleNoLimitData} style={{ color: "white" }}>
-                     
-                        {"Showing: 20 Series, Show All "}{matrixData.length}{" Series"}
-                        
-                    </div>
-                ) : (
-                    <div onClick={handleLimitData} style={{ color: "white" }}>
-                       
-                       {"Showing: "}{matrixData.length}{" Series, Show Only 20 Series"}
-                    </div>
-                )}
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    fontSize: ".95rem",
+                    cursor: "pointer",
+                }}
+            >
+                <div
+                    style={{
+                        flex: "1",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    {isSpliced ? (
+                        <div
+                            onClick={handleNoLimitData}
+                            style={{ color: "white" }}
+                        >
+                            {matrixData.length > 20
+                                ? "Showing: 20 Series, Show All "
+                                : "Showing: "}
+                            {matrixData.length}
+                            {" Series"}
+                        </div>
+                    ) : (
+                        <div
+                            onClick={handleLimitData}
+                            style={{ color: "white" }}
+                        >
+                            {"Showing: "}
+                            {matrixData.length}
+                            {" Series, Show Only 20 Series"}
+                        </div>
+                    )}
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                    }}
+                >
+                    <button
+                        style={{
+                            border: "none",
+                            margin: "3px",
+                            background: chartType === "bar" ? "#333" : "black",
+                            color: "#ddd",
+                            padding: "3px 6px",
+                            borderRadius: "2px",
+                            cursor: "pointer",
+                            fontSize: "1em",
+                        }}
+                        onClick={setBarChart}
+                    >
+                        {"bar chart"}
+                    </button>
+                    <button
+                        onClick={setLineChart}
+                        style={{
+                            border: "none",
+                            margin: "3px",
+                            background: chartType === "line" ? "#333" : "black",
+                            color: "#ddd",
+                            padding: "3px 6px",
+                            borderRadius: "2px",
+                            cursor: "pointer",
+                            fontSize: "1em",
+                        }}
+                    >
+                        {"line chart"}
+                    </button>
+                    <button
+                        onClick={setPointsChart}
+                        style={{
+                            border: "none",
+                            margin: "3px",
+                            background:
+                                chartType === "points" ? "#333" : "black",
+                            color: "#ddd",
+                            padding: "3px 6px",
+                            borderRadius: "2px",
+                            cursor: "pointer",
+                            fontSize: "1em",
+                        }}
+                    >
+                        {"points chart"}
+                    </button>
+                </div>
             </div>
             <div
                 ref={chartRef}
