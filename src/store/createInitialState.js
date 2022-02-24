@@ -16,6 +16,7 @@ const initialState = () => {
         query: externalState.query || '',
         queryValue: '',
         logs: [],
+        matrixData: [],
         loading: false,
         start: externalState.start || new Date(moment(Date.now()).subtract(5,"minutes").format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
         stop: externalState.end || new Date(moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
@@ -31,6 +32,7 @@ const initialState = () => {
         urlLocation: '',
         apiUrl: externalState.apiUrl || environment.apiUrl || '',
         isSubmit: externalState.isSubmit || false,
+        chartType:'line'
     }
     if (debug) console.log('🚧 LOGIC/ INITIAL STATE ::: ', state)
     return state
