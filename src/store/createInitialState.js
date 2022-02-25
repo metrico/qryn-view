@@ -1,7 +1,6 @@
 import * as moment from 'moment';
 import { environment } from '../environment/env.dev';
 
-
 const debug = setDebug(environment.environment)
 
 const initialState = () => {
@@ -20,7 +19,7 @@ const initialState = () => {
         loading: false,
         start: externalState.start || new Date(moment(Date.now()).subtract(5,"minutes").format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
         stop: externalState.end || new Date(moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
-        label: 'Last 5 minutes',
+        label:externalState.label || 'Last 5 minutes',
         messages: [],
         limitLoad: false,
         limit: externalState.limit || 1000,
@@ -63,8 +62,8 @@ function stateFromQueryParams () {
     if (debug) console.log('🚧 LOGIC/startParams/BeforeURLFromHash', startParams)
     for (let [key, value] of urlFromHash.entries()) {
       if (debug) console.log('🚧 LOGIC/startParams/', key, value)
-      if (key === 'end' | key === 'start') {
-        const croppedTime = value / 1000000
+      if (key === 'end' || key === 'start') {
+        const croppedTime = parseInt(value) / 1000000
         startParams[key] = new Date(moment(croppedTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ"))
       } else if (key === 'query') {
         const parsedQuery = decodeURIComponent(value)
@@ -81,6 +80,11 @@ function stateFromQueryParams () {
     }
     if (debug) console.log('🚧 LOGIC/startParams/AfterURLFromHash', startParams, Object.keys(startParams).length)
     if (debug) console.groupEnd('🚧 LOGIC/InitialState/FromQuery')
+    if(startParams['start'] && startParams['end']) {
+      const startTs = moment(startParams['start']).format("YYYY-MM-DD HH:mm:ss")
+      const endTs = moment(startParams['end']).format("YYYY-MM-DD HH:mm:ss")
+      startParams['label'] = `${startTs} - ${endTs}`
+    }
     return startParams
   } else {
     if (debug) console.groupEnd('🚧 LOGIC/InitialState/FromQuery')
