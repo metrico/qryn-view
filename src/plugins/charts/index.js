@@ -356,6 +356,7 @@ function ClokiChart({ matrixData }) {
 
     // Init
     useEffect(() => {
+       
         setElement(chartRef.current);
         setLabels(chartData.map(({ label }) => label));
         $q(chartRef.current).bind("plotselected", setRanges);

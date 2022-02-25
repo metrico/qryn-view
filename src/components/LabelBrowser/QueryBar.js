@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { setIsSubmit, setQuery } from "../../actions";
 import loadLogs from "../../actions/loadLogs"
+import setLoading from "../../actions/setLoading"
 import { setLabelsBrowserOpen } from "../../actions/setLabelsBrowserOpen";
 
 export const QueryBar = () => {
@@ -28,6 +29,8 @@ export const QueryBar = () => {
     if (onQueryValid(query && isSubmit === "true") ) {
         if (debug) console.log('🚧 LOGIC/QueryBar/ dispatch ', query !== "{}", query.length > 0, query !== "{}" || query.length > 1)
         // here
+        dispatch(setLoading(true))
+       
         dispatch(loadLogs())
 
         setTimeout(()=>{
