@@ -78,7 +78,7 @@ jobs:
         target-directory: 'view'
         target-branch: 'view'
         destination-github-username: 'lmangani'
-        destination-repository-name: 'cloki'
+        destination-repository-name: 'cLoki'
         user-email: lorenzo.mangani@gmail.com
         commit-message: Upgrade view to ${{steps.version.outputs.newTag}}
     - name: Deploy to gh-pages 🚀

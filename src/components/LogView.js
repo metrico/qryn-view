@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { CircularProgress } from "@mui/material";
 import * as moment from "moment";
 import ClokiChart from "../plugins/charts";
+import SearchHistory from "../plugins/searchhistory";
 
 const TAGS_LEVEL = {
     critical: ['emerg', 'fatal', 'alert', 'crit', 'critical'],
@@ -129,6 +130,7 @@ class LogView extends Component {
                         
                             </div>
                     )}
+                    <SearchHistory/>
                     {this.props.loading && (
                         <CircularProgress
                             className={"progress"}
