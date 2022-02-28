@@ -30,7 +30,7 @@ const ChartLabel = styled("div")`
     margin: 2px;
     padding: 4px;
     cursor: pointer;
-    opacity: ${(props) => (!props.isVisible ? "1" : ".75")};
+    opacity: ${(props) => (!props.isVisible ? "1" : ".5")};
     border-radius: 3px;
     height:20px !important;
     &:hover {
