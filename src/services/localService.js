@@ -86,7 +86,8 @@ function localService(item = null) {
             return historyItem || {};
         };
 
-        const update = () => {
+        const update = (item) => {
+            // pass id and data
             const historyItem = findById();
             const updated = { ...historyItem, item };
             const newStorage = [...historyStorage];
@@ -135,9 +136,8 @@ function localService(item = null) {
         };
 
         const remove = (item) => {
-            const filtered = [
-                historyStorage.filter(({ id }) => id !== item.id),
-            ];
+            const filtered = historyStorage.filter(({ id }) => id !== item.id)
+            
             
             set(filtered);
         };
