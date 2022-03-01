@@ -46,7 +46,6 @@ export default function loadLabels(apiUrl) {
             }
 
         }
-            
 
             }).catch(error => {
                 console.log(error)
