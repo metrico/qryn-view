@@ -247,6 +247,7 @@ async function decodeQuery(query, apiUrl) {
             return i.name !== a[k - 1]?.name})
         .filter((i) => !!i);
         labelWithValues.values = values;
+        labelWithValues.selected = true;
         store.dispatch(setLabels(labelsWithValues))
     })
 

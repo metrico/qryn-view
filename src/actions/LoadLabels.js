@@ -39,7 +39,6 @@ export default function loadLabels(apiUrl) {
                     hidden: false,
                     facets: 0,
                 }));
-               console.log(labels)
                 dispatch(setLabels(labels || []));
              
                 dispatch(setApiError(''))

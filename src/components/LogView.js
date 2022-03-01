@@ -1,15 +1,15 @@
+import { ZoomIn, ZoomOut } from "@mui/icons-material/";
+import { CircularProgress, IconButton } from "@mui/material";
+import * as moment from "moment";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { CircularProgress } from "@mui/material";
-import * as moment from "moment";
-import store from "../store/store"
-import { IconButton } from "@mui/material";
-import { ZoomIn, ZoomOut } from "@mui/icons-material/";
 import { setLabels } from "../actions";
-import { queryBuilderWithLabels } from "./LabelBrowser/helpers/querybuilder";
 import loadLabelValues from '../actions/loadLabelValues';
 import ClokiChart from "../plugins/charts";
+import store from "../store/store";
+import { queryBuilderWithLabels } from "./LabelBrowser/helpers/querybuilder";
 
+import loadLogs from "../actions/loadLogs"
 const TAGS_LEVEL = {
     critical: ['emerg', 'fatal', 'alert', 'crit', 'critical'],
     error: ['err', 'eror', 'error', 'warning'],
@@ -31,7 +31,6 @@ export const ValueTags = (props) => {
                 labelValue.inverted = !labelValue.inverted && isInverted;
                 label.selected = label.values.some(value => value.selected);
                 store.dispatch(setLabels(labels));
-                queryBuilderWithLabels()
             } else {
                 await store.dispatch(loadLabelValues(label,labels,apiUrl));
                 const updatedLabels = store.getState().labels;
@@ -41,8 +40,9 @@ export const ValueTags = (props) => {
                 labelValue.inverted = !labelValue.inverted && isInverted;
                 updatedLabel.selected = updatedLabel.values.some(value => value.selected);
                 store.dispatch(setLabels(updatedLabels));
-                queryBuilderWithLabels()
             }
+            queryBuilderWithLabels()
+            store.dispatch(loadLogs())
         }
     }
     const getTags = (tags) => {

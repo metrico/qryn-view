@@ -39,6 +39,7 @@ export default function loadLabelValues(label, labelList, apiUrl) {
                         selected: false,
                         loading: false,
                         hidden: false,
+                        inverted: false
                     }));
 
                     const lsList = [...labelList];
