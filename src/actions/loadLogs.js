@@ -3,7 +3,7 @@ import setLogs from "./setLogs";
 import setLoading from "./setLoading";
 import store from "../store/store";
 import setMatrixData from "./setMatrixData";
-
+import {nanoid} from 'nanoid'
 import { findRangeByLabel } from "../plugins/daterangepicker/utils";
 import { setStartTime, setStopTime } from "./";
 // *query : LogQl Query
@@ -75,7 +75,7 @@ export default function loadLogs() {
                             : {},
                     showTs: true,
                     showLabels: false,
-                    id: i + ts,
+                    id: nanoid(),
                 });
             });
         });
@@ -97,12 +97,14 @@ export default function loadLogs() {
                     if (type === "streams") {
                         mapStreams(result, messages, type);
                         dispatch(setMatrixData([]));
-                        dispatch(setLogs(messages || []));
+                        const messSorted = messages?.sort((a, b) => (a.timestamp < b.timestamp) ? 1 : -1);
+                        dispatch(setLogs(messSorted || []));
                         dispatch(setLoading(false));
                     }
 
                     if (type === "matrix") {
-                        dispatch(setMatrixData(result || []));
+                        const idResult = result.map( m => ({...m,id:nanoid()}))
+                        dispatch(setMatrixData(idResult || []));
                         dispatch(setLoading(false));
                     }
                     dispatch(setLoading(false));

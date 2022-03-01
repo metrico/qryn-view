@@ -27,10 +27,10 @@ const ChartLabel = styled("div")`
     font-family: sans-serif;
     display: flex;
     align-items: center;
-    margin: 2px;
-    padding: 4px;
+  
+    padding-right: 10px;
     cursor: pointer;
-    opacity: ${(props) => (!props.isVisible ? "1" : ".75")};
+    opacity: ${(props) => (!props.isVisible ? "1" : ".5")};
     border-radius: 3px;
     height:20px !important;
     &:hover {
@@ -38,18 +38,6 @@ const ChartLabel = styled("div")`
     }
 `;
 
-const SearchButton = styled(FindReplaceIcon)`
-    color: orange;
-    font-size: 16px;
-    background: #222;
-    padding: 2px;
-    border-radius: 2px;
-    margin-left: 2px;
-    opacity: 0.5;
-    &:hover {
-        opacity: 1;
-    }
-`;
 
 const ColorLabel = styled("div")`
     height: 4px;
