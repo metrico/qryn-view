@@ -8,6 +8,8 @@ import { ZoomIn, ZoomOut } from "@mui/icons-material/";
 import { setLabels } from "../actions";
 import { queryBuilderWithLabels } from "./LabelBrowser/helpers/querybuilder";
 import loadLabelValues from '../actions/loadLabelValues';
+import ClokiChart from "../plugins/charts";
+
 const TAGS_LEVEL = {
     critical: ['emerg', 'fatal', 'alert', 'crit', 'critical'],
     error: ['err', 'eror', 'error', 'warning'],
@@ -71,22 +73,36 @@ class LogView extends Component {
             limitLoad: this.props.limitLoad || false,
             limit: props.limit || 100,
             messages: props.messages || [],
+            matrixData: props.matrixData || [],
             loading: false
         }
-
-
-    }
-    onTagsShow = (show) => {
-        return (show ? {
-            display: 'flex'
-        } : { display: 'none' })
     }
 
+
+     toggleTagsActive(idx) {
+        let arrCopy = [...this.props.messages]
+        arrCopy.forEach( entry => {
+            if(entry.id === idx) {
+                entry.showLabels = entry.showLabels ? false : true
+            }
+        })
+        this.setState({...this.state,logs : arrCopy})
+    }
+    toggleActiveStyles(idx){
+        return idx.showLabels ? "value-tags-container labelsActive" :  "value-tags-container labelsInactive"
+
+    } 
+    getMatrixForChart = () => {
+        return this.props.matrixData
+    }
+    getLimit = () => {
+        return this.props.limit
+    }
     onShowTags = (e, value) => {
         e.preventDefault()
         value.showLabels = !value.showLabels;
         const logs = value
-        this.setState({ ...this.state, logs })
+        this.setState({ ...this.state, messages: logs })
     }
 
     getLogColor = (tags) => {
@@ -101,29 +117,39 @@ class LogView extends Component {
         return (
             <div className={"log-view"}>
                 <div className={`logs-box`}>
-                    {this.getLogs() && this.getLogs().map((value, key) => (
-                        <div
-                            key={key}
-                            className={`line ${this.getLogColor(value.tags)}`}
-                            onClick={e => this.onShowTags(e, value)}
-                        >
-                            <span id={value.timestamp} className={"timestamp"}>
-                                {this.formatDate(value.timestamp)}
-                            </span>
-                            <span className={"log-line"}>{value.text}</span>
+                    {this.props.messages.length > 0 && this.getMatrixForChart().length < 1 ? (
+                        this.props.messages.map((value, key) => (
+                            <div
+                                key={key}
+                                className={`line ${this.getLogColor(value.tags)}`}
+                                onClick={e => this.toggleTagsActive(value.id)}
+                            >
+                                <span id={value.timestamp} className={"timestamp"}>
+                                    {this.formatDate(value.timestamp)}
+                                </span>
+                                <span className={"log-line"}>{value.text}</span>
+    
+                                {value.tags && (
+                                    <div className={this.toggleActiveStyles(value)}
+                                    >
+                                        <ValueTags
+                                            tags={value.tags}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        )
 
-                            {value.tags && (
-                                <div className={"value-tags-container"}
-                                    style={this.onTagsShow(value.showLabels)}
-                                >
-                                    <ValueTags
-                                        tags={value.tags}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                    {this.getLogs().length < 1 && (
+                    )   ): (null)}
+
+
+                    {this.getMatrixForChart().length > 0 ? (
+                        <ClokiChart
+                        chartLimit={this.getLimit()}
+                        matrixData={this.getMatrixForChart()}
+                        />
+                    ) : (null)}
+                        {this.props.messages.length < 1 && this.getMatrixForChart().length < 1 && !this.props.loading &&(
                         <div
                         style={{
                             color:"white",
@@ -158,11 +184,6 @@ class LogView extends Component {
         );
     }
 
-    getLogs = () => {
-        
-            return this.props.messages?.sort((a, b) => (a.timestamp < b.timestamp) ? 1 : -1);
-        
-    };
 
     formatDate = (timestamp) => {
         return moment(parseInt(timestamp)).format("YYYY-MM-DD HH:mm:ss.SSS UTC");
@@ -176,6 +197,7 @@ const mapStateToProps = (state) => {
         stop: state.stop,
         limit: state.limit,
         loading: state.loading,
+        matrixData: state.matrixData
     };
 };
 

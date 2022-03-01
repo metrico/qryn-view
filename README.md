@@ -9,7 +9,7 @@
 
 cLoki-view is a smart and minimal data explorer developed in React/JS and designed for LogQL APIs
 
-<img src="https://user-images.githubusercontent.com/1423657/152640509-82d7704a-4e9a-4a2b-9b7e-1819984c7581.png"/>
+<img src="https://user-images.githubusercontent.com/1423657/152640509-82d7704a-4e9a-4a2b-9b7e-1819984c7581.png"/><img src="https://user-images.githubusercontent.com/1423657/155608224-8654694b-b999-4781-994a-5a87e39dfddf.png" />
 
 ### Setup
 

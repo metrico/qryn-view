@@ -96,8 +96,6 @@ export function ApiSelector() {
         setEditedUrl(e.target.value)
     }
     const onUrlSubmit = (e) => {
-        console.log(apiUrl, "API URL CHANGE")
-
         dispatch(setApiUrl(editedUrl))
         const condition = true;
         if (condition) {

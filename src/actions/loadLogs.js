@@ -1,8 +1,9 @@
 import axios from "axios";
 import setLogs from "./setLogs";
 import setLoading from "./setLoading";
-
-import store from '../store/store'
+import store from "../store/store";
+import setMatrixData from "./setMatrixData";
+import {nanoid} from 'nanoid'
 import { findRangeByLabel } from "../plugins/daterangepicker/utils";
 import { setStartTime, setStopTime } from "./";
 // *query : LogQl Query
@@ -12,22 +13,29 @@ import { setStartTime, setStopTime } from "./";
 // *step : Resolution step width in either a duration [1s, 5s, 5m etc] or number of seconds
 // *direction : Determines sort order of logs. Either forward or backward. Default is backward
 
-// *time: [start,end]
-
 export default function loadLogs() {
     // const step = 120
     // const direction = 'backward'
     const localStore = store.getState();
-    const {query: label, limit, step, apiUrl, label: rangeLabel} = localStore;
+    const { query: label, limit, step, apiUrl, label: rangeLabel } = localStore;
     let { start: startTs, stop: stopTs } = localStore;
-    if (rangeLabel !== '') {
-        ;({dateStart: startTs, dateEnd: stopTs } = findRangeByLabel(rangeLabel));
-        store.dispatch(setStartTime(startTs))
-        store.dispatch(setStopTime(stopTs))
+
+    if (findRangeByLabel(rangeLabel)) {
+        ({ dateStart: startTs, dateEnd: stopTs } =
+            findRangeByLabel(rangeLabel));
     }
+
+    store.dispatch(setStartTime(startTs));
+    store.dispatch(setStopTime(stopTs));
+
     const origin = window.location.origin;
     const url = apiUrl;
-    const parsedTime ="&start=" + startTs?.getTime() +"000000" + "&end=" + stopTs?.getTime() + "000000";
+    const parsedTime ="&start=" +
+        startTs?.getTime() +
+        "000000" +
+        "&end=" +
+        stopTs?.getTime() +
+        "000000";
 
     const queryStep = `&step=${step || 120}`;
 
@@ -53,20 +61,21 @@ export default function loadLogs() {
             : ts;
     const mapStreams = (streams, messages, type) => {
         streams.forEach((stream) => {
-            stream.values.forEach((log,i) => {
+            stream.values.forEach((log, i) => {
                 let [ts, text] = log;
                 messages.push({
                     type,
                     timestamp: getTimestamp(type)(ts),
                     text,
-                    tags: type === "streams"
+                    tags:
+                        type === "streams"
                             ? stream.stream
                             : type === "matrix"
                             ? stream.metric
                             : {},
                     showTs: true,
                     showLabels: false,
-                    id:i+ts 
+                    id: nanoid(),
                 });
             });
         });
@@ -75,6 +84,8 @@ export default function loadLogs() {
     //const mapMatrix
     return function (dispatch) {
         dispatch(setLoading(true));
+        dispatch(setLogs([]));
+        dispatch(setMatrixData([]));
 
         axios
             .get(getUrl, options)
@@ -83,16 +94,24 @@ export default function loadLogs() {
                     let messages = [];
                     const result = response?.data?.data?.result; // array
                     const type = response?.data?.data?.resultType;
-                   if(result && result.length > 0) {
-                    mapStreams(result, messages, type);
-                   }
-                    dispatch(setLogs(messages));
+                    if (type === "streams") {
+                        mapStreams(result, messages, type);
+                        dispatch(setMatrixData([]));
+                        const messSorted = messages?.sort((a, b) => (a.timestamp < b.timestamp) ? 1 : -1);
+                        dispatch(setLogs(messSorted || []));
+                        dispatch(setLoading(false));
+                    }
+
+                    if (type === "matrix") {
+                        dispatch(setMatrixData(result || []));
+                        dispatch(setLoading(false));
+                    }
                     dispatch(setLoading(false));
                 } else {
-                    dispatch(setLogs([]))
+                    dispatch(setLogs([]));
+                    dispatch(setMatrixData([]));
                     dispatch(setLoading(false));
                 }
-
                 dispatch(setLoading(false));
             })
             .catch((error) => {
