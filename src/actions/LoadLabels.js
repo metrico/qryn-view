@@ -22,12 +22,11 @@ export default function loadLabels(apiUrl) {
     }; 
     return function (dispatch) {
 
-        dispatch(setLoading(true))
+     
       
         axios.get(`${url.trim()}/loki/api/v1/labels`, options)
             ?.then((response) => {
         if(response){
-            dispatch(setLoading(false))
             if(response?.data?.data === []) console.log('no labels found')
             if (response?.data?.data?.length > 0) {
 

@@ -170,8 +170,8 @@ export const ValuesList = (props) => {
                 {selectedList() && (
                     <div className={"values-container"}>
                         <div className={"values-container-column"}>
-                            {labelsSelected.map((labelSelected, key) => (
-                                <div className={"values-column"} key={key}>
+                            {labelsSelected.map((labelSelected, skey) => (
+                                <div className={"values-column"} key={skey}>
                                     <div className={"values-column-title"}>
                                         <span>
                                             {labelSelected.name} ({labelSelected.values.length})
@@ -185,9 +185,8 @@ export const ValuesList = (props) => {
                                     <div className={"valuelist-content column"}>
                                         {labelSelected?.values?.map(
                                             (value, key) => (
-                                                <Tooltip title={value.name} placement="bottom">
+                                                <Tooltip title={value.name} key={key} placement="bottom">
                                                     <small
-                                                        key={key}
                                                         className={"label-value"}
                                                         style={styleValue(value)}
                                                         onClick={(e) => onLabelValueClick(e, value)}
