@@ -1,14 +1,11 @@
-import * as moment from 'moment';
-import { useEffect } from 'react';
+import * as moment from 'moment'
 import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { setApiUrl, setIsSubmit, setLabels, setQuery, setQueryLimit, setQueryStep, setStartTime, setStopTime } from '../actions';
-import loadLabels from '../actions/LoadLabels';
-import loadLabelValues from '../actions/loadLabelValues';
-import { setUrlLocation } from '../actions/setUrlLocation';
 import { setUrlQueryParams } from '../actions/setUrlQueryParams';
+import { setUrlLocation } from '../actions/setUrlLocation';
+import { setQuery, setStopTime, setStartTime, setQueryLimit, setQueryStep, setApiUrl, setIsSubmit} from '../actions';
 import { environment } from '../environment/env.dev';
-import store from '../store/store';
 export function UpdateStateFromQueryParams() {
     const { hash } = useLocation()
 
@@ -82,7 +79,6 @@ export function UpdateStateFromQueryParams() {
                         dispatch(STORE_ACTIONS[param](startParams[param]))
                     } else if (QUERY_VALUE === param && startParams[param] !== '') {
                         const parsedQuery = decodeURIComponent(startParams[param])
-                        decodeQuery(parsedQuery, apiUrl)
                         dispatch(STORE_ACTIONS[param](parsedQuery))
                     } else if (TIME_VALUES.includes(param) && startParams[param] !== '') {
                         const croppedTime = ((startParams[param])) / 1000000
@@ -91,9 +87,7 @@ export function UpdateStateFromQueryParams() {
                     } else if (BOOLEAN_VALUES.includes(param) && typeof param === 'boolean') {
                         dispatch(STORE_ACTIONS[param](startParams[param]))
                     }
-                    if (QUERY_VALUE === param) {
 
-                    }
                 })
 
             }
@@ -115,8 +109,7 @@ export function UpdateStateFromQueryParams() {
 
                     urlFromHash.set(param, time_value.toString())
                 } else if (QUERY_VALUE === param) {
-                    const parsed = encodeURIComponent(STORE_KEYS[param]).toString();
-                    decodeQuery(parsed, apiUrl)
+                    const parsed = encodeURIComponent(STORE_KEYS[param]).toString()
                     urlFromHash.set(param, parsed.toString())
                 } else if(BOOLEAN_VALUES === param && typeof param === 'boolean') {
                     urlFromHash.set(param,param.toString())
@@ -173,82 +166,5 @@ export function UpdateStateFromQueryParams() {
 
         }
     }, [STORE_KEYS])
-
-}
-async function decodeQuery(query, apiUrl) {
-    await store.dispatch(loadLabels(apiUrl))
-    const queryArr = query.replaceAll(/[{}]/g,'').split(',');
-    const labelsFromQuery = [];
-    queryArr.forEach(label => {
-        const regexQuery = label.match(/([^{}=,~!]+)/gm);
-        if (!regexQuery) {
-            return;
-        }
-        if (label.includes("!=")) {
-            const labelObj = {
-                name: regexQuery[0],
-                values: []
-            }
-            const valueObj = {
-                name: regexQuery[1].replaceAll('"', ''),
-                selected: true,
-                inverted: true
-            }
-            labelObj.values.push(valueObj);
-            labelsFromQuery.push(labelObj);
-        } else if(label.includes("=~")) {
-            const values = regexQuery[1].split('|')
-            console.log(values)
-            const labelObj = {
-                name: regexQuery[0],
-                values: []
-            }
-            values.forEach(value => {
-                const valueObj = {
-                    name: value.replaceAll('"', ''),
-                    selected: true,
-                    inverted: false
-                }
-                labelObj.values.push(valueObj);
-                
-            });
-            labelsFromQuery.push(labelObj);
-        } else {
-            const labelObj = {
-                name: regexQuery[0],
-                values: []
-            }
-            const valueObj = {
-                name: regexQuery[1].replaceAll('"', ''),
-                selected: true,
-                inverted: false
-            }
-            labelObj.values.push(valueObj);
-            labelsFromQuery.push(labelObj);
-        }
-    });
-    const newLabels = store.getState().labels;
-    labelsFromQuery.forEach(async (label) => {
-
-        const cleanLabel = newLabels?.find(item => item?.name === label?.name);
-        if (!cleanLabel) {
-            return
-        }
-        
-        await store.dispatch(loadLabelValues(cleanLabel,newLabels,apiUrl));
-        const labelsWithValues = store.getState().labels;
-        const labelWithValues = labelsWithValues.find(item => item?.name === label?.name);
-        let values = labelWithValues.values;
-        values = label.values.concat(values);
-        values = values
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .filter((i, k, a) => { 
-            console.log(a[k-1])
-            return i.name !== a[k - 1]?.name})
-        .filter((i) => !!i);
-        labelWithValues.values = values;
-        labelWithValues.selected = true;
-        store.dispatch(setLabels(labelsWithValues))
-    })
 
 }

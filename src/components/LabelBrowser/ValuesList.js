@@ -94,7 +94,6 @@ export const ValuesList = (props) => {
     const onLabelValueClick = (e, value) => {
         e.preventDefault()
         value.selected = !value.selected;
-        value.inverted = false;
         onLabelValueChange();
     };
 

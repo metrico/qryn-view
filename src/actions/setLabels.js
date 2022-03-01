@@ -1,6 +1,6 @@
-export const setLabels = (labels) => (dispatch) => {
+export default (labels) => (dispatch) => {
     dispatch({
         type: 'SET_LABELS',
         labels: labels
     });
-};
+}
