@@ -49,12 +49,13 @@ export const ValueTags = (props) => {
         return Object.entries(tags).map(
             ([key, value], k) => (
                 <div className={"value-tags"} key={k}>
-                    <IconButton  onClick={(e) => addLabel(e, key, value)} aria-label="Filter for value" size="small" color="primary">
-                        <ZoomIn />
-                    </IconButton>
-                    <IconButton  onClick={(e) => addLabel(e, key, value, true)} aria-label="Filter out value" size="small" color="primary">
-                        <ZoomOut />
-                    </IconButton>
+                    <span aria-label="Filter for value" title="Filter for value" onClick={(e) => addLabel(e, key, value)} class={'icon'}>
+                        <ZoomIn color='primary'/>
+                    </span>
+                    <span aria-label="Filter out value" title='Filter out value' onClick={(e) => addLabel(e, key, value, true)} class={'icon'}>
+                        <ZoomOut color='primary'/>
+                    </span>
+                    
                     <span>{key}</span>
                     <span>{value}</span>
                 </div>

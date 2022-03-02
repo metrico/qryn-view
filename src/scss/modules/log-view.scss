@@ -64,6 +64,7 @@
         margin: auto;
     }
 }
+
 .value-tags-container {
     flex: 1;
     display: flex;
@@ -92,6 +93,10 @@
         }
         &:hover {
             background: black;
+        }
+        .icon {
+            padding: 5px;
+            flex: 0;
         }
     }
 }
