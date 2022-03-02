@@ -19,6 +19,7 @@ const TAGS_LEVEL = {
     trace: ['trace']
 }
 export const ValueTags = (props) => {
+
     const addLabel = async (e, key, value, isInverted = false) => {
         e.preventDefault();
         e.stopPropagation();
