@@ -9,4 +9,6 @@ export * from "./setApiUrl";
 export * from "./setQuery";
 export * from "./setIsSubmit";
 export * from "./setMatrixData";
+export * from "./setApiError";
+export * from "./errorHandler";
 export * from "./setLabels";

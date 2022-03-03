@@ -22,8 +22,6 @@ export default function loadLabels(apiUrl) {
     };
 
     return async (dispatch) => {
-
-     
       
         await axios.get(`${url.trim()}/loki/api/v1/labels`, options)
             ?.then((response) => {
@@ -40,8 +38,6 @@ export default function loadLabels(apiUrl) {
                     facets: 0,
                 }));
                 dispatch(setLabels(labels || []));
-             
-                dispatch(setApiError(''))
             }
 
         }
@@ -50,7 +46,6 @@ export default function loadLabels(apiUrl) {
                 console.log(error)
                 dispatch(setLoading(false))
                 const {message,status} = errorHandler(url, error)
-                dispatch(setApiError(message || status + 'Error'))
                 dispatch(setLabels([]))
              
             })
