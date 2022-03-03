@@ -114,10 +114,7 @@ export const QueryBar = () => {
         }
     };
     function handleHistoryClick(e){
-        console.log('CHANGED')
-       
         dispatch((setHistoryOpen(!historyOpen)))
-        console.log(historyOpen)
     }
     return (
         <div className={"query-bar-container"}>

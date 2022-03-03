@@ -415,8 +415,6 @@ const SearchHistoryDrawer = (props) => {
     useEffect(() => {
         const starred = queryHistory.filter((f) => f.starred) || [];
         setStarredItems(starred);
-
-        console.log(starred);
     }, [queryHistory]);
 
     function handleStarItem(item) {
@@ -450,7 +448,6 @@ const SearchHistoryDrawer = (props) => {
     }
 
     function setFilteredItems(list) {
-        console.log("LIST CHANGED", list);
         setFiltered(list);
     }
 
