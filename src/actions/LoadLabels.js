@@ -1,5 +1,5 @@
 import axios from "axios";
-import setLabels from "./setLabels";
+import { setLabels } from "./setLabels";
 import setLoading from "./setLoading";
 import { setApiError } from "./setApiError";
 import { errorHandler } from "./errorHandler";
@@ -21,11 +21,11 @@ export default function loadLabels(apiUrl) {
         mode: "cors",
     };
 
-    return function (dispatch) {
+    return async (dispatch) => {
 
      
       
-        axios.get(`${url.trim()}/loki/api/v1/labels`, options)
+        await axios.get(`${url.trim()}/loki/api/v1/labels`, options)
             ?.then((response) => {
         if(response){
             if(response?.data?.data === []) console.log('no labels found')
@@ -39,7 +39,6 @@ export default function loadLabels(apiUrl) {
                     hidden: false,
                     facets: 0,
                 }));
-               
                 dispatch(setLabels(labels || []));
              
                 dispatch(setApiError(''))
