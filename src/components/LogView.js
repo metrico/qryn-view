@@ -27,7 +27,7 @@ export const ValueTags = (props) => {
         if (label) {
             const labelValue = label.values.find(tag => tag.name === value);
             if (labelValue) {
-                labelValue.selected = !labelValue.selected || (labelValue.inverted !== isInverted);
+                labelValue.selected = true || (labelValue.inverted !== isInverted);
                 labelValue.inverted = !labelValue.inverted && isInverted;
                 label.selected = label.values.some(value => value.selected);
                 store.dispatch(setLabels(labels));
@@ -36,7 +36,7 @@ export const ValueTags = (props) => {
                 const updatedLabels = store.getState().labels;
                 const updatedLabel = updatedLabels.find(label => label.name === key);
                 const labelValue = updatedLabel.values.find(tag => tag.name === value);
-                labelValue.selected = !labelValue.selected || (labelValue.inverted !== isInverted);
+                labelValue.selected = true || (labelValue.inverted !== isInverted);
                 labelValue.inverted = !labelValue.inverted && isInverted;
                 updatedLabel.selected = updatedLabel.values.some(value => value.selected);
                 store.dispatch(setLabels(updatedLabels));
