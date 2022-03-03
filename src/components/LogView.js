@@ -26,6 +26,10 @@ export const ValueTags = (props) => {
         const label = labels.find(label => label.name === key);
         if (label) {
             const labelValue = label.values.find(tag => tag.name === value);
+            if (labelValue?.selected && labelValue.inverted === isInverted) {
+                console.log(labelValue)
+                return;
+            }
             if (labelValue) {
                 labelValue.selected = true || (labelValue.inverted !== isInverted);
                 labelValue.inverted = !labelValue.inverted && isInverted;
