@@ -27,6 +27,7 @@ function localService(item = null) {
 
         const clean = () => {
             setStorageItem(_HISTORY_ITEM, JSON.stringify(cleanup));
+            return getAll()||[]
         };
 
         const historyStorage = get();
@@ -63,7 +64,7 @@ function localService(item = null) {
                     starred: item.starred || false,
                     data: encodeURI(item.data) || "",
                 };
-                let newStorage = previousData.concat(newItem);
+                let newStorage = [newItem].concat(previousData);
 
                 set(newStorage);
                 return getAll()
