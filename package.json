@@ -6,7 +6,7 @@
     "url": "git+ssh://git@github.com/metrico/cloki-view.git"
   },
   "author": "joel@qxip.net",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "private": false,
   "dependencies": {
     "@emotion/react": "^11.7.1",
@@ -69,6 +69,7 @@
     "@babel/core": "^7.16.12",
     "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/plugin-proposal-object-rest-spread": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "babel-loader": "^8.2.3",

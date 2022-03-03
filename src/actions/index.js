@@ -11,3 +11,4 @@ export * from "./setIsSubmit";
 export * from "./setMatrixData";
 export * from "./setApiError";
 export * from "./errorHandler";
+export * from "./setLabels";

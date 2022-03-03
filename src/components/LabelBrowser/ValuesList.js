@@ -8,6 +8,7 @@ import { setQuery } from "../../actions"
 import loadLabelValues from "../../actions/loadLabelValues"
 
 import Tooltip from '@mui/material/Tooltip';
+import store from "../../store/store";
 export const LabelsFetchError = () => {
     const labelError = useSelector((store) => store.apiErrors)
 
@@ -28,9 +29,18 @@ export const LabelsFetchError = () => {
 }
 
 export const ValuesList = (props) => {
-    const labels = useSelector(state => state.labels)
-    const [labelList, setLabelList] = useState(labels);
     const [labelsSelected, setLabelsSelected] = useState([]);
+    const labels = useSelector(state => { 
+        const selected = state.labels.filter((f) => f.selected);
+        console.log(JSON.stringify(selected) !== JSON.stringify(labelsSelected))
+        if (JSON.stringify(selected) !== JSON.stringify(labelsSelected)) {
+            setLabelsSelected(selected);
+        }
+        return state.labels
+    })
+    
+    const [labelList, setLabelList] = useState(labels);
+
     const dispatch = useDispatch()
     const debug = useSelector((store) => store.debug)
     const apiUrl = useSelector((store) => store.apiUrl)
@@ -94,6 +104,7 @@ export const ValuesList = (props) => {
     const onLabelValueClick = (e, value) => {
         e.preventDefault()
         value.selected = !value.selected;
+        value.inverted = false;
         onLabelValueChange();
     };
 

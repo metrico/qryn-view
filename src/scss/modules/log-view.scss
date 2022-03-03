@@ -64,6 +64,7 @@
         margin: auto;
     }
 }
+
 .value-tags-container {
     flex: 1;
     display: flex;
@@ -84,14 +85,18 @@
         justify-content: space-between;
 
         span {
-            padding: 4px;
+            padding: 0px 4px;
             display: flex;
             flex: 1;
-
+            line-height: 34px;
             color: #cccccd;
         }
         &:hover {
             background: black;
+        }
+        .icon {
+            padding: 5px;
+            flex: 0;
         }
     }
 }
