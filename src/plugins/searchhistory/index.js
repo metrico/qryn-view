@@ -114,10 +114,10 @@ function AlertDialog({ clearHistory }) {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClearHistory} autoFocus>
+                    <DialogCancelButton onClick={handleClose}>Cancel</DialogCancelButton>
+                    <DialogConfirmButton onClick={handleClearHistory} autoFocus>
                         Clear History
-                    </Button>
+                    </DialogConfirmButton>
                 </DialogActions>
             </Dialog>
         </div>
@@ -318,7 +318,7 @@ const HistoryButton = styled.button`
 
 const SettingItemContainer = styled.div`
     height: 100px;
-    width: 300px;
+    width: 240px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -344,6 +344,7 @@ const ClearHistoryButton = styled(HistoryButton)`
     padding: 10px 20px;
     background: #088789;
     margin: 0;
+    width:100%;
 `;
 const StyledCloseButton = styled(HistoryButton)`
     background: none;
@@ -354,6 +355,17 @@ const StyledCloseButton = styled(HistoryButton)`
     position: absolute;
     right: 0;
 `;
+
+const DialogCancelButton = styled(HistoryButton)`
+background: #646464;
+padding: 8px 16px;
+
+`
+const DialogConfirmButton = styled(HistoryButton)`
+background: #088789;
+padding: 8px 16px;
+`
+
 
 const FilterInput = styled.input`
     color: orange;
