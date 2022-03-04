@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Box, createTheme, ThemeProvider, Typography } from "@mui/material";
+import { Badge, Box, createTheme, ThemeProvider, Typography } from "@mui/material";
 import localService from "../../services/localService";
 import Drawer from "@mui/material/Drawer";
 import { useState, useEffect, forwardRef } from "react";
@@ -105,12 +105,11 @@ function AlertDialog({ clearHistory }) {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    {"Are You Sure Want to Clear Query History?"}
+                    {"Are you sure you want to clear the Query History?"}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        This Action Will Delete All Of Your Query History,
-                        Permanently.
+                    {"Click ‘Clear History’ to delete your query history permanently"}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -163,7 +162,7 @@ const Tab = styled(TabUnstyled)`
     }
 
     &.${tabUnstyledClasses.selected} {
-        color: #ddd;
+        color: #eee;
         border-bottom: 1px solid #11abab;
     }
 
@@ -234,7 +233,7 @@ function EmptyHistoryDisplay({ message }) {
     return <EmptyHistory>{message}</EmptyHistory>;
 }
 
-function SearchHistoryTabs({
+function QueryHistoryTabs({
     historyTabHeader,
     historyTab,
     starredTab,
@@ -283,13 +282,13 @@ export const theme = createTheme({
     palette: {
         mode: "dark",
         primary: {
-            main: "#fff",
+            main: "#ddd",
             background: "#1a1a1a",
         },
     },
 });
 
-const SearchHistoryContainer = styled.div`
+const QueryHistoryContainer = styled.div`
     height: 250px;
     overflow-y: auto;
     &::-webkit-scrollbar {
@@ -375,6 +374,7 @@ const FilterInput = styled.input`
     padding: 3px 0px;
     font-size: 13px;
     border-radius: 0px 3px 3px 0px;
+    font-family: monospace;
     &:focus{
         outline:none;
     }    
@@ -401,7 +401,7 @@ const HistoryRow = styled.div`
     height: 30px;
 `;
 
-function SearchHistoryTab({
+function QueryHistoryTab({
     queryHistory,
     copyQuery,
     handleDelete,
@@ -426,7 +426,7 @@ function SearchHistoryTab({
     }, [queryHistory]);
     // const listDisplay = filtered.length > 0 ? filtered : queryHistory
     return (
-        <SearchHistoryContainer>
+        <QueryHistoryContainer>
             {listDisplay.length > 0 ? (
                 listDisplay.map((item, index) => (
                     <HistoryRow key={index}>
@@ -435,8 +435,8 @@ function SearchHistoryTab({
                             paddingRight:'10px',
                             color:'#666'
                         }}
-                        >{index+1}</span>
-                        <span style={{ flex: 1 }}>{item.data} </span>
+                        >{listDisplay.length -(index)}</span>
+                        <span style={{ flex: 1, fontFamily:'monospace',fontSize:'13px', color:'#ddd' }}>{item.data} </span>
 
                         <span>
                             {format(item.timestamp, "yyyy/MM/dd HH:mm:ss")}
@@ -459,7 +459,7 @@ function SearchHistoryTab({
                                 </HistoryButton>
                             </Tooltip>
 
-                            <Tooltip title={"Add Query to Starred"}>
+                            <Tooltip title={"Star / Unstar Query"}>
                                 <HistoryButton
                                     onClick={(e) => handleStarItem(item)}
                                 >
@@ -484,11 +484,11 @@ function SearchHistoryTab({
             ) : (
                 <EmptyHistoryDisplay message={emptyMessage} />
             )}
-        </SearchHistoryContainer>
+        </QueryHistoryContainer>
     );
 }
 
-function SearchHistoryTabHeader({
+function QueryHistoryTabHeader({
     queryHistory,
     clearHistory,
     filterItems,
@@ -550,7 +550,7 @@ function SettingHistoryTabHeader({ clearHistory, queryHistory }) {
 function SettingTab({ clearHistory }) {
     // const listDisplay = filtered.length > 0 ? filtered : queryHistory
     return (
-        <SearchHistoryContainer>
+        <QueryHistoryContainer>
             <div>
                 <SettingItemContainer>
                     <div>Clear Query History</div>
@@ -560,11 +560,11 @@ function SettingTab({ clearHistory }) {
                     <AlertDialog clearHistory={clearHistory} />
                 </SettingItemContainer>
             </div>
-        </SearchHistoryContainer>
+        </QueryHistoryContainer>
     );
 }
 
-const SearchHistoryDrawer = (props) => {
+const QueryHistoryDrawer = (props) => {
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
     const queryHistory = useSelector((store) => store.queryHistory);
@@ -669,9 +669,9 @@ const SearchHistoryDrawer = (props) => {
                 open={historyOpen}
                 variant={"persistent"}
             >
-                <SearchHistoryTabs
+                <QueryHistoryTabs
                     historyTabHeader={
-                        <SearchHistoryTabHeader
+                        <QueryHistoryTabHeader
                             queryHistory={queryHistory}
                             clearHistory={clearHistory}
                             filterItems={filterItems}
@@ -679,7 +679,7 @@ const SearchHistoryDrawer = (props) => {
                         />
                     }
                     historyTab={
-                        <SearchHistoryTab
+                        <QueryHistoryTab
                             queryHistory={queryHistory}
                             copyQuery={copyQuery}
                             handleDelete={handleDelete}
@@ -687,12 +687,12 @@ const SearchHistoryDrawer = (props) => {
                             handleSubmit={handleSubmit}
                             filtered={filtered}
                             emptyMessage={
-                                "History Items Will Be Added Once You Search For Logs."
+                                "There is no query history. Please execute some queries and you will see a history here."
                             }
                         />
                     }
                     starredTabHeader={
-                        <SearchHistoryTabHeader
+                        <QueryHistoryTabHeader
                             queryHistory={starredItems}
                             clearHistory={clearHistory}
                             filterItems={filterItems}
@@ -700,7 +700,7 @@ const SearchHistoryDrawer = (props) => {
                         />
                     }
                     starredTab={
-                        <SearchHistoryTab
+                        <QueryHistoryTab
                             queryHistory={starredItems}
                             copyQuery={copyQuery}
                             handleDelete={handleDelete}
@@ -708,7 +708,7 @@ const SearchHistoryDrawer = (props) => {
                             handleSubmit={handleSubmit}
                             filtered={starredFiltered}
                             emptyMessage={
-                                "Starred Items Will Be Added Once You Click Star on Query History Items."
+                                "Click the ‘Star’ icon to save queries and find them here to reuse again"
                             }
                         />
                     }
@@ -724,31 +724,31 @@ const SearchHistoryDrawer = (props) => {
                 <HistorySnackbar
                     succeed={succeed}
                     resetSnackbar={resetSnackbar}
-                    message={" Query History Cleared Succesfully"}
+                    message={" Query History cleared succesfully"}
                     type={"info"}
                 />
                 <HistorySnackbar
                     succeed={copySucceed}
                     resetSnackbar={resetCopy}
-                    message={"Query Copied Successfully"}
+                    message={"Query copied successfully"}
                     type={"success"}
                 />
                 <HistorySnackbar
                     succeed={trashedSucceed}
                     resetSnackbar={resetTrashed}
-                    message={"Query Deleted Successfully"}
+                    message={"Query deleted successfully"}
                     type={"info"}
                 />
                 <HistorySnackbar
                     succeed={starredSucceed}
                     resetSnackbar={resetStarred}
-                    message={"Query Starred Successfully"}
+                    message={"Query starred successfully"}
                     type={"success"}
                 />
                 <HistorySnackbar
                     succeed={unstarredSucceed}
                     resetSnackbar={resetUnstarred}
-                    message={"Query Unstarred Successfully"}
+                    message={"Query unstarred successfully"}
                     type={"info"}
                 />
             </Drawer>
@@ -756,8 +756,8 @@ const SearchHistoryDrawer = (props) => {
     );
 };
 
-const SearchHistory = () => {
-    return <SearchHistoryDrawer />;
+const QueryHistory = () => {
+    return <QueryHistoryDrawer />;
 };
 
-export default SearchHistory;
+export default QueryHistory;
