@@ -29,8 +29,16 @@ export const QueryBar = () => {
     const historyOpen = useSelector((store) => store.historyOpen)
     const [queryInput, setQueryInput] = useState(query);
     const [queryValid, setQueryValid] = useState(false);
+    
     const SHOW_LOGS = "Show Logs";
     const LOG_BROWSER = "Log Browser";
+    const queryHistory = useSelector((store) => store.queryHistory)
+    const [historyItems, setHistoryItems] = useState(queryHistory.length>0)
+
+    useEffect(()=>{
+        setHistoryItems(queryHistory.length>0)
+    },[queryHistory])
+
     const onQueryValid = (query) => {
         return query !== "{" && query !== "}" && query !== "{}" && query !== ""; // TODO: make a proper query validation
     };
@@ -135,9 +143,10 @@ export const QueryBar = () => {
                 onKeyDown={handleInputKeyDown}
             />
             <HistoryButton
+            style={{
+                color: historyItems ? 'orange': '#ddd'
+            }}
             onClick={e => handleHistoryClick(e)}
-            
-            
             >
                 <HistoryIcon fontSize={"small"}/>
             </HistoryButton>

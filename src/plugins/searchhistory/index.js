@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { Box, createTheme, ThemeProvider, Typography } from "@mui/material";
 import localService from "../../services/localService";
 import Drawer from "@mui/material/Drawer";
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import setQueryHistory from "../../actions/setQueryHistory";
 import loadLogs from "../../actions/loadLogs";
@@ -22,6 +22,106 @@ import TabPanelUnstyled from "@mui/base/TabPanelUnstyled";
 import { buttonUnstyledClasses } from "@mui/base/ButtonUnstyled";
 import TabUnstyled, { tabUnstyledClasses } from "@mui/base/TabUnstyled";
 
+// Dialog
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+// Snackbar
+
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+
+
+// Snackbar for clearing confirmation
+const Alert = forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="outlined" {...props} />;
+  });
+  
+ function CustomizedSnackbars({succeed,resetSnackbar}) {
+    
+    const [open, setOpen] = useState(succeed);
+  useEffect(()=>{
+setOpen(succeed)
+ 
+  },[succeed])
+    const handleClick = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpen(false);
+      resetSnackbar()
+    };
+  
+    return (
+     <div>
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
+            Query History Cleared Succesfully
+          </Alert>
+        </Snackbar>
+        </div>
+    
+    );
+  }
+
+
+
+
+// Alert Dialog for Clearing History
+function AlertDialog({clearHistory}) {
+    const [open, setOpen] = useState(false);
+  
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+   function handleClearHistory(){
+            clearHistory()
+            setOpen(false)
+   }
+    return (
+      <div>
+        <ClearHistoryButton onClick={handleClickOpen}>
+                        {"Clear History"}
+                    </ClearHistoryButton>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Are You Sure Want to Clear Query History?"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+            This Action Will Delete All Of Your Query History, Permanently.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleClearHistory} autoFocus>
+              Clear History
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  }
+
 const blue = {
     50: "#F0F7FF",
     100: "#C2E0FF",
@@ -36,7 +136,7 @@ const blue = {
 };
 
 const Tab = styled(TabUnstyled)`
-    color: white;
+    color: #aaa;
     cursor: pointer;
     font-size: 13px;
     background-color: transparent;
@@ -54,14 +154,15 @@ const Tab = styled(TabUnstyled)`
     }
 
     &:focus {
-        color: #fff;
+        color: #aaa;
         border-radius: 3px 3px 0px 0px;
 
         outline-offset: 2px;
     }
 
     &.${tabUnstyledClasses.selected} {
-        border-bottom: 1px solid #aaa;
+        color: #ddd;
+        border-bottom: 1px solid #11abab;
     }
 
     &.${buttonUnstyledClasses.disabled} {
@@ -69,6 +170,7 @@ const Tab = styled(TabUnstyled)`
         cursor: not-allowed;
     }
 `;
+
 const TabHistoryIcon = styled(HistoryIcon)`
     height: 16px;
     width: 16px;
@@ -87,12 +189,13 @@ const TabHistorySettingIcon = styled(DisplaySettingsIcon)`
 `;
 
 const TabHeaderContainer = styled.div`
-    padding: 8px 10px;
+    padding: 0px 10px;
     font-size: 13px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: #8a8a8a50;
+    height:37px;
 `;
 const TabPanel = styled(TabPanelUnstyled)`
     width: 100%;
@@ -101,7 +204,7 @@ const TabPanel = styled(TabPanelUnstyled)`
 const TabsList = styled(TabsListUnstyled)`
     min-width: 320px;
     background-color: ${blue[500]};
-    border-bottom: 6px solid #333;
+    border-bottom: 4px solid #2e2e2e;
     display: flex;
     align-items: center;
     align-content: space-between;
@@ -210,8 +313,9 @@ const SubmitButton = styled(HistoryButton)`
 `;
 
 const ClearHistoryButton = styled(HistoryButton)`
-    padding: 6px 12px;
-    background: orangered;
+    font-weight: bold;
+    padding: 10px 20px;
+    background: #088789;
     margin: 0;
 `;
 const StyledCloseButton = styled(HistoryButton)`
@@ -243,7 +347,8 @@ function CloseButton({ onClose }) {
 }
 
 const HistoryRow = styled.div`
-    padding: 5px;
+    padding: 5px 10px;
+    padding-left: 12px;
     background: #212121;
     margin: 5px;
     border-radius: 3px;
@@ -251,6 +356,7 @@ const HistoryRow = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height:30px;
 `;
 
 function SearchHistoryTab({
@@ -383,9 +489,10 @@ function SettingTab({ clearHistory }) {
                     <small>
                         Delete all of your query history, permanently.
                     </small>
-                    <ClearHistoryButton onClick={clearHistory}>
-                        {"Clear History"}
-                    </ClearHistoryButton>
+                    <AlertDialog 
+                    clearHistory={clearHistory}
+                    />
+                   
                 </SettingItemContainer>
             </div>
         </SearchHistoryContainer>
@@ -401,6 +508,7 @@ const SearchHistoryDrawer = (props) => {
     const [starredItems, setStarredItems] = useState([]);
     const [filtered, setFiltered] = useState([]);
     const [starredFiltered, setStarredFiltered] = useState([]);
+    const [succeed,setSucceed] = useState(false)
 
     function handleDelete(id) {
         const removed = historyService.remove(id);
@@ -439,6 +547,10 @@ const SearchHistoryDrawer = (props) => {
     function clearHistory() {
         const historyClean = historyService.clean();
         dispatch(setQueryHistory(historyClean));
+        if(historyClean?.length < 1){
+            console.log('succeed on main')
+            setSucceed(true)
+        }
     }
 
     function filterItems(list, item) {
@@ -455,9 +567,16 @@ const SearchHistoryDrawer = (props) => {
         setStarredFiltered(starred);
     }
 
+    function resetSnackbar() {
+        setSucceed(false)
+    }
+
     return (
         <ThemeProvider theme={theme}>
-            <Drawer anchor={"bottom"} open={historyOpen} variant={"persistent"}>
+            <Drawer anchor={"bottom"}
+            
+            style={{height:'250px'}}
+            open={historyOpen} variant={"persistent"}>
                 <SearchHistoryTabs
                     historyTabHeader={
                         <SearchHistoryTabHeader
@@ -503,6 +622,11 @@ const SearchHistoryDrawer = (props) => {
                     }
                     settingTab={<SettingTab clearHistory={clearHistory} />}
                     closeButton={<CloseButton onClose={handleClose} />}
+                    
+                />
+                <CustomizedSnackbars
+                succeed={succeed}
+                resetSnackbar={resetSnackbar}
                 />
             </Drawer>
         </ThemeProvider>
