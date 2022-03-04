@@ -16,6 +16,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
 import HistoryIcon from "@mui/icons-material/History";
 import CloseIcon from "@mui/icons-material/Close";
+import SearchIcon from '@mui/icons-material/Search';
 import TabsUnstyled from "@mui/base/TabsUnstyled";
 import TabsListUnstyled from "@mui/base/TabsListUnstyled";
 import TabPanelUnstyled from "@mui/base/TabPanelUnstyled";
@@ -23,104 +24,105 @@ import { buttonUnstyledClasses } from "@mui/base/ButtonUnstyled";
 import TabUnstyled, { tabUnstyledClasses } from "@mui/base/TabUnstyled";
 
 // Dialog
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 // Snackbar
 
-import Stack from '@mui/material/Stack';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Stack from "@mui/material/Stack";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip from "@mui/material/Tooltip";
 
 // Snackbar for clearing confirmation
 const Alert = forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="outlined" {...props} />;
-  });
-  
- function CustomizedSnackbars({succeed,resetSnackbar}) {
-    
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+function HistorySnackbar({ succeed, resetSnackbar, message, type }) {
     const [open, setOpen] = useState(succeed);
-  useEffect(()=>{
-setOpen(succeed)
- 
-  },[succeed])
+    useEffect(() => {
+        setOpen(succeed);
+    }, [succeed]);
     const handleClick = () => {
-      setOpen(true);
+        setOpen(true);
     };
-  
+
     const handleClose = (event, reason) => {
-      if (reason === 'clickaway') {
-        return;
-      }
-  
-      setOpen(false);
-      resetSnackbar()
+        if (reason === "clickaway") {
+            return;
+        }
+
+        setOpen(false);
+        resetSnackbar();
     };
-  
+
     return (
-     <div>
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
-            Query History Cleared Succesfully
-          </Alert>
-        </Snackbar>
+        <div>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert
+                    onClose={handleClose}
+                    severity={type}
+                    sx={{ width: "100%" }}
+                >
+                    {message}
+                </Alert>
+            </Snackbar>
         </div>
-    
     );
-  }
-
-
-
+}
 
 // Alert Dialog for Clearing History
-function AlertDialog({clearHistory}) {
+function AlertDialog({ clearHistory }) {
     const [open, setOpen] = useState(false);
-  
+
     const handleClickOpen = () => {
-      setOpen(true);
+        setOpen(true);
     };
-  
+
     const handleClose = () => {
-      setOpen(false);
+        setOpen(false);
     };
-   function handleClearHistory(){
-            clearHistory()
-            setOpen(false)
-   }
+    function handleClearHistory() {
+        clearHistory();
+        setOpen(false);
+    }
     return (
-      <div>
-        <ClearHistoryButton onClick={handleClickOpen}>
-                        {"Clear History"}
-                    </ClearHistoryButton>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Are You Sure Want to Clear Query History?"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-            This Action Will Delete All Of Your Query History, Permanently.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleClearHistory} autoFocus>
-              Clear History
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
+        <div>
+            <Tooltip title={"Clear Query History"}>
+                <ClearHistoryButton onClick={handleClickOpen}>
+                    {"Clear History"}
+                </ClearHistoryButton>
+            </Tooltip>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Are You Sure Want to Clear Query History?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        This Action Will Delete All Of Your Query History,
+                        Permanently.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClearHistory} autoFocus>
+                        Clear History
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </div>
     );
-  }
+}
 
 const blue = {
     50: "#F0F7FF",
@@ -188,14 +190,23 @@ const TabHistorySettingIcon = styled(DisplaySettingsIcon)`
     margin-right: 3px;
 `;
 
+const TabHistorySearchIcon = styled(SearchIcon)`
+    height: 15px;
+    width: 16px;
+    padding:3px;
+    border-radius: 3px 0px 0px 3px;
+    background: #121212;
+
+`
+
 const TabHeaderContainer = styled.div`
-    padding: 0px 10px;
+    padding: 0px 15px;
     font-size: 13px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: #8a8a8a50;
-    height:37px;
+    height: 37px;
 `;
 const TabPanel = styled(TabPanelUnstyled)`
     width: 100%;
@@ -211,24 +222,17 @@ const TabsList = styled(TabsListUnstyled)`
 `;
 
 const EmptyHistory = styled.div`
-display:flex;
-align-items: center;
-justify-content: center;
-color:#ddd;
-font-size: 14px;
-flex:1;
-height:50%;
-`
-function EmptyHistoryDisplay({message}){
-    console.log(message)
-    return (
-        <EmptyHistory>
-            {message}
-        </EmptyHistory>
-    )
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ddd;
+    font-size: 14px;
+    flex: 1;
+    height: 50%;
+`;
+function EmptyHistoryDisplay({ message }) {
+    return <EmptyHistory>{message}</EmptyHistory>;
 }
-
-
 
 function SearchHistoryTabs({
     historyTabHeader,
@@ -244,15 +248,18 @@ function SearchHistoryTabs({
             <TabsList>
                 <Tab>
                     <TabHistoryIcon />
+
                     <span>{"Query History"}</span>
                 </Tab>
                 <Tab>
                     <TabHistoryStarIcon />
+
                     <span>Starred</span>
                 </Tab>
                 <Tab>
-                    {" "}
-                    <TabHistorySettingIcon /> Settings
+                    <TabHistorySettingIcon />
+
+                    <span>Settings</span>
                 </Tab>
                 {closeButton}
             </TabsList>
@@ -352,10 +359,13 @@ const FilterInput = styled.input`
     color: orange;
     background: #121212;
     border: none;
-    margin: 3px;
-    padding: 3px 6px;
+    margin: 0px 10px 0px 0px;
+    padding: 3px 0px;
     font-size: 13px;
-    border-radius: 3px;
+    border-radius: 0px 3px 3px 0px;
+    &:focus{
+        outline:none;
+    }    
 `;
 
 function CloseButton({ onClose }) {
@@ -376,7 +386,7 @@ const HistoryRow = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height:30px;
+    height: 30px;
 `;
 
 function SearchHistoryTab({
@@ -386,7 +396,7 @@ function SearchHistoryTab({
     handleStarItem,
     handleSubmit,
     filtered,
-    emptyMessage
+    emptyMessage,
 }) {
     const [listDisplay, setListDisplay] = useState([]);
     useEffect(() => {
@@ -405,9 +415,15 @@ function SearchHistoryTab({
     // const listDisplay = filtered.length > 0 ? filtered : queryHistory
     return (
         <SearchHistoryContainer>
-            {listDisplay.length > 0 ?
+            {listDisplay.length > 0 ? (
                 listDisplay.map((item, index) => (
                     <HistoryRow key={index}>
+                        <span
+                        style={{
+                            paddingRight:'10px',
+                            color:'#666'
+                        }}
+                        >{index+1}</span>
                         <span style={{ flex: 1 }}>{item.data} </span>
 
                         <span>
@@ -415,38 +431,47 @@ function SearchHistoryTab({
                         </span>
 
                         <div style={{ display: "flex" }}>
-                          <Tooltip title={'Copy Query to Clipboard'}>
-                          <HistoryButton
-                                onClick={(e) => copyQuery(item.data)}
-                            >
-                                <ContentCopyIcon fontSize={"14px"} />
-                            </HistoryButton>
-                              </Tooltip> 
-                              <Tooltip></Tooltip> 
-                            <HistoryButton onClick={(e) => handleDelete(item)}>
-                                <DeleteOutlineIcon fontSize={"14px"} />
-                            </HistoryButton>
-                            <Tooltip></Tooltip>
-                            <HistoryButton
-                                onClick={(e) => handleStarItem(item)}
-                            >
-                                {item.starred ? (
-                                    <StarIcon fontSize={"14px"} />
-                                ) : (
-                                    <StarBorderIcon fontSize={"14px"} />
-                                )}
-                            </HistoryButton>
-                            <Tooltip></Tooltip>
-                            <SubmitButton onClick={(e) => handleSubmit(item)}>
-                                {"Show Logs"}
-                            </SubmitButton>
+                            <Tooltip title={"Copy Query to Clipboard"}>
+                                <HistoryButton
+                                    onClick={(e) => copyQuery(item.data)}
+                                >
+                                    <ContentCopyIcon fontSize={"14px"} />
+                                </HistoryButton>
+                            </Tooltip>
+
+                            <Tooltip title={"Delete Query"}>
+                                <HistoryButton
+                                    onClick={(e) => handleDelete(item)}
+                                >
+                                    <DeleteOutlineIcon fontSize={"14px"} />
+                                </HistoryButton>
+                            </Tooltip>
+
+                            <Tooltip title={"Add Query to Starred"}>
+                                <HistoryButton
+                                    onClick={(e) => handleStarItem(item)}
+                                >
+                                    {item.starred ? (
+                                        <StarIcon fontSize={"14px"} />
+                                    ) : (
+                                        <StarBorderIcon fontSize={"14px"} />
+                                    )}
+                                </HistoryButton>
+                            </Tooltip>
+
+                            <Tooltip title={"Search Logs from Query"}>
+                                <SubmitButton
+                                    onClick={(e) => handleSubmit(item)}
+                                >
+                                    {"Show Logs"}
+                                </SubmitButton>
+                            </Tooltip>
                         </div>
                     </HistoryRow>
-                )):(
-                    <EmptyHistoryDisplay
-                    message={emptyMessage}
-                    />
-                )}
+                ))
+            ) : (
+                <EmptyHistoryDisplay message={emptyMessage} />
+            )}
         </SearchHistoryContainer>
     );
 }
@@ -479,6 +504,7 @@ function SearchHistoryTabHeader({
                     alignItems: "center",
                 }}
             >
+           <TabHistorySearchIcon/>
                 <FilterInput
                     type="text"
                     value={value}
@@ -519,10 +545,7 @@ function SettingTab({ clearHistory }) {
                     <small>
                         Delete all of your query history, permanently.
                     </small>
-                    <AlertDialog 
-                    clearHistory={clearHistory}
-                    />
-                   
+                    <AlertDialog clearHistory={clearHistory} />
                 </SettingItemContainer>
             </div>
         </SearchHistoryContainer>
@@ -538,11 +561,15 @@ const SearchHistoryDrawer = (props) => {
     const [starredItems, setStarredItems] = useState([]);
     const [filtered, setFiltered] = useState([]);
     const [starredFiltered, setStarredFiltered] = useState([]);
-    const [succeed,setSucceed] = useState(false)
-
+    const [succeed, setSucceed] = useState(false);
+    const [copySucceed, setCopySucceed] = useState(false);
+    const [trashedSucceed, setTrashedSucceed] = useState(false);
+    const [starredSucceed, setStarredSucceed] = useState(false);
+    const [unstarredSucceed, setUnstarredSucceed] = useState(false);
     function handleDelete(id) {
         const removed = historyService.remove(id);
         dispatch(setQueryHistory(removed));
+        setTrashedSucceed(true);
     }
 
     function handleSubmit(item) {
@@ -559,12 +586,22 @@ const SearchHistoryDrawer = (props) => {
         const updatedItem = { ...item, starred: item.starred ? false : true };
         const updated = historyService.update(updatedItem);
         dispatch(setQueryHistory(updated));
+        if (updatedItem.starred) {
+            setUnstarredSucceed(false)
+            setStarredSucceed(true);
+        } else {
+            setStarredSucceed(false)
+            setUnstarredSucceed(true);
+        }
+        
     }
 
     function copyQuery(item) {
         navigator.clipboard.writeText(item).then(
             function () {
-                console.log("copied to clipboard", item);
+                if (item.length > 0) {
+                    setCopySucceed(true);
+                }
             },
             function (err) {
                 console.err("error on copy", err);
@@ -577,9 +614,8 @@ const SearchHistoryDrawer = (props) => {
     function clearHistory() {
         const historyClean = historyService.clean();
         dispatch(setQueryHistory(historyClean));
-        if(historyClean?.length < 1){
-            console.log('succeed on main')
-            setSucceed(true)
+        if (historyClean?.length < 1) {
+            setSucceed(true);
         }
     }
 
@@ -598,15 +634,29 @@ const SearchHistoryDrawer = (props) => {
     }
 
     function resetSnackbar() {
-        setSucceed(false)
+        setSucceed(false);
+    }
+    function resetCopy() {
+        setCopySucceed(false);
+    }
+    function resetStarred() {
+        setStarredSucceed(false);
+    }
+    function resetUnstarred() {
+        setUnstarredSucceed(false);
+    }
+    function resetTrashed() {
+        setTrashedSucceed(false);
     }
 
     return (
         <ThemeProvider theme={theme}>
-            <Drawer anchor={"bottom"}
-            
-            style={{height:'250px'}}
-            open={historyOpen} variant={"persistent"}>
+            <Drawer
+                anchor={"bottom"}
+                style={{ height: "250px" }}
+                open={historyOpen}
+                variant={"persistent"}
+            >
                 <SearchHistoryTabs
                     historyTabHeader={
                         <SearchHistoryTabHeader
@@ -624,7 +674,9 @@ const SearchHistoryDrawer = (props) => {
                             handleStarItem={handleStarItem}
                             handleSubmit={handleSubmit}
                             filtered={filtered}
-                            emptyMessage={'History Items Will Be Added Once You Search For Logs.'}
+                            emptyMessage={
+                                "History Items Will Be Added Once You Search For Logs."
+                            }
                         />
                     }
                     starredTabHeader={
@@ -643,7 +695,9 @@ const SearchHistoryDrawer = (props) => {
                             handleStarItem={handleStarItem}
                             handleSubmit={handleSubmit}
                             filtered={starredFiltered}
-                            emptyMessage={'Starred Items Will Be Added Once You Click Star on Query History Items.'}
+                            emptyMessage={
+                                "Starred Items Will Be Added Once You Click Star on Query History Items."
+                            }
                         />
                     }
                     settingTabHeader={
@@ -654,11 +708,36 @@ const SearchHistoryDrawer = (props) => {
                     }
                     settingTab={<SettingTab clearHistory={clearHistory} />}
                     closeButton={<CloseButton onClose={handleClose} />}
-                    
                 />
-                <CustomizedSnackbars
-                succeed={succeed}
-                resetSnackbar={resetSnackbar}
+                <HistorySnackbar
+                    succeed={succeed}
+                    resetSnackbar={resetSnackbar}
+                    message={" Query History Cleared Succesfully"}
+                    type={"info"}
+                />
+                <HistorySnackbar
+                    succeed={copySucceed}
+                    resetSnackbar={resetCopy}
+                    message={"Query Copied Successfully"}
+                    type={"success"}
+                />
+                <HistorySnackbar
+                    succeed={trashedSucceed}
+                    resetSnackbar={resetTrashed}
+                    message={"Query Deleted Successfully"}
+                    type={"info"}
+                />
+                <HistorySnackbar
+                    succeed={starredSucceed}
+                    resetSnackbar={resetStarred}
+                    message={"Query Starred Successfully"}
+                    type={"success"}
+                />
+                <HistorySnackbar
+                    succeed={unstarredSucceed}
+                    resetSnackbar={resetUnstarred}
+                    message={"Query Unstarred Successfully"}
+                    type={"info"}
                 />
             </Drawer>
         </ThemeProvider>

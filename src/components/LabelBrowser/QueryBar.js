@@ -9,6 +9,7 @@ import setQueryHistory from "../../actions/setQueryHistory";
 import HistoryIcon from "@mui/icons-material/History";
 import styled from "@emotion/styled";
 import setHistoryOpen from "../../actions/setHistoryOpen";
+import { Tooltip } from "@mui/material";
 
 const HistoryButton = styled.button`
     background: none;
@@ -142,6 +143,9 @@ export const QueryBar = () => {
                 tabIndex="0"
                 onKeyDown={handleInputKeyDown}
             />
+            <Tooltip title={'Query History('+queryHistory.length+')'}>
+
+           
             <HistoryButton
             style={{
                 color: historyItems ? 'orange': '#ddd'
@@ -150,6 +154,7 @@ export const QueryBar = () => {
             >
                 <HistoryIcon fontSize={"small"}/>
             </HistoryButton>
+            </Tooltip>
             <button
                 disabled={!queryValid}
                 type="submit"
