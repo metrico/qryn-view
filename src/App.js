@@ -1,11 +1,7 @@
 import { Provider } from "react-redux";
-import store from './store/store';
 import MainView from "./components/MainView";
-import localService from "./services/localService";
-
-
+import store from './store/store';
 export default function App() {
-window.LOCALSERVICE = localService
 		return (
 			<Provider store={store}>
 
