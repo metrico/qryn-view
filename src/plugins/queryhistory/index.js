@@ -190,9 +190,9 @@ const TabHistorySettingIcon = styled(DisplaySettingsIcon)`
 `;
 
 const TabHistorySearchIcon = styled(SearchIcon)`
-    height: 15px;
+    height: 21px;
     width: 16px;
-    padding:3px;
+    padding: 0px 3px;
     border-radius: 3px 0px 0px 3px;
     background: #121212;
 
@@ -370,11 +370,13 @@ const FilterInput = styled.input`
     color: orange;
     background: #121212;
     border: none;
+    height:21px;
     margin: 0px 10px 0px 0px;
-    padding: 3px 0px;
+  padding:0px;
     font-size: 13px;
     border-radius: 0px 3px 3px 0px;
     font-family: monospace;
+    font-size:12px;
     &:focus{
         outline:none;
     }    
