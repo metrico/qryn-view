@@ -35,7 +35,7 @@ import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
-
+import Tooltip from '@mui/material/Tooltip';
 
 // Snackbar for clearing confirmation
 const Alert = forwardRef(function Alert(props, ref) {
@@ -210,6 +210,26 @@ const TabsList = styled(TabsListUnstyled)`
     align-content: space-between;
 `;
 
+const EmptyHistory = styled.div`
+display:flex;
+align-items: center;
+justify-content: center;
+color:#ddd;
+font-size: 14px;
+flex:1;
+height:50%;
+`
+function EmptyHistoryDisplay({message}){
+    console.log(message)
+    return (
+        <EmptyHistory>
+            {message}
+        </EmptyHistory>
+    )
+}
+
+
+
 function SearchHistoryTabs({
     historyTabHeader,
     historyTab,
@@ -366,6 +386,7 @@ function SearchHistoryTab({
     handleStarItem,
     handleSubmit,
     filtered,
+    emptyMessage
 }) {
     const [listDisplay, setListDisplay] = useState([]);
     useEffect(() => {
@@ -384,7 +405,7 @@ function SearchHistoryTab({
     // const listDisplay = filtered.length > 0 ? filtered : queryHistory
     return (
         <SearchHistoryContainer>
-            {listDisplay &&
+            {listDisplay.length > 0 ?
                 listDisplay.map((item, index) => (
                     <HistoryRow key={index}>
                         <span style={{ flex: 1 }}>{item.data} </span>
@@ -394,14 +415,18 @@ function SearchHistoryTab({
                         </span>
 
                         <div style={{ display: "flex" }}>
-                            <HistoryButton
+                          <Tooltip title={'Copy Query to Clipboard'}>
+                          <HistoryButton
                                 onClick={(e) => copyQuery(item.data)}
                             >
                                 <ContentCopyIcon fontSize={"14px"} />
                             </HistoryButton>
+                              </Tooltip> 
+                              <Tooltip></Tooltip> 
                             <HistoryButton onClick={(e) => handleDelete(item)}>
                                 <DeleteOutlineIcon fontSize={"14px"} />
                             </HistoryButton>
+                            <Tooltip></Tooltip>
                             <HistoryButton
                                 onClick={(e) => handleStarItem(item)}
                             >
@@ -411,12 +436,17 @@ function SearchHistoryTab({
                                     <StarBorderIcon fontSize={"14px"} />
                                 )}
                             </HistoryButton>
+                            <Tooltip></Tooltip>
                             <SubmitButton onClick={(e) => handleSubmit(item)}>
                                 {"Show Logs"}
                             </SubmitButton>
                         </div>
                     </HistoryRow>
-                ))}
+                )):(
+                    <EmptyHistoryDisplay
+                    message={emptyMessage}
+                    />
+                )}
         </SearchHistoryContainer>
     );
 }
@@ -594,6 +624,7 @@ const SearchHistoryDrawer = (props) => {
                             handleStarItem={handleStarItem}
                             handleSubmit={handleSubmit}
                             filtered={filtered}
+                            emptyMessage={'History Items Will Be Added Once You Search For Logs.'}
                         />
                     }
                     starredTabHeader={
@@ -612,6 +643,7 @@ const SearchHistoryDrawer = (props) => {
                             handleStarItem={handleStarItem}
                             handleSubmit={handleSubmit}
                             filtered={starredFiltered}
+                            emptyMessage={'Starred Items Will Be Added Once You Click Star on Query History Items.'}
                         />
                     }
                     settingTabHeader={
