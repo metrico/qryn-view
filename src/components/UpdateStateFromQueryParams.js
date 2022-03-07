@@ -82,7 +82,6 @@ export function UpdateStateFromQueryParams() {
                         dispatch(STORE_ACTIONS[param](startParams[param]))
                     } else if (QUERY_VALUE === param && startParams[param] !== '') {
                         const parsedQuery = decodeURIComponent(startParams[param])
-                        decodeQuery(parsedQuery, apiUrl)
                         dispatch(STORE_ACTIONS[param](parsedQuery))
                     } else if (TIME_VALUES.includes(param) && startParams[param] !== '') {
                         const croppedTime = ((startParams[param])) / 1000000
@@ -95,6 +94,8 @@ export function UpdateStateFromQueryParams() {
 
                     }
                 })
+                decodeQuery(decodeURIComponent(startParams.query),apiUrl)
+
 
             }
         }
@@ -116,12 +117,14 @@ export function UpdateStateFromQueryParams() {
                     urlFromHash.set(param, time_value.toString())
                 } else if (QUERY_VALUE === param) {
                     const parsed = encodeURIComponent(STORE_KEYS[param]).toString();
-                    decodeQuery(parsed, apiUrl)
                     urlFromHash.set(param, parsed.toString())
                 } else if(BOOLEAN_VALUES === param && typeof param === 'boolean') {
                     urlFromHash.set(param,param.toString())
                 }
             })
+            const newQuery = STORE_KEYS[query]
+            decodeQuery(newQuery,apiUrl)
+
 
             window.location.hash = urlFromHash
         }
@@ -175,8 +178,9 @@ export function UpdateStateFromQueryParams() {
     }, [STORE_KEYS])
 
 }
-async function decodeQuery(query, apiUrl) {
-    await store.dispatch(loadLabels(apiUrl))
+
+ export async function decodeQuery(query, apiUrl) {
+     await store.dispatch(loadLabels(apiUrl))
     const queryArr = query.replaceAll(/[{}]/g,'').split(',');
     const labelsFromQuery = [];
     queryArr.forEach(label => {
@@ -198,7 +202,6 @@ async function decodeQuery(query, apiUrl) {
             labelsFromQuery.push(labelObj);
         } else if(label.includes("=~")) {
             const values = regexQuery[1].split('|')
-            console.log(values)
             const labelObj = {
                 name: regexQuery[0],
                 values: []
@@ -228,27 +231,38 @@ async function decodeQuery(query, apiUrl) {
         }
     });
     const newLabels = store.getState().labels;
-    labelsFromQuery.forEach(async (label) => {
-
-        const cleanLabel = newLabels?.find(item => item?.name === label?.name);
-        if (!cleanLabel) {
-            return
+    newLabels.forEach(label=> {
+        if(label.selected && label.values > 0){
+            label.selected = false
+            label.values.forEach(value=> {
+                if(value.selected) {
+                    value.selected = false;
+                }
+            })
         }
-        
-        await store.dispatch(loadLabelValues(cleanLabel,newLabels,apiUrl));
-        const labelsWithValues = store.getState().labels;
-        const labelWithValues = labelsWithValues.find(item => item?.name === label?.name);
-        let values = labelWithValues.values;
-        values = label.values.concat(values);
-        values = values
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .filter((i, k, a) => { 
-            console.log(a[k-1])
-            return i.name !== a[k - 1]?.name})
-        .filter((i) => !!i);
-        labelWithValues.values = values;
-        labelWithValues.selected = true;
-        store.dispatch(setLabels(labelsWithValues))
     })
+
+    if(labelsFromQuery.length > 0) {
+        labelsFromQuery.forEach( async(label) => {
+
+            const cleanLabel = newLabels?.find(item => item?.name === label?.name);
+            if (!cleanLabel) {
+                return
+            }
+             await store.dispatch(loadLabelValues(cleanLabel,newLabels,apiUrl));
+            const labelsWithValues = store.getState().labels;
+            const labelWithValues = labelsWithValues.find(item => item?.name === label?.name);
+            let values = labelWithValues.values;
+            values = label.values.concat(values);
+            values = values
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .filter((value, index, arr) => { 
+                return value.name !== arr[index - 1]?.name})
+            .filter((value) => !!value);
+            labelWithValues.values = values;
+            labelWithValues.selected = true;
+            store.dispatch(setLabels(labelsWithValues))
+        })
+    }
 
 }

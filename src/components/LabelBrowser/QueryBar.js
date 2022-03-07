@@ -10,7 +10,8 @@ import HistoryIcon from "@mui/icons-material/History";
 import styled from "@emotion/styled";
 import setHistoryOpen from "../../actions/setHistoryOpen";
 import { Tooltip } from "@mui/material";
-import Badge from '@mui/material/Badge';
+import { decodeQuery } from "../UpdateStateFromQueryParams";
+
 
 const HistoryButton = styled.button`
     background: none;
@@ -27,6 +28,7 @@ export const QueryBar = () => {
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen);
     const debug = useSelector((store) => store.debug);
     const query = useSelector((store) => store.query);
+    const apiUrl = useSelector((store) => store.apiUrl)
     const isSubmit = useSelector((store) => store.isSubmit);
     const historyOpen = useSelector((store) => store.historyOpen)
     const [queryInput, setQueryInput] = useState(query);
@@ -60,7 +62,6 @@ export const QueryBar = () => {
                 );
             // here
             dispatch(setLoading(true));
-
             dispatch(loadLogs());
 
             setTimeout(() => {
@@ -107,14 +108,15 @@ export const QueryBar = () => {
 
         dispatch(setQuery(queryInput));
 
-        if (onQueryValid(query)) {
+        if (onQueryValid(queryInput)) {
             try {
                 const historyUpdated = historyService.add({
-                    data: query,
+                    data: queryInput,
                     url: window.location.hash,
                 });
                 dispatch(setQueryHistory(historyUpdated));
                 dispatch(setLabelsBrowserOpen(false));
+                decodeQuery(query,apiUrl)
                 dispatch(loadLogs());
             } catch (e) {
                 console.log(e);
