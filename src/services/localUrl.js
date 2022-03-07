@@ -1,8 +1,12 @@
 import { nanoid } from "nanoid";
 import { _HISTORY_ITEM, _URL_ITEM } from "./consts";
-import { l_set, l_get, cleanup, j_parse, j_string } from "./localService";
+import localService from "./localService";
+
 
 const localUrl = () => {
+
+    const {l_set, l_get, cleanup, j_parse, j_string} = localService()
+
     const get = () => {
         return j_parse(l_get(_URL_ITEM));
     };

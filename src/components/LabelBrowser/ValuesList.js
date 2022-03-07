@@ -46,7 +46,7 @@ export const ValuesList = (props) => {
     if(debug) console.log('🚧 LOGIC/LabelBrowser/ValuesList', apiUrl)
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen)
 
-    const CLOSE = "close"
+    const CLEAR = "clear"
     /**
      * TODO: FILTER VALUES INSIDE LABELS
      */
@@ -190,7 +190,7 @@ export const ValuesList = (props) => {
                                             onClick={(e) =>
                                                 onLabelOpen(e, labelSelected)
                                             }
-                                        >{CLOSE}</span>
+                                        >{CLEAR}</span>
                                     </div>
                                     <div className={"valuelist-content column"}>
                                         {labelSelected?.values?.map(

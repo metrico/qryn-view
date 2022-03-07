@@ -11,6 +11,7 @@ import styled from "@emotion/styled";
 import setHistoryOpen from "../../actions/setHistoryOpen";
 import { Tooltip } from "@mui/material";
 import { decodeQuery } from "../UpdateStateFromQueryParams";
+import localUrl from "../../services/localUrl";
 
 
 const HistoryButton = styled.button`
@@ -38,7 +39,7 @@ export const QueryBar = () => {
     const LOG_BROWSER = "Log Browser";
     const queryHistory = useSelector((store) => store.queryHistory)
     const [historyItems, setHistoryItems] = useState(queryHistory.length>0)
-
+    const saveUrl = localUrl()
     useEffect(()=>{
         setHistoryItems(queryHistory.length>0)
     },[queryHistory])
@@ -118,6 +119,7 @@ export const QueryBar = () => {
                 dispatch(setLabelsBrowserOpen(false));
                 decodeQuery(query,apiUrl)
                 dispatch(loadLogs());
+                saveUrl.add({data: window.location.href, description:'From Query Submit'})
             } catch (e) {
                 console.log(e);
             }

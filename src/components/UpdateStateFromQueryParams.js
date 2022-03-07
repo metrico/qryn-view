@@ -173,7 +173,6 @@ export function UpdateStateFromQueryParams() {
                 }
             })
             window.location.hash = paramsFromHash
-
         }
     }, [STORE_KEYS])
 
@@ -181,9 +180,9 @@ export function UpdateStateFromQueryParams() {
 
  export async function decodeQuery(query, apiUrl) {
      await store.dispatch(loadLabels(apiUrl))
-    const queryArr = query.match(/[^{\}]+(?=})/g, "$1").map(m => m.split(",")).flat()
+    const queryArr = query?.match(/[^{\}]+(?=})/g, "$1")?.map(m => m.split(","))?.flat()
     const labelsFromQuery = [];
-    queryArr.forEach(label => {
+    queryArr?.forEach(label => {
         const regexQuery = label.match(/([^{}=,~!]+)/gm);
         if (!regexQuery) {
             return;
@@ -231,7 +230,7 @@ export function UpdateStateFromQueryParams() {
         }
     });
     const newLabels = store.getState().labels;
-    newLabels.forEach(label=> {
+    newLabels?.forEach(label=> {
         if(label.selected && label.values > 0){
             label.selected = false
             label.values.forEach(value=> {

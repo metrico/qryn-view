@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+
 function localService(item = null) {
 
     const _APP = "cloki-query";
@@ -18,8 +19,8 @@ function localService(item = null) {
     };
     const j_parse = (item) => JSON.parse(item)
     const j_string = (item) => JSON.stringify(item)
-    const l_set = (item,value) => { localStorage.set(item,value) }
-    const l_get = (item) => localStorage.get(item)
+    const l_set = (item,value) => { localStorage.setItem(item,value) }
+    const l_get = (item) =>  localStorage.getItem(item)
     const historyStore = () => {
         const get = () => {
             return JSON.parse(getStorageItem(_HISTORY_ITEM));
@@ -117,6 +118,8 @@ function localService(item = null) {
         }
 
     }
+
+    
     return {
         historyStore,
         labelsStore,
