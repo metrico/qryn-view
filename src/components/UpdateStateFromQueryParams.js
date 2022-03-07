@@ -181,7 +181,7 @@ export function UpdateStateFromQueryParams() {
 
  export async function decodeQuery(query, apiUrl) {
      await store.dispatch(loadLabels(apiUrl))
-    const queryArr = query.replaceAll(/[{}]/g,'').split(',');
+    const queryArr = query.match(/[^{\}]+(?=})/g, "$1").map(m => m.split(",")).flat()
     const labelsFromQuery = [];
     queryArr.forEach(label => {
         const regexQuery = label.match(/([^{}=,~!]+)/gm);
