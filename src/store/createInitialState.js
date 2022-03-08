@@ -1,18 +1,20 @@
 import * as moment from 'moment';
 import { environment } from '../environment/env.dev';
 import localService from '../services/localService';
-
+import localUrl from '../services/localUrl';
 const debug = setDebug(environment.environment)
 
 const initialState = () => {
     if (debug) console.log('🚧 LOGIC/ INITIAL STATE 🚧')
     const externalState = stateFromQueryParams()
     const historyService = localService().historyStore()
+    const linkService = localUrl()
     const state =  {
         debug: setDebug(environment.environment),
         labels: [],
         labelValues:[],
         queryHistory: historyService.getAll() || [],
+        linksHistory: linkService.getAll() || [],
         timeRange:[],
         query: externalState.query || '',
         queryValue: '',

@@ -1,5 +1,11 @@
 import styled from "@emotion/styled";
-import { Badge, Box, createTheme, ThemeProvider, Typography } from "@mui/material";
+import {
+    Badge,
+    Box,
+    createTheme,
+    ThemeProvider,
+    Typography,
+} from "@mui/material";
 import localService from "../../services/localService";
 import Drawer from "@mui/material/Drawer";
 import { useState, useEffect, forwardRef } from "react";
@@ -16,7 +22,9 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
 import HistoryIcon from "@mui/icons-material/History";
 import CloseIcon from "@mui/icons-material/Close";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
+import LinkIcon from "@mui/icons-material/Link";
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import TabsUnstyled from "@mui/base/TabsUnstyled";
 import TabsListUnstyled from "@mui/base/TabsListUnstyled";
 import TabPanelUnstyled from "@mui/base/TabPanelUnstyled";
@@ -37,6 +45,8 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
 import Tooltip from "@mui/material/Tooltip";
+import localUrl from "../../services/localUrl";
+import setLinksHistory from "../../actions/setLinksHistory";
 
 // Snackbar for clearing confirmation
 const Alert = forwardRef(function Alert(props, ref) {
@@ -109,11 +119,15 @@ function AlertDialog({ clearHistory }) {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                    {"Click ‘Clear History’ to delete your query history permanently"}
+                        {
+                            "Click ‘Clear History’ to delete your query history permanently"
+                        }
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <DialogCancelButton onClick={handleClose}>Cancel</DialogCancelButton>
+                    <DialogCancelButton onClick={handleClose}>
+                        Cancel
+                    </DialogCancelButton>
                     <DialogConfirmButton onClick={handleClearHistory} autoFocus>
                         Clear History
                     </DialogConfirmButton>
@@ -189,14 +203,19 @@ const TabHistorySettingIcon = styled(DisplaySettingsIcon)`
     margin-right: 3px;
 `;
 
+const TabHistoryLinkIcon = styled(LinkIcon)`
+    height: 16px;
+    width: 16px;
+    margin-right: 3px;
+`;
+
 const TabHistorySearchIcon = styled(SearchIcon)`
     height: 21px;
     width: 16px;
     padding: 0px 3px;
     border-radius: 3px 0px 0px 3px;
     background: #121212;
-
-`
+`;
 
 const TabHeaderContainer = styled.div`
     padding: 0px 15px;
@@ -238,6 +257,8 @@ function QueryHistoryTabs({
     historyTab,
     starredTab,
     closeButton,
+    linksTabHeader,
+    linksTab,
     starredTabHeader,
     settingTab,
     settingTabHeader,
@@ -250,6 +271,12 @@ function QueryHistoryTabs({
 
                     <span>{"Query History"}</span>
                 </Tab>
+
+                <Tab>
+                    <TabHistoryLinkIcon />
+                    <span>{"Links History"}</span>
+                </Tab>
+
                 <Tab>
                     <TabHistoryStarIcon />
 
@@ -267,10 +294,15 @@ function QueryHistoryTabs({
                 {historyTab}
             </TabPanel>
             <TabPanel value={1}>
+                {linksTabHeader}
+                {linksTab}
+            </TabPanel>
+
+            <TabPanel value={2}>
                 {starredTabHeader}
                 {starredTab}
             </TabPanel>
-            <TabPanel value={2}>
+            <TabPanel value={3}>
                 {settingTabHeader}
                 {settingTab}
             </TabPanel>
@@ -343,7 +375,7 @@ const ClearHistoryButton = styled(HistoryButton)`
     padding: 10px 20px;
     background: #088789;
     margin: 0;
-    width:100%;
+    width: 100%;
 `;
 const StyledCloseButton = styled(HistoryButton)`
     background: none;
@@ -356,30 +388,28 @@ const StyledCloseButton = styled(HistoryButton)`
 `;
 
 const DialogCancelButton = styled(HistoryButton)`
-background: #646464;
-padding: 8px 16px;
-
-`
+    background: #646464;
+    padding: 8px 16px;
+`;
 const DialogConfirmButton = styled(HistoryButton)`
-background: #088789;
-padding: 8px 16px;
-`
-
+    background: #088789;
+    padding: 8px 16px;
+`;
 
 const FilterInput = styled.input`
     color: orange;
     background: #121212;
     border: none;
-    height:21px;
+    height: 21px;
     margin: 0px 10px 0px 0px;
-  padding:0px;
+    padding: 0px;
     font-size: 13px;
     border-radius: 0px 3px 3px 0px;
     font-family: monospace;
-    font-size:12px;
-    &:focus{
-        outline:none;
-    }    
+    font-size: 12px;
+    &:focus {
+        outline: none;
+    }
 `;
 
 function CloseButton({ onClose }) {
@@ -433,12 +463,23 @@ function QueryHistoryTab({
                 listDisplay.map((item, index) => (
                     <HistoryRow key={index}>
                         <span
-                        style={{
-                            paddingRight:'10px',
-                            color:'#666'
-                        }}
-                        >{listDisplay.length -(index)}</span>
-                        <span style={{ flex: 1, fontFamily:'monospace',fontSize:'13px', color:'#ddd' }}>{item.data} </span>
+                            style={{
+                                paddingRight: "10px",
+                                color: "#666",
+                            }}
+                        >
+                            {listDisplay.length - index}
+                        </span>
+                        <span
+                            style={{
+                                flex: 1,
+                                fontFamily: "monospace",
+                                fontSize: "13px",
+                                color: "#ddd",
+                            }}
+                        >
+                            {item.data}{" "}
+                        </span>
 
                         <span>
                             {format(item.timestamp, "yyyy/MM/dd HH:mm:ss")}
@@ -489,6 +530,119 @@ function QueryHistoryTab({
         </QueryHistoryContainer>
     );
 }
+function LinksHistoryTab({
+    linksHistory,
+    copyLink,
+    handleDelete,
+    handleStarItem,
+    handleSubmit,
+    filtered,
+    emptyMessage,
+}) {
+    const [listDisplay, setListDisplay] = useState([]);
+    useEffect(() => {
+        setListDisplay(linksHistory);
+    }, []);
+    useEffect(()=>{
+        if(filtered.length>0){
+            console.log(filtered)
+            setListDisplay(filtered)
+        }
+    },[filtered])
+    useEffect(() => {
+        setListDisplay(linksHistory);
+    }, [linksHistory]);
+
+    return (
+        <QueryHistoryContainer>
+            {listDisplay.length > 0 ? (
+                listDisplay.map((item, index) => (
+                    <HistoryRow key={index}>
+                        <span
+                            style={{
+                                paddingRight: "10px",
+                                color: "#666",
+                            }}
+                        >
+                            {listDisplay.length - index}
+                        </span>
+
+                        <span
+                            style={{
+                                flex: 1,
+                                fontFamily: "monospace",
+                                fontSize: "13px",
+                                color: "#ddd",
+                            }}
+                        >
+                            {decodeURIComponent(item.params.query)}{" "}
+                        </span>
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns: "1fr .25fr .25fr 1fr",
+                                width: "50%",
+                            }}
+                        >
+                            <span>API URL: {item.params.apiUrl}</span>
+                            <span>limit: {item.params.limit}</span>
+
+                            <span>step: {item.params.step}</span>
+                            <span style={{
+                                display:'flex',
+                                alignItems:'center'
+                            }}> <AccessTimeIcon fontSize={"14px"} style={{marginRight:'3px'}}/>{" "}
+                                {item.fromDate}
+                                {" - "}
+                                {item.toDate}
+                            </span>
+                        </div>
+
+                        <div style={{ display: "flex" }}>
+                            <Tooltip title={"Copy Link to Clipboard"}>
+                                <HistoryButton
+                                    onClick={(e) => copyLink(item.data)}
+                                >
+                                    <LinkIcon fontSize={"14px"} />
+                                </HistoryButton>
+                            </Tooltip>
+
+                            <Tooltip title={"Delete Query"}>
+                                <HistoryButton
+                                    onClick={(e) => handleDelete(item)}
+                                >
+                                    <DeleteOutlineIcon fontSize={"14px"} />
+                                </HistoryButton>
+                            </Tooltip>
+
+                            <Tooltip title={"Star / Unstar Link"}>
+                                <HistoryButton
+                                    onClick={(e) => handleStarItem(item)}
+                                >
+                                    {item.starred ? (
+                                        <StarIcon fontSize={"14px"} />
+                                    ) : (
+                                        <StarBorderIcon fontSize={"14px"} />
+                                    )}
+                                </HistoryButton>
+                            </Tooltip>
+
+                            <Tooltip title={"Search Logs from Query"}>
+                                <SubmitButton
+                                    onClick={(e) => handleSubmit(item.data)}
+                                >
+                                    {"Open In New Tab"}
+                                </SubmitButton>
+                            </Tooltip>
+                        </div>
+                    </HistoryRow>
+                ))
+            ) : (
+                <EmptyHistoryDisplay message={emptyMessage} />
+            )}
+        </QueryHistoryContainer>
+    );
+}
 
 function QueryHistoryTabHeader({
     queryHistory,
@@ -500,11 +654,12 @@ function QueryHistoryTabHeader({
 
     function handleValueChange(e) {
         let edited = e.target.value;
-
+console.log(edited)
         setValue(edited);
         const filtered = filterItems(queryHistory, edited);
         if (filtered.length > 0) {
             setFilteredItems(filtered);
+            console.log(filtered)
         } else {
             setFilteredItems([]);
         }
@@ -518,7 +673,7 @@ function QueryHistoryTabHeader({
                     alignItems: "center",
                 }}
             >
-           <TabHistorySearchIcon/>
+                <TabHistorySearchIcon />
                 <FilterInput
                     type="text"
                     value={value}
@@ -532,7 +687,12 @@ function QueryHistoryTabHeader({
         </TabHeaderContainer>
     );
 }
-function SettingHistoryTabHeader({ clearHistory, queryHistory }) {
+function SettingHistoryTabHeader({  queryHistory,
+    linksHistory,
+
+
+
+}) {
     return (
         <TabHeaderContainer>
             <div
@@ -544,22 +704,34 @@ function SettingHistoryTabHeader({ clearHistory, queryHistory }) {
                 <span style={{ margin: "0px 4px" }}>
                     Query History Rows: {queryHistory.length}
                 </span>
+                {" | "}
+                <span style={{ margin: "0px 4px" }}>
+                    Links History Rows: {linksHistory.length}
+                </span>
             </div>
         </TabHeaderContainer>
     );
 }
 
-function SettingTab({ clearHistory }) {
+function SettingTab({ clearHistory,
+    clearLinksHistory,}) {
     // const listDisplay = filtered.length > 0 ? filtered : queryHistory
     return (
         <QueryHistoryContainer>
-            <div>
+            <div style={{ display: "flex" }}>
                 <SettingItemContainer>
                     <div>Clear Query History</div>
                     <small>
                         Delete all of your query history, permanently.
                     </small>
                     <AlertDialog clearHistory={clearHistory} />
+                </SettingItemContainer>
+                <SettingItemContainer>
+                    <div>Clear Links History</div>
+                    <small>
+                        Delete all of your links history, permanently.
+                    </small>
+                    <AlertDialog clearHistory={clearLinksHistory} />
                 </SettingItemContainer>
             </div>
         </QueryHistoryContainer>
@@ -569,20 +741,30 @@ function SettingTab({ clearHistory }) {
 const QueryHistoryDrawer = (props) => {
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
+    const linkService = localUrl();
     const queryHistory = useSelector((store) => store.queryHistory);
+    const linksHistory = useSelector((store) => store.linksHistory);
     const historyOpen = useSelector((store) => store.historyOpen);
 
     const [starredItems, setStarredItems] = useState([]);
     const [filtered, setFiltered] = useState([]);
+    const [linksFiltered, setLinksFiltered] = useState([]);
     const [starredFiltered, setStarredFiltered] = useState([]);
     const [succeed, setSucceed] = useState(false);
     const [copySucceed, setCopySucceed] = useState(false);
     const [trashedSucceed, setTrashedSucceed] = useState(false);
     const [starredSucceed, setStarredSucceed] = useState(false);
     const [unstarredSucceed, setUnstarredSucceed] = useState(false);
+    const [linksStarredItems, setLinksStarredItems] = useState(false);
     function handleDelete(id) {
         const removed = historyService.remove(id);
         dispatch(setQueryHistory(removed));
+        setTrashedSucceed(true);
+    }
+
+    function handleLinkDelete(id) {
+        const removed = linkService.remove(id);
+        dispatch(setLinksHistory(removed));
         setTrashedSucceed(true);
     }
 
@@ -591,23 +773,41 @@ const QueryHistoryDrawer = (props) => {
         dispatch(loadLogs());
     }
 
+    function handleLinkSubmit(link) {
+        window.open(link);
+    }
+
     useEffect(() => {
         const starred = queryHistory.filter((f) => f.starred) || [];
+        const linksStarred = linksHistory.filter((f) => f.starred) || [];
+        setLinksStarredItems(linksStarred);
         setStarredItems(starred);
-    }, [queryHistory]);
+        console.log(linksHistory);
+    }, [queryHistory, linksHistory]);
 
     function handleStarItem(item) {
         const updatedItem = { ...item, starred: item.starred ? false : true };
         const updated = historyService.update(updatedItem);
         dispatch(setQueryHistory(updated));
         if (updatedItem.starred) {
-            setUnstarredSucceed(false)
+            setUnstarredSucceed(false);
             setStarredSucceed(true);
         } else {
-            setStarredSucceed(false)
+            setStarredSucceed(false);
             setUnstarredSucceed(true);
         }
-        
+    }
+    function handleStarLinkItem(item) {
+        const updatedItem = { ...item, starred: item.starred ? false : true };
+        const updated = linkService.update(updatedItem);
+        dispatch(setLinksHistory(updated));
+        if (updatedItem.starred) {
+            setUnstarredSucceed(false);
+            setStarredSucceed(true);
+        } else {
+            setStarredSucceed(false);
+            setUnstarredSucceed(true);
+        }
     }
 
     function copyQuery(item) {
@@ -633,6 +833,11 @@ const QueryHistoryDrawer = (props) => {
         }
     }
 
+    function clearLinksHistory(){
+        const historyClean = historyService.clean();
+        dispatch(setLinksHistory(historyClean))
+    }
+
     function filterItems(list, item) {
         return list.filter((f) =>
             f.data.toLowerCase().includes(item.toLowerCase())
@@ -643,10 +848,14 @@ const QueryHistoryDrawer = (props) => {
         setFiltered(list);
     }
 
+    function setFilterLinkItems(list) {
+        setLinksFiltered(list)
+    }
+
     function filterStarred(starred) {
         setStarredFiltered(starred);
     }
-
+    
     function resetSnackbar() {
         setSucceed(false);
     }
@@ -693,6 +902,26 @@ const QueryHistoryDrawer = (props) => {
                             }
                         />
                     }
+                    linksTabHeader={
+                        <QueryHistoryTabHeader
+                            queryHistory={linksHistory}
+                            filterItems={filterItems}
+                            setFilteredItems={setFilterLinkItems}
+                        />
+                    }
+                    linksTab={
+                        <LinksHistoryTab
+                            linksHistory={linksHistory}
+                            copyLink={copyQuery}
+                            handleDelete={handleLinkDelete}
+                            handleStarItem={handleStarLinkItem}
+                            handleSubmit={handleLinkSubmit}
+                            filtered={linksFiltered}
+                            emptyMessage={
+                                "There is no links history. Please execute some queries and share links and you will see a history here."
+                            }
+                        />
+                    }
                     starredTabHeader={
                         <QueryHistoryTabHeader
                             queryHistory={starredItems}
@@ -717,40 +946,43 @@ const QueryHistoryDrawer = (props) => {
                     settingTabHeader={
                         <SettingHistoryTabHeader
                             queryHistory={queryHistory}
-                            clearHistory={clearHistory}
+                            linksHistory={linksHistory}
                         />
                     }
-                    settingTab={<SettingTab clearHistory={clearHistory} />}
+                    settingTab={<SettingTab 
+                        clearHistory={clearHistory}
+                        clearLinksHistory={clearLinksHistory}
+                        />}
                     closeButton={<CloseButton onClose={handleClose} />}
                 />
                 <HistorySnackbar
                     succeed={succeed}
                     resetSnackbar={resetSnackbar}
-                    message={" Query History cleared succesfully"}
+                    message={"History Cleared succesfully"}
                     type={"info"}
                 />
                 <HistorySnackbar
                     succeed={copySucceed}
                     resetSnackbar={resetCopy}
-                    message={"Query copied successfully"}
+                    message={"Copied successfully"}
                     type={"success"}
                 />
                 <HistorySnackbar
                     succeed={trashedSucceed}
                     resetSnackbar={resetTrashed}
-                    message={"Query deleted successfully"}
+                    message={"Deleted successfully"}
                     type={"info"}
                 />
                 <HistorySnackbar
                     succeed={starredSucceed}
                     resetSnackbar={resetStarred}
-                    message={"Query starred successfully"}
+                    message={"Starred successfully"}
                     type={"success"}
                 />
                 <HistorySnackbar
                     succeed={unstarredSucceed}
                     resetSnackbar={resetUnstarred}
-                    message={"Query unstarred successfully"}
+                    message={"Unstarred successfully"}
                     type={"info"}
                 />
             </Drawer>
