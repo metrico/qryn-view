@@ -28,6 +28,7 @@ import store from '../../store/store'
 import loadLogs from "../../actions/loadLogs"
 import { setLabelsBrowserOpen } from "../../actions/setLabelsBrowserOpen";
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import { Tooltip } from "@mui/material";
 export function DateRangePickerMain(props) {
     const today = Date.now();
     const {
@@ -163,6 +164,8 @@ useEffect(()=>{
             })
         );
     };
+    const mediaMatch = window.matchMedia('(min-width: 1200px)');
+    const [matches, setMatches] = useState(mediaMatch.matches);
     const dateButtonStyles = {
         border:'none',
         height:'21px',
@@ -173,8 +176,7 @@ useEffect(()=>{
         fontSize:'.85em',
         display:'flex',
         alignItems:'center',
-        marginLeft:'20px'
-
+        marginLeft:'20px',
     }
 
     const helpers = {
@@ -200,13 +202,45 @@ useEffect(()=>{
     return (
         <div>
             <button style={dateButtonStyles}
-                onClick={openButtonHandler}
-            ><AccessTimeOutlinedIcon 
-            style={{
-                fontSize:'1.15em',
-                marginRight:'3px'
-            }} />
+                onClick={openButtonHandler} className={'date-time-selector'}
+            >
+                <Tooltip title={
+                    timeLabel ? <React.Fragment>
+                        <span style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            padding: '3px',
+                        }}  >
+                            <span style={{
+                                textAlign: 'center'
+                            }}>
+                                {(isValid(dateRange.dateStart)
+                                ? format(dateRange.dateStart, "yyyy/MM/dd HH:mm:ss")
+                                : dateRange.dateStart)}
+                            </span>
+                            <span style={{
+                                textAlign: 'center'
+                            }}>
+                            to
+                            </span>
+                            <span style={{
+                                textAlign: 'center'
+                            }}>
+                            {(isValid(dateRange.dateEnd)
+                                ? format(dateRange.dateEnd, "yyyy/MM/dd HH:mm:ss")
+                                : typeof dateRange.dateEnd !== 'undefined' ?
+                                dateRange.dateEnd : ''
+                                )}
+                            </span>
 
+                        </span>
+                    </React.Fragment> : undefined
+                    }>
+                    <AccessTimeOutlinedIcon />
+                </Tooltip>
+
+                <span>
                 {timeLabel ?
                 timeLabel :
                 (isValid(dateRange.dateStart)
@@ -219,6 +253,7 @@ useEffect(()=>{
                     dateRange.dateEnd : ''
                     )
                 }
+                </span>
             </button> 
 
             { isComponentVisible ? (

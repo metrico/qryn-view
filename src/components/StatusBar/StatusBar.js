@@ -11,7 +11,7 @@ import { DateRangePicker } from "../../plugins/daterangepicker";
 import { DATE_TIME_RANGE } from '../../plugins/daterangepicker/consts';
 import {  findRangeByLabel } from "../../plugins/daterangepicker/utils";
 import { UpdateStateFromQueryParams } from "../UpdateStateFromQueryParams";
-
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import store from '../../store/store'
 import loadLabels from "../../actions/LoadLabels";
 
@@ -207,7 +207,7 @@ export function StatusBarSelectors() {
                         title={"Copy Link"}
                         onClick={shareLink}
                     >
-                        <LinkIcon
+                        <ContentCopyIcon
                             fontSize={"small"}
                         />
 
