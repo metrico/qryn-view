@@ -38,6 +38,10 @@ const reducer =  (state, action) => {
             return {...state, matrixData: action.matrixData};
         case "SET_CHART_TYPE":
             return {...state, chartType: action.setChartType};
+        case "SET_QUERY_HISTORY":
+            return {...state, queryHistory: action.queryHistory};
+        case "SET_HISTORY_OPEN":
+                return {...state, historyOpen: action.historyOpen};
         default:
             return { ...state };
     }

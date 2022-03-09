@@ -1,11 +1,12 @@
 import { ZoomIn, ZoomOut } from "@mui/icons-material/";
-import { CircularProgress, IconButton } from "@mui/material";
+import { CircularProgress, } from "@mui/material";
 import * as moment from "moment";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { setLabels } from "../actions";
 import loadLabelValues from '../actions/loadLabelValues';
 import ClokiChart from "../plugins/charts";
+import QueryHistory from "../plugins/queryhistory";
 import store from "../store/store";
 import { queryBuilderWithLabels } from "./LabelBrowser/helpers/querybuilder";
 
@@ -53,10 +54,10 @@ export const ValueTags = (props) => {
         return Object.entries(tags).map(
             ([key, value], k) => (
                 <div className={"value-tags"} key={k}>
-                    <span aria-label="Filter for value" title="Filter for value" onClick={(e) => addLabel(e, key, value)} class={'icon'}>
+                    <span aria-label="Filter for value" title="Filter for value" onClick={(e) => addLabel(e, key, value)} className={'icon'}>
                         <ZoomIn color='primary'/>
                     </span>
-                    <span aria-label="Filter out value" title='Filter out value' onClick={(e) => addLabel(e, key, value, true)} class={'icon'}>
+                    <span aria-label="Filter out value" title='Filter out value' onClick={(e) => addLabel(e, key, value, true)} className={'icon'}>
                         <ZoomOut color='primary'/>
                     </span>
                     
@@ -173,11 +174,12 @@ class LogView extends Component {
                                 letterSpacing:"1px"
                             }}
                             >
-                            Please Adjust Search Parameters and Click on Show Logs 
+                            {"Please adjust search parameters and click on ‘Show Logs’ button"} 
                             </span>
                         
                             </div>
                     )}
+                    <QueryHistory/>
                     {this.props.loading && (
                         <CircularProgress
                             className={"progress"}
