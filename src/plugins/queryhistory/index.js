@@ -24,7 +24,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import LinkIcon from "@mui/icons-material/Link";
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import TabsUnstyled from "@mui/base/TabsUnstyled";
 import TabsListUnstyled from "@mui/base/TabsListUnstyled";
 import TabPanelUnstyled from "@mui/base/TabPanelUnstyled";
@@ -87,7 +87,7 @@ function HistorySnackbar({ succeed, resetSnackbar, message, type }) {
 }
 
 // Alert Dialog for Clearing History
-function AlertDialog({ clearHistory }) {
+function AlertDialog({ clearHistory, dialogType }) {
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -115,13 +115,12 @@ function AlertDialog({ clearHistory }) {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    {"Are you sure you want to clear the Query History?"}
+                    Are you sure you want to clear the {dialogType} History?
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        {
-                            "Click ‘Clear History’ to delete your query history permanently"
-                        }
+                        Click ‘Clear History’ to delete your {dialogType}{" "}
+                        history permanently
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -255,16 +254,15 @@ function EmptyHistoryDisplay({ message }) {
 function QueryHistoryTabs({
     historyTabHeader,
     historyTab,
-    starredTab,
+    starredHistoryTab,
     closeButton,
     linksTabHeader,
     linksTab,
-    starredTabHeader,
     settingTab,
     settingTabHeader,
 }) {
     return (
-        <TabsUnstyled defaultValue={0}>
+        <TabsUnstyled style={{ height: "320px" }} defaultValue={0}>
             <TabsList>
                 <Tab>
                     <TabHistoryIcon />
@@ -298,10 +296,7 @@ function QueryHistoryTabs({
                 {linksTab}
             </TabPanel>
 
-            <TabPanel value={2}>
-                {starredTabHeader}
-                {starredTab}
-            </TabPanel>
+            <TabPanel value={2}>{starredHistoryTab}</TabPanel>
             <TabPanel value={3}>
                 {settingTabHeader}
                 {settingTab}
@@ -534,7 +529,7 @@ function LinksHistoryTab({
     linksHistory,
     copyLink,
     handleDelete,
-    handleStarItem,
+    handleStarLinkItem,
     handleSubmit,
     filtered,
     emptyMessage,
@@ -543,12 +538,11 @@ function LinksHistoryTab({
     useEffect(() => {
         setListDisplay(linksHistory);
     }, []);
-    useEffect(()=>{
-        if(filtered.length>0){
-            console.log(filtered)
-            setListDisplay(filtered)
+    useEffect(() => {
+        if (filtered.length > 0) {
+            setListDisplay(filtered);
         }
-    },[filtered])
+    }, [filtered]);
     useEffect(() => {
         setListDisplay(linksHistory);
     }, [linksHistory]);
@@ -588,10 +582,17 @@ function LinksHistoryTab({
                             <span>limit: {item.params.limit}</span>
 
                             <span>step: {item.params.step}</span>
-                            <span style={{
-                                display:'flex',
-                                alignItems:'center'
-                            }}> <AccessTimeIcon fontSize={"14px"} style={{marginRight:'3px'}}/>{" "}
+                            <span
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                }}
+                            >
+                                {" "}
+                                <AccessTimeIcon
+                                    fontSize={"14px"}
+                                    style={{ marginRight: "3px" }}
+                                />{" "}
                                 {item.fromDate}
                                 {" - "}
                                 {item.toDate}
@@ -617,7 +618,7 @@ function LinksHistoryTab({
 
                             <Tooltip title={"Star / Unstar Link"}>
                                 <HistoryButton
-                                    onClick={(e) => handleStarItem(item)}
+                                    onClick={(e) => handleStarLinkItem(item)}
                                 >
                                     {item.starred ? (
                                         <StarIcon fontSize={"14px"} />
@@ -644,22 +645,105 @@ function LinksHistoryTab({
     );
 }
 
+function StarredHistoryTab({
+    starredQueries,
+    starredLinks,
+    handleDeleteQuery,
+    handleDeleteLink,
+    handleStarItem,
+    handleStarLinkItem,
+    handleSubmitQuery,
+    handleSubmitLink,
+    filteredLinks,
+    filteredQueries,
+    setFilteredStarLink,
+    setFilteredStarQuery,
+    filterItems,
+    emptyQueryMessage,
+    emptyLinkMessage,
+    copyQuery,
+}) {
+    const [queryListDisplay, setQueryListDisplay] = useState([]);
+    const [linksListDisplay, setLinksListDisplay] = useState([]);
+
+    useEffect(() => {
+        setQueryListDisplay(starredQueries);
+        setLinksListDisplay(starredLinks);
+    }, []);
+
+    useEffect(() => {
+        if (filteredLinks.length > 0) {
+            setLinksListDisplay(filteredLinks);
+        }
+        if (filteredQueries.length > 0) {
+            setQueryListDisplay(filteredQueries);
+        }
+    }, [filteredLinks, filteredQueries]);
+
+    useEffect(() => {
+        setQueryListDisplay(starredQueries);
+        setLinksListDisplay(starredLinks);
+    }, [starredQueries, starredLinks]);
+
+    return (
+        <TabsUnstyled defaultValue={0}>
+            <TabsList>
+                <Tab>Queries</Tab>
+                <Tab>Links</Tab>
+            </TabsList>
+
+            <TabPanel value={0}>
+                <QueryHistoryTabHeader
+                    searchQueriesText={"Queries"}
+                    queryHistory={starredQueries}
+                    filterItems={filterItems}
+                    setFilteredItems={setFilteredStarQuery}
+                />
+                <QueryHistoryTab
+                    queryHistory={queryListDisplay}
+                    copyQuery={copyQuery}
+                    handleDelete={handleDeleteQuery}
+                    handleStarItem={handleStarItem}
+                    handleSubmit={handleSubmitQuery}
+                    filtered={filteredQueries}
+                    emptyMessage={emptyQueryMessage}
+                />
+            </TabPanel>
+            <TabPanel value={1}>
+                <QueryHistoryTabHeader
+                    searchQueriesText={"Links"}
+                    queryHistory={starredLinks}
+                    filterItems={filterItems}
+                    setFilteredItems={setFilteredStarLink}
+                />
+                <LinksHistoryTab
+                    linksHistory={linksListDisplay}
+                    copyQuery={copyQuery}
+                    handleDelete={handleDeleteLink}
+                    handleStarLinkItem={handleStarLinkItem}
+                    handleSubmit={handleSubmitLink}
+                    filtered={filteredLinks}
+                    emptyMessage={emptyLinkMessage}
+                />
+            </TabPanel>
+        </TabsUnstyled>
+    );
+}
+
 function QueryHistoryTabHeader({
     queryHistory,
-    clearHistory,
     filterItems,
     setFilteredItems,
+    searchQueriesText,
 }) {
     const [value, setValue] = useState("");
 
     function handleValueChange(e) {
         let edited = e.target.value;
-console.log(edited)
         setValue(edited);
         const filtered = filterItems(queryHistory, edited);
         if (filtered.length > 0) {
             setFilteredItems(filtered);
-            console.log(filtered)
         } else {
             setFilteredItems([]);
         }
@@ -678,7 +762,7 @@ console.log(edited)
                     type="text"
                     value={value}
                     onChange={handleValueChange}
-                    placeholder={"Search Queries"}
+                    placeholder={"Search " + searchQueriesText}
                 />{" "}
                 <span style={{ margin: "0px 4px" }}>
                     Total: {queryHistory.length}
@@ -687,12 +771,8 @@ console.log(edited)
         </TabHeaderContainer>
     );
 }
-function SettingHistoryTabHeader({  queryHistory,
-    linksHistory,
 
-
-
-}) {
+function SettingHistoryTabHeader({ queryHistory, linksHistory }) {
     return (
         <TabHeaderContainer>
             <div
@@ -702,19 +782,18 @@ function SettingHistoryTabHeader({  queryHistory,
                 }}
             >
                 <span style={{ margin: "0px 4px" }}>
-                    Query History Rows: {queryHistory.length}
+                    Query History Rows: {queryHistory?.length}
                 </span>
                 {" | "}
                 <span style={{ margin: "0px 4px" }}>
-                    Links History Rows: {linksHistory.length}
+                    Links History Rows: {linksHistory?.length}
                 </span>
             </div>
         </TabHeaderContainer>
     );
 }
 
-function SettingTab({ clearHistory,
-    clearLinksHistory,}) {
+function SettingTab({ clearHistory, clearLinksHistory }) {
     // const listDisplay = filtered.length > 0 ? filtered : queryHistory
     return (
         <QueryHistoryContainer>
@@ -724,14 +803,20 @@ function SettingTab({ clearHistory,
                     <small>
                         Delete all of your query history, permanently.
                     </small>
-                    <AlertDialog clearHistory={clearHistory} />
+                    <AlertDialog
+                        dialogType={"Query"}
+                        clearHistory={clearHistory}
+                    />
                 </SettingItemContainer>
                 <SettingItemContainer>
                     <div>Clear Links History</div>
                     <small>
                         Delete all of your links history, permanently.
                     </small>
-                    <AlertDialog clearHistory={clearLinksHistory} />
+                    <AlertDialog
+                        dialogType={"Links"}
+                        clearHistory={clearLinksHistory}
+                    />
                 </SettingItemContainer>
             </div>
         </QueryHistoryContainer>
@@ -750,6 +835,7 @@ const QueryHistoryDrawer = (props) => {
     const [filtered, setFiltered] = useState([]);
     const [linksFiltered, setLinksFiltered] = useState([]);
     const [starredFiltered, setStarredFiltered] = useState([]);
+    const [linksStarredFiltered, setLinksStarredFiltered] = useState([]);
     const [succeed, setSucceed] = useState(false);
     const [copySucceed, setCopySucceed] = useState(false);
     const [trashedSucceed, setTrashedSucceed] = useState(false);
@@ -778,11 +864,10 @@ const QueryHistoryDrawer = (props) => {
     }
 
     useEffect(() => {
-        const starred = queryHistory.filter((f) => f.starred) || [];
-        const linksStarred = linksHistory.filter((f) => f.starred) || [];
+        const starred = queryHistory?.filter((f) => f.starred) || [];
+        const linksStarred = linksHistory?.filter((f) => f.starred) || [];
         setLinksStarredItems(linksStarred);
         setStarredItems(starred);
-        console.log(linksHistory);
     }, [queryHistory, linksHistory]);
 
     function handleStarItem(item) {
@@ -833,13 +918,13 @@ const QueryHistoryDrawer = (props) => {
         }
     }
 
-    function clearLinksHistory(){
-        const historyClean = historyService.clean();
-        dispatch(setLinksHistory(historyClean))
+    function clearLinksHistory() {
+        const historyClean = linkService.clean();
+        dispatch(setLinksHistory(historyClean));
     }
 
     function filterItems(list, item) {
-        return list.filter((f) =>
+        return list?.filter((f) =>
             f.data.toLowerCase().includes(item.toLowerCase())
         );
     }
@@ -849,16 +934,21 @@ const QueryHistoryDrawer = (props) => {
     }
 
     function setFilterLinkItems(list) {
-        setLinksFiltered(list)
+        setLinksFiltered(list);
     }
 
     function filterStarred(starred) {
         setStarredFiltered(starred);
     }
-    
+
+    function filterLinkStarred(starred) {
+        setLinksStarredFiltered(starred);
+    }
+
     function resetSnackbar() {
         setSucceed(false);
     }
+
     function resetCopy() {
         setCopySucceed(false);
     }
@@ -883,6 +973,7 @@ const QueryHistoryDrawer = (props) => {
                 <QueryHistoryTabs
                     historyTabHeader={
                         <QueryHistoryTabHeader
+                            searchQueriesText={"Queries"}
                             queryHistory={queryHistory}
                             clearHistory={clearHistory}
                             filterItems={filterItems}
@@ -904,6 +995,7 @@ const QueryHistoryDrawer = (props) => {
                     }
                     linksTabHeader={
                         <QueryHistoryTabHeader
+                            searchQueriesText={"Links"}
                             queryHistory={linksHistory}
                             filterItems={filterItems}
                             setFilteredItems={setFilterLinkItems}
@@ -914,7 +1006,7 @@ const QueryHistoryDrawer = (props) => {
                             linksHistory={linksHistory}
                             copyLink={copyQuery}
                             handleDelete={handleLinkDelete}
-                            handleStarItem={handleStarLinkItem}
+                            handleStarLinkItem={handleStarLinkItem}
                             handleSubmit={handleLinkSubmit}
                             filtered={linksFiltered}
                             emptyMessage={
@@ -924,6 +1016,7 @@ const QueryHistoryDrawer = (props) => {
                     }
                     starredTabHeader={
                         <QueryHistoryTabHeader
+                            searchQueriesText={"Queries"}
                             queryHistory={starredItems}
                             clearHistory={clearHistory}
                             filterItems={filterItems}
@@ -943,18 +1036,45 @@ const QueryHistoryDrawer = (props) => {
                             }
                         />
                     }
+                    starredHistoryTab={
+                        <StarredHistoryTab
+                            starredQueries={starredItems}
+                            starredLinks={linksStarredItems}
+                            handleDeleteQuery={handleDelete}
+                            handleDeleteLink={handleLinkDelete}
+                            handleStarItem={handleStarItem}
+                            handleStarLinkItem={handleStarLinkItem}
+                            handleSubmitQuery={handleSubmit}
+                            handleSubmitLink={handleLinkSubmit}
+                            filterItems={filterItems}
+                            setFilteredStarLink={filterLinkStarred}
+                            setFilteredStarQuery={filterStarred}
+                            filteredQueries={starredFiltered}
+                            filteredLinks={linksStarredFiltered}
+                            emptyQueryMessage={
+                                "Click the ‘Star’ icon to save links and find them here to reuse again"
+                            }
+                            emptyLinkMessage={
+                                "Click the ‘Star’ icon to save queries and find them here to reuse again"
+                            }
+                            copyQuery={copyQuery}
+                        />
+                    }
                     settingTabHeader={
                         <SettingHistoryTabHeader
                             queryHistory={queryHistory}
                             linksHistory={linksHistory}
                         />
                     }
-                    settingTab={<SettingTab 
-                        clearHistory={clearHistory}
-                        clearLinksHistory={clearLinksHistory}
-                        />}
+                    settingTab={
+                        <SettingTab
+                            clearHistory={clearHistory}
+                            clearLinksHistory={clearLinksHistory}
+                        />
+                    }
                     closeButton={<CloseButton onClose={handleClose} />}
                 />
+
                 <HistorySnackbar
                     succeed={succeed}
                     resetSnackbar={resetSnackbar}

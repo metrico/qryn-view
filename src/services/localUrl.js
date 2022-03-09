@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { _HISTORY_ITEM, _URL_ITEM } from "./consts";
+import { _URL_ITEM } from "./consts";
 import localService from "./localService";
 import {format} from 'date-fns'
 
@@ -17,7 +17,9 @@ const localUrl = () => {
     };
 
     const clean = () => {
-        l_set(_URL_ITEM, j_string(cleanup));
+      //  l_set(_URL_ITEM, j_string(cleanup));
+        localStorage.setItem(_URL_ITEM,JSON.stringify([]))
+        return getAll()||[]
     };
 
     const urlStorage = get();
@@ -41,8 +43,7 @@ const localUrl = () => {
 
     const add = (item) => {
         let previousData = get() || [];
-        console.log(item)
-        // TRANSFORM ISSUBMIT TO TRUE
+
         const {hash} = window.location
         const origin = window.location.origin
         const urlParams = new URLSearchParams(hash.replace("#",""))
@@ -74,7 +75,7 @@ const localUrl = () => {
     };
 
     const remove = (item) => {
-        const filtered = urlStorage.filter(({ id }) => id !== item.id);
+        const filtered = urlStorage?.filter(({ id }) => id !== item.id);
         set(filtered);
         return getAll();
     };
@@ -86,7 +87,6 @@ const localUrl = () => {
     
     function getAll() {
         const actualStorage = JSON.parse(localStorage.getItem(_URL_ITEM)) || [];
-        console.log(actualStorage)
         return actualStorage;
     }
 

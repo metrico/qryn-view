@@ -38,12 +38,10 @@ export const ValueTags = (props) => {
         e.preventDefault();
         e.stopPropagation();
         const { labels, apiUrl } = store.getState();
-        console.log(e,key, value, isInverted)
         const label = labels.find((label) => label.name === key);
         if (label) {
             const labelValue = label.values.find((tag) => tag.name === value);
             if (labelValue?.selected && labelValue.inverted === isInverted) {
-                console.log(labelValue);
                 return;
             }
             if (labelValue) {

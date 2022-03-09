@@ -79,7 +79,6 @@ function stateFromQueryParams () {
       } 
       
       else {
-        console.log(startParams[key],value)
         startParams[key] = value;
       }
 
