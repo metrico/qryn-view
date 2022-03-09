@@ -208,7 +208,7 @@ export function StatusBarSelectors() {
                         onClick={shareLink}
                     >
                         <ContentCopyIcon
-                            fontSize={"small"}
+                            fontSize={"15px"}
                         />
 
                         <span>{"Copy Link"}</span>
