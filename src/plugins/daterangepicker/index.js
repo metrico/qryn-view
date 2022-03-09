@@ -201,10 +201,7 @@ useEffect(()=>{
     }
     return (
         <div>
-            <button style={dateButtonStyles}
-                onClick={openButtonHandler} className={'date-time-selector'}
-            >
-                <Tooltip title={
+            <Tooltip title={
                     timeLabel ? <React.Fragment>
                         <span style={{
                             display: 'flex',
@@ -237,8 +234,12 @@ useEffect(()=>{
                         </span>
                     </React.Fragment> : undefined
                     }>
+                <button style={dateButtonStyles}
+                    onClick={openButtonHandler} className={'date-time-selector'}
+                >
+
                     <AccessTimeOutlinedIcon />
-                </Tooltip>
+                
 
                 <span>
                 {timeLabel ?
@@ -255,7 +256,7 @@ useEffect(()=>{
                 }
                 </span>
             </button> 
-
+            </Tooltip>
             { isComponentVisible ? (
                 <div tabIndex={"0"} ref={ref}>
                     <ThemeProvider theme={theme}>
