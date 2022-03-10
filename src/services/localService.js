@@ -1,10 +1,12 @@
 import { nanoid } from "nanoid";
+
 function localService(item = null) {
 
     const _APP = "cloki-query";
     const _HISTORY_ITEM = _APP + "-history-item";
     const _TIMERANGE_ITEM = _APP + "-time-range-item";
     const _CHART_ITEM = _APP + "-chart-item";
+    const _LABELS_ITEM = _APP + '-labels-item';
     const cleanup = [];
 
 
@@ -15,7 +17,10 @@ function localService(item = null) {
     const setStorageItem = (name, data) => {
         localStorage.setItem(name, data);
     };
-
+    const j_parse = (item) => JSON.parse(item)
+    const j_string = (item) => JSON.stringify(item)
+    const l_set = (item,value) => { localStorage.setItem(item,value) }
+    const l_get = (item) =>  localStorage.getItem(item)
     const historyStore = () => {
         const get = () => {
             return JSON.parse(getStorageItem(_HISTORY_ITEM));
@@ -94,8 +99,37 @@ function localService(item = null) {
         return { clean, get, set, getById, update, add, remove, getAll };
     };
 
+    const labelsStore = () => {
+        const get = () => {
+            return localStorage.getItem(_LABELS_ITEM);
+        }
+        const set = (item) => {
+            localStorage.setItem(_LABELS_ITEM,item)
+        }
+
+        const clean = () => {
+            setStorageItem(_LABELS_ITEM, JSON.stringify(cleanup));
+            return getAll()||[]
+        };
+
+        function getAll(){
+            const actualStorage = JSON.parse(localStorage.getItem(_LABELS_ITEM))||[]
+            return actualStorage;
+        }
+
+    }
+
+    
     return {
         historyStore,
+        labelsStore,
+        setStorageItem,
+        getStorageItem,
+        cleanup,
+        j_parse,
+        j_string,
+        l_set,
+        l_get
     };
 }
 
