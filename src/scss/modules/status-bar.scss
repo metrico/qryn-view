@@ -15,7 +15,7 @@
         .label {
             flex: 1;
             color: #bfbfbf;
-
+            min-width: 51px;
             padding: 6px 6px;
             margin: 5px;
             font-size: 0.7rem;
@@ -132,7 +132,14 @@
      }
     
 }
+@media screen and (max-width: 950px) {
+    .url-copy {
+        span {
+            display: none;
+        }
 
+    }
+}
 .copied-warning {
 transition:.2s all;
   color:orange;

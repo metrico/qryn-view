@@ -1,0 +1,22 @@
+.date-time-selector {
+    svg {
+        font-size: 1.15em;
+        margin-right: 3px;
+    }
+    .tooltip {
+        background-color: red;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+    }
+}
+@media screen and (max-width: 1200px) {
+    .date-time-selector {
+        svg {
+            margin-right: 0;
+        }
+        span {
+            display: none;
+        }
+    }
+}
