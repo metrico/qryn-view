@@ -17,7 +17,7 @@ export default function loadLogs() {
     // const step = 120
     // const direction = 'backward'
     const localStore = store.getState();
-    const { query: label, limit, step, apiUrl, label: rangeLabel } = localStore;
+    const { query, limit, step, apiUrl, label: rangeLabel } = localStore;
     let { start: startTs, stop: stopTs } = localStore;
 
     if (findRangeByLabel(rangeLabel)) {
@@ -39,9 +39,9 @@ export default function loadLogs() {
 
     const queryStep = `&step=${step || 120}`;
 
-    const query = `${encodeURIComponent(label)}`;
+    const encodedQuery = `${encodeURIComponent(query)}`;
 
-    const getUrl = `${url}/loki/api/v1/query_range?query=${query}&limit=${limit}${parsedTime}${queryStep}`;
+    const getUrl = `${url}/loki/api/v1/query_range?query=${encodedQuery}&limit=${limit}${parsedTime}${queryStep}`;
 
     const options = {
         method: "GET",

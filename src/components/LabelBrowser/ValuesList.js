@@ -32,7 +32,6 @@ export const ValuesList = (props) => {
     const [labelsSelected, setLabelsSelected] = useState([]);
     const labels = useSelector(state => { 
         const selected = state.labels.filter((f) => f.selected);
-        console.log(JSON.stringify(selected) !== JSON.stringify(labelsSelected))
         if (JSON.stringify(selected) !== JSON.stringify(labelsSelected)) {
             setLabelsSelected(selected);
         }
@@ -47,7 +46,7 @@ export const ValuesList = (props) => {
     if(debug) console.log('🚧 LOGIC/LabelBrowser/ValuesList', apiUrl)
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen)
 
-    const CLOSE = "close"
+    const CLEAR = "clear"
     /**
      * TODO: FILTER VALUES INSIDE LABELS
      */
@@ -191,7 +190,7 @@ export const ValuesList = (props) => {
                                             onClick={(e) =>
                                                 onLabelOpen(e, labelSelected)
                                             }
-                                        >{CLOSE}</span>
+                                        >{CLEAR}</span>
                                     </div>
                                     <div className={"valuelist-content column"}>
                                         {labelSelected?.values?.map(

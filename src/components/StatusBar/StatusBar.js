@@ -14,6 +14,7 @@ import { UpdateStateFromQueryParams } from "../UpdateStateFromQueryParams";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import store from '../../store/store'
 import loadLabels from "../../actions/LoadLabels";
+import localUrl from "../../services/localUrl";
 
 export default function StatusBar() {
 
@@ -150,6 +151,7 @@ export function StatusBarSelectors() {
     const dispatch = useDispatch();
     const [open, setOpen] = useState()
     const LINK_COPIED = "Link Copied To Clipboard"
+    const saveUrl = localUrl()
     const initialDateRange = () => {
         try {
             const ls = JSON.parse(localStorage.getItem(DATE_TIME_RANGE));
@@ -179,6 +181,7 @@ export function StatusBarSelectors() {
        const setSubmit = dispatch(setIsSubmit(true)) 
       setTimeout(()=>{
         navigator.clipboard.writeText(window.location.href).then(function () {
+            saveUrl.add({data:window.location.href,description:'From Shared URL'})
             setCopied(true)
             setTimeout(() => {
                 setCopied(false)
@@ -189,8 +192,6 @@ export function StatusBarSelectors() {
         })
       },200)
             
-        
-
     }
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>

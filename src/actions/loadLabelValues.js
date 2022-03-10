@@ -37,8 +37,6 @@ export default function loadLabelValues(label, labelList, apiUrl) {
                     const values = response?.data?.data?.map?.((value) => ({
                         name: value,
                         selected: false,
-                        loading: false,
-                        hidden: false,
                         inverted: false
                     }));
 
@@ -54,8 +52,6 @@ export default function loadLabelValues(label, labelList, apiUrl) {
                 dispatch(setLoading(false));
                 dispatch(setApiError(''))
                 dispatch(setLabelValues(response?.data?.data));
-
-
 
             }).catch(error => {
                 dispatch(setLoading(false))
