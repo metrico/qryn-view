@@ -577,11 +577,12 @@ function LinksHistoryTab({
                         </span>
                         <div
                             style={{
-                                display: "flex",
-                                flex: "1",
-                                alignItems: "center",
-                                justifyContent: "space-between",
+                                display: "grid",
+                                
+                                
+                                gridTemplateColumns:'1fr .25fr .25fr auto',
                                 marginRight: "5px",
+                                width:'50%'
                             }}
                         >
                             <Tooltip title={'API URL'}>
