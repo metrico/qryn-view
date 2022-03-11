@@ -130,6 +130,10 @@
      &:hover {
          background:#9e9e9e3b;
      }
+     &:disabled {
+         color:#7b7b7b;
+         cursor:not-allowed;
+     }
     
 }
 @media screen and (max-width: 950px) {

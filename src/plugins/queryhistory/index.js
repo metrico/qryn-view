@@ -427,7 +427,11 @@ const HistoryRow = styled.div`
     align-items: center;
     height: 30px;
 `;
-
+const TimeSpan = styled.div`
+    @media screen and (max-width: 1370px) {
+        display: none;
+    }
+`;
 function QueryHistoryTab({
     queryHistory,
     copyQuery,
@@ -455,7 +459,7 @@ function QueryHistoryTab({
     return (
         <QueryHistoryContainer>
             {listDisplay.length > 0 ? (
-                listDisplay.map((item, index) => (
+                listDisplay?.map((item, index) => (
                     <HistoryRow key={index}>
                         <span
                             style={{
@@ -550,7 +554,7 @@ function LinksHistoryTab({
     return (
         <QueryHistoryContainer>
             {listDisplay.length > 0 ? (
-                listDisplay.map((item, index) => (
+                listDisplay?.map((item, index) => (
                     <HistoryRow key={index}>
                         <span
                             style={{
@@ -558,7 +562,7 @@ function LinksHistoryTab({
                                 color: "#666",
                             }}
                         >
-                            {listDisplay.length - index}
+                            {listDisplay?.length - index}
                         </span>
 
                         <span
@@ -569,40 +573,64 @@ function LinksHistoryTab({
                                 color: "#ddd",
                             }}
                         >
-                            {decodeURIComponent(item.params.query)}{" "}
+                            {decodeURIComponent(item?.params?.query)}{" "}
                         </span>
                         <div
                             style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr .25fr .25fr 1fr",
-                                width: "50%",
+                                display: "flex",
+                                flex: "1",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                marginRight: "5px",
                             }}
                         >
-                            <span>API URL: {item.params.apiUrl}</span>
-                            <span>limit: {item.params.limit}</span>
-
-                            <span>step: {item.params.step}</span>
+                            <Tooltip title={'API URL'}>
                             <span
                                 style={{
                                     display: "flex",
                                     alignItems: "center",
                                 }}
                             >
-                                {" "}
-                                <AccessTimeIcon
-                                    fontSize={"14px"}
-                                    style={{ marginRight: "3px" }}
-                                />{" "}
-                                {item.fromDate}
-                                {" - "}
-                                {item.toDate}
+                                <LinkIcon
+                                fontSize="14px"
+                                style={{marginRight:'3px'}}
+                                /> {item?.params?.apiUrl}
                             </span>
+                            </Tooltip>
+                         
+                            <span>limit: {item?.params?.limit}</span>
+
+                            <span>step: {item?.params?.step}</span>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                {" "}
+                                <Tooltip
+                                    title={
+                                        item?.fromDate + " - " + item?.toDate
+                                    }
+                                >
+                                    <AccessTimeIcon
+                                        fontSize={"14px"}
+                                        style={{ marginRight: "3px" }}
+                                    />
+                                </Tooltip>{" "}
+                                <TimeSpan>
+                                    {item?.fromDate}
+                                    {" - "}
+                                    {item?.toDate}
+                                </TimeSpan>
+                            </div>
                         </div>
 
                         <div style={{ display: "flex" }}>
                             <Tooltip title={"Copy Link to Clipboard"}>
                                 <HistoryButton
-                                    onClick={(e) => copyLink(item.data)}
+                                    onClick={(e) => copyLink(item?.data)}
                                 >
                                     <LinkIcon fontSize={"14px"} />
                                 </HistoryButton>
@@ -630,7 +658,7 @@ function LinksHistoryTab({
 
                             <Tooltip title={"Search Logs from Query"}>
                                 <SubmitButton
-                                    onClick={(e) => handleSubmit(item.data)}
+                                    onClick={(e) => handleSubmit(item?.data)}
                                 >
                                     {"Open In New Tab"}
                                 </SubmitButton>
