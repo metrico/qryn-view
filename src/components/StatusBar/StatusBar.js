@@ -212,10 +212,9 @@ export function StatusBarSelectors() {
                     )}
                     <Tooltip title={
                         query.length < 1 ? 
-                        "Please add a query for sharing link" : "Share Link" }>
+                        "Please add a query for sharing link" : "Copy Link" }>
                         <button
                             className={"url-copy"}
-                            title={"Copy Link"}
                             onClick={shareLink}
                             disabled={query.length < 1}
                         >
