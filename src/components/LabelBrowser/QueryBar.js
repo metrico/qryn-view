@@ -35,12 +35,19 @@ export const QueryBar = () => {
   const historyOpen = useSelector((store) => store.historyOpen);
   const [queryInput, setQueryInput] = useState(query);
   const [queryValid, setQueryValid] = useState(false);
-  const [queryValue, setQueryValue] = useState([
+  const [queryValue, setQueryValue] = useState( query.split(/[    ]+/).map( m => ({
+    type:'code-line',
+    children:[
+        {
+            text:m
+        }
+    ]
+}))||[
     {
       type: "code_line",
       children: [
         {
-          text: query || "Enter a cLoki Query",
+          text: "Enter a cLoki Query",
         },
       ],
     },
@@ -115,7 +122,7 @@ export const QueryBar = () => {
     //   const qr = e.target.value;
     //   console.log(qr)
     
-    const multiline = e.map( text => text.children[0].text).join('')
+    const multiline = e.map( text => text.children[0].text).join('  ')
     dispatch(setQuery(multiline))
  
   };

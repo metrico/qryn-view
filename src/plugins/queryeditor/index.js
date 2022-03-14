@@ -37,6 +37,7 @@ export default function QueryEditor({ onQueryChange, value, onKeyDown }) {
     >
       <CustomEditor
       placeholder="Enter a cLoki Query"
+      spellCheck="false"
       />
     </Slate>
   );
