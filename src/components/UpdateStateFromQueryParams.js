@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { setApiUrl, setIsSubmit, setLabels, setQuery, setQueryLimit, setQueryStep, setStartTime, setStopTime } from '../actions';
 import loadLabels from '../actions/LoadLabels';
 import loadLabelValues from '../actions/loadLabelValues';
+import { setLabelsBrowserOpen } from '../actions/setLabelsBrowserOpen';
 import { setUrlLocation } from '../actions/setUrlLocation';
 import { setUrlQueryParams } from '../actions/setUrlQueryParams';
 import { environment } from '../environment/env.dev';
@@ -95,6 +96,7 @@ export function UpdateStateFromQueryParams() {
                     }
                 })
                 decodeQuery(decodeURIComponent(startParams.query),apiUrl)
+                dispatch(setLabelsBrowserOpen(false))
 
 
             }
