@@ -177,6 +177,7 @@ export function StatusBarSelectors() {
         setOpen(!open)
     }
     const shareLink = (e) => {
+        console.log(store.getState())
         e.preventDefault()
        const setSubmit = dispatch(setIsSubmit(true)) 
       setTimeout(()=>{

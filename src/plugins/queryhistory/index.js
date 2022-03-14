@@ -37,7 +37,7 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
 import Tooltip from "@mui/material/Tooltip";
-
+import {Notification} from "../notifications"
 // Snackbar for clearing confirmation
 const Alert = forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -723,12 +723,18 @@ const QueryHistoryDrawer = (props) => {
                     settingTab={<SettingTab clearHistory={clearHistory} />}
                     closeButton={<CloseButton onClose={handleClose} />}
                 />
-                <HistorySnackbar
+                <Notification
+                succeed={succeed}
+                resetSnackbar={resetSnackbar}
+                message={" Query History cleared succesfully"}
+                type={"info"}
+                />
+                {/* <HistorySnackbar
                     succeed={succeed}
                     resetSnackbar={resetSnackbar}
                     message={" Query History cleared succesfully"}
                     type={"info"}
-                />
+                /> */}
                 <HistorySnackbar
                     succeed={copySucceed}
                     resetSnackbar={resetCopy}

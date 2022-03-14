@@ -42,6 +42,9 @@ const reducer =  (state, action) => {
             return {...state, queryHistory: action.queryHistory};
         case "SET_HISTORY_OPEN":
                 return {...state, historyOpen: action.historyOpen};
+        case "ADD_NOTIFICATION":
+            console.log(state, action)
+            return {...state, notification: action.notification};
         default:
             return { ...state };
     }
