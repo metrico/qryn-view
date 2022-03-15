@@ -11,13 +11,13 @@ export default function MainView() {
     return (
         <div className={"log-search"}>
                 
-        <Notification/>
         <StatusBar/>
 
         <LabelBrowser/>
 
         <LogView />
 
+        <Notification/>
     </div>
     )
 }
