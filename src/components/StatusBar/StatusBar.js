@@ -4,7 +4,7 @@ import Logo from "./assets/cloki-logo.png";
 import LinkIcon from '@mui/icons-material/Link';
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { setApiError, setIsSubmit, setQueryLimit, setQueryStep, setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
+import { createAlert, setApiError, setIsSubmit, setQueryLimit, setQueryStep, setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
 import isDate from "date-fns/isDate";
 import { setApiUrl } from "../../actions/setApiUrl";
 import { DateRangePicker } from "../../plugins/daterangepicker";
@@ -15,7 +15,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import store from '../../store/store'
 import loadLabels from "../../actions/LoadLabels";
 import localUrl from "../../services/localUrl";
-
+import { notificationTypes } from "../../plugins/notifications/consts";
 export default function StatusBar() {
 
     return (
@@ -177,21 +177,20 @@ export function StatusBarSelectors() {
         setOpen(!open)
     }
     const shareLink = (e) => {
-        console.log(store.getState())
         e.preventDefault()
-       const setSubmit = dispatch(setIsSubmit(true)) 
-      setTimeout(()=>{
-        navigator.clipboard.writeText(window.location.href).then(function () {
-            saveUrl.add({data:window.location.href,description:'From Shared URL'})
-            setCopied(true)
-            setTimeout(() => {
-                setCopied(false)
-                dispatch(setIsSubmit(false))
-            }, 1500)
-        }, function (err) {
-            console.err('error on copy', err)
-        })
-      },200)
+        const setSubmit = dispatch(setIsSubmit(true)) 
+        setTimeout(()=>{
+            navigator.clipboard.writeText(window.location.href).then(function () {
+                saveUrl.add({data:window.location.href,description:'From Shared URL'})
+                dispatch(createAlert({
+                    type: notificationTypes.success,
+                    message: LINK_COPIED
+                }))
+                
+            }, function (err) {
+                console.err('error on copy', err)
+            })
+        },200)
             
     }
     return (
@@ -200,10 +199,6 @@ export function StatusBarSelectors() {
 
 
                 <div className={"status-selectors"}>
-                    {copied && (
-                        <span className={"copied-warning"}>{LINK_COPIED}</span>
-                    )}
-
                     <button
                         className={"url-copy"}
                         title={"Copy Link"}

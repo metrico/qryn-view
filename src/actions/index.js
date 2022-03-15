@@ -13,3 +13,4 @@ export * from "./setHistoryOpen";
 export * from "./setApiError";
 export * from "./errorHandler";
 export * from "./setLabels";
+export * from "./createAlert";

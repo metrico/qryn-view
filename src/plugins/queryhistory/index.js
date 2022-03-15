@@ -1,13 +1,13 @@
 import styled from "@emotion/styled";
-import { Badge, Box, createTheme, ThemeProvider, Typography } from "@mui/material";
+import { createTheme, ThemeProvider, Tooltip } from "@mui/material";
 import localService from "../../services/localService";
 import Drawer from "@mui/material/Drawer";
-import { useState, useEffect, forwardRef } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import setQueryHistory from "../../actions/setQueryHistory";
 import loadLogs from "../../actions/loadLogs";
 import setHistoryOpen from "../../actions/setHistoryOpen";
-import { setQuery } from "../../actions";
+import { createAlert, setQuery } from "../../actions";
 import { format } from "date-fns";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import StarIcon from "@mui/icons-material/Star";
@@ -24,57 +24,13 @@ import { buttonUnstyledClasses } from "@mui/base/ButtonUnstyled";
 import TabUnstyled, { tabUnstyledClasses } from "@mui/base/TabUnstyled";
 
 // Dialog
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-// Snackbar
+import { notificationTypes } from "../notifications/consts";
 
-import Stack from "@mui/material/Stack";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-
-import Tooltip from "@mui/material/Tooltip";
-import {Notification} from "../notifications"
-// Snackbar for clearing confirmation
-const Alert = forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-function HistorySnackbar({ succeed, resetSnackbar, message, type }) {
-    const [open, setOpen] = useState(succeed);
-    useEffect(() => {
-        setOpen(succeed);
-    }, [succeed]);
-    const handleClick = () => {
-        setOpen(true);
-    };
-
-    const handleClose = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-
-        setOpen(false);
-        resetSnackbar();
-    };
-
-    return (
-        <div>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                <Alert
-                    onClose={handleClose}
-                    severity={type}
-                    sx={{ width: "100%" }}
-                >
-                    {message}
-                </Alert>
-            </Snackbar>
-        </div>
-    );
-}
 
 // Alert Dialog for Clearing History
 function AlertDialog({ clearHistory }) {
@@ -575,15 +531,13 @@ const QueryHistoryDrawer = (props) => {
     const [starredItems, setStarredItems] = useState([]);
     const [filtered, setFiltered] = useState([]);
     const [starredFiltered, setStarredFiltered] = useState([]);
-    const [succeed, setSucceed] = useState(false);
-    const [copySucceed, setCopySucceed] = useState(false);
-    const [trashedSucceed, setTrashedSucceed] = useState(false);
-    const [starredSucceed, setStarredSucceed] = useState(false);
-    const [unstarredSucceed, setUnstarredSucceed] = useState(false);
     function handleDelete(id) {
         const removed = historyService.remove(id);
         dispatch(setQueryHistory(removed));
-        setTrashedSucceed(true);
+        dispatch(createAlert({
+            message: "Query deleted succesfully",
+            type: notificationTypes.info
+        }))
     }
 
     function handleSubmit(item) {
@@ -601,11 +555,15 @@ const QueryHistoryDrawer = (props) => {
         const updated = historyService.update(updatedItem);
         dispatch(setQueryHistory(updated));
         if (updatedItem.starred) {
-            setUnstarredSucceed(false)
-            setStarredSucceed(true);
+            dispatch(createAlert({
+                message: "Query starred succesfully",
+                type: notificationTypes.success
+            }))
         } else {
-            setStarredSucceed(false)
-            setUnstarredSucceed(true);
+            dispatch(createAlert({
+                message: "Query unstarred succesfully",
+                type: notificationTypes.success
+            }))
         }
         
     }
@@ -614,7 +572,10 @@ const QueryHistoryDrawer = (props) => {
         navigator.clipboard.writeText(item).then(
             function () {
                 if (item.length > 0) {
-                    setCopySucceed(true);
+                    dispatch(createAlert({
+                        message: "Query copied succesfully",
+                        type: notificationTypes.success
+                    }))
                 }
             },
             function (err) {
@@ -629,7 +590,10 @@ const QueryHistoryDrawer = (props) => {
         const historyClean = historyService.clean();
         dispatch(setQueryHistory(historyClean));
         if (historyClean?.length < 1) {
-            setSucceed(true);
+            dispatch(createAlert({
+                message: "Query History cleared succesfully",
+                type: notificationTypes.info
+            }))
         }
     }
 
@@ -645,22 +609,6 @@ const QueryHistoryDrawer = (props) => {
 
     function filterStarred(starred) {
         setStarredFiltered(starred);
-    }
-
-    function resetSnackbar() {
-        setSucceed(false);
-    }
-    function resetCopy() {
-        setCopySucceed(false);
-    }
-    function resetStarred() {
-        setStarredSucceed(false);
-    }
-    function resetUnstarred() {
-        setUnstarredSucceed(false);
-    }
-    function resetTrashed() {
-        setTrashedSucceed(false);
     }
 
     return (
@@ -722,42 +670,6 @@ const QueryHistoryDrawer = (props) => {
                     }
                     settingTab={<SettingTab clearHistory={clearHistory} />}
                     closeButton={<CloseButton onClose={handleClose} />}
-                />
-                <Notification
-                succeed={succeed}
-                resetSnackbar={resetSnackbar}
-                message={" Query History cleared succesfully"}
-                type={"info"}
-                />
-                {/* <HistorySnackbar
-                    succeed={succeed}
-                    resetSnackbar={resetSnackbar}
-                    message={" Query History cleared succesfully"}
-                    type={"info"}
-                /> */}
-                <HistorySnackbar
-                    succeed={copySucceed}
-                    resetSnackbar={resetCopy}
-                    message={"Query copied successfully"}
-                    type={"success"}
-                />
-                <HistorySnackbar
-                    succeed={trashedSucceed}
-                    resetSnackbar={resetTrashed}
-                    message={"Query deleted successfully"}
-                    type={"info"}
-                />
-                <HistorySnackbar
-                    succeed={starredSucceed}
-                    resetSnackbar={resetStarred}
-                    message={"Query starred successfully"}
-                    type={"success"}
-                />
-                <HistorySnackbar
-                    succeed={unstarredSucceed}
-                    resetSnackbar={resetUnstarred}
-                    message={"Query unstarred successfully"}
-                    type={"info"}
                 />
             </Drawer>
         </ThemeProvider>

@@ -4,13 +4,11 @@ import { useSelector } from "react-redux";
 import {Snackbar, Alert} from "@mui/material";
 
 export function Notification() {  
-    const { alerts: notifications } = useSelector(state =>  state.notifications);
+    const { notifications } = useSelector(state =>  state);
 
     const [notification, setNotification] = useState({ type: "info", message: "" });
     const [open, setOpen] = useState(false);
-    console.log('test notif')
     useEffect(() => {
-        console.log(notifications)
         if (notifications?.length > 0) {
           setNotification(notifications[notifications.length - 1]);
           setOpen(true);

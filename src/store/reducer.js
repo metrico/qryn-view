@@ -43,8 +43,8 @@ const reducer =  (state, action) => {
         case "SET_HISTORY_OPEN":
                 return {...state, historyOpen: action.historyOpen};
         case "ADD_NOTIFICATION":
-            console.log(state, action)
-            return {...state, notification: action.notification};
+            console.log({...state, notifications: action.payload})
+            return {...state, notifications: action.payload};
         default:
             return { ...state };
     }
