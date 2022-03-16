@@ -6,6 +6,7 @@
     align-items: center;
     font-family: sans-serif;
 }
+
 .query-bar-input {
     background: $black-quoise;
     outline:none;
@@ -25,6 +26,7 @@
         color:$dark-quoise-hover;
     }
 }
+
 .show-log-browser {
     margin: 3px;
 
@@ -47,6 +49,7 @@
       
     }
 }
+
 button.show-logs {
     
         background:$dark-quoise;

@@ -121,8 +121,9 @@ export const QueryBar = () => {
     console.log(e);
     //   const qr = e.target.value;
     //   console.log(qr)
-    
+    console.log(e.length)
     const multiline = e.map( text => text.children[0].text).join('  ')
+    console.log(multiline)
     dispatch(setQuery(multiline))
  
   };
