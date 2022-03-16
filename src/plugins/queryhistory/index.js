@@ -32,8 +32,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { notificationTypes } from "../notifications/consts";
-
-
+import localUrl from "../../services/localUrl";
+import setLinksHistory from "../../actions/setLinksHistory";
 // Alert Dialog for Clearing History
 function AlertDialog({ clearHistory, dialogType }) {
     const [open, setOpen] = useState(false);
@@ -827,7 +827,6 @@ const QueryHistoryDrawer = (props) => {
     function handleLinkDelete(id) {
         const removed = linkService.remove(id);
         dispatch(setLinksHistory(removed));
-        setTrashedSucceed(true);
     }
 
     function handleSubmit(item) {
@@ -866,13 +865,6 @@ const QueryHistoryDrawer = (props) => {
         const updatedItem = { ...item, starred: item.starred ? false : true };
         const updated = linkService.update(updatedItem);
         dispatch(setLinksHistory(updated));
-        if (updatedItem.starred) {
-            setUnstarredSucceed(false);
-            setStarredSucceed(true);
-        } else {
-            setStarredSucceed(false);
-            setUnstarredSucceed(true);
-        }
     }
     function copyQuery(item) {
         navigator.clipboard.writeText(item).then(
