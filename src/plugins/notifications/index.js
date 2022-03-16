@@ -25,26 +25,27 @@ export function Notification() {
     return (
         <div className={'alertWrapper'}>
             {
-                notifications.map((notification, index) => 
-                    <Expire delay='5000' index={index}>
-                        <div className={'alert'}>
-                            <Alert
-                            elevation={6}
-                            variant="filled"
-                            onClose={() => handleClose(index)}
-                            severity={notification.type}
-                            sx={{ width: "100%" }}
-                            >
-                                {notification.message}
-                            </Alert>
-                        </div>
-                    </Expire>
-                    
+                notifications.map((notification, index) => {
+                    if (notification.visible) {
+                        return <Expire key={index} delay='5000' index={index}>
+                            <div className={'alert'}>
+                                <Alert
+                                elevation={6}
+                                variant="filled"
+                                onClose={() => handleClose(index)}
+                                severity={notification.type}
+                                sx={{ width: "100%" }}
+                                >
+                                    {notification.message}
+                                </Alert>
+                            </div>
+                        </Expire>
+                    } else {
+                        return undefined;
+                    }
+                }
                 )
             }
-            <div>
-
-            </div>
         </div>
     );
 }

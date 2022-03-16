@@ -1,8 +1,8 @@
 import store from '../store/store';
 
 export const removeAlert = ( index) => (dispatch) => {
-    const notifications = store.getState().notifications
-    notifications.splice(index, 1)
+    let notifications = store.getState().notifications
+    notifications[index].visible = false;
     dispatch({
         type: "REMOVE_NOTIFICATION",
         payload: [...notifications]
