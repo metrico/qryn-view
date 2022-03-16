@@ -865,6 +865,17 @@ const QueryHistoryDrawer = (props) => {
         const updatedItem = { ...item, starred: item.starred ? false : true };
         const updated = linkService.update(updatedItem);
         dispatch(setLinksHistory(updated));
+        if (updatedItem.starred) {
+            dispatch(createAlert({
+                message: "Link starred succesfully",
+                type: notificationTypes.success
+            }))
+        } else {
+            dispatch(createAlert({
+                message: "Link unstarred succesfully",
+                type: notificationTypes.success
+            }))
+        }
     }
     function copyQuery(item) {
         navigator.clipboard.writeText(item).then(
@@ -898,6 +909,12 @@ const QueryHistoryDrawer = (props) => {
     function clearLinksHistory() {
         const historyClean = linkService.clean();
         dispatch(setLinksHistory(historyClean));
+        if (historyClean?.length < 1) {
+            dispatch(createAlert({
+                message: "Links History cleared succesfully",
+                type: notificationTypes.info
+            }))
+        }
     }
 
     function filterItems(list, item) {
