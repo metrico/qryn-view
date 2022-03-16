@@ -67,6 +67,15 @@ jobs:
         draft: false
         prerelease: false
         overwrite: true
+    - name: Prepare for Mothership
+      if: github.event_name != 'pull_request'
+      uses: GuillaumeFalourd/create-other-repo-branch-action@v1
+      with:
+        repository_owner: lmangani
+        repository_name: cloki
+        new_branch_name: view_${{steps.version.outputs.newTag}}
+        new_branch_ref: master
+        access_token: ${{ secrets.GH_PUSH }}
     - name: Push to Mothership
       if: github.event_name != 'pull_request'
       uses: cpina/github-action-push-to-another-repository@main
@@ -76,7 +85,7 @@ jobs:
       with:
         source-directory: 'build'
         target-directory: 'view'
-        target-branch: 'view'
+        target-branch: view_${{steps.version.outputs.newTag}}
         destination-github-username: 'lmangani'
         destination-repository-name: 'cLoki'
         user-email: lorenzo.mangani@gmail.com

@@ -1,27 +1,43 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Logo from "./assets/cloki-logo.png";
-import LinkIcon from '@mui/icons-material/Link';
+import LinkIcon from "@mui/icons-material/Link";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { createAlert, setApiError, setIsSubmit, setQueryLimit, setQueryStep, setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
+import {
+    createAlert,
+    setApiError,
+    setIsSubmit,
+    setQueryLimit,
+    setQueryStep,
+    setStartTime,
+    setStopTime,
+    setTimeRangeLabel,
+} from "../../actions";
 import isDate from "date-fns/isDate";
 import { setApiUrl } from "../../actions/setApiUrl";
 import { DateRangePicker } from "../../plugins/daterangepicker";
-import { DATE_TIME_RANGE } from '../../plugins/daterangepicker/consts';
-import {  findRangeByLabel } from "../../plugins/daterangepicker/utils";
+import { DATE_TIME_RANGE } from "../../plugins/daterangepicker/consts";
+import { findRangeByLabel } from "../../plugins/daterangepicker/utils";
 import { UpdateStateFromQueryParams } from "../UpdateStateFromQueryParams";
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import store from '../../store/store'
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import store from "../../store/store";
 import loadLabels from "../../actions/LoadLabels";
 import localUrl from "../../services/localUrl";
+import setLinksHistory from "../../actions/setLinksHistory";
+import { Tooltip } from "@mui/material";
 import { notificationTypes } from "../../plugins/notifications/consts";
-export default function StatusBar() {
 
+export default function StatusBar() {
     return (
         <div className="status-bar">
             <div className="logo-section">
-                <img src={Logo} alt={"cLoki View"} height={"28px"} className={"logo"} />
+                <img
+                    src={Logo}
+                    alt={"cLoki View"}
+                    height={"28px"}
+                    className={"logo"}
+                />
                 <ApiSelector />
             </div>
 
@@ -30,15 +46,14 @@ export default function StatusBar() {
             </div>
         </div>
     );
-};
+}
 
 export function StatusBarInput(props) {
-
-    const { label, value, dispatchAction, type } = props
-    const dispatch = useDispatch()
+    const { label, value, dispatchAction, type } = props;
+    const dispatch = useDispatch();
     const handleStatusInputChange = (e) => {
-        dispatch(dispatchAction(e.target.value))
-    }
+        dispatch(dispatchAction(e.target.value));
+    };
 
     return (
         <div className="selector">
@@ -48,65 +63,60 @@ export function StatusBarInput(props) {
                 value={value}
                 onChange={handleStatusInputChange}
             />
-
         </div>
-    )
+    );
 }
 
 export function ApiSelector() {
-    const apiUrl = useSelector((store) => store.apiUrl)
-    const apiError = useSelector((store) => store.apiErrors)
-    const [editedUrl, setEditedUrl] = useState(apiUrl)
-    const [apiSelectorOpen, setApiSelectorOpen] = useState(false)
-    const dispatch = useDispatch()
-    const [isError, setIsError] = useState(true)
+    const apiUrl = useSelector((store) => store.apiUrl);
+    const apiError = useSelector((store) => store.apiErrors);
+    const [editedUrl, setEditedUrl] = useState(apiUrl);
+    const [apiSelectorOpen, setApiSelectorOpen] = useState(false);
+    const dispatch = useDispatch();
+    const [isError, setIsError] = useState(true);
     const API_URL = "API URL";
     useEffect(() => {
-        setEditedUrl(apiUrl)
-    }, [])
+        setEditedUrl(apiUrl);
+    }, []);
 
     useEffect(() => {
-        setEditedUrl(apiUrl)
-
-    }, [apiUrl])
-
+        setEditedUrl(apiUrl);
+    }, [apiUrl]);
 
     useEffect(() => {
         if (isError) {
-            setApiSelectorOpen(true)
+            setApiSelectorOpen(true);
         } else {
-            setApiSelectorOpen(false)
-            setIsError(false)
+            setApiSelectorOpen(false);
+            setIsError(false);
         }
-
     }, [isError]);
 
     useEffect(() => {
         if (apiError.length > 0) {
-            setIsError(true)
-            setApiSelectorOpen(true)
-
+            setIsError(true);
+            setApiSelectorOpen(true);
         }
-    }, [apiError])
+    }, [apiError]);
 
     const handleApiUrlOpen = (e = null) => {
-        e?.preventDefault()
-        apiSelectorOpen ? setApiSelectorOpen(false) : setApiSelectorOpen(true)
-    }
+        e?.preventDefault();
+        apiSelectorOpen ? setApiSelectorOpen(false) : setApiSelectorOpen(true);
+    };
 
     const handleIntputChange = (e) => {
-        e.preventDefault()
-        setEditedUrl(e.target.value)
-    }
+        e.preventDefault();
+        setEditedUrl(e.target.value);
+    };
     const onUrlSubmit = (e) => {
-        dispatch(setApiError(''))
-        dispatch(setApiUrl(editedUrl))
-        dispatch(loadLabels(apiUrl))
+        dispatch(setApiError(""));
+        dispatch(setApiUrl(editedUrl));
+        dispatch(loadLabels(apiUrl));
         const isError = store.getState().apiErrors.length === 0;
         if (isError) {
-            handleApiUrlOpen()
+            handleApiUrlOpen();
         }
-    }
+    };
 
     return (
         <div className={"status-selectors"}>
@@ -116,9 +126,7 @@ export function ApiSelector() {
                     className={"api-url-selector-toggle"}
                     onClick={handleApiUrlOpen}
                 >
-                    <LinkIcon
-                        fontSize={"small"}
-                    />
+                    <LinkIcon fontSize={"small"} />
                 </button>
                 {apiSelectorOpen ? (
                     <div className={"selector"}>
@@ -126,20 +134,14 @@ export function ApiSelector() {
                         <input
                             className={"url"}
                             value={editedUrl}
-                            onChange={handleIntputChange} />
-                        <button
-
-                            onClick={onUrlSubmit}
-                        >{"save"}</button>
+                            onChange={handleIntputChange}
+                        />
+                        <button onClick={onUrlSubmit}>{"save"}</button>
                     </div>
-
                 ) : null}
             </div>
-
         </div>
-
-    )
-
+    );
 }
 
 export function StatusBarSelectors() {
@@ -147,82 +149,94 @@ export function StatusBarSelectors() {
     const stopTs = useSelector((store) => store.stop);
     const queryLimit = useSelector((store) => store.limit);
     const queryStep = useSelector((store) => store.step);
-    const [copied, setCopied] = useState(false)
+    const query = useSelector((store) => store.query);
+    const [copied, setCopied] = useState(false);
     const dispatch = useDispatch();
-    const [open, setOpen] = useState()
-    const LINK_COPIED = "Link Copied To Clipboard"
-    const saveUrl = localUrl()
+    const [open, setOpen] = useState();
+    const LINK_COPIED = "Link Copied To Clipboard";
+    const saveUrl = localUrl();
     const initialDateRange = () => {
         try {
             const ls = JSON.parse(localStorage.getItem(DATE_TIME_RANGE));
-            if (ls?.label !== "" && typeof ls.label !== 'undefined') {
-                const range = findRangeByLabel(ls?.label)
+            if (ls?.label !== "" && typeof ls.label !== "undefined") {
+                const range = findRangeByLabel(ls?.label);
                 ls.dateStart = range.dateStart;
                 ls.dateEnd = range.dateEnd;
-            }else {
+            } else {
                 ls.dateStart = new Date(ls.dateStart);
                 ls.dateEnd = new Date(ls.dateEnd);
             }
-            
-            UpdateStateFromQueryParams()
+
+            UpdateStateFromQueryParams();
             return ls;
         } catch (e) {
             if (isDate(startTs) && isDate(stopTs)) {
-                return { dateStart: startTs, dateEnd: stopTs }
+                return { dateStart: startTs, dateEnd: stopTs };
             }
         }
-    }
+    };
     const isOpen = (e) => {
-        e?.preventDefault()
-        setOpen(!open)
-    }
+        e?.preventDefault();
+        setOpen(!open);
+    };
     const shareLink = (e) => {
-        e.preventDefault()
-        const setSubmit = dispatch(setIsSubmit(true)) 
-        setTimeout(()=>{
-            navigator.clipboard.writeText(window.location.href).then(function () {
-                saveUrl.add({data:window.location.href,description:'From Shared URL'})
-                dispatch(createAlert({
-                    type: notificationTypes.success,
-                    message: LINK_COPIED
-                }))
-                
-            }, function (err) {
-                console.err('error on copy', err)
-            })
-        },200)
-            
-    }
+        e.preventDefault();
+        const setSubmit = dispatch(setIsSubmit(true));
+        setTimeout(() => {
+            navigator.clipboard.writeText(window.location.href).then(
+                function () {
+                    if (query.length > 0) {
+                        const storedUrl = saveUrl.add({
+                            data: window.location.href,
+                            description: "From Shared URL",
+                        });
+                        dispatch(setLinksHistory(storedUrl));
+                    }
+
+                    dispatch(createAlert({
+                        type: notificationTypes.success,
+                        message: LINK_COPIED
+                    }))
+                },
+                function (err) {
+                    console.err("error on copy", err);
+                }
+            );
+        }, 200);
+    };
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <div className={"status-options"}>
-
-
                 <div className={"status-selectors"}>
-                    <button
-                        className={"url-copy"}
-                        title={"Copy Link"}
-                        onClick={shareLink}
-                    >
-                        <ContentCopyIcon
-                            fontSize={"15px"}
-                        />
+                    {copied && (
+                        <span className={"copied-warning"}>{LINK_COPIED}</span>
+                    )}
+                    <Tooltip title={
+                        query.length < 1 ? 
+                        "Please add a query for sharing link" : "Share Link" }>
+                        <button
+                            className={"url-copy"}
+                            title={"Copy Link"}
+                            onClick={shareLink}
+                            disabled={query.length < 1}
+                        >
+                            <ContentCopyIcon fontSize={"15px"} />
 
-                        <span>{"Copy Link"}</span>
-
-                    </button>
+                            <span>{"Copy Link"}</span>
+                        </button>
+                    </Tooltip>
 
                     <StatusBarInput
-                        label={'Limit'}
+                        label={"Limit"}
                         value={queryLimit}
                         dispatchAction={setQueryLimit}
-                        type={'limit'}
+                        type={"limit"}
                     />
                     <StatusBarInput
-                        label={'Step'}
+                        label={"Step"}
                         value={queryStep}
                         dispatchAction={setQueryStep}
-                        type={'limit'}
+                        type={"limit"}
                     />
                 </div>
 
@@ -232,11 +246,11 @@ export function StatusBarSelectors() {
                     initialDateRange={initialDateRange()}
                     onChange={({ dateStart, dateEnd, label }) => {
                         const isStart = isDate(dateStart);
-                        const isEnd = isDate(dateEnd)
-                        const isLabel = typeof label !== 'undefined';
-                        if (isStart) dispatch(setStartTime(dateStart))
-                        if (isEnd) dispatch(setStopTime(dateEnd))
-                        if (isLabel) dispatch(setTimeRangeLabel(label))
+                        const isEnd = isDate(dateEnd);
+                        const isLabel = typeof label !== "undefined";
+                        if (isStart) dispatch(setStartTime(dateStart));
+                        if (isEnd) dispatch(setStopTime(dateEnd));
+                        if (isLabel) dispatch(setTimeRangeLabel(label));
                     }}
                     // here
                 />
