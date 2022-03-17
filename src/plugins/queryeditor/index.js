@@ -1,11 +1,11 @@
 // Import React dependencies.
 import styled from "@emotion/styled";
-import {css} from "@emotion/css";
-import React, { useCallback, useState, useMemo } from "react";
+import { css } from "@emotion/css";
+import React, { useCallback, useState, useMemo, useEffect, useRef } from "react";
 // Import the Slate editor factory.
 import { createEditor, Text, Element as SlateElement, Descendant } from "slate";
 // Import the Slate components and React plugin.
-import { Slate, Editable, withReact } from "slate-react";
+import { Slate, Editable, withReact,insertData } from "slate-react";
 import { withHistory } from "slate-history";
 import Prism from "prismjs";
 import "prismjs/components/prism-promql";
@@ -18,7 +18,7 @@ import "prismjs/components/prism-sql";
 const CustomEditor = styled(Editable)`
   flex: 1;
   background: #121212;
-  color:#ccc;
+  color: #ccc;
   padding: 4px 8px;
   font-size: 1em;
   font-family: monospace;
@@ -32,80 +32,88 @@ const QueryBar = styled.div`
   align-items: center;
   flex: 1;
 `;
+
 function Leaf({ attributes, children, leaf }) {
+ 
   return (
     <span
       {...attributes}
       className={css`
         font-family: monospace;
-       // background: black;
+        // background: black;
         ${leaf.comment &&
         css`
-          color: slategray;
+          color: blue;
         `}
         ${(leaf.operator || leaf.url) &&
         css`
-          color: #9a6e3a;
+          color: white;
         `}
-        ${leaf.keyword && 
+        ${leaf.keyword &&
         css`
-        color:#07a;
+          color: #57aed4;
         `}
         ${(leaf.variable || leaf.regex) &&
-          css`
-            color: #e90;
-          `}
+        css`
+          color: #e90;
+        `}
         ${(leaf.number ||
           leaf.boolean ||
           leaf.tag ||
           leaf.constant ||
           leaf.symbol ||
-          leaf['attr-name'] ||
+          leaf["attr-name"] ||
           leaf.selector) &&
-          css`
-            color: #690;
-          `}
-        ${leaf.punctuation &&
-          css`
-            color: yellow;
-          `}
-        ${(leaf.string || leaf.char) &&
-          css`
-            color: #690;
-          `}
-        ${(leaf.function || leaf['class-name'] || leaf['attr-name']) &&
-          css`
-            color: #dd4a68;
-          `}
-          ${leaf['context-labels']&&
-          css`
-          color:orange;
-          `}
-          ${leaf['label-key'] && 
         css`
-        color: green
-        
+          color: #dd4a68;
         `}
-          
+        ${leaf.punctuation &&
+        css`
+          color: orange;
+        `}
+        ${(leaf.string || leaf.char) &&
+        css`
+          color: #7bdb40;
+        `}
+        ${(leaf.function || leaf["class-name"] || leaf["attr-name"]) &&
+        css`
+          color: #dd4a68;
+        `}
+          ${leaf["context-labels"] &&
+        css`
+          color: orange;
+        `}
+          ${leaf["label-key"] &&
+        css`
+          color: green;
+        `}
       `}
     >
       {children}
     </span>
   );
 }
+
 export default function QueryEditor({ onQueryChange, value, onKeyDown }) {
   // Create a Slate editor object that won't change across renders.
+//  the value could change, so add useEffect
+
+
 
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
 
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  /* const editorRef = useRef()
+  if(!editorRef.current) editorRef.current =  withHistory(withReact(createEditor()))
+  const editor = editorRef.current */
+ const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   // Keep track of state for the value of the editor.
-  const [language, setLanguage] = useState("promql");
+
+  const [language, setLanguage] = useState("sql");
 
   const decorate = useCallback(
     ([node, path]) => {
       const ranges = [];
-      if (!Text.isText(node)) {
+      if (!Text.isText(node) || node.length <1) {
         return ranges;
       }
       const tokens = Prism.tokenize(node.text, Prism.languages[language]);
@@ -113,11 +121,12 @@ export default function QueryEditor({ onQueryChange, value, onKeyDown }) {
       for (const token of tokens) {
         const length = getLength(token);
         const end = start + length;
+
         if (typeof token !== "string") {
           ranges.push({
             [token.type]: true,
             anchor: { path, offset: start },
-            focus: { path, offset: end },
+            focus: { path, offset:  end },
           });
         }
         start = end;
@@ -137,15 +146,25 @@ export default function QueryEditor({ onQueryChange, value, onKeyDown }) {
     }
   }
 
+
+  const [editorValue, setEditorValue] = useState(value)
+
+  useEffect(()=>{
+setEditorValue(value)
+  },[])
+  useEffect(()=>{
+    setEditorValue(value)
+   editor.children = value
+  },[value])
   return (
     <QueryBar>
-      <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+      {/* <select value={language} onChange={(e) => setLanguage(e.target.value)}>
         <option value={"sql"}>{"SQL"}</option>
         <option value={"promql"}>{"promQL"}</option>
-      </select>
-      <Slate editor={editor} value={value} onChange={onQueryChange}>
+      </select> */}
+      <Slate editor={editor} value={editorValue} onChange={onQueryChange}>
         <CustomEditor
-          decorate={decorate}
+        decorate={decorate}
           renderLeaf={renderLeaf}
           placeholder="Enter a cLoki Query"
           onKeyDown={onKeyDown}
@@ -156,8 +175,3 @@ export default function QueryEditor({ onQueryChange, value, onKeyDown }) {
   );
 }
 
-/**
- * events will be taken from CustomEditor
- * as: CTRL Enter
- * as: Enter (new line)
- */

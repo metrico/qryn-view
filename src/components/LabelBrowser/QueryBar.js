@@ -35,23 +35,25 @@ export const QueryBar = () => {
   const historyOpen = useSelector((store) => store.historyOpen);
   const [queryInput, setQueryInput] = useState(query);
   const [queryValid, setQueryValid] = useState(false);
-  const [queryValue, setQueryValue] = useState( query.split(/[    ]+/).map( m => ({
-    type:'code-line',
-    children:[
-        {
-            text:m
-        }
-    ]
-}))||[
-    {
-      type: "code_line",
+  const [queryValue, setQueryValue] = useState(
+    query.split(/[  ]+/).map((m) => ({
+      type: "code-line",
       children: [
         {
-          text: "Enter a cLoki Query",
+          text: m,
         },
       ],
-    },
-  ]);
+    })) || [
+      {
+        type: "code-line",
+        children: [
+          {
+            text: "Enter a cLoki Query",
+          },
+        ],
+      },
+    ]
+  );
   const SHOW_LOGS = "Show Logs";
   const LOG_BROWSER = "Log Browser";
   const queryHistory = useSelector((store) => store.queryHistory);
@@ -91,20 +93,9 @@ export const QueryBar = () => {
 
   useEffect(() => {
     setQueryInput(query);
-    setQueryValue(
-        [
-            {
-              type: "code_line",
-              children: [
-                {
-                  text: query,
-                },
-              ],
-            },
-          ]
-    )
+    setQueryValue([{children:[{text:query}]}]);
     setQueryValid(onQueryValid(query));
-  }, [query, queryInput]);
+  }, [query]);
 
   const onValueDisplay = (e) => {
     e.preventDefault();
@@ -117,15 +108,11 @@ export const QueryBar = () => {
     setQueryInput(qr);
     dispatch(setQuery(qr));
   };
-  const handleQueryChange = (e) => {
-    console.log(e);
-    //   const qr = e.target.value;
-    //   console.log(qr)
-    console.log(e.length)
-    const multiline = e.map( text => text.children[0].text).join('  ')
-    console.log(multiline)
-    dispatch(setQuery(multiline))
- 
+  function handleQueryChange (e) {
+    setQueryValue(e)
+
+    const multiline = e.map((text) => text.children[0].text).join("\n");
+    dispatch(setQuery(multiline));
   };
   const onBrowserActive = () => {
     return !labelsBrowserOpen
@@ -136,6 +123,7 @@ export const QueryBar = () => {
   };
 
   const handleInputKeyDown = (e) => {
+
     if (e.code === "Enter" && e.ctrlKey) {
       onSubmit(e);
     }
@@ -185,7 +173,6 @@ export const QueryBar = () => {
         onQueryChange={handleQueryChange}
         value={queryValue}
         onKeyDown={handleInputKeyDown}
-
       />
 
       {/* <input
@@ -201,12 +188,11 @@ export const QueryBar = () => {
         <HistoryButton
           style={{
             color: historyItems ? "orange" : "#ddd",
-            height:'22px',
-            margin:'3px'
+            height: "22px",
+            margin: "3px",
           }}
           onClick={(e) => handleHistoryClick(e)}
         >
-
           <HistoryIcon fontSize={"small"} />
         </HistoryButton>
       </Tooltip>
