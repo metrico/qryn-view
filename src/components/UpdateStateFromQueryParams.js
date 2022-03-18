@@ -195,21 +195,21 @@ export function UpdateStateFromQueryParams() {
                 values: []
             }
             const valueObj = {
-                name: regexQuery[1].replaceAll('"', ''),
+                name: regexQuery[1]?.replaceAll('"', ''),
                 selected: true,
                 inverted: true
             }
             labelObj.values.push(valueObj);
             labelsFromQuery.push(labelObj);
         } else if(label.includes("=~")) {
-            const values = regexQuery[1].split('|')
+            const values = regexQuery[1]?.split('|')
             const labelObj = {
                 name: regexQuery[0],
                 values: []
             }
             values.forEach(value => {
                 const valueObj = {
-                    name: value.replaceAll('"', ''),
+                    name: value?.replaceAll('"', ''),
                     selected: true,
                     inverted: false
                 }
@@ -223,7 +223,7 @@ export function UpdateStateFromQueryParams() {
                 values: []
             }
             const valueObj = {
-                name: regexQuery[1].replaceAll('"', ''),
+                name: regexQuery[1]?.replaceAll('"', ''),
                 selected: true,
                 inverted: false
             }

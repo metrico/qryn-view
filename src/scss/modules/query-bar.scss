@@ -6,6 +6,7 @@
     align-items: center;
     font-family: sans-serif;
 }
+
 .query-bar-input {
     background: $black-quoise;
     outline:none;
@@ -25,9 +26,10 @@
         color:$dark-quoise-hover;
     }
 }
+
 .show-log-browser {
     margin: 3px;
-    padding: 5px 8px;
+
     border-radius: 3px;
    color:$dark-quoise;
     font-size: 0.85em;
@@ -37,12 +39,17 @@
     text-overflow: ellipsis;
     border:1px solid transparent;
     transition: 0.25s all;
+    width:90px;
+    height:20px;
+    justify-content: center;
+
     &:hover {
        
         border:1px solid $dark-quoise-hover;
       
     }
 }
+
 button.show-logs {
     
         background:$dark-quoise;
@@ -54,6 +61,11 @@ button.show-logs {
         font-weight:bold;
         margin:3px;
         transition:.25s all;
+        height:23px;
+        width: 90px;
+        display:flex;
+        align-items:center;
+        justify-content: center;
         &:hover {
             background:$dark-quoise-hover;
         }
