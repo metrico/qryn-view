@@ -37,7 +37,7 @@ const initialState = () => {
         apiUrl: externalState.apiUrl || environment.apiUrl || '',
         isSubmit: externalState.isSubmit || false,
         chartType:'line',
-        
+        notifications: []
     }
     if (debug) console.log('🚧 LOGIC/ INITIAL STATE ::: ', state)
     return state

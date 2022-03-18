@@ -1,0 +1,14 @@
+.alertWrapper {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    z-index: 10000;
+    pointer-events: none;
+    .alert {
+        margin-top: 10px;
+        pointer-events: all;
+    }
+}
