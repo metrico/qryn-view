@@ -193,9 +193,9 @@ class LogView extends Component {
                             matrixData={this.getMatrixForChart()}
                         />
                     ) : null}
-                    {this.props.messages.length < 1 &&
+                    {(this.props.messages.length < 1 &&
                         this.getMatrixForChart().length < 1 &&
-                        !this.props.loading && (
+                        !this.props.loading) && (
                             <EmptyViewContainer>
                                 {
                                     "Please adjust search parameters and click on ‘Show Logs’ button"

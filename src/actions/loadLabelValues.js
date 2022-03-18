@@ -47,6 +47,9 @@ export default function loadLabelValues(label, labelList, apiUrl) {
                         }
                     });
                     dispatch(setLabels(lsList))
+                } else if(!response) {
+                    dispatch(setApiError('URL NOT FOUND'))
+                    dispatch(setLabelValues([]))
                 }
 
                 dispatch(setLoading(false));
@@ -56,8 +59,8 @@ export default function loadLabelValues(label, labelList, apiUrl) {
             }).catch(error => {
                 dispatch(setLoading(false))
                 const { message } = errorHandler(url, error)
-                dispatch(setApiError(message))
-
+                dispatch(setApiError(message || 'API NOT FOUND'))
+                dispatch(setLabelValues([]))
                 console.err(error)
             })
     }

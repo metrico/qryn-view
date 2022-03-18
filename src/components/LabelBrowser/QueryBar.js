@@ -125,6 +125,7 @@ export const QueryBar = () => {
   const handleInputKeyDown = (e) => {
 
     if (e.code === "Enter" && e.ctrlKey) {
+      dispatch(setLoading(true))
       onSubmit(e);
     }
   };
@@ -143,6 +144,7 @@ export const QueryBar = () => {
         dispatch(setQueryHistory(historyUpdated));
         dispatch(setLabelsBrowserOpen(false));
         decodeQuery(query, apiUrl);
+        dispatch(setLoading(true))
         dispatch(loadLogs());
         const storedUrl = saveUrl.add({
           data: window.location.href,
