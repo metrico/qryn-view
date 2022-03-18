@@ -43,7 +43,7 @@ export const ValuesList = (props) => {
     const dispatch = useDispatch()
     const debug = useSelector((store) => store.debug)
     const apiUrl = useSelector((store) => store.apiUrl)
-    if(debug) console.log('🚧 LOGIC/LabelBrowser/ValuesList', apiUrl)
+    //if(debug) console.log('🚧 LOGIC/LabelBrowser/ValuesList', apiUrl)
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen)
 
     const CLEAR = "clear"

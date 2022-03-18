@@ -6,7 +6,6 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import {
     createAlert,
-    setApiError,
     setIsSubmit,
     setQueryLimit,
     setQueryStep,
@@ -21,12 +20,15 @@ import { DATE_TIME_RANGE } from "../../plugins/daterangepicker/consts";
 import { findRangeByLabel } from "../../plugins/daterangepicker/utils";
 import { UpdateStateFromQueryParams } from "../UpdateStateFromQueryParams";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import store from "../../store/store";
 import loadLabels from "../../actions/LoadLabels";
 import localUrl from "../../services/localUrl";
 import setLinksHistory from "../../actions/setLinksHistory";
 import { Tooltip } from "@mui/material";
 import { notificationTypes } from "../../plugins/notifications/consts";
+import setLogs from "../../actions/setLogs";
+import setMatrixData from "../../actions/setMatrixData";
+import loadLogs from "../../actions/loadLogs";
+
 
 export default function StatusBar() {
     return (
@@ -73,7 +75,6 @@ export function ApiSelector() {
     const [editedUrl, setEditedUrl] = useState(apiUrl);
     const [apiSelectorOpen, setApiSelectorOpen] = useState(false);
     const dispatch = useDispatch();
-    const [isError, setIsError] = useState(true);
     const API_URL = "API URL";
     useEffect(() => {
         setEditedUrl(apiUrl);
@@ -83,19 +84,15 @@ export function ApiSelector() {
         setEditedUrl(apiUrl);
     }, [apiUrl]);
 
-    useEffect(() => {
-        if (isError) {
-            setApiSelectorOpen(true);
-        } else {
-            setApiSelectorOpen(false);
-            setIsError(false);
-        }
-    }, [isError]);
 
     useEffect(() => {
         if (apiError.length > 0) {
-            setIsError(true);
             setApiSelectorOpen(true);
+            dispatch(setLogs([]));
+            dispatch(setMatrixData([]));
+        } else {
+            setApiSelectorOpen(false)
+            dispatch(loadLogs())
         }
     }, [apiError]);
 
@@ -109,13 +106,8 @@ export function ApiSelector() {
         setEditedUrl(e.target.value);
     };
     const onUrlSubmit = (e) => {
-        dispatch(setApiError(""));
         dispatch(setApiUrl(editedUrl));
-        dispatch(loadLabels(apiUrl));
-        const isError = store.getState().apiErrors.length === 0;
-        if (isError) {
-            handleApiUrlOpen();
-        }
+        dispatch(loadLabels(editedUrl));
     };
 
     return (
@@ -251,7 +243,6 @@ export function StatusBarSelectors() {
                         if (isEnd) dispatch(setStopTime(dateEnd));
                         if (isLabel) dispatch(setTimeRangeLabel(label));
                     }}
-                    // here
                 />
             </div>
         </LocalizationProvider>
