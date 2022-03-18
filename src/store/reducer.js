@@ -44,6 +44,10 @@ const reducer =  (state, action) => {
             return {...state, linksHistory: action.linksHistory};
         case "SET_HISTORY_OPEN":
                 return {...state, historyOpen: action.historyOpen};
+        case "ADD_NOTIFICATION":
+            return {...state, notifications: action.payload};
+        case "REMOVE_NOTIFICATION":
+                return {...state, notifications: action.payload};
         default:
             return { ...state };
     }

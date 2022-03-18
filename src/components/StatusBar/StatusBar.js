@@ -5,6 +5,7 @@ import LinkIcon from "@mui/icons-material/Link";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import {
+    createAlert,
     setApiError,
     setIsSubmit,
     setQueryLimit,
@@ -25,6 +26,7 @@ import loadLabels from "../../actions/LoadLabels";
 import localUrl from "../../services/localUrl";
 import setLinksHistory from "../../actions/setLinksHistory";
 import { Tooltip } from "@mui/material";
+import { notificationTypes } from "../../plugins/notifications/consts";
 
 export default function StatusBar() {
     return (
@@ -191,11 +193,10 @@ export function StatusBarSelectors() {
                         dispatch(setLinksHistory(storedUrl));
                     }
 
-                    setCopied(true);
-                    setTimeout(() => {
-                        setCopied(false);
-                        dispatch(setIsSubmit(false));
-                    }, 1500);
+                    dispatch(createAlert({
+                        type: notificationTypes.success,
+                        message: LINK_COPIED
+                    }))
                 },
                 function (err) {
                     console.err("error on copy", err);
