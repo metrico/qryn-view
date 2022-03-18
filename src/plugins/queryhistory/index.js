@@ -318,6 +318,9 @@ export const theme = createTheme({
 const QueryHistoryContainer = styled.div`
     height: 250px;
     overflow-y: auto;
+    &.starredCont {
+        height:210px;
+    }
     &::-webkit-scrollbar {
         width: 10px;
         background: black;
@@ -440,6 +443,7 @@ function QueryHistoryTab({
     handleSubmit,
     filtered,
     emptyMessage,
+    isStarred
 }) {
     const [listDisplay, setListDisplay] = useState([]);
     useEffect(() => {
@@ -457,7 +461,9 @@ function QueryHistoryTab({
     }, [queryHistory]);
     // const listDisplay = filtered.length > 0 ? filtered : queryHistory
     return (
-        <QueryHistoryContainer>
+        <QueryHistoryContainer
+        className={isStarred ? 'starredCont': ''}
+        >
             {listDisplay.length > 0 ? (
                 listDisplay?.map((item, index) => (
                     <HistoryRow key={index}>
@@ -736,6 +742,7 @@ function StarredHistoryTab({
                     handleSubmit={handleSubmitQuery}
                     filtered={filteredQueries}
                     emptyMessage={emptyQueryMessage}
+                    isStarred={true}
                 />
             </TabPanel>
             <TabPanel value={1}>
@@ -753,6 +760,7 @@ function StarredHistoryTab({
                     handleSubmit={handleSubmitLink}
                     filtered={filteredLinks}
                     emptyMessage={emptyLinkMessage}
+                    isStarred={true}
                 />
             </TabPanel>
         </TabsUnstyled>
