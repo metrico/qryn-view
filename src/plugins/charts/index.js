@@ -31,17 +31,25 @@ function ClokiChart({ matrixData }) {
         const first = tsArray[0];
         const last = tsArray[tsArray.length - 1];
         const timeSpan = (last - first) / 1000 / 86400;
-        return timeSpan > 1
-            ? "%m-%d %H:%M"
+        const formatted = timeSpan > 1
+            ? "%m/%d %H:%M"
             : timeSpan > 30
-            ? "%y-%m-%d %H:%M"
+            ? "%y/%m/%d %H:%M"
             : "%H:%M:%S";
+            return {
+                timeformat:formatted,
+                min: first,
+                max: last 
+            }
     }
+
+ 
 
     const options = {
         xaxis: {
             show: true,
             mode: "time",
+            timezone:"browser",
             timeformat: "%Y-%m-%d %H:%M:%S", // set this one on custom settings
         },
         grid: {
@@ -252,12 +260,13 @@ function ClokiChart({ matrixData }) {
         };
 
         try {
+            const {timeformat,min,max} = formatDateRange(newData)
             let plot = $q.plot(
                 element,
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     ...chartBarSeries,
-                    xaxis: { timeformat: formatDateRange(newData) },
+                    xaxis: { timeformat, min, max },
                 })
             );
 
@@ -308,12 +317,13 @@ function ClokiChart({ matrixData }) {
         }
 
         try {
+            const {timeformat,min,max} = formatDateRange(newData)
             let plot = $q.plot(
                 element,
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     ...chartPointsSeries,
-                    xaxis: { timeformat: formatDateRange(newData) },
+                    xaxis: { timeformat,min,max },
                 })
             );
             const colorLabels = plot.getData();
@@ -363,12 +373,13 @@ function ClokiChart({ matrixData }) {
         };
 
         try {
+            const {timeformat,min,max} = formatDateRange(newData)
             let plot = $q.plot(
                 element,
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     ...chartLineSeries,
-                    xaxis: { timeformat: formatDateRange(newData) },
+                    xaxis: { timeformat,min,max },
                 })
             );
             const colorLabels = plot.getData();
@@ -424,7 +435,7 @@ function ClokiChart({ matrixData }) {
                     xaxis: {
                         min: ranges.xaxis.from,
                         max: ranges.xaxis.to,
-                        timeformat: formatDateRange(newData),
+                        timeformat: formatDateRange(newData).timerange,
                     },
                 })
             );
@@ -493,14 +504,14 @@ function ClokiChart({ matrixData }) {
                     };
                 }
             });
-
+             const {timeformat,min,max} = formatDateRange(dataSelected)
             let plot = $q.plot(
                 element,
                 dataSelected,
 
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
-                    xaxis: { timeformat: formatDateRange(dataSelected) },
+                    xaxis: { timeformat,min,max  },
                 })
             );
 
@@ -517,12 +528,13 @@ function ClokiChart({ matrixData }) {
                     points,
                 };
             });
+            const {timeformat,min,max} = formatDateRange(newData)
             let plot = $q.plot(
                 element,
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
-                    xaxis: { timeformat: formatDateRange(newData) },
+                    xaxis: { timeformat,min,max },
                 })
             );
 
@@ -584,12 +596,13 @@ function ClokiChart({ matrixData }) {
         }
 
         try {
+            const {timeformat,min,max} = formatDateRange(newData)
             let plot = $q.plot(
                 element,
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
-                    xaxis: { timeformat: formatDateRange(newData) },
+                    xaxis: { timeformat,min,max },
                 })
             );
 
@@ -604,12 +617,13 @@ function ClokiChart({ matrixData }) {
     function drawChart(data) {
         if (data?.length) {
             try {
+                const {timeformat,min,max} = formatDateRange(data)
                 let plot = $q.plot(
                     chartRef.current,
                     data,
                     $q.extend(true, {}, chartOptions, {
                         series: getSeriesFromChartType(chartType),
-                        xaxis: { timeformat: formatDateRange(data) },
+                        xaxis: { timeformat,min,max },
                     })
                 );
                 // get  generated colors
