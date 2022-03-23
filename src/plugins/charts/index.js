@@ -34,7 +34,7 @@ function ClokiChart({ matrixData }) {
         return timeSpan > 1
             ? "%m-%d %H:%M"
             : timeSpan > 30
-            ? "%y-%m-%d %H:%M:%S"
+            ? "%y-%m-%d %H:%M"
             : "%H:%M:%S";
     }
 
