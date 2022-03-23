@@ -22,13 +22,27 @@ function ClokiChart({ matrixData }) {
     const [allData, getAllData] = useState(getDataParsed(false));
     const [labels, setLabels] = useState([]);
     const [element, setElement] = useState(chartRef.current);
-    // set it to local storage
+
+    function formatDateRange(data) {
+        const tsArray = data
+            .map((m) => m.data.map(([t, v]) => t))
+            .flat()
+            .sort();
+        const first = tsArray[0];
+        const last = tsArray[tsArray.length - 1];
+        const timeSpan = (last - first) / 1000 / 86400;
+        return timeSpan > 1
+            ? "%m-%d %H:%M"
+            : timeSpan > 30
+            ? "%y-%m-%d %H:%M:%S"
+            : "%H:%M:%S";
+    }
 
     const options = {
         xaxis: {
             show: true,
             mode: "time",
-            timeformat: "%H:%M:%S", // set this one on custom settings
+            timeformat: "%Y-%m-%d %H:%M:%S", // set this one on custom settings
         },
         grid: {
             show: true,
@@ -185,15 +199,14 @@ function ClokiChart({ matrixData }) {
             data: formatTs(m.values),
             label: formatLabel(m.metric),
             isVisible: true,
-            id:m.id
+            id: m.id,
         }));
 
         if (spliced) {
-         
             const splicedData = parsed.splice(0, 20);
-            return splicedData
+            return splicedData;
         } else {
-            return parsed
+            return parsed;
         }
     }
     /**
@@ -242,7 +255,10 @@ function ClokiChart({ matrixData }) {
             let plot = $q.plot(
                 element,
                 newData,
-                $q.extend(true, {}, chartOptions, chartBarSeries)
+                $q.extend(true, {}, chartOptions, {
+                    ...chartBarSeries,
+                    xaxis: { timeformat: formatDateRange(newData) },
+                })
             );
 
             const colorLabels = plot.getData();
@@ -295,7 +311,10 @@ function ClokiChart({ matrixData }) {
             let plot = $q.plot(
                 element,
                 newData,
-                $q.extend(true, {}, chartOptions, chartPointsSeries)
+                $q.extend(true, {}, chartOptions, {
+                    ...chartPointsSeries,
+                    xaxis: { timeformat: formatDateRange(newData) },
+                })
             );
             const colorLabels = plot.getData();
             setLabels(colorLabels);
@@ -347,7 +366,10 @@ function ClokiChart({ matrixData }) {
             let plot = $q.plot(
                 element,
                 newData,
-                $q.extend(true, {}, chartOptions, chartLineSeries)
+                $q.extend(true, {}, chartOptions, {
+                    ...chartLineSeries,
+                    xaxis: { timeformat: formatDateRange(newData) },
+                })
             );
             const colorLabels = plot.getData();
             setLabels(colorLabels);
@@ -399,9 +421,12 @@ function ClokiChart({ matrixData }) {
                 element,
                 newData,
                 $q.extend(true, {}, chartOptions, {
-                    xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to },
+                    xaxis: {
+                        min: ranges.xaxis.from,
+                        max: ranges.xaxis.to,
+                        timeformat: formatDateRange(newData),
+                    },
                 })
-
             );
             setTimeout(() => {
                 const fromTime = ranges.xaxis.from;
@@ -475,6 +500,7 @@ function ClokiChart({ matrixData }) {
 
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
+                    xaxis: { timeformat: formatDateRange(dataSelected) },
                 })
             );
 
@@ -496,6 +522,7 @@ function ClokiChart({ matrixData }) {
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
+                    xaxis: { timeformat: formatDateRange(newData) },
                 })
             );
 
@@ -523,9 +550,8 @@ function ClokiChart({ matrixData }) {
     }, [matrixData, isSpliced]);
 
     function drawChartFromData() {
-        const data = isSpliced ? chartData : allData
+        const data = isSpliced ? chartData : allData;
         const element = $q(chartRef.current);
-
 
         let newData = [];
         const lSelected =
@@ -535,7 +561,6 @@ function ClokiChart({ matrixData }) {
             const ids = lSelected.map((m) => m.id);
             const dataMapped = data.map((series) => {
                 if (!ids.includes(series.id)) {
-
                     return {
                         ...series,
                         lines: { ...series.lines, show: false },
@@ -564,24 +589,19 @@ function ClokiChart({ matrixData }) {
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
+                    xaxis: { timeformat: formatDateRange(newData) },
                 })
             );
 
             const colorLabels = plot.getData();
             setLabels(colorLabels);
             $q(chartRef.current).UseTooltip();
-
-            } catch(e) {
-                console.log(e)
-            }
-
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     function drawChart(data) {
-
-
-
-
         if (data?.length) {
             try {
                 let plot = $q.plot(
@@ -589,6 +609,7 @@ function ClokiChart({ matrixData }) {
                     data,
                     $q.extend(true, {}, chartOptions, {
                         series: getSeriesFromChartType(chartType),
+                        xaxis: { timeformat: formatDateRange(data) },
                     })
                 );
                 // get  generated colors
@@ -617,7 +638,7 @@ function ClokiChart({ matrixData }) {
                     alignItems: "center",
                     fontSize: ".95rem",
                     cursor: "pointer",
-                    margin:"0px 23px"
+                    margin: "0px 23px",
                 }}
             >
                 <div
@@ -626,7 +647,6 @@ function ClokiChart({ matrixData }) {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                       
                     }}
                 >
                     {isSpliced ? (
