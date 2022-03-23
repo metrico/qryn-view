@@ -31,7 +31,7 @@ function ClokiChart({ matrixData }) {
         const first = tsArray[0];
         const last = tsArray[tsArray.length - 1];
         const timeSpan = (last - first) / 1000 / 86400;
-        const formatted = timeSpan > 0.0208? '%H:%M': timeSpan > 1
+        const formatted = timeSpan > 1
             ? "%m/%d %H:%M"
             : timeSpan > 30
             ? "%y/%m/%d %H:%M"
