@@ -111,7 +111,7 @@ function ClokiChart({ matrixData }) {
         markings: {
             clickable: true,
         },
-        crosshair: { mode: "x" },
+        crosshair: { color:'#88888855', mode: "xy", linewidth:1, },
 
         selection: {
             mode: "x",
