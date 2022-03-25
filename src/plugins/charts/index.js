@@ -29,10 +29,14 @@ function ClokiChart({ matrixData }) {
             item.plot.highlight(item.i, item.plotIndex);
         });
     }
+
+    function isFloat(x){
+        return !!(x % 1)
+    }
+
     function makeTolltipItems(list) {
-        const sorted = list.sort((a, b) =>
-            parseFloat(a.value) < parseFloat(b.value) ? 1 : -1
-        );
+        const sorted = list.filter( f => parseFloat(f.value) === parseFloat(f.item.datapoint[1]))
+       
 
         return sorted
             ?.map(
@@ -43,7 +47,7 @@ function ClokiChart({ matrixData }) {
                                    <p style="white-space:nowrap">${template.label}</p>
                             </div>
                             <div>
-                            <p>${template.value}</p>
+                     
                             </div>
                             </div>
                             
@@ -156,7 +160,8 @@ function ClokiChart({ matrixData }) {
                 const selectedPlots = JSON.parse(
                     localStorage.getItem("labelsSelected")
                 );
-
+                    const itemValue =  isFloat(parseFloat(item.datapoint[1]))? parseFloat(item.datapoint[1]).toFixed(3) : item.datapoint[1]
+               
                 const isSelectedPlots = selectedPlots.length > 0;
                 const labelsList = [];
                 for (let i = 0; i < plotData.length; i++) {
@@ -177,9 +182,10 @@ function ClokiChart({ matrixData }) {
                         labelsList.push({
                             color: plotData[i].color,
                             label: plotData[i].label,
-                            value: parseFloat(value).toFixed(3),
+                            value:  value,
                             plot,
                             plotIndex,
+                            item,
                             i,
                         });
                     }
@@ -195,9 +201,9 @@ function ClokiChart({ matrixData }) {
                     <p>${moment(item.datapoint[0]).format(
                         "YYYY-MM-DDTHH:mm:ss.SSSZ"
                     )}</p>
-                    <p>Total: ${labelsList.length}</p>
-                    <p>
-                  Value: </p>
+          
+                    <p style="margin-left:10px">
+                  Value: ${itemValue}</p>
                     </div>
                    <div style="padding:3px">
                     ${labelsFormatted}
