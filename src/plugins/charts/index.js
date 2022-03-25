@@ -50,7 +50,7 @@ function ClokiChart({ matrixData }) {
     `
             )
             .join("");
-        //console.log(mapped)
+        
     }
     function formatDateRange(data) {
         const tsArray = data
@@ -79,7 +79,7 @@ function ClokiChart({ matrixData }) {
             show: true,
             mode: "time",
             timezone: "local",
-            timeformat: "%Y-%m-%d %H:%M:%S", // set this one on custom settings
+            timeformat: "%Y-%m-%d %H:%M:%S", 
         },
         grid: {
             show: true,
@@ -152,10 +152,7 @@ function ClokiChart({ matrixData }) {
             plot.unhighlight();
             if (item) {
                 let plotData = plot.getData();
-                const plotTime = item.datapoint[0];
-                const plotValue = item.datapoint[1];
-
-                // const notAllVisible = plotData.some( plot => !plot.isVisible)
+                const [plotTime,_] = item.datapoint;
                 const selectedPlots = JSON.parse(
                     localStorage.getItem("labelsSelected")
                 );
@@ -206,14 +203,14 @@ function ClokiChart({ matrixData }) {
                     ${labelsFormatted}
                     </div>
                     `;
-                    const labelLength = item.series.label.length; // counting only this label length
+                    const labelLength = item.series.label.length; 
                     showTooltip(
                         item.pageX,
                         item.pageY,
                         tooltipTemplate,
                         labelLength
                     );
-                    // plot.highlight()
+                 
                 }
             } else {
                 $q("#tooltip").remove();
@@ -583,7 +580,7 @@ function ClokiChart({ matrixData }) {
                         lines: { ...series.lines, show: false },
                         bars: { ...series.bars, show: false },
                         points: { ...series.points, show: false },
-                        // isVisible: true
+                      
                     };
                 } else {
                     return {
@@ -591,7 +588,7 @@ function ClokiChart({ matrixData }) {
                         bars,
                         lines,
                         points,
-                        // isVisible:false
+                       
                     };
                 }
             });
@@ -639,7 +636,7 @@ function ClokiChart({ matrixData }) {
         }
     }
 
-    // Init
+ 
     useEffect(() => {
         setElement(chartRef.current);
         setLabels(chartData.map(({ label }) => label));
@@ -648,7 +645,7 @@ function ClokiChart({ matrixData }) {
         localStorage.setItem("labelsSelected", JSON.stringify([]));
     }, []);
 
-    // On data update or splicing / showing all data
+  
     useEffect(() => {
         setChartOptions(chartOptions);
         setElement(chartRef.current);
@@ -721,7 +718,7 @@ function ClokiChart({ matrixData }) {
                         xaxis: { timeformat, min, max },
                     })
                 );
-                // get  generated colors
+               
                 const colorLabels = plot.getData();
                 setLabels(colorLabels);
                 $q(chartRef.current).UseTooltip(plot);
