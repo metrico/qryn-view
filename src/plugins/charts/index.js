@@ -2,7 +2,9 @@ import "./jquery-loader";
 import ReactFlot from "react-flot";
 import "react-flot/flot/jquery.flot.time.min";
 import "react-flot/flot/jquery.flot.selection.min";
+
 import "react-flot/flot/jquery.flot.crosshair.min";
+
 import loadLogs from "../../actions/loadLogs";
 import { useDispatch } from "react-redux";
 import { setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
@@ -22,7 +24,34 @@ function ClokiChart({ matrixData }) {
     const [allData, getAllData] = useState(getDataParsed(false));
     const [labels, setLabels] = useState([]);
     const [element, setElement] = useState(chartRef.current);
+    function highlightItems(list) {
+        list.forEach((item) => {
+            item.plot.highlight(item.i, item.plotIndex);
+        });
+    }
+    function makeTolltipItems(list) {
+        const sorted = list.sort((a, b) =>
+            parseFloat(a.value) < parseFloat(b.value) ? 1 : -1
+        );
 
+        return sorted
+            ?.map(
+                (template) => `
+                        <div style="display:flex;justify-content:space-between">
+                           <div style="display:flex;margin-right:10px;">  
+                               <span style="background:${template.color};height:6px;width:24px;pading:3px;border-radius:1px;margin:4px;"></span>
+                                   <p style="white-space:nowrap">${template.label}</p>
+                            </div>
+                            <div>
+                            <p>${template.value}</p>
+                            </div>
+                            </div>
+                            
+    `
+            )
+            .join("");
+        
+    }
     function formatDateRange(data) {
         const tsArray = data
             .map((m) => m.data.map(([t, v]) => t))
@@ -31,36 +60,40 @@ function ClokiChart({ matrixData }) {
         const first = tsArray[0];
         const last = tsArray[tsArray.length - 1];
         const timeSpan = (last - first) / 1000 / 86400;
-        const formatted = timeSpan > 1
-            ? "%m/%d %H:%M"
-            : timeSpan > 30
-            ? "%y/%m/%d %H:%M"
-            : "%H:%M:%S";
-            return {
-                timeformat:formatted,
-                min: first,
-                max: last 
-            }
-    }
 
- 
+        const formatted =
+            timeSpan > 1
+                ? "%m/%d %H:%M"
+                : timeSpan > 30
+                ? "%y/%m/%d %H:%M"
+                : "%H:%M:%S";
+        return {
+            timeformat: formatted,
+            min: first,
+            max: last,
+        };
+    }
 
     const options = {
         xaxis: {
             show: true,
             mode: "time",
-            timezone:"browser",
-            timeformat: "%Y-%m-%d %H:%M:%S", // set this one on custom settings
+            timezone: "local",
+            timeformat: "%Y-%m-%d %H:%M:%S", 
         },
         grid: {
             show: true,
-            aboveData: true,
+            aboveData: false,
             color: "#999",
             clickable: true,
             hoverable: true,
-            autoHighlight: true,
+            autoHighlight: false,
+            highlightColor: "blue",
             mouseActiveRadius: 30,
             borderWidth: 0,
+            margin: { left: 0, right: 0 },
+            labelMarginX: 0,
+            reserveSpace: true,
         },
         legend: {
             show: false,
@@ -71,13 +104,14 @@ function ClokiChart({ matrixData }) {
         },
 
         series: {
-            lines: { show: true, lineWidth: 1.5, shadowSize: 0 },
-            bars: { show: false, barWidth: 100, shadowSize: 0 },
-            points: { show: false, radius: 2, shadowSize: 0 },
+            lines: { show: true, lineWidth: 1.5, shadowSize: 0, zero: false },
+            bars: { show: false, barWidth: 1000, shadowSize: 0, zero: false },
+            points: { show: true, radius: 1, shadowSize: 0, zero: false },
         },
         markings: {
             clickable: true,
         },
+        crosshair: { color:'#88888855', mode: "xy", linewidth:1, },
 
         selection: {
             mode: "x",
@@ -87,13 +121,13 @@ function ClokiChart({ matrixData }) {
     const barSeries = {
         lines: { show: false, lineWidth: 1.5, shadowSize: 0 },
         bars: { show: true, barWidth: 100, shadowSize: 0 },
-        points: { show: true, radius: 0, shadowSize: 0 },
+        points: { show: true, radius: 1, shadowSize: 0 },
     };
 
     const lineSeries = {
         lines: { show: true, lineWidth: 1.5, shadowSize: 0 },
         bars: { show: false, barWidth: 100, shadowSize: 0 },
-        points: { show: false, radius: 2, shadowSize: 0 },
+        points: { show: true, radius: 1, shadowSize: 0 },
     };
     const pointSeries = {
         lines: { show: false, lineWidth: 1.5, shadowSize: 0 },
@@ -102,41 +136,86 @@ function ClokiChart({ matrixData }) {
     };
 
     const [chartOptions, setChartOptions] = useState(options);
+    function isLAbelSelected(label) {
+        const labelsSelected = JSON.parse(
+            localStorage.getItem("labelsSelected")
+        );
+        return labelsSelected.some((l) => l.id === label.id);
+    }
 
-    $q.fn.UseTooltip = function () {
+    $q.fn.UseTooltip = function (plot) {
         let previousPoint = null;
-
+        $q("#tooltip").remove();
+        previousPoint = null;
         $q(this).bind("plothover", function (event, pos, item) {
+            let labels = ``;
+            plot.unhighlight();
             if (item) {
-                if (previousPoint !== item.dataIndex) {
+                let plotData = plot.getData();
+                const [plotTime,_] = item.datapoint;
+                const selectedPlots = JSON.parse(
+                    localStorage.getItem("labelsSelected")
+                );
+
+                const isSelectedPlots = selectedPlots.length > 0;
+                const labelsList = [];
+                for (let i = 0; i < plotData.length; i++) {
+                    const plotIsVisible = isSelectedPlots
+                        ? isLAbelSelected(plotData[i])
+                        : true;
+                    const plotTimes = plotData[i].data
+                        .map((d) => d)
+                        .map((e) => e[0]);
+                    const plotPoints = plotData[i].data.map((d) => d);
+
+                    if (plotTimes.includes(plotTime) && plotIsVisible) {
+                        const plotIndex = plotTimes.indexOf(plotTime);
+
+                        const [_, value] = plotPoints.find(
+                            ([time, _]) => time === plotTime
+                        );
+                        labelsList.push({
+                            color: plotData[i].color,
+                            label: plotData[i].label,
+                            value: parseFloat(value).toFixed(3),
+                            plot,
+                            plotIndex,
+                            i,
+                        });
+                    }
+                }
+
+                highlightItems(labelsList);
+                const labelsFormatted = makeTolltipItems(labelsList);
+                if (previousPoint !== item.datapoint) {
+                    previousPoint = item.datapoint;
                     $q("#tooltip").remove();
                     const tooltipTemplate = `
                     <div style="${"display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #666;padding:6px"}">
                     <p>${moment(item.datapoint[0]).format(
                         "YYYY-MM-DDTHH:mm:ss.SSSZ"
                     )}</p>
+                    <p>Total: ${labelsList.length}</p>
                     <p>
-                  Value: ${item.datapoint[1]}</p>
+                  Value: </p>
                     </div>
                    <div style="padding:3px">
-                    <p style="display:flex;align-items:center">
-                    <span style="background:${
-                        item.series.color
-                    };height:6px;width:24px;pading:3px;border-radius:1px;margin:4px" ></span>
-                    ${item.series.label}</p>
+                    ${labelsFormatted}
                     </div>
                     `;
-                    const labelLength = item.series.label.length;
+                    const labelLength = item.series.label.length; 
                     showTooltip(
                         item.pageX,
                         item.pageY,
                         tooltipTemplate,
                         labelLength
                     );
+                 
                 }
             } else {
                 $q("#tooltip").remove();
                 previousPoint = null;
+                labels = ``;
             }
         });
     };
@@ -145,7 +224,7 @@ function ClokiChart({ matrixData }) {
         let wWidth = window.innerWidth;
         let posX = x + 20;
         if (x * 2 > wWidth) {
-            posX = x - length * 6 - 28;
+            posX = x - length * 8;
         }
         $q(`<div id="tooltip">` + contents + `</div>`)
             .css({
@@ -161,7 +240,7 @@ function ClokiChart({ matrixData }) {
                 color: "#aaa",
             })
             .appendTo("body")
-            .fadeIn(200);
+            .fadeIn(125);
     }
 
     function getSeriesFromChartType(type) {
@@ -217,10 +296,12 @@ function ClokiChart({ matrixData }) {
             return parsed;
         }
     }
+
     /**
      *
      * Set chart types
      */
+
     function setBarChart() {
         const element = $q(chartRef.current);
         const data = isSpliced ? chartData : allData;
@@ -238,7 +319,7 @@ function ClokiChart({ matrixData }) {
                         lines: { ...series.lines, show: false },
                         bars: { ...series.bars, show: false },
                         points: { ...series.points, show: false },
-                        isVisible: true,
+                        isVisible: false,
                     };
                 } else {
                     return {
@@ -246,7 +327,7 @@ function ClokiChart({ matrixData }) {
                         bars,
                         lines,
                         points,
-                        isVisible: false,
+                        isVisible: true,
                     };
                 }
             });
@@ -260,7 +341,7 @@ function ClokiChart({ matrixData }) {
         };
 
         try {
-            const {timeformat,min,max} = formatDateRange(newData)
+            const { timeformat, min, max } = formatDateRange(newData);
             let plot = $q.plot(
                 element,
                 newData,
@@ -272,6 +353,7 @@ function ClokiChart({ matrixData }) {
 
             const colorLabels = plot.getData();
             setLabels(colorLabels);
+            $q(chartRef.current).UseTooltip(plot);
             setChartType("bar");
             setTypeToLocal("bar");
         } catch (e) {
@@ -299,7 +381,7 @@ function ClokiChart({ matrixData }) {
                         lines: { ...series.lines, show: false },
                         bars: { ...series.bars, show: false },
                         points: { ...series.points, show: false },
-                        isVisible: true,
+                        isVisible: false,
                     };
                 } else {
                     return {
@@ -307,7 +389,7 @@ function ClokiChart({ matrixData }) {
                         bars,
                         lines,
                         points,
-                        isVisible: false,
+                        isVisible: true,
                     };
                 }
             });
@@ -317,18 +399,19 @@ function ClokiChart({ matrixData }) {
         }
 
         try {
-            const {timeformat,min,max} = formatDateRange(newData)
+            const { timeformat, min, max } = formatDateRange(newData);
             let plot = $q.plot(
                 element,
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     ...chartPointsSeries,
-                    xaxis: { timeformat,min,max },
+                    xaxis: { timeformat, min, max },
                 })
             );
             const colorLabels = plot.getData();
             setLabels(colorLabels);
             setChartType("points");
+            $q(chartRef.current).UseTooltip(plot);
             setTypeToLocal("points");
         } catch (e) {
             console.log(e);
@@ -351,7 +434,7 @@ function ClokiChart({ matrixData }) {
                         lines: { ...series.lines, show: false },
                         bars: { ...series.bars, show: false },
                         points: { ...series.points, show: false },
-                        isVisible: true,
+                        isVisible: false,
                     };
                 } else {
                     return {
@@ -359,7 +442,7 @@ function ClokiChart({ matrixData }) {
                         bars,
                         lines,
                         points,
-                        isVisible: false,
+                        isVisible: true,
                     };
                 }
             });
@@ -373,17 +456,18 @@ function ClokiChart({ matrixData }) {
         };
 
         try {
-            const {timeformat,min,max} = formatDateRange(newData)
+            const { timeformat, min, max } = formatDateRange(newData);
             let plot = $q.plot(
                 element,
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     ...chartLineSeries,
-                    xaxis: { timeformat,min,max },
+                    xaxis: { timeformat, min, max },
                 })
             );
             const colorLabels = plot.getData();
             setLabels(colorLabels);
+            $q(element).UseTooltip(plot);
             setChartType("line");
             setTypeToLocal("line");
         } catch (e) {
@@ -410,7 +494,7 @@ function ClokiChart({ matrixData }) {
                         lines: { ...series.lines, show: false },
                         bars: { ...series.bars, show: false },
                         points: { ...series.points, show: false },
-                        isVisible: true,
+                        isVisible: false,
                     };
                 } else {
                     return {
@@ -418,7 +502,7 @@ function ClokiChart({ matrixData }) {
                         bars,
                         lines,
                         points,
-                        isVisible: false,
+                        isVisible: true,
                     };
                 }
             });
@@ -433,12 +517,13 @@ function ClokiChart({ matrixData }) {
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     xaxis: {
-                        min: ranges.xaxis.from,
-                        max: ranges.xaxis.to,
+                        min: ranges.xaxis.from - 100000,
+                        max: ranges.xaxis.to + 100000,
                         timeformat: formatDateRange(newData).timerange,
                     },
                 })
             );
+            $q(chartRef.current).UseTooltip(plot);
             setTimeout(() => {
                 const fromTime = ranges.xaxis.from;
                 const toTime = ranges.xaxis.to;
@@ -465,6 +550,7 @@ function ClokiChart({ matrixData }) {
             console.log("error on chart redraw", e);
         }
     }
+
     /**
      *
      *Isolate Series clicking label
@@ -494,6 +580,7 @@ function ClokiChart({ matrixData }) {
                         lines: { ...series.lines, show: false },
                         bars: { ...series.bars, show: false },
                         points: { ...series.points, show: false },
+                      
                     };
                 } else {
                     return {
@@ -501,22 +588,25 @@ function ClokiChart({ matrixData }) {
                         bars,
                         lines,
                         points,
+                       
                     };
                 }
             });
-             const {timeformat,min,max} = formatDateRange(dataSelected)
+            const { timeformat, min, max } = formatDateRange(dataSelected);
+
             let plot = $q.plot(
                 element,
                 dataSelected,
 
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
-                    xaxis: { timeformat,min,max  },
+                    xaxis: { timeformat, min, max },
                 })
             );
 
             const colorLabels = plot.getData();
             setLabels(colorLabels);
+            $q(chartRef.current).UseTooltip(plot);
         } else {
             const data = isSpliced ? chartData : allData;
             const { lines, bars, points } = getSeriesFromChartType(chartType);
@@ -526,25 +616,27 @@ function ClokiChart({ matrixData }) {
                     bars,
                     lines,
                     points,
+                    isVisible: true,
                 };
             });
-            const {timeformat,min,max} = formatDateRange(newData)
+            const { timeformat, min, max } = formatDateRange(newData);
+
             let plot = $q.plot(
                 element,
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
-                    xaxis: { timeformat,min,max },
+                    xaxis: { timeformat, min, max },
                 })
             );
 
             const colorLabels = plot.getData();
             setLabels(colorLabels);
-            $q(chartRef.current).UseTooltip();
+            $q(chartRef.current).UseTooltip(plot);
         }
     }
 
-    // Init
+ 
     useEffect(() => {
         setElement(chartRef.current);
         setLabels(chartData.map(({ label }) => label));
@@ -553,7 +645,7 @@ function ClokiChart({ matrixData }) {
         localStorage.setItem("labelsSelected", JSON.stringify([]));
     }, []);
 
-    // On data update or splicing / showing all data
+  
     useEffect(() => {
         setChartOptions(chartOptions);
         setElement(chartRef.current);
@@ -578,7 +670,7 @@ function ClokiChart({ matrixData }) {
                         lines: { ...series.lines, show: false },
                         bars: { ...series.bars, show: false },
                         points: { ...series.points, show: false },
-                        isVisible: true,
+                        isVisible: false,
                     };
                 } else {
                     return {
@@ -586,7 +678,7 @@ function ClokiChart({ matrixData }) {
                         bars,
                         lines,
                         points,
-                        isVisible: false,
+                        isVisible: true,
                     };
                 }
             });
@@ -596,19 +688,19 @@ function ClokiChart({ matrixData }) {
         }
 
         try {
-            const {timeformat,min,max} = formatDateRange(newData)
+            const { timeformat, min, max } = formatDateRange(newData);
             let plot = $q.plot(
                 element,
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
-                    xaxis: { timeformat,min,max },
+                    xaxis: { timeformat, min, max },
                 })
             );
 
             const colorLabels = plot.getData();
             setLabels(colorLabels);
-            $q(chartRef.current).UseTooltip();
+            $q(chartRef.current).UseTooltip(plot);
         } catch (e) {
             console.log(e);
         }
@@ -617,19 +709,19 @@ function ClokiChart({ matrixData }) {
     function drawChart(data) {
         if (data?.length) {
             try {
-                const {timeformat,min,max} = formatDateRange(data)
+                const { timeformat, min, max } = formatDateRange(data);
                 let plot = $q.plot(
                     chartRef.current,
                     data,
                     $q.extend(true, {}, chartOptions, {
                         series: getSeriesFromChartType(chartType),
-                        xaxis: { timeformat,min,max },
+                        xaxis: { timeformat, min, max },
                     })
                 );
-                // get  generated colors
+               
                 const colorLabels = plot.getData();
                 setLabels(colorLabels);
-                $q(chartRef.current).UseTooltip();
+                $q(chartRef.current).UseTooltip(plot);
             } catch (e) {
                 console.log("error drawing chart", data);
             }
