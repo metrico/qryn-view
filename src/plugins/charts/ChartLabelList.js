@@ -1,12 +1,9 @@
 import FindReplaceIcon from "@mui/icons-material/FindReplace";
 import styled from "@emotion/styled";
 
-
-
-
 const LabelsContainer = styled("div")`
-   position:absolute;
-   display: flex;
+    position: absolute;
+    display: flex;
     flex-wrap: wrap;
     max-height: calc(100% - 300px);
     overflow-y: auto;
@@ -23,21 +20,20 @@ const LabelsContainer = styled("div")`
 
 const ChartLabel = styled("div")`
     font-size: 12px;
-    color: #ddd;
+    color: #aaa;
     font-family: sans-serif;
     display: flex;
     align-items: center;
-  
+
     padding-right: 10px;
     cursor: pointer;
-    opacity: ${(props) => (!props.isVisible ? "1" : ".5")};
+    opacity: ${(props) => (props.isVisible ? "1" : ".5")};
     border-radius: 3px;
-    height:20px !important;
+    height: 20px !important;
     &:hover {
         background: black;
     }
 `;
-
 
 const ColorLabel = styled("div")`
     height: 4px;
@@ -48,32 +44,35 @@ const ColorLabel = styled("div")`
 `;
 
 export const ChartLabelList = (props) => {
+    const labelsSelected = JSON.parse(localStorage.getItem("labelsSelected"));
+
+    const isLabelsSelected = labelsSelected.length > 0;
 
     const matchHeight = (length) => {
-        if(length <= 12) {
-            return 150
+        if (length <= 12) {
+            return 150;
         } else if (length <= 20) {
-            return 250
-        } else if(length <=15) {
-            return 175
-        }else if( length > 0) {
-            return 450
+            return 250;
+        } else if (length <= 15) {
+            return 175;
+        } else if (length > 0) {
+            return 450;
         }
-  
-    }
+    };
 
+    function setIsVisible(label) {
+        return labelsSelected?.some((f) => f.id === label.id);
+    }
     const handleLabelClick = (val) => {
-        val.isVisible = !val.isVisible;
+        val.isVisible = val.isVisible ? false : true;
         props.onLabelClick(props.labels, val);
     };
     return (
-        <LabelsContainer
-        divHeight={matchHeight(props.labels.length)}
-        >
+        <LabelsContainer divHeight={matchHeight(props.labels.length)}>
             {props.labels.length &&
                 props.labels.map((val, idx) => (
                     <ChartLabel
-                        isVisible={val.isVisible}
+                        isVisible={!isLabelsSelected ? true : setIsVisible(val)}
                         key={idx}
                         onClick={(e) => handleLabelClick(val)}
                     >
