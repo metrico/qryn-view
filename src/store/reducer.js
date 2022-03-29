@@ -20,6 +20,8 @@ const reducer =  (state, action) => {
                 return { ...state, rangeOpen: action.rangeOpen};
         case "SET_BROWSER_OPEN":
             return {...state, labelsBrowserOpen: action.labelsBrowserOpen};
+        case "SET_SETTINGS_MENU_OPEN":
+            return {...state, settingsMenuOpen: action.settingsMenuOpen};
         case "SET_QUERY" :
             return {...state, query: action.query};
         case "SET_QUERY_STEP":
@@ -48,6 +50,7 @@ const reducer =  (state, action) => {
             return {...state, notifications: action.payload};
         case "REMOVE_NOTIFICATION":
                 return {...state, notifications: action.payload};
+    
         default:
             return { ...state };
     }

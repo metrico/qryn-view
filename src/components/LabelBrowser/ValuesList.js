@@ -47,21 +47,6 @@ export const ValuesList = (props) => {
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen)
 
     const CLEAR = "clear"
-    /**
-     * TODO: FILTER VALUES INSIDE LABELS
-     */
-    // const filterValues = useCallback(
-    //     () =>
-
-    //         labelList.filter((label) => {
-    //             return label?.name
-    //                 ?.toLowerCase()
-    //                 .includes(filteredValue.toLowerCase());
-    //         }
-
-    //         ),
-    //     [JSON.stringify(labelList), filteredValue]
-    // );
 
     useEffect(() => {
         dispatch(loadLabels(apiUrl))

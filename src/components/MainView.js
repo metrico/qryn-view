@@ -1,9 +1,12 @@
 
 import  LogView  from "./LogView";
-import  StatusBar  from "./StatusBar/StatusBar";
+
 import LabelBrowser from "./LabelBrowser/LabelBrowser"
 import { UpdateStateFromQueryParams } from "./UpdateStateFromQueryParams";
 import { Notification } from "../plugins/notifications";
+import StatusBar from "../features/statusbar";
+import SettingsDrawer from "../plugins/settingsdrawer/SettingsDrawer";
+
 export default function MainView() {
     
   UpdateStateFromQueryParams()
@@ -18,6 +21,7 @@ export default function MainView() {
         <LogView />
 
         <Notification/>
+       <SettingsDrawer/>
     </div>
     )
 }

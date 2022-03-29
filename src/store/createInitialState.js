@@ -30,6 +30,7 @@ const initialState = () => {
         step: externalState.step || 100,
         rangeOpen: false,
         labelsBrowserOpen: true,
+        settingsMenuOpen:false,
         historyOpen: false,
         apiErrors: '',
         urlQueryParams: externalState || {},
@@ -43,6 +44,7 @@ const initialState = () => {
     return state
 }
 export default initialState;
+
 function setDebug (envSetting) {
   if (envSetting === 'dev') {
     return true
