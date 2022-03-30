@@ -22,8 +22,8 @@ const EmptyViewContainer = styled.div`
     height: 175px;
     font-size: 1em;
     color: #aaa;
-    font-weight: lighter;
-    letter-spacing: 1px;
+    text-align: center;
+    
 `;
 const TAGS_LEVEL = {
     critical: ["emerg", "fatal", "alert", "crit", "critical"],

@@ -14,8 +14,39 @@ export default function CopyButton() {
     function shareLink() {
         const setSubmit = dispatch(setIsSubmit(true));
         setTimeout(() => {
-            navigator.clipboard.writeText(window.location.href).then(
-                function () {
+            if (navigator?.clipboard && window.isSecureContext) {
+                navigator?.clipboard?.writeText(window.location.href).then(
+                    function () {
+                        if (query.length > 0) {
+                            const storedUrl = saveUrl.add({
+                                data: window.location.href,
+                                description: "From Shared URL",
+                            });
+                            dispatch(setLinksHistory(storedUrl));
+                        }
+
+                        dispatch(
+                            createAlert({
+                                type: notificationTypes.success,
+                                message: LINK_COPIED,
+                            })
+                        );
+                    },
+                    function (err) {
+                        console.err("error on copy", err);
+                    }
+                );
+            } else {
+                let textArea = document.createElement("textarea");
+                textArea.value = window.location.href;
+
+                textArea.style.position = "fixed";
+                textArea.style.left = "-999999px";
+                textArea.style.top = "-999999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                return new Promise((res, rej) => {
                     if (query.length > 0) {
                         const storedUrl = saveUrl.add({
                             data: window.location.href,
@@ -23,27 +54,21 @@ export default function CopyButton() {
                         });
                         dispatch(setLinksHistory(storedUrl));
                     }
-
                     dispatch(
                         createAlert({
                             type: notificationTypes.success,
                             message: LINK_COPIED,
                         })
                     );
-                },
-                function (err) {
-                    console.err("error on copy", err);
-                }
-            );
+                    document.execCommand("copy") ? res() : rej();
+                    textArea.remove();
+                });
+            }
         }, 200);
     }
     return (
         <MenuButtonCont>
-            <MenuButton
-              
-                onClick={shareLink}
-                disabled={query.length < 1}
-            >
+            <MenuButton onClick={shareLink} disabled={query.length < 1}>
                 {" "}
                 <ContentCopyIcon fontSize={"15px"} />
                 <span>{"Copy Link"}</span>
