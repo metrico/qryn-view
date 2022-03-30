@@ -1,27 +1,24 @@
-
-import  LogView  from "./LogView";
-
-import LabelBrowser from "./LabelBrowser/LabelBrowser"
-import { UpdateStateFromQueryParams } from "./UpdateStateFromQueryParams";
 import { Notification } from "../plugins/notifications";
-import StatusBar from "../features/statusbar";
-import SettingsDrawer from "../plugins/settingsdrawer/SettingsDrawer";
+
+import DataView from "./DataView/DataView";
+import StatusBar from "./StatusBar";
+import { UpdateStateFromQueryParams } from "../helpers/UpdateStateFromQueryParams";
+import LabelBrowser from "./LabelBrowser";
+import SettingsMenu from "../plugins/settingsmenu";
 
 export default function MainView() {
-    
-  UpdateStateFromQueryParams()
-  
+    UpdateStateFromQueryParams();
+
     return (
         <div className={"log-search"}>
-                
-        <StatusBar/>
+            <StatusBar />
 
-        <LabelBrowser/>
+            <LabelBrowser />
 
-        <LogView />
+            <DataView />
 
-        <Notification/>
-       <SettingsDrawer/>
-    </div>
-    )
+            <Notification />
+            <SettingsMenu />
+        </div>
+    );
 }

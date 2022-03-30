@@ -10,14 +10,13 @@ import HistoryIcon from "@mui/icons-material/History";
 import styled from "@emotion/styled";
 import setHistoryOpen from "../../actions/setHistoryOpen";
 import { Tooltip } from "@mui/material";
-import { decodeQuery } from "../UpdateStateFromQueryParams";
 import localUrl from "../../services/localUrl";
 import setLinksHistory from "../../actions/setLinksHistory";
 import QueryEditor from "../../plugins/queryeditor";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import loadLabels from "../../actions/LoadLabels";
-import { ThemeProvider } from "@mui/styles";
+import { decodeQuery } from "../../helpers/UpdateStateFromQueryParams";
 
 
 const HistoryButtonStyled = styled.button`

@@ -7,40 +7,13 @@ import loadLogs from "../../../../actions/loadLogs";
 import { setApiUrl } from "../../../../actions";
 import LinkIcon from "@mui/icons-material/Link";
 import setLogs from "../../../../actions/setLogs";
-import styled from "@emotion/styled";
-
-
-const ApiSelectorStyled = styled.div`
-    display: flex;
-    align-items: center;
-    @media screen and (max-width:850px) {
-      display: none;
-  }
-    .selector {
-        margin-left: 10px;
-        .label {
-            flex: 1;
-            color: #bfbfbf;
-            min-width: 51px;
-            padding: 6px 6px;
-            margin: 5px;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: #12121267;
-            border-radius: 4px;
-        }
-    }
-    & div {
-        display: flex;
-        align-items: center;
-    }
-`;
+import { ApiSelectorStyled } from "../../styled";
 
 export function ApiSelector() {
     const apiUrl = useSelector((store) => store.apiUrl);
     const apiError = useSelector((store) => store.apiErrors);
     const [editedUrl, setEditedUrl] = useState(apiUrl);
+    const query = useSelector((store) => store.query);
     const [apiSelectorOpen, setApiSelectorOpen] = useState(false);
     const dispatch = useDispatch();
     const API_URL = "API URL";
@@ -75,8 +48,9 @@ export function ApiSelector() {
     const onUrlSubmit = (e) => {
         dispatch(setApiUrl(editedUrl));
         dispatch(loadLabels(editedUrl));
-
-        dispatch(setLabelsBrowserOpen(false));
+        if (query?.length > 3) {
+            dispatch(setLabelsBrowserOpen(false));
+        }
     };
 
     return (

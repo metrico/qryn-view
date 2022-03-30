@@ -1,5 +1,19 @@
 import styled from "@emotion/styled";
 import { createTheme } from "@mui/material";
+import { SETTINGS_THEME } from "../theme";
+
+const st = SETTINGS_THEME
+
+
+export const theme = createTheme({
+    palette: {
+        mode: "dark",
+        primary: {
+            main: st.main,
+            background: st.background,
+        },
+    },
+});
 
 export const SettingsHeader = styled.div`
     display: flex;
@@ -9,7 +23,7 @@ export const SettingsHeader = styled.div`
     align-items: center;
     span {
         padding: 20px 10px;
-        color: #666;
+        color: ${st.header};
         text-transform: uppercase;
         font-size: 12px;
     }
@@ -17,7 +31,7 @@ export const SettingsHeader = styled.div`
 
 export const StyledCloseBtn = styled.button`
     border: none;
-    color: #ddd;
+    color:${st.main};
     background: none;
     cursor: pointer;
 `;
@@ -29,18 +43,10 @@ export const DrawerContainer = styled.div`
     }
 `;
 
-export const theme = createTheme({
-    palette: {
-        mode: "dark",
-        primary: {
-            main: "#ddd",
-            background: "#1a1a1a",
-        },
-    },
-});
+
 
 export const DrawerInput = styled.input`
-    background: #333;
+    background: ${st.inputBg};
     color: orange;
     padding: 9px 12px;
     border: none;
@@ -59,14 +65,14 @@ export const DrawerInputCont = styled.div`
     flex: 1;
     label {
         font-size: 0.85em;
-        color: #aaa;
+        color: ${st.labelColor};
         margin-right: 10px;
         white-space: nowrap;
     }
 `;
 
 export const ApiSelectorInput = styled(DrawerInput)`
-    border: ${(props) => (props.inputError ? "1px solid red" : "none")};
+    border: ${(props) => (props.inputError ? "1px solid orange" : "none")};
 `;
 
 export const ApiSelectorCont = styled(DrawerInputCont)`
@@ -79,7 +85,7 @@ export const ApiSelectorWrapper = styled.div`
     margin: 10px 20px;
     label {
         font-size: 0.85em;
-        color: #aaa;
+        color: ${st.labelColor};
         margin:10px 0px;
     }
 `;
@@ -87,7 +93,7 @@ export const SaveApiButton = styled.button`
     border: none;
     padding: none;
     margin: 2px;
-    color: #ddd;
+    color: ${st.main};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -102,14 +108,14 @@ export const LimitInputsCont = styled.div`
 
 export const MenuButton = styled.button`
     background: none;
-    color: #ddd;
+    color: ${st.main};
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     flex: ${(props)=>(props.save ? 0 : 1 )};
     margin-left: ${(props)=>(props.save ? '10px' : '0px')};
-    background: #7b7b7b55;
+    background: ${st.inputBg};
     border-radius: 3px;
     padding: 6px 12px;
     font-size: 1em;
@@ -125,7 +131,7 @@ export const MenuButton = styled.button`
     }
 `;
 export const MenuSeparator = styled.div`
-border-bottom:1px solid #333;
+border-bottom:1px solid ${st.inputBg};
 margin:20px 20px;
 
 display: flex;

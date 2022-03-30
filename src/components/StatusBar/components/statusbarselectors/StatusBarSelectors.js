@@ -1,7 +1,7 @@
 import { isDate } from "date-fns";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { UpdateStateFromQueryParams } from "../../../../components/UpdateStateFromQueryParams";
+
 import {
     createAlert,
     setIsSubmit,
@@ -19,10 +19,10 @@ import { LocalizationProvider } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { StatusBarInput } from "../statusbarinput/StatusBarInput";
 import localUrl from "../../../../services/localUrl";
-
 import { Tooltip } from "@mui/material";
 import { DateRangePicker } from "../daterangepicker";
 import { DATE_TIME_RANGE } from "../daterangepicker/consts";
+import { UrlCopyButton } from "../../styled";
 
 export function StatusBarSelectors() {
     const startTs = useSelector((store) => store.start);
@@ -35,6 +35,7 @@ export function StatusBarSelectors() {
     const [open, setOpen] = useState();
     const LINK_COPIED = "Link Copied To Clipboard";
     const saveUrl = localUrl();
+
     const initialDateRange = () => {
         try {
             const ls = JSON.parse(localStorage.getItem(DATE_TIME_RANGE));
@@ -46,8 +47,6 @@ export function StatusBarSelectors() {
                 ls.dateStart = new Date(ls.dateStart);
                 ls.dateEnd = new Date(ls.dateEnd);
             }
-
-            UpdateStateFromQueryParams();
             return ls;
         } catch (e) {
             if (isDate(startTs) && isDate(stopTs)) {
@@ -128,15 +127,14 @@ export function StatusBarSelectors() {
                                 : "Copy Link"
                         }
                     >
-                        <button
-                            className={"url-copy"}
+                        <UrlCopyButton
                             onClick={shareLink}
-                            disabled={query.length < 1}
+                           isActive={(query.length > 0)}
                         >
                             <ContentCopyIcon fontSize={"15px"} />
 
                             <span>{"Copy Link"}</span>
-                        </button>
+                        </UrlCopyButton>
                     </Tooltip>
 
                     <StatusBarInput

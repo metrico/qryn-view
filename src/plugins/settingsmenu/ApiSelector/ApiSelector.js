@@ -21,6 +21,7 @@ import {
 export default function ApiSelector() {
     const apiUrl = useSelector((store) => store.apiUrl);
     const apiError = useSelector((store) => store.apiErrors);
+    const query = useSelector((store) => store.query)
     const [editedUrl, setEditedUrl] = useState(apiUrl);
     const dispatch = useDispatch();
     const API_URL = "API URL";
@@ -49,7 +50,12 @@ export default function ApiSelector() {
     const onUrlSubmit = (e) => {
         dispatch(setApiUrl(editedUrl));
         dispatch(loadLabels(editedUrl));
-        dispatch(setLabelsBrowserOpen(false));
+        console.log(query, 'QUERY')
+        if(query.length > 3) {
+            console.log(query)
+            dispatch(setLabelsBrowserOpen(false));
+        }
+    
     };
 
     // here should only have an input with a 'save' button
