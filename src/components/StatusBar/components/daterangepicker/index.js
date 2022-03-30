@@ -13,12 +13,11 @@ import {
     min,
     format,
     isValid,
-    isSameMinute,
 } from "date-fns";
 
 import Nav from "./components/Nav";
 import {
-    defaultRanges,
+    findRangeByLabel,
     getDefaultRanges,
     getValidatedMonths,
     parseOptionalDate,
@@ -45,21 +44,41 @@ import { setLabelsBrowserOpen } from "../../../../actions/setLabelsBrowserOpen";
 export function DateRangePickerMain(props) {
     const today = Date.now();
     const {
-        open,
-        onChange,
-        initialDateRange,
+        isOpen,
         minDate,
         maxDate,
-        definedRanges = getDefaultRanges,
     } = props;
+
+    const startTs = useSelector( store => store.start)
+    const stopTs = useSelector( store => store.stop)
+    const initialDateRange = () => {
+        try {
+            const ls = JSON.parse(localStorage.getItem(DATE_TIME_RANGE));
+            if (ls?.label !== "" && typeof ls.label !== "undefined") {
+                const range = findRangeByLabel(ls?.label);
+                ls.dateStart = range.dateStart;
+                ls.dateEnd = range.dateEnd;
+            } else {
+                ls.dateStart = new Date(ls.dateStart);
+                ls.dateEnd = new Date(ls.dateEnd);
+            }
+            return ls;
+        } catch (e) {
+            if (isDate(startTs) && isDate(stopTs)) {
+                return { dateStart: startTs, dateEnd: stopTs };
+            }
+        }
+    };
+
+
     const minDateValid = parseOptionalDate(minDate, addYears(today, -10));
     const maxDateValid = parseOptionalDate(maxDate, addYears(today, 10));
     const [intialFirstMonth, initialSecondMonth] = getValidatedMonths(
-        initialDateRange || {},
+        initialDateRange() || {},
         minDateValid,
         maxDateValid
     );
-    const [dateRange, setDateRange] = useState({ ...initialDateRange });
+    const [dateRange, setDateRange] = useState({ ...initialDateRange() });
     const [hoverDay, setHoverDay] = useState();
     const [firstMonth, setFirstMonth] = useState(intialFirstMonth || today);
     const [secondMonth, setSecondMonth] = useState(
@@ -159,7 +178,7 @@ export function DateRangePickerMain(props) {
             console.log("Please make a log query", query);
         }
         dispatch(setRangeOpen(false));
-        props.isOpen(e);
+        isOpen(e);
     };
     const onQueryValid = (query) => {
         return query !== "{" && query !== "}" && query !== "{}" && query !== ""; // TODO: make a proper query validation
@@ -177,8 +196,10 @@ export function DateRangePickerMain(props) {
             })
         );
     };
-    const mediaMatch = window.matchMedia("(min-width: 1200px)");
-    const [matches, setMatches] = useState(mediaMatch.matches);
+
+
+
+
     const dateButtonStyles = {
         border: "none",
         height: "21px",
@@ -202,6 +223,16 @@ export function DateRangePickerMain(props) {
         onMonthNavigate,
     };
 
+
+    function onChange({ dateStart, dateEnd, label }) {
+        const isStart = isDate(dateStart);
+        const isEnd = isDate(dateEnd);
+        const isLabel = typeof label !== "undefined";
+        if (isStart) dispatch(setStartTime(dateStart));
+        if (isEnd) dispatch(setStopTime(dateEnd));
+        if (isLabel) dispatch(setTimeRangeLabel(label));
+    }
+
     const openButtonHandler = (e) => {
         e.preventDefault();
         if (rangeOpen === true) {
@@ -212,6 +243,9 @@ export function DateRangePickerMain(props) {
             setIsComponentVisible(true);
         }
     };
+
+
+
     return (
         <div>
             <Tooltip
