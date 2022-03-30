@@ -1,6 +1,8 @@
-export default  (loading) => (dispatch) => {
+const setLoading = (loading) => (dispatch) => {
     dispatch({
-        type: 'SET_LOADING',
-       loading
+        type: "SET_LOADING",
+        loading,
     });
-}
+};
+
+export default setLoading;

@@ -1,4 +1,3 @@
-import FindReplaceIcon from "@mui/icons-material/FindReplace";
 import styled from "@emotion/styled";
 
 const LabelsContainer = styled("div")`
@@ -46,7 +45,7 @@ const ColorLabel = styled("div")`
 export const ChartLabelList = (props) => {
     const labelsSelected = JSON.parse(localStorage.getItem("labelsSelected"));
 
-    const isLabelsSelected = labelsSelected.length > 0;
+    const isLabelsSelected = labelsSelected?.length > 0;
 
     const matchHeight = (length) => {
         if (length <= 12) {
@@ -68,8 +67,8 @@ export const ChartLabelList = (props) => {
         props.onLabelClick(props.labels, val);
     };
     return (
-        <LabelsContainer divHeight={matchHeight(props.labels.length)}>
-            {props.labels.length &&
+        <LabelsContainer divHeight={matchHeight(props?.labels?.length)}>
+            {props?.labels?.length &&
                 props.labels.map((val, idx) => (
                     <ChartLabel
                         isVisible={!isLabelsSelected ? true : setIsVisible(val)}

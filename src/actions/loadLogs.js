@@ -4,18 +4,12 @@ import setLoading from "./setLoading";
 import store from "../store/store";
 import setMatrixData from "./setMatrixData";
 import { nanoid } from "nanoid";
-import { findRangeByLabel } from "../plugins/daterangepicker/utils";
 import { setStartTime, setStopTime } from "./";
-// *query : LogQl Query
-// *limit : Limit of returned lines
-// *start : The start time for the query as a nanosecond Unix epoch. Defaults to one hour ago
-// *end : The end time for the query as a nanosecond Unix epoch. Defaults to now
-// *step : Resolution step width in either a duration [1s, 5s, 5m etc] or number of seconds
-// *direction : Determines sort order of logs. Either forward or backward. Default is backward
+import { findRangeByLabel } from "../components/StatusBar/components/daterangepicker/utils";
+
 
 export default function loadLogs() {
-  // const step = 120
-  // const direction = 'backward'
+
   const localStore = store.getState();
   const { query, limit, step, apiUrl, label: rangeLabel } = localStore;
   let { start: startTs, stop: stopTs } = localStore;
@@ -51,8 +45,8 @@ export default function loadLogs() {
     },
   };
 
-  const fromNanoSec = (ts) => parseInt(ts / 1000000); // stream type will come in Nanoseconds
-  const toMiliseC = (ts) => parseInt(ts * 1000); // matrix type will come without millisec
+  const fromNanoSec = (ts) => parseInt(ts / 1000000); 
+  const toMiliseC = (ts) => parseInt(ts * 1000); 
   const getTimestamp = (type) => (ts) =>
     type === "streams"
       ? fromNanoSec(ts)
@@ -108,7 +102,7 @@ export default function loadLogs() {
           }
 
           if (type === "matrix") {
-            const idResult = result.map((m) => ({ ...m, id: nanoid() }));
+            const idResult = result?.map((m) => ({ ...m, id: nanoid() }))||[];
             dispatch(setMatrixData(idResult || []));
             dispatch(setLoading(false));
           }

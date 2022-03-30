@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 
 import { useState, useEffect } from "react";
-import styled from "@emotion/styled";
 import loadLogs from "../../../actions/loadLogs";
 import setMatrixData from "../../../actions/setMatrixData";
 import setLogs from "../../../actions/setLogs";
@@ -14,14 +13,12 @@ import {
     ApiSelectorInput,
     ApiSelectorWrapper,
     MenuButton,
-    MenuButtonCont,
-    SaveApiButton,
 } from "../styled";
 
 export default function ApiSelector() {
     const apiUrl = useSelector((store) => store.apiUrl);
     const apiError = useSelector((store) => store.apiErrors);
-    const query = useSelector((store) => store.query)
+    const query = useSelector((store) => store.query);
     const [editedUrl, setEditedUrl] = useState(apiUrl);
     const dispatch = useDispatch();
     const API_URL = "API URL";
@@ -50,12 +47,11 @@ export default function ApiSelector() {
     const onUrlSubmit = (e) => {
         dispatch(setApiUrl(editedUrl));
         dispatch(loadLabels(editedUrl));
-        console.log(query, 'QUERY')
-        if(query.length > 3) {
-            console.log(query)
+        console.log(query, "QUERY");
+        if (query.length > 3) {
+            console.log(query);
             dispatch(setLabelsBrowserOpen(false));
         }
-    
     };
 
     // here should only have an input with a 'save' button
@@ -69,11 +65,10 @@ export default function ApiSelector() {
                     value={editedUrl}
                     onChange={handleIntputChange}
                 />
-              
-                    <MenuButton save onClick={onUrlSubmit}>
-                        <SaveIcon /> 
-                    </MenuButton>
-               
+
+                <MenuButton save onClick={onUrlSubmit}>
+                    <SaveIcon />
+                </MenuButton>
             </ApiSelectorCont>
         </ApiSelectorWrapper>
     );

@@ -140,10 +140,7 @@ const PickerNav = props => {
 	const getEditedEndDate = () => {
 		return isValid(editedEndDate) ? format(editedEndDate, 'yyy-MM-dd HH:mm:ss') : typeof editedEndDate !== 'undefined' ? editedEndDate : ""
 	}
-	const dateTimeBarStyle = {
-		display: 'flex',
-		alignItems: 'center'
-	}
+	
 	return (
 		<ThemeProvider theme={theme}>
 

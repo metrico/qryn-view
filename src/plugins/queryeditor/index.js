@@ -5,11 +5,10 @@ import React, {
     useState,
     useMemo,
     useEffect,
-    useRef,
 } from "react";
 
-import { createEditor, Text, Element as SlateElement, Descendant } from "slate";
-import { Slate, Editable, withReact, insertData } from "slate-react";
+import { createEditor, Text,  } from "slate";
+import { Slate, Editable, withReact, } from "slate-react";
 import { withHistory } from "slate-history";
 import Prism from "prismjs";
 import "prismjs/components/prism-promql";
@@ -100,7 +99,7 @@ export default function QueryEditor({ onQueryChange, value, onKeyDown }) {
     const editor = useMemo(() => withHistory(withReact(createEditor())), []);
     // Keep track of state for the value of the editor.
 
-    const [language, setLanguage] = useState("sql");
+    const [language] = useState("sql");
 
     const decorate = useCallback(
         ([node, path]) => {

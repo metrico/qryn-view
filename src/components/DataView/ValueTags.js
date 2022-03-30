@@ -1,5 +1,3 @@
-
-import { useDispatch, useSelector } from 'react-redux';
 import { setLabels } from '../../actions/setLabels';
 import { queryBuilderWithLabels } from '../LabelBrowser/helpers/querybuilder';
 import store from '../../store/store';

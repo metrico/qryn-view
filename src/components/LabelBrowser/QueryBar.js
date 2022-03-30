@@ -162,11 +162,7 @@ export const QueryBar = () => {
     const SHOW_LOGS = "Show Logs";
     
     const queryHistory = useSelector((store) => store.queryHistory);
-    const [historyItems, setHistoryItems] = useState(queryHistory.length > 0);
     const saveUrl = localUrl();
-    useEffect(() => {
-        setHistoryItems(queryHistory.length > 0);
-    }, [queryHistory]);
 
     const onQueryValid = (query) => {
         return query !== "{" && query !== "}" && query !== "{}" && query !== ""; // TODO: make a proper query validation

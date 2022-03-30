@@ -4,8 +4,6 @@ function localService(item = null) {
 
     const _APP = "cloki-query";
     const _HISTORY_ITEM = _APP + "-history-item";
-    const _TIMERANGE_ITEM = _APP + "-time-range-item";
-    const _CHART_ITEM = _APP + "-chart-item";
     const _LABELS_ITEM = _APP + '-labels-item';
     const cleanup = [];
 
@@ -100,18 +98,6 @@ function localService(item = null) {
     };
 
     const labelsStore = () => {
-        const get = () => {
-            return localStorage.getItem(_LABELS_ITEM);
-        }
-        const set = (item) => {
-            localStorage.setItem(_LABELS_ITEM,item)
-        }
-
-        const clean = () => {
-            setStorageItem(_LABELS_ITEM, JSON.stringify(cleanup));
-            return getAll()||[]
-        };
-
         function getAll(){
             const actualStorage = JSON.parse(localStorage.getItem(_LABELS_ITEM))||[]
             return actualStorage;

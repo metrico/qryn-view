@@ -12,7 +12,7 @@ export default function CopyButton() {
     const saveUrl = localUrl();
     const LINK_COPIED = "Link Copied To Clipboard";
     function shareLink() {
-        const setSubmit = dispatch(setIsSubmit(true));
+       dispatch(setIsSubmit(true));
         setTimeout(() => {
             if (navigator?.clipboard && window.isSecureContext) {
                 navigator?.clipboard?.writeText(window.location.href).then(
