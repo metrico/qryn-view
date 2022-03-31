@@ -24,7 +24,10 @@ import TabsListUnstyled from "@mui/base/TabsListUnstyled";
 import TabPanelUnstyled from "@mui/base/TabPanelUnstyled";
 import { buttonUnstyledClasses } from "@mui/base/ButtonUnstyled";
 import TabUnstyled, { tabUnstyledClasses } from "@mui/base/TabUnstyled";
-
+import LaunchIcon from "@mui/icons-material/Launch";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
+import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
 // Dialog
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -33,7 +36,9 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { notificationTypes } from "../notifications/consts";
 import localUrl from "../../services/localUrl";
+
 import setLinksHistory from "../../actions/setLinksHistory";
+//import { DateRangePickerMain } from "../../components/StatusBar/components/daterangepicker/index";
 // Alert Dialog for Clearing History
 function AlertDialog({ clearHistory, dialogType }) {
     const [open, setOpen] = useState(false);
@@ -193,6 +198,7 @@ const EmptyHistory = styled.div`
     color: #ddd;
     font-size: 14px;
     flex: 1;
+    padding:20px;
     height: 50%;
 `;
 function EmptyHistoryDisplay({ message }) {
@@ -291,6 +297,7 @@ const HistoryButton = styled.button`
     justify-content: center;
     margin: 0px 6px;
     cursor: pointer;
+    min-height: 20px;
 `;
 
 const SettingItemContainer = styled.div`
@@ -314,6 +321,21 @@ const SettingItemContainer = styled.div`
 `;
 const SubmitButton = styled(HistoryButton)`
     background: #11abab;
+    white-space: nowrap;
+    .open-icon {
+        display: none;
+    }
+    .open-text {
+        display: flex;
+    }
+    @media screen and (max-width: 864px) {
+        .open-icon {
+            display: flex;
+        }
+        .open-text {
+            display: none;
+        }
+    }
 `;
 
 const ClearHistoryButton = styled(HistoryButton)`
@@ -322,6 +344,7 @@ const ClearHistoryButton = styled(HistoryButton)`
     background: #088789;
     margin: 0;
     width: 100%;
+    white-space: nowrap;
 `;
 const StyledCloseButton = styled(HistoryButton)`
     background: none;
@@ -367,6 +390,216 @@ const RowData = styled.span`
     overflow: hidden;
     text-overflow: ellipsis;
 `;
+
+const LinkParams = styled.div`
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    .open-button {
+        display: none;
+    }
+    .inline-params {
+        align-items: center;
+        display: ${(props) => (props.open ? "none" : "grid")};
+        flex: 1;
+        grid-template-columns: 1fr 0.25fr 0.25fr auto;
+        margin-right: 5px;
+    }
+
+    .open-button {
+        display: flex;
+        color: #aaa;
+        background: none;
+        border: none;
+    }
+    .block-params {
+        display: ${(props) => (props.open ? "flex" : "none")};
+        flex-direction: column;
+        flex: 1;
+        p {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex: 1;
+            border-bottom: 1px solid #333;
+            margin-bottom: 4px;
+            padding-bottom: 2px;
+            span {
+                margin-left: 3px;
+            }
+        }
+    }
+    @media screen and (max-width: 864px) {
+        .inline-params {
+            display: none;
+        }
+    }
+`;
+
+function HistoryLinkParams({
+    item,
+    copyLink,
+    handleDelete,
+    handleStarLinkItem,
+    handleSubmit,
+}) {
+    const [open, setOpen] = useState(false);
+
+    const openParams = () => {
+        setOpen((opened) => (opened ? false : true));
+    };
+
+    return (
+        <LinkParams open={open}>
+            <HistoryLinkQuery item={item} onOpen={open} />
+            <button
+                className="open-button"
+                onClick={(e) => {
+                    openParams();
+                }}
+            >
+                {open ? (
+                    <ZoomInMapIcon fontSize={"small"} />
+                ) : (
+                    <ZoomOutMapIcon fontSize={"small"} />
+                )}
+            </button>
+            <div className="inline-params">
+                <Tooltip title={"API URL"}>
+                    <span
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                        }}
+                    >
+                        <LinkIcon
+                            fontSize="14px"
+                            style={{ marginRight: "3px" }}
+                        />{" "}
+                        {item?.params?.apiUrl}
+                    </span>
+                </Tooltip>
+
+                <span style={{ whiteSpace: "nowrap" }}>
+                    limit: {item?.params?.limit}
+                </span>
+
+                <span style={{ whiteSpace: "nowrap" }}>
+                    step: {item?.params?.step}
+                </span>
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    {" "}
+                    <Tooltip title={item?.fromDate + " - " + item?.toDate}>
+                        <AccessTimeIcon
+                            fontSize={"14px"}
+                            style={{ marginRight: "3px" }}
+                        />
+                    </Tooltip>{" "}
+                    <TimeSpan>
+                        {item?.fromDate}
+                        {" - "}
+                        {item?.toDate}
+                    </TimeSpan>
+                </div>
+            </div>
+
+            <div className="block-params">
+                <p>
+                    <span> Query:</span>{" "}
+                    <span>{decodeURIComponent(item.params.query)}</span>{" "}
+                </p>
+                <p>
+                    <span> API URL:</span> <span>{item.params.apiUrl}</span>{" "}
+                </p>
+                <p>
+                    <span>From: </span> <span>{item?.fromDate}</span>{" "}
+                </p>
+                <p>
+                    <span> To: </span> <span> {item?.toDate}</span>{" "}
+                </p>
+                <p>
+                    <span>Limit: </span> <span>{item.params.limit}</span>{" "}
+                </p>
+                <p>
+                    <span> Step:</span> <span>{item.params.step}</span>{" "}
+                </p>
+            </div>
+            <HistoryLinkTools
+                item={item}
+                onOpen={open}
+                copyLink={copyLink}
+                handleDelete={handleDelete}
+                handleStarLinkItem={handleStarLinkItem}
+                handleSubmit={handleSubmit}
+            />
+        </LinkParams>
+    );
+}
+
+function HistoryLinkQuery({ item, onOpen }) {
+    return (
+        <div style={{ display: onOpen ? "none" : "flex", width: "30vw" }}>
+            <Tooltip title={decodeURIComponent(item?.params?.query)}>
+                <RowData>{decodeURIComponent(item?.params?.query)} </RowData>
+            </Tooltip>
+        </div>
+    );
+}
+
+function HistoryLinkTools({
+    item,
+    onOpen,
+    copyLink,
+    handleDelete,
+    handleStarLinkItem,
+    handleSubmit,
+}) {
+    return (
+        <div
+            style={{
+                display: "flex",
+                flexDirection: onOpen ? "column-reverse" : "row",
+                justifyContent: "space-between",
+            }}
+        >
+            <Tooltip title={"Copy Link to Clipboard"}>
+                <HistoryButton onClick={(e) => copyLink(item?.data)}>
+                    <LinkIcon fontSize={"14px"} />
+                </HistoryButton>
+            </Tooltip>
+
+            <Tooltip title={"Delete Query"}>
+                <HistoryButton onClick={(e) => handleDelete(item)}>
+                    <DeleteOutlineIcon fontSize={"14px"} />
+                </HistoryButton>
+            </Tooltip>
+
+            <Tooltip title={"Star / Unstar Link"}>
+                <HistoryButton onClick={(e) => handleStarLinkItem(item)}>
+                    {item.starred ? (
+                        <StarIcon fontSize={"14px"} />
+                    ) : (
+                        <StarBorderIcon fontSize={"14px"} />
+                    )}
+                </HistoryButton>
+            </Tooltip>
+
+            <Tooltip title={"Search Logs from Query"}>
+                <SubmitButton onClick={(e) => handleSubmit(item?.data)}>
+                    <LaunchIcon className={"open-icon"} fontSize={"13px"} />
+                    <span className={"open-text"}>{"Open In New Tab"}</span>
+                </SubmitButton>
+            </Tooltip>
+        </div>
+    );
+}
+
 function CloseButton({ onClose }) {
     return (
         <StyledCloseButton onClick={onClose}>
@@ -376,8 +609,8 @@ function CloseButton({ onClose }) {
 }
 
 const HistoryRow = styled.div`
-    padding: 5px 10px;
-    padding-left: 12px;
+    padding: 5px 0px;
+    padding-left: 10px;
     background: #212121;
     margin: 5px;
     border-radius: 3px;
@@ -385,7 +618,7 @@ const HistoryRow = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 30px;
+    //height: 30px;
 `;
 const TimeSpan = styled.div`
     @media screen and (max-width: 1370px) {
@@ -424,7 +657,6 @@ function QueryHistoryTab({
                     <HistoryRow key={index}>
                         <span
                             style={{
-                                paddingRight: "10px",
                                 color: "#666",
                             }}
                         >
@@ -470,7 +702,12 @@ function QueryHistoryTab({
                                 <SubmitButton
                                     onClick={(e) => handleSubmit(item)}
                                 >
-                                    {"Show Logs"}
+                                    <KeyboardArrowRightIcon
+                                        className={"open-icon"}
+                                    />
+                                    <span className={"open-text"}>
+                                        {"Show Logs"}
+                                    </span>
                                 </SubmitButton>
                             </Tooltip>
                         </div>
@@ -492,6 +729,7 @@ function LinksHistoryTab({
     emptyMessage,
 }) {
     const [listDisplay, setListDisplay] = useState([]);
+
     useEffect(() => {
         setListDisplay(linksHistory);
     }, []);
@@ -517,104 +755,14 @@ function LinksHistoryTab({
                         >
                             {listDisplay?.length - index}
                         </span>
-                        <Tooltip
-                            title={decodeURIComponent(item?.params?.query)}
-                        >
-                            <RowData>
-                                {decodeURIComponent(item?.params?.query)}{" "}
-                            </RowData>
-                        </Tooltip>
 
-                        <div
-                            style={{
-                                display: "grid",
-
-                                gridTemplateColumns: "1fr .25fr .25fr auto",
-                                marginRight: "5px",
-                                width: "50%",
-                            }}
-                        >
-                            <Tooltip title={"API URL"}>
-                                <span
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <LinkIcon
-                                        fontSize="14px"
-                                        style={{ marginRight: "3px" }}
-                                    />{" "}
-                                    {item?.params?.apiUrl}
-                                </span>
-                            </Tooltip>
-
-                            <span>limit: {item?.params?.limit}</span>
-
-                            <span>step: {item?.params?.step}</span>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                }}
-                            >
-                                {" "}
-                                <Tooltip
-                                    title={
-                                        item?.fromDate + " - " + item?.toDate
-                                    }
-                                >
-                                    <AccessTimeIcon
-                                        fontSize={"14px"}
-                                        style={{ marginRight: "3px" }}
-                                    />
-                                </Tooltip>{" "}
-                                <TimeSpan>
-                                    {item?.fromDate}
-                                    {" - "}
-                                    {item?.toDate}
-                                </TimeSpan>
-                            </div>
-                        </div>
-
-                        <div style={{ display: "flex" }}>
-                            <Tooltip title={"Copy Link to Clipboard"}>
-                                <HistoryButton
-                                    onClick={(e) => copyLink(item?.data)}
-                                >
-                                    <LinkIcon fontSize={"14px"} />
-                                </HistoryButton>
-                            </Tooltip>
-
-                            <Tooltip title={"Delete Query"}>
-                                <HistoryButton
-                                    onClick={(e) => handleDelete(item)}
-                                >
-                                    <DeleteOutlineIcon fontSize={"14px"} />
-                                </HistoryButton>
-                            </Tooltip>
-
-                            <Tooltip title={"Star / Unstar Link"}>
-                                <HistoryButton
-                                    onClick={(e) => handleStarLinkItem(item)}
-                                >
-                                    {item.starred ? (
-                                        <StarIcon fontSize={"14px"} />
-                                    ) : (
-                                        <StarBorderIcon fontSize={"14px"} />
-                                    )}
-                                </HistoryButton>
-                            </Tooltip>
-
-                            <Tooltip title={"Search Logs from Query"}>
-                                <SubmitButton
-                                    onClick={(e) => handleSubmit(item?.data)}
-                                >
-                                    {"Open In New Tab"}
-                                </SubmitButton>
-                            </Tooltip>
-                        </div>
+                        <HistoryLinkParams
+                            item={item}
+                            copyLink={copyLink}
+                            handleDelete={handleDelete}
+                            handleStarLinkItem={handleStarLinkItem}
+                            handleSubmit={handleSubmit}
+                        />
                     </HistoryRow>
                 ))
             ) : (

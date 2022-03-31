@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setIsSubmit, setQuery } from "../../actions";
 import loadLogs from "../../actions/loadLogs";
@@ -189,34 +189,32 @@ export const QueryBar = () => {
     const onQueryValid = (query) => {
         return query !== "{" && query !== "}" && query !== "{}" && query !== ""; // TODO: make a proper query validation
     };
-    function init() {
-        // force a query to be run after load of component
-        if (debug)
-            console.log("🚧 LOGIC/QueryBar/", typeof query, query.length);
 
-        if (onQueryValid(query && isSubmit === "true")) {
-            if (debug) {
-                console.log(
-                    "🚧 LOGIC/QueryBar/ dispatch ",
-                    query !== "{}",
-                    query.length > 0,
-                    query !== "{}" || query.length > 1
-                );
-                // here
-            }
-
-            dispatch(setLoading(true));
-            dispatch(loadLogs());
-
-            setTimeout(() => {
-                dispatch(setIsSubmit(false));
-            }, 200);
-        } else if (!onQueryValid(query) && isSubmit === "true") {
-            dispatch(setIsSubmit(false));
-        }
-    }
     useEffect(() => {
-        init();
+               // force a query to be run after load of component
+               if (debug)
+               console.log("🚧 LOGIC/QueryBar/", typeof query, query.length);
+   
+           if (onQueryValid(query && isSubmit === "true")) {
+               if (debug) {
+                   console.log(
+                       "🚧 LOGIC/QueryBar/ dispatch ",
+                       query !== "{}",
+                       query.length > 0,
+                       query !== "{}" || query.length > 1
+                   );
+                   // here
+               }
+   
+               dispatch(setLoading(true));
+               dispatch(loadLogs());
+   
+               setTimeout(() => {
+                   dispatch(setIsSubmit(false));
+               }, 200);
+           } else if (!onQueryValid(query) && isSubmit === "true") {
+               dispatch(setIsSubmit(false));
+           }
     }, []);
 
     useEffect(() => {
