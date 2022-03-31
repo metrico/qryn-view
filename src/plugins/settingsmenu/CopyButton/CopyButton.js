@@ -4,7 +4,7 @@ import { createAlert, setIsSubmit } from "../../../actions";
 import { notificationTypes } from "../../notifications/consts";
 import localUrl from "../../../services/localUrl";
 import setLinksHistory from "../../../actions/setLinksHistory";
-import { MenuButton, MenuButtonCont } from "../styled";
+import { MenuButton, MenuButtonCont, MenuToolsCont, MenuToolsButton } from "../styled";
 
 export default function CopyButton() {
     const dispatch = useDispatch();
@@ -67,12 +67,11 @@ export default function CopyButton() {
         }, 200);
     }
     return (
-        <MenuButtonCont>
-            <MenuButton onClick={shareLink} disabled={query.length < 1}>
-                {" "}
+        <MenuToolsCont>
+            <MenuToolsButton onClick={shareLink} disabled={query.length < 1}>
                 <ContentCopyIcon fontSize={"15px"} />
                 <span>{"Copy Link"}</span>
-            </MenuButton>
-        </MenuButtonCont>
+            </MenuToolsButton>
+        </MenuToolsCont>
     );
 }

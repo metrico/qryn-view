@@ -42,10 +42,11 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
-            max-width: 100%;
-            transition: 0.2s all;
+            max-width: 23ch;
+          transition: 1s all;
             &:hover {
                 background: #ffffff3a;
+           
             }
         }
     }
@@ -90,6 +91,7 @@
             height: auto;
             min-height: 100px;
             min-width: 175px;
+            flex:1;
             .column {
                 max-height: 350px;
                 &::-webkit-scrollbar {

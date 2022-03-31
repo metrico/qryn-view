@@ -25,12 +25,15 @@ const CustomEditor = styled(Editable)`
     margin: 3px;
     border-radius: 3px;
     line-height: 1.25;
+   line-break: anywhere;
+ 
 `;
 
 const QueryBar = styled.div`
     display: flex;
     align-items: center;
     flex: 1;
+    max-width: 100%;
 `;
 
 function Leaf({ attributes, children, leaf }) {

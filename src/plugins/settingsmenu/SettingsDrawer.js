@@ -8,6 +8,7 @@ import {
     MenuSeparator,
 } from "./styled";
 import CloseButton from "./CloseButton";
+import { DateRangePicker } from "../../components/StatusBar/components/daterangepicker";
 
 export default function SettingsDrawer({
     apiSelector,
@@ -31,8 +32,10 @@ export default function SettingsDrawer({
                     <LimitInputsCont>
                         {stepInput}
                         {limitInput}
-                        {copyUrlButton}
+                       
                     </LimitInputsCont>
+                    {copyUrlButton}
+                 
                 </DrawerContainer>
             </Drawer>
         </ThemeProvider>
