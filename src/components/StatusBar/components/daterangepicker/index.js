@@ -41,16 +41,13 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { Tooltip } from "@mui/material";
 import loadLogs from "../../../../actions/loadLogs";
 import { setLabelsBrowserOpen } from "../../../../actions/setLabelsBrowserOpen";
+import TimeLabel from "./components/TimeLabel";
 export function DateRangePickerMain(props) {
     const today = Date.now();
-    const {
-        isOpen,
-        minDate,
-        maxDate,
-    } = props;
+    const { isOpen, minDate, maxDate } = props;
 
-    const startTs = useSelector( store => store.start)
-    const stopTs = useSelector( store => store.stop)
+    const startTs = useSelector((store) => store.start);
+    const stopTs = useSelector((store) => store.stop);
     const initialDateRange = () => {
         try {
             const ls = JSON.parse(localStorage.getItem(DATE_TIME_RANGE));
@@ -69,7 +66,6 @@ export function DateRangePickerMain(props) {
             }
         }
     };
-
 
     const minDateValid = parseOptionalDate(minDate, addYears(today, -10));
     const maxDateValid = parseOptionalDate(maxDate, addYears(today, 10));
@@ -100,12 +96,8 @@ export function DateRangePickerMain(props) {
 
     const { dateStart, dateEnd } = dateRange;
 
-    const { ref, isComponentVisible, setIsComponentVisible } =
-        useOutsideRef(true);
+    const { ref } = useOutsideRef(true);
 
-    useEffect(() => {
-        setIsComponentVisible(rangeOpen);
-    }, [rangeOpen]);
 
     const setFirstMonthValidated = (date) => {
         if (isBefore(date, secondMonth)) {
@@ -197,9 +189,6 @@ export function DateRangePickerMain(props) {
         );
     };
 
-
-
-
     const dateButtonStyles = {
         border: "none",
         height: "21px",
@@ -223,7 +212,6 @@ export function DateRangePickerMain(props) {
         onMonthNavigate,
     };
 
-
     function onChange({ dateStart, dateEnd, label }) {
         const isStart = isDate(dateStart);
         const isEnd = isDate(dateEnd);
@@ -237,69 +225,17 @@ export function DateRangePickerMain(props) {
         e.preventDefault();
         if (rangeOpen === true) {
             onClose(e);
-            setIsComponentVisible(false);
+          
         } else {
             dispatch(setRangeOpen(true));
-            setIsComponentVisible(true);
+         
         }
     };
-
-
 
     return (
         <div>
             <Tooltip
-                title={
-                    timeLabel ? (
-                        <React.Fragment>
-                            <span
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    justifyContent: "center",
-                                    padding: "3px",
-                                }}
-                            >
-                                <span
-                                    style={{
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    {isValid(dateRange.dateStart)
-                                        ? format(
-                                              dateRange.dateStart,
-                                              "yyyy/MM/dd HH:mm:ss"
-                                          )
-                                        : dateRange.dateStart}
-                                </span>
-                                <span
-                                    style={{
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    to
-                                </span>
-                                <span
-                                    style={{
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    {isValid(dateRange.dateEnd)
-                                        ? format(
-                                              dateRange.dateEnd,
-                                              "yyyy/MM/dd HH:mm:ss"
-                                          )
-                                        : typeof dateRange.dateEnd !==
-                                          "undefined"
-                                        ? dateRange.dateEnd
-                                        : ""}
-                                </span>
-                            </span>
-                        </React.Fragment>
-                    ) : (
-                        ""
-                    )
-                }
+                title={timeLabel ? <TimeLabel dateRange={dateRange} /> : ""}
             >
                 <button
                     style={dateButtonStyles}
@@ -329,7 +265,7 @@ export function DateRangePickerMain(props) {
                     </span>
                 </button>
             </Tooltip>
-            {isComponentVisible ? (
+            {rangeOpen ? (
                 <div tabIndex={"0"} ref={ref}>
                     <ThemeProvider theme={theme}>
                         <Nav
@@ -353,3 +289,7 @@ export function DateRangePickerMain(props) {
     );
 }
 export const DateRangePicker = DateRangePickerMain;
+
+//shouldnt be at same div!! 
+
+

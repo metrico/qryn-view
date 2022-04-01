@@ -31,6 +31,7 @@ const initialState = () => {
         rangeOpen: false,
         labelsBrowserOpen: true,
         settingsMenuOpen:false,
+        timePickerOpen: false,
         historyOpen: false,
         apiErrors: '',
         urlQueryParams: externalState || {},

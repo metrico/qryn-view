@@ -1,18 +1,19 @@
 import { useEffect, useRef, useState } from "react";
+import { setRangeOpen } from '../../../../../actions/setRangeOpen';
+import { useDispatch } from 'react-redux';
 
-export default function useOutsideRef(initialIsVisible) {
-    const [isComponentVisible, setIsComponentVisible] =
-        useState(initialIsVisible);
+export default function useOutsideRef() {
+ const dispatch = useDispatch()
     const ref = useRef(null);
 
     const handleHideDateRange = (event) => {
         if (event.key === "Escape") {
-            setIsComponentVisible(false);
+            dispatch(setRangeOpen(false));
         }
     };
     const handleClickOutside = (event) => {
         if (ref.current && !ref.current.contains(event.target)) {
-            setIsComponentVisible(false);
+            dispatch(setRangeOpen(false));
         }
     };
     useEffect(() => {
@@ -25,5 +26,5 @@ export default function useOutsideRef(initialIsVisible) {
             document.removeEventListener("click", handleClickOutside, true);
         };
     });
-    return { ref, isComponentVisible, setIsComponentVisible };
+    return { ref };
 }

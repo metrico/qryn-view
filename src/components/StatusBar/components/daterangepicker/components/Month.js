@@ -35,7 +35,7 @@ const theme = createTheme({
 const styles = (theme) =>
     createStyles({
         root: {
-            width: 290,
+          width: 260,
             background: '#262626'
         },
         weekDaysContainer: {
