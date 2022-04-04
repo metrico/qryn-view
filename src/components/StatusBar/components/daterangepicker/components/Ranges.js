@@ -1,29 +1,51 @@
-import  List  from '@mui/material/List';
-import  ListItem  from '@mui/material/ListItem';
-import ListItemText  from '@mui/material/ListItemText'
+import styled from "@emotion/styled";
 import { isSameRange } from "../utils";
 
-const Ranges = props => {
-	return (
-		<List>
-			{props.ranges.map((range, idx) => (
-				<ListItem button key={idx} onClick={() => {props.setRange(range); props.onClose()}}>
-					<ListItemText
-						primaryTypographyProps={{
-							variant: "body2",
-							style: {
-								fontWeight: isSameRange(range, props.selectedRange)
-									? "bold"
-									: "normal",
-                                   color: isSameRange(range, props.selectedRange) ? 'orange' : 'white'
-							}
-						}}>
-						{range.label}
-					</ListItemText>
-				</ListItem>
-			))}
-		</List>
-	);
+const StyledList = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    button {
+        background: none;
+        text-align: left;
+        border: none;
+        padding: 10px;
+        line-height: 1.5;
+        border-radius: 3px;
+        cursor: pointer;
+        &:hover {
+            background: #11111155;
+        }
+    }
+`;
+
+const Ranges = (props) => {
+    return (
+        <StyledList>
+            {props.ranges.map((range, idx) => (
+                <button
+                    key={idx}
+                    onClick={() => {
+                        props.setRange(range);
+                        props.onClose();
+                    }}
+                >
+                    <span
+                        style={{
+                            fontWeight: isSameRange(range, props.selectedRange)
+                                ? "bold"
+                                : "normal",
+                            color: isSameRange(range, props.selectedRange)
+                                ? "orange"
+                                : "white",
+                        }}
+                    >
+                        {range.label}
+                    </span>
+                </button>
+            ))}
+        </StyledList>
+    );
 };
 
 export default Ranges;

@@ -24,6 +24,8 @@ export const StatusBarCont = styled.div`
 `;
 
 export const StatusCont = styled.div`
+    display: flex;
+    align-items: center;
     input {
         color: orange;
         background: #121212;
@@ -40,19 +42,17 @@ export const StatusCont = styled.div`
         }
         &.date-time-range {
             width: 120px;
+            color: orange;
+            background: #121212;
         }
-    }
-
-    @media screen and (max-width: 565px) {
-        display: none;
     }
 `;
 export const ApiSelectorStyled = styled.div`
     display: flex;
     align-items: center;
-    @media screen and (max-width:850px) {
-      display: none;
-  }
+    @media screen and (max-width: 850px) {
+        display: none;
+    }
     .selector {
         margin-left: 10px;
         .label {
@@ -73,7 +73,6 @@ export const ApiSelectorStyled = styled.div`
         align-items: center;
     }
 `;
-
 
 export const UrlCopyButton = styled.button`
     display: flex;
