@@ -4,4 +4,16 @@ body {
     margin: 0 auto;
     padding: 0 auto;
     overflow: hidden;
+
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: #616161;
+    }
 }
+html {
+    background:$grey-dark; 
+  }

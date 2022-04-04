@@ -1,12 +1,10 @@
 import { nanoid } from "nanoid";
 import { _URL_ITEM } from "./consts";
 import localService from "./localService";
-import {format} from 'date-fns'
-
+import { format } from "date-fns";
 
 const localUrl = () => {
-
-    const {l_set, l_get, cleanup, j_parse, j_string} = localService()
+    const { l_set, l_get, j_parse, j_string } = localService();
 
     const get = () => {
         return j_parse(l_get(_URL_ITEM));
@@ -17,9 +15,8 @@ const localUrl = () => {
     };
 
     const clean = () => {
-      //  l_set(_URL_ITEM, j_string(cleanup));
-        localStorage.setItem(_URL_ITEM,JSON.stringify([]))
-        return getAll()||[]
+        localStorage.setItem(_URL_ITEM, JSON.stringify([]));
+        return getAll() || [];
     };
 
     const urlStorage = get();
@@ -44,16 +41,22 @@ const localUrl = () => {
     const add = (item) => {
         let previousData = get() || [];
 
-        const {hash} = window.location
-        const origin = window.location.origin
-        const urlParams = new URLSearchParams(hash.replace("#",""))
-        let paramsData = {}
-        urlParams.set("isSubmit",true)
-        for (let[key,value] of urlParams) {
-            paramsData[key] = value
+        const { hash } = window.location;
+        const origin = window.location.origin;
+        const urlParams = new URLSearchParams(hash.replace("#", ""));
+        let paramsData = {};
+        urlParams.set("isSubmit", true);
+        for (let [key, value] of urlParams) {
+            paramsData[key] = value;
         }
-        const fromDate = format(parseInt(paramsData.start) / 1000000,"yyyy-MM-dd HH:mm:ss")  
-        const toDate = format(parseInt(paramsData.end) / 1000000,"yyyy-MM-dd HH:mm:ss")  
+        const fromDate = format(
+            parseInt(paramsData.start) / 1000000,
+            "yyyy-MM-dd HH:mm:ss"
+        );
+        const toDate = format(
+            parseInt(paramsData.end) / 1000000,
+            "yyyy-MM-dd HH:mm:ss"
+        );
 
         try {
             const newItem = {
@@ -80,11 +83,11 @@ const localUrl = () => {
         return getAll();
     };
     const share = (item) => {
-        const hash = item.urlParams
-        const origin = item.origin
-        return `${origin}/#${hash.toString()}`
-    }
-    
+        const hash = item.urlParams;
+        const origin = item.origin;
+        return `${origin}/#${hash.toString()}`;
+    };
+
     function getAll() {
         const actualStorage = JSON.parse(localStorage.getItem(_URL_ITEM)) || [];
         return actualStorage;

@@ -1,4 +1,4 @@
-const reducer =  (state, action) => {
+const reducer = (state, action) => {
     switch (action.type) {
         case "SET_LABELS":
             return { ...state, labels: action.labels };
@@ -15,39 +15,44 @@ const reducer =  (state, action) => {
         case "SET_TIME_RANGE_LABEL":
             return { ...state, label: action.label };
         case "SET_QUERY_LIMIT":
-                return { ...state, limit: action.limit };
+            return { ...state, limit: action.limit };
         case "SET_RANGE_OPEN":
-                return { ...state, rangeOpen: action.rangeOpen};
+            return { ...state, rangeOpen: action.rangeOpen };
         case "SET_BROWSER_OPEN":
-            return {...state, labelsBrowserOpen: action.labelsBrowserOpen};
-        case "SET_QUERY" :
-            return {...state, query: action.query};
+            return { ...state, labelsBrowserOpen: action.labelsBrowserOpen };
+        case "SET_SETTINGS_MENU_OPEN":
+            return { ...state, settingsMenuOpen: action.settingsMenuOpen };
+        case "SET_TIME_PICKER_OPEN":
+            return { ...state, timePickerOpen: action.timePickerOpen };
+        case "SET_QUERY":
+            return { ...state, query: action.query };
         case "SET_QUERY_STEP":
-                return { ...state, step: action.step};
+            return { ...state, step: action.step };
         case "SET_API_URL":
-            return { ...state, apiUrl: action.apiUrl};
+            return { ...state, apiUrl: action.apiUrl };
         case "SET_API_ERRORS":
-            return {...state, apiErrors: action.apiErrors};
+            return { ...state, apiErrors: action.apiErrors };
         case "SET_URL_QUERY_PARAMS":
-            return {...state, urlQueryParams: action.urlQueryParams};
+            return { ...state, urlQueryParams: action.urlQueryParams };
         case "SET_URL_LOCATION":
-            return {...state, urlLocation: action.urlLocation};
-            case "SET_IS_SUBMIT":
-                return {...state, isSubmit: action.isSubmit};
+            return { ...state, urlLocation: action.urlLocation };
+        case "SET_IS_SUBMIT":
+            return { ...state, isSubmit: action.isSubmit };
         case "SET_MATRIX_DATA":
-            return {...state, matrixData: action.matrixData};
+            return { ...state, matrixData: action.matrixData };
         case "SET_CHART_TYPE":
-            return {...state, chartType: action.setChartType};
+            return { ...state, chartType: action.setChartType };
         case "SET_QUERY_HISTORY":
-            return {...state, queryHistory: action.queryHistory};
+            return { ...state, queryHistory: action.queryHistory };
         case "SET_LINKS_HISTORY":
-            return {...state, linksHistory: action.linksHistory};
+            return { ...state, linksHistory: action.linksHistory };
         case "SET_HISTORY_OPEN":
-                return {...state, historyOpen: action.historyOpen};
+            return { ...state, historyOpen: action.historyOpen };
         case "ADD_NOTIFICATION":
-            return {...state, notifications: action.payload};
+            return { ...state, notifications: action.payload };
         case "REMOVE_NOTIFICATION":
-                return {...state, notifications: action.payload};
+            return { ...state, notifications: action.payload };
+
         default:
             return { ...state };
     }

@@ -13,65 +13,90 @@ import {
     min,
     format,
     isValid,
-    isSameMinute,
 } from "date-fns";
 
 import Nav from "./components/Nav";
-import { defaultRanges, getDefaultRanges, getValidatedMonths, parseOptionalDate } from "./utils";
+import {
+    findRangeByLabel,
+    getDefaultRanges,
+    getValidatedMonths,
+    parseOptionalDate,
+} from "./utils";
 import { DATE_TIME_RANGE, MARKERS } from "./consts";
 import { theme } from "./components/styles";
 import { ThemeProvider } from "@emotion/react";
-import { setRangeOpen, setStartTime, setTimeRangeLabel, setStopTime } from "../../actions";
+import {
+    setRangeOpen,
+    setStartTime,
+    setTimeRangeLabel,
+    setStopTime,
+} from "../../../../actions";
+
 import { useSelector, useDispatch } from "react-redux";
 import useOutsideRef from "./hooks/useOutsideRef";
-import store from '../../store/store'
-import loadLogs from "../../actions/loadLogs"
-import { setLabelsBrowserOpen } from "../../actions/setLabelsBrowserOpen";
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+
+import store from "../../../../store/store";
+
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { Tooltip } from "@mui/material";
+import loadLogs from "../../../../actions/loadLogs";
+import { setLabelsBrowserOpen } from "../../../../actions/setLabelsBrowserOpen";
+import TimeLabel from "./components/TimeLabel";
 export function DateRangePickerMain(props) {
     const today = Date.now();
-    const {
-        open,
-        onChange,
-        initialDateRange,
-        minDate,
-        maxDate,
-        definedRanges = getDefaultRanges,
-    } = props;
+    const { isOpen, minDate, maxDate } = props;
+
+    const startTs = useSelector((store) => store.start);
+    const stopTs = useSelector((store) => store.stop);
+    const initialDateRange = () => {
+        try {
+            const ls = JSON.parse(localStorage.getItem(DATE_TIME_RANGE));
+            if (ls?.label !== "" && typeof ls.label !== "undefined") {
+                const range = findRangeByLabel(ls?.label);
+                ls.dateStart = range.dateStart;
+                ls.dateEnd = range.dateEnd;
+            } else {
+                ls.dateStart = new Date(ls.dateStart);
+                ls.dateEnd = new Date(ls.dateEnd);
+            }
+            return ls;
+        } catch (e) {
+            if (isDate(startTs) && isDate(stopTs)) {
+                return { dateStart: startTs, dateEnd: stopTs };
+            }
+        }
+    };
+
     const minDateValid = parseOptionalDate(minDate, addYears(today, -10));
     const maxDateValid = parseOptionalDate(maxDate, addYears(today, 10));
     const [intialFirstMonth, initialSecondMonth] = getValidatedMonths(
-        initialDateRange || {},
+        initialDateRange() || {},
         minDateValid,
         maxDateValid
     );
-    const [dateRange, setDateRange] = useState({ ...initialDateRange });
+    const [dateRange, setDateRange] = useState({ ...initialDateRange() });
     const [hoverDay, setHoverDay] = useState();
     const [firstMonth, setFirstMonth] = useState(intialFirstMonth || today);
     const [secondMonth, setSecondMonth] = useState(
         initialSecondMonth || addMonths(firstMonth, 1)
     );
-    const [timeLabel,setTimeLabel] = useState('')
+    const [timeLabel, setTimeLabel] = useState("");
     const dispatch = useDispatch();
 
     const rangeOpen = useSelector((store) => store.rangeOpen);
-    const range = useSelector((store) => ({dateStart: store.start, dateEnd: store.stop, label: store.label}))
+    const range = useSelector((store) => ({
+        dateStart: store.start,
+        dateEnd: store.stop,
+        label: store.label,
+    }));
 
-useEffect(()=>{
-    setTimeLabel(range.label)
-},[range])
-
+    useEffect(() => {
+        setTimeLabel(range.label);
+    }, [range]);
 
     const { dateStart, dateEnd } = dateRange;
 
-    const { ref, isComponentVisible, setIsComponentVisible } =
-        useOutsideRef(true);
-
-    useEffect(() => {
-        setIsComponentVisible(rangeOpen);
-       
-    }, [rangeOpen]);
+    const { ref } = useOutsideRef(true);
 
 
     const setFirstMonthValidated = (date) => {
@@ -87,9 +112,9 @@ useEffect(()=>{
     };
 
     const setDateRangeValidated = (range) => {
-        let {label, dateStart: newStart, dateEnd: newEnd } = range;
+        let { label, dateStart: newStart, dateEnd: newEnd } = range;
         if (newStart && newEnd) {
-            range.label = label
+            range.label = label;
             range.dateStart = newStart = max([newStart, minDateValid]);
             range.dateEnd = newEnd = min([newEnd, maxDateValid]);
             setDateRange(range);
@@ -103,14 +128,14 @@ useEffect(()=>{
     };
     const saveDateRange = (range) => {
         localStorage.setItem(DATE_TIME_RANGE, JSON.stringify(range));
-    }
+    };
     const onDayClick = (day) => {
         if (dateStart && !dateEnd && !isBefore(day, dateStart)) {
             const newRange = { dateStart, dateEnd: day };
             onChange(newRange);
             saveDateRange(newRange);
             setDateRange(newRange);
-            dispatch(setTimeRangeLabel(''))
+            dispatch(setTimeRangeLabel(""));
             onClose();
         } else {
             setDateRange({ dateStart: day, dateEnd: undefined });
@@ -136,21 +161,20 @@ useEffect(()=>{
         }
     };
     const onClose = (e = null) => {
-        const {query} = store.getState();
-        e?.preventDefault();        
+        const { query } = store.getState();
+        e?.preventDefault();
         if (onQueryValid(query)) {
-            dispatch(setLabelsBrowserOpen(false))
-            dispatch(loadLogs())
+            dispatch(setLabelsBrowserOpen(false));
+            dispatch(loadLogs());
         } else {
             console.log("Please make a log query", query);
         }
         dispatch(setRangeOpen(false));
-        props.isOpen(e);
-
+        isOpen(e);
     };
     const onQueryValid = (query) => {
-        return query !== '{' && query !== '}' && query !== '{}' && query !== '' // TODO: make a proper query validation
-    }
+        return query !== "{" && query !== "}" && query !== "{}" && query !== ""; // TODO: make a proper query validation
+    };
     // helpers
     const inHoverRange = (day) => {
         return (
@@ -164,20 +188,19 @@ useEffect(()=>{
             })
         );
     };
-    const mediaMatch = window.matchMedia('(min-width: 1200px)');
-    const [matches, setMatches] = useState(mediaMatch.matches);
+
     const dateButtonStyles = {
-        border:'none',
-        height:'21px',
-        background:'#121212',
-        color:'orange',
-        padding:'3px 6px',
-        borderRadius:'3px',
-        fontSize:'.85em',
-        display:'flex',
-        alignItems:'center',
-        marginLeft:'20px',
-    }
+        border: "none",
+        height: "21px",
+        background: "#121212",
+        color: "orange",
+        padding: "3px 6px",
+        borderRadius: "3px",
+        fontSize: ".85em",
+        display: "flex",
+        alignItems: "center",
+        marginLeft: "20px",
+    };
 
     const helpers = {
         inHoverRange,
@@ -189,75 +212,60 @@ useEffect(()=>{
         onMonthNavigate,
     };
 
-    const openButtonHandler = (e) => {
-        e.preventDefault()
-        if(rangeOpen === true) {
-           onClose(e)
-           setIsComponentVisible(false)
-        } else {
-            dispatch(setRangeOpen(true))
-            setIsComponentVisible(true)
-        }
+    function onChange({ dateStart, dateEnd, label }) {
+        const isStart = isDate(dateStart);
+        const isEnd = isDate(dateEnd);
+        const isLabel = typeof label !== "undefined";
+        if (isStart) dispatch(setStartTime(dateStart));
+        if (isEnd) dispatch(setStopTime(dateEnd));
+        if (isLabel) dispatch(setTimeRangeLabel(label));
     }
+
+    const openButtonHandler = (e) => {
+        e.preventDefault();
+        if (rangeOpen === true) {
+            onClose(e);
+          
+        } else {
+            dispatch(setRangeOpen(true));
+         
+        }
+    };
+
     return (
         <div>
-            <Tooltip title={
-                    timeLabel ? <React.Fragment>
-                        <span style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            padding: '3px',
-                        }}  >
-                            <span style={{
-                                textAlign: 'center'
-                            }}>
-                                {(isValid(dateRange.dateStart)
-                                ? format(dateRange.dateStart, "yyyy/MM/dd HH:mm:ss")
-                                : dateRange.dateStart)}
-                            </span>
-                            <span style={{
-                                textAlign: 'center'
-                            }}>
-                            to
-                            </span>
-                            <span style={{
-                                textAlign: 'center'
-                            }}>
-                            {(isValid(dateRange.dateEnd)
-                                ? format(dateRange.dateEnd, "yyyy/MM/dd HH:mm:ss")
-                                : typeof dateRange.dateEnd !== 'undefined' ?
-                                dateRange.dateEnd : ''
-                                )}
-                            </span>
-
-                        </span>
-                    </React.Fragment> : ''
-                    }>
-                <button style={dateButtonStyles}
-                    onClick={openButtonHandler} className={'date-time-selector'}
+            <Tooltip
+                title={timeLabel ? <TimeLabel dateRange={dateRange} /> : ""}
+            >
+                <button
+                    style={dateButtonStyles}
+                    onClick={openButtonHandler}
+                    className={"date-time-selector"}
                 >
-
                     <AccessTimeOutlinedIcon />
-                
 
-                <span>
-                {timeLabel ?
-                timeLabel :
-                (isValid(dateRange.dateStart)
-                    ? format(dateRange.dateStart, "yyyy/MM/dd HH:mm:ss")
-                    : dateRange.dateStart)
-                +"-"+ 
-                (isValid(dateRange.dateEnd)
-                    ? format(dateRange.dateEnd, "yyyy/MM/dd HH:mm:ss")
-                    : typeof dateRange.dateEnd !== 'undefined' ?
-                    dateRange.dateEnd : ''
-                    )
-                }
-                </span>
-            </button> 
+                    <span>
+                        {timeLabel
+                            ? timeLabel
+                            : (isValid(dateRange.dateStart)
+                                  ? format(
+                                        dateRange.dateStart,
+                                        "yyyy/MM/dd HH:mm:ss"
+                                    )
+                                  : dateRange.dateStart) +
+                              "-" +
+                              (isValid(dateRange.dateEnd)
+                                  ? format(
+                                        dateRange.dateEnd,
+                                        "yyyy/MM/dd HH:mm:ss"
+                                    )
+                                  : typeof dateRange.dateEnd !== "undefined"
+                                  ? dateRange.dateEnd
+                                  : "")}
+                    </span>
+                </button>
             </Tooltip>
-            { isComponentVisible ? (
+            {rangeOpen ? (
                 <div tabIndex={"0"} ref={ref}>
                     <ThemeProvider theme={theme}>
                         <Nav
@@ -281,3 +289,7 @@ useEffect(()=>{
     );
 }
 export const DateRangePicker = DateRangePickerMain;
+
+//shouldnt be at same div!! 
+
+

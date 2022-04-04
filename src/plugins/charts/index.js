@@ -21,7 +21,7 @@ function ClokiChart({ matrixData }) {
     const dispatch = useDispatch();
     const [isSpliced, setIsSpliced] = useState(true);
     const [chartData, setChartData] = useState(getDataParsed(isSpliced));
-    const [allData, getAllData] = useState(getDataParsed(false));
+    const [allData] = useState(getDataParsed(false));
     const [labels, setLabels] = useState([]);
     const [element, setElement] = useState(chartRef.current);
     function highlightItems(list) {
@@ -221,7 +221,7 @@ function ClokiChart({ matrixData }) {
             } else {
                 $q("#tooltip").remove();
                 previousPoint = null;
-                labels = ``;
+              
             }
         });
     };
@@ -712,27 +712,6 @@ function ClokiChart({ matrixData }) {
         }
     }
 
-    function drawChart(data) {
-        if (data?.length) {
-            try {
-                const { timeformat, min, max } = formatDateRange(data);
-                let plot = $q.plot(
-                    chartRef.current,
-                    data,
-                    $q.extend(true, {}, chartOptions, {
-                        series: getSeriesFromChartType(chartType),
-                        xaxis: { timeformat, min, max },
-                    })
-                );
-               
-                const colorLabels = plot.getData();
-                setLabels(colorLabels);
-                $q(chartRef.current).UseTooltip(plot);
-            } catch (e) {
-                console.log("error drawing chart", data);
-            }
-        }
-    }
 
     const handleNoLimitData = (e) => {
         setIsSpliced(false);

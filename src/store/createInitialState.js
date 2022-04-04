@@ -26,10 +26,12 @@ const initialState = () => {
         label:externalState.label || 'Last 5 minutes',
         messages: [],
         limitLoad: false,
-        limit: externalState.limit || 1000,
+        limit: externalState.limit || 100,
         step: externalState.step || 100,
         rangeOpen: false,
         labelsBrowserOpen: true,
+        settingsMenuOpen:false,
+        timePickerOpen: false,
         historyOpen: false,
         apiErrors: '',
         urlQueryParams: externalState || {},
@@ -43,6 +45,7 @@ const initialState = () => {
     return state
 }
 export default initialState;
+
 function setDebug (envSetting) {
   if (envSetting === 'dev') {
     return true

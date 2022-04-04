@@ -13,8 +13,8 @@ export const DayStyles = () =>
             display: "flex"
         },
         button: {
-            height: 36,
-            width: 36,
+            height: 30,
+            width: 30,
             padding: 0
         },
         buttonText: {
