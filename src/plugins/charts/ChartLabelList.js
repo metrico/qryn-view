@@ -23,12 +23,11 @@ const ChartLabel = styled("div")`
     font-family: sans-serif;
     display: flex;
     align-items: center;
-
+    line-height: 1.5;
     padding-right: 10px;
     cursor: pointer;
     opacity: ${(props) => (props.isVisible ? "1" : ".5")};
     border-radius: 3px;
-    height: 20px !important;
     &:hover {
         background: black;
     }

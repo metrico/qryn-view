@@ -8,14 +8,15 @@ import { MONTHS } from "../consts";
 import { HeadingStyles, theme } from "./styles";
 import { generateYears } from "../utils";
 import styled from "@emotion/styled";
-
+import darkTheme from "../../../../../theme/dark";
+const ctheme = darkTheme;
 const DateSelect = styled.select`
     cursor: pointer;
 
     position: relative;
     font-size: 1em;
-    color: #ddd;
-    background: #121212;
+    color: ${ctheme.textColor};
+    background: ${ctheme.inputBg};
     border: none;
     border-radius: 3px;
     padding: 4px 8px;
@@ -28,7 +29,7 @@ const DateSelect = styled.select`
 
     &::-webkit-scrollbar-thumb {
         border-radius: 10px;
-        background: #444;
+        background: ${ctheme.scrollbarThumb};
     }
 `;
 

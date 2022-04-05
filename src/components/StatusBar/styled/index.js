@@ -42,10 +42,11 @@ export const StatusCont = styled.div`
             text-transform: uppercase;
             background: ${theme.inputLabelBg};
             border-radius: 4px;
+            white-space: nowrap;
         }
     }
     input {
-        color: #ddd;
+        color: ${theme.textColor};
         background: ${theme.inputBg};
         border: none;
         outline: none;
@@ -60,9 +61,7 @@ export const StatusCont = styled.div`
         &.limit {
             width: 50px;
         }
-        &.url {
-            width: 175px;
-        }
+  
         &.date-time-range {
             width: 120px;
         }
@@ -89,9 +88,7 @@ export const ApiSelectorStyled = styled.div`
         &:focus {
             color: orange;
         }
-        &.url {
-            width: 175px;
-        }
+    
     }
 
     button {
@@ -100,8 +97,8 @@ export const ApiSelectorStyled = styled.div`
         border: none;
         padding: 4px 8px;
         border-radius: 3px;
-        background: #7b7b7b3b;
-        color: #d1d1d1;
+        background: ${theme.buttonDefault};
+        color: ${theme.textColor};
         font-size: 1em;
         cursor: pointer;
         line-height: 1.5;
@@ -109,7 +106,7 @@ export const ApiSelectorStyled = styled.div`
         text-overflow: ellipsis;
         transition: 0.2s all;
         &:hover {
-            background: #9e9e9e3b;
+            background: ${theme.buttonHover};
         }
     }
 
@@ -123,6 +120,7 @@ export const ApiSelectorStyled = styled.div`
             text-transform: uppercase;
             background: ${theme.inputLabelBg};
             border-radius: 4px;
+            white-space: nowrap;
         }
     }
     & div {
@@ -139,9 +137,9 @@ export const UrlCopyButton = styled.button`
     align-items: center;
     border: none;
     padding: 4px 8px;
-    background: #7b7b7b3b;
+    background: ${theme.buttonDefault};
     border-radius: 3px;
-    color: ${({ isActive }) => (isActive ? "orange" : "#7b7b7b")};
+    color: ${({ isActive }) => (isActive ? "orange" : theme.textColor)};
     cursor: ${({ isActive }) => (isActive ? "pointer" : "not-allowed")};
     align-items: center;
     white-space: nowrap;
@@ -154,7 +152,7 @@ export const UrlCopyButton = styled.button`
         color: ${theme.textColor};
     }
     &:hover {
-        background: #9e9e9e3b;
+        background:${theme.buttonHover};
     }
 `;
 
@@ -170,6 +168,7 @@ export const DatePickerButton = styled.button`
     display: flex;
     align-items: center;
     margin-left: 10px;
+    height:32px;
     span{ margin-left:5px;}
     &:hover{
         color:orange;

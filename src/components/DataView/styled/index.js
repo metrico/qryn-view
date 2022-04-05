@@ -1,9 +1,12 @@
 import styled from "@emotion/styled";
 import { THEME_COLORS } from '../theme/theme';
 import { CircularProgress } from "@mui/material";
+import darkTheme from "../../../theme/dark";
+
+const theme = darkTheme;
 
 export const DataViewStyled = styled.div`
-    background: ${THEME_COLORS.dataViewBackground};
+    background: ${theme.viewBg};
     margin: 6px 8px;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -18,7 +21,7 @@ export const DataViewStyled = styled.div`
 
     &::-webkit-scrollbar-thumb {
         border-radius: 10px;
-        background: ${THEME_COLORS.scrollbarThumb};
+        background: ${theme.scrollbarThumb};
     }
 `;
 
@@ -30,7 +33,7 @@ export const EmptyViewContainer = styled.div`
     width: 100%;
     height: 175px;
     font-size: 1em;
-    color: ${THEME_COLORS.emptyViewMessage};
+    color: ${theme.textOff};
     text-align: center;
 `;
 
@@ -63,12 +66,13 @@ export const LogRow = styled.div`
 export const RowLogContent = styled.span`
     font-size: 0.95em;
     font-family: monospace;
-    color: ${THEME_COLORS.logContent};
+    color: ${theme.textWhite};
+    line-height: 1.5;
 `;
 
 export const RowTimestamp = styled.span`
     position: relative;
-    color: ${THEME_COLORS.logsTimestamp};
+    color: ${theme.textColor};
     margin-right: 0.25rem;
 `;
 

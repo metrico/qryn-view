@@ -90,6 +90,7 @@ export const ApiSelectorWrapper = styled.div`
         font-size: 0.8em;
         color: ${st.labelColor};
         margin: 3px 0px;
+        white-space: nowrap;
     }
 `;
 export const SaveApiButton = styled.button`

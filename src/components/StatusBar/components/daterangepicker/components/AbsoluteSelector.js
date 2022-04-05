@@ -1,5 +1,7 @@
 import styled from "@emotion/styled";
 import DateRangeIcon from "@mui/icons-material/DateRange";
+import darkTheme from "../../../../../theme/dark";
+const theme = darkTheme;
 const SelectorsContainer = styled.div`
     display: ${(props) => (props.isDisplay ? "flex" : "none")};
     flex-direction: column;
@@ -11,10 +13,11 @@ const SelectorsContainer = styled.div`
 
         .label {
             font-size: 0.85em;
-            color: #aaa;
+            color: ${theme.inputLabelColor};
             width: 50px;
             margin-left: 5px;
             margin-bottom: 2px;
+            white-space: nowrap;
         }
         .input-group {
             display: flex;
@@ -23,7 +26,7 @@ const SelectorsContainer = styled.div`
                 width: 170px;
                 line-height: 1.5;
                 text-align: center;
-                color: #ddd;
+                color: ${theme.textColor};
             }
             button {
                 cursor: pointer;
@@ -34,10 +37,10 @@ const SelectorsContainer = styled.div`
                 padding: 0px 8px;
                 margin: 3px;
                 border-radius: 3px;
-                color: #eee;
-                background: #0c8181;
+                color: ${theme.textColor};
+                background: ${theme.primaryDark};
                 &:hover {
-                    background: #159d9d;
+                    background: ${theme.primaryLight};
                 }
             }
         }
@@ -45,8 +48,8 @@ const SelectorsContainer = styled.div`
 `;
 
 const AbsoluteSubmitButton = styled.button`
-    color: #eee;
-    background: #0c8181;
+    color: ${theme.textColor};
+    background: ${theme.primaryDark};
     font-size: 0.85em;
     font-weight: bold;
     padding: 8px 0px;
@@ -55,11 +58,12 @@ const AbsoluteSubmitButton = styled.button`
     border-radius: 3px;
     transition: 0.2s all;
     margin: 10px;
-    margin-top: {props => (props.isHorizontal && props.isMobile ? '20px':'40px')}
+    margin-top: ${(props) =>
+        props.isHorizontal && props.isMobile ? "20px" : "40px"};
     cursor: pointer;
     &:hover {
-        background: #159d9d;
-    } 
+        background: ${theme.primaryLight};
+    }
 `;
 
 export default function AbsoluteSelector({
@@ -72,7 +76,6 @@ export default function AbsoluteSelector({
     isFullCalendar,
     setStopCalendar,
     setStartCalendar,
-    calendarOpen,
     startCalendarOpen,
     stopCalendarOpen,
     isHorizontal,

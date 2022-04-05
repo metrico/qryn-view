@@ -1,32 +1,26 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/css";
-import React, {
-    useCallback,
-    useState,
-    useMemo,
-    useEffect,
-} from "react";
+import React, { useCallback, useState, useMemo, useEffect } from "react";
 
-import { createEditor, Text,  } from "slate";
-import { Slate, Editable, withReact, } from "slate-react";
+import { createEditor, Text } from "slate";
+import { Slate, Editable, withReact } from "slate-react";
 import { withHistory } from "slate-history";
 import Prism from "prismjs";
 import "prismjs/components/prism-promql";
 import "prismjs/components/prism-sql";
-
-
+import darkTheme from "../../theme/dark";
+const theme = darkTheme;
 const CustomEditor = styled(Editable)`
     flex: 1;
-    background: #121212;
-    color: #ccc;
+    background: ${theme.inputBg};
+    color: ${theme.textColor};
     padding: 4px 8px;
     font-size: 1em;
     font-family: monospace;
-    margin: 3px;
+    margin: 0px 5px;
     border-radius: 3px;
-    line-height: 1.25;
-   line-break: anywhere;
- 
+    line-height: 1.5;
+    line-break: anywhere;
 `;
 
 const QueryBar = styled.div`
