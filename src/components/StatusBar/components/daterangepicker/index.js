@@ -41,7 +41,13 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { Tooltip } from "@mui/material";
 import loadLogs from "../../../../actions/loadLogs";
 import { setLabelsBrowserOpen } from "../../../../actions/setLabelsBrowserOpen";
+
+
+
 import TimeLabel from "./components/TimeLabel";
+import { DatePickerButton } from "../../styled";
+
+
 export function DateRangePickerMain(props) {
     const today = Date.now();
     const { isOpen, minDate, maxDate } = props;
@@ -189,18 +195,6 @@ export function DateRangePickerMain(props) {
         );
     };
 
-    const dateButtonStyles = {
-        border: "none",
-        height: "21px",
-        background: "#121212",
-        color: "orange",
-        padding: "3px 6px",
-        borderRadius: "3px",
-        fontSize: ".85em",
-        display: "flex",
-        alignItems: "center",
-        marginLeft: "20px",
-    };
 
     const helpers = {
         inHoverRange,
@@ -237,8 +231,8 @@ export function DateRangePickerMain(props) {
             <Tooltip
                 title={timeLabel ? <TimeLabel dateRange={dateRange} /> : ""}
             >
-                <button
-                    style={dateButtonStyles}
+                <DatePickerButton
+                    
                     onClick={openButtonHandler}
                     className={"date-time-selector"}
                 >
@@ -263,7 +257,7 @@ export function DateRangePickerMain(props) {
                                   ? dateRange.dateEnd
                                   : "")}
                     </span>
-                </button>
+                </DatePickerButton>
             </Tooltip>
             {rangeOpen ? (
                 <div tabIndex={"0"} ref={ref}>

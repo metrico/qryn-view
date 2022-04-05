@@ -1,11 +1,17 @@
 import styled from "@emotion/styled";
-
+import darkTheme from "../../../theme/dark";
+const theme = darkTheme;
 export const MenuButton = styled.button`
-    display: none;
+    padding: 0px 8px;
+    font-size: 1em;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
     background: none;
     border: none;
-    margin-left: 10px;
-    color: ${(props) => (props.isActive ? "orange" : "#ddd")};
+    display: none;
+    color: ${(props) =>
+        props.isActive ? theme.inputTextFocus : theme.textColor};
     cursor: pointer;
 
     @media screen and (max-width: 850px) {
@@ -26,14 +32,31 @@ export const StatusBarCont = styled.div`
 export const StatusCont = styled.div`
     display: flex;
     align-items: center;
+    .selector {
+        margin-left: 10px;
+        .label {
+            flex: 1;
+            color: ${theme.inputLabelColor};
+            padding: 4px 8px;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            background: ${theme.inputLabelBg};
+            border-radius: 4px;
+        }
+    }
     input {
-        color: orange;
-        background: #121212;
+        color: #ddd;
+        background: ${theme.inputBg};
         border: none;
-        margin: 3px;
-        padding: 3px 6px;
-        font-size: 13px;
+        outline: none;
+        padding: 4px 8px;
+        font-size: 1em;
         border-radius: 3px;
+        line-height: 1.5;
+        margin: 0px 5px;
+        &:focus {
+            color: orange;
+        }
         &.limit {
             width: 50px;
         }
@@ -42,29 +65,63 @@ export const StatusCont = styled.div`
         }
         &.date-time-range {
             width: 120px;
-            color: orange;
-            background: #121212;
         }
     }
 `;
 export const ApiSelectorStyled = styled.div`
     display: flex;
     align-items: center;
-    @media screen and (max-width: 850px) {
-        display: none;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    transition: 0.2s all;
+
+    input {
+        color: ${theme.textColor};
+        background: ${theme.inputBg};
+        border: none;
+        outline: none;
+        padding: 4px 8px;
+        font-size: 1em;
+        border-radius: 3px;
+        line-height: 1.5;
+        margin: 0px 5px;
+        &:focus {
+            color: orange;
+        }
+        &.url {
+            width: 175px;
+        }
     }
+
+    button {
+        display: flex;
+        align-items: center;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 3px;
+        background: #7b7b7b3b;
+        color: #d1d1d1;
+        font-size: 1em;
+        cursor: pointer;
+        line-height: 1.5;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        transition: 0.2s all;
+        &:hover {
+            background: #9e9e9e3b;
+        }
+    }
+
     .selector {
         margin-left: 10px;
         .label {
             flex: 1;
-            color: #bfbfbf;
-            min-width: 51px;
-            padding: 6px 6px;
-            margin: 5px;
-            font-size: 0.7rem;
+            color: ${theme.inputLabelColor};
+            padding: 4px 8px;
+            font-size: 0.85em;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            background: #12121267;
+            background: ${theme.inputLabelBg};
             border-radius: 4px;
         }
     }
@@ -72,31 +129,49 @@ export const ApiSelectorStyled = styled.div`
         display: flex;
         align-items: center;
     }
+    @media screen and (max-width: 850px) {
+        display: none;
+    }
 `;
 
 export const UrlCopyButton = styled.button`
     display: flex;
     align-items: center;
-    height: 20px;
-    font-size: 18px;
     border: none;
-    margin: 3px;
-    padding: 5px 8px;
+    padding: 4px 8px;
     background: #7b7b7b3b;
+    border-radius: 3px;
     color: ${({ isActive }) => (isActive ? "orange" : "#7b7b7b")};
-    font-size: 0.9em;
     cursor: ${({ isActive }) => (isActive ? "pointer" : "not-allowed")};
     align-items: center;
     white-space: nowrap;
     text-overflow: ellipsis;
     transition: 0.2s all;
+    font-size: 1em;
+    line-height: 1.5;
     span {
         margin-left: 4px;
-        text-transform: uppercase;
-        font-size: 0.85em;
-        color: #d1d1d1;
+        color: ${theme.textColor};
     }
     &:hover {
         background: #9e9e9e3b;
+    }
+`;
+
+export const DatePickerButton = styled.button`
+    cursor:pointer;
+    border: none;
+    background: ${theme.inputBg};
+    color: ${theme.textColor};
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 1em;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    span{ margin-left:5px;}
+    &:hover{
+        color:orange;
     }
 `;

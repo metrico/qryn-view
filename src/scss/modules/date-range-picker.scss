@@ -12,6 +12,10 @@
 }
 @media screen and (max-width: 1200px) {
     .date-time-selector {
+        font-size: 1em;
+        padding: 8px;
+        color:#ddd;
+        line-height: 1.5;
         svg {
             margin-right: 0;
         }
