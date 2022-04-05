@@ -31,12 +31,13 @@
         max-height: 500px;
         overflow: auto;
         small {
-            margin: 3px;
-            padding: 5px 8px;
+            margin: 5px;
+            padding: 4px 8px;
             border-radius: 3px;
             background: #5454543b;
+            line-height: 1.5;
             color: #d1d1d1;
-            font-size: 0.9em;
+            font-size: 1em;
             cursor: pointer;
             align-items: center;
             white-space: nowrap;

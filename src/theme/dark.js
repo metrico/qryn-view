@@ -1,6 +1,4 @@
-// this is the set for dark theme colors
 
-// black
 const black = {
     b10: "#12121267",
     b15: "#121212",
@@ -10,6 +8,7 @@ const black = {
     b400: "#292929",
     b500: "#333333",
 };
+
 const white = {
     w100: "#fff",
     w200: "#f5f5f5",
@@ -49,6 +48,8 @@ const orange = {
 };
 
 const textColor = lightgrey.lg200;
+const textOff = lightgrey.lg400;
+const textWhite = white.w300;
 const inputBg = black.b15;
 const primaryDark = turquoise.tq200;
 const primaryLight = turquoise.tq300;
@@ -59,7 +60,15 @@ const buttonInactive = black.b400;
 const inputTextFocus = orange.or100;
 const inputLabelColor = lightgrey.lg400;
 const inputLabelBg = black.bg10;
-
+const viewBg = black.b300;
+const scrollbarThumb = "#616161";
+const critical = "purple";
+const error = "red";
+const warning = "yellow";
+const info = "green";
+const debug = "blue";
+const trace = "lightblue";
+const unknown = "gray";
 
 const darkTheme = {
     black,
@@ -76,8 +85,18 @@ const darkTheme = {
     inputTextFocus,
     inputLabelColor,
     inputLabelBg,
+    textOff,
+    textWhite,
+    viewBg,
+    scrollbarThumb,
+    critical,
+    error,
+    warning,
+    info,
+    debug,
+    trace,
+    unknown,
     darkgrey,
     turquoise,
-
 };
 export default darkTheme;

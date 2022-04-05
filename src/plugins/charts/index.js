@@ -13,6 +13,21 @@ import { useState, useEffect, useRef } from "react";
 import { format } from "date-fns";
 import { ChartLabelList } from "./ChartLabelList";
 
+import styled from "@emotion/styled";
+
+const ChartButton = styled.button`
+    border: none;
+    margin: 0px 5px;
+    background: ${(props) => (props.isActive ? "#333" : "black")};
+    color: #ddd;
+    padding: 4px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 1em;
+    line-height: 1.5;
+    white-space: nowrap;
+`;
+
 function ClokiChart({ matrixData }) {
     const APP_NAME = "cloki_view";
     const LOCAL_CHART_TYPE = `${APP_NAME}_chart_type`;
@@ -24,19 +39,21 @@ function ClokiChart({ matrixData }) {
     const [allData] = useState(getDataParsed(false));
     const [labels, setLabels] = useState([]);
     const [element, setElement] = useState(chartRef.current);
+
     function highlightItems(list) {
         list.forEach((item) => {
             item.plot.highlight(item.i, item.plotIndex);
         });
     }
 
-    function isFloat(x){
-        return !!(x % 1)
+    function isFloat(x) {
+        return !!(x % 1);
     }
 
     function makeTolltipItems(list) {
-        const sorted = list.filter( f => parseFloat(f.value) === parseFloat(f.item.datapoint[1]))
-       
+        const sorted = list.filter(
+            (f) => parseFloat(f.value) === parseFloat(f.item.datapoint[1])
+        );
 
         return sorted
             ?.map(
@@ -54,7 +71,6 @@ function ClokiChart({ matrixData }) {
     `
             )
             .join("");
-        
     }
     function formatDateRange(data) {
         const tsArray = data
@@ -83,7 +99,7 @@ function ClokiChart({ matrixData }) {
             show: true,
             mode: "time",
             timezone: "local",
-            timeformat: "%Y-%m-%d %H:%M:%S", 
+            timeformat: "%Y-%m-%d %H:%M:%S",
         },
         grid: {
             show: true,
@@ -115,7 +131,7 @@ function ClokiChart({ matrixData }) {
         markings: {
             clickable: true,
         },
-        crosshair: { color:'#88888855', mode: "xy", linewidth:1, },
+        crosshair: { color: "#88888855", mode: "xy", linewidth: 1 },
 
         selection: {
             mode: "x",
@@ -156,12 +172,14 @@ function ClokiChart({ matrixData }) {
             plot.unhighlight();
             if (item) {
                 let plotData = plot.getData();
-                const [plotTime,_] = item.datapoint;
+                const [plotTime, _] = item.datapoint;
                 const selectedPlots = JSON.parse(
                     localStorage.getItem("labelsSelected")
                 );
-                    const itemValue =  isFloat(parseFloat(item.datapoint[1]))? parseFloat(item.datapoint[1]).toFixed(3) : item.datapoint[1]
-               
+                const itemValue = isFloat(parseFloat(item.datapoint[1]))
+                    ? parseFloat(item.datapoint[1]).toFixed(3)
+                    : item.datapoint[1];
+
                 const isSelectedPlots = selectedPlots.length > 0;
                 const labelsList = [];
                 for (let i = 0; i < plotData.length; i++) {
@@ -182,7 +200,7 @@ function ClokiChart({ matrixData }) {
                         labelsList.push({
                             color: plotData[i].color,
                             label: plotData[i].label,
-                            value:  value,
+                            value: value,
                             plot,
                             plotIndex,
                             item,
@@ -209,19 +227,17 @@ function ClokiChart({ matrixData }) {
                     ${labelsFormatted}
                     </div>
                     `;
-                    const labelLength = item.series.label.length; 
+                    const labelLength = item.series.label.length;
                     showTooltip(
                         item.pageX,
                         item.pageY,
                         tooltipTemplate,
                         labelLength
                     );
-                 
                 }
             } else {
                 $q("#tooltip").remove();
                 previousPoint = null;
-              
             }
         });
     };
@@ -586,7 +602,6 @@ function ClokiChart({ matrixData }) {
                         lines: { ...series.lines, show: false },
                         bars: { ...series.bars, show: false },
                         points: { ...series.points, show: false },
-                      
                     };
                 } else {
                     return {
@@ -594,7 +609,6 @@ function ClokiChart({ matrixData }) {
                         bars,
                         lines,
                         points,
-                       
                     };
                 }
             });
@@ -642,7 +656,6 @@ function ClokiChart({ matrixData }) {
         }
     }
 
- 
     useEffect(() => {
         setElement(chartRef.current);
         setLabels(chartData.map(({ label }) => label));
@@ -651,7 +664,6 @@ function ClokiChart({ matrixData }) {
         localStorage.setItem("labelsSelected", JSON.stringify([]));
     }, []);
 
-  
     useEffect(() => {
         setChartOptions(chartOptions);
         setElement(chartRef.current);
@@ -712,7 +724,6 @@ function ClokiChart({ matrixData }) {
         }
     }
 
-
     const handleNoLimitData = (e) => {
         setIsSpliced(false);
     };
@@ -769,52 +780,24 @@ function ClokiChart({ matrixData }) {
                         justifyContent: "flex-end",
                     }}
                 >
-                    <button
-                        style={{
-                            border: "none",
-                            margin: "3px",
-                            background: chartType === "bar" ? "#333" : "black",
-                            color: "#ddd",
-                            padding: "4px 10px",
-                            borderRadius: "2px",
-                            cursor: "pointer",
-                            fontSize: "13px",
-                        }}
+                    <ChartButton
+                        isActive={chartType === "bar"}
                         onClick={setBarChart}
                     >
                         {"bar chart"}
-                    </button>
-                    <button
+                    </ChartButton>
+                    <ChartButton
                         onClick={setLineChart}
-                        style={{
-                            border: "none",
-                            margin: "3px",
-                            background: chartType === "line" ? "#333" : "black",
-                            color: "#ddd",
-                            padding: "4px 10px",
-                            borderRadius: "2px",
-                            cursor: "pointer",
-                            fontSize: "13px",
-                        }}
+                        isActive={chartType === "line"}
                     >
                         {"line chart"}
-                    </button>
-                    <button
+                    </ChartButton>
+                    <ChartButton
                         onClick={setPointsChart}
-                        style={{
-                            border: "none",
-                            margin: "3px",
-                            background:
-                                chartType === "points" ? "#333" : "black",
-                            color: "#ddd",
-                            padding: "4px 10px",
-                            borderRadius: "2px",
-                            cursor: "pointer",
-                            fontSize: "13px",
-                        }}
+                        isActive={chartType === "points"}
                     >
                         {"points chart"}
-                    </button>
+                    </ChartButton>
                 </div>
             </div>
             <div

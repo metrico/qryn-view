@@ -15,7 +15,7 @@
         .label {
             flex: 1;
             color: #bfbfbf;
-
+            white-space: nowrap;;
             text-transform: uppercase;
             border-radius: 3px;
         }
@@ -41,9 +41,7 @@
         &.limit {
             width: 50px;
         }
-        &.url {
-            width: 175px;
-        }
+ 
         &.date-time-range {
             width: 120px;
             color: orange;
@@ -69,9 +67,7 @@
         padding: 3px 6px;
         font-size: 13px;
         border-radius: 3px;
-        &.url {
-            width: 175px;
-        }
+     
     }
     button {
         display: flex;
