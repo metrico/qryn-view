@@ -55,26 +55,24 @@ export function ApiSelector() {
 
     return (
         <ApiSelectorStyled>
-            <div className={"api-url-selector"}>
-                <button
-                    title={"Set API URL"}
-                    className={"api-url-selector-toggle"}
-                    onClick={handleApiUrlOpen}
-                >
-                    <LinkIcon fontSize={"small"} />
-                </button>
-                {apiSelectorOpen ? (
-                    <div className={"selector"}>
-                        <span className={"label"}>{API_URL}</span>
-                        <input
-                            className={"url"}
-                            value={editedUrl}
-                            onChange={handleIntputChange}
-                        />
-                        <button onClick={onUrlSubmit}>{"save"}</button>
-                    </div>
-                ) : null}
-            </div>
+            <button
+                title={"Set API URL"}
+                className={"toggle-url"}
+                onClick={handleApiUrlOpen}
+            >
+                <LinkIcon fontSize={"small"} />
+            </button>
+            {apiSelectorOpen ? (
+                <div className={"selector"}>
+                    <span className={"label"}>{API_URL}</span>
+                    <input
+                        className={"url"}
+                        value={editedUrl}
+                        onChange={handleIntputChange}
+                    />
+                    <button onClick={onUrlSubmit}>{"save"}</button>
+                </div>
+            ) : null}
         </ApiSelectorStyled>
     );
 }
