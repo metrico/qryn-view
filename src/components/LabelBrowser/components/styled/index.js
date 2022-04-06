@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 
 import HistoryIcon from "@mui/icons-material/History";
 import darkTheme from "../../../../theme/dark";
+import { BtnSmall } from "../../../../theme/styles/Button";
 
 // get theme from main state
 
@@ -10,19 +11,11 @@ const theme = darkTheme;
 export const HistoryIconStyled = styled(HistoryIcon)`
     color: ${(props) => props.color};
 `;
-export const HistoryButtonStyled = styled.button`
+export const HistoryButtonStyled = styled(BtnSmall)`
     background: none;
     color: ${theme.textColor};
     margin-left: 5px;
     background: ${theme.buttonHover};
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    line-height: 1.5;
-    font-size: 1em;
-    padding: 0px 8px;
-    border-radius: 3px;
     span {
         margin-left: 5px;
     }
@@ -31,18 +24,11 @@ export const HistoryButtonStyled = styled.button`
     }
 `;
 
-export const ShowLabelsBtn = styled.button`
-    background: ${(props) => (props.browserActive ? theme.buttonDefault : theme.buttonHover)};
-    font-size: 1em;
-    display: flex;
-    cursor: pointer;
-    align-items: center;
+export const ShowLabelsBtn = styled(BtnSmall)`
+    background: ${(props) =>
+        props.browserActive ? theme.buttonDefault : theme.buttonHover};
     text-overflow: ellipsis;
-    border: none;
-    border-radius: 3px;
-    padding: 4px 8px;
     transition: 0.25s all;
-    white-space: nowrap;
     justify-content: flex-start;
     color: ${theme.textColor};
     &:hover {
@@ -64,22 +50,12 @@ export const QueryBarContainer = styled.div`
     flex-wrap: wrap;
     border-radius: 3px;
 `;
-export const ShowLogsBtn = styled.button`
+export const ShowLogsBtn = styled(BtnSmall)`
     background: ${theme.primaryDark};
-    cursor: pointer;
     color: white;
-    outline: none;
-    border: none;
-    border-radius: 3px;
-
     margin-left: 5px;
     transition: 0.25s all;
-    padding: 4px 8px;
-    font-size: 1em;
-    line-height: 1.5;
-    align-items: center;
     justify-content: center;
-    white-space: nowrap;
     &:hover {
         background: ${theme.primaryLight};
     }

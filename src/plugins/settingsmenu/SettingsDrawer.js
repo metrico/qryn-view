@@ -32,10 +32,8 @@ export default function SettingsDrawer({
                     <LimitInputsCont>
                         {stepInput}
                         {limitInput}
-                       
                     </LimitInputsCont>
                     {copyUrlButton}
-                 
                 </DrawerContainer>
             </Drawer>
         </ThemeProvider>

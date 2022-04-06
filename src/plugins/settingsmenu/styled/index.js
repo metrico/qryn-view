@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import { createTheme } from "@mui/material";
 import { SETTINGS_THEME } from "../theme";
+import { BtnSmall } from '../../../theme/styles/Button';
+import { InputSmall } from "../../../theme/styles/Input";
 
 const st = SETTINGS_THEME;
 
@@ -36,20 +38,13 @@ export const StyledCloseBtn = styled.button`
 `;
 export const DrawerContainer = styled.div`
     height: 75vh;
-    display: none;
-    @media screen and (max-width: 850px) {
-        display: block;
-    }
+ 
 `;
 
-export const DrawerInput = styled.input`
+export const DrawerInput = styled(InputSmall)`
     background: ${st.inputBg};
     color: orange;
-    padding: 6px 9px;
-    border: none;
-    border-radius: 3px;
-
-    font-size: 1em;
+  
     flex: 1;
 `;
 
@@ -93,10 +88,8 @@ export const ApiSelectorWrapper = styled.div`
         white-space: nowrap;
     }
 `;
-export const SaveApiButton = styled.button`
-    border: none;
-    padding: none;
-    margin: 2px;
+export const SaveApiButton = styled(BtnSmall)`
+ 
     color: ${st.main};
     display: flex;
     justify-content: center;
@@ -111,20 +104,15 @@ export const LimitInputsCont = styled.div`
     align-items: flex-end;
 `;
 
-export const MenuButton = styled.button`
+export const MenuButton = styled(BtnSmall)`
     background: none;
     color: ${st.main};
-    border: none;
     display: flex;
-    align-items: center;
     justify-content: center;
     flex: ${(props) => (props.save ? 0 : 1)};
     margin-left: ${(props) => (props.save ? "10px" : "0px")};
     background: ${st.inputBg};
-    border-radius: 3px;
-    padding: 6px 12px;
     flex: 1;
-    font-size: 1em;
     @media screen and (max-width: 324px) {
         flex: 1;
         margin-left: ${(props) => (props.save ? "0px" : "0px")};
@@ -156,11 +144,9 @@ export const MenuToolsCont = styled.div`
     flex: 1;
     align-items: center;
     justify-content: end;
-    display: none;
+    display: flex;
     width: 100%;
-    @media screen and (max-width: 565px) {
-        display: flex;
-    }
+ 
 `;
 export const MenuToolsButton = styled(MenuButton)`
     flex: 0;
