@@ -4,13 +4,15 @@ import DataView from "./DataView/DataView";
 import StatusBar from "./StatusBar";
 import { UpdateStateFromQueryParams } from "../helpers/UpdateStateFromQueryParams";
 import LabelBrowser from "./LabelBrowser";
-import SettingsMenu from "../plugins/settingsmenu";
+import SettingsDialog from "../plugins/settingsdialog/SettingsDialog";
+import { useSelector } from 'react-redux';
 
 export default function MainView() {
     UpdateStateFromQueryParams();
-
+    const settingsDialogOpen = useSelector( store => store.settingsDialogOpen)
     return (
         <div className={"log-search"}>
+
             <StatusBar />
 
             <LabelBrowser />
@@ -18,7 +20,12 @@ export default function MainView() {
             <DataView />
 
             <Notification />
-            <SettingsMenu />
+
+
+            <SettingsDialog
+             open={settingsDialogOpen}
+             />
+
         </div>
     );
 }

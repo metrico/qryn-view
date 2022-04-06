@@ -1,26 +1,16 @@
 import styled from "@emotion/styled";
 import darkTheme from "../../../theme/dark";
+import { BtnSmall } from "../../../theme/styles/Button";
+import { InputSmall } from "../../../theme/styles/Input";
 const theme = darkTheme;
-export const MenuButton = styled.button`
-    padding: 0px 8px;
-    font-size: 1em;
-    line-height: 1.5;
-    display: flex;
-    align-items: center;
+export const MenuButton = styled(BtnSmall)`
     background: none;
     border: none;
-    display: none;
+    display: flex;
+    height: 26px;
     color: ${(props) =>
         props.isActive ? theme.inputTextFocus : theme.textColor};
     cursor: pointer;
-
-    @media screen and (max-width: 850px) {
-        display: flex;
-    }
-    @media screen and (max-width: 560px) {
-        flex: 1;
-        justify-content: flex-end;
-    }
 `;
 
 export const StatusBarCont = styled.div`
@@ -61,7 +51,7 @@ export const StatusCont = styled.div`
         &.limit {
             width: 50px;
         }
-  
+
         &.date-time-range {
             width: 120px;
         }
@@ -74,41 +64,7 @@ export const ApiSelectorStyled = styled.div`
     display: flex;
     align-items: center;
     transition: 0.2s all;
-
-    input {
-        color: ${theme.textColor};
-        background: ${theme.inputBg};
-        border: none;
-        outline: none;
-        padding: 4px 8px;
-        font-size: 1em;
-        border-radius: 3px;
-        line-height: 1.5;
-        margin: 0px 5px;
-        &:focus {
-            color: orange;
-        }
-    
-    }
-
-    button {
-        display: flex;
-        align-items: center;
-        border: none;
-        padding: 4px 8px;
-        border-radius: 3px;
-        background: ${theme.buttonDefault};
-        color: ${theme.textColor};
-        font-size: 1em;
-        cursor: pointer;
-        line-height: 1.5;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        transition: 0.2s all;
-        &:hover {
-            background: ${theme.buttonHover};
-        }
-    }
+    height: 26px;
 
     .selector {
         margin-left: 10px;
@@ -132,45 +88,46 @@ export const ApiSelectorStyled = styled.div`
     }
 `;
 
-export const UrlCopyButton = styled.button`
-    display: flex;
-    align-items: center;
-    border: none;
-    padding: 4px 8px;
+export const ApiSelectorButton = styled(BtnSmall)`
     background: ${theme.buttonDefault};
-    border-radius: 3px;
-    color: ${({ isActive }) => (isActive ? "orange" : theme.textColor)};
-    cursor: ${({ isActive }) => (isActive ? "pointer" : "not-allowed")};
-    align-items: center;
-    white-space: nowrap;
+    color: ${theme.textColor};
     text-overflow: ellipsis;
     transition: 0.2s all;
-    font-size: 1em;
-    line-height: 1.5;
+    &:hover {
+        background: ${theme.buttonHover};
+    }
+`;
+export const ApiSelectorInput = styled(InputSmall)`
+    color: ${theme.textColor};
+    background: ${theme.inputBg};
+    &:focus {
+        color: orange;
+    }
+`;
+export const UrlCopyButton = styled(BtnSmall)`
+    background: ${theme.buttonDefault};
+    color: ${({ isActive }) => (isActive ? "orange" : theme.textColor)};
+    cursor: ${({ isActive }) => (isActive ? "pointer" : "not-allowed")};
+    text-overflow: ellipsis;
+    transition: 0.2s all;
     span {
         margin-left: 4px;
         color: ${theme.textColor};
     }
     &:hover {
-        background:${theme.buttonHover};
+        background: ${theme.buttonHover};
     }
 `;
 
-export const DatePickerButton = styled.button`
-    cursor:pointer;
-    border: none;
-    background: ${theme.inputBg};
+export const DatePickerButton = styled(BtnSmall)`
+    background: ${theme.buttonDefault};
     color: ${theme.textColor};
-    padding: 4px 8px;
-    border-radius: 3px;
-    font-size: 1em;
-    line-height: 1.5;
-    display: flex;
-    align-items: center;
+    height: 26px;
     margin-left: 10px;
-    height:32px;
-    span{ margin-left:5px;}
-    &:hover{
-        color:orange;
+    span {
+        margin-left: 5px;
+    }
+    &:hover {
+        color: orange;
     }
 `;

@@ -4,7 +4,7 @@ import { createAlert, setIsSubmit } from "../../../actions";
 import { notificationTypes } from "../../notifications/consts";
 import localUrl from "../../../services/localUrl";
 import setLinksHistory from "../../../actions/setLinksHistory";
-import { MenuButton, MenuButtonCont, MenuToolsCont, MenuToolsButton } from "../styled";
+import { MenuItem } from "@mui/material";
 
 export default function CopyButton() {
     const dispatch = useDispatch();
@@ -12,7 +12,7 @@ export default function CopyButton() {
     const saveUrl = localUrl();
     const LINK_COPIED = "Link Copied To Clipboard";
     function shareLink() {
-       dispatch(setIsSubmit(true));
+        dispatch(setIsSubmit(true));
         setTimeout(() => {
             if (navigator?.clipboard && window.isSecureContext) {
                 navigator?.clipboard?.writeText(window.location.href).then(
@@ -67,11 +67,10 @@ export default function CopyButton() {
         }, 200);
     }
     return (
-        <MenuToolsCont>
-            <MenuToolsButton onClick={shareLink} disabled={query.length < 1}>
-                <ContentCopyIcon fontSize={"15px"} />
-                <span>{"Copy Link"}</span>
-            </MenuToolsButton>
-        </MenuToolsCont>
+        <MenuItem onClick={shareLink} disabled={query.length < 1}>
+            {" "}
+            <ContentCopyIcon style={{color:'#ddd'}} fontSize={"15px"} />
+            <span>{"Copy Link"}</span>
+        </MenuItem>
     );
 }
