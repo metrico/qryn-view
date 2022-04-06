@@ -1,21 +1,11 @@
 import { ApiSelector } from "./components/apiselector/ApiSelector";
 import { StatusBarSelectors } from "./components/statusbarselectors/StatusBarSelectors";
 import Logo from "./assets/cloki-logo.png";
+import { StatusBarCont, StatusCont } from "./styled";
+import ClokiMenu from "../../plugins/settingsmenu/Menu";
 
-import { useSelector, useDispatch } from "react-redux";
-import { setSettingsMenuOpen } from "./actions/setMenuSettingsOpen";
-import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
-import { MenuButton, StatusBarCont, StatusCont } from "./styled";
 
 export default function StatusBar() {
-    const dispatch = useDispatch();
-    const menuOpen = useSelector((store) => store.settingsMenuOpen);
-    function openSettings() {
-        const shouldOpen = menuOpen ? false : true;
-
-        dispatch(setSettingsMenuOpen(shouldOpen));
-    }
-
     return (
         <StatusBarCont>
             <div className="logo-section">
@@ -31,9 +21,8 @@ export default function StatusBar() {
 
             <StatusCont>
                 <StatusBarSelectors />
-                <MenuButton isActive={menuOpen} onClick={openSettings}>
-                    <DisplaySettingsIcon />
-                </MenuButton>
+
+           <ClokiMenu/>
             </StatusCont>
         </StatusBarCont>
     );

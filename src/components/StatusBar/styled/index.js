@@ -1,12 +1,13 @@
 import styled from "@emotion/styled";
 import darkTheme from "../../../theme/dark";
 import { BtnSmall } from "../../../theme/styles/Button";
+import { InputSmall } from "../../../theme/styles/Input";
 const theme = darkTheme;
 export const MenuButton = styled(BtnSmall)`
     background: none;
     border: none;
     display: flex;
-    height:26px;
+    height: 26px;
     color: ${(props) =>
         props.isActive ? theme.inputTextFocus : theme.textColor};
     cursor: pointer;
@@ -63,22 +64,7 @@ export const ApiSelectorStyled = styled.div`
     display: flex;
     align-items: center;
     transition: 0.2s all;
-    height:26px;
-
-    input {
-        color: ${theme.textColor};
-        background: ${theme.inputBg};
-        border: none;
-        outline: none;
-        padding: 4px 8px;
-        font-size: 1em;
-        border-radius: 3px;
-        line-height: 1.5;
-        margin: 0px 5px;
-        &:focus {
-            color: orange;
-        }
-    }
+    height: 26px;
 
     .selector {
         margin-left: 10px;
@@ -111,7 +97,13 @@ export const ApiSelectorButton = styled(BtnSmall)`
         background: ${theme.buttonHover};
     }
 `;
-
+export const ApiSelectorInput = styled(InputSmall)`
+    color: ${theme.textColor};
+    background: ${theme.inputBg};
+    &:focus {
+        color: orange;
+    }
+`;
 export const UrlCopyButton = styled(BtnSmall)`
     background: ${theme.buttonDefault};
     color: ${({ isActive }) => (isActive ? "orange" : theme.textColor)};
@@ -130,7 +122,7 @@ export const UrlCopyButton = styled(BtnSmall)`
 export const DatePickerButton = styled(BtnSmall)`
     background: ${theme.buttonDefault};
     color: ${theme.textColor};
-    height:26px;
+    height: 26px;
     margin-left: 10px;
     span {
         margin-left: 5px;

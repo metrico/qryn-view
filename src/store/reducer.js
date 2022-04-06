@@ -24,6 +24,8 @@ const reducer = (state, action) => {
             return { ...state, settingsMenuOpen: action.settingsMenuOpen };
         case "SET_TIME_PICKER_OPEN":
             return { ...state, timePickerOpen: action.timePickerOpen };
+        case "SET_SETTINGS_DIALOG_OPEN":
+            return { ...state, settingsDialogOpen: action.settingsDialogOpen };
         case "SET_QUERY":
             return { ...state, query: action.query };
         case "SET_QUERY_STEP":

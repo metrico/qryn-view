@@ -4,7 +4,7 @@ import styled from "@emotion/styled"
 
 export const BtnSmall = styled.button`
 padding:3px 12px;
-font-size: .9em;
+font-size: 12px;
 line-height:20px;
 cursor:pointer;
 user-select: none;

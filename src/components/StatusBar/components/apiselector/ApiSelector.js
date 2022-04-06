@@ -7,8 +7,11 @@ import loadLogs from "../../../../actions/loadLogs";
 import { setApiUrl } from "../../../../actions";
 import LinkIcon from "@mui/icons-material/Link";
 import setLogs from "../../../../actions/setLogs";
-import { ApiSelectorButton, ApiSelectorStyled } from "../../styled";
-import { red } from "@mui/material/colors";
+import {
+    ApiSelectorButton,
+    ApiSelectorInput,
+    ApiSelectorStyled,
+} from "../../styled";
 
 export function ApiSelector() {
     const apiUrl = useSelector((store) => store.apiUrl);
@@ -56,11 +59,7 @@ export function ApiSelector() {
 
     return (
         <ApiSelectorStyled>
-            <ApiSelectorButton
-                title={"Set API URL"}
-                className={"toggle-url"}
-                onClick={handleApiUrlOpen}
-            >
+            <ApiSelectorButton title={"Set API URL"} onClick={handleApiUrlOpen}>
                 <LinkIcon fontSize={"small"} />
                 <span
                     style={{
@@ -73,8 +72,7 @@ export function ApiSelector() {
             {apiSelectorOpen ? (
                 <div className={"selector"}>
                     <span className={"label"}>{API_URL}</span>
-                    <input
-                        className={"url"}
+                    <ApiSelectorInput
                         value={editedUrl}
                         onChange={handleIntputChange}
                     />
