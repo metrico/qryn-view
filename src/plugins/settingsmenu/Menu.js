@@ -3,11 +3,13 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
-import { useDispatch, useStore } from "react-redux";
-import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen";
+import { useDispatch } from "react-redux";
+
 import CopyButton from "./CopyButton/CopyButton";
 import { styled } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
+import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen";
+
 const StyledMenu = styled((props) => (
     <Menu
         elevation={0}
@@ -54,10 +56,11 @@ export default function ClokiMenu() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    function handleSettingsOpen() {
+    const handleSettingsOpen = () => {
         dispatch(setSettingsDialogOpen(true));
+
         handleClose();
-    }
+    };
     return (
         <div>
             <Button
