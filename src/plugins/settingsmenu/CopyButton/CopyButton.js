@@ -46,6 +46,7 @@ export default function CopyButton() {
                 document.body.appendChild(textArea);
                 textArea.focus();
                 textArea.select();
+              
                 return new Promise((res, rej) => {
                     if (query.length > 0) {
                         const storedUrl = saveUrl.add({
@@ -54,14 +55,15 @@ export default function CopyButton() {
                         });
                         dispatch(setLinksHistory(storedUrl));
                     }
+              
+                    document.execCommand("copy") ? res() : rej();
+                    textArea.remove();
                     dispatch(
                         createAlert({
                             type: notificationTypes.success,
                             message: LINK_COPIED,
                         })
                     );
-                    document.execCommand("copy") ? res() : rej();
-                    textArea.remove();
                 });
             }
         }, 200);
