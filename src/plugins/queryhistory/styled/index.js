@@ -9,10 +9,11 @@ import TabPanelUnstyled from "@mui/base/TabPanelUnstyled";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import LinkIcon from "@mui/icons-material/Link";
 import { createTheme } from "@mui/material";
+import darkTheme from "../../../theme/dark";
 
-
+const dTheme = darkTheme;
 export const Tab = styled(TabUnstyled)`
-    color: #aaa;
+    color: ${dTheme.buttonText};
     cursor: pointer;
     font-size: 13px;
     background-color: transparent;
@@ -26,7 +27,7 @@ export const Tab = styled(TabUnstyled)`
     transition: 0.2s all;
 
     &:hover {
-        background-color: #666666;
+        background-color: ${dTheme.buttonHover};
     }
 
     &:focus {
@@ -37,13 +38,18 @@ export const Tab = styled(TabUnstyled)`
     }
 
     &.${tabUnstyledClasses.selected} {
-        color: #eee;
-        border-bottom: 1px solid #11abab;
+        border-bottom: 1px solid ${dTheme.primaryDark};
     }
 
     &.${buttonUnstyledClasses.disabled} {
         opacity: 0.5;
         cursor: not-allowed;
+    }
+    @media screen and (max-width: 360px) {
+        span {
+            display: none;
+        }
+        padding: 5px 20px;
     }
 `;
 
@@ -75,7 +81,7 @@ export const TabHistorySearchIcon = styled(SearchIcon)`
     width: 16px;
     padding: 0px 3px;
     border-radius: 3px 0px 0px 3px;
-    background: #121212;
+    background: ${dTheme.inputBg};
 `;
 
 export const TabHeaderContainer = styled.div`
@@ -84,7 +90,7 @@ export const TabHeaderContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #8a8a8a50;
+    background: #7b7b7b1f;
     height: 37px;
 `;
 export const TabPanel = styled(TabPanelUnstyled)`
@@ -93,7 +99,7 @@ export const TabPanel = styled(TabPanelUnstyled)`
 
 export const TabsList = styled(TabsListUnstyled)`
     min-width: 320px;
-    border-bottom: 4px solid #2e2e2e;
+    border-bottom: 4px solid ${dTheme.inputBg};
     display: flex;
     align-items: center;
     align-content: space-between;
@@ -103,7 +109,7 @@ export const EmptyHistory = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ddd;
+    color: ${dTheme.buttonText};
     font-size: 14px;
     flex: 1;
     padding: 20px;
@@ -121,18 +127,15 @@ export const QueryHistoryContainer = styled.div`
         background: black;
     }
 
-    &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background: #444;
-    }
+  
 `;
 
 export const HistoryButton = styled.button`
     padding: 3px 6px;
-    background: #333;
+    background: ${dTheme.buttonDefault};
     border-radius: 3px;
     border: none;
-    color: #ddd;
+    color: ${dTheme.buttonText};
     display: flex;
     align-items: center;
     justify-content: center;
@@ -148,20 +151,24 @@ export const SettingItemContainer = styled.div`
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
-    background: #333;
+    background: ${dTheme.viewBg};
     margin: 10px;
     border-radius: 3px;
     & div {
         font-size: 15px;
         color: orange;
+        line-height: 1.5;
     }
     & small {
         font-size: 12px;
-        color: #ddd;
+        color: ${dTheme.buttonText};
+        line-height: 1.5;
+        margin-bottom:10px;
     }
 `;
 export const SubmitButton = styled(HistoryButton)`
-    background: #11abab;
+    background: ${dTheme.primaryDark};
+    color: ${dTheme.buttonText};
     white-space: nowrap;
     .open-icon {
         display: none;
@@ -182,33 +189,30 @@ export const SubmitButton = styled(HistoryButton)`
 export const ClearHistoryButton = styled(HistoryButton)`
     font-weight: bold;
     padding: 10px 20px;
-    background: #088789;
+    background: ${dTheme.primaryDark};
     margin: 0;
     width: 100%;
     white-space: nowrap;
 `;
 export const StyledCloseButton = styled(HistoryButton)`
     background: none;
-    color: #ddd;
-    font-size: 14px;
-    height: 16px;
-    width: 16px;
+    color: ${dTheme.buttonText};
     position: absolute;
     right: 0;
 `;
 
 export const DialogCancelButton = styled(HistoryButton)`
-    background: #646464;
+    background: ${dTheme.buttonDefault};
     padding: 8px 16px;
 `;
 export const DialogConfirmButton = styled(HistoryButton)`
-    background: #088789;
+    background: ${dTheme.primaryDark};
     padding: 8px 16px;
 `;
 
 export const FilterInput = styled.input`
-    color: orange;
-    background: #121212;
+    color: ${dTheme.buttonText};
+    background: ${dTheme.inputBg};
     border: none;
     height: 21px;
     margin: 0px 10px 0px 0px;
@@ -219,13 +223,14 @@ export const FilterInput = styled.input`
     font-size: 12px;
     &:focus {
         outline: none;
+        color: ${dTheme.inputTextFocus};
     }
 `;
 export const RowData = styled.span`
     flex: 1;
     font-family: "monospace";
     font-size: "13px";
-    color: "#ddd";
+    color: ${dTheme.buttonText};
     white-space: nowrap;
     padding: 4px 0px;
     overflow: hidden;
@@ -249,7 +254,7 @@ export const LinkParams = styled.div`
 
     .open-button {
         display: flex;
-        color: #aaa;
+        color: ${dTheme.buttonText};
         background: none;
         border: none;
     }
@@ -262,7 +267,7 @@ export const LinkParams = styled.div`
             align-items: center;
             justify-content: space-between;
             flex: 1;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid ${dTheme.buttonDefault};
             margin-bottom: 4px;
             padding-bottom: 2px;
             span {
@@ -280,7 +285,7 @@ export const LinkParams = styled.div`
 export const HistoryRow = styled.div`
     padding: 5px 0px;
     padding-left: 10px;
-    background: #212121;
+    background:#7b7b7b1f;
     margin: 5px;
     border-radius: 3px;
     font-size: 13px;
@@ -299,8 +304,8 @@ export const theme = createTheme({
     palette: {
         mode: "dark",
         primary: {
-            main: "#ddd",
-            background: "#1a1a1a",
+            main: dTheme.buttonText,
+            background: dTheme.buttonHover,
         },
     },
 });

@@ -1,4 +1,3 @@
-
 const black = {
     b10: "#12121267",
     b15: "#121212",
@@ -57,11 +56,12 @@ const widgetContainer = black.b400;
 const buttonDefault = darkgrey.dg100;
 const buttonHover = darkgrey.dg15;
 const buttonInactive = black.b400;
+const buttonText = white.w200;
 const inputTextFocus = orange.or100;
 const inputLabelColor = lightgrey.lg400;
 const inputLabelBg = black.bg10;
 const viewBg = black.b300;
-const scrollbarThumb = "#616161";
+const scrollbarThumb = "#7b7b7b1f";
 const critical = "purple";
 const error = "red";
 const warning = "yellow";
@@ -81,6 +81,7 @@ const darkTheme = {
     buttonDefault,
     buttonHover,
     buttonInactive,
+    buttonText,
     inputBg,
     inputTextFocus,
     inputLabelColor,

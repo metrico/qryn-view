@@ -5,6 +5,12 @@ const StyledList = styled.div`
     display: flex;
     flex-direction: column;
     padding: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+    flex: 1;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
     button {
         background: none;
         text-align: left;
@@ -12,6 +18,7 @@ const StyledList = styled.div`
         padding: 10px;
         line-height: 1.5;
         border-radius: 3px;
+        font-size: 0.85em;
         cursor: pointer;
         &:hover {
             background: #11111155;
@@ -38,6 +45,7 @@ const Ranges = (props) => {
                             color: isSameRange(range, props.selectedRange)
                                 ? "orange"
                                 : "white",
+                            whiteSpace: "nowrap",
                         }}
                     >
                         {range.label}

@@ -311,6 +311,7 @@ function QueryHistoryTab({
                         <span
                             style={{
                                 color: "#666",
+                                marginRight:'10px'
                             }}
                         >
                             {listDisplay.length - index}
@@ -380,6 +381,7 @@ function LinksHistoryTab({
     handleSubmit,
     filtered,
     emptyMessage,
+    isStarred,
 }) {
     const [listDisplay, setListDisplay] = useState([]);
 
@@ -396,7 +398,7 @@ function LinksHistoryTab({
     }, [linksHistory]);
 
     return (
-        <QueryHistoryContainer>
+        <QueryHistoryContainer className={isStarred ? "starredCont" : ""}>
             {listDisplay.length > 0 ? (
                 listDisplay?.map((item, index) => (
                     <HistoryRow key={index}>
@@ -760,7 +762,7 @@ const QueryHistory = (props) => {
             {historyOpen && (
                 <Drawer
                     anchor={"bottom"}
-                    style={{ height: "250px" }}
+                    style={{ maxHeight: "250px" }}
                     open={historyOpen}
                     variant={"persistent"}
                 >
