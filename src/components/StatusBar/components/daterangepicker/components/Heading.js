@@ -14,14 +14,14 @@ const DateSelect = styled.select`
     cursor: pointer;
 
     position: relative;
-    font-size: 1em;
+    font-size: 14px;
     color: ${ctheme.textColor};
-    background: ${ctheme.inputBg};
+    background: #333;
     border: none;
     border-radius: 3px;
     padding: 4px 8px;
-    line-height: 1.5;
-
+    line-height: 20px;
+    flex: 1;
     &::-webkit-scrollbar {
         width: 5px;
         background: black;
@@ -56,6 +56,7 @@ const Heading = ({
                 container
                 justifyContent={"space-between"}
                 alignItems={"center"}
+                style={{ marginTop: "20px" }}
             >
                 <Grid item className={classes.iconContainer}>
                     <IconButton

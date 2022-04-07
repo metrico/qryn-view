@@ -10,6 +10,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import createStyles from "@mui/styles/createStyles";
 import { withStyles } from "@mui/styles";
 import { css, jsx } from "@emotion/css";
+
 import {
     format,
     differenceInCalendarMonths,
@@ -33,6 +34,31 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { findRangeByLabel } from "../utils";
 import AbsoluteSelector from "./AbsoluteSelector";
 import { useMediaQuery } from "react-responsive";
+import styled from "@emotion/styled";
+import darkTheme from "../../../../../theme/dark";
+const dTheme = darkTheme;
+const PickerTypeButton = styled.button`
+    padding: 10px;
+    border-radius: 3px;
+    color: orange;
+    font-size: 1em;
+    border: none;
+    background: none;
+    display: flex;
+
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    &:hover {
+        background: #11111155;
+    }
+    span {
+        margin-right: 4px;
+        font-size: 12px;
+    }
+`;
+
 const styles = (theme) =>
     createStyles({
         header: {
@@ -52,9 +78,10 @@ const styles = (theme) =>
         container: {
             position: "absolute",
             zIndex: 1000,
-            top: 95,
-            right: 10,
+            top: 45,
+            right: 0,
             display: "flex",
+            flexDirection: "column",
             overflowY: "auto",
         },
         applyButton: {
@@ -184,28 +211,9 @@ const PickerNav = (props) => {
     return (
         <ThemeProvider theme={theme}>
             <Paper className={classes.container} elevation={5}>
-                {calendarOpen && isBigScreen && (
-                    <Grid container direction={"row"} wrap={"nowrap"}>
-                        <Month
-                            {...commonProps}
-                            value={firstMonth}
-                            setValue={setFirstMonth}
-                            navState={[true, canNavigateCloser]}
-                            marker={MARKERS.FIRST_MONTH}
-                        />
-                        <div className={classes.divider} />
-                        <Month
-                            {...commonProps}
-                            value={secondMonth}
-                            setValue={setSecondMonth}
-                            navState={[canNavigateCloser, true]}
-                            marker={MARKERS.SECOND_MONTH}
-                        />
-                    </Grid>
-                )}
-                {calendarOpen && !isBigScreen && !isPortrait && !relativeOpen && (
-                    <Grid container direction={"row"} wrap={"nowrap"}>
-                        {startCalendar && (
+                <Grid display={"flex"} style={{ flex: "1" }}>
+                    {calendarOpen && isBigScreen && (
+                        <Grid container direction={"row"} wrap={"nowrap"}>
                             <Month
                                 {...commonProps}
                                 value={firstMonth}
@@ -213,9 +221,7 @@ const PickerNav = (props) => {
                                 navState={[true, canNavigateCloser]}
                                 marker={MARKERS.FIRST_MONTH}
                             />
-                        )}
-
-                        {stopCalendar && (
+                            <div className={classes.divider} />
                             <Month
                                 {...commonProps}
                                 value={secondMonth}
@@ -223,206 +229,161 @@ const PickerNav = (props) => {
                                 navState={[canNavigateCloser, true]}
                                 marker={MARKERS.SECOND_MONTH}
                             />
-                        )}
-                    </Grid>
-                )}
-
-                <Grid container direction={"row"} wrap={"nowrap"}>
-                    <Grid>
-                        <Grid container>
-                            <Grid item flex={"1"}>
-                                <div
-                                    className={css`
-                                        display: flex;
-                                        justify-content: space-between;
-                                    `}
-                                >
-                                    <IconButton
-                                        onClick={(e) => {
-                                            props.onClose(e);
-                                        }}
-                                        aria-label={"close"}
-                                    >
-                                        <CloseIcon />
-                                    </IconButton>
-                                </div>
-
-                                {isTabletOrMobile && (
-                                    <>
-                                        <div
-                                            style={{
-                                                maxHeight: isPortrait
-                                                    ? "60vh"
-                                                    : "50vh",
-                                                overflowY: "auto",
-
-                                                display: relativeOpen
-                                                    ? "flex"
-                                                    : "none",
-                                                flex: 1,
-                                                flexDirection: "column",
-                                            }}
-                                        >
-                                            <Ranges
-                                                selectedRange={dateRange}
-                                                isHorizontal={!isPortrait}
-                                                ranges={ranges}
-                                                setRange={setDateRange}
-                                                onClose={props.onClose}
-                                            />
-                                        </div>
-                                        <AbsoluteSelector
-                                            styles={!relativeOpen}
-                                            getEditedStartDate={
-                                                getEditedStartDate
-                                            }
-                                            isHorizontal={!isPortrait}
-                                            isMobile={true}
-                                            isFullCalendar={false}
-                                            getEditedEndDate={getEditedEndDate}
-                                            handleStart={handleStartInputChange}
-                                            handleStop={handleStopInputChange}
-                                            onTimeRangeSet={onTimeRangeSet}
-                                            calendarOpen={calendarOpen}
-                                            stopCalendarOpen={stopCalendar}
-                                            startCalendarOpen={startCalendar}
-                                            setCalendarOpen={setCalendarOpen}
-                                            setStopCalendar={setStopCalendar}
-                                            setStartCalendar={setStartCalendar}
-                                        />
-                                        {isTabletOrMobile && (
-                                            <button
-                                                className={css`
-                                                    padding: 10px;
-                                                    border-radius: 3px;
-                                                    color: orange;
-                                                    font-size: 1em;
-                                                    border: none;
-                                                    background: none;
-                                                    display: flex;
-                                                    margin: 0 auto;
-                                                    cursor: pointer;
-                                                    align-items: center;
-                                                    &:hover {
-                                                        background: #11111155;
-                                                    }
-                                                `}
-                                                onClick={openRelative}
-                                            >
-                                                <span
-                                                    className={css`
-                                                        margin-right: 4px;
-                                                    `}
-                                                >
-                                                    {relativeOpen
-                                                        ? "Set Absolute Time"
-                                                        : "Set Relative Time"}
-                                                </span>
-
-                                                <ArrowForwardIosIcon fontSize="small" />
-                                            </button>
-                                        )}
-                                    </>
+                        </Grid>
+                    )}
+                    {calendarOpen &&
+                        !isBigScreen &&
+                        !isPortrait &&
+                        !relativeOpen && (
+                            <Grid container direction={"row"} wrap={"nowrap"}>
+                                {startCalendar && (
+                                    <Month
+                                        {...commonProps}
+                                        value={firstMonth}
+                                        setValue={setFirstMonth}
+                                        navState={[true, canNavigateCloser]}
+                                        marker={MARKERS.FIRST_MONTH}
+                                    />
                                 )}
-                                {!isTabletOrMobile && (
+
+                                {stopCalendar && (
+                                    <Month
+                                        {...commonProps}
+                                        value={secondMonth}
+                                        setValue={setSecondMonth}
+                                        navState={[canNavigateCloser, true]}
+                                        marker={MARKERS.SECOND_MONTH}
+                                    />
+                                )}
+                            </Grid>
+                        )}
+
+                    <Grid display={"flex"} flex={1}>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                flex: "1",
+                            }}
+                        >
+                            {isTabletOrMobile && (
+                                <>
+                                    <div
+                                        style={{
+                                            maxHeight: isPortrait
+                                                ? "60vh"
+                                                : "50vh",
+                                            overflowY: "auto",
+
+                                            display: relativeOpen
+                                                ? "flex"
+                                                : "none",
+                                            flex: 1,
+                                            flexDirection: "column",
+                                        }}
+                                    >
+                                        <Ranges
+                                            selectedRange={dateRange}
+                                            isHorizontal={!isPortrait}
+                                            ranges={ranges}
+                                            setRange={setDateRange}
+                                            onClose={props.onClose}
+                                        />
+                                    </div>
+
                                     <AbsoluteSelector
-                                        styles={true}
-                                        isMobile={false}
-                                        isFullCalendar={true}
+                                        styles={!relativeOpen}
                                         getEditedStartDate={getEditedStartDate}
+                                        isHorizontal={!isPortrait}
+                                        isMobile={true}
+                                        isFullCalendar={false}
                                         getEditedEndDate={getEditedEndDate}
                                         handleStart={handleStartInputChange}
                                         handleStop={handleStopInputChange}
                                         onTimeRangeSet={onTimeRangeSet}
                                         calendarOpen={calendarOpen}
+                                        stopCalendarOpen={stopCalendar}
+                                        startCalendarOpen={startCalendar}
                                         setCalendarOpen={setCalendarOpen}
+                                        setStopCalendar={setStopCalendar}
+                                        setStartCalendar={setStartCalendar}
                                     />
-                                )}
-
-                                {calendarOpen &&
-                                    isTabletOrMobile &&
-                                    !relativeOpen && (
-                                        <Grid
-                                            container
-                                            direction={"row"}
-                                            wrap={"nowrap"}
+                                    {isTabletOrMobile && (
+                                        <PickerTypeButton
+                                            onClick={openRelative}
                                         >
-                                            {startCalendar && (
-                                                <Month
-                                                    {...commonProps}
-                                                    value={firstMonth}
-                                                    setValue={setFirstMonth}
-                                                    navState={[
-                                                        true,
-                                                        canNavigateCloser,
-                                                    ]}
-                                                    marker={MARKERS.FIRST_MONTH}
-                                                />
-                                            )}
+                                            <span>
+                                                {relativeOpen
+                                                    ? "Set Absolute Time"
+                                                    : "Set Relative Time"}
+                                            </span>
 
-                                            {stopCalendar && (
-                                                <Month
-                                                    {...commonProps}
-                                                    value={secondMonth}
-                                                    setValue={setSecondMonth}
-                                                    navState={[
-                                                        canNavigateCloser,
-                                                        true,
-                                                    ]}
-                                                    marker={
-                                                        MARKERS.SECOND_MONTH
-                                                    }
-                                                />
-                                            )}
-                                        </Grid>
+                                            <ArrowForwardIosIcon
+                                                className={css`
+                                                    font-size: 12px;
+                                                `}
+                                            />
+                                        </PickerTypeButton>
                                     )}
-                            </Grid>
-                        </Grid>
+                                </>
+                            )}
+                            {!isTabletOrMobile && (
+                                <AbsoluteSelector
+                                    styles={true}
+                                    isMobile={false}
+                                    isFullCalendar={true}
+                                    getEditedStartDate={getEditedStartDate}
+                                    getEditedEndDate={getEditedEndDate}
+                                    handleStart={handleStartInputChange}
+                                    handleStop={handleStopInputChange}
+                                    onTimeRangeSet={onTimeRangeSet}
+                                    calendarOpen={calendarOpen}
+                                    setCalendarOpen={setCalendarOpen}
+                                />
+                            )}
+
+                            {calendarOpen && isTabletOrMobile && !relativeOpen && (
+                                <Grid
+                                    container
+                                    direction={"row"}
+                                    wrap={"nowrap"}
+                                >
+                                    {startCalendar && (
+                                        <Month
+                                            {...commonProps}
+                                            value={firstMonth}
+                                            setValue={setFirstMonth}
+                                            navState={[true, canNavigateCloser]}
+                                            marker={MARKERS.FIRST_MONTH}
+                                        />
+                                    )}
+
+                                    {stopCalendar && (
+                                        <Month
+                                            {...commonProps}
+                                            value={secondMonth}
+                                            setValue={setSecondMonth}
+                                            navState={[canNavigateCloser, true]}
+                                            marker={MARKERS.SECOND_MONTH}
+                                        />
+                                    )}
+                                </Grid>
+                            )}
+                        </div>
+
+                        <div className={classes.divider} />
+
                         {isBigScreen && (
-                            <Grid
-                                container
-                                className={classes.header}
-                                alignItems={"center"}
-                            >
-                                <Grid item className={classes.headerItem}>
-                                    <div className={classes.dateComplete}>
-                                        {dateRange?.dateStart &&
-                                        isValid(dateRange?.dateStart)
-                                            ? format(
-                                                  dateRange?.dateStart,
-                                                  "MMMM dd, yyyy"
-                                              )
-                                            : "Start Date"}
-                                    </div>
-                                </Grid>
-                                <Grid item className={classes.headerItem}>
-                                    <ArrowRightAlt />
-                                </Grid>
-                                <Grid item className={classes.headerItem}>
-                                    <div className={classes.dateComplete}>
-                                        {dateRange?.dateEnd &&
-                                        isValid(dateRange?.dateEnd)
-                                            ? format(
-                                                  dateRange?.dateEnd,
-                                                  "MMMM dd, yyyy"
-                                              )
-                                            : "End Date"}
-                                    </div>
-                                </Grid>
+                            <Grid style={{ display: "flex", flex: 1 }}>
+                                <Ranges
+                                    selectedRange={dateRange}
+                                    ranges={ranges}
+                                    setRange={setDateRange}
+                                    onClose={props.onClose}
+                                />
                             </Grid>
                         )}
                     </Grid>
-                    <div className={classes.divider} />
-                    {isBigScreen && (
-                        <Grid>
-                            <Ranges
-                                selectedRange={dateRange}
-                                ranges={ranges}
-                                setRange={setDateRange}
-                                onClose={props.onClose}
-                            />
-                        </Grid>
-                    )}
                 </Grid>
             </Paper>
         </ThemeProvider>

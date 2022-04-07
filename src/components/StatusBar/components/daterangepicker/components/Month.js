@@ -3,9 +3,9 @@ import {
     Grid,
     Typography,
     ThemeProvider,
-	createTheme
+    createTheme,
 } from "@mui/material";
-import {withStyles,createStyles} from '@mui/styles'
+import { withStyles, createStyles } from "@mui/styles";
 import {
     getDate,
     isSameMonth,
@@ -29,28 +29,26 @@ const NAVIGATION_ACTION = { Previous: -1, Next: 1 };
 
 const theme = createTheme({
     palette: {
-        mode: 'dark'
-    }
-})
+        mode: "dark",
+    },
+});
 const styles = (theme) =>
     createStyles({
         root: {
-          width: 260,
-            background: '#262626'
+            width: 260,
+            background: "#262626",
         },
         weekDaysContainer: {
-            marginTop: 10,
+            marginTop: 5,
             paddingLeft: 30,
-            paddingRight: 30
+            paddingRight: 30,
         },
         daysContainer: {
             paddingLeft: 15,
             paddingRight: 15,
-            marginTop: 15,
+            marginTop: 10,
             marginBottom: 20,
-
-
-        }
+        },
     });
 const Month = (props) => {
     const {
@@ -98,11 +96,7 @@ const Month = (props) => {
                         className={classes.weekDaysContainer}
                     >
                         {WEEK_DAYS.map((day) => (
-                            <Typography
-                               
-                                key={day}
-                                variant={"caption"}
-                            >
+                            <Typography key={day} variant={"caption"}>
                                 {day}
                             </Typography>
                         ))}

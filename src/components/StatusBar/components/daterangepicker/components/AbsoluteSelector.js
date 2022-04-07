@@ -1,68 +1,67 @@
 import styled from "@emotion/styled";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import darkTheme from "../../../../../theme/dark";
+import { BtnSmall } from "../../../../../theme/styles/Button";
 const theme = darkTheme;
+
 const SelectorsContainer = styled.div`
     display: ${(props) => (props.isDisplay ? "flex" : "none")};
     flex-direction: column;
-    margin: 4px;
+    margin: 20px;
+    margin-top: 30px;
     .time-selectors {
         display: ${(props) => (props.isDisplay ? "flex" : "none")};
         flex-direction: column;
-        padding: 5px;
-
+        margin-bottom: 15px;
         .label {
             font-size: 0.85em;
             color: ${theme.inputLabelColor};
             width: 50px;
             margin-left: 5px;
-            margin-bottom: 2px;
+            margin-bottom: 5px;
             white-space: nowrap;
         }
         .input-group {
             display: flex;
+            margin-bottom: 20px;
             .date-time-ranged {
-                font-size: 1em;
+                font-size:14px;
                 width: 170px;
-                line-height: 1.5;
-                text-align: center;
+                line-height: 20px;
+                border:1px solid ${theme.buttonHover};
                 color: ${theme.textColor};
-            }
-            button {
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border: none;
-                padding: 0px 8px;
-                margin: 3px;
-                border-radius: 3px;
-                color: ${theme.textColor};
-                background: ${theme.primaryDark};
-                &:hover {
-                    background: ${theme.primaryLight};
+                margin: 0;
+                padding:0px 8px;
+                margin-right: 5px;
+                &:focus{
+                    border:1px solid ${theme.buttonDefault};
                 }
             }
         }
     }
 `;
 
-const AbsoluteSubmitButton = styled.button`
-    color: ${theme.textColor};
+const AbsoluteSubmitButton = styled(BtnSmall)`
+    color: ${theme.buttonText};
     background: ${theme.primaryDark};
-    font-size: 0.85em;
-    font-weight: bold;
-    padding: 8px 0px;
-    line-height: 1.5;
-    border: none;
-    border-radius: 3px;
-    transition: 0.2s all;
-    margin: 10px;
-    margin-top: ${(props) =>
-        props.isHorizontal && props.isMobile ? "20px" : "40px"};
+    padding: 6px;
+    justify-content: center;
+    margin-top:10px;
+    margin-bottom: 10px;
     cursor: pointer;
     &:hover {
         background: ${theme.primaryLight};
+    }
+`;
+
+const CalendarBtn = styled(BtnSmall)`
+   
+    color: ${theme.buttonText};
+    background: ${theme.buttonDefault};
+    padding:8px;
+    &:hover {
+        background: ${theme.buttonHover};
+        color: ${theme.textColor};
     }
 `;
 
@@ -108,6 +107,7 @@ export default function AbsoluteSelector({
 
     return (
         <SelectorsContainer isDisplay={styles}>
+          
             <div className={"time-selectors"}>
                 <span className={"label"}>{"From"}</span>
                 <div className="input-group">
@@ -117,9 +117,9 @@ export default function AbsoluteSelector({
                         onChange={(e) => handleStart(e, false)}
                         onBlur={(e) => handleStart(e, true)}
                     />
-                    <button onClick={handleStartOpen}>
-                        <DateRangeIcon fontSize="small" />
-                    </button>
+                    <CalendarBtn onClick={handleStartOpen}>
+                        <DateRangeIcon  style={{height:'16px',width:'16px'}} />
+                    </CalendarBtn>
                 </div>
             </div>
 
@@ -132,9 +132,9 @@ export default function AbsoluteSelector({
                         onChange={(e) => handleStop(e, false)}
                         onBlur={(e) => handleStop(e, true)}
                     />
-                    <button onClick={handleStopOpen}>
-                        <DateRangeIcon fontSize="small" />
-                    </button>
+                    <CalendarBtn onClick={handleStopOpen}>
+                        <DateRangeIcon style={{height:'16px',width:'16px'}} />
+                    </CalendarBtn>
                 </div>
             </div>
             <AbsoluteSubmitButton
