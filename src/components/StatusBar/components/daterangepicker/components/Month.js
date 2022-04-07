@@ -34,7 +34,7 @@ const theme = createTheme({
 });
 const styles = (theme) =>
     createStyles({
-        root: {
+        root: { 
             width: 260,
             background: "#262626",
         },

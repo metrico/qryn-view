@@ -90,7 +90,7 @@ export const TabHeaderContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: ${dTheme.buttonDefault};
+    background: #7b7b7b1f;
     height: 37px;
 `;
 export const TabPanel = styled(TabPanelUnstyled)`
@@ -127,10 +127,7 @@ export const QueryHistoryContainer = styled.div`
         background: black;
     }
 
-    &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background: ${dTheme.scrollbarThumb};
-    }
+  
 `;
 
 export const HistoryButton = styled.button`
@@ -160,10 +157,13 @@ export const SettingItemContainer = styled.div`
     & div {
         font-size: 15px;
         color: orange;
+        line-height: 1.5;
     }
     & small {
         font-size: 12px;
         color: ${dTheme.buttonText};
+        line-height: 1.5;
+        margin-bottom:10px;
     }
 `;
 export const SubmitButton = styled(HistoryButton)`
@@ -285,7 +285,7 @@ export const LinkParams = styled.div`
 export const HistoryRow = styled.div`
     padding: 5px 0px;
     padding-left: 10px;
-    background: ${dTheme.buttonHover};
+    background:#7b7b7b1f;
     margin: 5px;
     border-radius: 3px;
     font-size: 13px;
