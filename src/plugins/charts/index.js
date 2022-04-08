@@ -12,21 +12,145 @@ import * as moment from "moment";
 import { useState, useEffect, useRef } from "react";
 import { format } from "date-fns";
 import { ChartLabelList } from "./ChartLabelList";
-
 import styled from "@emotion/styled";
+import darkTheme from "../../theme/dark";
+import { useMediaQuery } from "react-responsive";
 
+const theme = darkTheme;
 const ChartButton = styled.button`
-    border: none;
-    margin: 0px 5px;
-    background: ${(props) => (props.isActive ? "#333" : "black")};
+    background: ${(props) =>
+        props.isActive ? theme.buttonDefault : theme.buttonInactive};
     color: #ddd;
-    padding: 4px 8px;
+    padding: 3px 12px;
+    border: none;
+    border-right: ${(props) => (props.leftBtn ? "2px solid #242424" : "none")};
+    border-left: ${(props) => (props.rightBtn ? "2px solid #242424" : "none")};
+    border-radius: ${(props) =>
+        props.rightBtn
+            ? "0px 3px 3px 0px"
+            : props.leftBtn
+            ? "3px 0px 0px 3px"
+            : "none"};
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 20px;
+    white-space: nowrap;
+    flex: 1;
+`;
+
+const ShowSeries = styled.div`
+    font-size: 12px;
+    line-height: 20px;
+    padding: 3px 12px;
+    white-space: nowrap;
+    color: ${theme.textColor};
+    background: ${theme.buttonInactive};
     border-radius: 3px;
     cursor: pointer;
-    font-size: 1em;
-    line-height: 1.5;
-    white-space: nowrap;
+    transition: 0.2s all;
+    &:hover {
+        background: ${theme.buttonHover};
+    }
 `;
+
+const ChartToolsCont = styled.div`
+    display: flex;
+    align-items: center;
+    flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
+    margin: 5px 23px;
+    margin-left: 0;
+    margin-bottom: 10px;
+    justify-content: space-between;
+    .limit-cont {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex: 1;
+        margin-bottom: ${(props) => (props.isMobile ? "10px" : "0px")};
+        width: ${(props) => (props.isMobile ? "100%" : "auto")};
+        div {
+            flex: ${(props) => (props.isMobile ? "1" : "0")};
+            text-align: ${(props) => (props.isMobile ? "center" : "left")};
+        }
+    }
+    .chart-buttons-cont {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: ${(props) => (props.isMobile ? "1" : "0")};
+        width: ${(props) => (props.isMobile ? "100%" : "auto")};
+    }
+`;
+
+function HandleLimitButton({
+    isSpliced,
+    handleNoLimitData,
+    handleLimitData,
+    matrixData,
+}) {
+    return isSpliced ? (
+        <ShowSeries onClick={handleNoLimitData}>
+            {matrixData.length > 20
+                ? "Showing: 20 Series, Show All "
+                : "Showing: "}
+            {matrixData.length}
+            {" Series"}
+        </ShowSeries>
+    ) : (
+        <ShowSeries onClick={handleLimitData}>
+            {"Showing: "}
+            {matrixData.length}
+            {" Series, Show Only 20 Series"}
+        </ShowSeries>
+    );
+}
+
+function ChartTools({
+    matrixData,
+    chartType,
+    handleNoLimitData,
+    handleLimitData,
+    isSpliced,
+    setBarChart,
+    setLineChart,
+    setPointsChart,
+}) {
+    const isMobile = useMediaQuery({ query: "(max-width: 565px)" });
+    return (
+        <ChartToolsCont isMobile={isMobile}>
+            <div className="limit-cont">
+                <HandleLimitButton
+                    isSpliced={isSpliced}
+                    handleNoLimitData={handleNoLimitData}
+                    handleLimitData={handleLimitData}
+                    matrixData={matrixData}
+                />
+            </div>
+            <div className="chart-buttons-cont">
+                <ChartButton
+                    isActive={chartType === "bar"}
+                    onClick={setBarChart}
+                    leftBtn={true}
+                >
+                    {"bar chart"}
+                </ChartButton>
+                <ChartButton
+                    onClick={setLineChart}
+                    isActive={chartType === "line"}
+                >
+                    {"line chart"}
+                </ChartButton>
+                <ChartButton
+                    onClick={setPointsChart}
+                    isActive={chartType === "points"}
+                    rightBtn={true}
+                >
+                    {"points chart"}
+                </ChartButton>
+            </div>
+        </ChartToolsCont>
+    );
+}
 
 function ClokiChart({ matrixData }) {
     const APP_NAME = "cloki_view";
@@ -72,14 +196,21 @@ function ClokiChart({ matrixData }) {
             )
             .join("");
     }
-    function formatDateRange(data) {
+
+    function getTimeSpan(data) {
         const tsArray = data
-            .map((m) => m.data.map(([t, v]) => t))
+            .map((tsItem) => tsItem?.data?.map(([t, v]) => t))
             .flat()
             .sort();
         const first = tsArray[0];
         const last = tsArray[tsArray.length - 1];
         const timeSpan = (last - first) / 1000 / 86400;
+
+        return { first, last, timeSpan };
+    }
+
+    function formatDateRange(data) {
+        const { timeSpan, first, last } = getTimeSpan(data);
 
         const formatted =
             timeSpan > 1
@@ -111,9 +242,11 @@ function ClokiChart({ matrixData }) {
             highlightColor: "blue",
             mouseActiveRadius: 30,
             borderWidth: 0,
-            margin: { left: 0, right: 0 },
+            margin: { left: 0, right: 0, top: 0, bottom: 0 },
+
             labelMarginX: 0,
-            reserveSpace: true,
+            labelMarginY: 0,
+            reserveSpace: false,
         },
         legend: {
             show: false,
@@ -733,73 +866,18 @@ function ClokiChart({ matrixData }) {
     };
 
     return (
-        <div>
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontSize: ".95rem",
-                    cursor: "pointer",
-                    margin: "0px 23px",
-                }}
-            >
-                <div
-                    style={{
-                        flex: "1",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    {isSpliced ? (
-                        <div
-                            onClick={handleNoLimitData}
-                            style={{ color: "#aaa", fontSize: "13px" }}
-                        >
-                            {matrixData.length > 20
-                                ? "Showing: 20 Series, Show All "
-                                : "Showing: "}
-                            {matrixData.length}
-                            {" Series"}
-                        </div>
-                    ) : (
-                        <div
-                            onClick={handleLimitData}
-                            style={{ color: "#aaa", fontSize: "13px" }}
-                        >
-                            {"Showing: "}
-                            {matrixData.length}
-                            {" Series, Show Only 20 Series"}
-                        </div>
-                    )}
-                </div>
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                    }}
-                >
-                    <ChartButton
-                        isActive={chartType === "bar"}
-                        onClick={setBarChart}
-                    >
-                        {"bar chart"}
-                    </ChartButton>
-                    <ChartButton
-                        onClick={setLineChart}
-                        isActive={chartType === "line"}
-                    >
-                        {"line chart"}
-                    </ChartButton>
-                    <ChartButton
-                        onClick={setPointsChart}
-                        isActive={chartType === "points"}
-                    >
-                        {"points chart"}
-                    </ChartButton>
-                </div>
-            </div>
+        <div style={{ padding: "20px", paddingTop: "0", paddingRight: "0" }}>
+            <ChartTools
+                matrixData={matrixData}
+                chartType={chartType}
+                handleNoLimitData={handleNoLimitData}
+                handleLimitData={handleLimitData}
+                isSpliced={isSpliced}
+                setBarChart={setBarChart}
+                setLineChart={setLineChart}
+                setPointsChart={setPointsChart}
+            />
+
             <div
                 ref={chartRef}
                 id={"chart-container"}

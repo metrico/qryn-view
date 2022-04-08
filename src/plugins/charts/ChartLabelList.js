@@ -6,6 +6,8 @@ const LabelsContainer = styled("div")`
     flex-wrap: wrap;
     max-height: calc(100% - 300px);
     overflow-y: auto;
+    margin-top: 10px;
+    padding-bottom: 10px;
     &::-webkit-scrollbar {
         width: 10px;
         background: black;

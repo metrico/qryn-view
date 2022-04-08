@@ -13,7 +13,7 @@ export const HistoryIconStyled = styled(HistoryIcon)`
 `;
 export const HistoryButtonStyled = styled(BtnSmall)`
     background: none;
-    color: ${theme.textColor};
+    color: ${theme.buttonText};
     margin-left: 5px;
     background: ${theme.buttonHover};
     span {
@@ -30,7 +30,7 @@ export const ShowLabelsBtn = styled(BtnSmall)`
     text-overflow: ellipsis;
     transition: 0.25s all;
     justify-content: flex-start;
-    color: ${theme.textColor};
+    color: ${theme.buttonText};
     &:hover {
         background: ${theme.buttonHover};
     }
@@ -52,7 +52,7 @@ export const QueryBarContainer = styled.div`
 `;
 export const ShowLogsBtn = styled(BtnSmall)`
     background: ${theme.primaryDark};
-    color: white;
+    color: ${theme.buttonText};
     margin-left: 5px;
     transition: 0.25s all;
     justify-content: center;
