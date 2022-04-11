@@ -1,49 +1,6 @@
-import styled from "@emotion/styled";
+import { LabelsContainer, ChartLabel, ColorLabel } from "./styled";
 
-const LabelsContainer = styled("div")`
-    position: absolute;
-    display: flex;
-    flex-wrap: wrap;
-    max-height: calc(100% - 300px);
-    overflow-y: auto;
-    margin-top: 10px;
-    padding-bottom: 10px;
-    &::-webkit-scrollbar {
-        width: 10px;
-        background: black;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background: #444;
-    }
-`;
-
-const ChartLabel = styled("div")`
-    font-size: 12px;
-    color: #aaa;
-    font-family: sans-serif;
-    display: flex;
-    align-items: center;
-    line-height: 1.5;
-    padding-right: 10px;
-    cursor: pointer;
-    opacity: ${(props) => (props.isVisible ? "1" : ".5")};
-    border-radius: 3px;
-    &:hover {
-        background: black;
-    }
-`;
-
-const ColorLabel = styled("div")`
-    height: 4px;
-    width: 16px;
-    margin-right: 8px;
-    background: ${(props) => props.color};
-    content: " ";
-`;
-
-export const ChartLabelList = (props) => {
+export default function ChartLabelsList({ onLabelClick, labels }) {
     const labelsSelected = JSON.parse(localStorage.getItem("labelsSelected"));
 
     const isLabelsSelected = labelsSelected?.length > 0;
@@ -65,12 +22,12 @@ export const ChartLabelList = (props) => {
     }
     const handleLabelClick = (val) => {
         val.isVisible = val.isVisible ? false : true;
-        props.onLabelClick(props.labels, val);
+        onLabelClick(labels, val);
     };
     return (
-        <LabelsContainer divHeight={matchHeight(props?.labels?.length)}>
-            {props?.labels?.length &&
-                props.labels.map((val, idx) => (
+        <LabelsContainer divHeight={matchHeight(labels?.length)}>
+            {labels?.length &&
+                labels?.map((val, idx) => (
                     <ChartLabel
                         isVisible={!isLabelsSelected ? true : setIsVisible(val)}
                         key={idx}
@@ -78,9 +35,8 @@ export const ChartLabelList = (props) => {
                     >
                         <ColorLabel color={val.color} />
                         {val.label}
-                        {/* <SearchButton /> */}
                     </ChartLabel>
                 ))}
         </LabelsContainer>
     );
-};
+}

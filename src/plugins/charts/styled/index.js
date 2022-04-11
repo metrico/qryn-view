@@ -1,0 +1,121 @@
+import styled from "@emotion/styled";
+import darkTheme from "../../../theme/dark";
+
+const theme = darkTheme;
+
+/**
+ * Labels styles
+ */
+export const LabelsContainer = styled("div")`
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    max-height: calc(100% - 300px);
+    overflow-y: auto;
+    margin: 10px 20px;
+    padding-bottom: 10px;
+    &::-webkit-scrollbar {
+        width: 10px;
+        background: black;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: #444;
+    }
+`;
+
+export const ChartLabel = styled("div")`
+    font-size: 12px;
+    color: #aaa;
+    font-family: sans-serif;
+    display: flex;
+    align-items: center;
+    line-height: 1.5;
+    padding-right: 10px;
+    cursor: pointer;
+    opacity: ${(props) => (props.isVisible ? "1" : ".5")};
+    border-radius: 3px;
+    &:hover {
+        background: black;
+    }
+`;
+
+export const ColorLabel = styled("div")`
+    height: 4px;
+    width: 16px;
+    margin-right: 8px;
+    background: ${(props) => props.color};
+    content: " ";
+`;
+
+/**
+ *  Chart Tools styles
+ */
+export const ChartButton = styled.button`
+    background: ${(props) =>
+        props.isActive ? theme.buttonDefault : theme.buttonInactive};
+    color: #ddd;
+    padding: 3px 12px;
+    border: none;
+    border-right: ${(props) => (props.leftBtn ? "2px solid #242424" : "none")};
+    border-left: ${(props) => (props.rightBtn ? "2px solid #242424" : "none")};
+    border-radius: ${(props) =>
+        props.rightBtn
+            ? "0px 3px 3px 0px"
+            : props.leftBtn
+            ? "3px 0px 0px 3px"
+            : "none"};
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 20px;
+    white-space: nowrap;
+    flex: 1;
+`;
+
+export const ChartToolsCont = styled.div`
+    display: flex;
+    align-items: center;
+    flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
+
+        margin: 10px 25px;
+    justify-content: space-between;
+    .limit-cont {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex: 1;
+        margin-bottom: ${(props) => (props.isMobile ? "10px" : "0px")};
+        width: ${(props) => (props.isMobile ? "100%" : "auto")};
+        div {
+            flex: ${(props) => (props.isMobile ? "1" : "0")};
+            text-align: ${(props) => (props.isMobile ? "center" : "left")};
+        }
+    }
+    .chart-buttons-cont {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: ${(props) => (props.isMobile ? "1" : "0")};
+        width: ${(props) => (props.isMobile ? "100%" : "auto")};
+    }
+`;
+
+/**
+ * Show Series styles
+ */
+
+export const ShowSeries = styled.div`
+    font-size: 12px;
+    line-height: 20px;
+    padding: 3px 12px;
+    white-space: nowrap;
+    color: ${theme.textColor};
+    background: ${theme.buttonInactive};
+    border-radius: 3px;
+    cursor: pointer;
+    transition: 0.2s all;
+    &:hover {
+        background: ${theme.buttonHover};
+    }
+`;
