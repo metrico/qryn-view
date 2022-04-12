@@ -4,6 +4,7 @@ import { LocalizationProvider } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { DateRangePicker } from "../daterangepicker";
 import CopyLinkButton from "../copylinkbutton/CopyLinkButton";
+import EmbedLinkButton from "../embedlinkbutton";
 
 export function StatusBarSelectors() {
 
@@ -19,6 +20,7 @@ export function StatusBarSelectors() {
             <div className={"status-options"}>
                 <div className={"status-selectors"}>
                     <CopyLinkButton />
+                    <EmbedLinkButton/>
                 </div>
 
                 <DateRangePicker isOpen={isOpen} />

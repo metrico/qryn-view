@@ -3,27 +3,31 @@ import { StatusBarSelectors } from "./components/statusbarselectors/StatusBarSel
 import Logo from "./assets/cloki-logo.png";
 import { StatusBarCont, StatusCont } from "./styled";
 import ClokiMenu from "../../plugins/settingsmenu/Menu";
+import { useSelector } from "react-redux";
 
 
 export default function StatusBar() {
-    return (
+const isEmbed = useSelector(store => store.isEmbed)
+    return ( !isEmbed && (
         <StatusBarCont>
-            <div className="logo-section">
-                <img
-                    src={Logo}
-                    alt={"cLoki View"}
-                    height={"28px"}
-                    className={"logo"}
-                />
+        <div className="logo-section">
+            <img
+                src={Logo}
+                alt={"cLoki View"}
+                height={"28px"}
+                className={"logo"}
+            />
+            <ApiSelector />
+        </div>
 
-                <ApiSelector />
-            </div>
+        <StatusCont>
+            <StatusBarSelectors />
+            <ClokiMenu />
+        </StatusCont>
+    </StatusBarCont>
 
-            <StatusCont>
-                <StatusBarSelectors />
 
-           <ClokiMenu/>
-            </StatusCont>
-        </StatusBarCont>
+    )
+    
     );
 }

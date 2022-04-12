@@ -78,5 +78,17 @@ h3 {
 export const SettingCloseBtn = styled(BtnSmall)`
 background:none;
 padding:0;
-color:${dTheme.textColor}
+color:${dTheme.textColor};
+`
+
+export const EmbedArea = styled.textarea`
+display: flex;
+flex:1;
+height:150px;
+padding:5px 8px;
+border:none;
+border-radius: 3px;
+background:${dTheme.inputBg};
+color:${dTheme.textColor};
+
 `

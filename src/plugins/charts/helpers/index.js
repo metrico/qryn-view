@@ -162,8 +162,8 @@ export function getNewData(data, type) {
     if (lSelected.length > 0) {
         const ids = mapIds(lSelected);
 
-        const dataMapped = data.map((series) => {
-            if (!ids.includes(series.id)) {
+        const dataMapped = data?.map((series) => {
+            if (!ids?.includes(series.id)) {
                 return hideSeries(series);
             } else {
                 return showSeries(series, type);

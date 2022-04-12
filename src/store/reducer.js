@@ -12,6 +12,10 @@ const reducer = (state, action) => {
             return { ...state, start: action.start };
         case "SET_STOP_TIME":
             return { ...state, stop: action.stop };
+        case "SET_FROM_TIME":
+            return { ...state, from: action.from };
+        case "SET_TO_TIME":
+            return { ...state, to: action.to };
         case "SET_TIME_RANGE_LABEL":
             return { ...state, label: action.label };
         case "SET_QUERY_LIMIT":
@@ -40,6 +44,8 @@ const reducer = (state, action) => {
             return { ...state, urlLocation: action.urlLocation };
         case "SET_IS_SUBMIT":
             return { ...state, isSubmit: action.isSubmit };
+        case "SET_IS_EMBED":
+            return { ...state, isEmbed: action.isEmbed };
         case "SET_MATRIX_DATA":
             return { ...state, matrixData: action.matrixData };
         case "SET_CHART_TYPE":
@@ -54,7 +60,8 @@ const reducer = (state, action) => {
             return { ...state, notifications: action.payload };
         case "REMOVE_NOTIFICATION":
             return { ...state, notifications: action.payload };
-
+        case "SET_DEBUG_MODE":
+            return { ...state, debugMode: action.debugMode };
         default:
             return { ...state };
     }
