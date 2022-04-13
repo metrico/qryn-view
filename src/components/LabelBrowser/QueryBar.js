@@ -27,20 +27,19 @@ export const QueryBar = () => {
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen);
-    const debug = useSelector((store) => store.debug);
+    const debug = useSelector((store) => store.debugMode);
     const query = useSelector((store) => store.query);
     const apiUrl = useSelector((store) => store.apiUrl);
     const isSubmit = useSelector((store) => store.isSubmit);
     const historyOpen = useSelector((store) => store.historyOpen);
+    const isEmbed = useSelector( ( store ) => store.isEmbed) 
 
     const [queryInput, setQueryInput] = useState(query);
     const [queryValid, setQueryValid] = useState(false);
-
     const [queryValue, setQueryValue] = useState(queryInit(query));
 
     const queryHistory = useSelector((store) => store.queryHistory);
     const saveUrl = localUrl();
-
     useEffect(() => {
         const dLog = debugLog(query);
         debug && dLog.logicQueryBar();
@@ -55,6 +54,7 @@ export const QueryBar = () => {
                 dispatch(setIsSubmit(false));
             }, 200);
         } else if (!onQueryValid(query) && isSubmit === "true") {
+            
             dispatch(setIsSubmit(false));
         }
     }, []);
@@ -118,9 +118,11 @@ export const QueryBar = () => {
         dispatch(setHistoryOpen(!historyOpen));
     }
     return (
-        <div
+        !isEmbed && (
+            <div
             className={css`
                 max-width: 100%;
+                
             `}
         >
             <MobileTopQueryMenu>
@@ -170,5 +172,8 @@ export const QueryBar = () => {
                 />
             </QueryBarContainer>
         </div>
+
+        )
+
     );
 };

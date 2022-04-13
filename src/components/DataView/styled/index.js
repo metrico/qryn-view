@@ -13,7 +13,7 @@ export const DataViewStyled = styled.div`
     position: relative;
     flex: 1;
     border-radius: 3px;
-    padding: 0.5rem;
+    //padding: 0.5rem;
 
     &::-webkit-scrollbar {
         width: 10px;

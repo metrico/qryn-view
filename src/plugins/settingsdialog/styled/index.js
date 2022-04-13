@@ -1,12 +1,8 @@
-
 import styled from "@emotion/styled";
 
-
-import darkTheme from '../../../theme/dark';
-import { BtnSmall } from '../../../theme/styles/Button';
-import { InputSmall } from '../../../theme/styles/Input';
-
-
+import darkTheme from "../../../theme/dark";
+import { BtnSmall } from "../../../theme/styles/Button";
+import { InputSmall } from "../../../theme/styles/Input";
 
 const dTheme = darkTheme;
 
@@ -30,7 +26,7 @@ export const SettingCont = styled.div`
 `;
 
 export const SettingsInputContainer = styled.div`
-    margin:20px;
+    margin: 20px;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -40,18 +36,18 @@ export const SettingInput = styled(InputSmall)`
     background: ${dTheme.inputBg};
     margin: 5px;
     flex: 1;
-    padding:5px 12px;
-    border:1px solid transparent;
+    padding: 5px 12px;
+    border: 1px solid transparent;
     &:focus {
         background: ${dTheme.black.b100};
-        border:1px solid ${dTheme.buttonHover};
-        color:${dTheme.buttonText};
+        border: 1px solid ${dTheme.buttonHover};
+        color: ${dTheme.buttonText};
     }
 `;
 export const SettingButton = styled(BtnSmall)`
     background: ${dTheme.primaryDark};
-    color:${dTheme.buttonText};
-    height:26px;
+    color: ${dTheme.buttonText};
+    height: 26px;
     &:hover {
         background: ${dTheme.primaryLight};
     }
@@ -64,19 +60,30 @@ export const SettingLabel = styled.label`
 `;
 
 export const SettingHeader = styled.div`
-display:flex;
-justify-content: space-between;
-align-items: center;
-margin:10px;
-h3 {
-    margin-left: 10px;
-    font-size: 1em;
-    color:${dTheme.textColor}
-
-}
-`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    h3 {
+        margin-left: 10px;
+        font-size: 1em;
+        color: ${dTheme.textColor};
+    }
+`;
 export const SettingCloseBtn = styled(BtnSmall)`
-background:none;
-padding:0;
-color:${dTheme.textColor}
-`
+    background: none;
+    padding: 0;
+    color: ${dTheme.textColor};
+`;
+
+export const EmbedArea = styled.textarea`
+    display: flex;
+    flex: 1;
+    margin: 5px;
+    height: 150px;
+    padding: 5px 8px;
+    border: none;
+    border-radius: 3px;
+    background: ${dTheme.inputBg};
+    color: ${dTheme.textColor};
+`;
