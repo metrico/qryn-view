@@ -2,7 +2,7 @@ import { Dialog, Switch } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setApiUrl, setQueryLimit, setQueryStep } from "../../actions";
 import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 
 import {
@@ -24,65 +24,22 @@ export default function SettingsDialog({ open, onClose }) {
     const apiUrl = useSelector((store) => store.apiUrl);
     const limit = useSelector((store) => store.limit);
     const step = useSelector((store) => store.step);
-    const from = useSelector((store) => store.from);
-    const to = useSelector((store) => store.to);
-    const debugMode = useSelector((store) => store.debugMode);
-    //const theme = useSelector((store) => store.theme);
 
+    const debugMode = useSelector((store) => store.debugMode);
+    
     const [apiEdited, setApiEdited] = useState(apiUrl);
 
-    const url = window.location.href;
-    const submitUrl = url + "&isEmbed=true";
-    const [embedEdited, setEmbedEdited] = useState(submitUrl);
-    const urlParams = new URLSearchParams(window.location.hash);
+    const [embedEdited, setEmbedEdited] = useState(
+        getEmbed(window.location.href)
+    );
 
-    function getFromTime() {
-        return urlParams.get("start");
-    }
-
-    function getToTime() {
-        return urlParams.get("stop");
-    }
-    function removeStart() {
-        urlParams.delete("start");
+    function getEmbed(url) {
+        return url + "&isEmbed=true";
     }
 
-    function removeStop() {
-        urlParams.delete("stop");
-    }
-
-    function appendFrom() {
-        urlParams.append("from", from);
-    }
-    function appendTo() {
-        urlParams.append("to", to);
-    }
-
-    function setFromTime() {
-        const fromTime = getFromTime();
-        dispatch(setFromTime(fromTime));
-    }
-
-    function setToTime() {
-        const toTime = getToTime();
-        dispatch(setToTime(toTime));
-    }
-
-    function updateExternalTime() {
-        setToTime();
-        setFromTime();
-    }
-
-    function externalGenerator() {
-        // update from - to
-        updateExternalTime();
-        // remove start and stop
-        removeStart();
-        removeStop();
-        // add from and to
-        appendFrom();
-        appendTo();
-    }
+    useEffect(() => {
+        setEmbedEdited(getEmbed(window.location.href));
+    }, [window.location.href]);
 
     function handleApiChange(e) {
         const value = e.target.value;
@@ -112,12 +69,8 @@ export default function SettingsDialog({ open, onClose }) {
     }
     function handleDebugSwitch() {
         dispatch(setDebugMode(debugMode ? false : true));
+        localStorage.setItem("isDebug",JSON.stringify({isActive: debugMode ? false : true}))
     }
-    const label = {
-        onChange: { handleDebugSwitch },
-        checked: { debugMode },
-        inputProps: { "aria-label": "Set Debug Mode" },
-    };
 
     return (
         <Dialog open={open} onClose={handleClose}>
@@ -162,12 +115,11 @@ export default function SettingsDialog({ open, onClose }) {
                     </InputGroup>
                     <InputGroup>
                         <SettingLabel>Set Debug Mode</SettingLabel>
-                        <Switch 
-                        checked={debugMode}
-                        onChange={handleDebugSwitch}
-                        inputProps={{'aria-label':'controlled'}}
-
-                         />
+                        <Switch
+                            checked={debugMode}
+                            onChange={handleDebugSwitch}
+                            inputProps={{ "aria-label": "controlled" }}
+                        />
                     </InputGroup>
                     <InputGroup>
                         <SettingLabel>Embed View</SettingLabel>

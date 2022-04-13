@@ -27,7 +27,7 @@ export const QueryBar = () => {
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen);
-    const debug = useSelector((store) => store.debug);
+    const debug = useSelector((store) => store.debugMode);
     const query = useSelector((store) => store.query);
     const apiUrl = useSelector((store) => store.apiUrl);
     const isSubmit = useSelector((store) => store.isSubmit);
