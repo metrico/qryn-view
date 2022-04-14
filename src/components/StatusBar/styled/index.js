@@ -1,15 +1,14 @@
 import styled from "@emotion/styled";
-import darkTheme from "../../../theme/dark";
+import theme from "../../../theme/themes";
 import { BtnSmall } from "../../../theme/styles/Button";
 import { InputSmall } from "../../../theme/styles/Input";
-const theme = darkTheme;
 export const MenuButton = styled(BtnSmall)`
     background: none;
     border: none;
     display: flex;
     height: 26px;
     color: ${(props) =>
-        props.isActive ? theme.inputTextFocus : theme.textColor};
+        props.isActive ? props.theme.inputTextFocus : props.theme.textColor};
     cursor: pointer;
 `;
 
@@ -26,18 +25,18 @@ export const StatusCont = styled.div`
         margin-left: 10px;
         .label {
             flex: 1;
-            color: ${theme.inputLabelColor};
+            color: ${props => props.theme.inputLabelColor};
             padding: 4px 8px;
             font-size: 0.85em;
             text-transform: uppercase;
-            background: ${theme.inputLabelBg};
+            background: ${props => props.theme.inputLabelBg};
             border-radius: 4px;
             white-space: nowrap;
         }
     }
     input {
-        color: ${theme.textColor};
-        background: ${theme.inputBg};
+        color: ${props => props.theme.textColor};
+        background: ${props => props.theme.inputBg};
         border: none;
         outline: none;
         padding: 4px 8px;
@@ -70,11 +69,11 @@ export const ApiSelectorStyled = styled.div`
         margin-left: 10px;
         .label {
             flex: 1;
-            color: ${theme.inputLabelColor};
+            color: ${props => props.theme.inputLabelColor};
             padding: 4px 8px;
             font-size: 0.85em;
             text-transform: uppercase;
-            background: ${theme.inputLabelBg};
+            background: ${props => props.theme.inputLabelBg};
             border-radius: 4px;
             white-space: nowrap;
         }
@@ -89,39 +88,39 @@ export const ApiSelectorStyled = styled.div`
 `;
 
 export const ApiSelectorButton = styled(BtnSmall)`
-    background: ${theme.buttonDefault};
-    color: ${theme.textColor};
+    background: ${props => props.theme.buttonDefault};
+    color: ${props => props.theme.textColor};
     text-overflow: ellipsis;
     transition: 0.2s all;
     &:hover {
-        background: ${theme.buttonHover};
+        background: ${props => props.theme.buttonHover};
     }
 `;
 export const ApiSelectorInput = styled(InputSmall)`
-    color: ${theme.textColor};
-    background: ${theme.inputBg};
+    color: ${props => props.theme.textColor};
+    background: ${props => props.theme.inputBg};
     &:focus {
         color: orange;
     }
 `;
 export const UrlCopyButton = styled(BtnSmall)`
     background: ${theme.buttonDefault};
-    color: ${({ isActive }) => (isActive ? "orange" : theme.textColor)};
+    color: ${({ isActive, theme }) => (isActive ? "orange" : theme.textColor)};
     cursor: ${({ isActive }) => (isActive ? "pointer" : "not-allowed")};
     text-overflow: ellipsis;
     transition: 0.2s all;
     span {
         margin-left: 4px;
-        color: ${theme.textColor};
+        color: ${props => props.theme.textColor};
     }
     &:hover {
-        background: ${theme.buttonHover};
+        background: ${props => props.theme.buttonHover};
     }
 `;
 
 export const DatePickerButton = styled(BtnSmall)`
-    background: ${theme.buttonDefault};
-    color: ${theme.textColor};
+    background: ${props => props.theme.buttonDefault};
+    color: ${props => props.theme.textColor};
     height: 26px;
     margin-left: 10px;
     span {

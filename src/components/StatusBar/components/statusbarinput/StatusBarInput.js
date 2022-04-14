@@ -1,5 +1,7 @@
 
 import { useDispatch } from "react-redux";
+import { ThemeProvider, useSelector } from '@emotion/react';
+import { themes } from "../../../../theme/themes";
 export function StatusBarInput(props) {
     const { label, value, dispatchAction, type } = props;
     const dispatch = useDispatch();
@@ -7,7 +9,9 @@ export function StatusBarInput(props) {
       dispatch(dispatchAction(e.target.value));
     };
   
+    const theme = useSelector((store) => store.theme);
     return (
+      <ThemeProvider theme={themes[theme]}>
       <div className="selector">
         <span className="label">{label}</span>
         <input
@@ -16,5 +20,6 @@ export function StatusBarInput(props) {
           onChange={handleStatusInputChange}
         />
       </div>
+      </ThemeProvider>
     );
   }

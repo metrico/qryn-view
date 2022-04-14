@@ -11,6 +11,7 @@ import {
     setQueryStep,
     setStartTime,
     setStopTime,
+    setTheme,
 
 } from "../actions";
 
@@ -65,10 +66,10 @@ export function UpdateStateFromQueryParams() {
         to: setToTime,
         isSubmit: setIsSubmit,
         isEmbed: setIsEmbed,
-
+        theme: setTheme
     };
 
-    const STRING_VALUES = ["limit", "step", "apiUrl"];
+    const STRING_VALUES = ["limit", "step", "apiUrl", "theme"];
 
     const QUERY_VALUE = "query";
 

@@ -6,26 +6,42 @@ import { UpdateStateFromQueryParams } from "../helpers/UpdateStateFromQueryParam
 import LabelBrowser from "./LabelBrowser";
 import SettingsDialog from "../plugins/settingsdialog/SettingsDialog";
 import { useSelector } from 'react-redux';
-
+import styled from "@emotion/styled";
+import { ThemeProvider } from '@emotion/react';
+import { themes } from "../theme/themes";
+export const MainViewStyled = styled.div`
+    position:absolute;
+    top:5px;
+    left:0;
+    height:100%;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    background-color: ${props => props.theme.bgColor} !important;
+`;
 export default function MainView() {
     UpdateStateFromQueryParams();
-    const settingsDialogOpen = useSelector( store => store.settingsDialogOpen)
+    const settingsDialogOpen = useSelector( store => store.settingsDialogOpen);
+    const theme = useSelector((store) => store.theme);
     return (
-        <div className={"log-search"}>
+        
+        <ThemeProvider theme={themes[theme]}>
+            <MainViewStyled>
 
-            <StatusBar />
+                <StatusBar />
 
-            <LabelBrowser />
+                <LabelBrowser />
 
-            <DataView />
+                <DataView />
 
-            <Notification />
+                <Notification />
 
 
-            <SettingsDialog
-             open={settingsDialogOpen}
-             />
+                <SettingsDialog
+                open={settingsDialogOpen}
+                />
 
-        </div>
+            </MainViewStyled>
+        </ThemeProvider>
     );
 }

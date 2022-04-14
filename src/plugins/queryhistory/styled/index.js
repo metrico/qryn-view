@@ -9,9 +9,8 @@ import TabPanelUnstyled from "@mui/base/TabPanelUnstyled";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import LinkIcon from "@mui/icons-material/Link";
 import { createTheme } from "@mui/material";
-import darkTheme from "../../../theme/dark";
+import dTheme from "../../../theme/themes";
 
-const dTheme = darkTheme;
 export const Tab = styled(TabUnstyled)`
     color: ${dTheme.buttonText};
     cursor: pointer;

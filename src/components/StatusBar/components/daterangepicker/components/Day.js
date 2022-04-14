@@ -7,14 +7,16 @@ import {
 } from "@mui/material";
 import {withStyles} from '@mui/styles';
 import { combine } from "../utils";
-import { DayStyles, theme } from "./styles";
+import { DayStyles } from "./styles";
 
-
+import { useSelector } from 'react-redux';
+import { themes } from "../../../../../theme/themes";
 
 const Day = props => {
 	const { classes } = props;
+    const theme = useSelector((store) => store.theme);
 	return (
-		<ThemeProvider theme={theme}>
+		<ThemeProvider theme={themes[theme]}>
 
 
 		<div

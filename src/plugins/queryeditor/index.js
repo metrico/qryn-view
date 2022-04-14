@@ -8,8 +8,7 @@ import { withHistory } from "slate-history";
 import Prism from "prismjs";
 import "prismjs/components/prism-promql";
 import "prismjs/components/prism-sql";
-import darkTheme from "../../theme/dark";
-const theme = darkTheme;
+import theme from "../../theme/themes";
 const CustomEditor = styled(Editable)`
     flex: 1;
     background: ${theme.inputBg};

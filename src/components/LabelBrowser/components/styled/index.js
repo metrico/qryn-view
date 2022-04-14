@@ -1,21 +1,19 @@
 import styled from "@emotion/styled";
 
 import HistoryIcon from "@mui/icons-material/History";
-import darkTheme from "../../../../theme/dark";
 import { BtnSmall } from "../../../../theme/styles/Button";
 
 // get theme from main state
 
-const theme = darkTheme;
 
 export const HistoryIconStyled = styled(HistoryIcon)`
     color: ${(props) => props.color};
 `;
 export const HistoryButtonStyled = styled(BtnSmall)`
     background: none;
-    color: ${theme.buttonText};
+    color: ${props => props.theme.buttonText};
     margin-left: 5px;
-    background: ${theme.buttonHover};
+    background: ${props => props.theme.buttonHover};
     span {
         margin-left: 5px;
     }
@@ -26,13 +24,13 @@ export const HistoryButtonStyled = styled(BtnSmall)`
 
 export const ShowLabelsBtn = styled(BtnSmall)`
     background: ${(props) =>
-        props.browserActive ? theme.buttonDefault : theme.buttonHover};
+        props.browserActive ? props.theme.buttonDefault : props.theme.buttonHover};
     text-overflow: ellipsis;
     transition: 0.25s all;
     justify-content: flex-start;
-    color: ${theme.buttonText};
+    color: ${props => props.theme.buttonText};
     &:hover {
-        background: ${theme.buttonHover};
+        background: ${props => props.theme.buttonHover};
     }
     @media screen and (max-width: 864px) {
         display: ${(props) => (props.isMobile ? "flex" : "none")};
@@ -46,21 +44,21 @@ export const QueryBarContainer = styled.div`
     padding: 3px 6px;
     margin: 5px 0px;
     margin-left: 0px;
-    background: ${theme.widgetContainer};
+    background: ${props => props.theme.widgetContainer};
     flex-wrap: wrap;
     border-radius: 3px;
 `;
 export const ShowLogsBtn = styled(BtnSmall)`
-    background: ${theme.primaryDark};
-    color: ${theme.buttonText};
+    background: ${props => props.theme.primaryDark};
+    color: ${props => props.theme.buttonText};
     margin-left: 5px;
     transition: 0.25s all;
     justify-content: center;
     &:hover {
-        background: ${theme.primaryLight};
+        background: ${props => props.theme.primaryLight};
     }
     &:disabled {
-        background: ${theme.buttonDefault};
+        background: ${props => props.theme.buttonDefault};
         cursor: not-allowed;
     }
     @media screen and (max-width: 864px) {

@@ -2,14 +2,9 @@ import React, { useState, useEffect } from "react";
 
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import { createTheme } from "@mui/material/styles";
-import { ThemeProvider } from "@mui/material/styles";
 import createStyles from "@mui/styles/createStyles";
 import { withStyles } from "@mui/styles";
-import { css, jsx } from "@emotion/css";
+import { css } from "@emotion/css";
 
 import {
     format,
@@ -19,10 +14,8 @@ import {
     isSameSecond,
     isBefore,
 } from "date-fns";
-import ArrowRightAlt from "@mui/icons-material/ArrowRightAlt";
 import Month from "./Month";
 import Ranges from "./Ranges";
-import CloseIcon from "@mui/icons-material/Close";
 import { DATE_TIME_RANGE, MARKERS } from "../consts";
 import { useDispatch } from "react-redux";
 import {
@@ -35,8 +28,9 @@ import { findRangeByLabel } from "../utils";
 import AbsoluteSelector from "./AbsoluteSelector";
 import { useMediaQuery } from "react-responsive";
 import styled from "@emotion/styled";
-import darkTheme from "../../../../../theme/dark";
-const dTheme = darkTheme;
+import {themes} from "../../../../../theme/themes";
+import { useSelector } from 'react-redux';
+import { ThemeProvider } from '@emotion/react';
 const PickerTypeButton = styled.button`
     padding: 10px;
     border-radius: 3px;
@@ -95,11 +89,6 @@ const styles = (theme) =>
         },
     });
 
-const theme = createTheme({
-    palette: {
-        mode: "dark",
-    },
-});
 const PickerNav = (props) => {
     const {
         classes,
@@ -132,6 +121,7 @@ const PickerNav = (props) => {
     const [startCalendar, setStartCalendar] = useState(false);
     const [stopCalendar, setStopCalendar] = useState(false);
 
+    const theme = useSelector((store) => store.theme);
     useEffect(() => {
         if (rangeLabel) {
             const newRange = findRangeByLabel(rangeLabel);
@@ -209,7 +199,7 @@ const PickerNav = (props) => {
     };
 
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={themes[theme]}>
             <Paper className={classes.container} elevation={5}>
                 <Grid display={"flex"} style={{ flex: "1" }}>
                     {calendarOpen && isBigScreen && (

@@ -1,13 +1,16 @@
 import { formatDate, getRowColor, toggleActiveStyles } from "./helpers";
 import { LogRow, RowLogContent, RowTimestamp } from "./styled";
 import ValueTags from "./ValueTags";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, useStore } from "react-redux";
 import setLogs from "../../actions/setLogs";
+import { ThemeProvider } from "@emotion/react";
+import { themes } from "../../theme/themes";
 
 export default function LogsRow({ message }) {
     const dispatch = useDispatch();
     const messages = useSelector((store) => store.logs);
 
+    const theme = useStore().getState().theme;
     function toggleTagsActive(idx) {
         let arrCopy = [...messages];
         arrCopy.forEach((entry) => {
@@ -19,6 +22,7 @@ export default function LogsRow({ message }) {
     }
 
     return (
+        <ThemeProvider theme={themes[theme]}>
         <LogRow
             rowColor={getRowColor(message.tags)}
             onClick={(e) => {
@@ -34,5 +38,6 @@ export default function LogsRow({ message }) {
                 </div>
             )}
         </LogRow>
+        </ThemeProvider>
     );
 }

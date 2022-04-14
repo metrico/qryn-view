@@ -8,8 +8,10 @@ import { setQuery } from "../../actions";
 import loadLabelValues from "../../actions/loadLabelValues";
 
 import Tooltip from "@mui/material/Tooltip";
-import store from "../../store/store";
 import styled from "@emotion/styled";
+
+import { ThemeProvider } from '@emotion/react';
+import { themes } from "../../theme/themes";
 
 const ErrorContainer = styled.div`
     padding: 20px;
@@ -28,8 +30,11 @@ const LabelErrorStyled = styled.div`
 
 export const LabelsFetchError = () => {
     const labelError = useSelector((store) => store.apiErrors);
+    const theme = useSelector((store) => store.theme);
 
     return (
+        
+        <ThemeProvider theme={themes[theme]}>
         <ErrorContainer>
             {labelError !== "" && (
                 <LabelErrorStyled>
@@ -37,6 +42,7 @@ export const LabelsFetchError = () => {
                 </LabelErrorStyled>
             )}
         </ErrorContainer>
+        </ThemeProvider>
     );
 };
 
@@ -52,6 +58,7 @@ export const ValuesList = (props) => {
 
     const [labelList, setLabelList] = useState(labels);
 
+    const theme = useSelector((store) => store.theme);
     const dispatch = useDispatch();
     const debug = useSelector((store) => store.debug);
     const apiUrl = useSelector((store) => store.apiUrl);
@@ -117,6 +124,7 @@ export const ValuesList = (props) => {
     };
     return (
         labelsBrowserOpen && (
+            <ThemeProvider theme={themes[theme]}>
             <div className={"labels-container"}>
                 <div className={"valuesList"}>
                     {labelList.length > 0 ? (
@@ -217,6 +225,7 @@ export const ValuesList = (props) => {
                     )}
                 </div>
             </div>
+            </ThemeProvider>
         )
     );
 };
