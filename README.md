@@ -31,6 +31,7 @@ Use the [public client](https://view.cloki.org) _(no data goes through the serve
 - ``PORT`` default: ``8080``
 - ``API_URL`` default: ``http://localhost:3100``
 
+##### Example 
 ```bash
 ~/$ HOST=localhost PORT=8080 API_URL=http://cloki-host:3100 npm start
 ```
@@ -40,13 +41,13 @@ cLoki-view can be controlled through URL parameters
 
 | param | description |  |
 |-------|-------------|---------|
-| apiUrl | LogQL API URL | http://localhost:3100 |
-| query  | LogQL query | |
-| from   | timestamp Ns | |
-| to     | timestamp Ns | |
-| limit  | query limit | |
-| step   | query step | |
-| isEmbed | embed mode | false |
+| `apiUrl` | _LogQL API URL_ | http://localhost:3100 |
+| `query`  | _LogQL query_   | |
+| `from`   | _timestamp Ns_  | |
+| `to`     | _timestamp Ns_  | |
+| `limit`  | _query limit_   | |
+| `step`   | _query step_    | |
+| `isEmbed` | _embed mode_   | false |
 
 
 ------------
