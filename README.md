@@ -5,9 +5,9 @@
 
 # :eye: cLoki View
 
-### like Grafana Explore, but for cLoki
+### like Grafana Explore [^1], but for cLoki [^2]
 
-cLoki-view is a smart and minimal data explorer developed in React/JS and designed for LogQL APIs and [cLoki](https://cloki.org)
+cLoki-view is a smart and minimal data explorer developed in React/JS and designed for LogQL APIs such as [cLoki](https://cloki.org)
 
 <img src="https://user-images.githubusercontent.com/1423657/152640509-82d7704a-4e9a-4a2b-9b7e-1819984c7581.png"/><img src="https://user-images.githubusercontent.com/1423657/155608224-8654694b-b999-4781-994a-5a87e39dfddf.png" />
 
@@ -58,4 +58,7 @@ Consult the [cLoki Wiki](https://github.com/lmangani/cLoki/wiki/LogQL-Supported-
 
 ### Acknowledgements
 - (C) 2022 QXIP BV see LICENSE for details
-- This project is not affiliated or endorsed by Grafana Labs. All rights belong to their respective owners.
+
+[^1]: cLoki is not affiliated or endorsed by Grafana Labs or ClickHouse Inc. All rights belong to their respective owners.
+[^2]: cLoki is part of the cLoki project, licensed under the AGPLv3 LICENSE by QXIP BV
+
