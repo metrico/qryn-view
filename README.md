@@ -7,40 +7,25 @@
 
 ### like Grafana Explore, but for cLoki
 
-cLoki-view is a smart and minimal data explorer developed in React/JS and designed for LogQL APIs
+cLoki-view is a smart and minimal data explorer developed in React/JS and designed for LogQL APIs and [cLoki](https://cloki.org)
 
 <img src="https://user-images.githubusercontent.com/1423657/152640509-82d7704a-4e9a-4a2b-9b7e-1819984c7581.png"/><img src="https://user-images.githubusercontent.com/1423657/155608224-8654694b-b999-4781-994a-5a87e39dfddf.png" />
 
-### Setup
+### Features
+- Label Browser
+- Display Logs & Charts
+- Timerange Selector
+- Query History
+- Mobile View
+- Embeddable Results
+- 100% Client-Side
 
-#### :busstop: **Basic Instructions**
 
-***clone the repository***, then:
+### Usage
 
-##### install: 
+Use the [public client](https://view.cloki.org) _(no data goes through the server)_ or [build](BUILD.md) and run your own instance
 
-```bash
-~/$ npm install
-```
-
-##### build (dist): 
-
-```bash
-~/$ npm run build
-```
-##### start (development mode): 
-
-```bash
-~/$ npm start
-```
-
-will serve the UI on ``http://localhost:8080``
-
-#### :busstop:  **Important:** set api endpoint:
-
-- go to ``./src/environment/env.dev.js``
-
-### Environment Variables:
+#### Environment Variables:
 
 - ``HOST`` default: `` 0.0.0.0``
 - ``PORT`` default: ``8080``
@@ -49,24 +34,20 @@ will serve the UI on ``http://localhost:8080``
 ```bash
 ~/$ HOST=localhost PORT=8080 API_URL=http://cloki-host:3100 npm start
 ```
-  
-### Basic Features
 
-**Labels:** 
+##### URL Parameters
+cLoki-view can be controlled through URL parameters
 
-the labels will be loaded atomatically on every DOM change
+| param | description |  |
+|-------|-------------|---------|
+| apiUrl | LogQL API URL | http://localhost:3100 |
+| query  | LogQL query | |
+| from   | timestamp Ns | |
+| to     | timestamp Ns | |
+| limit  | query limit | |
+| step   | query step | |
+| isEmbed | embed mode | false |
 
-**Label Values:** 
-
-the values of each label will be retrieved clicking on the ``log browser => [click on some label]``
-
-**Query:** 
-
-The LogQL Query will be auto-formed by Label selection, and can be extended manually
-
-**Show Logs:** 
-
-click on ``show logs`` button to execute your LogQL Query
 
 ------------
 
