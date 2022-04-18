@@ -13,7 +13,7 @@ export const HistoryButtonStyled = styled(BtnSmall)`
     background: none;
     color: ${props => props.theme.buttonText};
     margin-left: 5px;
-    background: ${props => props.theme.buttonHover};
+    background: ${props => props.theme.buttonDefault};
     span {
         margin-left: 5px;
     }

@@ -25,7 +25,7 @@ const StyledList = styled.div`
         font-size: 0.85em;
         cursor: pointer;
         &:hover {
-            background: #11111155;
+            background: ${props => props.theme.buttonHover};
         }
     }
 `;
@@ -50,7 +50,7 @@ const Ranges = (props) => {
                                 : "normal",
                             color: isSameRange(range, props.selectedRange)
                                 ? "orange"
-                                : "white",
+                                : themes[theme].textColor,
                             whiteSpace: "nowrap",
                         }}
                     >

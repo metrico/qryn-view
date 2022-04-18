@@ -41,7 +41,8 @@ export function UpdateStateFromQueryParams() {
     const isSubmit = useSelector((store) => store.isSubmit);
     const isEmbed = useSelector((store) => store.isEmbed);
     const query = useSelector((store) => store.query);
-
+    const theme = useSelector((store) => store.theme)
+    const isLightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
     const STORE_KEYS = {
         apiUrl,
         query,
@@ -53,6 +54,7 @@ export function UpdateStateFromQueryParams() {
         to,
         isSubmit,
         isEmbed,
+        theme
     };
 
     const STORE_ACTIONS = {
@@ -134,6 +136,7 @@ export function UpdateStateFromQueryParams() {
                 dispatch(setLabelsBrowserOpen(false));
             }
         } else {
+            console.log('test')
             dispatch(setApiUrl(environment.apiUrl));
 
             const allParams = STRING_VALUES.concat(TIME_VALUES);

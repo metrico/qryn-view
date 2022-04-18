@@ -17,7 +17,7 @@ export const MainViewStyled = styled.div`
     width:100%;
     display:flex;
     flex-direction:column;
-    background-color: ${props => props.theme.bgColor} !important;
+    background-color: ${props => props.theme.mainBgColor} !important;
 `;
 export default function MainView() {
     UpdateStateFromQueryParams();

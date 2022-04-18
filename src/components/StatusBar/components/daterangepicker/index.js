@@ -23,7 +23,6 @@ import {
     parseOptionalDate,
 } from "./utils";
 import { DATE_TIME_RANGE, MARKERS } from "./consts";
-import { theme } from "./components/styles";
 import { ThemeProvider } from "@emotion/react";
 import {
     setRangeOpen,
@@ -46,6 +45,7 @@ import { setLabelsBrowserOpen } from "../../../../actions/setLabelsBrowserOpen";
 
 import TimeLabel from "./components/TimeLabel";
 import { DatePickerButton } from "../../styled";
+import { themes } from "../../../../theme/themes";
 
 
 export function DateRangePickerMain(props) {
@@ -226,6 +226,7 @@ export function DateRangePickerMain(props) {
         }
     };
 
+    const theme = useSelector(store => store.theme);
     return (
         <div>
             <Tooltip
@@ -261,7 +262,7 @@ export function DateRangePickerMain(props) {
             </Tooltip>
             {rangeOpen ? (
                 <div tabIndex={"0"} ref={ref}>
-                    <ThemeProvider theme={theme}>
+                    <ThemeProvider theme={themes[theme]}>
                         <Nav
                             dateRange={dateRange}
                             minDate={minDateValid}

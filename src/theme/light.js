@@ -18,11 +18,15 @@ const white = {
 };
 
 const lightgrey = {
+    lg10: "hsla(0, 0%, 90%, 0.231)",
+    lg15: "hsla(0, 0%, 90%, 0.333)",
     lg100: "hsl(0, 0%, 80%)",
-    lg200: "hsl(0, 0%, 76%)", //text
+    lg200: "hsl(0, 0%, 76%)",
     lg300: "hsl(0, 0%, 72%)",
-    lg400: "hsl(0, 0%, 68%)", // label
+    lg400: "hsl(0, 0%, 68%)", 
     lg500: "hsl(0, 0%, 64%)",
+    lg600: "hsl(0, 0%, 60%)",
+    lg700: "hsl(0, 0%, 56%)",
 };
 
 const darkgrey = {
@@ -59,16 +63,19 @@ const typography = {
 const orange = {
     or100: "hsl(39, 100%, 50%)",
 };
-const bgColor = white.w400;
-const textColor = darkgrey.dg200;
+const mainBgColor = white.w400;
+const textColor = darkgrey.dg100;
 const textOff = darkgrey.dg400;
 const textPrimary = white.w300;
-const inputBg = black.b15;
+const inputBg = white.w200;
 const primaryDark = turquoise.tq200;
 const primaryLight = turquoise.tq300;
-const widgetContainer = white.w400;
-const buttonDefault = darkgrey.dg100;
-const buttonHover = darkgrey.dg15;
+const widgetContainer = white.w500;
+const secondaryWidgetContainer = lightgrey.lg100;
+const widgetTitle = lightgrey.lg300;
+const widgetTitleBorder = lightgrey.lg700;
+const buttonDefault = lightgrey.lg300;
+const buttonHover = lightgrey.lg400;
 const buttonInactive = black.b400;
 const buttonText = white.w200;
 const inputTextFocus = orange.or100;
@@ -115,7 +122,10 @@ const lightTheme = {
     turquoise,
     palette,
     typography,
-    bgColor,
+    mainBgColor,
+    secondaryWidgetContainer,
+    widgetTitle,
+    widgetTitleBorder,
     ...defaultTheme
 };
 export default lightTheme;

@@ -8,11 +8,14 @@ import { withHistory } from "slate-history";
 import Prism from "prismjs";
 import "prismjs/components/prism-promql";
 import "prismjs/components/prism-sql";
-import theme from "../../theme/themes";
+import { themes } from "../../theme/themes";
+import { ThemeProvider } from '@emotion/react';
+import { useSelector } from "react-redux";
+
 const CustomEditor = styled(Editable)`
     flex: 1;
-    background: ${theme.inputBg};
-    color: ${theme.textColor};
+    background: ${props => props.theme.inputBg};
+    color: ${props => props.theme.textColor};
     padding: 4px 8px;
     font-size: 1em;
     font-family: monospace;
@@ -90,6 +93,7 @@ function Leaf({ attributes, children, leaf }) {
 }
 
 export default function QueryEditor({ onQueryChange, value, onKeyDown }) {
+    const theme = useSelector((store) => store.theme);
     const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
 
     const editor = useMemo(() => withHistory(withReact(createEditor())), []);
@@ -143,6 +147,7 @@ export default function QueryEditor({ onQueryChange, value, onKeyDown }) {
         editor.children = value;
     }, [value]);
     return (
+        <ThemeProvider theme={themes[theme]}>
         <QueryBar>
             {/* <select value={language} onChange={(e) => setLanguage(e.target.value)}>
         <option value={"sql"}>{"SQL"}</option>
@@ -158,5 +163,6 @@ export default function QueryEditor({ onQueryChange, value, onKeyDown }) {
                 />
             </Slate>
         </QueryBar>
+        </ThemeProvider>
     );
 }

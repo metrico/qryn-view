@@ -64,7 +64,6 @@ export const ApiSelectorStyled = styled.div`
     align-items: center;
     transition: 0.2s all;
     height: 26px;
-
     .selector {
         margin-left: 10px;
         .label {
@@ -73,9 +72,12 @@ export const ApiSelectorStyled = styled.div`
             padding: 4px 8px;
             font-size: 0.85em;
             text-transform: uppercase;
-            background: ${props => props.theme.inputLabelBg};
+            background: ${props => props.theme.mainBgColor};
             border-radius: 4px;
             white-space: nowrap;
+        }
+        .input {
+            bacgkround: ${props => props.theme.inputLabelBg}
         }
     }
     & div {
@@ -104,7 +106,7 @@ export const ApiSelectorInput = styled(InputSmall)`
     }
 `;
 export const UrlCopyButton = styled(BtnSmall)`
-    background: ${theme.buttonDefault};
+    background: ${props => props.theme.buttonDefault};
     color: ${({ isActive, theme }) => (isActive ? "orange" : theme.textColor)};
     cursor: ${({ isActive }) => (isActive ? "pointer" : "not-allowed")};
     text-overflow: ellipsis;
