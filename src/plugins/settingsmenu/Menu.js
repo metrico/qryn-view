@@ -9,6 +9,7 @@ import CopyButton from "./CopyButton/CopyButton";
 import { styled } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen";
+import { MenuButton } from "./styled";
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -34,8 +35,9 @@ const StyledMenu = styled((props) => (
             padding: "4px 0",
         },
         "& .MuiMenuItem-root": {
+            fontSize:12,
             "& .MuiSvgIcon-root": {
-                fontSize: 18,
+                fontSize: 12,
                 color: theme.palette.text.secondary,
                 marginRight: theme.spacing(1.5),
             },
@@ -63,7 +65,7 @@ export default function ClokiMenu() {
     };
     return (
         <div>
-            <Button
+            <MenuButton
                 style={{ color: "#ddd" }}
                 id="basic-button"
                 aria-controls={open ? "basic-menu" : undefined}
@@ -71,8 +73,8 @@ export default function ClokiMenu() {
                 aria-expanded={open ? "true" : undefined}
                 onClick={handleClick}
             >
-                <MenuIcon />
-            </Button>
+                <MenuIcon style={{height:'16px',width:'16px'}} />
+            </MenuButton>
             <StyledMenu
                 id="basic-menu"
                 anchorEl={anchorEl}

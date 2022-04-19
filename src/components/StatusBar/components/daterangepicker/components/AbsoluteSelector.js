@@ -14,7 +14,7 @@ const SelectorsContainer = styled.div`
         flex-direction: column;
         margin-bottom: 15px;
         .label {
-            font-size: 0.85em;
+            font-size: 12px;
             color: ${theme.inputLabelColor};
             width: 50px;
             margin-left: 5px;

@@ -18,7 +18,7 @@ const StyledList = styled.div`
         padding: 10px;
         line-height: 1.5;
         border-radius: 3px;
-        font-size: 0.85em;
+        font-size: 12px;
         cursor: pointer;
         &:hover {
             background: #11111155;
