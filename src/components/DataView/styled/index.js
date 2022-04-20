@@ -63,7 +63,7 @@ export const LogRow = styled.div`
 `;
 
 export const RowLogContent = styled.span`
-    font-size: 0.95em;
+    font-size: 12px;
     font-family: monospace;
     color: ${props => props.theme.textPrimary};
     line-height: 1.5;

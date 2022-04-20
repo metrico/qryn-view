@@ -8,6 +8,8 @@ import { BtnSmall } from "../../../../theme/styles/Button";
 
 export const HistoryIconStyled = styled(HistoryIcon)`
     color: ${(props) => props.color};
+    height:18px;
+    width:18px;
 `;
 export const HistoryButtonStyled = styled(BtnSmall)`
     background: none;

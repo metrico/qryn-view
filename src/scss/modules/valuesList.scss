@@ -32,7 +32,7 @@
             border-radius: 3px;
             background: hsla(0, 0%, 33%, 0.231);
             line-height: 1.5;
-            font-size: 1em;
+            font-size: 12px;
             cursor: pointer;
             align-items: center;
             white-space: nowrap;
@@ -136,12 +136,13 @@
 .legend-container {
     margin:3px;
     padding:3px;
+    line-height: 1.5;
     .legend-title {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: bold;
     }
     .legend-text {
-        font-size: 11px;
+        font-size: 12px;
         font-family: monospace;
     }
 }

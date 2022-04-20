@@ -12,7 +12,7 @@ import localUrl from "../../services/localUrl";
 import setLinksHistory from "../../actions/setLinksHistory";
 import QueryEditor from "../../plugins/queryeditor";
 
-import loadLabels from "../../actions/LoadLabels";
+import loadLabels from "../../actions/loadLabels";
 import { decodeQuery } from "../../helpers/UpdateStateFromQueryParams";
 import { css } from "@emotion/css";
 import { MobileTopQueryMenu, QueryBarContainer } from "./components/styled";
@@ -24,6 +24,8 @@ import onQueryValid from "./helpers/onQueryValid";
 import debugLog from "./helpers/debugLog";
 import { ThemeProvider } from '@emotion/react';
 import { themes } from "../../theme/themes";
+import { sendLabels } from "../../hooks/useLabels";
+
 export const QueryBar = () => {
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
@@ -39,26 +41,40 @@ export const QueryBar = () => {
     const [queryInput, setQueryInput] = useState(query);
     const [queryValid, setQueryValid] = useState(false);
     const [queryValue, setQueryValue] = useState(queryInit(query));
-
+    const labels = useSelector( store => store.labels)
     const queryHistory = useSelector((store) => store.queryHistory);
     const saveUrl = localUrl();
     useEffect(() => {
         const dLog = debugLog(query);
         debug && dLog.logicQueryBar();
+        // labels first load from api url
+        const labels = sendLabels(apiUrl)
 
         if (onQueryValid(query && isSubmit === "true")) {
             debug && dLog.queryBarDispatch();
-
+            return labels.then( data => {
+                decodeQuery(query,apiUrl,data)
+    
+        })
             dispatch(setLoading(true));
             dispatch(loadLogs());
 
             setTimeout(() => {
                 dispatch(setIsSubmit(false));
+                
+  
+
             }, 200);
         } else if (!onQueryValid(query) && isSubmit === "true") {
             
             dispatch(setIsSubmit(false));
         }
+
+        return labels.then( data => {
+                decodeQuery(query,apiUrl,data)
+
+        })
+       
     }, []);
 
     useEffect(() => {
@@ -101,7 +117,9 @@ export const QueryBar = () => {
                 });
                 dispatch(setQueryHistory(historyUpdated));
                 dispatch(setLabelsBrowserOpen(false));
-                decodeQuery(query, apiUrl);
+                decodeQuery(queryInput,apiUrl,labels)
+              
+
                 dispatch(setLoading(true));
                 dispatch(loadLogs());
                 const storedUrl = saveUrl.add({

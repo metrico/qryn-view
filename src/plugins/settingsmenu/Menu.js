@@ -9,6 +9,7 @@ import { styled } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen";
 import { themes } from "../../theme/themes";
+import { MenuButton } from "./styled";
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -33,6 +34,7 @@ const StyledMenu = styled((props) => (
             padding: "4px 0",
         },
         "& .MuiMenuItem-root": {
+            fontSize:12,
             "& .MuiSvgIcon-root": {
                 fontSize: 18,
                 color: theme.textColor,
@@ -63,7 +65,7 @@ export default function ClokiMenu() {
     const theme = useSelector(store => store.theme);
     return (
         <div>
-            <Button
+            <MenuButton
                 style={{ color: themes[theme].textColor, background: themes[theme].mainBgColor }}
                 id="basic-button"
                 aria-controls={open ? "basic-menu" : undefined}
@@ -71,8 +73,8 @@ export default function ClokiMenu() {
                 aria-expanded={open ? "true" : undefined}
                 onClick={handleClick}
             >
-                <MenuIcon />
-            </Button>
+                <MenuIcon style={{height:'16px',width:'16px'}} />
+            </MenuButton>
             <StyledMenu
                 id="basic-menu"
                 anchorEl={anchorEl}

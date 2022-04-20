@@ -15,8 +15,8 @@ import {
 
 } from "../actions";
 
+import  loadLabels  from "../actions/loadLabels"
 
-import loadLabels from "../actions/LoadLabels";
 import loadLabelValues from "../actions/loadLabelValues";
 import setFromTime from "../actions/setFromTime";
 import setIsEmbed from "../actions/setIsEmbed";
@@ -37,6 +37,7 @@ export function UpdateStateFromQueryParams() {
     const from = useSelector((store) => store.from);
     const to = useSelector((store)=> store.to);
     const step = useSelector((store) => store.step);
+    const labels = useSelector((store) => store.labels)
     const apiUrl = useSelector((store) => store.apiUrl);
     const isSubmit = useSelector((store) => store.isSubmit);
     const isEmbed = useSelector((store) => store.isEmbed);
@@ -103,7 +104,11 @@ export function UpdateStateFromQueryParams() {
                         STRING_VALUES.includes(param) &&
                         startParams[param] !== ""
                     ) {
+       
                         dispatch(STORE_ACTIONS[param](startParams[param]));
+                        if(param === 'apiUrl') {
+                         dispatch(loadLabels(startParams[param]))
+                        }
                     } else if (
                         QUERY_VALUE === param &&
                         startParams[param] !== ""
@@ -132,8 +137,10 @@ export function UpdateStateFromQueryParams() {
                     if (QUERY_VALUE === param) {
                     }
                 });
-                decodeQuery(decodeURIComponent(startParams.query), apiUrl);
+
+                decodeQuery(decodeURIComponent(startParams.query),apiUrl,labels);
                 dispatch(setLabelsBrowserOpen(false));
+                
             }
         } else {
             console.log('test')
@@ -162,7 +169,8 @@ export function UpdateStateFromQueryParams() {
                 }
             });
             const newQuery = STORE_KEYS[query];
-            decodeQuery(newQuery, apiUrl);
+
+            decodeQuery(newQuery, apiUrl, labels);
 
             window.location.hash = urlFromHash;
         }
@@ -211,8 +219,8 @@ export function UpdateStateFromQueryParams() {
     }, [STORE_KEYS]);
 }
 
-export async function decodeQuery(query, apiUrl) {
-    await store.dispatch(loadLabels(apiUrl));
+export  function decodeQuery(query, apiUrl, labels=[]) {
+
     const queryArr = query
         ?.match(/[^{\}]+(?=})/g, "$1")
         ?.map((m) => m.split(","))
@@ -262,9 +270,12 @@ export async function decodeQuery(query, apiUrl) {
             };
             labelObj.values.push(valueObj);
             labelsFromQuery.push(labelObj);
+ 
         }
     });
-    const newLabels = store.getState().labels;
+
+    const newLabels = labels 
+
     newLabels?.forEach((label) => {
         if (label.selected && label.values > 0) {
             label.selected = false;

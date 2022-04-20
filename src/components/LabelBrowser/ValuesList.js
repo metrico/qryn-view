@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Legend } from "./Legend";
 import { useSelector, useDispatch } from "react-redux";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import loadLabels from "../../actions/LoadLabels";
+import loadLabels from "../../actions/loadLabels";
 import { queryBuilder } from "./helpers/querybuilder";
 import { setQuery } from "../../actions";
 import loadLabelValues from "../../actions/loadLabelValues";

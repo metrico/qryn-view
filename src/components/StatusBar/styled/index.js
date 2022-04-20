@@ -15,7 +15,7 @@ export const MenuButton = styled(BtnSmall)`
 export const StatusBarCont = styled.div`
     display: flex;
     justify-content: space-between;
-    padding: 5px 10px;
+    padding: 0px 7px;
 `;
 
 export const StatusCont = styled.div`
@@ -27,7 +27,7 @@ export const StatusCont = styled.div`
             flex: 1;
             color: ${props => props.theme.inputLabelColor};
             padding: 4px 8px;
-            font-size: 0.85em;
+            font-size: 12px;
             text-transform: uppercase;
             background: ${props => props.theme.inputLabelBg};
             border-radius: 4px;
@@ -70,7 +70,7 @@ export const ApiSelectorStyled = styled.div`
             flex: 1;
             color: ${props => props.theme.inputLabelColor};
             padding: 4px 8px;
-            font-size: 0.85em;
+            font-size: 12px;
             text-transform: uppercase;
             background: ${props => props.theme.mainBgColor};
             border-radius: 4px;
