@@ -11,7 +11,7 @@ export const HistoryIconStyled = styled(HistoryIcon)`
 `;
 export const HistoryButtonStyled = styled(BtnSmall)`
     background: none;
-    color: ${props => props.theme.buttonText};
+    color: ${props => props.theme.textColor};
     margin-left: 5px;
     background: ${props => props.theme.buttonDefault};
     span {

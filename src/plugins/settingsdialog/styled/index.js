@@ -1,13 +1,12 @@
 import styled from "@emotion/styled";
 
-import dTheme from "../../../theme/themes";
 import { BtnSmall } from "../../../theme/styles/Button";
 import { InputSmall } from "../../../theme/styles/Input";
 
 
 export const InputGroup = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: column;s
     margin-bottom: 20px;
 `;
 export const InlineGroup = styled.div`
@@ -21,7 +20,7 @@ export const SettingCont = styled.div`
     flex-direction: column;
 
     height: 650px;
-    background: ${dTheme.black.b300};
+    background: ${({theme}) => theme.widgetContainer};
 `;
 
 export const SettingsInputContainer = styled.div`
@@ -32,29 +31,28 @@ export const SettingsInputContainer = styled.div`
 `;
 
 export const SettingInput = styled(InputSmall)`
-    background: ${dTheme.inputBg};
+    background: ${({theme}) => theme.inputBg};
     margin: 5px;
     flex: 1;
     padding: 5px 12px;
     border: 1px solid transparent;
+    color: ${({theme}) => theme.textColor};
     &:focus {
-        background: ${dTheme.black.b100};
-        border: 1px solid ${dTheme.buttonHover};
-        color: ${dTheme.buttonText};
+        border: 1px solid ${({theme}) => theme.buttonHover};
     }
 `;
 export const SettingButton = styled(BtnSmall)`
-    background: ${dTheme.primaryDark};
-    color: ${dTheme.buttonText};
+    background: ${({theme}) => theme.primaryDark};
+    color: ${({theme}) => theme.textColor};
     height: 26px;
     &:hover {
-        background: ${dTheme.primaryLight};
+        background: ${({theme}) => theme.primaryLight};
     }
 `;
 
 export const SettingLabel = styled.label`
     font-size: 12px;
-    color: ${dTheme.inputLabelColor};
+    color: ${({theme}) => theme.inputLabelColor};
     margin-left: 10px;
 `;
 
@@ -66,13 +64,13 @@ export const SettingHeader = styled.div`
     h3 {
         margin-left: 10px;
         font-size: 1em;
-        color: ${dTheme.textColor};
+        color: ${({theme}) => theme.textColor};
     }
 `;
 export const SettingCloseBtn = styled(BtnSmall)`
     background: none;
     padding: 0;
-    color: ${dTheme.textColor};
+    color: ${({theme}) => theme.textColor};
 `;
 
 export const EmbedArea = styled.textarea`
@@ -83,6 +81,6 @@ export const EmbedArea = styled.textarea`
     padding: 5px 8px;
     border: none;
     border-radius: 3px;
-    background: ${dTheme.inputBg};
-    color: ${dTheme.textColor};
+    background: ${({theme}) => theme.inputBg};
+    color: ${({theme}) => theme.textColor};
 `;

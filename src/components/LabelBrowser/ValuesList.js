@@ -32,6 +32,13 @@ const ValuesListStyled = styled.div`
     small {
         color: ${props => props.theme.textColor};
     }
+    button {
+        color: ${props => props.theme.textColor};
+        background: ${props => props.theme.buttonDefault};
+        &:hover{
+            background: ${props => props.theme.buttonHover};
+        }
+    }
     .values-container {
         .values-column {
             background: ${props => props.theme.secondaryWidgetContainer};

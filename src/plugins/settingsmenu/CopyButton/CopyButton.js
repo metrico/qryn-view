@@ -71,7 +71,7 @@ export default function CopyButton() {
     return (
         <MenuItem onClick={shareLink} disabled={query.length < 1}>
             {" "}
-            <ContentCopyIcon style={{color:'#ddd'}} fontSize={"15px"} />
+            <ContentCopyIcon fontSize={"15px"} />
             <span>{"Copy Link"}</span>
         </MenuItem>
     );

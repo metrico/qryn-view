@@ -13,7 +13,7 @@ const white = {
     w100: "hsl(0, 0%, 100%)",
     w200: "hsl(0, 0%, 96%)",
     w300: "hsl(0, 0%, 92%)",
-    w400: "hsl(0, 0%, 88%)",
+    w400: "hsl(180, 5%, 96%)",
     w500: "hsl(0, 0%, 84%)",
 };
 
@@ -46,15 +46,6 @@ const turquoise = {
     tq400: "hsl(180, 62%, 52%)",
     tq500: "hsl(180, 62%, 60%)",
 };
-const palette = {
-    primary: turquoise.tq200,
-    grey: {
-        '700': darkgrey.dg300
-    },
-    common: {
-        white: 'hsl(0, 0%, 100%)'
-    }
-}
 const typography = {
     ...defaultTheme.typography,
     fontFamily: 'Roboto, Helvetica, Arial, sans-serif'
@@ -66,22 +57,22 @@ const orange = {
 const mainBgColor = white.w400;
 const textColor = darkgrey.dg100;
 const textOff = darkgrey.dg400;
-const textPrimary = white.w300;
+const textPrimary = black.b300;
 const inputBg = white.w200;
 const primaryDark = turquoise.tq200;
 const primaryLight = turquoise.tq300;
-const widgetContainer = white.w500;
-const secondaryWidgetContainer = lightgrey.lg100;
+const widgetContainer = white.w100;
+const secondaryWidgetContainer = white.w200;
 const widgetTitle = lightgrey.lg300;
 const widgetTitleBorder = lightgrey.lg700;
-const buttonDefault = lightgrey.lg300;
-const buttonHover = lightgrey.lg400;
+const buttonDefault = 'hsla(210, 12%, 16%, 0.16)';
+const buttonHover = 'hsla(210, 12%, 16%, 0.2)';
 const buttonInactive = black.b400;
 const buttonText = white.w200;
 const inputTextFocus = orange.or100;
 const inputLabelColor = lightgrey.lg400;
 const inputLabelBg = white.w100;
-const viewBg = black.w300;
+const viewBg = white.w400;
 const scrollbarThumb = "hsla(0, 0%, 48%, 0.122)";
 const critical = "hsl(300, 100%, 25%)";
 const error = "hsl(0, 100%, 50%)";
@@ -120,7 +111,6 @@ const lightTheme = {
     unknown,
     darkgrey,
     turquoise,
-    palette,
     typography,
     mainBgColor,
     secondaryWidgetContainer,

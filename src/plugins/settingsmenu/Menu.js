@@ -28,19 +28,18 @@ const StyledMenu = styled((props) => (
         borderRadius: 6,
         marginTop: theme.spacing(1),
         minWidth: 180,
-        color: "#ddd",
-        backgroundColor: "#333",
+        color: theme.textColor,
         "& .MuiMenu-list": {
             padding: "4px 0",
         },
         "& .MuiMenuItem-root": {
             "& .MuiSvgIcon-root": {
                 fontSize: 18,
-                color: theme.palette.text.secondary,
+                color: theme.textColor,
                 marginRight: theme.spacing(1.5),
             },
             "&:active": {
-                backgroundColor: "#222",
+                backgroundColor: theme.buttonHover,
             },
         },
     },
@@ -85,8 +84,7 @@ export default function ClokiMenu() {
             >
                 <CopyButton />
                 <MenuItem onClick={handleSettingsOpen}>
-                    <DisplaySettingsIcon style={{ color: "#ddd" }} /> Query
-                    Settings
+                    <DisplaySettingsIcon /> Query Settings
                 </MenuItem>
             </StyledMenu>
         </div>

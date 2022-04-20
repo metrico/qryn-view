@@ -32,6 +32,7 @@ export const EmptyViewContainer = styled.div`
     height: 175px;
     font-size: 1em;
     color: ${props => props.theme.textOff};
+    background: ${props => props.theme.secondaryWidgetContainer};
     text-align: center;
 `;
 
@@ -43,7 +44,7 @@ export const DataViewCont = styled.div`
 
 export const LogRow = styled.div`
     padding: 0.3rem;
-    color: white;
+    color: ${props => props.theme.textColor};
     font-size: 13px;
     cursor: pointer;
     margin-bottom: 4px;
@@ -51,7 +52,7 @@ export const LogRow = styled.div`
     margin-left: 0.25rem;
     transition: 0.2s all;
     &:hover {
-        background: black;
+        background: ${props => props.theme.widgetContainer};
     }
 
     p {

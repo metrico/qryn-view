@@ -33,6 +33,7 @@ const QueryBar = styled.div`
 `;
 
 function Leaf({ attributes, children, leaf }) {
+    const theme = useSelector((store) => store.theme);
     return (
         <span
             {...attributes}
@@ -45,7 +46,7 @@ function Leaf({ attributes, children, leaf }) {
                 `}
                 ${(leaf.operator || leaf.url) &&
                 css`
-                    color: white;
+                    color: ${themes[theme].textOff}};
                 `}
         ${leaf.keyword &&
                 css`

@@ -18,12 +18,14 @@ import {
     EmbedArea,
 } from "./styled";
 import setDebugMode from "../../actions/setDebugMode";
+import { themes } from "../../theme/themes";
 
 export default function SettingsDialog({ open, onClose }) {
     const dispatch = useDispatch();
     const apiUrl = useSelector((store) => store.apiUrl);
     const limit = useSelector((store) => store.limit);
     const step = useSelector((store) => store.step);
+    const theme = useSelector((store) => store.theme);
 
     const debugMode = useSelector((store) => store.debugMode);
     
