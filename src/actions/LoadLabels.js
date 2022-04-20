@@ -29,7 +29,6 @@ export default function loadLabels(apiUrl) {
             ?.then((response) => {
                 if (response) {
                     if (response?.data?.data === [])
-                        console.log("no labels found");
                     if (response?.data?.data?.length > 0) {
                         const labels = response?.data?.data
                             .sort()
@@ -44,16 +43,16 @@ export default function loadLabels(apiUrl) {
                 } else {
                     dispatch(setLoading(false));
                     dispatch(
-                        setApiError("API Not Found, Please adjust API URL")
+                        setApiError("")
                     );
-                    dispatch(setLabelsBrowserOpen(true));
                     dispatch(setLabels([]));
                 }
             })
             .catch((error) => {
                 console.log(error);
                 dispatch(setLoading(false));
-                const { message, status } = errorHandler(url, error);
+                const { message, status } = errorHandler(url, error,'labels');
+
                 dispatch(setApiError(`Status: ${status}, ${message}`));
                 dispatch(setLabels([]));
             });

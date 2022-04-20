@@ -104,7 +104,8 @@ export function UpdateStateFromQueryParams() {
        
                         dispatch(STORE_ACTIONS[param](startParams[param]));
                         if(param === 'apiUrl') {
-                         dispatch(loadLabels(startParams[param]))
+            
+                       //  dispatch(loadLabels(startParams[param]))
                         }
                     } else if (
                         QUERY_VALUE === param &&

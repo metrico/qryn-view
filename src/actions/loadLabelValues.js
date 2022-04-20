@@ -58,10 +58,10 @@ export default function loadLabelValues(label, labelList, apiUrl) {
 
             }).catch(error => {
                 dispatch(setLoading(false))
-                const { message } = errorHandler(url, error)
+                const { message } = errorHandler(url, error,'lavelValues')
                 dispatch(setApiError(message || 'API NOT FOUND'))
                 dispatch(setLabelValues([]))
-                console.err(error)
+                console.error(error)
             })
     }
 

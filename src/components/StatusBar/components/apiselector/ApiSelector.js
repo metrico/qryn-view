@@ -27,6 +27,7 @@ export function ApiSelector() {
 
     useEffect(() => {
         setEditedUrl(apiUrl);
+        dispatch(loadLabels(apiUrl))
     }, [apiUrl]);
 
     useEffect(() => {
@@ -51,10 +52,8 @@ export function ApiSelector() {
     };
     const onUrlSubmit = (e) => {
         dispatch(setApiUrl(editedUrl));
-        dispatch(loadLabels(editedUrl));
-        if (query?.length > 3) {
-            dispatch(setLabelsBrowserOpen(false));
-        }
+        dispatch(setLabelsBrowserOpen(false));
+
     };
 
     return (

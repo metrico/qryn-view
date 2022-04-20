@@ -53,7 +53,7 @@ export const ValuesList = (props) => {
     const [labelList, setLabelList] = useState(labels);
 
     const dispatch = useDispatch();
-    const debug = useSelector((store) => store.debug);
+    const debug = useSelector((store) => store.debugMode);
     const apiUrl = useSelector((store) => store.apiUrl);
     //if(debug) console.log('🚧 LOGIC/LabelBrowser/ValuesList', apiUrl)
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen);
@@ -62,7 +62,6 @@ export const ValuesList = (props) => {
 
     useEffect(() => {
         dispatch(loadLabels(apiUrl));
-        //   setLabelList(labels)
     }, [apiUrl]);
 
     useEffect(() => {
@@ -115,6 +114,9 @@ export const ValuesList = (props) => {
             };
         } else return {};
     };
+    const isString = (value) => {
+        return typeof value === 'string'
+    }
     return (
         labelsBrowserOpen && (
             <div className={"labels-container"}>
@@ -139,7 +141,7 @@ export const ValuesList = (props) => {
                                 {labelList &&
                                     labelList?.map((value, key) => (
                                         <small
-                                            title={value.name}
+                                            title={value?.name || ''}
                                             key={key}
                                             id={value.name}
                                             style={styleValue(value)}
@@ -159,10 +161,11 @@ export const ValuesList = (props) => {
                     {selectedList() && (
                         <div className={"values-container"}>
                             <div className={"values-container-column"}>
-                                {labelsSelected.map((labelSelected, skey) => (
+                                { labelsSelected.map((labelSelected, skey) => (
                                     <div className={"values-column"} key={skey}>
                                         <div className={"values-column-title"}>
                                             <span>
+                                             
                                                 {labelSelected.name} (
                                                 {labelSelected.values.length})
                                             </span>
@@ -183,13 +186,17 @@ export const ValuesList = (props) => {
                                                 "valuelist-content column"
                                             }
                                         >
+                                            
                                             {labelSelected?.values?.map(
-                                                (value, key) => (
-                                                    <Tooltip
-                                                        title={value.name}
+                                                ( value, key) => (
+
+                                                       isString(value.name) ? (
+                                                        <Tooltip
+                                                        title={value?.name || ''}
                                                         key={key}
                                                         placement="bottom"
                                                     >
+                                                      
                                                         <small
                                                             className={
                                                                 "label-value"
@@ -204,9 +211,12 @@ export const ValuesList = (props) => {
                                                                 )
                                                             }
                                                         >
-                                                            {value.name}
+                                                         
+                                                           {value.name}
                                                         </small>
                                                     </Tooltip>
+                                                    ):(<small key={key}>unknown</small>) 
+                                           
                                                 )
                                             )}
                                         </div>

@@ -169,7 +169,7 @@ export function DateRangePickerMain(props) {
     const onClose = (e = null) => {
         const { query } = store.getState();
         e?.preventDefault();
-        if (onQueryValid(query)) {
+        if (query.length > 0) {
             dispatch(setLabelsBrowserOpen(false));
             dispatch(loadLogs());
         } else {

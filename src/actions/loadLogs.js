@@ -6,6 +6,8 @@ import setMatrixData from "./setMatrixData";
 import { nanoid } from "nanoid";
 import { setStartTime, setStopTime } from "./";
 import { findRangeByLabel } from "../components/StatusBar/components/daterangepicker/utils";
+import { createAlert } from "./createAlert";
+import { errorHandler } from "./errorHandler";
 
 export default function loadLogs() {
     const localStore = store.getState();
@@ -119,8 +121,8 @@ export default function loadLogs() {
                     }
                     dispatch(setLoading(false));
                 } else {
-                    dispatch(setLogs([]));
-                    dispatch(setMatrixData([]));
+                  dispatch(setLogs([]));
+                   dispatch(setMatrixData([]));
                     dispatch(setLoading(false));
                 }
                 dispatch(setLoading(false));
@@ -129,7 +131,8 @@ export default function loadLogs() {
                 dispatch(setLogs([]));
                 dispatch(setMatrixData([]));
                 dispatch(setLoading(false));
-                console.log(error);
+                const handler = errorHandler(url,error,type)
+                console.log(handler)
             });
     };
 }
