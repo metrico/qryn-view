@@ -39,7 +39,7 @@ function Leaf({ attributes, children, leaf }) {
                 // background: black;
                 ${leaf.comment &&
                 css`
-                    color: blue;
+                    color: #57aed4;
                 `}
                 ${(leaf.operator || leaf.url) &&
                 css`

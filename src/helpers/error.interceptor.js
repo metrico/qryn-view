@@ -12,19 +12,40 @@ const errorInterceptor = (axiosInstance) => {
         (error) => {
 
             if (error.response) {
+
                 const handler = errorHandler(error)
+
                 if (error?.response?.status === 401) {
-             
-                } 
-                if (handler.status === 500 && handler.type === 'labels') {
+
+                }
+                else if (handler.status === 500 && handler.type === 'labels') {
+
+                    if (store.getState().notifications.length < 1 && store.getState().debugMode === true) {
+                        store.dispatch(createAlert({
+                            type: "error",
+                            message: (handler.message + " for " + handler.type || status + handler.type + 'Error')
+                        }))
+                    }
+                }
+
+                else if (handler.status === 404 && handler.type === 'labels') {
+
+                    if (store.getState().notifications.length < 1) {
+                        store.dispatch(createAlert({
+                            type: "error",
+                            message: (handler.message || status + handler.type + 'Error')
+                        }))
+                    }
 
                 }
                 else {
-                    store.dispatch(createAlert({
-                        type: "error",
-                        message: (handler.message + " for " + handler.type || status + handler.type + 'Error')
-                    }))
 
+                    if (store.getState().notifications.length < 1) {
+                        store.dispatch(createAlert({
+                            type: "error",
+                            message: (handler.message + " for " + handler.type || status + handler.type + 'Error')
+                        }))
+                    }
                 }
             } else {
 
@@ -36,22 +57,18 @@ const errorInterceptor = (axiosInstance) => {
                 }
 
                 store.dispatch(setApiWarning({ type: 'labels', message: 'Labels not available', }))
-                const{url,message,name} = networkError
+                const { url, message, name } = networkError
 
                 const apiWarning = store.getState().apiWarning
-                if(apiWarning && url.includes('query') ) {
-                    apiWarning.num ++
+                if (apiWarning && url.includes('query')) {
+                    apiWarning.num++
                     store.dispatch(createAlert({
-                        type:'error',
+                        type: 'error',
                         message: `API not found, please adjust API URL`
                     }))
                 }
 
             }
-
-        
-
-
         }
     );
 };

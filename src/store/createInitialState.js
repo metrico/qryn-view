@@ -27,7 +27,7 @@ export default function initialState() {
         queryHistory: historyService.getAll() || [],
         linksHistory: linkService.getAll() || [],
         timeRange: [],
-        query: urlState.query ||  decodeURIComponent(lastQuery.query) || "",
+        query: urlState.query || "",
         logs: [],
         matrixData: [],
         loading: false,
