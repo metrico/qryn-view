@@ -10,6 +10,8 @@ const theme = darkTheme;
 
 export const HistoryIconStyled = styled(HistoryIcon)`
     color: ${(props) => props.color};
+    height:18px;
+    width:18px;
 `;
 export const HistoryButtonStyled = styled(BtnSmall)`
     background: none;
@@ -34,6 +36,11 @@ export const ShowLabelsBtn = styled(BtnSmall)`
     &:hover {
         background: ${theme.buttonHover};
     }
+    &:disabled {
+        cursor:auto;
+        color:${theme.buttonDefault};
+        background:${theme.buttonInactive};
+    }
     @media screen and (max-width: 864px) {
         display: ${(props) => (props.isMobile ? "flex" : "none")};
 
@@ -53,7 +60,7 @@ export const QueryBarContainer = styled.div`
 export const ShowLogsBtn = styled(BtnSmall)`
     background: ${theme.primaryDark};
     color: ${theme.buttonText};
-    margin-left: 5px;
+    margin-left: 10px;
     transition: 0.25s all;
     justify-content: center;
     &:hover {

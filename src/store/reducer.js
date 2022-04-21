@@ -62,6 +62,8 @@ const reducer = (state, action) => {
             return { ...state, notifications: action.payload };
         case "SET_DEBUG_MODE":
             return { ...state, debugMode: action.debugMode };
+        case "SET_API_WARNING":
+            return { ...state, apiWarning: action.apiWarning};
         default:
             return { ...state };
     }

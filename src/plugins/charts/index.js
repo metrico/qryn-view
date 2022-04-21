@@ -73,7 +73,7 @@ export default function ClokiChart({ matrixData }) {
             data,
             $q.extend(true, {}, chartOptions, {
                 ...chartSeries,
-                xaxis: { timeformat, min, max,  },
+                xaxis: { timeformat, min, max, },
             })
         );
     }
@@ -139,7 +139,7 @@ export default function ClokiChart({ matrixData }) {
                         min: ranges.xaxis.from - 100000,
                         max: ranges.xaxis.to + 100000,
                         timeformat: formatDateRange(newData).timerange,
-                    
+
                     },
                 })
             );
@@ -218,7 +218,7 @@ export default function ClokiChart({ matrixData }) {
 
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
-                    xaxis: { timeformat, min, max,  },
+                    xaxis: { timeformat, min, max, },
                 })
             );
 
@@ -244,7 +244,7 @@ export default function ClokiChart({ matrixData }) {
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
-                    xaxis: { timeformat, min, max,  },
+                    xaxis: { timeformat, min, max, },
                 })
             );
 
@@ -279,7 +279,7 @@ export default function ClokiChart({ matrixData }) {
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
-                    xaxis: { timeformat, min, max,  },
+                    xaxis: { timeformat, min, max, },
                 })
             );
 
@@ -300,7 +300,7 @@ export default function ClokiChart({ matrixData }) {
     };
 
     return (
-        <div style={{ margin:'10px'}}>
+        <div style={{ margin: '10px' }}>
             <ChartTools
                 matrixData={matrixData}
                 chartType={chartType}
@@ -314,7 +314,7 @@ export default function ClokiChart({ matrixData }) {
                 ref={chartRef}
                 id={"chart-container"}
                 style={{
-                 width:'100%',
+                    width: '100%',
                     height: "220px",
                     display: 'block',
                     position: 'relative'

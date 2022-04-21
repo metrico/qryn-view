@@ -14,7 +14,7 @@ const isEmbed = useSelector(store => store.isEmbed)
             <img
                 src={Logo}
                 alt={"cLoki View"}
-                height={"28px"}
+                height={"24px"}
                 className={"logo"}
             />
             <ApiSelector />

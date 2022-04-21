@@ -29,7 +29,7 @@ export default function ValueTags({ tags }) {
                 const updatedLabels = store.getState().labels;
                 const updatedLabel = updatedLabels.find(
                     (label) => label.name === key
-                );
+                ); 
                 const labelValue = updatedLabel.values.find(
                     (tag) => tag.name === value
                 );

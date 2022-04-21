@@ -30,6 +30,7 @@ export function queryBuilder(labels) {
     }
     return [preTags,"{", selectedLabels.join(","), "}",postTags].join("");
 }
+
 export function queryBuilderWithLabels() {
     const labels = store.getState().labels;
    

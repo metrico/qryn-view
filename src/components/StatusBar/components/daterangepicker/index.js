@@ -169,7 +169,7 @@ export function DateRangePickerMain(props) {
     const onClose = (e = null) => {
         const { query } = store.getState();
         e?.preventDefault();
-        if (onQueryValid(query)) {
+        if (query.length > 0) {
             dispatch(setLabelsBrowserOpen(false));
             dispatch(loadLogs());
         } else {
@@ -178,10 +178,7 @@ export function DateRangePickerMain(props) {
         dispatch(setRangeOpen(false));
         isOpen(e);
     };
-    const onQueryValid = (query) => {
-        return query !== "{" && query !== "}" && query !== "{}" && query !== ""; // TODO: make a proper query validation
-    };
-    // helpers
+
     const inHoverRange = (day) => {
         return (
             dateStart &&

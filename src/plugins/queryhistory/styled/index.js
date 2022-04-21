@@ -228,7 +228,7 @@ export const FilterInput = styled.input`
 `;
 export const RowData = styled.span`
     flex: 1;
-    font-family: "monospace";
+    font-family: monospace;
     font-size: "13px";
     color: ${dTheme.buttonText};
     white-space: nowrap;

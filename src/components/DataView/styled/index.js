@@ -46,7 +46,7 @@ export const DataViewCont = styled.div`
 export const LogRow = styled.div`
     padding: 0.3rem;
     color: white;
-    font-size: 13px;
+    font-size: 12px;
     cursor: pointer;
     margin-bottom: 4px;
     padding-left: 0.5rem;
@@ -64,7 +64,7 @@ export const LogRow = styled.div`
 `;
 
 export const RowLogContent = styled.span`
-    font-size: 0.95em;
+    font-size: 12px;
     font-family: monospace;
     color: ${theme.textWhite};
     line-height: 1.5;
