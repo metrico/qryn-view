@@ -12,7 +12,6 @@ import localUrl from "../../services/localUrl";
 import setLinksHistory from "../../actions/setLinksHistory";
 import QueryEditor from "../../plugins/queryeditor";
 
-import loadLabels from "../../actions/loadLabels";
 import { decodeQuery } from "../../helpers/UpdateStateFromQueryParams";
 import { css } from "@emotion/css";
 import { MobileTopQueryMenu, QueryBarContainer } from "./components/styled";
@@ -23,6 +22,7 @@ import queryInit from "./helpers/queryInit";
 import onQueryValid from "./helpers/onQueryValid";
 import debugLog from "./helpers/debugLog";
 import { sendLabels } from "../../hooks/useLabels";
+import loadLabels from "../../actions/loadLabels";
 
 export const QueryBar = () => {
     const dispatch = useDispatch();

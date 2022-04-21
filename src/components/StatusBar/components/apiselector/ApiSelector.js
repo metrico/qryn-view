@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import loadLabels from "../../../../actions/loadLabels";
+
 import { setLabelsBrowserOpen } from "../../../../actions/setLabelsBrowserOpen";
 import setMatrixData from "../../../../actions/setMatrixData";
 import loadLogs from "../../../../actions/loadLogs";
@@ -12,6 +12,7 @@ import {
     ApiSelectorInput,
     ApiSelectorStyled,
 } from "../../styled";
+import loadLabels from "../../../../actions/loadLabels";
 
 export function ApiSelector() {
     const apiUrl = useSelector((store) => store.apiUrl);

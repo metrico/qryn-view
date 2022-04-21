@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Legend } from "./Legend";
 import { useSelector, useDispatch } from "react-redux";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import loadLabels from "../../actions/loadLabels";
+
 import { queryBuilder } from "./helpers/querybuilder";
 import { setQuery } from "../../actions";
 import loadLabelValues from "../../actions/loadLabelValues";
@@ -10,6 +10,7 @@ import loadLabelValues from "../../actions/loadLabelValues";
 import Tooltip from "@mui/material/Tooltip";
 import store from "../../store/store";
 import styled from "@emotion/styled";
+import loadLabels from "../../actions/loadLabels";
 
 const ErrorContainer = styled.div`
     padding: 20px;
