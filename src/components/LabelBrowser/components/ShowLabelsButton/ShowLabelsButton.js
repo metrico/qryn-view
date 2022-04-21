@@ -3,10 +3,11 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useSelector } from "react-redux";
 
-
 export default function ShowLabelsButton({ onValueDisplay, labelsBrowserOpen, isMobile }) {
+
     const LOG_BROWSER = "Labels";
     const labels = useSelector(store => store.labels)
+
     return (
 
         <ShowLabelsBtn
@@ -14,7 +15,7 @@ export default function ShowLabelsButton({ onValueDisplay, labelsBrowserOpen, is
             onClick={onValueDisplay}
             browserActive={labelsBrowserOpen}
             isMobile={isMobile}
-            disabled={labels?.length < 1}
+
 
         >
             {labelsBrowserOpen ? (

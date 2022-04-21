@@ -17,7 +17,7 @@ export function ApiSelector() {
     const apiUrl = useSelector((store) => store.apiUrl);
     const apiError = useSelector((store) => store.apiErrors);
     const [editedUrl, setEditedUrl] = useState(apiUrl);
-    const query = useSelector((store) => store.query);
+
     const [apiSelectorOpen, setApiSelectorOpen] = useState(false);
     const dispatch = useDispatch();
     const API_URL = "API URL";

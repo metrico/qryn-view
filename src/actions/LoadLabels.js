@@ -36,6 +36,7 @@ export default function loadLabels(apiUrl) {
                                 values: [],
                             }));
                         dispatch(setLabels(labels || []));
+                        console.log(labels)
                         dispatch(setApiError(""));
                     }
                 } else {
@@ -44,6 +45,7 @@ export default function loadLabels(apiUrl) {
                         setApiError("")
                     );
                     dispatch(setLabels([]));
+             
                 }
             })
             .catch((error) => {
