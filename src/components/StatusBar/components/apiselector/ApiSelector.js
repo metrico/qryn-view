@@ -52,6 +52,8 @@ export function ApiSelector() {
     };
     const onUrlSubmit = (e) => {
         dispatch(setApiUrl(editedUrl));
+        setEditedUrl(editedUrl);
+        dispatch(loadLabels(editedUrl))
         dispatch(setLabelsBrowserOpen(false));
 
     };

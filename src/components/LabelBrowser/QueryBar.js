@@ -31,9 +31,9 @@ export const QueryBar = () => {
     const debug = useSelector((store) => store.debugMode);
     const query = useSelector((store) => store.query);
     const apiUrl = useSelector((store) => store.apiUrl);
-    const isSubmit = useSelector((store) => store.isSubmit);
     const historyOpen = useSelector((store) => store.historyOpen);
     const isEmbed = useSelector((store) => store.isEmbed)
+    const apiWarning = useSelector((store) => store.apiWarning)
     const [queryInput, setQueryInput] = useState(query);
     const [queryValid, setQueryValid] = useState(false);
     const [queryValue, setQueryValue] = useState(queryInit(query));
@@ -43,20 +43,16 @@ export const QueryBar = () => {
     useEffect(() => {
         const dLog = debugLog(query);
         debug && dLog.logicQueryBar();
-
         const labels = sendLabels(apiUrl)
         if (isEmbed) dispatch(loadLogs())
         if (query.length > 0) {
             debug && dLog.queryBarDispatch();
             dispatch(setLoading(true));
-
-
             return labels.then(data => {
                 decodeQuery(query, apiUrl, data)
 
             })
         }
-
 
     }, []);
 
@@ -71,7 +67,7 @@ export const QueryBar = () => {
         const isOpen = labelsBrowserOpen ? false : true;
         if (isOpen) {
             dispatch(loadLabels(apiUrl));
-     
+
         }
 
         dispatch(setLabelsBrowserOpen(isOpen));
@@ -93,9 +89,7 @@ export const QueryBar = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-
         dispatch(setQuery(queryInput));
-
         if (onQueryValid(queryInput)) {
             try {
                 const historyUpdated = historyService.add({
@@ -105,10 +99,7 @@ export const QueryBar = () => {
                 dispatch(setQueryHistory(historyUpdated));
                 dispatch(setLabelsBrowserOpen(false));
                 decodeQuery(queryInput, apiUrl, labels)
-
-
                 dispatch(setLoading(true));
-        
                 dispatch(loadLogs());
                 const storedUrl = saveUrl.add({
                     data: window.location.href,

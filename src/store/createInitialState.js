@@ -3,6 +3,7 @@ import { environment } from "../environment/env.dev";
 import stateFromQueryParams from "../helpers/stateFromQueryParams";
 import localService from "../services/localService";
 import localUrl from "../services/localUrl";
+
 const debugLocal = () => {
     let isDebug = JSON.parse(localStorage.getItem("isDebug"));
     if (!isDebug) {
@@ -17,6 +18,8 @@ export default function initialState() {
     const urlState = stateFromQueryParams();
     const historyService = localService().historyStore();
     const linkService = localUrl();
+    const lastQuery = linkService.getAll()?.[0]?.params
+
     const state = {
         debugMode: debugLocal().isActive|| false,
         labels: [],
@@ -24,7 +27,7 @@ export default function initialState() {
         queryHistory: historyService.getAll() || [],
         linksHistory: linkService.getAll() || [],
         timeRange: [],
-        query: urlState.query || "",
+        query: urlState.query ||  decodeURIComponent(lastQuery.query) || "",
         logs: [],
         matrixData: [],
         loading: false,
@@ -54,7 +57,8 @@ export default function initialState() {
         apiErrors: "",
         urlQueryParams: urlState || {},
         urlLocation: "",
-        apiUrl: urlState.apiUrl || environment.apiUrl || "",
+        apiUrl: urlState.apiUrl ||  environment.apiUrl || "",
+        apiWarning:{},
         isSubmit: urlState.isSubmit || false,
         isEmbed: urlState.isEmbed || false,
         chartType: "line",

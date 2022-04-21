@@ -2,8 +2,6 @@ import axios from "axios";
 import { setLabels } from "./setLabels";
 import setLoading from "./setLoading";
 import { setApiError } from "./setApiError";
-import { errorHandler } from "./errorHandler";
-import { setLabelsBrowserOpen } from "./setLabelsBrowserOpen";
 
 export default function loadLabels(apiUrl) {
     const origin = window.location.origin;
@@ -51,8 +49,6 @@ export default function loadLabels(apiUrl) {
             .catch((error) => {
                 console.log(error);
                 dispatch(setLoading(false));
-                const { message, status } = errorHandler(url, error,'labels');
-
                 dispatch(setApiError(`Status: ${status}, ${message}`));
                 dispatch(setLabels([]));
             });

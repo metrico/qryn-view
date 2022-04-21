@@ -55,11 +55,9 @@ export const ValuesList = (props) => {
     const dispatch = useDispatch();
     const debug = useSelector((store) => store.debugMode);
     const apiUrl = useSelector((store) => store.apiUrl);
-    //if(debug) console.log('🚧 LOGIC/LabelBrowser/ValuesList', apiUrl)
+    if (debug) console.log('🚧 LOGIC/LabelBrowser/ValuesList', apiUrl)
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen);
-
     const CLEAR = "clear";
-
     useEffect(() => {
         dispatch(loadLabels(apiUrl));
     }, [apiUrl]);
@@ -76,11 +74,8 @@ export const ValuesList = (props) => {
     const onLabelOpen = (e, value) => {
         e.preventDefault();
         value.selected = !value.selected;
-        //  setLabel(value);
         const selected = labelList.filter((f) => f.selected);
         setLabelsSelected(selected);
-
-        //   setFilteredPlaceholder(value);
 
         const query = queryBuilder(labelList);
         dispatch(setQuery(query));
@@ -161,11 +156,11 @@ export const ValuesList = (props) => {
                     {selectedList() && (
                         <div className={"values-container"}>
                             <div className={"values-container-column"}>
-                                { labelsSelected.map((labelSelected, skey) => (
+                                {labelsSelected.map((labelSelected, skey) => (
                                     <div className={"values-column"} key={skey}>
                                         <div className={"values-column-title"}>
                                             <span>
-                                             
+
                                                 {labelSelected.name} (
                                                 {labelSelected.values.length})
                                             </span>
@@ -186,37 +181,37 @@ export const ValuesList = (props) => {
                                                 "valuelist-content column"
                                             }
                                         >
-                                            
-                                            {labelSelected?.values?.map(
-                                                ( value, key) => (
 
-                                                       isString(value.name) ? (
+                                            {labelSelected?.values?.map(
+                                                (value, key) => (
+
+                                                    isString(value.name) ? (
                                                         <Tooltip
-                                                        title={value?.name || ''}
-                                                        key={key}
-                                                        placement="bottom"
-                                                    >
-                                                      
-                                                        <small
-                                                            className={
-                                                                "label-value"
-                                                            }
-                                                            style={styleValue(
-                                                                value
-                                                            )}
-                                                            onClick={(e) =>
-                                                                onLabelValueClick(
-                                                                    e,
-                                                                    value
-                                                                )
-                                                            }
+                                                            title={value?.name || ''}
+                                                            key={key}
+                                                            placement="bottom"
                                                         >
-                                                         
-                                                           {value.name}
-                                                        </small>
-                                                    </Tooltip>
-                                                    ):(<small key={key}>unknown</small>) 
-                                           
+
+                                                            <small
+                                                                className={
+                                                                    "label-value"
+                                                                }
+                                                                style={styleValue(
+                                                                    value
+                                                                )}
+                                                                onClick={(e) =>
+                                                                    onLabelValueClick(
+                                                                        e,
+                                                                        value
+                                                                    )
+                                                                }
+                                                            >
+
+                                                                {value.name}
+                                                            </small>
+                                                        </Tooltip>
+                                                    ) : (<small key={key}>unknown</small>)
+
                                                 )
                                             )}
                                         </div>

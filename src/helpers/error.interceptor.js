@@ -1,32 +1,57 @@
 import store from '../store/store'
-import { errorHandler, setApiError,createAlert } from "../actions/";
+import { errorHandler, setApiError, createAlert } from "../actions/";
+import setApiWarning from '../actions/setApiWarning';
 
 const errorInterceptor = (axiosInstance) => {
     axiosInstance.interceptors.response.use(
         (response) => {
-            //Response Successful
+
             return response;
         },
+
         (error) => {
-            console.log("ERROR", error)
+
+            if (error.response) {
+                const handler = errorHandler(error)
+                if (error?.response?.status === 401) {
              
-            if (error?.response?.status === 401) {
-                //Unauthorized
-                //redirect to Login
+                } 
+                if (handler.status === 500 && handler.type === 'labels') {
+
+                }
+                else {
+                    store.dispatch(createAlert({
+                        type: "error",
+                        message: (handler.message + " for " + handler.type || status + handler.type + 'Error')
+                    }))
+
+                }
             } else {
-                const url = error?.response?.config?.url || ""
-                console.log(error.response)
-                const { message, status, type } = errorHandler(url, error, 'intercepted')
 
-                console.log(message,status,type)
-              //  console.log(errorHandler(url, error))
-             //     store.dispatch(setApiError(message || status + 'Error'))
+                const error_parsed = JSON.parse(JSON.stringify(error));
+                const networkError = {
+                    url: error_parsed.config.url,
+                    message: error_parsed.message,
+                    name: error_parsed.name
+                }
 
-                  store.dispatch(createAlert({
-                 type:"error",
-                 message: (message || status + 'Error')
-                 }))
+                store.dispatch(setApiWarning({ type: 'labels', message: 'Labels not available', }))
+                const{url,message,name} = networkError
+
+                const apiWarning = store.getState().apiWarning
+                if(apiWarning && url.includes('query') ) {
+                    apiWarning.num ++
+                    store.dispatch(createAlert({
+                        type:'error',
+                        message: `API not found, please adjust API URL`
+                    }))
+                }
+
             }
+
+        
+
+
         }
     );
 };
