@@ -1,5 +1,5 @@
 import store from '../store/store'
-import { errorHandler, setApiError, createAlert } from "../actions/";
+import { errorHandler, createAlert } from "../actions/";
 import setApiWarning from '../actions/setApiWarning';
 
 const errorInterceptor = (axiosInstance) => {
@@ -23,7 +23,7 @@ const errorInterceptor = (axiosInstance) => {
                     if (store.getState().notifications.length < 1 && store.getState().debugMode === true) {
                         store.dispatch(createAlert({
                             type: "error",
-                            message: (handler.message + " for " + handler.type || status + handler.type + 'Error')
+                            message: (handler.message + " for " + handler.type || handler.status + handler.type + 'Error')
                         }))
                     }
                 }
@@ -33,7 +33,7 @@ const errorInterceptor = (axiosInstance) => {
                     if (store.getState().notifications.length < 1) {
                         store.dispatch(createAlert({
                             type: "error",
-                            message: (handler.message || status + handler.type + 'Error')
+                            message: (handler.message || handler.status + handler.type + 'Error')
                         }))
                     }
 
@@ -43,7 +43,7 @@ const errorInterceptor = (axiosInstance) => {
                     if (store.getState().notifications.length < 1) {
                         store.dispatch(createAlert({
                             type: "error",
-                            message: (handler.message + " for " + handler.type || status + handler.type + 'Error')
+                            message: (handler.message + " for " + handler.type || handler.status + handler.type + 'Error')
                         }))
                     }
                 }
@@ -57,7 +57,7 @@ const errorInterceptor = (axiosInstance) => {
                 }
 
                 store.dispatch(setApiWarning({ type: 'labels', message: 'Labels not available', }))
-                const { url, message, name } = networkError
+                const { url } = networkError
 
                 const apiWarning = store.getState().apiWarning
                 if (apiWarning && url.includes('query')) {

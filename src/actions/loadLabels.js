@@ -51,7 +51,6 @@ export default function loadLabels(apiUrl) {
             .catch((error) => {
                 console.log(error);
                 dispatch(setLoading(false));
-                dispatch(setApiError(`Status: ${status}, ${message}`));
                 dispatch(setLabels([]));
             });
     };
