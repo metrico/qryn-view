@@ -18,7 +18,6 @@ export default function initialState() {
     const urlState = stateFromQueryParams();
     const historyService = localService().historyStore();
     const linkService = localUrl();
-    const lastQuery = linkService.getAll()?.[0]?.params
 
     const state = {
         debugMode: debugLocal().isActive|| false,

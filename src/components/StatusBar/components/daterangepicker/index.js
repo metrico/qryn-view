@@ -178,10 +178,7 @@ export function DateRangePickerMain(props) {
         dispatch(setRangeOpen(false));
         isOpen(e);
     };
-    const onQueryValid = (query) => {
-        return query !== "{" && query !== "}" && query !== "{}" && query !== ""; // TODO: make a proper query validation
-    };
-    // helpers
+
     const inHoverRange = (day) => {
         return (
             dateStart &&

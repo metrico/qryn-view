@@ -8,7 +8,6 @@ import { setQuery } from "../../actions";
 import loadLabelValues from "../../actions/loadLabelValues";
 
 import Tooltip from "@mui/material/Tooltip";
-import store from "../../store/store";
 import styled from "@emotion/styled";
 import loadLabels from "../../actions/loadLabels";
 

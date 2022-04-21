@@ -6,8 +6,7 @@ import setMatrixData from "./setMatrixData";
 import { nanoid } from "nanoid";
 import { setStartTime, setStopTime } from "./";
 import { findRangeByLabel } from "../components/StatusBar/components/daterangepicker/utils";
-import { createAlert } from "./createAlert";
-import { errorHandler } from "./errorHandler";
+
 
 export default function loadLogs() {
     const localStore = store.getState();
@@ -128,7 +127,7 @@ export default function loadLogs() {
                 dispatch(setMatrixData([]));
 
                 dispatch(setLoading(false));
-                const handler = errorHandler(url, error, type)
+    
 
             });
     };

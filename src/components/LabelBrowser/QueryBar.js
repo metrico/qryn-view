@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setIsSubmit, setQuery } from "../../actions";
+import { setQuery } from "../../actions";
 import loadLogs from "../../actions/loadLogs";
 import setLoading from "../../actions/setLoading";
 import { setLabelsBrowserOpen } from "../../actions/setLabelsBrowserOpen";
@@ -33,7 +33,6 @@ export const QueryBar = () => {
     const apiUrl = useSelector((store) => store.apiUrl);
     const historyOpen = useSelector((store) => store.historyOpen);
     const isEmbed = useSelector((store) => store.isEmbed)
-    const apiWarning = useSelector((store) => store.apiWarning)
     const [queryInput, setQueryInput] = useState(query);
     const [queryValid, setQueryValid] = useState(false);
     const [queryValue, setQueryValue] = useState(queryInit(query));
