@@ -14,7 +14,6 @@ import {
 
 } from "../actions";
 
-import  loadLabels  from "../actions/loadLabels"
 
 import loadLabelValues from "../actions/loadLabelValues";
 import setFromTime from "../actions/setFromTime";
@@ -105,7 +104,7 @@ export function UpdateStateFromQueryParams() {
                         dispatch(STORE_ACTIONS[param](startParams[param]));
                         if(param === 'apiUrl') {
             
-                       //  dispatch(loadLabels(startParams[param]))
+                
                         }
                     } else if (
                         QUERY_VALUE === param &&
