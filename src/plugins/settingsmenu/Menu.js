@@ -30,6 +30,7 @@ const StyledMenu = styled((props) => (
         marginTop: theme.spacing(1),
         minWidth: 180,
         color: theme.textColor,
+        background: theme.mainBgColor,
         "& .MuiMenu-list": {
             padding: "4px 0",
         },

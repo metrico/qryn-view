@@ -11,7 +11,8 @@ import { ThemeProvider } from '@emotion/react';
 import { themes } from "../theme/themes";
 export const MainViewStyled = styled.div`
     position:absolute;
-    top:5px;
+    top:0;
+    padding-top: 5px;
     left:0;
     height:100%;
     width:100%;

@@ -15,7 +15,7 @@ import {
     isValid,
 } from "date-fns";
 
-import Nav from "./components/Nav";
+import { PickerNav } from "./components/Nav";
 import {
     findRangeByLabel,
     getDefaultRanges,
@@ -263,7 +263,7 @@ export function DateRangePickerMain(props) {
             {rangeOpen ? (
                 <div tabIndex={"0"} ref={ref}>
                     <ThemeProvider theme={themes[theme]}>
-                        <Nav
+                        <PickerNav
                             dateRange={dateRange}
                             minDate={minDateValid}
                             maxDate={maxDateValid}

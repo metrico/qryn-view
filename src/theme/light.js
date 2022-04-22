@@ -70,6 +70,7 @@ const buttonHover = 'hsla(210, 12%, 16%, 0.2)';
 const buttonInactive = black.b400;
 const buttonText = white.w200;
 const inputTextFocus = orange.or100;
+const highlitedButton = orange.or100;
 const inputLabelColor = lightgrey.lg400;
 const inputLabelBg = white.w100;
 const viewBg = white.w400;
@@ -116,6 +117,7 @@ const lightTheme = {
     secondaryWidgetContainer,
     widgetTitle,
     widgetTitleBorder,
+    highlitedButton,
     ...defaultTheme
 };
 export default lightTheme;

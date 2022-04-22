@@ -72,6 +72,7 @@ const buttonHover = darkgrey.dg15;
 const buttonInactive = black.b400;
 const buttonText = white.w200;
 const inputTextFocus = orange.or100;
+const highlitedButton = orange.or100;
 const inputLabelColor = lightgrey.lg400;
 const inputLabelBg = black.bg10;
 const viewBg = black.b300;
@@ -118,6 +119,7 @@ const darkTheme = {
     secondaryWidgetContainer,
     widgetTitle,
     widgetTitleBorder,
+    highlitedButton,
     ...defaultTheme
 };
 export default darkTheme;

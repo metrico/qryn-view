@@ -22,7 +22,7 @@ export default function HistoryButton({ queryLength, handleHistoryClick, isMobil
                 isMobile={isMobile}
                 onClick={handleHistoryClick}
             >
-                <HistoryIconStyled color={buttonState ? "orange" : "#ddd"} />
+                <HistoryIconStyled color={buttonState ? themes[theme].highlitedButton : themes[theme].buttonText} />
                 {isMobile && <span>History</span>}
             </HistoryButtonStyled>
         </Tooltip>
