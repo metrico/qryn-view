@@ -21,15 +21,21 @@ export default function loadLogs() {
     } = localStore;
     let { start: startTs, stop: stopTs } = localStore;
 
+    function adjustForTimezone(date){
+
+        var timeOffsetInMS = date.getTimezoneOffset() * 60000;
+        date.setTime(date.getTime() + timeOffsetInMS);
+        return date
+    }
+
     function getTimeParsed(time) {
         return time.getTime() + "000000";
     }
 
+    const timeZone = new Date().getTimezoneOffset()
     const parsedStart = getTimeParsed(startTs);
     const parsedStop = getTimeParsed(stopTs);
-
     const parsedTime = "&start=" + (from || parsedStart) + "&end=" + (to || parsedStop);
-
     if (findRangeByLabel(rangeLabel)) {
         ({ dateStart: startTs, dateEnd: stopTs } =
             findRangeByLabel(rangeLabel));
@@ -37,6 +43,7 @@ export default function loadLogs() {
 
     store.dispatch(setStartTime(startTs));
     store.dispatch(setStopTime(stopTs));
+    
     const origin = window.location.origin;
     const url = apiUrl;
     const queryStep = `&step=${step || 120}`;
@@ -113,13 +120,13 @@ export default function loadLogs() {
                         dispatch(setMatrixData(idResult || []));
                         dispatch(setLoading(false));
                     }
-                    dispatch(setLoading(false));
+                   // dispatch(setLoading(false));
                 } else {
                     dispatch(setLogs([]));
                     dispatch(setMatrixData([]));
                     dispatch(setLoading(false));
                 }
-                dispatch(setLoading(false));
+               // dispatch(setLoading(false));
             })
             .catch((error) => {
 

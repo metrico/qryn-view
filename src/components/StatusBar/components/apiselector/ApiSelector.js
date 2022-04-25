@@ -18,17 +18,18 @@ export function ApiSelector() {
     const apiUrl = useSelector((store) => store.apiUrl);
     const apiError = useSelector((store) => store.apiErrors);
     const [editedUrl, setEditedUrl] = useState(apiUrl);
-
     const [apiSelectorOpen, setApiSelectorOpen] = useState(false);
     const dispatch = useDispatch();
     const API_URL = "API URL";
+    
     useEffect(() => {
         setEditedUrl(apiUrl);
     }, []);
 
     useEffect(() => {
         setEditedUrl(apiUrl);
-        dispatch(loadLabels(apiUrl))
+
+        dispatch(loadLabels(apiUrl));
     }, [apiUrl]);
 
     useEffect(() => {
@@ -51,12 +52,15 @@ export function ApiSelector() {
         e.preventDefault();
         setEditedUrl(e.target.value);
     };
+
     const onUrlSubmit = (e) => {
         dispatch(setApiUrl(editedUrl));
-        setEditedUrl(editedUrl);
-        dispatch(loadLabels(editedUrl))
-        dispatch(setLabelsBrowserOpen(false));
 
+        setEditedUrl(editedUrl);
+
+        dispatch(loadLabels(editedUrl));
+
+        dispatch(setLabelsBrowserOpen(false));
     };
 
     return (

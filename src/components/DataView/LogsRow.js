@@ -25,9 +25,10 @@ export default function LogsRow({ message }) {
                 toggleTagsActive(message.id);
             }}
         >
-            <RowTimestamp>{formatDate(message.timestamp)}</RowTimestamp>
-            <RowLogContent>{message.text}</RowLogContent>
-
+            <div className="log-ts-row">
+                <RowTimestamp>{formatDate(message.timestamp)}</RowTimestamp>
+                <RowLogContent>{message.text}</RowLogContent>
+            </div>
             {message.tags && (
                 <div className={toggleActiveStyles(message)}>
                     <ValueTags tags={message.tags} />

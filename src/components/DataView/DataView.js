@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import { DataViewCont, DataViewStyled, Loader } from "./styled";
-
 import ClokiChart from "../../plugins/charts";
 import QueryHistory from "../../plugins/queryhistory";
 import LogsRow from "./LogsRow";
 import EmptyView from "./EmptyView";
+// import Table from "../../plugins/tables/Table";
 
 class DataView extends Component {
     constructor(props) {
@@ -30,6 +30,7 @@ class DataView extends Component {
         return (
             <DataViewStyled>
                 <DataViewCont>
+                    {/* <Table/> */}
                     {this.props.messages.length > 0 &&
                     this.getMatrixForChart().length < 1
                         ? this.props.messages.map((message, key) => (

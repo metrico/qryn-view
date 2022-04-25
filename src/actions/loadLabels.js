@@ -2,6 +2,7 @@ import axios from "axios";
 import { setLabels } from "./setLabels";
 import setLoading from "./setLoading";
 import { setApiError } from "./setApiError";
+import { createAlert } from "./createAlert";
 
 export default function loadLabels(apiUrl) {
     const origin = window.location.origin;
@@ -26,30 +27,34 @@ export default function loadLabels(apiUrl) {
             .get(`${url.trim()}/loki/api/v1/labels`, options)
             ?.then((response) => {
                 if (response) {
-                    if (response?.data?.data === [])
                     if (response?.data?.data?.length > 0) {
-                        const labels = response?.data?.data
-                            .sort()
-                            .map((label) => ({
+                        let labels = response?.data?.data
+                            ?.sort()
+                            ?.map((label) => ({
                                 name: label,
                                 selected: false,
                                 values: [],
                             }));
-                        dispatch(setLabels(labels || []));
-        
-                        dispatch(setApiError(""));
+                        if (labels) {
+                            dispatch(setLabels(labels || []));
+                            dispatch(setApiError(""));
+                            dispatch(setLoading(false));
+                        }
+                    } else {
+                        dispatch(createAlert({type:'info',message:'No labels available for this API'}))
                     }
                 } else {
                     dispatch(setLoading(false));
-                    dispatch(
-                        setApiError("")
-                    );
+                    
+                    dispatch(setApiError(""));
                     dispatch(setLabels([]));
-             
                 }
             })
             .catch((error) => {
-                console.log(error);
+                dispatch(createAlert({
+                    type:"error",
+                    message:'API NOT FOUND'
+                }))
                 dispatch(setLoading(false));
                 dispatch(setLabels([]));
             });

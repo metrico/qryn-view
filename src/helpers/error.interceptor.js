@@ -12,7 +12,6 @@ const errorInterceptor = (axiosInstance) => {
         (error) => {
 
             if (error.response) {
-
                 const handler = errorHandler(error)
 
                 if (error?.response?.status === 401) {
@@ -49,6 +48,9 @@ const errorInterceptor = (axiosInstance) => {
                 }
             } else {
 
+          
+                // 1- get error by parsing json 
+
                 const error_parsed = JSON.parse(JSON.stringify(error));
                 const networkError = {
                     url: error_parsed.config.url,
@@ -56,15 +58,21 @@ const errorInterceptor = (axiosInstance) => {
                     name: error_parsed.name
                 }
 
+                // 2-  
                 store.dispatch(setApiWarning({ type: 'labels', message: 'Labels not available', }))
                 const { url } = networkError
-
+                
                 const apiWarning = store.getState().apiWarning
-                if (apiWarning && url.includes('query')) {
+                if (apiWarning && url.includes('query') &&  store.getState().notifications.length < 1) {
                     apiWarning.num++
                     store.dispatch(createAlert({
                         type: 'error',
                         message: `API not found, please adjust API URL`
+                    }))
+                } else if( url.includes('labels') && store.getState().notifications.length < 1) {
+                    store.dispatch(createAlert({
+                        type: 'error',
+                        message: 'API not found, please adjust API URL'
                     }))
                 }
 

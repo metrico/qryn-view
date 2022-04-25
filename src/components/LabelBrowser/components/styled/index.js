@@ -58,7 +58,7 @@ export const QueryBarContainer = styled.div`
     border-radius: 3px;
 `;
 export const ShowLogsBtn = styled(BtnSmall)`
-    background: ${theme.primaryDark};
+    background:  ${theme.primaryDark};
     color: ${theme.buttonText};
     margin-left: 10px;
     transition: 0.25s all;
@@ -76,6 +76,10 @@ export const ShowLogsBtn = styled(BtnSmall)`
         margin: 0;
     }
 `;
+
+export const LoadingBtn = styled(ShowLogsBtn)`
+background:green;
+`
 
 export const MobileTopQueryMenu = styled.div`
     display: none;

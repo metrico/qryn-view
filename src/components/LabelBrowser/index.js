@@ -7,9 +7,9 @@ export default function LabelBrowser() {
     return (
         <div>
             <QueryBar className={"query-bar-placeholder"} />
-            {labelsBrowserOpen && (
+             
                 <ValuesList />
-            )}
+            
 
         </div>
     );
