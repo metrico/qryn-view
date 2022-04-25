@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { THEME_COLORS } from '../theme/theme';
 import { CircularProgress } from "@mui/material";
 import darkTheme from "../../../theme/dark";
 
@@ -44,14 +43,18 @@ export const DataViewCont = styled.div`
 `;
 
 export const LogRow = styled.div`
-    padding: 0.3rem;
+    font-family: monospace;
     color: white;
     font-size: 12px;
     cursor: pointer;
-    margin-bottom: 4px;
     padding-left: 0.5rem;
     margin-left: 0.25rem;
     transition: 0.2s all;
+    display: flex;
+    flex-direction: column;
+    border-left: 4px solid ${(props) => props.rowColor};
+    margin-bottom: 2px;
+    margin-top: 2px;
     &:hover {
         background: black;
     }
@@ -59,13 +62,14 @@ export const LogRow = styled.div`
     p {
         display: inline-block;
     }
-
-    border-left: 4px solid ${(props) => props.rowColor};
+    .log-ts-row {
+        display: flex;
+    }
 `;
 
 export const RowLogContent = styled.span`
     font-size: 12px;
-    font-family: monospace;
+
     color: ${theme.textWhite};
     line-height: 1.5;
 `;
@@ -74,6 +78,8 @@ export const RowTimestamp = styled.span`
     position: relative;
     color: ${theme.textColor};
     margin-right: 0.25rem;
+    white-space: nowrap;
+    line-height: 1.5;
 `;
 
 export const Loader = styled(CircularProgress)`

@@ -1,6 +1,6 @@
 export const TAGS_LEVEL = {
     critical: ["emerg", "fatal", "alert", "crit", "critical"],
-    error: ["err", "eror", "error", "warning"],
+    error: ["err", "eror", "error"],
     warning: ["warn", "warning"],
     info: ["info", "information", "notice"],
     debug: ["dbug", "debug"],
