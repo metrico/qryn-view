@@ -39,10 +39,12 @@ export const QueryBar = () => {
     const labels = useSelector(store => store.labels)
     const queryHistory = useSelector((store) => store.queryHistory);
     const saveUrl = localUrl();
+   // const loading = useSelector( store => store.loading)
     useEffect(() => {
         const dLog = debugLog(query);
         debug && dLog.logicQueryBar();
         const labels = sendLabels(apiUrl)
+        
         if (isEmbed) dispatch(loadLogs())
         if (query.length > 0) {
             debug && dLog.queryBarDispatch();
@@ -144,6 +146,7 @@ export const QueryBar = () => {
                     <ShowLogsButton
                         disabled={!queryValid}
                         onClick={onSubmit}
+                       
                         isMobile={true}
                     />
                 </MobileTopQueryMenu>
@@ -165,6 +168,7 @@ export const QueryBar = () => {
                     />
                     <ShowLogsButton
                         disabled={!queryValid}
+                     
                         onClick={onSubmit}
                         isMobile={false}
                     />
