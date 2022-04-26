@@ -43,7 +43,7 @@ export const SettingInput = styled(InputSmall)`
 `;
 export const SettingButton = styled(BtnSmall)`
     background: ${({theme}) => theme.primaryDark};
-    color: ${({theme}) => theme.textColor};
+    color: ${({theme}) => theme.buttonText};
     height: 26px;
     &:hover {
         background: ${({theme}) => theme.primaryLight};

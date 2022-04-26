@@ -22,15 +22,14 @@ export const DataViewStyled = styled.div`
 `;
 
 export const EmptyViewContainer = styled.div`
-    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 175px;
     font-size: 1em;
-    color: ${props => props.theme.textOff};
-    background: ${props => props.theme.secondaryWidgetContainer};
+    color: ${({theme}) => theme.textOff };
+    background: ${({theme}) => theme.secondaryWidgetContainer};
     text-align: center;
 `;
 
@@ -41,20 +40,18 @@ export const DataViewCont = styled.div`
 `;
 
 export const LogRow = styled.div`
-    padding: 0.3rem;
     color: ${props => props.theme.textColor};
     font-size: 12px;
     cursor: pointer;
-    margin-bottom: 4px;
     padding-left: 0.5rem;
     margin-left: 0.25rem;
-    transition: 0.2s all;
     display: flex;
     flex-direction: column;
     margin-bottom: 2px;
     margin-top: 2px;
+    font-family: monospace;
     &:hover {
-        background: ${props => props.theme.widgetContainer};
+        background: ${props => props.theme.buttonDefault};
     }
 
     p {
@@ -78,6 +75,7 @@ export const RowTimestamp = styled.span`
     color: ${props => props.theme.textColor};
     margin-right: 0.25rem;
     white-space: nowrap;
+    font-size: 12px;
     line-height: 1.5;
 `;
 

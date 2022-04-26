@@ -28,7 +28,9 @@ export default function stateFromQueryParams() {
                 startParams[key] = parsedQuery;
             } else if (key === "isSubmit") {
                 startParams[key] = value;
-            } else {
+            }
+       
+            else {
                 startParams[key] = value;
             }
         }

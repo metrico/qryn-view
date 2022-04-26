@@ -42,8 +42,8 @@ export function UpdateStateFromQueryParams() {
     const query = useSelector((store) => store.query);
     const theme = useSelector((store) => store.theme)
     
-   // const isLightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
-
+   const isLightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
+console.log(isLightTheme)
     const STORE_KEYS = {
         apiUrl,
         query,
@@ -55,7 +55,7 @@ export function UpdateStateFromQueryParams() {
         to,
         isSubmit,
         isEmbed,
-        theme
+       theme
     };
 
     const STORE_ACTIONS = {
@@ -104,8 +104,10 @@ export function UpdateStateFromQueryParams() {
                         STRING_VALUES.includes(param) &&
                         startParams[param] !== ""
                     ) {
-       
+                        console.log(startParams[param])
+
                         dispatch(STORE_ACTIONS[param](startParams[param]));
+                      
                         if(param === 'apiUrl') {
                          dispatch(loadLabels(startParams[param]))
                         }

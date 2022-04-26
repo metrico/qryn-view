@@ -10,7 +10,8 @@ import { ThemeProvider } from "@emotion/react";
 import styled from '@emotion/styled'
 
 const ValueTagsStyled = styled.div`
-    color: ${props => props.theme.textPrimary}
+    color: ${props => props.theme.textPrimary};
+    flex:1;
     &:hover {
         background: ${props => props.theme.widgetContainer};
     }
@@ -71,7 +72,7 @@ export default function ValueTags({ tags }) {
                                 onClick={(e) => addLabel(e, key, value)}
                                 className={"icon"}
                             >
-                                <ZoomIn color="primary" />
+                                <ZoomIn color="primary" style={{width:'18px',height:'18px'}}/>
                             </span>
                             <span
                                 aria-label="Filter out value"
@@ -79,13 +80,13 @@ export default function ValueTags({ tags }) {
                                 onClick={(e) => addLabel(e, key, value, true)}
                                 className={"icon"}
                             >
-                                <ZoomOut color="primary" />
+                                <ZoomOut color="primary" style={{width:'18px',height:'18px'}}/>
                             </span>
                         </>
                     )}
 
-                    <span>{key}</span>
-                    <span>{value}</span>
+                    <span style={{flex:1}}>{key}</span>
+                    <span style={{flex:4}}>{value}</span>
                 </div>
                 </ValueTagsStyled>
             ))}

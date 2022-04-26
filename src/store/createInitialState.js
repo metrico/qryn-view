@@ -59,7 +59,7 @@ export default function initialState() {
         isEmbed: urlState.isEmbed || false,
         chartType: "line",
         notifications: [],
-        theme: "dark",
+        theme: urlState.theme || "dark",
     };
     const debug = state.debugMode;
     if (debug) console.log("🚧 LOGIC/ INITIAL STATE ::: ", state);

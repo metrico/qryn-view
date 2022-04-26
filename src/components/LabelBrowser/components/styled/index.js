@@ -26,7 +26,7 @@ export const ShowLabelsBtn = styled(BtnSmall)`
     text-overflow: ellipsis;
     transition: 0.25s all;
     justify-content: flex-start;
-    color: ${({theme}) => theme.buttonText};
+    color: ${({theme}) => theme.textColor};
     &:hover {
         background: ${({theme}) => theme.buttonHover};
     }

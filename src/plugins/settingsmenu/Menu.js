@@ -2,14 +2,15 @@ import * as React from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CopyButton from "./CopyButton/CopyButton";
 import { styled } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen";
 import { MenuButton } from "./styled";
-
+import {themes} from '../../theme/themes'
 const StyledMenu = styled((props) => (
+    
     <Menu
         elevation={0}
         anchorOrigin={{
@@ -22,13 +23,13 @@ const StyledMenu = styled((props) => (
         }}
         {...props}
     />
-))(({ theme }) => ({
+))(({ theme,clokiTheme }) => ({
     "& .MuiPaper-root": {
         borderRadius: 6,
         marginTop: theme.spacing(1),
         minWidth: 180,
-        color: "#ddd",
-        backgroundColor: "#333",
+        color:clokiTheme.textColor,
+        backgroundColor: clokiTheme.buttonDefault,
         "& .MuiMenu-list": {
             padding: "4px 0",
         },
@@ -36,11 +37,11 @@ const StyledMenu = styled((props) => (
             fontSize:12,
             "& .MuiSvgIcon-root": {
                 fontSize: 12,
-                color: theme.palette.text.secondary,
+                color: clokiTheme.textColor,
                 marginRight: theme.spacing(1.5),
             },
             "&:active": {
-                backgroundColor: "#222",
+                backgroundColor: clokiTheme.buttonDefault,
             },
         },
     },
@@ -50,6 +51,9 @@ export default function ClokiMenu() {
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+    const storeTheme = useSelector( store => store.theme)
+    const clokiTheme = themes[storeTheme]
+  
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -64,7 +68,7 @@ export default function ClokiMenu() {
     return (
         <div>
             <MenuButton
-                style={{ color: "#ddd" }}
+               theme={clokiTheme}
                 id="basic-button"
                 aria-controls={open ? "basic-menu" : undefined}
                 aria-haspopup="true"
@@ -78,13 +82,14 @@ export default function ClokiMenu() {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
+                clokiTheme={clokiTheme}
                 MenuListProps={{
                     "aria-labelledby": "basic-button",
                 }}
             >
                 <CopyButton />
                 <MenuItem onClick={handleSettingsOpen}>
-                    <DisplaySettingsIcon style={{ color: "#ddd" }} /> Query
+                    <DisplaySettingsIcon style={{ color:clokiTheme.textColor }} /> Query
                     Settings
                 </MenuItem>
             </StyledMenu>

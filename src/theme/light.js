@@ -10,11 +10,13 @@ const black = {
 };
 
 const white = {
-    w100: "hsl(0, 0%, 100%)",
+    w100: "hsl(0, 0%, 100%)", // buttons over lightgray
     w200: "hsl(0, 0%, 96%)",
     w300: "hsl(0, 0%, 92%)",
     w400: "hsl(180, 5%, 96%)",
-    w500: "hsl(0, 0%, 84%)",
+    w500: "hsl(0, 0%, 92%)",
+    w600: "hsla(180,5%,96%,1)",
+    w700: "hsl(0,0%,98%)"  // lightgray bg
 };
 
 const lightgrey = {
@@ -54,19 +56,19 @@ const typography = {
 const orange = {
     or100: "hsl(39, 100%, 50%)",
 };
-const mainBgColor = white.w400;
+const mainBgColor =white.w500;
 const textColor = darkgrey.dg100;
 const textOff = darkgrey.dg400;
 const textPrimary = black.b300;
-const inputBg = white.w200;
+const inputBg = white.w100;
 const primaryDark = turquoise.tq200;
 const primaryLight = turquoise.tq300;
-const widgetContainer = white.w100;
+const widgetContainer = white.w200;
 const secondaryWidgetContainer = white.w200;
 const widgetTitle = lightgrey.lg300;
 const widgetTitleBorder = lightgrey.lg700;
-const buttonDefault = 'hsla(210, 12%, 16%, 0.16)';
-const buttonHover = 'hsla(210, 12%, 16%, 0.2)';
+const buttonDefault = white.w100;
+const buttonHover = white.w700;
 const buttonInactive = black.b400;
 const buttonText = white.w200;
 const inputTextFocus = orange.or100;
@@ -77,7 +79,7 @@ const viewBg = white.w400;
 const scrollbarThumb = "hsla(0, 0%, 48%, 0.122)";
 const critical = "hsl(300, 100%, 25%)";
 const error = "hsl(0, 100%, 50%)";
-const warning = "hsl(60, 100%, 50%)";
+const warning = orange;
 const info = "hsl(120, 100%, 25%)";
 const debug = "hsl(240, 100%, 50%)";
 const trace = "hsl(195, 53%, 79%)";
