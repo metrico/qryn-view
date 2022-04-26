@@ -13,7 +13,7 @@ export default function UseTooltip(plot) {
     $q("#tooltip").remove();
     previousPoint = null;
     $q(this).bind("plothover", function (event, pos, item) {
-        let labels = ``;
+    
         plot.unhighlight();
         if (item) {
             let plotData = plot.getData();

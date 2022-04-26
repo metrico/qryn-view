@@ -6,7 +6,6 @@ import loadLabels from "../../actions/loadLabels";
 import { queryBuilder } from "./helpers/querybuilder";
 import { setQuery } from "../../actions";
 import loadLabelValues from "../../actions/loadLabelValues";
-
 import Tooltip from "@mui/material/Tooltip";
 import styled from "@emotion/styled";
 
@@ -82,16 +81,14 @@ export const ValuesList = (props) => {
 
     const theme = useSelector((store) => store.theme);
     const dispatch = useDispatch();
-    const debug = useSelector((store) => store.debug);
+    const debug = useSelector((store) => store.debugMode);
     const apiUrl = useSelector((store) => store.apiUrl);
-    //if(debug) console.log('🚧 LOGIC/LabelBrowser/ValuesList', apiUrl)
+    if(debug) console.log('🚧 LOGIC/LabelBrowser/ValuesList', apiUrl)
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen);
-
     const CLEAR = "clear";
 
     useEffect(() => {
         dispatch(loadLabels(apiUrl));
-        //   setLabelList(labels)
     }, [apiUrl]);
 
     useEffect(() => {
@@ -106,19 +103,15 @@ export const ValuesList = (props) => {
     const onLabelOpen = (e, value) => {
         e.preventDefault();
         value.selected = !value.selected;
-        //  setLabel(value);
+
         const selected = labelList.filter((f) => f.selected);
         setLabelsSelected(selected);
-
-        //   setFilteredPlaceholder(value);
 
         const query = queryBuilder(labelList);
         dispatch(setQuery(query));
 
-        //this.setState({ ...this.state, query });
-
         dispatch(loadLabelValues(value, labelList, apiUrl));
-        // loads label values into labelList
+
     };
 
     const onLabelValueClick = (e, value) => {
@@ -144,11 +137,11 @@ export const ValuesList = (props) => {
             };
         } else return {};
     };
+
     return (
         labelsBrowserOpen && (
             <ThemeProvider theme={themes[theme]}>
             <ValuesListStyled>
-                    
                 <div className={"labels-container"}>
                     <div className={"valuesList"}>
                         {labelList.length > 0 ? (

@@ -27,7 +27,7 @@ export function Notification() {
             {
                 notifications.map((notification, index) => {
                     if (notification.visible) {
-                        return <Expire key={index} delay='5000' index={index}>
+                        return <Expire key={index} delay='4000' index={index}>
                             <div className={'alert'}>
                                 <Alert
                                 elevation={6}

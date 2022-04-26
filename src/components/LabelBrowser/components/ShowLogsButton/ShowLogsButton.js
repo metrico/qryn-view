@@ -1,7 +1,7 @@
 import { ShowLogsBtn } from "../styled";
 import { themes } from '../../../../theme/themes';
 import { ThemeProvider } from '@emotion/react';
-import { useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 
 export default function ShowLogsButton({ disabled, onClick, isMobile }) {
     const SHOW_LOGS = "Show Logs";

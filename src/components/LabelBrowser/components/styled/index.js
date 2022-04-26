@@ -3,12 +3,9 @@ import styled from "@emotion/styled";
 import HistoryIcon from "@mui/icons-material/History";
 import { BtnSmall } from "../../../../theme/styles/Button";
 
-// get theme from main state
-
-
 export const HistoryIconStyled = styled(HistoryIcon)`
     height:18px;
-    color: ${({color}) => { console.log(color); return color}};
+    color: ${({color}) => color};
     width:18px;
 `;
 export const HistoryButtonStyled = styled(BtnSmall)`
@@ -24,17 +21,17 @@ export const HistoryButtonStyled = styled(BtnSmall)`
 `;
 
 export const ShowLabelsBtn = styled(BtnSmall)`
-    background: ${(props) =>
-        props.browserActive ? props.theme.buttonDefault : props.theme.buttonHover};
+    background: ${({browserActive,theme}) =>
+        browserActive ? theme.buttonDefault : theme.buttonHover};
     text-overflow: ellipsis;
     transition: 0.25s all;
     justify-content: flex-start;
-    color: ${props => props.theme.buttonText};
+    color: ${({theme}) => theme.buttonText};
     &:hover {
-        background: ${props => props.theme.buttonHover};
+        background: ${({theme}) => theme.buttonHover};
     }
     @media screen and (max-width: 864px) {
-        display: ${(props) => (props.isMobile ? "flex" : "none")};
+        display: ${({isMobile}) => (isMobile ? "flex" : "none")};
 
         margin: 0;
     }
@@ -45,7 +42,7 @@ export const QueryBarContainer = styled.div`
     padding: 3px 6px;
     margin: 5px 0px;
     margin-left: 0px;
-    background: ${props => props.theme.widgetContainer};
+    background: ${({theme}) => theme.widgetContainer};
     flex-wrap: wrap;
     border-radius: 3px;
 `;

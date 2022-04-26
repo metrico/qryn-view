@@ -1,14 +1,12 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import CopyButton from "./CopyButton/CopyButton";
 import { styled } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen";
-import { themes } from "../../theme/themes";
 import { MenuButton } from "./styled";
 
 const StyledMenu = styled((props) => (
@@ -29,20 +27,20 @@ const StyledMenu = styled((props) => (
         borderRadius: 6,
         marginTop: theme.spacing(1),
         minWidth: 180,
-        color: theme.textColor,
-        background: theme.mainBgColor,
+        color: "#ddd",
+        backgroundColor: "#333",
         "& .MuiMenu-list": {
             padding: "4px 0",
         },
         "& .MuiMenuItem-root": {
             fontSize:12,
             "& .MuiSvgIcon-root": {
-                fontSize: 18,
-                color: theme.textColor,
+                fontSize: 12,
+                color: theme.palette.text.secondary,
                 marginRight: theme.spacing(1.5),
             },
             "&:active": {
-                backgroundColor: theme.buttonHover,
+                backgroundColor: "#222",
             },
         },
     },
@@ -63,11 +61,10 @@ export default function ClokiMenu() {
 
         handleClose();
     };
-    const theme = useSelector(store => store.theme);
     return (
         <div>
             <MenuButton
-                style={{ color: themes[theme].textColor, background: themes[theme].mainBgColor }}
+                style={{ color: "#ddd" }}
                 id="basic-button"
                 aria-controls={open ? "basic-menu" : undefined}
                 aria-haspopup="true"
@@ -87,7 +84,8 @@ export default function ClokiMenu() {
             >
                 <CopyButton />
                 <MenuItem onClick={handleSettingsOpen}>
-                    <DisplaySettingsIcon /> Query Settings
+                    <DisplaySettingsIcon style={{ color: "#ddd" }} /> Query
+                    Settings
                 </MenuItem>
             </StyledMenu>
         </div>

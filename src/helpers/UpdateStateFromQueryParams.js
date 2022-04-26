@@ -16,7 +16,6 @@ import {
 } from "../actions";
 
 import  loadLabels  from "../actions/loadLabels"
-
 import loadLabelValues from "../actions/loadLabelValues";
 import setFromTime from "../actions/setFromTime";
 import setIsEmbed from "../actions/setIsEmbed";
@@ -28,7 +27,6 @@ import { environment } from "../environment/env.dev";
 import store from "../store/store";
 export function UpdateStateFromQueryParams() {
     const { hash } = useLocation();
-
     const dispatch = useDispatch();
     const urlQueryParams = useSelector((store) => store.urlQueryParams);
     const start = useSelector((store) => store.start);
@@ -43,7 +41,9 @@ export function UpdateStateFromQueryParams() {
     const isEmbed = useSelector((store) => store.isEmbed);
     const query = useSelector((store) => store.query);
     const theme = useSelector((store) => store.theme)
-    const isLightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
+    
+   // const isLightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
+
     const STORE_KEYS = {
         apiUrl,
         query,
@@ -143,9 +143,8 @@ export function UpdateStateFromQueryParams() {
                 
             }
         } else {
-            console.log('test')
-            dispatch(setApiUrl(environment.apiUrl));
 
+            dispatch(setApiUrl(environment.apiUrl));
             const allParams = STRING_VALUES.concat(TIME_VALUES);
             allParams.push(QUERY_VALUE);
             allParams.push(BOOLEAN_VALUES);
@@ -174,6 +173,7 @@ export function UpdateStateFromQueryParams() {
 
             window.location.hash = urlFromHash;
         }
+
     }, []);
 
     useEffect(() => {
@@ -183,7 +183,6 @@ export function UpdateStateFromQueryParams() {
             for (let [key, value] of paramsFromHash.entries()) {
                 previousParams[key] = value;
             }
-
             Object.keys(STORE_KEYS).forEach((store_key) => {
                 if (
                     STRING_VALUES.includes(store_key) &&
