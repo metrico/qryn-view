@@ -10,5 +10,5 @@ export default function debugLog(query) {
             query !== "{}" || query.length > 1
         );
     };
-    return {logicQueryBar, queryBarDispatch}
+    return { logicQueryBar, queryBarDispatch };
 }

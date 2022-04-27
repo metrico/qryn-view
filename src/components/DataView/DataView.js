@@ -17,7 +17,7 @@ class DataView extends Component {
             messages: props.messages || [],
             matrixData: props.matrixData || [],
             loading: false,
-            theme: props.theme
+            theme: props.theme,
         };
     }
     getMatrixForChart = () => {
@@ -35,12 +35,12 @@ class DataView extends Component {
                         {this.props.messages.length > 0 &&
                         this.getMatrixForChart().length < 1
                             ? this.props.messages.map((message, key) => (
-                                <LogsRow
-                                    message={message}
-                                    toggleTagsActive={this.toggleTagsActive}
-                                    key={key}
-                                />
-                            ))
+                                  <LogsRow
+                                      message={message}
+                                      toggleTagsActive={this.toggleTagsActive}
+                                      key={key}
+                                  />
+                              ))
                             : null}
 
                         {this.getMatrixForChart().length > 0 ? (
@@ -69,7 +69,7 @@ const mapStateToProps = (state) => {
         limit: state.limit,
         loading: state.loading,
         matrixData: state.matrixData,
-        theme: state.theme
+        theme: state.theme,
     };
 };
 

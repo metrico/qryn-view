@@ -23,22 +23,22 @@ export default function LogsRow({ message }) {
 
     return (
         <ThemeProvider theme={themes[theme]}>
-        <LogRow
-            rowColor={getRowColor(message.tags)}
-            onClick={(e) => {
-                toggleTagsActive(message.id);
-            }}
-        >
-            <div className="log-ts-row">
-            <RowTimestamp>{formatDate(message.timestamp)}</RowTimestamp>
-            <RowLogContent>{message.text}</RowLogContent>
-            </div>
-            {message.tags && (
-                <div className={toggleActiveStyles(message)}>
-                    <ValueTags tags={message.tags} />
+            <LogRow
+                rowColor={getRowColor(message.tags)}
+                onClick={(e) => {
+                    toggleTagsActive(message.id);
+                }}
+            >
+                <div className="log-ts-row">
+                    <RowTimestamp>{formatDate(message.timestamp)}</RowTimestamp>
+                    <RowLogContent>{message.text}</RowLogContent>
                 </div>
-            )}
-        </LogRow>
+                {message.tags && (
+                    <div className={toggleActiveStyles(message)}>
+                        <ValueTags tags={message.tags} />
+                    </div>
+                )}
+            </LogRow>
         </ThemeProvider>
     );
 }

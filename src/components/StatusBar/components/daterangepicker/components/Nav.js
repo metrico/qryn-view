@@ -34,7 +34,7 @@ import { ThemeProvider } from '@emotion/react';
 const PickerTypeButton = styled.button`
     padding: 10px;
     border-radius: 3px;
-    color: orange;
+    color:${({theme})=>theme.textPrimaryAccent};
     font-size: 1em;
     border: none;
     background: none;
@@ -56,17 +56,17 @@ const PickerTypeButton = styled.button`
 const StyledNav = styled.div`
         .header {
             padding: 10px;
-            justifyContent: space-between;
+            justify-content: space-between;
         }
         .headerItem {
-            textAlign: center;
+            text-align: center;
         }
         .dateComplete {
-            fontSize: .85em;
+            font-size: .85em;
         }
         .divider {
-            borderLeft: 1px solid action;
-            marginBottom: 20;
+            border-left: 1px solid action;
+            margin-bottom: 20;
         }
         .container {
             position: absolute;
@@ -80,11 +80,11 @@ const StyledNav = styled.div`
         };
         .applyButton {
             color: white;
-            background: hsl(0; 0%; 31%);
-            border: 1px solid hsl(0; 0%; 31%);
+            background: hsl(0, 0%, 31%);
+            border: 1px solid hsl(0, 0%, 31%);
             padding: 6px 8px;
-            borderRadius: 3px;
-            marginLeft: 10px;
+            border-radius: 3px;
+            margin-left: 10px;
             cursor: pointer;
         }
         `
@@ -117,7 +117,6 @@ export const PickerNav = (props) => {
     const isBigScreen = useMediaQuery({ query: "(min-width: 914px)" });
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
     const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
-    const isRetina = useMediaQuery({ query: "(min-resolution: 2dppx)" });
     const [startCalendar, setStartCalendar] = useState(false);
     const [stopCalendar, setStopCalendar] = useState(false);
 
@@ -302,6 +301,7 @@ export const PickerNav = (props) => {
                                     {isTabletOrMobile && (
                                         <PickerTypeButton
                                             onClick={openRelative}
+                                            theme={themes[theme]}
                                         >
                                             <span>
                                                 {relativeOpen

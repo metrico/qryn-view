@@ -16,7 +16,7 @@ const white = {
     w400: "hsl(180, 5%, 96%)",
     w500: "hsl(0, 0%, 92%)",
     w600: "hsla(180,5%,96%,1)",
-    w700: "hsl(0,0%,98%)"  // lightgray bg
+    w700: "hsl(0,0%,98%)", // lightgray bg
 };
 
 const lightgrey = {
@@ -25,7 +25,7 @@ const lightgrey = {
     lg100: "hsl(0, 0%, 80%)",
     lg200: "hsl(0, 0%, 76%)",
     lg300: "hsl(0, 0%, 72%)",
-    lg400: "hsl(0, 0%, 68%)", 
+    lg400: "hsl(0, 0%, 68%)",
     lg500: "hsl(0, 0%, 64%)",
     lg600: "hsl(0, 0%, 60%)",
     lg700: "hsl(0, 0%, 56%)",
@@ -50,16 +50,21 @@ const turquoise = {
 };
 const typography = {
     ...defaultTheme.typography,
-    fontFamily: 'Roboto, Helvetica, Arial, sans-serif'
-}
+    fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+};
 
 const orange = {
     or100: "hsl(39, 100%, 50%)",
 };
-const mainBgColor =white.w500;
+const mainBgColor = white.w500;
+const logBgColor = white.w100;
+const tabActive = white.w100;
+const tabHeader = white.b400;
+const tabBg = white.w200;
 const textColor = darkgrey.dg100;
 const textOff = darkgrey.dg400;
 const textPrimary = black.b300;
+const textPrimaryAccent = turquoise.tq200;
 const inputBg = white.w100;
 const primaryDark = turquoise.tq200;
 const primaryLight = turquoise.tq300;
@@ -103,6 +108,7 @@ const lightTheme = {
     inputLabelBg,
     textOff,
     textPrimary,
+    textPrimaryAccent,
     viewBg,
     scrollbarThumb,
     critical,
@@ -115,11 +121,15 @@ const lightTheme = {
     darkgrey,
     turquoise,
     typography,
+    logBgColor,
+    tabActive,
+    tabHeader,
+    tabBg,
     mainBgColor,
     secondaryWidgetContainer,
     widgetTitle,
     widgetTitleBorder,
     highlitedButton,
-    ...defaultTheme
+    ...defaultTheme,
 };
 export default lightTheme;

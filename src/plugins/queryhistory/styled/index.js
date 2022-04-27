@@ -23,6 +23,7 @@ export const StyledDrawer = styled((props) => (
     }));
 export const Tab = styled(TabUnstyled)`
     color: ${props => props.theme.textColor};
+    background: ${props => props.theme.buttonDefault};
     cursor: pointer;
     font-size: 13px;
     background-color: transparent;
@@ -40,7 +41,8 @@ export const Tab = styled(TabUnstyled)`
     }
 
     &:focus {
-        color: #aaa;
+        color: ${({theme})=> theme.textColor};
+        background: ${({theme})=> theme.buttonDefault};
         border-radius: 3px 3px 0px 0px;
 
         outline-offset: 2px;
@@ -73,6 +75,7 @@ export const TabHistoryStarIcon = styled(StarBorderIcon)`
     width: 16px;
     margin-right: 3px;
 `;
+
 export const TabHistorySettingIcon = styled(DisplaySettingsIcon)`
     height: 16px;
     width: 16px;
@@ -100,7 +103,7 @@ export const TabHeaderContainer = styled.div`
     align-items: center;
     color: ${props => props.theme.textColor};
     justify-content: space-between;
-    background: #7b7b7b1f;
+    background: ${props=> props.theme.tabHeader};
     height: 37px;
 `;
 export const TabPanel = styled(TabPanelUnstyled)`
@@ -132,12 +135,19 @@ export const QueryHistoryContainer = styled.div`
     height: 250px;
     overflow-y: auto;
     color: ${props => props.theme.textColor};
+    background: ${props => props.theme.tabBg};
     &.starredCont {
         height: 210px;
     }
     &::-webkit-scrollbar {
-        width: 10px;
-        background: black;
+        width: 5px;
+        background: ${props=> props.theme.buttonDefault}
+       
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: ${props => props.theme.scrollbarThumb};
     }
 
   
@@ -148,7 +158,7 @@ export const HistoryButton = styled.button`
     background: ${({theme}) => theme.buttonDefault};
     border-radius: 3px;
     border: none;
-    color: ${({theme}) => theme.buttonText};
+    color: ${({theme}) => theme.textColor};
     display: flex;
     align-items: center;
     justify-content: center;
@@ -164,12 +174,12 @@ export const SettingItemContainer = styled.div`
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
-    background: ${({theme}) => theme.viewBg};
+    background: ${({theme}) => theme.buttonDefault};
     margin: 10px;
     border-radius: 3px;
     & div {
         font-size: 15px;
-        color: orange;
+        color: ${({theme})=>theme.textPrimaryAccent};
         line-height: 1.5;
     }
     & small {
@@ -203,6 +213,7 @@ export const ClearHistoryButton = styled(HistoryButton)`
     font-weight: bold;
     padding: 10px 20px;
     background: ${({theme}) => theme.primaryDark};
+    color: ${({theme}) => theme.buttonText};
     margin: 0;
     width: 100%;
     white-space: nowrap;
@@ -210,6 +221,7 @@ export const ClearHistoryButton = styled(HistoryButton)`
 export const StyledCloseButton = styled(HistoryButton)`
     background: none;
     color: ${({theme}) => theme.buttonText};
+    
     position: absolute;
     right: 0;
 `;

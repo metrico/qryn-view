@@ -1,9 +1,6 @@
-import {
-    Paper,
-    Grid,
-    Typography
-} from "@mui/material";
+import { Paper, Grid, Typography } from "@mui/material";
 import { withStyles, createStyles } from "@mui/styles";
+import {useState, useEffect} from 'react';
 import {
     getDate,
     isSameMonth,
@@ -24,16 +21,19 @@ import Day from "./Day";
 import { WEEK_DAYS } from "../consts";
 
 import { themes } from "../../../../../theme/themes";
-import { useSelector } from 'react-redux';
-import { ThemeProvider } from '@emotion/react';
+import { useSelector } from "react-redux";
+import { ThemeProvider } from "@emotion/react";
+import store from "../../../../../store/store";
+
+const actTheme = themes[store.getState().theme];
 
 const NAVIGATION_ACTION = { Previous: -1, Next: 1 };
 
 const styles = (theme) =>
     createStyles({
-        root: { 
+        root: {
             width: 260,
-            background: "#262626",
+            background: actTheme.mainBgColor,
         },
         weekDaysContainer: {
             marginTop: 5,
@@ -49,6 +49,7 @@ const styles = (theme) =>
     });
 const Month = (props) => {
     const theme = useSelector((store) => store.theme);
+    const [themeSelected,setThemeSelected] = useState(themes[theme])
     const {
         classes,
         helpers,
@@ -63,9 +64,18 @@ const Month = (props) => {
 
     const [back, forward] = props.navState;
 
+    useEffect(() => {
+        setThemeSelected(theme)
+    }, [theme,setThemeSelected]);
+
     return (
         <ThemeProvider theme={themes[theme]}>
-            <Paper square elevation={0} className={classes.root}>
+            <Paper
+                square
+                elevation={0}
+                className={classes.root}
+                style={{ background: themes[theme].mainBgColor }}
+            >
                 <Grid container>
                     <Heading
                         date={date}
@@ -120,14 +130,16 @@ const Month = (props) => {
                                         day
                                     );
                                     const isEnd = isEndOfRange(dateRange, day);
-                                    const isRangeOneDay =
-                                        isRangeSameDay(dateRange);
+                                    const isRangeOneDay = isRangeSameDay(
+                                        dateRange
+                                    );
                                     const highlighted =
                                         inDateRange(dateRange, day) ||
                                         helpers.inHoverRange(day);
 
                                     return (
                                         <Day
+                                            themeSelected={themeSelected}
                                             key={format(day, "mm-dd-yyyy")}
                                             filled={isStart || isEnd}
                                             outlined={isToday(day)}

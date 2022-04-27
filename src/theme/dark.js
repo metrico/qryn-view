@@ -24,7 +24,7 @@ const lightgrey = {
     lg100: "hsl(0, 0%, 80%)",
     lg200: "hsl(0, 0%, 76%)",
     lg300: "hsl(0, 0%, 72%)",
-    lg400: "hsl(0, 0%, 68%)", 
+    lg400: "hsl(0, 0%, 68%)",
     lg500: "hsl(0, 0%, 64%)",
     lg600: "hsl(0, 0%, 60%)",
     lg700: "hsl(0, 0%, 56%)",
@@ -54,12 +54,17 @@ const orange = {
 };
 const typography = {
     ...defaultTheme.typography,
-    fontFamily: 'Roboto, Helvetica, Arial, sans-serif'
-}
+    fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+};
 const mainBgColor = black.b300;
+const logBgColor = black.b100;
+const tabActive = black.b100;
+const tabHeader = black.b400;
+const tabBg = black.b200;
 const textColor = lightgrey.lg200;
 const textOff = lightgrey.lg400;
 const textPrimary = white.w300;
+const textPrimaryAccent = orange.or100;
 const inputBg = black.b15;
 const primaryDark = turquoise.tq200;
 const primaryLight = turquoise.tq300;
@@ -103,6 +108,7 @@ const darkTheme = {
     inputLabelBg,
     textOff,
     textPrimary,
+    textPrimaryAccent,
     viewBg,
     scrollbarThumb,
     critical,
@@ -115,11 +121,16 @@ const darkTheme = {
     darkgrey,
     turquoise,
     typography,
+    logBgColor,
+    tabActive,
+    tabHeader,
+    tabBg,
     mainBgColor,
     secondaryWidgetContainer,
     widgetTitle,
     widgetTitleBorder,
     highlitedButton,
-    ...defaultTheme
+
+    ...defaultTheme,
 };
 export default darkTheme;

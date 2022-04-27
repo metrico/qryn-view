@@ -15,6 +15,15 @@ const StyledList = styled.div`
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 5px;
+    &::-webkit-scrollbar {
+        width: 5px;
+        background: ${props => props.theme.buttonHover};
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: ${props => props.theme.buttonDefault};
+    }
     button {
         background: none;
         text-align: left;

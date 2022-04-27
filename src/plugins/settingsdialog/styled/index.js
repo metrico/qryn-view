@@ -6,7 +6,7 @@ import { InputSmall } from "../../../theme/styles/Input";
 
 export const InputGroup = styled.div`
     display: flex;
-    flex-direction: column;s
+    flex-direction: column;
     margin-bottom: 20px;
 `;
 export const InlineGroup = styled.div`

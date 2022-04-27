@@ -56,7 +56,7 @@ const AbsoluteSubmitButton = styled(BtnSmall)`
 
 const CalendarBtn = styled(BtnSmall)`
    
-    color: ${props => props.theme.buttonText};
+    color: ${props => props.theme.textColor};
     background: ${props => props.theme.buttonDefault};
     padding:8px;
     &:hover {

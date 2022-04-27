@@ -16,7 +16,7 @@ const DateSelect = styled.select`
     position: relative;
     font-size: 14px;
     color: ${props => props.theme.textColor};
-    background: #333;
+    background: ${props=> props.theme.inputBg};
     border: none;
     border-radius: 3px;
     padding: 4px 8px;
@@ -24,7 +24,7 @@ const DateSelect = styled.select`
     flex: 1;
     &::-webkit-scrollbar {
         width: 5px;
-        background: black;
+        background: ${props => props.theme.inputBg};
     }
 
     &::-webkit-scrollbar-thumb {

@@ -23,13 +23,13 @@ const StyledMenu = styled((props) => (
         }}
         {...props}
     />
-))(({ theme,clokiTheme }) => ({
+))(({ theme,clokitheme }) => ({
     "& .MuiPaper-root": {
         borderRadius: 6,
         marginTop: theme.spacing(1),
         minWidth: 180,
-        color:clokiTheme.textColor,
-        backgroundColor: clokiTheme.buttonDefault,
+        color:clokitheme.textColor,
+        backgroundColor: clokitheme.buttonDefault,
         "& .MuiMenu-list": {
             padding: "4px 0",
         },
@@ -37,11 +37,11 @@ const StyledMenu = styled((props) => (
             fontSize:12,
             "& .MuiSvgIcon-root": {
                 fontSize: 12,
-                color: clokiTheme.textColor,
+                color: clokitheme.textColor,
                 marginRight: theme.spacing(1.5),
             },
             "&:active": {
-                backgroundColor: clokiTheme.buttonDefault,
+                backgroundColor: clokitheme.buttonDefault,
             },
         },
     },
@@ -82,7 +82,7 @@ export default function ClokiMenu() {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                clokiTheme={clokiTheme}
+                clokitheme={clokiTheme}
                 MenuListProps={{
                     "aria-labelledby": "basic-button",
                 }}

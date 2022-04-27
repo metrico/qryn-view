@@ -19,6 +19,10 @@ export const MainViewStyled = styled.div`
     display:flex;
     flex-direction:column;
     background-color: ${props => props.theme.mainBgColor} !important;
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: ${props => props.theme.scrollbarThumb} !important;
+    }
 `;
 export default function MainView() {
     UpdateStateFromQueryParams();

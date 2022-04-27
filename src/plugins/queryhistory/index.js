@@ -1,6 +1,5 @@
 import { ThemeProvider, Tooltip } from "@mui/material";
 import localService from "../../services/localService";
-import Drawer from "@mui/material/Drawer";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import setQueryHistory from "../../actions/setQueryHistory";

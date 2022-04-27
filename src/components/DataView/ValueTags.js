@@ -62,7 +62,7 @@ export default function ValueTags({ tags }) {
         
         <ThemeProvider theme={themes[theme]}>
             {Object.entries(tags).map(([key, value], k) => (
-                <ValueTagsStyled>
+                <ValueTagsStyled key={key}>
                 <div className={"value-tags"} key={k}>
                     {!isEmbed && (
                         <>

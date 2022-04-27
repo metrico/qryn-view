@@ -1,8 +1,16 @@
 import { Dialog, Switch } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setApiUrl, setQueryLimit, setQueryStep } from "../../actions";
+import {
+    setApiUrl,
+    setQueryLimit,
+    setQueryStep,
+    setTheme,
+} from "../../actions";
+
 import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen.js";
+
 import { useEffect, useState } from "react";
+
 import CloseIcon from "@mui/icons-material/Close";
 
 import {
@@ -17,8 +25,8 @@ import {
     SettingButton,
     EmbedArea,
 } from "./styled";
+
 import setDebugMode from "../../actions/setDebugMode";
-import { themes } from "../../theme/themes";
 
 export default function SettingsDialog({ open, onClose }) {
     const dispatch = useDispatch();
@@ -28,12 +36,14 @@ export default function SettingsDialog({ open, onClose }) {
     const theme = useSelector((store) => store.theme);
 
     const debugMode = useSelector((store) => store.debugMode);
-    
+
     const [apiEdited, setApiEdited] = useState(apiUrl);
 
     const [embedEdited, setEmbedEdited] = useState(
         getEmbed(window.location.href)
     );
+
+    const [themeSet, setThemeSet] = useState(theme);
 
     function getEmbed(url) {
         return url + "&isEmbed=true";
@@ -42,6 +52,10 @@ export default function SettingsDialog({ open, onClose }) {
     useEffect(() => {
         setEmbedEdited(getEmbed(window.location.href));
     }, [window.location.href]);
+
+    useEffect(() => {
+        setThemeSet(theme);
+    }, [theme, setThemeSet]);
 
     function handleApiChange(e) {
         const value = e.target.value;
@@ -62,6 +76,12 @@ export default function SettingsDialog({ open, onClose }) {
         dispatch(setQueryLimit(value));
     }
 
+    function handleThemeSwitch() {
+        dispatch(setTheme(themeSet === "light" ? "dark" : "light"));
+        setThemeSet(theme);
+        localStorage.setItem("theme", JSON.stringify({ theme }));
+    }
+
     function handleClose() {
         dispatch(setSettingsDialogOpen(false));
     }
@@ -69,9 +89,13 @@ export default function SettingsDialog({ open, onClose }) {
     function handleEmbedChange(e) {
         setEmbedEdited(e.target.value);
     }
+    
     function handleDebugSwitch() {
         dispatch(setDebugMode(debugMode ? false : true));
-        localStorage.setItem("isDebug",JSON.stringify({isActive: debugMode ? false : true}))
+        localStorage.setItem(
+            "isDebug",
+            JSON.stringify({ isActive: debugMode ? false : true })
+        );
     }
 
     return (
@@ -115,6 +139,16 @@ export default function SettingsDialog({ open, onClose }) {
                             onChange={handleLimitChange}
                         />
                     </InputGroup>
+
+                    <InputGroup>
+                        <SettingLabel>Theme: {theme}</SettingLabel>
+                        <Switch
+                            checked={themeSet === "dark"}
+                            onChange={handleThemeSwitch}
+                            inputProps={{ "aria-label": "controlled" }}
+                        />
+                    </InputGroup>
+
                     <InputGroup>
                         <SettingLabel>Set Debug Mode</SettingLabel>
                         <Switch
