@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { CircularProgress } from "@mui/material";
 
 export const DataViewStyled = styled.div`
-    background: ${(props) => props.theme.viewBg};
+    background: ${(props) => props.theme.mainBgColor};
     margin: 6px 8px;
     overflow-y: scroll;
     overflow-x: hidden;

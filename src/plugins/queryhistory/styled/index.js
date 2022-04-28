@@ -13,13 +13,13 @@ import { TabsUnstyled } from "@mui/base";
 export const StyledDrawer = styled((props) => (
     <Drawer
         anchor={"bottom"}
-        style={{ maxHeight: "250px" }}
+        style={{ maxHeight: "250px", }}
         variant={"persistent"}
         {...props}
     />
 ))(({ theme }) => ({
     "& .MuiPaper-root": {
-        borderTop: "none",
+        borderTop:`1px solid ${theme.buttonBorder}`,
     },
 }));
 

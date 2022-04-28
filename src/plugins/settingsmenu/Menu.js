@@ -29,6 +29,7 @@ const StyledMenu = styled((props) => (
         marginTop: theme.spacing(1),
         minWidth: 180,
         color:clokitheme.textColor,
+        border: `1px solid ${clokitheme.buttonBorder}`,
         backgroundColor: clokitheme.buttonDefault,
         "& .MuiMenu-list": {
             padding: "4px 0",
