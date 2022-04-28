@@ -1,7 +1,12 @@
 import { createTheme } from "@mui/material/styles";
 import { createStyles } from '@mui/styles';
+import  store  from '../../../../../store/store'
+import {themes} from '../../../../../theme/themes'
+const actTheme = store.getState().theme
+const themeSelected = themes[actTheme]
 
 export const DayStyles = () =>
+
     createStyles({
         leftBorderRadius: {
             borderRadius: "50% 0 0 50%"
@@ -19,7 +24,7 @@ export const DayStyles = () =>
         },
         buttonText: {
             lineHeight: 1.6,
-            color: 'primary'
+            color: themeSelected.textColor
         },
         inactive: {
             color: 'gray'
@@ -44,32 +49,38 @@ export const DayStyles = () =>
         }
     });
 
-export const HeadingStyles = (theme) => createStyles({
+export const HeadingStyles = () => createStyles({
 
     iconContainer: {
         padding: 5,
-        color: 'primary'
+        color: themeSelected.textColor
     },
     icon: {
         padding: 10,
-        color: 'primary',
+        color: themeSelected.textColor,
         "&:hover": {
-            color: 'primary',
+            color: themeSelected.textColor,
             background: "none"
         }
     },
     selector: {
-        color: 'primary',
-        borderBottom: '1px solid primary'
+        color: themeSelected.textColor,
+        borderBottom: `1px solid ${themeSelected.textColor}`
     }
 });
 
 
-export const theme = createTheme({
+
+export const theme = () => {
+
+    const theme = store.getState().theme;
+
+    return createTheme({
     palette: {
-        mode: 'dark',
+        mode: theme,
         primary: {
-            main:'#fff'
+            main:themeSelected.textColor
         }
     }
 })
+    }

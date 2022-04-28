@@ -1,7 +1,5 @@
 import styled from "@emotion/styled";
-import darkTheme from "../../../theme/dark";
-
-const theme = darkTheme;
+import theme from "../../../theme/themes";
 
 /**
  * Labels styles
@@ -16,18 +14,17 @@ export const LabelsContainer = styled("div")`
     padding-bottom: 10px;
     &::-webkit-scrollbar {
         width: 10px;
-        background: black;
     }
 
     &::-webkit-scrollbar-thumb {
         border-radius: 10px;
-        background: #444;
+        background: ${(props) => props.theme.scrollbarThumb};
     }
 `;
 
 export const ChartLabel = styled("div")`
     font-size: 12px;
-    color: #aaa;
+    color: ${(props) => props.theme.textColor};
     font-family: sans-serif;
     display: flex;
     align-items: center;
@@ -37,7 +34,7 @@ export const ChartLabel = styled("div")`
     opacity: ${(props) => (props.isVisible ? "1" : ".5")};
     border-radius: 3px;
     &:hover {
-        background: black;
+        background: ${(props) => props.theme.buttonHover};
     }
 `;
 
@@ -54,12 +51,10 @@ export const ColorLabel = styled("div")`
  */
 export const ChartButton = styled.button`
     background: ${(props) =>
-        props.isActive ? theme.buttonDefault : theme.buttonInactive};
-    color: #ddd;
+        props.isActive ? props.theme.buttonDefault : props.theme.buttonHover};
+    color: ${(props) => props.theme.textColor};
     padding: 3px 12px;
-    border: none;
-    border-right: ${(props) => (props.leftBtn ? "2px solid #242424" : "none")};
-    border-left: ${(props) => (props.rightBtn ? "2px solid #242424" : "none")};
+    border: 1px solid ${(props) => props.theme.buttonBorder};
     border-radius: ${(props) =>
         props.rightBtn
             ? "0px 3px 3px 0px"
@@ -78,7 +73,7 @@ export const ChartToolsCont = styled.div`
     align-items: center;
     flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
 
-        margin: 10px 25px;
+    margin: 10px 25px;
     justify-content: space-between;
     .limit-cont {
         display: flex;
@@ -110,12 +105,13 @@ export const ShowSeries = styled.div`
     line-height: 20px;
     padding: 3px 12px;
     white-space: nowrap;
-    color: ${theme.textColor};
-    background: ${theme.buttonInactive};
+    color: ${(props) => props.theme.textColor};
+    background: ${(props) => props.theme.buttonDefault};
+    border: 1px solid ${(props) => props.theme.buttonBorder};
     border-radius: 3px;
     cursor: pointer;
     transition: 0.2s all;
     &:hover {
-        background: ${theme.buttonHover};
+        background: ${(props) => props.theme.buttonHover};
     }
 `;

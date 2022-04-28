@@ -3,7 +3,6 @@ import { environment } from "../environment/env.dev";
 import stateFromQueryParams from "../helpers/stateFromQueryParams";
 import localService from "../services/localService";
 import localUrl from "../services/localUrl";
-
 const debugLocal = () => {
     let isDebug = JSON.parse(localStorage.getItem("isDebug"));
     if (!isDebug) {
@@ -18,7 +17,6 @@ export default function initialState() {
     const urlState = stateFromQueryParams();
     const historyService = localService().historyStore();
     const linkService = localUrl();
-
     const state = {
         debugMode: debugLocal().isActive|| false,
         labels: [],
@@ -48,7 +46,7 @@ export default function initialState() {
         limit: urlState.limit || 100,
         step: urlState.step || 100,
         rangeOpen: false,
-        labelsBrowserOpen: false,
+        labelsBrowserOpen: true,
         settingsMenuOpen: false,
         timePickerOpen: false,
         settingsDialogOpen: false,
@@ -56,13 +54,12 @@ export default function initialState() {
         apiErrors: "",
         urlQueryParams: urlState || {},
         urlLocation: "",
-        apiUrl: urlState.apiUrl ||  environment.apiUrl || "",
-        apiWarning:{},
+        apiUrl: urlState.apiUrl || environment.apiUrl || "",
         isSubmit: urlState.isSubmit || false,
         isEmbed: urlState.isEmbed || false,
         chartType: "line",
         notifications: [],
-        theme: "darkTheme",
+        theme: urlState.theme || "dark",
     };
     const debug = state.debugMode;
     if (debug) console.log("🚧 LOGIC/ INITIAL STATE ::: ", state);

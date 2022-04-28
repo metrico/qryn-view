@@ -26,6 +26,7 @@ export const CHART_OPTIONS = {
         labelMarginX: 0,
         labelMarginY: 0,
         reserveSpace: false,
+        shadowSize: 0,
     },
     legend: {
         noColumns: 0,

@@ -12,6 +12,7 @@ import localUrl from "../../services/localUrl";
 import setLinksHistory from "../../actions/setLinksHistory";
 import QueryEditor from "../../plugins/queryeditor";
 
+import loadLabels from "../../actions/loadLabels";
 import { decodeQuery } from "../../helpers/UpdateStateFromQueryParams";
 import { css } from "@emotion/css";
 import { MobileTopQueryMenu, QueryBarContainer } from "./components/styled";
@@ -21,8 +22,9 @@ import ShowLogsButton from "./components/ShowLogsButton/ShowLogsButton";
 import queryInit from "./helpers/queryInit";
 import onQueryValid from "./helpers/onQueryValid";
 import debugLog from "./helpers/debugLog";
+import { ThemeProvider } from "@emotion/react";
+import { themes } from "../../theme/themes";
 import { sendLabels } from "../../hooks/useLabels";
-import loadLabels from "../../actions/loadLabels";
 
 export const QueryBar = () => {
     const dispatch = useDispatch();
@@ -32,29 +34,27 @@ export const QueryBar = () => {
     const query = useSelector((store) => store.query);
     const apiUrl = useSelector((store) => store.apiUrl);
     const historyOpen = useSelector((store) => store.historyOpen);
-    const isEmbed = useSelector((store) => store.isEmbed)
+    const isEmbed = useSelector((store) => store.isEmbed);
+    const theme = useSelector((store) => store.theme);
     const [queryInput, setQueryInput] = useState(query);
     const [queryValid, setQueryValid] = useState(false);
     const [queryValue, setQueryValue] = useState(queryInit(query));
-    const labels = useSelector(store => store.labels)
+    const labels = useSelector((store) => store.labels);
     const queryHistory = useSelector((store) => store.queryHistory);
     const saveUrl = localUrl();
-   // const loading = useSelector( store => store.loading)
+
     useEffect(() => {
         const dLog = debugLog(query);
         debug && dLog.logicQueryBar();
-        const labels = sendLabels(apiUrl)
-        
-        if (isEmbed) dispatch(loadLogs())
+        const labels = sendLabels(apiUrl);
+        if (isEmbed) dispatch(loadLogs());
         if (query.length > 0) {
             debug && dLog.queryBarDispatch();
             dispatch(setLoading(true));
-            return labels.then(data => {
-                decodeQuery(query, apiUrl, data)
-
-            })
+            return labels.then((data) => {
+                decodeQuery(query, apiUrl, data);
+            });
         }
-
     }, []);
 
     useEffect(() => {
@@ -68,9 +68,7 @@ export const QueryBar = () => {
         const isOpen = labelsBrowserOpen ? false : true;
         if (isOpen) {
             dispatch(loadLabels(apiUrl));
-
         }
-
         dispatch(setLabelsBrowserOpen(isOpen));
     };
 
@@ -90,7 +88,9 @@ export const QueryBar = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
+
         dispatch(setQuery(queryInput));
+
         if (onQueryValid(queryInput)) {
             try {
                 const historyUpdated = historyService.add({
@@ -99,7 +99,7 @@ export const QueryBar = () => {
                 });
                 dispatch(setQueryHistory(historyUpdated));
                 dispatch(setLabelsBrowserOpen(false));
-                decodeQuery(queryInput, apiUrl, labels)
+                decodeQuery(queryInput, apiUrl, labels);
                 dispatch(setLoading(true));
                 dispatch(loadLogs());
                 const storedUrl = saveUrl.add({
@@ -121,61 +121,58 @@ export const QueryBar = () => {
         !isEmbed && (
             <div
                 className={css`
-                max-width: 100%;
-                
-            `}
+                    max-width: 100%;
+                `}
             >
-                <MobileTopQueryMenu>
-                    <div
-                        className={css`
-                        display: flex;
-                    `}
-                    >
+                <ThemeProvider theme={themes[theme]}>
+                    <MobileTopQueryMenu>
+                        <div
+                            className={css`
+                                display: flex;
+                            `}
+                        >
+                            <ShowLabelsButton
+                                onValueDisplay={onValueDisplay}
+                                labelsBrowserOpen={labelsBrowserOpen}
+                                isMobile={true}
+                            />
+                            <HistoryButton
+                                queryLength={queryHistory.length}
+                                handleHistoryClick={handleHistoryClick}
+                                isMobile={true}
+                            />
+                        </div>
+
+                        <ShowLogsButton
+                            disabled={!queryValid}
+                            onClick={onSubmit}
+                            isMobile={true}
+                        />
+                    </MobileTopQueryMenu>
+                    <QueryBarContainer>
                         <ShowLabelsButton
                             onValueDisplay={onValueDisplay}
                             labelsBrowserOpen={labelsBrowserOpen}
-                            isMobile={true}
                         />
+
+                        <QueryEditor
+                            onQueryChange={handleQueryChange}
+                            value={queryValue}
+                            onKeyDown={handleInputKeyDown}
+                        />
+
                         <HistoryButton
                             queryLength={queryHistory.length}
                             handleHistoryClick={handleHistoryClick}
-                            isMobile={true}
                         />
-                    </div>
-
-                    <ShowLogsButton
-                        disabled={!queryValid}
-                        onClick={onSubmit}
-                       
-                        isMobile={true}
-                    />
-                </MobileTopQueryMenu>
-                <QueryBarContainer>
-                    <ShowLabelsButton
-                        onValueDisplay={onValueDisplay}
-                        labelsBrowserOpen={labelsBrowserOpen}
-                    />
-
-                    <QueryEditor
-                        onQueryChange={handleQueryChange}
-                        value={queryValue}
-                        onKeyDown={handleInputKeyDown}
-                    />
-
-                    <HistoryButton
-                        queryLength={queryHistory.length}
-                        handleHistoryClick={handleHistoryClick}
-                    />
-                    <ShowLogsButton
-                        disabled={!queryValid}
-                     
-                        onClick={onSubmit}
-                        isMobile={false}
-                    />
-                </QueryBarContainer>
+                        <ShowLogsButton
+                            disabled={!queryValid}
+                            onClick={onSubmit}
+                            isMobile={false}
+                        />
+                    </QueryBarContainer>
+                </ThemeProvider>
             </div>
-
         )
-
     );
 };

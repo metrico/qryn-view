@@ -1,11 +1,6 @@
-import {
-    Paper,
-    Grid,
-    Typography,
-    ThemeProvider,
-    createTheme,
-} from "@mui/material";
+import { Paper, Grid, Typography } from "@mui/material";
 import { withStyles, createStyles } from "@mui/styles";
+import {useState, useEffect} from 'react';
 import {
     getDate,
     isSameMonth,
@@ -25,18 +20,20 @@ import Heading from "./Heading";
 import Day from "./Day";
 import { WEEK_DAYS } from "../consts";
 
+import { themes } from "../../../../../theme/themes";
+import { useSelector } from "react-redux";
+import { ThemeProvider } from "@emotion/react";
+import store from "../../../../../store/store";
+
+const actTheme = themes[store.getState().theme];
+
 const NAVIGATION_ACTION = { Previous: -1, Next: 1 };
 
-const theme = createTheme({
-    palette: {
-        mode: "dark",
-    },
-});
 const styles = (theme) =>
     createStyles({
-        root: { 
+        root: {
             width: 260,
-            background: "#262626",
+            background: actTheme.mainBgColor,
         },
         weekDaysContainer: {
             marginTop: 5,
@@ -50,7 +47,10 @@ const styles = (theme) =>
             marginBottom: 20,
         },
     });
+
 const Month = (props) => {
+    const theme = useSelector((store) => store.theme);
+    const [themeSelected,setThemeSelected] = useState(themes[theme])
     const {
         classes,
         helpers,
@@ -65,9 +65,18 @@ const Month = (props) => {
 
     const [back, forward] = props.navState;
 
+    useEffect(() => {
+        setThemeSelected(theme)
+    }, [theme,setThemeSelected]);
+
     return (
-        <ThemeProvider theme={theme}>
-            <Paper square elevation={0} className={classes.root}>
+        <ThemeProvider theme={themes[theme]}>
+            <Paper
+                square
+                elevation={0}
+                className={classes.root}
+                style={{ background: themes[theme].mainBgColor }}
+            >
                 <Grid container>
                     <Heading
                         date={date}
@@ -96,9 +105,11 @@ const Month = (props) => {
                         className={classes.weekDaysContainer}
                     >
                         {WEEK_DAYS.map((day) => (
-                            <Typography key={day} variant={"caption"}>
+                            <div 
+                            style={{color: themes[theme].textColor, fontSize:'10px'}}
+                            key={day} variant={"caption"}>
                                 {day}
-                            </Typography>
+                            </div>
                         ))}
                     </Grid>
 
@@ -122,14 +133,16 @@ const Month = (props) => {
                                         day
                                     );
                                     const isEnd = isEndOfRange(dateRange, day);
-                                    const isRangeOneDay =
-                                        isRangeSameDay(dateRange);
+                                    const isRangeOneDay = isRangeSameDay(
+                                        dateRange
+                                    );
                                     const highlighted =
                                         inDateRange(dateRange, day) ||
                                         helpers.inHoverRange(day);
 
                                     return (
                                         <Day
+                                            themeSelected={themeSelected}
                                             key={format(day, "mm-dd-yyyy")}
                                             filled={isStart || isEnd}
                                             outlined={isToday(day)}

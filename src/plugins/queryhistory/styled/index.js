@@ -8,12 +8,29 @@ import TabsListUnstyled from "@mui/base/TabsListUnstyled";
 import TabPanelUnstyled from "@mui/base/TabPanelUnstyled";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import LinkIcon from "@mui/icons-material/Link";
-import { createTheme } from "@mui/material";
-import darkTheme from "../../../theme/dark";
+import { Drawer } from "@mui/material";
+import { TabsUnstyled } from "@mui/base";
+export const StyledDrawer = styled((props) => (
+    <Drawer
+        anchor={"bottom"}
+        style={{ maxHeight: "250px" }}
+        variant={"persistent"}
+        {...props}
+    />
+))(({ theme }) => ({
+    "& .MuiPaper-root": {
+        borderTop: "none",
+    },
+}));
 
-const dTheme = darkTheme;
+export const TabsContainer = styled(TabsUnstyled)`
+    height: "320px";
+    background: ${(props) => props.theme.inputBg};
+`;
 export const Tab = styled(TabUnstyled)`
-    color: ${dTheme.buttonText};
+    color: ${(props) => props.theme.textColor};
+    background: ${(props) => props.theme.buttonDefault};
+    border:1px solid ${(props)=>props.theme.buttonBorder};
     cursor: pointer;
     font-size: 13px;
     background-color: transparent;
@@ -27,18 +44,19 @@ export const Tab = styled(TabUnstyled)`
     transition: 0.2s all;
 
     &:hover {
-        background-color: ${dTheme.buttonHover};
+        background-color: ${({ theme }) => theme.buttonHover};
     }
 
     &:focus {
-        color: #aaa;
+        color: ${({ theme }) => theme.textColor};
+        background: ${({ theme }) => theme.buttonDefault};
         border-radius: 3px 3px 0px 0px;
 
         outline-offset: 2px;
     }
 
     &.${tabUnstyledClasses.selected} {
-        border-bottom: 1px solid ${dTheme.primaryDark};
+        border-bottom: 1px solid ${({ theme }) => theme.primaryDark};
     }
 
     &.${buttonUnstyledClasses.disabled} {
@@ -64,6 +82,7 @@ export const TabHistoryStarIcon = styled(StarBorderIcon)`
     width: 16px;
     margin-right: 3px;
 `;
+
 export const TabHistorySettingIcon = styled(DisplaySettingsIcon)`
     height: 16px;
     width: 16px;
@@ -81,7 +100,7 @@ export const TabHistorySearchIcon = styled(SearchIcon)`
     width: 16px;
     padding: 0px 3px;
     border-radius: 3px 0px 0px 3px;
-    background: ${dTheme.inputBg};
+    background: ${({ theme }) => theme.inputBg};
 `;
 
 export const TabHeaderContainer = styled.div`
@@ -89,17 +108,20 @@ export const TabHeaderContainer = styled.div`
     font-size: 13px;
     display: flex;
     align-items: center;
+    color: ${(props) => props.theme.textColor};
     justify-content: space-between;
-    background: #7b7b7b1f;
+    background: ${(props) => props.theme.tabHeader};
     height: 37px;
 `;
 export const TabPanel = styled(TabPanelUnstyled)`
     width: 100%;
+    background: ${({ theme }) => theme.widgetContainer};
 `;
 
 export const TabsList = styled(TabsListUnstyled)`
     min-width: 320px;
-    border-bottom: 4px solid ${dTheme.inputBg};
+    background: ${({ theme }) => theme.tabHeader};
+    border-bottom: 4px solid ${({ theme }) => theme.historyRow};
     display: flex;
     align-items: center;
     align-content: space-between;
@@ -109,7 +131,7 @@ export const EmptyHistory = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: ${dTheme.buttonText};
+    color: ${(props) => props.theme.textColor};
     font-size: 14px;
     flex: 1;
     padding: 20px;
@@ -119,23 +141,29 @@ export const EmptyHistory = styled.div`
 export const QueryHistoryContainer = styled.div`
     height: 250px;
     overflow-y: auto;
+    color: ${(props) => props.theme.textColor};
+    background: ${(props) => props.theme.tabBg};
     &.starredCont {
         height: 210px;
     }
     &::-webkit-scrollbar {
-        width: 10px;
-        background: black;
+        width: 5px;
+        background: ${(props) => props.theme.buttonDefault};
     }
 
-  
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: ${(props) => props.theme.scrollbarThumb};
+    }
 `;
 
 export const HistoryButton = styled.button`
     padding: 3px 6px;
-    background: ${dTheme.buttonDefault};
+    background: ${({ theme }) => theme.buttonDefault};
+    border:1px solid ${(props)=>props.theme.buttonBorder};
     border-radius: 3px;
     border: none;
-    color: ${dTheme.buttonText};
+    color: ${({ theme }) => theme.textColor};
     display: flex;
     align-items: center;
     justify-content: center;
@@ -151,30 +179,32 @@ export const SettingItemContainer = styled.div`
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
-    background: ${dTheme.viewBg};
+    background: ${({ theme }) => theme.buttonDefault};
+    border:1px solid ${(props)=>props.theme.buttonBorder};
     margin: 10px;
     border-radius: 3px;
     & div {
         font-size: 15px;
-        color: orange;
+        color: ${({ theme }) => theme.textPrimaryAccent};
         line-height: 1.5;
     }
     & small {
         font-size: 12px;
-        color: ${dTheme.buttonText};
+        color: ${(props) => props.theme.textColor};
         line-height: 1.5;
-        margin-bottom:10px;
+        margin-bottom: 10px;
     }
 `;
 export const SubmitButton = styled(HistoryButton)`
-    background: ${dTheme.primaryDark};
-    color: ${dTheme.buttonText};
+    background: ${({ theme }) => theme.primaryDark};
+    color: ${({ theme }) => theme.buttonText};
     white-space: nowrap;
     .open-icon {
         display: none;
     }
     .open-text {
         display: flex;
+        font-size: 12px;
     }
     @media screen and (max-width: 864px) {
         .open-icon {
@@ -182,6 +212,7 @@ export const SubmitButton = styled(HistoryButton)`
         }
         .open-text {
             display: none;
+            
         }
     }
 `;
@@ -189,31 +220,35 @@ export const SubmitButton = styled(HistoryButton)`
 export const ClearHistoryButton = styled(HistoryButton)`
     font-weight: bold;
     padding: 10px 20px;
-    background: ${dTheme.primaryDark};
+    background: ${({ theme }) => theme.primaryDark};
+    color: ${({ theme }) => theme.buttonText};
     margin: 0;
     width: 100%;
     white-space: nowrap;
 `;
 export const StyledCloseButton = styled(HistoryButton)`
     background: none;
-    color: ${dTheme.buttonText};
+    color: ${({ theme }) => theme.textColor};
+
     position: absolute;
     right: 0;
 `;
 
 export const DialogCancelButton = styled(HistoryButton)`
-    background: ${dTheme.buttonDefault};
+    background: ${({ theme }) => theme.buttonDefault};
+    border:1px solid ${(props)=>props.theme.buttonBorder};
     padding: 8px 16px;
 `;
 export const DialogConfirmButton = styled(HistoryButton)`
-    background: ${dTheme.primaryDark};
+    background: ${({ theme }) => theme.primaryDark};
+    color:${({theme}) => theme.buttonText};
     padding: 8px 16px;
 `;
 
 export const FilterInput = styled.input`
-    color: ${dTheme.buttonText};
-    background: ${dTheme.inputBg};
-    border: none;
+    color: ${(props) => props.theme.textColor};
+    background: ${({ theme }) => theme.inputBg};
+    border:none;
     height: 21px;
     margin: 0px 10px 0px 0px;
     padding: 0px;
@@ -223,14 +258,14 @@ export const FilterInput = styled.input`
     font-size: 12px;
     &:focus {
         outline: none;
-        color: ${dTheme.inputTextFocus};
+        color: ${({ theme }) => theme.inputTextFocus};
     }
 `;
 export const RowData = styled.span`
     flex: 1;
     font-family: monospace;
     font-size: "13px";
-    color: ${dTheme.buttonText};
+    color: ${(props) => props.theme.textColor};
     white-space: nowrap;
     padding: 4px 0px;
     overflow: hidden;
@@ -254,7 +289,7 @@ export const LinkParams = styled.div`
 
     .open-button {
         display: flex;
-        color: ${dTheme.buttonText};
+        color: ${({ theme }) => theme.buttonText};
         background: none;
         border: none;
     }
@@ -265,13 +300,18 @@ export const LinkParams = styled.div`
         p {
             display: flex;
             align-items: center;
-            justify-content: space-between;
             flex: 1;
-            border-bottom: 1px solid ${dTheme.buttonDefault};
-            margin-bottom: 4px;
-            padding-bottom: 2px;
+            line-height: 1.5;
+            font-size: 12px;
+            font-family: monospace;
             span {
                 margin-left: 3px;
+                &.key {
+                    flex: 1;
+                }
+                &.value {
+                    flex: 3;
+                }
             }
         }
     }
@@ -285,7 +325,7 @@ export const LinkParams = styled.div`
 export const HistoryRow = styled.div`
     padding: 5px 0px;
     padding-left: 10px;
-    background:#7b7b7b1f;
+    background: ${({ theme }) => theme.historyRow};
     margin: 5px;
     border-radius: 3px;
     font-size: 13px;
@@ -299,13 +339,3 @@ export const TimeSpan = styled.div`
         display: none;
     }
 `;
-
-export const theme = createTheme({
-    palette: {
-        mode: "dark",
-        primary: {
-            main: dTheme.buttonText,
-            background: dTheme.buttonHover,
-        },
-    },
-});

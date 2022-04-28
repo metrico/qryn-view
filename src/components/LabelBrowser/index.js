@@ -1,16 +1,18 @@
+import { ThemeProvider } from "@emotion/react";
+import { useSelector } from "react-redux";
+import { themes } from "../../theme/themes";
 import { QueryBar } from "./QueryBar";
 import { ValuesList } from "./ValuesList";
-import { useSelector } from "react-redux";
+
 export default function LabelBrowser() {
-    const labelsBrowserOpen = useSelector(store => store.labelsBrowserOpen)
-
+    const theme = useSelector((store) => store.theme);
     return (
-        <div>
-            <QueryBar className={"query-bar-placeholder"} />
-             
-                <ValuesList />
-            
+        <ThemeProvider theme={themes[theme]}>
+            <div>
+                <QueryBar className={"query-bar-placeholder"} />
 
-        </div>
+                <ValuesList />
+            </div>
+        </ThemeProvider>
     );
 }

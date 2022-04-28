@@ -1,11 +1,10 @@
 import styled from "@emotion/styled";
-import darkTheme from "../../../theme/dark";
-const theme = darkTheme;
 
 export const MenuButton = styled.button`
   border: none;
-  background: ${theme.buttonDefault};
-  color: ${theme.buttonText};
+  background: ${({theme})=>(theme.buttonDefault)};
+  border:1px solid ${(props)=>props.theme.buttonBorder};
+  color: ${(props)=>(props.theme.textColor)};
   padding: 3px 12px;
   border-radius: 3px;
   font-size: 12px;

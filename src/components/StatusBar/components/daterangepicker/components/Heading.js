@@ -5,18 +5,18 @@ import ChevronLeft from "@mui/icons-material/ChevronLeft";
 import ChevronRight from "@mui/icons-material/ChevronRight";
 import { setMonth, getMonth, setYear, getYear } from "date-fns";
 import { MONTHS } from "../consts";
-import { HeadingStyles, theme } from "./styles";
+import { HeadingStyles } from "./styles";
 import { generateYears } from "../utils";
 import styled from "@emotion/styled";
-import darkTheme from "../../../../../theme/dark";
-const ctheme = darkTheme;
+import { themes } from "../../../../../theme/themes";
+import { useSelector } from 'react-redux';
 const DateSelect = styled.select`
     cursor: pointer;
 
     position: relative;
     font-size: 14px;
-    color: ${ctheme.textColor};
-    background: #333;
+    color: ${props => props.theme.textColor};
+    background: ${props=> props.theme.inputBg};
     border: none;
     border-radius: 3px;
     padding: 4px 8px;
@@ -24,12 +24,12 @@ const DateSelect = styled.select`
     flex: 1;
     &::-webkit-scrollbar {
         width: 5px;
-        background: black;
+        background: ${props => props.theme.inputBg};
     }
 
     &::-webkit-scrollbar-thumb {
         border-radius: 10px;
-        background: ${ctheme.scrollbarThumb};
+        background: ${props => props.theme.scrollbarThumb};
     }
 `;
 
@@ -42,6 +42,7 @@ const Heading = ({
     onClickNext,
     onClickPrevious,
 }) => {
+    const theme = useSelector((store) => store.theme);
     const handleMonthChange = (event) => {
         setDate(setMonth(date, parseInt(event.target.value)));
     };
@@ -51,7 +52,7 @@ const Heading = ({
     };
 
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={themes[theme]}>
             <Grid
                 container
                 justifyContent={"space-between"}
@@ -64,7 +65,7 @@ const Heading = ({
                         onClick={onClickPrevious}
                     >
                         <ChevronLeft
-                            color={prevDisabled ? "disabled" : "active"}
+                             style={{color: prevDisabled ? themes[theme].textOff : themes[theme].textColor }}
                         />
                     </IconButton>
                 </Grid>
@@ -100,7 +101,8 @@ const Heading = ({
                 <Grid item className={classes.iconContainer}>
                     <IconButton disabled={nextDisabled} onClick={onClickNext}>
                         <ChevronRight
-                            color={nextDisabled ? "disabled" : "active"}
+                        style={{color: nextDisabled ? themes[theme].textOff : themes[theme].textColor }}
+                           
                         />
                     </IconButton>
                 </Grid>

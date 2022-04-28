@@ -1,6 +1,5 @@
 import { ThemeProvider, Tooltip } from "@mui/material";
 import localService from "../../services/localService";
-import Drawer from "@mui/material/Drawer";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import setQueryHistory from "../../actions/setQueryHistory";
@@ -45,25 +44,29 @@ import {
     SettingItemContainer,
     TimeSpan,
     HistoryRow,
-    theme,
+    StyledDrawer,
+    TabsContainer,
 } from "./styled";
 
 import AlertDialog from "./components/AlertDialog/AlertDialog";
 import EmptyHistoryDisplay from "./components/EmptyHistoryDisplay/EmptyHistoryDisplay";
 import CloseButton from "./components/CloseButton/CloseButton";
-
-function QueryHistoryTabs({
-    historyTabHeader,
-    historyTab,
-    starredHistoryTab,
-    closeButton,
-    linksTabHeader,
-    linksTab,
-    settingTab,
-    settingTabHeader,
-}) {
+import { themes } from "../../theme/themes";
+function QueryHistoryTabs(props) {
+    const {
+        historyTabHeader,
+        historyTab,
+        starredHistoryTab,
+        closeButton,
+        linksTabHeader,
+        linksTab,
+        settingTab,
+        settingTabHeader,
+        
+    } = props
     return (
-        <TabsUnstyled style={{ height: "320px" }} defaultValue={0}>
+        
+        <TabsContainer defaultValue={0}>
             <TabsList>
                 <Tab>
                     <TabHistoryIcon />
@@ -102,7 +105,7 @@ function QueryHistoryTabs({
                 {settingTabHeader}
                 {settingTab}
             </TabPanel>
-        </TabsUnstyled>
+        </TabsContainer>
     );
 }
 
@@ -181,31 +184,27 @@ function HistoryLinkParams({
 
             <div className="block-params">
                 <p>
-                    <span> Query:</span>{" "}
+                    <span className="key"> Query:</span>{" "}
                     <span
-                        style={{
-                            margin: "5px",
-                            lineHeight: "1.5",
-                            textAlign: "right",
-                        }}
+                   className="value"
                     >
                         {decodeURIComponent(item.params.query)}
                     </span>{" "}
                 </p>
                 <p>
-                    <span> API URL:</span> <span>{item.params.apiUrl}</span>{" "}
+                    <span className="key"> API URL:</span> <span className="value">{item.params.apiUrl}</span>{" "}
                 </p>
                 <p>
-                    <span>From: </span> <span>{item?.fromDate}</span>{" "}
+                    <span className="key">From: </span> <span className="value">{item?.fromDate}</span>{" "}
                 </p>
                 <p>
-                    <span> To: </span> <span> {item?.toDate}</span>{" "}
+                    <span className="key"> To: </span> <span className="value"> {item?.toDate}</span>{" "}
                 </p>
                 <p>
-                    <span>Limit: </span> <span>{item.params.limit}</span>{" "}
+                    <span className="key">Limit: </span> <span className="value">{item.params.limit}</span>{" "}
                 </p>
                 <p>
-                    <span> Step:</span> <span>{item.params.step}</span>{" "}
+                    <span className="key"> Step:</span> <span className="value">{item.params.step}</span>{" "}
                 </p>
             </div>
             <HistoryLinkTools
@@ -230,14 +229,15 @@ function HistoryLinkQuery({ item, onOpen }) {
     );
 }
 
-function HistoryLinkTools({
-    item,
-    onOpen,
-    copyLink,
-    handleDelete,
-    handleStarLinkItem,
-    handleSubmit,
-}) {
+function HistoryLinkTools(props) {
+    const {
+        item,
+        onOpen,
+        copyLink,
+        handleDelete,
+        handleStarLinkItem,
+        handleSubmit,
+    } = props;
     return (
         <div
             style={{
@@ -311,7 +311,7 @@ function QueryHistoryTab({
                         <span
                             style={{
                                 color: "#666",
-                                marginRight:'10px'
+                                marginRight: "10px",
                             }}
                         >
                             {listDisplay.length - index}
@@ -613,6 +613,7 @@ const QueryHistory = (props) => {
     const queryHistory = useSelector((store) => store.queryHistory);
     const linksHistory = useSelector((store) => store.linksHistory);
     const historyOpen = useSelector((store) => store.historyOpen);
+    const theme = useSelector((store) => store.theme);
 
     const [starredItems, setStarredItems] = useState([]);
     const [filtered, setFiltered] = useState([]);
@@ -758,9 +759,9 @@ const QueryHistory = (props) => {
         }
     }
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={themes[theme]}>
             {historyOpen && (
-                <Drawer
+                <StyledDrawer
                     anchor={"bottom"}
                     style={{ maxHeight: "250px" }}
                     open={historyOpen}
@@ -870,7 +871,7 @@ const QueryHistory = (props) => {
                         }
                         closeButton={<CloseButton onClose={handleClose} />}
                     />
-                </Drawer>
+                </StyledDrawer>
             )}
         </ThemeProvider>
     );

@@ -5,8 +5,19 @@ import loadLabelValues from "../../actions/loadLabelValues";
 import loadLogs from "../../actions/loadLogs";
 import { ZoomIn, ZoomOut } from "@mui/icons-material/";
 import { useSelector } from "react-redux";
+import { themes } from "../../theme/themes";
+import { ThemeProvider } from "@emotion/react";
+import styled from '@emotion/styled'
 
+const ValueTagsStyled = styled.div`
+    color: ${props => props.theme.textPrimary};
+    flex:1;
+    &:hover {
+        background: ${props => props.theme.widgetContainer};
+    }
+`
 export default function ValueTags({ tags }) {
+    const theme = useSelector((store) => store.theme);
     const isEmbed = useSelector((store) => store.isEmbed);
     async function addLabel(e, key, value, isInverted = false) {
         e.preventDefault();
@@ -48,8 +59,10 @@ export default function ValueTags({ tags }) {
     }
 
     return (
-        <>
+        
+        <ThemeProvider theme={themes[theme]}>
             {Object.entries(tags).map(([key, value], k) => (
+                <ValueTagsStyled key={key}>
                 <div className={"value-tags"} key={k}>
                     {!isEmbed && (
                         <>
@@ -59,7 +72,7 @@ export default function ValueTags({ tags }) {
                                 onClick={(e) => addLabel(e, key, value)}
                                 className={"icon"}
                             >
-                                <ZoomIn color="primary" />
+                                <ZoomIn color="primary" style={{width:'18px',height:'18px'}}/>
                             </span>
                             <span
                                 aria-label="Filter out value"
@@ -67,15 +80,16 @@ export default function ValueTags({ tags }) {
                                 onClick={(e) => addLabel(e, key, value, true)}
                                 className={"icon"}
                             >
-                                <ZoomOut color="primary" />
+                                <ZoomOut color="primary" style={{width:'18px',height:'18px'}}/>
                             </span>
                         </>
                     )}
 
-                    <span>{key}</span>
-                    <span>{value}</span>
+                    <span style={{flex:1}}>{key}</span>
+                    <span style={{flex:4}}>{value}</span>
                 </div>
+                </ValueTagsStyled>
             ))}
-        </>
+        </ThemeProvider>
     );
 }

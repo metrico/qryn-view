@@ -5,8 +5,6 @@
     flex: 1;
     flex-direction: column;
     font-size: 13px;
-
-    background: #262626;
     margin: 5px 0px;
     border-radius: 4px;
     transition: 0.2s all;
@@ -15,7 +13,6 @@
         flex-direction: column;
         flex: 1;
         justify-content: space-between;
-        color: white;
         font-size: 1em;
         flex: 1;
         margin: 10px;
@@ -24,32 +21,12 @@
     .valuelist-content {
         padding: 5px;
         display: flex;
-        color: white;
         font-size: 14px;
         align-items: center;
         flex-wrap: wrap;
         max-height: 500px;
         overflow: auto;
-        small {
-            margin: 5px;
-            padding: 4px 8px;
-            border-radius: 3px;
-            background: #5454543b;
-            line-height: 1.5;
-            color: #d1d1d1;
-            font-size: 12px;
-            cursor: pointer;
-            align-items: center;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            max-width: 23ch;
-          transition: 1s all;
-            &:hover {
-                background: #ffffff3a;
-           
-            }
-        }
+
     }
     .valuelist-filter {
         display: flex;
@@ -88,7 +65,6 @@
         .values-column {
             margin: 5px;
             border-radius: 3px;
-            background: #323131;
             height: auto;
             min-height: 100px;
             min-width: 175px;
@@ -106,13 +82,9 @@
                 }
             }
             .values-column-title {
-                background: #403f3f;
-            border-left: 1px solid #ffa60056;
                 padding: 8px;
                 font-size: 1em;
                 border-radius: 4px 4px 0px 0px;
-                border-bottom: 2px solid #2e2e2e;
-                color:white;
                 display: flex;
                 flex: 1;
                 transition: .2s all;
@@ -122,7 +94,6 @@
                 .close-column {
                     align-self: flex-end;
                     justify-self: end;
-                    color:orange;
                     cursor:pointer;
             
                 padding:2px;
@@ -130,7 +101,6 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color:#c9c5c5;
             
                 font-size: 10px;
                     &:hover {
@@ -145,19 +115,7 @@
         }
     }
 }
-.legend-container {
-    margin:3px;
-    padding:3px;
-    line-height: 1.5;
-    .legend-title {
-        font-size: 12px;
-        font-weight: bold;
-    }
-    .legend-text {
-        font-size: 12px;
-        font-family: monospace;
-    }
-}
+
 
 .refresh-button {
     display: flex;

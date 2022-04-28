@@ -1,4 +1,7 @@
+import { ThemeProvider } from "@emotion/react";
+import { useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
+import { themes } from "../../theme/themes";
 import HandleLimitButton from "./HandleLimitButton";
 import { ChartToolsCont, ChartButton } from "./styled";
 
@@ -10,6 +13,9 @@ export default function ChartTools({
     isSpliced,
     onSetChartType,
 }) {
+
+    const theme = useSelector( store => store.theme)
+
     const isMobile = useMediaQuery({ query: "(max-width: 565px)" });
     function setBarChart() {
         onSetChartType("bar");
@@ -21,6 +27,7 @@ export default function ChartTools({
         onSetChartType("points");
     }
     return (
+        <ThemeProvider theme={themes[theme]}>
         <ChartToolsCont isMobile={isMobile}>
             <div className="limit-cont">
                 <HandleLimitButton
@@ -53,5 +60,6 @@ export default function ChartTools({
                 </ChartButton>
             </div>
         </ChartToolsCont>
+        </ThemeProvider>
     );
 }

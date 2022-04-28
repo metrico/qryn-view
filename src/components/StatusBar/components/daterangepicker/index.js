@@ -15,7 +15,7 @@ import {
     isValid,
 } from "date-fns";
 
-import Nav from "./components/Nav";
+import { PickerNav } from "./components/Nav";
 import {
     findRangeByLabel,
     getDefaultRanges,
@@ -23,7 +23,6 @@ import {
     parseOptionalDate,
 } from "./utils";
 import { DATE_TIME_RANGE, MARKERS } from "./consts";
-import { theme } from "./components/styles";
 import { ThemeProvider } from "@emotion/react";
 import {
     setRangeOpen,
@@ -46,6 +45,7 @@ import { setLabelsBrowserOpen } from "../../../../actions/setLabelsBrowserOpen";
 
 import TimeLabel from "./components/TimeLabel";
 import { DatePickerButton } from "../../styled";
+import { themes } from "../../../../theme/themes";
 
 
 export function DateRangePickerMain(props) {
@@ -169,7 +169,7 @@ export function DateRangePickerMain(props) {
     const onClose = (e = null) => {
         const { query } = store.getState();
         e?.preventDefault();
-        if (query.length > 0) {
+        if (onQueryValid(query)) {
             dispatch(setLabelsBrowserOpen(false));
             dispatch(loadLogs());
         } else {
@@ -178,7 +178,10 @@ export function DateRangePickerMain(props) {
         dispatch(setRangeOpen(false));
         isOpen(e);
     };
-
+    const onQueryValid = (query) => {
+        return query !== "{" && query !== "}" && query !== "{}" && query !== ""; // TODO: make a proper query validation
+    };
+    // helpers
     const inHoverRange = (day) => {
         return (
             dateStart &&
@@ -223,6 +226,7 @@ export function DateRangePickerMain(props) {
         }
     };
 
+    const theme = useSelector(store => store.theme);
     return (
         <div>
             <Tooltip
@@ -258,8 +262,8 @@ export function DateRangePickerMain(props) {
             </Tooltip>
             {rangeOpen ? (
                 <div tabIndex={"0"} ref={ref}>
-                    <ThemeProvider theme={theme}>
-                        <Nav
+                    <ThemeProvider theme={themes[theme]}>
+                        <PickerNav
                             dateRange={dateRange}
                             minDate={minDateValid}
                             maxDate={maxDateValid}

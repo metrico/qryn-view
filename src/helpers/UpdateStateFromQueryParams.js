@@ -11,10 +11,11 @@ import {
     setQueryStep,
     setStartTime,
     setStopTime,
+    setTheme,
 
 } from "../actions";
 
-
+import  loadLabels  from "../actions/loadLabels"
 import loadLabelValues from "../actions/loadLabelValues";
 import setFromTime from "../actions/setFromTime";
 import setIsEmbed from "../actions/setIsEmbed";
@@ -25,8 +26,10 @@ import { setUrlQueryParams } from "../actions/setUrlQueryParams";
 import { environment } from "../environment/env.dev";
 import store from "../store/store";
 export function UpdateStateFromQueryParams() {
-    const { hash } = useLocation();
 
+    const isLightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
+
+    const { hash } = useLocation();
     const dispatch = useDispatch();
     const urlQueryParams = useSelector((store) => store.urlQueryParams);
     const start = useSelector((store) => store.start);
@@ -40,6 +43,7 @@ export function UpdateStateFromQueryParams() {
     const isSubmit = useSelector((store) => store.isSubmit);
     const isEmbed = useSelector((store) => store.isEmbed);
     const query = useSelector((store) => store.query);
+    const theme = useSelector((store) => isLightTheme ? 'light' : store.theme)
 
     const STORE_KEYS = {
         apiUrl,
@@ -52,6 +56,7 @@ export function UpdateStateFromQueryParams() {
         to,
         isSubmit,
         isEmbed,
+       theme
     };
 
     const STORE_ACTIONS = {
@@ -65,10 +70,10 @@ export function UpdateStateFromQueryParams() {
         to: setToTime,
         isSubmit: setIsSubmit,
         isEmbed: setIsEmbed,
-
+        theme: setTheme
     };
 
-    const STRING_VALUES = ["limit", "step", "apiUrl"];
+    const STRING_VALUES = ["limit", "step", "apiUrl", "theme"];
 
     const QUERY_VALUE = "query";
 
@@ -100,11 +105,10 @@ export function UpdateStateFromQueryParams() {
                         STRING_VALUES.includes(param) &&
                         startParams[param] !== ""
                     ) {
-       
                         dispatch(STORE_ACTIONS[param](startParams[param]));
+                      
                         if(param === 'apiUrl') {
-            
-                
+                         dispatch(loadLabels(startParams[param]))
                         }
                     } else if (
                         QUERY_VALUE === param &&
@@ -140,8 +144,8 @@ export function UpdateStateFromQueryParams() {
                 
             }
         } else {
-            dispatch(setApiUrl(environment.apiUrl));
 
+            dispatch(setApiUrl(environment.apiUrl));
             const allParams = STRING_VALUES.concat(TIME_VALUES);
             allParams.push(QUERY_VALUE);
             allParams.push(BOOLEAN_VALUES);
@@ -170,6 +174,7 @@ export function UpdateStateFromQueryParams() {
 
             window.location.hash = urlFromHash;
         }
+
     }, []);
 
     useEffect(() => {
@@ -179,7 +184,6 @@ export function UpdateStateFromQueryParams() {
             for (let [key, value] of paramsFromHash.entries()) {
                 previousParams[key] = value;
             }
-
             Object.keys(STORE_KEYS).forEach((store_key) => {
                 if (
                     STRING_VALUES.includes(store_key) &&
