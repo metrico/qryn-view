@@ -23,8 +23,7 @@ export const HistoryButtonStyled = styled(BtnSmall)`
 `;
 
 export const ShowLabelsBtn = styled(BtnSmall)`
-    background: ${({ browserActive, theme }) =>
-        browserActive ? theme.buttonDefault : theme.buttonHover};
+    background: ${({ theme }) => theme.buttonDefault};
         border:1px solid ${(props)=>props.theme.buttonBorder};
     text-overflow: ellipsis;
     transition: 0.25s all;

@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import theme from "../../../theme/themes";
 
-
 /**
  * Labels styles
  */
@@ -15,18 +14,17 @@ export const LabelsContainer = styled("div")`
     padding-bottom: 10px;
     &::-webkit-scrollbar {
         width: 10px;
-       
     }
 
     &::-webkit-scrollbar-thumb {
         border-radius: 10px;
-        background:${props => props.theme.scrollbarThumb};
+        background: ${(props) => props.theme.scrollbarThumb};
     }
 `;
 
 export const ChartLabel = styled("div")`
     font-size: 12px;
-    color: ${props=>props.theme.textColor};
+    color: ${(props) => props.theme.textColor};
     font-family: sans-serif;
     display: flex;
     align-items: center;
@@ -36,7 +34,7 @@ export const ChartLabel = styled("div")`
     opacity: ${(props) => (props.isVisible ? "1" : ".5")};
     border-radius: 3px;
     &:hover {
-        background: ${props => props.theme.buttonHover};
+        background: ${(props) => props.theme.buttonHover};
     }
 `;
 
@@ -53,12 +51,10 @@ export const ColorLabel = styled("div")`
  */
 export const ChartButton = styled.button`
     background: ${(props) =>
-        props.isActive ? props.theme.buttonDefault : props.theme.bgMain};
-    color: ${props => props.theme.textColor};
+        props.isActive ? props.theme.buttonDefault : props.theme.buttonHover};
+    color: ${(props) => props.theme.textColor};
     padding: 3px 12px;
-    border:1px solid ${(props)=>props.theme.buttonBorder};
-    border-right: ${(props) => (props.leftBtn ? `2px solid ${props.theme.bgMain}` : "none")};
-    border-left: ${(props) => (props.rightBtn ? `2px solid ${props.theme.bgMain}` : "none")};
+    border: 1px solid ${(props) => props.theme.buttonBorder};
     border-radius: ${(props) =>
         props.rightBtn
             ? "0px 3px 3px 0px"
@@ -77,7 +73,7 @@ export const ChartToolsCont = styled.div`
     align-items: center;
     flex-direction: ${(props) => (props.isMobile ? "column" : "row")};
 
-        margin: 10px 25px;
+    margin: 10px 25px;
     justify-content: space-between;
     .limit-cont {
         display: flex;
@@ -109,13 +105,13 @@ export const ShowSeries = styled.div`
     line-height: 20px;
     padding: 3px 12px;
     white-space: nowrap;
-    color: ${props => props.theme.textColor};
-    background: ${props => props.theme.buttonDefault};
-    border:1px solid ${(props)=>props.theme.buttonBorder};
+    color: ${(props) => props.theme.textColor};
+    background: ${(props) => props.theme.buttonDefault};
+    border: 1px solid ${(props) => props.theme.buttonBorder};
     border-radius: 3px;
     cursor: pointer;
     transition: 0.2s all;
     &:hover {
-        background: ${props => props.theme.buttonHover};
+        background: ${(props) => props.theme.buttonHover};
     }
 `;
