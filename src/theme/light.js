@@ -56,7 +56,7 @@ const typography = {
 const orange = {
     or100: "hsl(39, 100%, 50%)",
 };
-const mainBgColor = white.w500;
+const mainBgColor = white.w100;
 const logBgColor = white.w100;
 const tabActive = white.w100;
 const tabHeader = white.b400;
