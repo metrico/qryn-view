@@ -65,7 +65,7 @@ const Heading = ({
                         onClick={onClickPrevious}
                     >
                         <ChevronLeft
-                            color={prevDisabled ? "disabled" : "active"}
+                             style={{color: prevDisabled ? themes[theme].textOff : themes[theme].textColor }}
                         />
                     </IconButton>
                 </Grid>
@@ -101,7 +101,8 @@ const Heading = ({
                 <Grid item className={classes.iconContainer}>
                     <IconButton disabled={nextDisabled} onClick={onClickNext}>
                         <ChevronRight
-                            color={nextDisabled ? "disabled" : "active"}
+                        style={{color: nextDisabled ? themes[theme].textOff : themes[theme].textColor }}
+                           
                         />
                     </IconButton>
                 </Grid>

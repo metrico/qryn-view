@@ -58,6 +58,7 @@ const CalendarBtn = styled(BtnSmall)`
    
     color: ${props => props.theme.textColor};
     background: ${props => props.theme.buttonDefault};
+    border:1px solid ${(props)=>props.theme.buttonBorder};
     padding:8px;
     &:hover {
         background: ${props => props.theme.buttonHover};

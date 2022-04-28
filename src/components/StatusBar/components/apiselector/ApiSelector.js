@@ -83,7 +83,7 @@ export function ApiSelector() {
                         onChange={handleIntputChange}
                     />
                     <ApiSelectorButton onClick={onUrlSubmit}>
-                        {"save"}
+                        {"Save"}
                     </ApiSelectorButton>
                 </div>
             ) : null}

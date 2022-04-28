@@ -29,8 +29,8 @@ export default function HistoryButton({
                     <HistoryIconStyled
                         color={
                             buttonState
-                                ? themes[theme].highlitedButton
-                                : themes[theme].buttonText
+                                ? themes[theme].textColor
+                                : themes[theme].textOff
                         }
                     />
                     {isMobile && <span>History</span>}

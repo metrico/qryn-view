@@ -56,7 +56,7 @@ export const ChartButton = styled.button`
         props.isActive ? props.theme.buttonDefault : props.theme.bgMain};
     color: ${props => props.theme.textColor};
     padding: 3px 12px;
-    border: none;
+    border:1px solid ${(props)=>props.theme.buttonBorder};
     border-right: ${(props) => (props.leftBtn ? `2px solid ${props.theme.bgMain}` : "none")};
     border-left: ${(props) => (props.rightBtn ? `2px solid ${props.theme.bgMain}` : "none")};
     border-radius: ${(props) =>
@@ -111,6 +111,7 @@ export const ShowSeries = styled.div`
     white-space: nowrap;
     color: ${props => props.theme.textColor};
     background: ${props => props.theme.buttonDefault};
+    border:1px solid ${(props)=>props.theme.buttonBorder};
     border-radius: 3px;
     cursor: pointer;
     transition: 0.2s all;

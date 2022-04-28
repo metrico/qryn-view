@@ -11,7 +11,9 @@ export const HistoryIconStyled = styled(HistoryIcon)`
 export const HistoryButtonStyled = styled(BtnSmall)`
     background: none;
     margin-left: 5px;
+    color: ${(props)=> props.theme.textColor};
     background: ${(props) => props.theme.buttonDefault};
+    border:1px solid ${(props)=>props.theme.buttonBorder};
     span {
         margin-left: 5px;
     }
@@ -23,6 +25,7 @@ export const HistoryButtonStyled = styled(BtnSmall)`
 export const ShowLabelsBtn = styled(BtnSmall)`
     background: ${({ browserActive, theme }) =>
         browserActive ? theme.buttonDefault : theme.buttonHover};
+        border:1px solid ${(props)=>props.theme.buttonBorder};
     text-overflow: ellipsis;
     transition: 0.25s all;
     justify-content: flex-start;
@@ -48,6 +51,7 @@ export const QueryBarContainer = styled.div`
 `;
 export const ShowLogsBtn = styled(BtnSmall)`
     background: ${(props) => props.theme.primaryDark};
+    border:1px solid ${(props)=>props.theme.buttonBorder};
     color: ${(props) => props.theme.buttonText};
     margin-left: 5px;
     transition: 0.25s all;
@@ -57,6 +61,7 @@ export const ShowLogsBtn = styled(BtnSmall)`
     }
     &:disabled {
         background: ${(props) => props.theme.buttonDefault};
+        border:1px solid ${(props)=>props.theme.buttonBorder};
         cursor: not-allowed;
     }
     @media screen and (max-width: 864px) {

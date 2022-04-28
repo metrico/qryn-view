@@ -3,7 +3,6 @@ import styled from "@emotion/styled";
 import { BtnSmall } from "../../../theme/styles/Button";
 import { InputSmall } from "../../../theme/styles/Input";
 
-
 export const InputGroup = styled.div`
     display: flex;
     flex-direction: column;
@@ -20,7 +19,7 @@ export const SettingCont = styled.div`
     flex-direction: column;
 
     height: 650px;
-    background: ${({theme}) => theme.widgetContainer};
+    background: ${({ theme }) => theme.widgetContainer};
 `;
 
 export const SettingsInputContainer = styled.div`
@@ -31,28 +30,28 @@ export const SettingsInputContainer = styled.div`
 `;
 
 export const SettingInput = styled(InputSmall)`
-    background: ${({theme}) => theme.inputBg};
+    background: ${({ theme }) => theme.inputBg};
     margin: 5px;
     flex: 1;
     padding: 5px 12px;
-    border: 1px solid transparent;
-    color: ${({theme}) => theme.textColor};
+    border: 1px solid ${({ theme }) => theme.buttonBorder};
+    color: ${({ theme }) => theme.textColor};
     &:focus {
-        border: 1px solid ${({theme}) => theme.buttonHover};
+        border: 1px solid ${({ theme }) => theme.buttonHover};
     }
 `;
 export const SettingButton = styled(BtnSmall)`
-    background: ${({theme}) => theme.primaryDark};
-    color: ${({theme}) => theme.buttonText};
-    height: 26px;
+    background: ${({ theme }) => theme.primaryDark};
+    color: ${({ theme }) => theme.buttonText};
+    height: 30px;
     &:hover {
-        background: ${({theme}) => theme.primaryLight};
+        background: ${({ theme }) => theme.primaryLight};
     }
 `;
 
 export const SettingLabel = styled.label`
     font-size: 12px;
-    color: ${({theme}) => theme.inputLabelColor};
+    color: ${({ theme }) => theme.inputLabelColor};
     margin-left: 10px;
 `;
 
@@ -64,13 +63,13 @@ export const SettingHeader = styled.div`
     h3 {
         margin-left: 10px;
         font-size: 1em;
-        color: ${({theme}) => theme.textColor};
+        color: ${({ theme }) => theme.textColor};
     }
 `;
 export const SettingCloseBtn = styled(BtnSmall)`
     background: none;
     padding: 0;
-    color: ${({theme}) => theme.textColor};
+    color: ${({ theme }) => theme.textColor};
 `;
 
 export const EmbedArea = styled.textarea`
@@ -79,8 +78,8 @@ export const EmbedArea = styled.textarea`
     margin: 5px;
     height: 150px;
     padding: 5px 8px;
-    border: none;
+    border: 1px solid ${({theme}) => theme.buttonBorder};
     border-radius: 3px;
-    background: ${({theme}) => theme.inputBg};
-    color: ${({theme}) => theme.textColor};
+    background: ${({ theme }) => theme.inputBg};
+    color: ${({ theme }) => theme.textColor};
 `;

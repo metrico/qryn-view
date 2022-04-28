@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 export const MenuButton = styled.button`
   border: none;
   background: ${({theme})=>(theme.buttonDefault)};
+  border:1px solid ${(props)=>props.theme.buttonBorder};
   color: ${(props)=>(props.theme.textColor)};
   padding: 3px 12px;
   border-radius: 3px;

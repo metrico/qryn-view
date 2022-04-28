@@ -28,23 +28,45 @@ const LabelErrorStyled = styled.div`
 `;
 const ValuesListStyled = styled.div`
     background: ${(props) => props.theme.widgetContainer};
-    small {
-        color: ${(props) => props.theme.textColor};
+    .valuelist-content {
+        small {
+            color: ${(props) => props.theme.textColor} !important;
+            background: ${(props) => props.theme.buttonDefault} !important;
+            border: 1px solid ${(props) => props.theme.buttonBorder} !important;
+            margin: 5px;
+            padding: 4px 8px;
+            border-radius: 3px;
+            line-height: 1.5;
+            font-size: 12px;
+            cursor: pointer;
+            align-items: center;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 23ch;
+            transition: 1s all;
+            &:hover {
+                background: ${({ theme }) => theme.buttonHover};
+            }
+        }
     }
+
     button {
         color: ${(props) => props.theme.textColor};
-        background: ${(props) => props.theme.buttonDefault};
+        background: ${(props) => props.theme.buttonDefault} !important;
+        border: 1px solid ${(props) => props.theme.buttonBorder} !important;
+        padding: 13px 8px;
         &:hover {
             background: ${(props) => props.theme.buttonHover};
         }
     }
     .values-container {
         .values-column {
-            background: ${(props) => props.theme.secondaryWidgetContainer};
+            background: ${(props) => props.theme.buttonHover};
         }
         .values-column-title {
             color: ${(props) => props.theme.textColor};
-            background: ${(props) => props.theme.widgetTitle};
+            background: ${(props) => props.theme.historyRow};
             border-bottom: 2px solid ${(props) => props.theme.widgetTitleBorder};
         }
     }
@@ -157,7 +179,12 @@ export const ValuesList = (props) => {
                                             onClick={handleRefresh}
                                             title={"Refresh Labels List"}
                                         >
-                                            <RefreshIcon fontSize={"small"} />
+                                            <RefreshIcon
+                                                style={{
+                                                    height: "18px",
+                                                    width: "18px",
+                                                }}
+                                            />
                                         </button>
                                         {labelList &&
                                             labelList?.map((value, key) => (
@@ -179,7 +206,7 @@ export const ValuesList = (props) => {
                                 <LabelsFetchError />
                             )}
 
-                            { selectedList() && (
+                            {selectedList() && (
                                 <div className={"values-container"}>
                                     <div className={"values-container-column"}>
                                         {labelsSelected.map(

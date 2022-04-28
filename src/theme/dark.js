@@ -62,7 +62,7 @@ const tabActive = black.b100;
 const tabHeader = black.b400;
 const tabBg = black.b200;
 const textColor = lightgrey.lg200;
-const textOff = lightgrey.lg400;
+const textOff = darkgrey.dg500;
 const textPrimary = white.w300;
 const textPrimaryAccent = orange.or100;
 const inputBg = black.b15;
@@ -75,11 +75,13 @@ const widgetTitleBorder = lightgrey.lg700;
 const buttonDefault = darkgrey.dg100;
 const buttonHover = darkgrey.dg15;
 const buttonInactive = black.b400;
+const buttonBorder = darkgrey.dg300;
 const buttonText = white.w200;
 const inputTextFocus = orange.or100;
 const highlitedButton = orange.or100;
 const inputLabelColor = lightgrey.lg400;
 const inputLabelBg = black.bg10;
+const historyRow = '#6c6b6b38';
 const viewBg = black.b300;
 const scrollbarThumb = "hsla(0, 0%, 48%, 0.122)";
 const critical = "hsl(300, 100%, 25%)";
@@ -101,6 +103,7 @@ const darkTheme = {
     buttonDefault,
     buttonHover,
     buttonInactive,
+    buttonBorder,
     buttonText,
     inputBg,
     inputTextFocus,
@@ -110,6 +113,7 @@ const darkTheme = {
     textPrimary,
     textPrimaryAccent,
     viewBg,
+    historyRow,
     scrollbarThumb,
     critical,
     error,

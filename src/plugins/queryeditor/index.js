@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 const CustomEditor = styled(Editable)`
     flex: 1;
     background: ${props => props.theme.inputBg};
+    border: 1px solid ${props => props.theme.buttonBorder};
     color: ${props => props.theme.textColor};
     padding: 4px 8px;
     font-size: 1em;

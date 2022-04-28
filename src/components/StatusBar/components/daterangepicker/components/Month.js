@@ -47,6 +47,7 @@ const styles = (theme) =>
             marginBottom: 20,
         },
     });
+
 const Month = (props) => {
     const theme = useSelector((store) => store.theme);
     const [themeSelected,setThemeSelected] = useState(themes[theme])
@@ -104,9 +105,11 @@ const Month = (props) => {
                         className={classes.weekDaysContainer}
                     >
                         {WEEK_DAYS.map((day) => (
-                            <Typography key={day} variant={"caption"}>
+                            <div 
+                            style={{color: themes[theme].textColor, fontSize:'10px'}}
+                            key={day} variant={"caption"}>
                                 {day}
-                            </Typography>
+                            </div>
                         ))}
                     </Grid>
 

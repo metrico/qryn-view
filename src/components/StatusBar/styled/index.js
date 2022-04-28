@@ -91,9 +91,11 @@ export const ApiSelectorStyled = styled.div`
 
 export const ApiSelectorButton = styled(BtnSmall)`
     background: ${props => props.theme.buttonDefault};
+    border:1px solid ${(props)=>props.theme.buttonBorder};
     color: ${props => props.theme.textColor};
     text-overflow: ellipsis;
     transition: 0.2s all;
+    height:26px;
     &:hover {
         background: ${props => props.theme.buttonHover};
     }
@@ -101,16 +103,21 @@ export const ApiSelectorButton = styled(BtnSmall)`
 export const ApiSelectorInput = styled(InputSmall)`
     color: ${props => props.theme.textColor};
     background: ${props => props.theme.inputBg};
+    border: 1px solid ${({theme}) => theme.buttonBorder};
+    height:18px;
+    margin-right:4px;
     &:focus {
         color: orange;
     }
 `;
 export const UrlCopyButton = styled(BtnSmall)`
     background: ${props => props.theme.buttonDefault};
+    border:1px solid ${(props)=>props.theme.buttonBorder};
     color: ${({ isActive, theme }) => (isActive ? "orange" : theme.textColor)};
     cursor: ${({ isActive }) => (isActive ? "pointer" : "not-allowed")};
     text-overflow: ellipsis;
     transition: 0.2s all;
+    height:26px;
     span {
         margin-left: 4px;
         color: ${props => props.theme.textColor};
@@ -122,6 +129,7 @@ export const UrlCopyButton = styled(BtnSmall)`
 
 export const DatePickerButton = styled(BtnSmall)`
     background: ${props => props.theme.buttonDefault};
+    border:1px solid ${(props)=>props.theme.buttonBorder};
     color: ${props => props.theme.textColor};
     height: 26px;
     margin-left: 10px;
