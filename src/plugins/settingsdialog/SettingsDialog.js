@@ -160,7 +160,7 @@ export default function SettingsDialog({ open, onClose }) {
                     <InputGroup>
                         <SettingLabel>Embed View</SettingLabel>
                         <EmbedArea
-                            rows="10"
+                            rows="8"
                             value={embedEdited}
                             onChange={handleEmbedChange}
                         ></EmbedArea>

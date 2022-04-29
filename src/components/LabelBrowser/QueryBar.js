@@ -25,6 +25,9 @@ import debugLog from "./helpers/debugLog";
 import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
 import { sendLabels } from "../../hooks/useLabels";
+import CustomizedDividers from "../QueryTypeBar/components/QueryTypeSwitch";
+import QueryTypeSwitch from "../QueryTypeBar/components/QueryTypeSwitch";
+import QueryTypeBar from "../QueryTypeBar";
 
 export const QueryBar = () => {
     const dispatch = useDispatch();
@@ -85,7 +88,9 @@ export const QueryBar = () => {
             onSubmit(e);
         }
     };
-
+    const onQueryTypeChange = (e) => {
+        console.log(e)
+    }
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -170,7 +175,20 @@ export const QueryBar = () => {
                             onClick={onSubmit}
                             isMobile={false}
                         />
+                       
+                      {/*
+                       <QueryTypeSwitch
+                        defaultActive={'range'}
+                        onChange={onQueryTypeChange}
+                            options={[
+                                { value: "range", label: "Range" },
+                                { value: "instant", label: "Instant" },
+                            ]}
+                        />
+                      
+                      */} 
                     </QueryBarContainer>
+                    <QueryTypeBar/>
                 </ThemeProvider>
             </div>
         )

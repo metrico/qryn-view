@@ -766,6 +766,7 @@ const QueryHistory = (props) => {
                     style={{ maxHeight: "250px" }}
                     open={historyOpen}
                     variant={"persistent"}
+                    theme={themes[theme]}
                 >
                     <QueryHistoryTabs
                         historyTabHeader={
