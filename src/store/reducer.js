@@ -40,6 +40,8 @@ const reducer = (state, action) => {
             return { ...state, apiErrors: action.apiErrors };
         case "SET_URL_QUERY_PARAMS":
             return { ...state, urlQueryParams: action.urlQueryParams };
+        case "SET_QUERY_TYPE":
+            return { ...state, queryType: action.queryType };
         case "SET_URL_LOCATION":
             return { ...state, urlLocation: action.urlLocation };
         case "SET_IS_SUBMIT":
@@ -62,8 +64,10 @@ const reducer = (state, action) => {
             return { ...state, notifications: action.payload };
         case "SET_DEBUG_MODE":
             return { ...state, debugMode: action.debugMode };
-        case "SET_THEME": 
-            return {...state, theme: action.theme};
+        case "SET_THEME":
+            return { ...state, theme: action.theme };
+        case "SET_QUERY_TIME":
+            return { ...state, time: action.time };
         default:
             return { ...state };
     }

@@ -6,6 +6,8 @@ export * from "./setRangeOpen";
 export * from "./setTimeRangeLabel";
 export * from "./setApiUrl";
 export * from "./setQuery";
+export * from "./setQueryTime";
+export * from "./setQueryType";
 export * from "./setIsSubmit";
 export * from "./setMatrixData";
 export * from "./setQueryHistory";

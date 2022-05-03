@@ -2,6 +2,7 @@ import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { setQueryType } from "../../actions";
 import { themes } from "../../theme/themes";
 import QueryLimit from "./components/QueryLimit";
 import QueryResolution from "./components/QueryResolution";
@@ -16,9 +17,10 @@ import QueryTypeSwitch from "./components/QueryTypeSwitch";
 
 const QueryTypeCont = styled.div`
     display: flex;
-    padding:4px;
+    padding: 4px;
     background: ${(props) => props.theme.widgetContainer};
     color: ${(props) => props.color};
+    height:26px;
 `;
 
 export default function QueryTypeBar() {
@@ -58,20 +60,20 @@ export default function QueryTypeBar() {
         return `1/${step}`;
     }
 
-    function onSwitchChange(e){
-        console.log(e)
+    function onSwitchChange(e) {
+        dispatch(setQueryType(e));
     }
 
-    const stepOptions = () => STEP_VALUES.map((value) => ({ value, label: formatResolution(value) }));
+    const stepOptions = () =>
+        STEP_VALUES.map((value) => ({ value, label: formatResolution(value) }));
 
     return (
         <ThemeProvider theme={themes[theme]}>
             <QueryTypeCont>
                 <QueryTypeSwitch
-
                     options={SWITCH_OPTIONS}
                     onChange={onSwitchChange}
-                    defaultActive={'range'}
+                    defaultActive={queryTypeSwitch}
                 />
                 <QueryLimit />
                 <QueryResolution resolution={resolution} />

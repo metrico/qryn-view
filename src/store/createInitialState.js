@@ -25,6 +25,7 @@ export default function initialState() {
         linksHistory: linkService.getAll() || [],
         timeRange: [],
         query: urlState.query || "",
+        queryType: urlState.queryType || 'range',
         logs: [],
         matrixData: [],
         loading: false,
@@ -35,6 +36,7 @@ export default function initialState() {
                     .subtract(5, "minutes")
                     .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
             ),
+        time: urlState.time || '',
         stop:
             urlState.end ||
             new Date(moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")),

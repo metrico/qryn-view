@@ -26,9 +26,9 @@ export default function ShowLabelsButton({
                 isMobile={isMobile}
             >
                 {labelsBrowserOpen ? (
-                    <KeyboardArrowDownIcon fontSize={"small"} />
+                    <KeyboardArrowDownIcon style={{height:'18px',width:'18px'}} />
                 ) : (
-                    <KeyboardArrowRightIcon fontSize={"small"} />
+                    <KeyboardArrowRightIcon style={{height:'18px',width:'18px'}} />
                 )}{" "}
                 {LOG_BROWSER}
             </ShowLabelsBtn>

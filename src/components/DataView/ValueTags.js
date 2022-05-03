@@ -3,7 +3,7 @@ import { queryBuilderWithLabels } from "../LabelBrowser/helpers/querybuilder";
 import store from "../../store/store";
 import loadLabelValues from "../../actions/loadLabelValues";
 import loadLogs from "../../actions/loadLogs";
-import {  ZoomIn, ZoomOut } from "@mui/icons-material/";
+import { ZoomIn, ZoomOut } from "@mui/icons-material/";
 import { useSelector } from "react-redux";
 import { themes } from "../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
@@ -26,16 +26,18 @@ export default function ValueTags({ tags }) {
         e.stopPropagation();
         const { labels, apiUrl } = store.getState();
         const label = labels.find((label) => label.name === key);
-        const symb = isInverted ? '!=' : '='
-       const isAlreadySelected = query.includes(`${key}="${value}"`)
-       const isAlreadyInverted = query.includes(`${key}!="${value}"`)
+        const symb = isInverted ? "!=" : "=";
+        const isAlreadySelected = query.includes(`${key}="${value}"`);
+        const isAlreadyInverted = query.includes(`${key}!="${value}"`);
 
-       if((isAlreadyInverted && isInverted)|| (isAlreadySelected && !isInverted) ) {
-           return;
-       }
+        if (
+            (isAlreadyInverted && isInverted) ||
+            (isAlreadySelected && !isInverted)
+        ) {
+            return;
+        }
 
         if (label) {
-
             const labelValue = label.values.find((tag) => tag.name === value);
             if (labelValue?.selected && labelValue.inverted === isInverted) {
                 return;
@@ -67,7 +69,7 @@ export default function ValueTags({ tags }) {
 
             store.dispatch(loadLogs());
         } else {
-            queryBuilderWithLabels(true,[`${key}${symb}"${value}"`])
+            queryBuilderWithLabels(true, [`${key}${symb}"${value}"`]);
             store.dispatch(loadLogs());
         }
     }

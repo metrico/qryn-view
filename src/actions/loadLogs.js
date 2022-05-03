@@ -6,7 +6,7 @@ import setMatrixData from "./setMatrixData";
 import { nanoid } from "nanoid";
 import { setStartTime, setStopTime } from "./";
 import { findRangeByLabel } from "../components/StatusBar/components/daterangepicker/utils";
-
+import { setQueryTime } from "./setQueryTime";
 
 export default function loadLogs() {
     const localStore = store.getState();
@@ -21,34 +21,46 @@ export default function loadLogs() {
     } = localStore;
     let { start: startTs, stop: stopTs } = localStore;
 
-    function adjustForTimezone(date){
-
+    function adjustForTimezone(date) {
         var timeOffsetInMS = date.getTimezoneOffset() * 60000;
         date.setTime(date.getTime() + timeOffsetInMS);
-        return date
+        return date;
     }
 
     function getTimeParsed(time) {
         return time.getTime() + "000000";
     }
+    const time = localStore.time || new Date().getTime() + "000000";
+  
 
-    const timeZone = new Date().getTimezoneOffset()
+
+
+    const timeZone = new Date().getTimezoneOffset();
     const parsedStart = getTimeParsed(startTs);
     const parsedStop = getTimeParsed(stopTs);
-    const parsedTime = "&start=" + (from || parsedStart) + "&end=" + (to || parsedStop);
+    const parsedTime =
+        "&start=" + (from || parsedStart) + "&end=" + (to || parsedStop);
     if (findRangeByLabel(rangeLabel)) {
-        ({ dateStart: startTs, dateEnd: stopTs } =
-            findRangeByLabel(rangeLabel));
+        ({ dateStart: startTs, dateEnd: stopTs } = findRangeByLabel(
+            rangeLabel
+        ));
     }
 
     store.dispatch(setStartTime(startTs));
     store.dispatch(setStopTime(stopTs));
-    
+    const queryType = store.getState().queryType;
     const origin = window.location.origin;
     const url = apiUrl;
     const queryStep = `&step=${step || 120}`;
     const encodedQuery = `${encodeURIComponent(query)}`;
-    const getUrl = `${url}/loki/api/v1/query_range?query=${encodedQuery}&limit=${limit}${parsedTime}${queryStep}`;
+    const queryUrl = `${url}/loki/api/v1`;
+
+    const rangeEP = `${queryUrl}/query_range?query=${encodedQuery}&limit=${limit}${parsedTime}${queryStep}`;
+    const instantEP = `${queryUrl}/query?query=${encodedQuery}&limit=${limit}&time=${time}`;
+
+    const endpoint = { instant: instantEP, range: rangeEP };
+
+    // const getUrl = `${url}/loki/api/v1/query_range?query=${encodedQuery}&limit=${limit}${parsedTime}${queryStep}`;
 
     const options = {
         method: "GET",
@@ -64,8 +76,8 @@ export default function loadLogs() {
         type === "streams"
             ? fromNanoSec(ts)
             : type === "matrix"
-                ? toMiliseC(ts)
-                : ts;
+            ? toMiliseC(ts)
+            : ts;
     const mapStreams = (streams, messages, type) => {
         streams.forEach((stream) => {
             stream.values.forEach((log, i) => {
@@ -78,8 +90,8 @@ export default function loadLogs() {
                         type === "streams"
                             ? stream.stream
                             : type === "matrix"
-                                ? stream.metric
-                                : {},
+                            ? stream.metric
+                            : {},
                     showTs: true,
                     showLabels: false,
                     id: nanoid(),
@@ -95,7 +107,7 @@ export default function loadLogs() {
         dispatch(setMatrixData([]));
 
         await axios
-            .get(getUrl, options)
+            .get(endpoint[queryType], options)
             ?.then((response) => {
                 if (response?.data?.data) {
                     let messages = [];
@@ -111,6 +123,9 @@ export default function loadLogs() {
                             dispatch(setLogs(messSorted || []));
 
                             dispatch(setLoading(false));
+                            if(queryType === 'instant') {
+                                store.dispatch(setQueryTime(time))
+                            }
                         }
                     }
 
@@ -120,22 +135,19 @@ export default function loadLogs() {
                         dispatch(setMatrixData(idResult || []));
                         dispatch(setLoading(false));
                     }
-                   // dispatch(setLoading(false));
+                    // dispatch(setLoading(false));
                 } else {
                     dispatch(setLogs([]));
                     dispatch(setMatrixData([]));
                     dispatch(setLoading(false));
                 }
-               // dispatch(setLoading(false));
+                // dispatch(setLoading(false));
             })
             .catch((error) => {
-
                 dispatch(setLogs([]));
                 dispatch(setMatrixData([]));
 
                 dispatch(setLoading(false));
-    
-
             });
     };
 }

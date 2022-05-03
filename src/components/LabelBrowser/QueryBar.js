@@ -176,17 +176,6 @@ export const QueryBar = () => {
                             isMobile={false}
                         />
                        
-                      {/*
-                       <QueryTypeSwitch
-                        defaultActive={'range'}
-                        onChange={onQueryTypeChange}
-                            options={[
-                                { value: "range", label: "Range" },
-                                { value: "instant", label: "Instant" },
-                            ]}
-                        />
-                      
-                      */} 
                     </QueryBarContainer>
                     <QueryTypeBar/>
                 </ThemeProvider>

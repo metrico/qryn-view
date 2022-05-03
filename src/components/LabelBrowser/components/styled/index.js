@@ -29,6 +29,7 @@ export const ShowLabelsBtn = styled(BtnSmall)`
     transition: 0.25s all;
     justify-content: flex-start;
     color: ${({ theme }) => theme.textColor};
+    height: 28px;
     &:hover {
         background: ${({ theme }) => theme.buttonHover};
     }
