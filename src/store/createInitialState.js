@@ -29,6 +29,7 @@ export default function initialState() {
         logs: [],
         matrixData: [],
         loading: false,
+        queryResolution: 1,
         start:
             urlState.start ||
             new Date(

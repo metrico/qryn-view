@@ -68,6 +68,8 @@ const reducer = (state, action) => {
             return { ...state, theme: action.theme };
         case "SET_QUERY_TIME":
             return { ...state, time: action.time };
+        case "SET_QUERY_RESOLUTION":
+            return {...state, queryResolution: action.queryResolution};
         default:
             return { ...state };
     }

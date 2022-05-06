@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 import { setStartTime, setStopTime } from "./";
 import { findRangeByLabel } from "../components/StatusBar/components/daterangepicker/utils";
 import { setQueryTime } from "./setQueryTime";
+// import adjustedStep from "../components/QueryTypeBar/helpers";
 
 export default function loadLogs() {
     const localStore = store.getState();
@@ -14,6 +15,7 @@ export default function loadLogs() {
         query,
         limit,
         step,
+    //    queryResolution,
         apiUrl,
         label: rangeLabel,
         from,
@@ -21,21 +23,23 @@ export default function loadLogs() {
     } = localStore;
     let { start: startTs, stop: stopTs } = localStore;
 
-    function adjustForTimezone(date) {
-        var timeOffsetInMS = date.getTimezoneOffset() * 60000;
-        date.setTime(date.getTime() + timeOffsetInMS);
-        return date;
-    }
+    // @TODO : add target for multiple queries
+
+    // function adjustForTimezone(date) {
+    //     var timeOffsetInMS = date.getTimezoneOffset() * 60000;
+    //     date.setTime(date.getTime() + timeOffsetInMS);
+    //     return date;
+    // }
 
     function getTimeParsed(time) {
         return time.getTime() + "000000";
     }
     const time = localStore.time || new Date().getTime() + "000000";
-  
+    
 
 
-
-    const timeZone = new Date().getTimezoneOffset();
+    
+    // const timeZone = new Date().getTimezoneOffset();
     const parsedStart = getTimeParsed(startTs);
     const parsedStop = getTimeParsed(stopTs);
     const parsedTime =
@@ -51,6 +55,11 @@ export default function loadLogs() {
     const queryType = store.getState().queryType;
     const origin = window.location.origin;
     const url = apiUrl;
+
+    // const range = { to : (to || parsedStop), from: (from || parsedStart) }
+    // console.log(range)
+    // const step = adjustedStep({resolution:queryResolution},{range} )
+
     const queryStep = `&step=${step || 120}`;
     const encodedQuery = `${encodeURIComponent(query)}`;
     const queryUrl = `${url}/loki/api/v1`;

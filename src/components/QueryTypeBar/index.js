@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setQueryType } from "../../actions";
 import { themes } from "../../theme/themes";
 import QueryLimit from "./components/QueryLimit";
-import QueryResolution from "./components/QueryResolution";
+// import QueryResolution from "./components/QueryResolution";
 import QueryTypeSwitch from "./components/QueryTypeSwitch";
 
 /**
@@ -76,7 +76,7 @@ export default function QueryTypeBar() {
                     defaultActive={queryTypeSwitch}
                 />
                 <QueryLimit />
-                <QueryResolution resolution={resolution} />
+                {/* <QueryResolution resolution={resolution} /> */}
             </QueryTypeCont>
         </ThemeProvider>
     );

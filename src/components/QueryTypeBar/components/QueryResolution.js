@@ -1,9 +1,13 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setQueryResolution } from "../actions/setQueryResolution";
+import { DEFAULT_RESOLUTION, RESOLUTION_OPTIONS } from "../helpers";
+
 const Label = styled.div`
     color: ${(props) => props.theme.textColor};
     background: ${(props) => props.theme.buttonInactive};
-    
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -18,12 +22,12 @@ const ResSelect = styled.select`
     font-size: 14px;
     color: ${(props) => props.theme.textColor};
     background: ${(props) => props.theme.inputBg};
-    border: 1px solid ${props => props.theme.buttonBorder};
+    border: 1px solid ${(props) => props.theme.buttonBorder};
     border-radius: 3px;
     padding: 4px 8px;
     line-height: 20px;
     flex: 1;
-    max-width: 60px;
+    max-width: 70px;
     &::-webkit-scrollbar {
         width: 5px;
         background: ${(props) => props.theme.inputBg};
@@ -36,21 +40,21 @@ const ResSelect = styled.select`
 `;
 
 export default function QueryResolution() {
-    const resolutions = ["1/1", "1/2", "1/3", "1/4", "1/10"];
-
-    const [resValue, setResValue] = useState(resolutions[0]);
+    const dispatch = useDispatch();
+    const [resValue, setResValue] = useState(DEFAULT_RESOLUTION.value);
 
     function handleResChange(e) {
-        setResValue(e);
+        setResValue(parseInt(e.target.value));
+        dispatch(setQueryResolution(parseInt(e.target.value)));
     }
 
     return (
         <>
             <Label>Resolution</Label>
-            <ResSelect value={resValue} onChange={handleResChange}>
-                {resolutions.map((res, idx) => (
-                    <option key={idx} value={res}>
-                        {res}
+            <ResSelect value={resValue.value} onChange={handleResChange}>
+                {RESOLUTION_OPTIONS.map((res, idx) => (
+                    <option key={idx} value={res.value}>
+                        {res.label}
                     </option>
                 ))}
             </ResSelect>
