@@ -15,7 +15,6 @@ export default function loadLogs() {
         query,
         limit,
         step,
-    //    queryResolution,
         apiUrl,
         label: rangeLabel,
         from,
@@ -23,23 +22,10 @@ export default function loadLogs() {
     } = localStore;
     let { start: startTs, stop: stopTs } = localStore;
 
-    // @TODO : add target for multiple queries
-
-    // function adjustForTimezone(date) {
-    //     var timeOffsetInMS = date.getTimezoneOffset() * 60000;
-    //     date.setTime(date.getTime() + timeOffsetInMS);
-    //     return date;
-    // }
-
     function getTimeParsed(time) {
         return time.getTime() + "000000";
     }
     const time = localStore.time || new Date().getTime() + "000000";
-    
-
-
-    
-    // const timeZone = new Date().getTimezoneOffset();
     const parsedStart = getTimeParsed(startTs);
     const parsedStop = getTimeParsed(stopTs);
     const parsedTime =
@@ -56,10 +42,6 @@ export default function loadLogs() {
     const origin = window.location.origin;
     const url = apiUrl;
 
-    // const range = { to : (to || parsedStop), from: (from || parsedStart) }
-    // console.log(range)
-    // const step = adjustedStep({resolution:queryResolution},{range} )
-
     const queryStep = `&step=${step || 120}`;
     const encodedQuery = `${encodeURIComponent(query)}`;
     const queryUrl = `${url}/loki/api/v1`;
@@ -68,8 +50,6 @@ export default function loadLogs() {
     const instantEP = `${queryUrl}/query?query=${encodedQuery}&limit=${limit}&time=${time}`;
 
     const endpoint = { instant: instantEP, range: rangeEP };
-
-    // const getUrl = `${url}/loki/api/v1/query_range?query=${encodedQuery}&limit=${limit}${parsedTime}${queryStep}`;
 
     const options = {
         method: "GET",
@@ -109,7 +89,6 @@ export default function loadLogs() {
         });
     };
 
-    //const mapMatrix
     return async function (dispatch) {
         dispatch(setLoading(true));
         dispatch(setLogs([]));
@@ -132,8 +111,8 @@ export default function loadLogs() {
                             dispatch(setLogs(messSorted || []));
 
                             dispatch(setLoading(false));
-                            if(queryType === 'instant') {
-                                store.dispatch(setQueryTime(time))
+                            if (queryType === "instant") {
+                                store.dispatch(setQueryTime(time));
                             }
                         }
                     }
@@ -144,13 +123,11 @@ export default function loadLogs() {
                         dispatch(setMatrixData(idResult || []));
                         dispatch(setLoading(false));
                     }
-                    // dispatch(setLoading(false));
                 } else {
                     dispatch(setLogs([]));
                     dispatch(setMatrixData([]));
                     dispatch(setLoading(false));
                 }
-                // dispatch(setLoading(false));
             })
             .catch((error) => {
                 dispatch(setLogs([]));

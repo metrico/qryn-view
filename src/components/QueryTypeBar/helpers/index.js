@@ -13,7 +13,6 @@ function adjustInterval(
     if (safeInterval > 1) {
         safeInterval = Math.ceil(safeInterval);
     }
-    console.log(safeInterval)
     return Math.max(resolution * dynamicInterval, safeInterval);
 }
 
@@ -27,7 +26,6 @@ function getIntervalInfo(timespanMs) {
     let intervalMs = timespanMs;
 
     let interval = "";
-    // below 5 seconds we force the resolution to be per 1ms as interval in scopedVars is not less than 10ms
     if (timespanMs < SECOND * 5) {
         intervalMs = MILLISECOND;
         interval = "1ms";
@@ -60,61 +58,15 @@ export const RESOLUTION_OPTIONS = [DEFAULT_RESOLUTION].concat(
     }))
 );
 
-/**
- * options: { range : { from, to }}
- * target: { resolution }
- */
-
-/**
- *
- * @param {*} target
- * @param {*} options
- * @returns
- */
 
 export default function adjustedStep(target, options) {
 
-    console.log(target,options)
-    // resolution = resolution denominator
     const resolution = target.resolution || DEFAULT_RESOLUTION.value;
     const startNs = getTime(options.range.from, false);
     const endNs = getTime(options.range.to, true);
     const rangeMs = Math.ceil((endNs - startNs) / 1e6);
-
-    console.log(rangeMs)
-    console.log(resolution)
     const { intervalMs } = getIntervalInfo(rangeMs);
-    console.log(intervalMs)
-
     const intl = adjustInterval(intervalMs || 1000, resolution, rangeMs);
     console.log(intl)
     return Math.ceil(intl) / 1000;
 }
-
-
-// @TODO histogram request
-
-// function getLogsVolumeDataProvider(request) {
-//     const isLogsVolumeAvailable = request.targets.some((target) => target.expr && !isMetricsQuery(target.expr));
-//     if (!isLogsVolumeAvailable) {
-//       return undefined;
-//     }
-//     // the targets are the containers
-//     const logsVolumeRequest = JSON.parse(JSON.stringify(request));
-//     logsVolumeRequest.targets = logsVolumeRequest.targets
-//       .filter((target) => target.expr && !isMetricsQuery(target.expr))
-//       .map((target) => {
-//         return {
-//           ...target,
-//           instant: false,
-//           volumeQuery: true,
-//           expr: `sum by (level) (count_over_time(${target.expr}[$__interval]))`,
-//         };
-//       });
-
-//     return queryLogsVolume(this, logsVolumeRequest, {
-//       extractLevel,
-//       range: request.range,
-//       targets: request.targets,
-//     });
-//   }

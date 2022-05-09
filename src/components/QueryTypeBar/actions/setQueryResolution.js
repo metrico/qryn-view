@@ -1,6 +1,6 @@
-export const setQueryResolution = ( queryResolution ) => (dispatch) => {
+export const setQueryResolution = (queryResolution) => (dispatch) => {
     dispatch({
-        type: 'SET_QUERY_RESOLUTION',
-        queryResolution
-    })
-}
+        type: "SET_QUERY_RESOLUTION",
+        queryResolution,
+    });
+};

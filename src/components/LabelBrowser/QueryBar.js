@@ -25,8 +25,6 @@ import debugLog from "./helpers/debugLog";
 import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
 import { sendLabels } from "../../hooks/useLabels";
-import CustomizedDividers from "../QueryTypeBar/components/QueryTypeSwitch";
-import QueryTypeSwitch from "../QueryTypeBar/components/QueryTypeSwitch";
 import QueryTypeBar from "../QueryTypeBar";
 
 export const QueryBar = () => {
