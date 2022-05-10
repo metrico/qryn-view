@@ -160,10 +160,12 @@ export default function ClokiChart({ matrixData }) {
                 const toLabel = format(toTs, "yyyy/MM/dd HH:mm:ss");
 
                 const timeRangeLabel = `${fromLabel}-${toLabel}`;
+                
                 dispatch(setStopTime(toTs));
                 dispatch(setStartTime(fromTs));
 
                 dispatch(setTimeRangeLabel(timeRangeLabel));
+
                 dispatch(loadLogs());
             }, 400);
         } catch (e) {

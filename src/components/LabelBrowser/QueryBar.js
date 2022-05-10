@@ -86,9 +86,6 @@ export const QueryBar = () => {
             onSubmit(e);
         }
     };
-    const onQueryTypeChange = (e) => {
-        console.log(e)
-    }
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -173,9 +170,8 @@ export const QueryBar = () => {
                             onClick={onSubmit}
                             isMobile={false}
                         />
-                       
                     </QueryBarContainer>
-                    <QueryTypeBar/>
+                    <QueryTypeBar />
                 </ThemeProvider>
             </div>
         )

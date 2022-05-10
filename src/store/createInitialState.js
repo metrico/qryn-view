@@ -63,6 +63,7 @@ export default function initialState() {
         chartType: "line",
         notifications: [],
         theme: urlState.theme || "dark",
+        isEmptyView: false,
     };
     const debug = state.debugMode;
     if (debug) console.log("🚧 LOGIC/ INITIAL STATE ::: ", state);

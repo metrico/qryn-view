@@ -11,6 +11,7 @@ export default function LogsRow({ message }) {
     const messages = useSelector((store) => store.logs);
 
     const theme = useStore().getState().theme;
+    
     function toggleTagsActive(idx) {
         let arrCopy = [...messages];
         arrCopy.forEach((entry) => {

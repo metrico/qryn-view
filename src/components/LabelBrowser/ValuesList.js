@@ -104,20 +104,23 @@ export const ValuesList = (props) => {
     const dispatch = useDispatch();
     const debug = useSelector((store) => store.debugMode);
     const apiUrl = useSelector((store) => store.apiUrl);
-    if (debug) console.log("🚧 LOGIC/LabelBrowser/ValuesList", apiUrl);
+  
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen);
     const CLEAR = "clear";
 
-    useEffect(() => {
-        dispatch(loadLabels(apiUrl));
-    }, [apiUrl]);
+    // useEffect(() => {
+    //     dispatch(loadLabels(apiUrl));
+    //     if (debug) console.log("🚧 LOGIC/LabelBrowser/ValuesList", apiUrl);
+    // }, [apiUrl]);
 
     useEffect(() => {
         setLabelList(labels); // LABELS
+        console.log('labels changed')
     }, [labels]);
 
     const handleRefresh = (e) => {
         e.preventDefault();
+        console.log("event handled")
         dispatch(loadLabels(apiUrl));
     };
 

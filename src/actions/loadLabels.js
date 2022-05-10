@@ -4,6 +4,7 @@ import setLoading from "./setLoading";
 import { setApiError } from "./setApiError";
 import { createAlert } from "./createAlert";
 
+
 export default function loadLabels(apiUrl) {
     const origin = window.location.origin;
     const url = apiUrl;
@@ -36,6 +37,7 @@ export default function loadLabels(apiUrl) {
                                 values: [],
                             }));
                         if (labels) {
+                            console.log("loding labels from loadLabels")
                             dispatch(setLabels(labels || []));
                             dispatch(setApiError(""));
                             dispatch(setLoading(false));
@@ -48,6 +50,7 @@ export default function loadLabels(apiUrl) {
                     
                     dispatch(setApiError(""));
                     dispatch(setLabels([]));
+                
                 }
             })
             .catch((error) => {

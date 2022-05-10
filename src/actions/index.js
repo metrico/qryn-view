@@ -20,3 +20,4 @@ export * from "./removeAlert";
 export * from "./setFromTime";
 export * from "./setToTime";
 export * from "./setTheme";
+export * from "./setIsEmptyView";

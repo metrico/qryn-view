@@ -18,16 +18,20 @@ class DataView extends Component {
             matrixData: props.matrixData || [],
             loading: false,
             theme: props.theme,
+            isEmptyView: props.isEmptyView || false
         };
     }
+
     getMatrixForChart = () => {
         return this.props.matrixData;
     };
+
     getLimit = () => {
         return this.props.limit;
     };
 
     render() {
+        
         return (
             <ThemeProvider theme={themes[this.props.theme]}>
                 <DataViewStyled>
@@ -49,11 +53,12 @@ class DataView extends Component {
                                 matrixData={this.getMatrixForChart()}
                             />
                         ) : null}
-                        {this.props.messages.length < 1 &&
-                            this.getMatrixForChart().length < 1 &&
-                            !this.props.loading && <EmptyView />}
-                        <QueryHistory />
+
                         {this.props.loading && <Loader />}
+
+                        {this.props.isEmptyView && <EmptyView />}
+
+                        <QueryHistory />
                     </DataViewCont>
                 </DataViewStyled>
             </ThemeProvider>
@@ -70,6 +75,7 @@ const mapStateToProps = (state) => {
         loading: state.loading,
         matrixData: state.matrixData,
         theme: state.theme,
+        isEmptyView: state.isEmptyView,
     };
 };
 

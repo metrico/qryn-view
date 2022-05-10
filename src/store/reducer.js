@@ -70,6 +70,8 @@ const reducer = (state, action) => {
             return { ...state, time: action.time };
         case "SET_QUERY_RESOLUTION":
             return {...state, queryResolution: action.queryResolution};
+        case "SET_IS_EMPTY_VIEW":
+            return {...state, isEmptyView: action.isEmptyView};
         default:
             return { ...state };
     }

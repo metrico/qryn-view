@@ -116,10 +116,6 @@ export function UpdateStateFromQueryParams() {
                         startParams[param] !== ""
                     ) {
                         dispatch(STORE_ACTIONS[param](startParams[param]));
-
-                        if (param === "apiUrl") {
-                            dispatch(loadLabels(startParams[param]));
-                        }
                     } else if (
                         QUERY_VALUE === param &&
                         startParams[param] !== ""
@@ -307,10 +303,12 @@ export function decodeQuery(query, apiUrl, labels = []) {
             await store.dispatch(
                 loadLabelValues(cleanLabel, newLabels, apiUrl)
             );
+
             const labelsWithValues = store.getState().labels;
             const labelWithValues = labelsWithValues.find(
                 (item) => item?.name === label?.name
             );
+
             let values = labelWithValues.values;
             values = label.values.concat(values);
             values = values
@@ -321,6 +319,8 @@ export function decodeQuery(query, apiUrl, labels = []) {
                 .filter((value) => !!value);
             labelWithValues.values = values;
             labelWithValues.selected = true;
+            console.log('labels changed from labels from query')
+            console.log('here the labels get their values')
             store.dispatch(setLabels(labelsWithValues));
         });
     }
