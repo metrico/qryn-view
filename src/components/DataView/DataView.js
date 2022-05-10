@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { DataViewCont, DataViewStyled, Loader } from "./styled";
+import { DataViewCont, DataViewStyled, Loader, RowLogContent, RowTimestamp } from "./styled";
 
 import ClokiChart from "../../plugins/charts";
 import QueryHistory from "../../plugins/queryhistory";
@@ -46,17 +46,15 @@ class DataView extends Component {
                                   />
                               ))
                             : null} */}
-
+                        {this.props.messages.length > 0 && (
+                            <ExampleWrapper messages={this.props.messages} />
+                        )}
                         {this.getMatrixForChart().length > 0 ? (
                             <ClokiChart
                                 chartLimit={this.getLimit()}
                                 matrixData={this.getMatrixForChart()}
                             />
                         ) : null}
-
-                        {this.props.messages.length > 0 && (
-                            <ExampleWrapper messages={this.props.messages} />
-                        )}
 
                         {this.props.loading && <Loader />}
 
