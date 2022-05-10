@@ -9,6 +9,7 @@ import LogsRow from "./LogsRow";
 import EmptyView from "./EmptyView";
 import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
+import { ExampleWrapper } from "./LogsView";
 class DataView extends Component {
     constructor(props) {
         super(props);
@@ -18,7 +19,7 @@ class DataView extends Component {
             matrixData: props.matrixData || [],
             loading: false,
             theme: props.theme,
-            isEmptyView: props.isEmptyView || false
+            isEmptyView: props.isEmptyView || false,
         };
     }
 
@@ -31,12 +32,11 @@ class DataView extends Component {
     };
 
     render() {
-        
         return (
             <ThemeProvider theme={themes[this.props.theme]}>
                 <DataViewStyled>
                     <DataViewCont>
-                        {this.props.messages.length > 0 &&
+                        {/* {this.props.messages.length > 0 &&
                         this.getMatrixForChart().length < 1
                             ? this.props.messages.map((message, key) => (
                                   <LogsRow
@@ -45,7 +45,7 @@ class DataView extends Component {
                                       key={key}
                                   />
                               ))
-                            : null}
+                            : null} */}
 
                         {this.getMatrixForChart().length > 0 ? (
                             <ClokiChart
@@ -53,6 +53,10 @@ class DataView extends Component {
                                 matrixData={this.getMatrixForChart()}
                             />
                         ) : null}
+
+                        {this.props.messages.length > 0 && (
+                            <ExampleWrapper messages={this.props.messages} />
+                        )}
 
                         {this.props.loading && <Loader />}
 
