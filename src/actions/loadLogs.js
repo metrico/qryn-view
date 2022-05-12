@@ -10,6 +10,7 @@ import { setQueryTime } from "./setQueryTime";
 import setIsEmptyView from "./setIsEmptyView";
 
 // import adjustedStep from "../components/QueryTypeBar/helpers";
+const debugMode = store.getState().debugMode
 export async function getAsyncResponse(
     cb //: callback dispatch function
 ) {
@@ -22,7 +23,7 @@ export function sortMessagesByTimestamp(
     const startTime = performance.now()
    const mess =  messages?.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
    const duration = performance.now() - startTime;
-   console.log("sorting logs took: ",duration," ms")
+   if(debugMode) console.log( "🚧 loadLogs / sorting logs took: ",duration," ms")
    return mess
 
 }
@@ -51,7 +52,7 @@ export function mapStreams (streams) {
         });
     });
     const duration = performance.now() - startTime;
-    console.log("mapping logs took: ",duration," ms")
+    if(debugMode) console.log( "🚧 loadLogs / mapping logs took: ",duration," ms")
     return messages
 };
 
@@ -169,7 +170,7 @@ export default function loadLogs() {
                                 if (idResult.length === 0) {
                                     if (debugMode)
                                         console.log(
-                                            "getting no data from matrix"
+                                            "🚧 loadLogs / getting no data from matrix"
                                         );
                                     dispatch(setIsEmptyView(true));
                                 }

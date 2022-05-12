@@ -46,7 +46,6 @@ export default function loadLabelValues(label, labelList, apiUrl) {
                             l.values = [...values];
                         }
                     });
-                    console.log("labels changed from here")
                     dispatch(setLabels(lsList))
                 } else if(!response) {
                     dispatch(setApiError('URL NOT FOUND'))

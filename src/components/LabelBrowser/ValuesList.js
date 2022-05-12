@@ -110,7 +110,6 @@ export const ValuesList = (props) => {
 
     useEffect(() => {
         setLabelList(labels); // LABELS
-        console.log('labels changed')
     }, [labels]);
 
     const handleRefresh = (e) => {
