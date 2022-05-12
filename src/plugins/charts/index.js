@@ -1,11 +1,8 @@
 import "./jquery-loader";
 import ReactFlot from "react-flot";
 import "react-flot/flot/jquery.flot.time.min";
-
 import "react-flot/flot/jquery.flot.selection.min";
-
 import "react-flot/flot/jquery.flot.crosshair.min";
-
 import loadLogs from "../../actions/loadLogs";
 import { useDispatch } from "react-redux";
 import { setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
@@ -60,11 +57,6 @@ export default function ClokiChart({ matrixData }) {
         }
     }
 
-    /**
-     *
-     * Set chart types
-     */
-
     function plotChartData(data, type, element) {
         const chartSeries = setChartTypeSeries(type);
         const { timeformat, min, max } = formatDateRange(data);
@@ -73,7 +65,7 @@ export default function ClokiChart({ matrixData }) {
             data,
             $q.extend(true, {}, chartOptions, {
                 ...chartSeries,
-                xaxis: { timeformat, min, max, },
+                xaxis: { timeformat, min, max },
             })
         );
     }
@@ -139,10 +131,10 @@ export default function ClokiChart({ matrixData }) {
                         min: ranges.xaxis.from - 100000,
                         max: ranges.xaxis.to + 100000,
                         timeformat: formatDateRange(newData).timerange,
-
                     },
                 })
             );
+
             $q(chartRef.current).UseTooltip(plot);
             setTimeout(() => {
                 const fromTime = ranges.xaxis.from;
@@ -160,7 +152,7 @@ export default function ClokiChart({ matrixData }) {
                 const toLabel = format(toTs, "yyyy/MM/dd HH:mm:ss");
 
                 const timeRangeLabel = `${fromLabel}-${toLabel}`;
-                
+
                 dispatch(setStopTime(toTs));
                 dispatch(setStartTime(fromTs));
 
@@ -172,11 +164,6 @@ export default function ClokiChart({ matrixData }) {
             console.log("error on chart redraw", e);
         }
     }
-
-    /**
-     *
-     *Isolate Series clicking label
-     */
 
     function onLabelClick(e, v) {
         let newList = [];
@@ -220,7 +207,7 @@ export default function ClokiChart({ matrixData }) {
 
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
-                    xaxis: { timeformat, min, max, },
+                    xaxis: { timeformat, min, max },
                 })
             );
 
@@ -246,7 +233,7 @@ export default function ClokiChart({ matrixData }) {
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
-                    xaxis: { timeformat, min, max, },
+                    xaxis: { timeformat, min, max },
                 })
             );
 
@@ -281,7 +268,7 @@ export default function ClokiChart({ matrixData }) {
                 newData,
                 $q.extend(true, {}, chartOptions, {
                     series: getSeriesFromChartType(chartType),
-                    xaxis: { timeformat, min, max, },
+                    xaxis: { timeformat, min, max },
                 })
             );
 
@@ -302,7 +289,7 @@ export default function ClokiChart({ matrixData }) {
     };
 
     return (
-        <div style={{ margin: '10px' }}>
+        <div style={{ margin: "10px" }}>
             <ChartTools
                 matrixData={matrixData}
                 chartType={chartType}
@@ -316,10 +303,10 @@ export default function ClokiChart({ matrixData }) {
                 ref={chartRef}
                 id={"chart-container"}
                 style={{
-                    width: '100%',
+                    width: "100%",
                     height: "220px",
-                    display: 'block',
-                    position: 'relative'
+                    display: "block",
+                    position: "relative",
                 }}
             ></div>
 

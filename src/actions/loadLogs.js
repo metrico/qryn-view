@@ -76,8 +76,7 @@ export default function loadLogs() {
     const time = localStore.time || new Date().getTime() + "000000";
     const parsedStart = getTimeParsed(startTs);
     const parsedStop = getTimeParsed(stopTs);
-    const parsedTime =
-        "&start=" + (from || parsedStart) + "&end=" + (to || parsedStop);
+    const parsedTime = "&start=" + (from || parsedStart) + "&end=" + (to || parsedStop);
 
     if (findRangeByLabel(rangeLabel)) {
         ({ dateStart: startTs, dateEnd: stopTs } = findRangeByLabel(

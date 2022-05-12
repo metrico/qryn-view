@@ -83,7 +83,14 @@ export function UpdateStateFromQueryParams() {
         theme: setTheme,
     };
 
-    const STRING_VALUES = ["limit", "step", "apiUrl", "theme", "queryType","time"];
+    const STRING_VALUES = [
+        "limit",
+        "step",
+        "apiUrl",
+        "theme",
+        "queryType",
+        "time",
+    ];
 
     const QUERY_VALUE = "query";
 
@@ -123,6 +130,7 @@ export function UpdateStateFromQueryParams() {
                         const parsedQuery = decodeURIComponent(
                             startParams[param]
                         );
+
                         dispatch(STORE_ACTIONS[param](parsedQuery));
                     } else if (
                         TIME_VALUES.includes(param) &&
@@ -319,8 +327,6 @@ export function decodeQuery(query, apiUrl, labels = []) {
                 .filter((value) => !!value);
             labelWithValues.values = values;
             labelWithValues.selected = true;
-            console.log('labels changed from labels from query')
-            console.log('here the labels get their values')
             store.dispatch(setLabels(labelsWithValues));
         });
     }

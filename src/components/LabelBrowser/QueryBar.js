@@ -67,9 +67,6 @@ export const QueryBar = () => {
     const onValueDisplay = (e) => {
         e.preventDefault();
         const isOpen = labelsBrowserOpen ? false : true;
-        if (isOpen) {
-            dispatch(loadLabels(apiUrl));
-        }
         dispatch(setLabelsBrowserOpen(isOpen));
     };
 

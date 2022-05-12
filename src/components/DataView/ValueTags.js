@@ -49,8 +49,8 @@ export default function ValueTags({ tags }) {
                     true || labelValue.inverted !== isInverted;
                 labelValue.inverted = !labelValue.inverted && isInverted;
                 label.selected = label.values.some((value) => value.selected);
-                console.log("labels set at value tags if labelvalue")
                 store.dispatch(setLabels(labels));
+                
             } else {
                 await store.dispatch(loadLabelValues(label, labels, apiUrl));
                 const updatedLabels = store.getState().labels;
