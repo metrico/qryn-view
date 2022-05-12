@@ -1,11 +1,42 @@
 import { setQuery } from "../../../actions";
 import store from "../../../store/store";
 
-export function queryBuilder(labels) {
+export const PIPE_PARSE = [
+    {
+        label: "json",
+    },
+    {
+        label: "regexp",
+        text: 'regexp ""',
+    },
+    {
+        label: "logfmt",
+    },
+    {
+        label: "pattern",
+    },
+];
+
+const pipeParseOpts = ["json", "regexp", "logfmt", "pattern", "~", "="];
+
+export function queryBuilder(labels, hasPipe = false, pipeLabels = []) {
     const actualQuery = store.getState().query;
     const preTags = actualQuery.split("{")[0];
-    const postTags = actualQuery.split("}")[1];
+    let postTags = "";
+
+    if (hasPipe) {
+        postTags = actualQuery.split("}")[1];
+        const expParse = actualQuery.split(/[|]/);
+        if (pipeParseOpts.some((s) => expParse[1].includes(s))) {
+            const pipeTags = ` | ${pipeLabels}`;
+            postTags = postTags.toString().concat(pipeTags.toString());
+        }
+    } else {
+        postTags = actualQuery.split("}")[1];
+    }
+
     const selectedLabels = [];
+
     for (const label of labels) {
         if (label.selected && label.values && label.values.length > 0) {
             const selectedValues = label.values
@@ -27,12 +58,14 @@ export function queryBuilder(labels) {
             });
         }
     }
+    
     return [preTags, "{", selectedLabels.join(","), "}", postTags].join("");
 }
 
-export function queryBuilderWithLabels() {
+export function queryBuilderWithLabels(hasPipe = false, pipeLabels = []) {
     const labels = store.getState().labels;
 
-    const query = queryBuilder(labels);
+    const query = queryBuilder(labels, hasPipe, pipeLabels);
+
     store.dispatch(setQuery(query));
 }

@@ -30,9 +30,9 @@ const ValuesListStyled = styled.div`
     background: ${(props) => props.theme.widgetContainer};
     .valuelist-content {
         small {
-            color: ${(props) => props.theme.textColor} !important;
+            color: ${(props) => props.theme.textColor};
             background: ${(props) => props.theme.buttonDefault} !important;
-            border: 1px solid ${(props) => props.theme.buttonBorder} !important;
+            border: 1px solid ${(props) => props.theme.buttonBorder};
             margin: 5px;
             padding: 4px 8px;
             border-radius: 3px;
@@ -104,13 +104,9 @@ export const ValuesList = (props) => {
     const dispatch = useDispatch();
     const debug = useSelector((store) => store.debugMode);
     const apiUrl = useSelector((store) => store.apiUrl);
-    if (debug) console.log("🚧 LOGIC/LabelBrowser/ValuesList", apiUrl);
+  
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen);
     const CLEAR = "clear";
-
-    useEffect(() => {
-        dispatch(loadLabels(apiUrl));
-    }, [apiUrl]);
 
     useEffect(() => {
         setLabelList(labels); // LABELS
@@ -118,6 +114,7 @@ export const ValuesList = (props) => {
 
     const handleRefresh = (e) => {
         e.preventDefault();
+        console.log("event handled")
         dispatch(loadLabels(apiUrl));
     };
 

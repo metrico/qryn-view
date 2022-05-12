@@ -6,7 +6,55 @@ import setMatrixData from "./setMatrixData";
 import { nanoid } from "nanoid";
 import { setStartTime, setStopTime } from "./";
 import { findRangeByLabel } from "../components/StatusBar/components/daterangepicker/utils";
+import { setQueryTime } from "./setQueryTime";
+import setIsEmptyView from "./setIsEmptyView";
 
+// import adjustedStep from "../components/QueryTypeBar/helpers";
+const debugMode = store.getState().debugMode
+export async function getAsyncResponse(
+    cb //: callback dispatch function
+) {
+    return await cb;
+}
+
+export function sortMessagesByTimestamp(
+    messages //:array sort by timestamp
+) {
+    const startTime = performance.now()
+   const mess =  messages?.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
+   const duration = performance.now() - startTime;
+   if(debugMode) console.log( "🚧 loadLogs / sorting logs took: ",duration," ms")
+   return mess
+
+}
+
+export function fromNanoSec(
+    ts // :timestamp
+) {
+    return parseInt(ts / 1000000);
+}
+
+export function mapStreams (streams) {
+    const startTime = performance.now()
+    let messages = []
+
+    streams.forEach((stream) => {
+        stream.values.forEach(([ts,text], i) => {
+            messages.push({
+                type:'stream',
+                timestamp:fromNanoSec(ts),
+                text,
+                tags: stream.stream || {},
+                showTs: true,
+                showLabels: false,
+                id: nanoid(),
+            });
+        });
+    });
+    const duration = performance.now() - startTime;
+    if(debugMode) console.log( "🚧 loadLogs / mapping logs took: ",duration," ms")
+    return messages
+};
 
 export default function loadLogs() {
     const localStore = store.getState();
@@ -18,37 +66,40 @@ export default function loadLogs() {
         label: rangeLabel,
         from,
         to,
+        debugMode,
     } = localStore;
     let { start: startTs, stop: stopTs } = localStore;
-
-    function adjustForTimezone(date){
-
-        var timeOffsetInMS = date.getTimezoneOffset() * 60000;
-        date.setTime(date.getTime() + timeOffsetInMS);
-        return date
-    }
 
     function getTimeParsed(time) {
         return time.getTime() + "000000";
     }
 
-    const timeZone = new Date().getTimezoneOffset()
+    const time = localStore.time || new Date().getTime() + "000000";
     const parsedStart = getTimeParsed(startTs);
     const parsedStop = getTimeParsed(stopTs);
     const parsedTime = "&start=" + (from || parsedStart) + "&end=" + (to || parsedStop);
+
     if (findRangeByLabel(rangeLabel)) {
-        ({ dateStart: startTs, dateEnd: stopTs } =
-            findRangeByLabel(rangeLabel));
+        ({ dateStart: startTs, dateEnd: stopTs } = findRangeByLabel(
+            rangeLabel
+        ));
+
     }
 
     store.dispatch(setStartTime(startTs));
     store.dispatch(setStopTime(stopTs));
-    
+    const queryType = store.getState().queryType;
     const origin = window.location.origin;
     const url = apiUrl;
+
     const queryStep = `&step=${step || 120}`;
     const encodedQuery = `${encodeURIComponent(query)}`;
-    const getUrl = `${url}/loki/api/v1/query_range?query=${encodedQuery}&limit=${limit}${parsedTime}${queryStep}`;
+    const queryUrl = `${url}/loki/api/v1`;
+
+    const rangeEP = `${queryUrl}/query_range?query=${encodedQuery}&limit=${limit}${parsedTime}${queryStep}`;
+    const instantEP = `${queryUrl}/query?query=${encodedQuery}&limit=${limit}&time=${time}`;
+
+    const endpoint = { instant: instantEP, range: rangeEP };
 
     const options = {
         method: "GET",
@@ -58,84 +109,95 @@ export default function loadLogs() {
         },
     };
 
-    const fromNanoSec = (ts) => parseInt(ts / 1000000);
-    const toMiliseC = (ts) => parseInt(ts * 1000);
-    const getTimestamp = (type) => (ts) =>
-        type === "streams"
-            ? fromNanoSec(ts)
-            : type === "matrix"
-                ? toMiliseC(ts)
-                : ts;
-    const mapStreams = (streams, messages, type) => {
-        streams.forEach((stream) => {
-            stream.values.forEach((log, i) => {
-                let [ts, text] = log;
-                messages.push({
-                    type,
-                    timestamp: getTimestamp(type)(ts),
-                    text,
-                    tags:
-                        type === "streams"
-                            ? stream.stream
-                            : type === "matrix"
-                                ? stream.metric
-                                : {},
-                    showTs: true,
-                    showLabels: false,
-                    id: nanoid(),
-                });
-            });
-        });
-    };
-
-    //const mapMatrix
     return async function (dispatch) {
         dispatch(setLoading(true));
+        dispatch(setIsEmptyView(false));
         dispatch(setLogs([]));
         dispatch(setMatrixData([]));
 
         await axios
-            .get(getUrl, options)
+            .get(endpoint[queryType], options)
             ?.then((response) => {
+                if (response?.data?.streams?.length === 0) {
+                    if (debugMode)
+                        console.log(
+                            "🚧 loadLogs / getting no data from streams"
+                        );
+                    dispatch(setIsEmptyView(true));
+                }
                 if (response?.data?.data) {
                     let messages = [];
-                    const result = response?.data?.data?.result; // array
+                    const result = response?.data?.data?.result;
                     const type = response?.data?.data?.resultType;
                     if (type === "streams") {
-                        mapStreams(result, messages, type);
+                        messages = mapStreams(result);
                         dispatch(setMatrixData([]));
-                        const messSorted = messages?.sort((a, b) =>
-                            a.timestamp < b.timestamp ? 1 : -1
-                        );
+                        const messSorted = sortMessagesByTimestamp(messages) 
                         if (messSorted) {
-                            dispatch(setLogs(messSorted || []));
-
-                            dispatch(setLoading(false));
+                            try {
+                                getAsyncResponse(
+                                    dispatch(setLogs(messSorted || []))
+                                ).then(() => {
+                                    if (messSorted.length === 0) {
+                                        if (debugMode)
+                                            console.log(
+                                                "🚧 loadLogs / getting no messages sorted"
+                                            );
+                                        dispatch(setIsEmptyView(true));
+                                    }
+                                    dispatch(setIsEmptyView(false));
+                                    dispatch(setLoading(false));
+                                });
+                                if (queryType === "instant") {
+                                    store.dispatch(setQueryTime(time));
+                                }
+                            } catch (e) {
+                                console.log(e);
+                            }
                         }
                     }
 
                     if (type === "matrix") {
-                        const idResult =
-                            result?.map((m) => ({ ...m, id: nanoid() })) || [];
-                        dispatch(setMatrixData(idResult || []));
-                        dispatch(setLoading(false));
+                        try {
+                            const idResult =
+                                result?.map((m) => ({ ...m, id: nanoid() })) ||
+                                [];
+
+                            getAsyncResponse(
+                                dispatch(setMatrixData(idResult || []))
+                            ).then(() => {
+                                dispatch(setLoading(false));
+                                if (idResult.length === 0) {
+                                    if (debugMode)
+                                        console.log(
+                                            "🚧 loadLogs / getting no data from matrix"
+                                        );
+                                    dispatch(setIsEmptyView(true));
+                                }
+                                dispatch(setIsEmptyView(false));
+                            });
+                        } catch (e) {
+                            if (debugMode)
+                                console.log(
+                                    "🚧 loadLogs / getting an error from rendering matrix type streams"
+                                );
+                            console.log(e);
+                        }
                     }
-                   // dispatch(setLoading(false));
                 } else {
                     dispatch(setLogs([]));
                     dispatch(setMatrixData([]));
-                    dispatch(setLoading(false));
+
+                    //
                 }
-               // dispatch(setLoading(false));
             })
             .catch((error) => {
-
                 dispatch(setLogs([]));
                 dispatch(setMatrixData([]));
-
                 dispatch(setLoading(false));
-    
-
+                if (debugMode)
+                    console.log("getting an error from response: ", error);
+                dispatch(setIsEmptyView(true));
             });
     };
 }

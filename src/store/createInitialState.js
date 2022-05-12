@@ -25,9 +25,11 @@ export default function initialState() {
         linksHistory: linkService.getAll() || [],
         timeRange: [],
         query: urlState.query || "",
+        queryType: urlState.queryType || 'range',
         logs: [],
         matrixData: [],
         loading: false,
+        queryResolution: 1,
         start:
             urlState.start ||
             new Date(
@@ -35,6 +37,7 @@ export default function initialState() {
                     .subtract(5, "minutes")
                     .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
             ),
+        time: urlState.time || '',
         stop:
             urlState.end ||
             new Date(moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
@@ -60,6 +63,7 @@ export default function initialState() {
         chartType: "line",
         notifications: [],
         theme: urlState.theme || "dark",
+        isEmptyView: false,
     };
     const debug = state.debugMode;
     if (debug) console.log("🚧 LOGIC/ INITIAL STATE ::: ", state);

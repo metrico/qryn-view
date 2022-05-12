@@ -15,6 +15,7 @@ export function getRowColor(tags) {
 }
 
 export function toggleActiveStyles(idx) {
+    console.log(idx, 'toggled')
     return idx.showLabels
         ? "value-tags-container labelsActive"
         : "value-tags-container labelsInactive";

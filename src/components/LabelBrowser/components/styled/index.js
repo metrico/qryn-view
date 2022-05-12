@@ -29,6 +29,7 @@ export const ShowLabelsBtn = styled(BtnSmall)`
     transition: 0.25s all;
     justify-content: flex-start;
     color: ${({ theme }) => theme.textColor};
+    height: 28px;
     &:hover {
         background: ${({ theme }) => theme.buttonHover};
     }
@@ -42,7 +43,7 @@ export const ShowLabelsBtn = styled(BtnSmall)`
 export const QueryBarContainer = styled.div`
     display: flex;
     padding: 3px 6px;
-    margin: 5px 0px;
+    margin-top:5px;
     margin-left: 0px;
     background: ${({ theme }) => theme.widgetContainer};
     flex-wrap: wrap;
@@ -62,6 +63,7 @@ export const ShowLogsBtn = styled(BtnSmall)`
         background: ${(props) => props.theme.buttonDefault};
         border:1px solid ${(props)=>props.theme.buttonBorder};
         cursor: not-allowed;
+        color: ${props => props.theme.textColor};
     }
     @media screen and (max-width: 864px) {
         display: ${(props) => (props.isMobile ? "flex" : "none")};

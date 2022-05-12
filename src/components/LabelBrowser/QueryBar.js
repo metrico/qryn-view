@@ -25,6 +25,7 @@ import debugLog from "./helpers/debugLog";
 import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
 import { sendLabels } from "../../hooks/useLabels";
+import QueryTypeBar from "../QueryTypeBar";
 
 export const QueryBar = () => {
     const dispatch = useDispatch();
@@ -66,9 +67,6 @@ export const QueryBar = () => {
     const onValueDisplay = (e) => {
         e.preventDefault();
         const isOpen = labelsBrowserOpen ? false : true;
-        if (isOpen) {
-            dispatch(loadLabels(apiUrl));
-        }
         dispatch(setLabelsBrowserOpen(isOpen));
     };
 
@@ -85,7 +83,6 @@ export const QueryBar = () => {
             onSubmit(e);
         }
     };
-
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -171,6 +168,7 @@ export const QueryBar = () => {
                             isMobile={false}
                         />
                     </QueryBarContainer>
+                    <QueryTypeBar />
                 </ThemeProvider>
             </div>
         )
