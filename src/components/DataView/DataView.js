@@ -1,21 +1,19 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
-import { DataViewCont, DataViewStyled, Loader, RowLogContent, RowTimestamp } from "./styled";
-
+import { DataViewCont, DataViewStyled, Loader } from "./styled";
 import ClokiChart from "../../plugins/charts";
 import QueryHistory from "../../plugins/queryhistory";
-import LogsRow from "./LogsRow";
 import EmptyView from "./EmptyView";
 import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
-import { ExampleWrapper } from "./LogsView";
+import { LogRows } from "./LogRows";
 class DataView extends Component {
     constructor(props) {
         super(props);
+        const { messages } = props || [];
         this.state = {
             limit: props.limit || 100,
-            messages: props.messages || [],
+            messages,
             matrixData: props.matrixData || [],
             loading: false,
             theme: props.theme,
@@ -36,18 +34,8 @@ class DataView extends Component {
             <ThemeProvider theme={themes[this.props.theme]}>
                 <DataViewStyled>
                     <DataViewCont>
-                        {/* {this.props.messages.length > 0 &&
-                        this.getMatrixForChart().length < 1
-                            ? this.props.messages.map((message, key) => (
-                                  <LogsRow
-                                      message={message}
-                                      toggleTagsActive={this.toggleTagsActive}
-                                      key={key}
-                                  />
-                              ))
-                            : null} */}
                         {this.props.messages.length > 0 && (
-                            <ExampleWrapper messages={this.props.messages} />
+                            <LogRows messages={this.props.messages} />
                         )}
                         {this.getMatrixForChart().length > 0 ? (
                             <ClokiChart
@@ -71,8 +59,6 @@ class DataView extends Component {
 const mapStateToProps = (state) => {
     return {
         messages: state.logs,
-        start: state.start,
-        stop: state.stop,
         limit: state.limit,
         loading: state.loading,
         matrixData: state.matrixData,
