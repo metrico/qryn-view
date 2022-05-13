@@ -1,5 +1,6 @@
 import * as moment from "moment";
 import {
+    getItemsLength,
     highlightItems,
     isFloat,
     isLAbelSelected,
@@ -7,7 +8,6 @@ import {
 } from "./helpers";
 
 const $q = window.jQuery;
-
 export default function UseTooltip(plot) {
     let previousPoint = null;
     $q("#tooltip").remove();
@@ -60,7 +60,7 @@ export default function UseTooltip(plot) {
                 previousPoint = item.datapoint;
                 $q("#tooltip").remove();
                 const tooltipTemplate = `
-                <div style="${"display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #666;padding:6px"}">
+                <div style="${"display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #666;padding:6px;flex:1"}">
                 <p>${moment(item.datapoint[0]).format(
                     "YYYY-MM-DDTHH:mm:ss.SSSZ"
                 )}</p>
@@ -72,7 +72,7 @@ export default function UseTooltip(plot) {
                 ${labelsFormatted}
                 </div>
                 `;
-                const labelLength = item.series.label.length;
+                const labelLength =  getItemsLength(labelsList)
                 showTooltip(
                     item.pageX,
                     item.pageY,
@@ -88,15 +88,19 @@ export default function UseTooltip(plot) {
 }
 
 function showTooltip(x, y, contents, length) {
+    // calculate the xpos with mouse position
+
     let wWidth = window.innerWidth;
-    let posX = x + 20;
-    if (x * 2 > wWidth) {
-        posX = x - length * 8;
+    let halfScreen = wWidth / 2
+
+    let posX
+    const clientX = window.event.clientX;
+    posX = clientX
+    if(clientX > halfScreen) {
+        posX -= length < 125 ? (length *6) + 15 : 505;
     }
 
-    // use ref for tooltip as made with chart!
-
-    $q(`<div id="tooltip">` + contents + `</div>`)
+ $q(`<div id="tooltip">` + contents + `</div>`)
         .css({
             position: "absolute",
             display: "none",
@@ -104,7 +108,8 @@ function showTooltip(x, y, contents, length) {
             left: posX,
             padding: "6px",
             "font-size": "12px",
-            size: "10",
+            "flex-direction":"column",
+            "max-width":"500px",
             "border-radius": "6px 6px 6px 6px",
             "background-color": "#333",
             color: "#aaa",

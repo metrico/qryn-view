@@ -10,7 +10,7 @@ import { setQueryTime } from "./setQueryTime";
 import setIsEmptyView from "./setIsEmptyView";
 
 // import adjustedStep from "../components/QueryTypeBar/helpers";
-const debugMode = store.getState().debugMode
+const debugMode = store.getState().debugMode;
 export async function getAsyncResponse(
     cb //: callback dispatch function
 ) {
@@ -20,12 +20,12 @@ export async function getAsyncResponse(
 export function sortMessagesByTimestamp(
     messages //:array sort by timestamp
 ) {
-    const startTime = performance.now()
-   const mess =  messages?.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
-   const duration = performance.now() - startTime;
-   if(debugMode) console.log( "🚧 loadLogs / sorting logs took: ",duration," ms")
-   return mess
-
+    const startTime = performance.now();
+    const mess = messages?.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
+    const duration = performance.now() - startTime;
+    if (debugMode)
+        console.log("🚧 loadLogs / sorting logs took: ", duration, " ms");
+    return mess;
 }
 
 export function fromNanoSec(
@@ -34,15 +34,15 @@ export function fromNanoSec(
     return parseInt(ts / 1000000);
 }
 
-export function mapStreams (streams) {
-    const startTime = performance.now()
-    let messages = []
+export function mapStreams(streams) {
+    const startTime = performance.now();
+    let messages = [];
 
     streams.forEach((stream) => {
-        stream.values.forEach(([ts,text], i) => {
+        stream.values.forEach(([ts, text], i) => {
             messages.push({
-                type:'stream',
-                timestamp:fromNanoSec(ts),
+                type: "stream",
+                timestamp: fromNanoSec(ts),
                 text,
                 tags: stream.stream || {},
                 showTs: true,
@@ -52,9 +52,10 @@ export function mapStreams (streams) {
         });
     });
     const duration = performance.now() - startTime;
-    if(debugMode) console.log( "🚧 loadLogs / mapping logs took: ",duration," ms")
-    return messages
-};
+    if (debugMode)
+        console.log("🚧 loadLogs / mapping logs took: ", duration, " ms");
+    return messages;
+}
 
 export default function loadLogs() {
     const localStore = store.getState();
@@ -77,13 +78,13 @@ export default function loadLogs() {
     const time = localStore.time || new Date().getTime() + "000000";
     const parsedStart = getTimeParsed(startTs);
     const parsedStop = getTimeParsed(stopTs);
-    const parsedTime = "&start=" + (from || parsedStart) + "&end=" + (to || parsedStop);
+    const parsedTime =
+        "&start=" + (from || parsedStart) + "&end=" + (to || parsedStop);
 
     if (findRangeByLabel(rangeLabel)) {
         ({ dateStart: startTs, dateEnd: stopTs } = findRangeByLabel(
             rangeLabel
         ));
-
     }
 
     store.dispatch(setStartTime(startTs));
@@ -132,7 +133,7 @@ export default function loadLogs() {
                     if (type === "streams") {
                         messages = mapStreams(result);
                         dispatch(setMatrixData([]));
-                        const messSorted = sortMessagesByTimestamp(messages) 
+                        const messSorted = sortMessagesByTimestamp(messages);
                         if (messSorted) {
                             try {
                                 getAsyncResponse(
@@ -186,17 +187,17 @@ export default function loadLogs() {
                     }
                 } else {
                     dispatch(setLogs([]));
-                    dispatch(setMatrixData([]));
 
-                    //
+                    dispatch(setMatrixData([]));
                 }
             })
             .catch((error) => {
+
                 dispatch(setLogs([]));
                 dispatch(setMatrixData([]));
                 dispatch(setLoading(false));
-                if (debugMode)
-                    console.log("getting an error from response: ", error);
+
+                if (debugMode) console.log("getting an error from response: ", error);
                 dispatch(setIsEmptyView(true));
             });
     };
