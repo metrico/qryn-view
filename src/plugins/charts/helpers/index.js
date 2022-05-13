@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import {
     CHART_BAR_SERIES,
     CHART_LINE_SERIES,
@@ -15,27 +16,41 @@ export function isFloat(x) {
     return !!(x % 1);
 }
 
-export function makeTolltipItems(list) {
-    const sorted = list.filter(
+export function getSortedItems(list) {
+    return list.filter(
         (f) => parseFloat(f.value) === parseFloat(f.item.datapoint[1])
     );
+}
 
-    return sorted
+export function getLabelTemplate(sortedList) {
+    return sortedList
         ?.map(
-            (template) => `
-                    <div style="display:flex;justify-content:space-between">
-                       <div style="display:flex;margin-right:10px;">  
-                           <span style="background:${template.color};height:6px;width:24px;pading:3px;border-radius:1px;margin:4px;"></span>
-                               <p style="white-space:nowrap">${template.label}</p>
-                        </div>
+            (template) =>
+                ` <div style="display:flex;justify-content:space-between">
+                           <div style="display:flex;margin-right:10px;">
+                               <span style="background:${template.color};
+                               height:6px;width:24px;pading:3px;
+                               border-radius:1px;margin:4px;"></span> 
+                               <p style="display:flex;flex-wrap:wrap;
+                               line-height:1.25">${template.label}</p>
+                            </div>
                         <div>
-                 
-                        </div>
-                        </div>
-                        
-`
+                    </div>
+                </div>
+    `
         )
+
         .join("");
+}
+
+export function makeTolltipItems(list) {
+    const sorted = getSortedItems(list);
+    return getLabelTemplate(sorted);
+}
+
+export function getItemsLength(list) {
+    const sList = getSortedItems(list)
+    return sList.sort((a,b) => (a.label.length > b.label.length ? 0 : 1))[0].label.length
 }
 
 export function getTimeSpan(data) {
@@ -114,11 +129,11 @@ export function setTypeToLocal(type) {
 
 export function formatLabel(labels) {
     return (
-        "{" +
+        "{ " +
         Object.entries(labels)
             .map(([key, value]) => `${key}="${value}"`)
-            .join(",") +
-        "}"
+            .join(", ") +
+        " }"
     );
 }
 
