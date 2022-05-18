@@ -7,6 +7,8 @@ import EmptyView from "./EmptyView";
 import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
 import { LogRows } from "./LogRows";
+import VectorTable from "../VectorTable/VectorTable";
+
 class DataView extends Component {
     constructor(props) {
         super(props);
@@ -47,7 +49,7 @@ class DataView extends Component {
                         {this.props.loading && <Loader />}
 
                         {this.props.isEmptyView && <EmptyView />}
-
+                        <VectorTable/>
                         <QueryHistory />
                     </DataViewCont>
                 </DataViewStyled>
