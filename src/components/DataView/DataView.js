@@ -36,7 +36,7 @@ class DataView extends Component {
             <ThemeProvider theme={themes[this.props.theme]}>
                 <DataViewStyled>
                     <DataViewCont>
-                        {this.props.messages.length > 0 && (
+                        {/* { this.props.messages.length > 0 && (
                             <LogRows messages={this.props.messages} />
                         )}
                         {this.getMatrixForChart().length > 0 ? (
@@ -44,12 +44,12 @@ class DataView extends Component {
                                 chartLimit={this.getLimit()}
                                 matrixData={this.getMatrixForChart()}
                             />
-                        ) : null}
+                        ) : null} */}
 
                         {this.props.loading && <Loader />}
 
                         {this.props.isEmptyView && <EmptyView />}
-                        <VectorTable/>
+                        <VectorTable data={this.props.messages} />
                         <QueryHistory />
                     </DataViewCont>
                 </DataViewStyled>

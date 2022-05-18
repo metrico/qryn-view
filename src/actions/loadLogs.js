@@ -157,6 +157,34 @@ export default function loadLogs() {
                             }
                         }
                     }
+                    if(type === "vector") {
+                        try { 
+                            const idResult = 
+                            result?.map((m) => ({ ...m, id: nanoid() })) ||
+                            [];
+
+                            getAsyncResponse(
+                                dispatch(setLogs(idResult || []))
+                            ).then(() => {
+                                dispatch(setLoading(false));
+                                if (idResult.length === 0) {
+                                    if (debugMode)
+                                        console.log(
+                                            "🚧 loadLogs / getting no data from matrix"
+                                        );
+                                    dispatch(setIsEmptyView(true));
+                                }
+                                dispatch(setIsEmptyView(false));
+                            });
+
+                        } catch(e) {
+                            if (debugMode)
+                            console.log(
+                                "🚧 loadLogs / getting an error from rendering vector type streams"
+                            );
+                        console.log(e);
+                        }
+                    }
 
                     if (type === "matrix") {
                         try {

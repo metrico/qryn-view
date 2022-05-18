@@ -1,15 +1,7 @@
 import { useMemo } from "react";
-import {
-    useAbsoluteLayout,
-    useBlockLayout,
-    useFilters,
-    usePagination,
-    useResizeColumns,
-    useSortBy,
-    useTable,
-} from "react-table";
+import { useBlockLayout, useResizeColumns, useTable } from "react-table";
 
-import { styled } from "@emotion/styled";
+import styled from "@emotion/styled";
 
 // get the datasource
 // format into Columns
@@ -22,8 +14,8 @@ const Styles = styled.div`
     .table {
         display: inline-block;
         border-spacing: 0;
-        border: 1px solid black;
-
+        border: 1px solid lightgray;
+        font-size: 12px;
         .tr {
             :last-child {
                 .td {
@@ -36,8 +28,8 @@ const Styles = styled.div`
         .td {
             margin: 0;
             padding: 0.5rem;
-            border-bottom: 1px solid black;
-            border-right: 1px solid black;
+            border-bottom: 1px solid lightgray;
+            border-right: 1px solid transparent;
 
             ${"" /* In this example we use an absolutely position resizer,
      so this is required. */}
@@ -48,8 +40,8 @@ const Styles = styled.div`
             }
             .resizer {
                 display: inline-block;
-                background: gray;
-                width: 10px;
+                background: lightgray;
+                width: 3px;
                 height: 100%;
                 position: absolute;
                 right: 0;
@@ -60,14 +52,68 @@ const Styles = styled.div`
                 touch-action:none;
 
                 &.isResizing {
-                    background: red;
+                    background: blue;
                 }
             }
         }
     }
 `;
 
+// from JSON const parsed = (rawData['data']['result'])
+
+function prepareCols(data) {
+    let cache = [];
+    for (let header of data) {
+        let metricKeys = Object.keys(header.metric);
+        for (let metric in metricKeys) {
+            if (!cache.includes(metricKeys[metric])) {
+                cache.push(metricKeys[metric]);
+            }
+        }
+    }
+    console.log(cache);
+    return cache;
+}
+
+function setColumnsData(columns) {
+    console.log(columns);
+    return columns
+        ?.map((row) => ({ Header: row, accessor: row }))
+        ?.concat([
+            { Header: "Time", accessor: "time" },
+            { Header: "Value", accessor: "value" },
+        ]);
+}
+function hasKey(obj, value) {
+    return Object.keys(obj).includes(value);
+}
+
+function prepareVectorRows(data) {
+    const cols = prepareCols(data);
+    let rows = [];
+    const dataLength = data.length;
+    const colsLength = cols.length;
+
+    for (let i = 0; i < dataLength; i++) {
+        let dataRow = data[i];
+        let metric = dataRow.metric;
+        let [time, value] = dataRow.value;
+        let row = {};
+        for (let j = 0; j < colsLength; j++) {
+            let col = cols[j];
+
+            row[col] = metric[col] || "";
+        }
+        row.time = time;
+        row.value = value;
+        rows.push(row);
+    }
+    console.log(rows);
+    return rows;
+}
+
 function Table({ columns, data }) {
+    console.log(columns, data);
     const defaultColumn = useMemo(
         () => ({
             minWidth: 30,
@@ -123,9 +169,9 @@ function Table({ columns, data }) {
                         prepareRow(row);
                         return (
                             <div {...row.getRowProps()} className="tr" key={i}>
-                                {row.cells.map((cell,idx) => {
+                                {row.cells.map((cell, idx) => {
                                     return (
-                                        <div 
+                                        <div
                                             {...cell.getCellProps()}
                                             key={idx}
                                             className="td"
@@ -143,19 +189,12 @@ function Table({ columns, data }) {
     );
 }
 
-export default function VectorTable() {
-    const cols = [
-        { Header: "Header Label", accessor: "label" },
-        { Header: "Header Labels 2", accessor: "labels2" },
-    ];
-    const data = [
-        { label: "row", labels2: "row2" },
-        { label: "mow", labels2: "mow2" },
-        { label: "dow", labels2: "dow2" },
-    ];
-    const columns = useMemo(() => cols,[]);
+export default function VectorTable(props) {
+    const colsData = prepareCols(props.data);
+    const columnsData = setColumnsData(colsData);
+    const columns = columnsData;
 
-    const dataRows = useMemo(() => data,[]);
+    const dataRows = prepareVectorRows(props.data);
 
     return (
         <Styles>
