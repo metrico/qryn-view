@@ -7,7 +7,8 @@ import EmptyView from "./EmptyView";
 import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
 import { LogRows } from "./LogRows";
-import VectorTable from "../VectorTable/VectorTable";
+import { VectorTable } from "../VectorTable/VectorTable";
+
 
 class DataView extends Component {
     constructor(props) {

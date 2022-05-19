@@ -1,7 +1,17 @@
-import { useMemo } from "react";
-import { useBlockLayout, useResizeColumns, useTable } from "react-table";
+import { useMemo, useState, useEffect, memo, useCallback } from "react";
+import {
+    useBlockLayout,
+    useResizeColumns,
+    useTable,
+    useSortBy,
+    useFlexLayout,
+    useRowSelect,
+} from "react-table";
 
 import styled from "@emotion/styled";
+import memoizeOne from "memoize-one";
+import { FixedSizeList } from "react-window";
+import { sortBy } from "lodash";
 
 // get the datasource
 // format into Columns
@@ -12,24 +22,31 @@ const Styles = styled.div`
     padding: 1rem;
 
     .table {
-        display: inline-block;
         border-spacing: 0;
         border: 1px solid lightgray;
         font-size: 12px;
+
         .tr {
+            display: flex;
             :last-child {
                 .td {
                     border-bottom: 0;
                 }
             }
         }
-
+        .th {
+                :last-child {
+                    box-sizing: unset !important;
+                }
+            }
         .th,
         .td {
+            display: flex;
+            flex: 1;
             margin: 0;
             padding: 0.5rem;
             border-bottom: 1px solid lightgray;
-            border-right: 1px solid transparent;
+            border-right: 1px solid lightgray;
 
             ${"" /* In this example we use an absolutely position resizer,
      so this is required. */}
@@ -37,11 +54,14 @@ const Styles = styled.div`
 
             :last-child {
                 border-right: 0;
+                padding-right: 0px;
             }
+        
+
             .resizer {
                 display: inline-block;
                 background: lightgray;
-                width: 3px;
+                width: 1px;
                 height: 100%;
                 position: absolute;
                 right: 0;
@@ -57,123 +77,246 @@ const Styles = styled.div`
             }
         }
     }
+    .pagination {
+        padding: 0.5rem;
+    }
 `;
 
 // from JSON const parsed = (rawData['data']['result'])
+// PREPARE COLS
+export function prepareCols(data) {
+    const startTime = performance.now();
 
-function prepareCols(data) {
     let cache = [];
-    for (let header of data) {
-        let metricKeys = Object.keys(header.metric);
-        for (let metric in metricKeys) {
-            if (!cache.includes(metricKeys[metric])) {
-                cache.push(metricKeys[metric]);
+    try {
+        for (let header of data) {
+            let metricKeys = Object.keys(header.metric);
+
+            for (let metric in metricKeys) {
+                if (!cache.includes(metricKeys[metric])) {
+                    cache.push(metricKeys[metric]);
+                }
             }
         }
+    } catch (e) {
+        console.log(e);
     }
-    console.log(cache);
+    const duration = performance.now() - startTime;
+    console.log("prepareCols took ", duration, " seconds");
+
     return cache;
 }
 
-function setColumnsData(columns) {
-    console.log(columns);
-    return columns
-        ?.map((row) => ({ Header: row, accessor: row }))
-        ?.concat([
+export function setColumnsData(columns) {
+    const startTime = performance.now();
+    const columnsData = columns?.map((row) => ({ Header: row, accessor: row }));
+    const columnsDated = setColumnsTsValue(columnsData);
+    const duration = performance.now() - startTime;
+    console.log("prepareCols took ", duration, " seconds");
+
+    return columnsDated;
+}
+
+export function setColumnsTsValue(columns) {
+    if (columns.length > 0) {
+        return [
             { Header: "Time", accessor: "time" },
+            ...columns,
             { Header: "Value", accessor: "value" },
-        ]);
-}
-function hasKey(obj, value) {
-    return Object.keys(obj).includes(value);
+        ];
+    } else return [];
 }
 
-function prepareVectorRows(data) {
+// PREPARE ROWS
+export function prepareVectorRows(data) {
+    const startTime = performance.now();
     const cols = prepareCols(data);
-    let rows = [];
-    const dataLength = data.length;
-    const colsLength = cols.length;
+    try {
+        let rows = [];
+        const dataLength = data.length;
+        const colsLength = cols.length;
 
-    for (let i = 0; i < dataLength; i++) {
-        let dataRow = data[i];
-        let metric = dataRow.metric;
-        let [time, value] = dataRow.value;
-        let row = {};
-        for (let j = 0; j < colsLength; j++) {
-            let col = cols[j];
+        for (let i = 0; i < dataLength; i++) {
+            let dataRow = data[i];
+            let metric = dataRow.metric;
+            let [time, value] = dataRow.value;
+            let row = {};
+            for (let j = 0; j < colsLength; j++) {
+                let col = cols[j];
 
-            row[col] = metric[col] || "";
+                row[col] = metric[col] || "";
+            }
+            row.time = time;
+            row.value = value;
+            rows.push(row);
         }
-        row.time = time;
-        row.value = value;
-        rows.push(row);
+
+        const sorted = sortBy( rows , (row) => row.time )
+        const duration = performance.now() - startTime;
+        console.log("prepareVectorRows took ", duration, " seconds");
+        return sorted;
+    } catch (e) {
+        console.log(e);
     }
-    console.log(rows);
-    return rows;
 }
 
 function Table({ columns, data }) {
+
+  const [tableHeight,setTableHeight] = useState(window.innerHeight - 200)
+useEffect(()=>{
+if(tableHeight !== window.innerHeight - 200)
+setTableHeight(window.innerHeight - 200)
+},[setTableHeight, tableHeight])
+
+
+    const getStyles = (props, align = "left") => [
+        props,
+        {
+            style: {
+                justifyContent: align === "right" ? "flex-end" : "flex-start",
+                alignItems: "flex-start",
+                display: "flex",
+            },
+        },
+    ];
+
+    const headerProps = (props, { column }) => getStyles(props, column.align);
+
+    const cellProps = (props, { cell }) => getStyles(props, cell.column.align);
+
     console.log(columns, data);
+
+    const startTime = performance.now();
     const defaultColumn = useMemo(
         () => ({
-            minWidth: 30,
-            width: 150,
-            maxWidth: 400,
+            width: 75,
         }),
         []
     );
 
+    const scrollbarWidth = () => {
+        // thanks too https://davidwalsh.name/detect-scrollbar-width
+        const scrollDiv = document.createElement("div");
+        scrollDiv.setAttribute(
+            "style",
+            "width: 100px; height: 100px; overflow: scroll; position:absolute; top:-9999px;"
+        );
+        document.body.appendChild(scrollDiv);
+        const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+        document.body.removeChild(scrollDiv);
+        return scrollbarWidth;
+    };
+
+    console.log(data);
+
+    const enablePagination = true;
+
+    const duration1 = performance.now() - startTime;
+    if (duration1) {
+        console.log("duration 1 process took: ", duration1 / 1000, " Seconds");
+    }
+    const options = useMemo(() => ({ columns, data, defaultColumn }), [
+        columns,
+        data,
+        defaultColumn,
+    ]);
+
     const {
         getTableProps,
         getTableBodyProps,
+        totalColumnsWidth,
         headerGroups,
         rows,
         prepareRow,
-        resetResizing,
-    } = useTable(
-        { columns, data, defaultColumn },
-        useBlockLayout,
-        useResizeColumns
-    );
-    return (
-        <>
-            <button onClick={resetResizing}>Reset Resizing</button>
-            <div {...getTableProps()} className="table">
-                <div>
-                    {headerGroups.map((headerGroup) => (
-                        <div
-                            {...headerGroup.getHeaderGroupProps()}
-                            className="tr"
-                        >
-                            {headerGroup.headers.map((column) => (
-                                <div
-                                    {...column.getHeaderProps()}
-                                    className="th"
-                                >
-                                    {column.render("Header")}
-                                    <div
-                                        {...column.getResizerProps()}
-                                        className={`resizer ${
-                                            column.isResizing
-                                                ? "isResizing"
-                                                : ""
-                                        }`}
-                                    ></div>
-                                </div>
-                            ))}
-                        </div>
-                    ))}
+        page,
+        state,
+        gotoPage,
+        setPageSize,
+        pageOptions,
+    } = useTable(options, useFlexLayout, useResizeColumns, useSortBy);
+    console.log(data);
+    const duration = performance.now() - duration1;
+
+    if (duration) {
+        console.log("duration 2 process took: ", duration / 1000, " Seconds");
+    }
+
+    const RenderRow = useCallback(
+        ({ index, style }) => {
+            const row = rows[index];
+            prepareRow(row);
+            return (
+                <div
+                    {...row.getRowProps({
+                        style,
+                    })}
+                    className="tr"
+                >
+                    {row.cells.map((cell) => {
+                        return (
+                            <div
+                                {...cell.getCellProps(cellProps)}
+                                className="td"
+                            >
+                                {cell.render("Cell")}
+                            </div>
+                        );
+                    })}
                 </div>
-                <div {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
+            );
+        },
+        [prepareRow, rows]
+    );
+
+    return (
+        <div {...getTableProps()} className="table">
+            <div>
+                {headerGroups.map((headerGroup) => (
+                    <div {...headerGroup.getHeaderGroupProps()} className="tr">
+                        {headerGroup.headers.map((column) => (
+                            <div
+                                {...column.getHeaderProps(column.getSortByToggleProps())}
+                                className="th"
+                            >
+                                {column.render("Header")}
+                                <span>
+                                {column.isSorted
+                      ? column.isSortedDesc
+                        ? ' 🔽'
+                        : ' 🔼'
+                      : ''}
+                                </span>
+                                <div
+                                    {...column.getResizerProps()}
+                                    className={`resizer ${
+                                        column.isResizing ? "isResizing" : ""
+                                    }`}
+                                ></div>
+                            </div>
+                        ))}
+                    </div>
+                ))}
+            </div>
+
+            <div {...getTableBodyProps()}>
+                <FixedSizeList
+                    height={tableHeight}
+                    itemCount={rows.length}
+                    itemSize={26}
+                    width={totalColumnsWidth + scrollbarWidth}
+                >
+                    {RenderRow}
+                </FixedSizeList>
+
+                {/* {rows.map((row) => {
                         prepareRow(row);
                         return (
-                            <div {...row.getRowProps()} className="tr" key={i}>
-                                {row.cells.map((cell, idx) => {
+                            <div {...row.getRowProps()} className="tr">
+                                {row.cells.map((cell) => {
                                     return (
                                         <div
-                                            {...cell.getCellProps()}
-                                            key={idx}
+                                            {...cell.getCellProps(cellProps)}
+                                            
                                             className="td"
                                         >
                                             {cell.render("Cell")}
@@ -182,23 +325,34 @@ function Table({ columns, data }) {
                                 })}
                             </div>
                         );
-                    })}
-                </div>
+                    })} */}
             </div>
-        </>
+        </div>
     );
 }
 
-export default function VectorTable(props) {
-    const colsData = prepareCols(props.data);
-    const columnsData = setColumnsData(colsData);
-    const columns = columnsData;
+// prepare data for the table as table format
+//columns: Header , accessor
+// data [{acccesor:value}]
+export const VectorTable = memo((props) => {
+    // get the data processed before
+    // memoize already processed data ?
+    const startTime = performance.now();
 
-    const dataRows = prepareVectorRows(props.data);
+    const colsData = useMemo(() => prepareCols(props.data), [props.data]);
 
+    const columnsData = useMemo(() => setColumnsData(colsData), [colsData]);
+
+    const dataRows = useMemo(() => prepareVectorRows(props.data), [props.data]);
+
+    const duration = performance.now() - startTime;
+
+    if (duration) {
+        console.log("process took: ", duration, " Seconds");
+    }
     return (
         <Styles>
-            <Table columns={columns} data={dataRows} />
+            <Table columns={columnsData} data={dataRows} />
         </Styles>
     );
-}
+});

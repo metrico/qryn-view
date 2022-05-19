@@ -1,5 +1,4 @@
 export function getInitialState(initialSortBy, columns) {
-
     const state = {};
 
     if (initialSortBy) {

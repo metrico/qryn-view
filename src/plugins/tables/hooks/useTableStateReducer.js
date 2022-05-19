@@ -25,7 +25,7 @@ export function useTableState({ onColumnResize, onSortByChange, data }) {
                         );
                         onColumnResize(fieldDisplayName, width);
                     }
-                    break;
+                    break; 
                 case "toggleSortBy":
                     if (onSortByChange) {
                         const sortByFields = [];

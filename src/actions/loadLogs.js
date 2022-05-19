@@ -159,15 +159,13 @@ export default function loadLogs() {
                     }
                     if(type === "vector") {
                         try { 
-                            const idResult = 
-                            result?.map((m) => ({ ...m, id: nanoid() })) ||
-                            [];
+                       
 
                             getAsyncResponse(
-                                dispatch(setLogs(idResult || []))
+                                dispatch(setLogs(result || []))
                             ).then(() => {
                                 dispatch(setLoading(false));
-                                if (idResult.length === 0) {
+                                if (result.length === 0) {
                                     if (debugMode)
                                         console.log(
                                             "🚧 loadLogs / getting no data from matrix"

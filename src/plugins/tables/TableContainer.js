@@ -1,9 +1,6 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 
-import { applyFieldOverrides } from "@grafana/data";
-import { Collapse, Table } from "@grafana/ui";
-
 import { config } from "app/core/config";
 
 import { PANEL_BORDER } from "app/core/constants";
@@ -13,6 +10,7 @@ import { MetaInfoText } from "./MetaInfoText";
 import { splitOpen } from "./state/main";
 
 import { getFieldLinksForExplore } from "./utils/links";
+import { Table } from "./Tables";
 
 
 
@@ -76,17 +74,7 @@ export class TableContainer extends PureComponent {
 
         let dataFrame = tableResult;
 
-        if (dataFrame?.length) {
-            dataFrame = applyFieldOverrides({
-                data: [dataFrame],
-                timeZone,
-                theme: config.theme2,
-                replaceVariables: (v) => v,
-                fieldConfig: {
-                    defaults: {},
-                    overrides: [],
-                },
-            })[0];
+  
 
             for (const field of dataFrame.fields) {
                 field.getLinks = (config) => {
@@ -99,10 +87,10 @@ export class TableContainer extends PureComponent {
                     });
                 };
             }
-        }
+        
 
         return (
-            <Collapse label="Table" loading={loading} isOpen>
+            <div title="Table"> 
                 {dataFrame?.length ? (
                     <Table
                         ariaLabel={ariaLabel}
@@ -116,7 +104,7 @@ export class TableContainer extends PureComponent {
                         metaItems={[{ value: "0 series returned" }]}
                     />
                 )}
-            </Collapse>
+            </div>
         );
     }
 }
