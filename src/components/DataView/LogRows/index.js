@@ -27,6 +27,7 @@ function Row({ toggleItemActive, index, log }) {
     )
  
 }
+ 
 
 const createItemData = memoize((items, toggleItemActive) => ({
     items,

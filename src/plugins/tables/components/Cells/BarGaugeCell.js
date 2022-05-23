@@ -1,8 +1,6 @@
 import { isFunction } from 'lodash';
 import React from 'react';
 
-import { ThresholdsMode, VizOrientation, getFieldConfigWithMinMax,  } from '@grafana/data';
-
 import { BarGauge, BarGaugeDisplayMode } from '../BarGauge/BarGauge';
 import { DataLinksContextMenu, } from '../DataLinks/DataLinksContextMenu';
 

@@ -14,22 +14,6 @@ import { Table } from "./Tables";
 
 
 
-// how to get the actual data formatted when it comes as a vector ? 
-
-/**
- * 
- * we need the headers and the rows formatted as: 
- * 
- * Headers: 
- *  const columns = React.useMemo(
- * ()=> [
- *  {Header: 'Name' <= the actual header name,
- *    columns:  }
- * 
- * ])
- * 
- * Rows:  
- * */
 function mapStateToProps(state, { exploreId }) {
     const explore = state.explore;
 
@@ -54,7 +38,6 @@ function getTableHeight(tableResult) {
     return Math.max(Math.min(600, tableResult.length * 35) + 35);
 }
 
-
 export class TableContainer extends PureComponent {
     render() {
         const {
@@ -74,23 +57,20 @@ export class TableContainer extends PureComponent {
 
         let dataFrame = tableResult;
 
-  
-
-            for (const field of dataFrame.fields) {
-                field.getLinks = (config) => {
-                    return getFieldLinksForExplore({
-                        field,
-                        rowIndex: config.valueRowIndex,
-                        splitOpenFn: splitOpen,
-                        range,
-                        dataFrame: dataFrame,
-                    });
-                };
-            }
-        
+        for (const field of dataFrame.fields) {
+            field.getLinks = (config) => {
+                return getFieldLinksForExplore({
+                    field,
+                    rowIndex: config.valueRowIndex,
+                    splitOpenFn: splitOpen,
+                    range,
+                    dataFrame: dataFrame,
+                });
+            };
+        }
 
         return (
-            <div title="Table"> 
+            <div title="Table">
                 {dataFrame?.length ? (
                     <Table
                         ariaLabel={ariaLabel}
