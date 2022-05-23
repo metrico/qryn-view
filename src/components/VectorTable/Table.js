@@ -1,27 +1,65 @@
-import { ThemeProvider } from "@emotion/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useFlexLayout, useResizeColumns, useSortBy, useTable } from "react-table";
+import {
+    useFlexLayout,
+    useResizeColumns,
+    useSortBy,
+    useTable,
+} from "react-table";
+
 import { FixedSizeList } from "react-window";
 import { scrollbarWidth } from "./helpers";
-import { getStyles, TableStyles } from "./styles";
-import { themes } from '../../theme/themes'
+import { getStyles } from "./styles";
 import { useSelector } from "react-redux";
+import { addLabel } from "../DataView/ValueTags";
+import { ZoomIn, ZoomOut } from "@mui/icons-material/";
 
+export const AddLabels = ({ tkey, value, query }) => {
+    return (
+        <div className="show-add-labels">
+            <span
+                aria-label="Filter for value"
+                title="Filter for value"
+                onClick={(e) => addLabel(e, tkey, value, false, query)}
+                className={"icon"}
+            >
+                <ZoomIn
+                    color="primary"
+                    style={{
+                        width: "18px",
+                        height: "18px",
+                    }}
+                />
+            </span>
+            <span
+                aria-label="Filter out value"
+                title="Filter out value"
+                onClick={(e) => addLabel(e, tkey, value, true, query)}
+                className={"icon"}
+            >
+                <ZoomOut
+                    color="primary"
+                    style={{
+                        width: "18px",
+                        height: "18px",
+                    }}
+                />
+            </span>
+        </div>
+    );
+};
 
 export function Table({ columns, data }) {
-
-    console.log(columns, data)    
+    console.log(columns, data);
     const [tableHeight, setTableHeight] = useState(window.innerHeight - 200);
 
-
+    const { query } = useSelector((store) => store);
     useEffect(() => {
         if (tableHeight !== window.innerHeight - 200)
             setTableHeight(window.innerHeight - 200);
     }, [setTableHeight, tableHeight]);
 
-
     const cellProps = (props, { cell }) => getStyles(props, cell.column.align);
-    
+
     const defaultColumn = useMemo(
         () => ({
             width: 75,
@@ -29,14 +67,13 @@ export function Table({ columns, data }) {
         []
     );
 
-    const options = useMemo(() => ({ columns, data, defaultColumn }), [
-        columns,
-        data,
-        defaultColumn,
-    ]);
+    const options = useMemo(
+        () => ({ columns, data, defaultColumn }),
+        [columns, data, defaultColumn]
+    );
 
     const {
-        getTableProps, 
+        getTableProps,
         getTableBodyProps,
         totalColumnsWidth,
         headerGroups,
@@ -66,7 +103,14 @@ export function Table({ columns, data }) {
                                 {...cell.getCellProps(cellProps)}
                                 className="td"
                             >
-                                {cell.render("Cell")}
+                                {cell.render("Cell")}{" "}
+                                <AddLabels
+                                    tkey={
+                                        cell.render("Cell").props.column.Header
+                                    }
+                                    value={cell.render("Cell").props.value}
+                                    query={query}
+                                />
                             </div>
                         );
                     })}

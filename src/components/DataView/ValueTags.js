@@ -18,12 +18,7 @@ const ValueTagsStyled = styled.div`
         background: ${(props) => props.theme.widgetContainer};
     }
 `;
-
-export default function ValueTags({ tags }) {
-    const theme = useSelector((store) => store.theme);
-    const isEmbed = useSelector((store) => store.isEmbed);
-    const query = useSelector((store) => store.query);
-    async function addLabel(e, key, value, isInverted = false) {
+export async function addLabel(e, key, value, isInverted = false, query) {
         e.preventDefault();
         e.stopPropagation();
         const { labels, apiUrl } = store.getState();
@@ -76,9 +71,15 @@ export default function ValueTags({ tags }) {
             queryBuilderWithLabels(true, [`${key}${symb}"${value}"`]);
             store.dispatch(loadLogs());
         }
-    }
+}
+    
+export default function ValueTags({ tags }) {
 
+    const theme = useSelector((store) => store.theme);
+    const isEmbed = useSelector((store) => store.isEmbed);
+    const query = useSelector((store) => store.query);
     return (
+
         <ThemeProvider theme={themes[theme]}>
             {Object.entries(tags).map(([key, value], k) => (
                 <ValueTagsStyled key={key}>
@@ -88,7 +89,7 @@ export default function ValueTags({ tags }) {
                                 <span
                                     aria-label="Filter for value"
                                     title="Filter for value"
-                                    onClick={(e) => addLabel(e, key, value)}
+                                    onClick={(e) => addLabel(e, key, value, false, query)}
                                     className={"icon"}
                                 >
                                     <ZoomIn
@@ -103,7 +104,7 @@ export default function ValueTags({ tags }) {
                                     aria-label="Filter out value"
                                     title="Filter out value"
                                     onClick={(e) =>
-                                        addLabel(e, key, value, true)
+                                        addLabel(e, key, value, true, query)
                                     }
                                     className={"icon"}
                                 >

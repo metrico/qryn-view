@@ -29,12 +29,24 @@ export const TableStyles = styled.div`
             flex: 1;
             margin: 0;
             padding: 0.5rem;
+            justify-content:space-between;
             border-bottom: 1px solid ${props => props.theme.buttonBorder};
             border-right: 1px solid ${props => props.theme.buttonBorder};
 
             ${"" /* In this example we use an absolutely position resizer,
      so this is required. */}
             position: relative;
+
+            .show-add-labels{
+                display:none;
+            }
+            &:hover {
+                .show-add-labels{
+                    display:flex;
+                    align-items:center;
+           
+                }
+            }
 
             :last-child {
                 border-right: 0;
@@ -69,8 +81,8 @@ export const getStyles = (props, align = "left") => [
     props,
     {
         style: {
-            justifyContent: align === "right" ? "flex-end" : "flex-start",
-            alignItems: "flex-start",
+            
+            alignItems: "center",
             display: "flex",
         },
     },
