@@ -20,6 +20,7 @@ class DataView extends Component {
             matrixData: props.matrixData || [],
             loading: false,
             theme: props.theme,
+            vectorData: props.vectorData || [],
             isEmptyView: props.isEmptyView || false,
         };
     }
@@ -29,15 +30,18 @@ class DataView extends Component {
     };
 
     getLimit = () => {
+        console.log(this.props.vectorData)
         return this.props.limit;
     };
+
+    
 
     render() {
         return (
             <ThemeProvider theme={themes[this.props.theme]}>
                 <DataViewStyled>
                     <DataViewCont>
-                        {/* { this.props.messages.length > 0 && (
+                        { this.props.messages.length > 0 && (
                             <LogRows messages={this.props.messages} />
                         )}
                         {this.getMatrixForChart().length > 0 ? (
@@ -45,12 +49,13 @@ class DataView extends Component {
                                 chartLimit={this.getLimit()}
                                 matrixData={this.getMatrixForChart()}
                             />
-                        ) : null} */}
+                        ) : null}
 
                         {this.props.loading && <Loader />}
 
                         {this.props.isEmptyView && <EmptyView />}
-                        <VectorTable data={this.props.messages} />
+                        {  this.props.vectorData?.dataRows?.length > 0 && (<VectorTable data={this.props.vectorData} />)}
+                        
                         <QueryHistory />
                     </DataViewCont>
                 </DataViewStyled>
@@ -65,6 +70,7 @@ const mapStateToProps = (state) => {
         limit: state.limit,
         loading: state.loading,
         matrixData: state.matrixData,
+        vectorData: state.vectorData,
         theme: state.theme,
         isEmptyView: state.isEmptyView,
     };

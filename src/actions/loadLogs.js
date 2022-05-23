@@ -10,7 +10,15 @@ import { setQueryTime } from "./setQueryTime";
 import setIsEmptyView from "./setIsEmptyView";
 import { useDispatch } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
-
+import {
+    prepareCols,
+    prepareVectorRows,
+    scrollbarWidth,
+    setColumnsData,
+    setColumnsTsValue,
+} from "../components/VectorTable/helpers";
+import { setTableData } from "./setTableData";
+import { setVectorData } from "./setVectorData";
 // import adjustedStep from "../components/QueryTypeBar/helpers";
 const debugMode = store.getState().debugMode;
 export async function getAsyncResponse(
@@ -66,14 +74,15 @@ function getTimeParsed(time) {
 }
 
 export const responseActions = {
-    stream: (props) => parseStreamResponse(props),
+    streams: (props) => parseStreamResponse(props),
     vector: (props) => parseVectorResponse(props),
     matrix: (props) => parseMatrixResponse(props),
 };
 
-export function parseResponse(responseProps) {
+export async function parseResponse(responseProps) {
     const { type } = responseProps;
-    responseActions[type](responseProps)
+    console.log(type)
+    responseActions[type](responseProps);
 }
 
 export function parseStreamResponse(responseProps) {
@@ -92,7 +101,7 @@ export function parseStreamResponse(responseProps) {
                     dispatch(setIsEmptyView(true));
                 }
                 dispatch(setIsEmptyView(false));
-                dispatch(setLoading(false));
+                //   dispatch(setLoading(false));
             });
             if (queryType === "instant") {
                 store.dispatch(setQueryTime(time));
@@ -108,9 +117,9 @@ export function parseMatrixResponse(responseProps) {
 
     try {
         const idResult = result?.map((m) => ({ ...m, id: nanoid() })) || [];
-
+       // const matrixResponse = { type: "matrix", data: idResult };
         getAsyncResponse(dispatch(setMatrixData(idResult || []))).then(() => {
-            dispatch(setLoading(false));
+            //   dispatch(setLoading(false));
             if (idResult.length === 0) {
                 if (debugMode)
                     console.log("🚧 loadLogs / getting no data from matrix");
@@ -129,10 +138,27 @@ export function parseMatrixResponse(responseProps) {
 
 export function parseVectorResponse(responseProps) {
     // gotta process this sht
+    console.log(responseProps);
     const { result, debugMode, dispatch } = responseProps;
     try {
-        getAsyncResponse(dispatch(setLogs(result || []))).then(() => {
-            dispatch(setLoading(false));
+        // here should dispatch the parsed table view and the state should be a 'tableState' with dataframe identifyed as the 'source'
+
+        const colsData = prepareCols(result);
+        if (colsData.length > 0) {
+            const columnsData = setColumnsData(colsData);
+            console.log(columnsData, "set");
+            const dataRows = prepareVectorRows(result);
+            console.log(dataRows)
+            const vectorTableData = {
+              columnsData,
+                dataRows
+            }
+            console.log(vectorTableData)
+            if (columnsData.length > 0 && dataRows.length > 0) {
+                console.log(vectorTableData)
+                getAsyncResponse(dispatch(setVectorData(vectorTableData || {}))).then(() => {
+                                   console.log(result)
+            //   dispatch(setLoading(false));
             if (result.length === 0) {
                 if (debugMode)
                     console.log("🚧 loadLogs / getting no data from matrix");
@@ -140,6 +166,13 @@ export function parseVectorResponse(responseProps) {
             }
             dispatch(setIsEmptyView(false));
         });
+            }
+
+    
+          
+        }
+
+ 
     } catch (e) {
         if (debugMode)
             console.log(
@@ -198,9 +231,8 @@ export default function loadLogs() {
         "&start=" + (from || parsedStart) + "&end=" + (to || parsedStop);
 
     if (findRangeByLabel(rangeLabel)) {
-        ({ dateStart: startTs, dateEnd: stopTs } = findRangeByLabel(
-            rangeLabel
-        ));
+        ({ dateStart: startTs, dateEnd: stopTs } =
+            findRangeByLabel(rangeLabel));
     }
 
     store.dispatch(setStartTime(startTs));
@@ -217,7 +249,7 @@ export default function loadLogs() {
 
     const endpoint = { instant: instantEP, range: rangeEP };
 
-    const options = {
+    let options = {
         method: "GET",
         headers: {
             "Content-Type": "application/javascript",
@@ -233,7 +265,13 @@ export default function loadLogs() {
         dispatch(setIsEmptyView(false));
         dispatch(setLogs([]));
         dispatch(setMatrixData([]));
-
+        dispatch(setVectorData([]));
+        let cancelToken;
+        if (typeof cancelToken != typeof undefined) {
+            cancelToken.cancel("Cancelling the previous req");
+        }
+        cancelToken = axios.CancelToken.source();
+        options.cancelToken = cancelToken.token;
         await axios
             .get(endpoint[queryType], options)
             ?.then((response) => {
@@ -245,10 +283,10 @@ export default function loadLogs() {
                     dispatch(setIsEmptyView(true));
                 }
                 if (response?.data?.data) {
-                    let messages = [];
                     const result = response?.data?.data?.result;
                     const type = response?.data?.data?.resultType;
-                    const parseProps = {
+                    console.log(result);
+                    return {
                         result,
                         time,
                         debugMode,
@@ -256,110 +294,30 @@ export default function loadLogs() {
                         dispatch,
                         type,
                     };
-                    parseResponse(parseProps)
-
-                    // if (type === "streams") {
-                    //     const streamProps = {
-                    //         result,
-                    //         time,
-                    //         debugMode,
-                    //         queryType,
-                    //         dispatch,
-                    //         type,
-                    //     };
-
-                    //     messages = mapStreams(result);
-                    //     dispatch(setMatrixData([]));
-                    //     const messSorted = sortMessagesByTimestamp(messages);
-                    //     if (messSorted) {
-                    //         try {
-                    //             getAsyncResponse(
-                    //                 dispatch(setLogs(messSorted || []))
-                    //             ).then(() => {
-                    //                 if (messSorted.length === 0) {
-                    //                     if (debugMode)
-                    //                         console.log(
-                    //                             "🚧 loadLogs / getting no messages sorted"
-                    //                         );
-                    //                     dispatch(setIsEmptyView(true));
-                    //                 }
-                    //                 dispatch(setIsEmptyView(false));
-                    //                 dispatch(setLoading(false));
-                    //             });
-                    //             if (queryType === "instant") {
-                    //                 store.dispatch(setQueryTime(time));
-                    //             }
-                    //         } catch (e) {
-                    //             console.log(e);
-                    //         }
-                    //     }
-                    // }
-                    // if (type === "vector") {
-                    //     // gotta process this sht
-                    //     try {
-                    //         getAsyncResponse(
-                    //             dispatch(setLogs(result || []))
-                    //         ).then(() => {
-                    //             dispatch(setLoading(false));
-                    //             if (result.length === 0) {
-                    //                 if (debugMode)
-                    //                     console.log(
-                    //                         "🚧 loadLogs / getting no data from matrix"
-                    //                     );
-                    //                 dispatch(setIsEmptyView(true));
-                    //             }
-                    //             dispatch(setIsEmptyView(false));
-                    //         });
-                    //     } catch (e) {
-                    //         if (debugMode)
-                    //             console.log(
-                    //                 "🚧 loadLogs / getting an error from rendering vector type streams"
-                    //             );
-                    //         console.log(e);
-                    //     }
-                    // }
-
-                    // if (type === "matrix") {
-                    //     try {
-                    //         const idResult =
-                    //             result?.map((m) => ({ ...m, id: nanoid() })) ||
-                    //             [];
-
-                    //         getAsyncResponse(
-                    //             dispatch(setMatrixData(idResult || []))
-                    //         ).then(() => {
-                    //             dispatch(setLoading(false));
-                    //             if (idResult.length === 0) {
-                    //                 if (debugMode)
-                    //                     console.log(
-                    //                         "🚧 loadLogs / getting no data from matrix"
-                    //                     );
-                    //                 dispatch(setIsEmptyView(true));
-                    //             }
-                    //             dispatch(setIsEmptyView(false));
-                    //         });
-                    //     } catch (e) {
-                    //         if (debugMode)
-                    //             console.log(
-                    //                 "🚧 loadLogs / getting an error from rendering matrix type streams"
-                    //             );
-                    //         console.log(e);
-                    //     }
-                    // }
                 } else {
                     dispatch(setLogs([]));
-
+                    dispatch(setVectorData({}));
                     dispatch(setMatrixData([]));
+                    return {};
+                }
+            })
+            .then((parseProps) => {
+                console.log(parseProps);
+                if (Object.keys(parseProps).length > 0) {
+                    parseResponse(parseProps);
                 }
             })
             .catch((error) => {
                 dispatch(setLogs([]));
                 dispatch(setMatrixData([]));
-                dispatch(setLoading(false));
+                dispatch(setVectorData({}))
 
                 if (debugMode)
                     console.log("getting an error from response: ", error);
                 dispatch(setIsEmptyView(true));
+            })
+            .finally(() => {
+                dispatch(setLoading(false));
             });
     };
 }

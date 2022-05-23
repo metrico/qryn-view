@@ -1,13 +1,16 @@
+import { ThemeProvider } from "@emotion/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFlexLayout, useResizeColumns, useSortBy, useTable } from "react-table";
 import { FixedSizeList } from "react-window";
 import { scrollbarWidth } from "./helpers";
 import { getStyles, TableStyles } from "./styles";
-
-
+import { themes } from '../../theme/themes'
+import { useSelector } from "react-redux";
 
 
 export function Table({ columns, data }) {
+
+    console.log(columns, data)    
     const [tableHeight, setTableHeight] = useState(window.innerHeight - 200);
 
 

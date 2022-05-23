@@ -66,12 +66,16 @@ const reducer = (state, action) => {
             return { ...state, debugMode: action.debugMode };
         case "SET_THEME":
             return { ...state, theme: action.theme };
+        case "SET_TABLE_DATA":
+            return { ...state, tableData: action.tableData };
         case "SET_QUERY_TIME":
             return { ...state, time: action.time };
         case "SET_QUERY_RESOLUTION":
             return {...state, queryResolution: action.queryResolution};
         case "SET_IS_EMPTY_VIEW":
-            return {...state, isEmptyView: action.isEmptyView};
+            return { ...state, isEmptyView: action.isEmptyView };
+        case "SET_VECTOR_DATA":
+            return {...state, vectorData: action.vectorData}
         default:
             return { ...state };
     }

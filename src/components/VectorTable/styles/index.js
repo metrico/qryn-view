@@ -1,12 +1,14 @@
-import {styled} from '@emotion/styled'
+import styled from '@emotion/styled'
 
 export const TableStyles = styled.div`
     padding: 1rem;
 
     .table {
         border-spacing: 0;
-        border: 1px solid lightgray;
+        border: 1px solid ${props => props.theme.buttonBorder};
+        border-radius:4px;
         font-size: 12px;
+        color: ${props => props.theme.textColor};
 
         .tr {
             display: flex;
@@ -27,8 +29,8 @@ export const TableStyles = styled.div`
             flex: 1;
             margin: 0;
             padding: 0.5rem;
-            border-bottom: 1px solid lightgray;
-            border-right: 1px solid lightgray;
+            border-bottom: 1px solid ${props => props.theme.buttonBorder};
+            border-right: 1px solid ${props => props.theme.buttonBorder};
 
             ${"" /* In this example we use an absolutely position resizer,
      so this is required. */}
@@ -39,10 +41,9 @@ export const TableStyles = styled.div`
                 padding-right: 0px;
             }
         
-
             .resizer {
                 display: inline-block;
-                background: lightgray;
+                background: ${props => props.theme.buttonBorder};
                 width: 1px;
                 height: 100%;
                 position: absolute;
