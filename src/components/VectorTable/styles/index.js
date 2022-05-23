@@ -11,7 +11,7 @@ export const TableStyles = styled.div`
         color: ${props => props.theme.textColor};
 
         .tr {
-            display: flex;
+            display: block;
             :last-child {
                 .td {
                     border-bottom: 0;
@@ -25,7 +25,7 @@ export const TableStyles = styled.div`
             }
         .th,
         .td {
-            display: flex;
+            display: block;
             flex: 1;
             margin: 0;
             padding: 0.5rem;
@@ -36,7 +36,8 @@ export const TableStyles = styled.div`
             ${"" /* In this example we use an absolutely position resizer,
      so this is required. */}
             position: relative;
-
+            white-space:nowrap;
+            overflow:hidden;
             .show-add-labels{
                 display:none;
             }

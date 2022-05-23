@@ -102,6 +102,7 @@ export function Table({ columns, data }) {
                             <div
                                 {...cell.getCellProps(cellProps)}
                                 className="td"
+                                title={cell.render("Cell").props.value}
                             >
                                 {cell.render("Cell")}{" "}
                                 <AddLabels
