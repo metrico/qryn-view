@@ -28,7 +28,6 @@ export function ApiSelector() {
 
     useEffect(() => {
         setEditedUrl(apiUrl);
-        console.log("labels loaded from apiURL")
         dispatch(loadLabels(apiUrl));
     }, [apiUrl]);
 
@@ -57,7 +56,6 @@ export function ApiSelector() {
         dispatch(setApiUrl(editedUrl));
 
         setEditedUrl(editedUrl);
-        console.log("set from onurlsubmit")
         dispatch(loadLabels(editedUrl));
 
         dispatch(setLabelsBrowserOpen(false));

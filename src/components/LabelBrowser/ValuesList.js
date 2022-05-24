@@ -114,7 +114,6 @@ export const ValuesList = (props) => {
 
     const handleRefresh = (e) => {
         e.preventDefault();
-        console.log("event handled")
         dispatch(loadLabels(apiUrl));
     };
 

@@ -61,7 +61,6 @@ export async function addLabel(e, key, value, isInverted = false, query) {
                 updatedLabel.selected = updatedLabel.values.some(
                     (value) => value.selected
                 );
-                console.log('labels set if no labelvalue')
                 store.dispatch(setLabels(updatedLabels));
             }
             queryBuilderWithLabels();

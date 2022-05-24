@@ -20,10 +20,15 @@
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.1",
+    "@types/node": "^17.0.35",
+    "@types/react": "^17.0.45",
+    "@types/react-dom": "^18.0.5",
     "axios": "^0.25.0",
     "classnames": "^2.3.1",
     "date-fns": "^2.28.0",
     "env-cmd": "^10.1.0",
+    "eslint": "^8.16.0",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "memoize-one": "^6.0.0",
@@ -44,7 +49,8 @@
     "slate": "^0.73.1",
     "slate-history": "^0.66.0",
     "slate-react": "^0.74.2",
-    "tinycolor2": "^1.4.2"
+    "tinycolor2": "^1.4.2",
+    "typescript": "^4.6.4"
   },
   "scripts": {
     "webpack": "webpack",
@@ -54,6 +60,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start": "npx webpack-dev-server",
+    "react-sc": "react-scripts start",
     "build-old": "webpack --mode production",
     "webpack-build": "webpack --config webpack.config.prod.js --mode=production",
     "build": "CI=false && react-scripts build"

@@ -42,7 +42,6 @@ function getIntervalInfo(timespanMs) {
         intervalMs = SECOND;
         interval = "1s";
     }
-    console.log(intervalMs)
     return { interval, intervalMs };
 }
 
@@ -67,6 +66,5 @@ export default function adjustedStep(target, options) {
     const rangeMs = Math.ceil((endNs - startNs) / 1e6);
     const { intervalMs } = getIntervalInfo(rangeMs);
     const intl = adjustInterval(intervalMs || 1000, resolution, rangeMs);
-    console.log(intl)
     return Math.ceil(intl) / 1000;
 }

@@ -30,7 +30,6 @@ class DataView extends Component {
     };
 
     getLimit = () => {
-        console.log(this.props.vectorData)
         return this.props.limit;
     };
 

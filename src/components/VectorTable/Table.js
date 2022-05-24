@@ -49,9 +49,7 @@ export const AddLabels = ({ tkey, value, query }) => {
 };
 
 export function Table({ columns, data }) {
-    console.log(columns, data);
     const [tableHeight, setTableHeight] = useState(window.innerHeight - 200);
-
     const { query } = useSelector((store) => store);
     useEffect(() => {
         if (tableHeight !== window.innerHeight - 200)
