@@ -1,13 +1,16 @@
-import { setLabels } from "../../actions/setLabels";
+
 import { queryBuilderWithLabels } from "../LabelBrowser/helpers/querybuilder";
 import store from "../../store/store";
-import loadLabelValues from "../../actions/loadLabelValues";
-import loadLogs from "../../actions/loadLogs";
+
+
 import { ZoomIn, ZoomOut } from "@mui/icons-material/";
 import { useSelector } from "react-redux";
 import { themes } from "../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
+import { setLabels } from "../../actions";
+import loadLabelValues from "../../actions/loadLabelValues";
+import loadLogs from "../../actions/loadLogs";
 
 const ValueTagsStyled = styled.div`
     color: ${(props) => props.theme.textPrimary};
@@ -21,11 +24,11 @@ const ValueTagsStyled = styled.div`
 export async function addLabel(e, key, value, isInverted = false, query) {
         e.preventDefault();
         e.stopPropagation();
-        const { labels, apiUrl } = store.getState();
+    const { labels, apiUrl } = store.getState();
         const label = labels.find((label) => label.name === key);
         const symb = isInverted ? "!=" : "=";
-        const isAlreadySelected = query.includes(`${key}="${value}"`);
-        const isAlreadyInverted = query.includes(`${key}!="${value}"`);
+    const isAlreadySelected = query.includes(`${key}="${value}"`);
+    const isAlreadyInverted = query.includes(`${key}!="${value}"`);
 
         if (
             (isAlreadyInverted && isInverted) ||

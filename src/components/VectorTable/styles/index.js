@@ -5,7 +5,7 @@ export const TableStyles = styled.div`
 
     .table {
         border-spacing: 0;
-        border: 1px solid ${props => props.theme.buttonBorder};
+   
         border-radius:4px;
         font-size: 12px;
         color: ${props => props.theme.textColor};
@@ -19,6 +19,8 @@ export const TableStyles = styled.div`
             }
         }
         .th {
+            background:${props => props.theme.buttonHover};
+            border-bottom:none;
                 :last-child {
                     box-sizing: unset !important;
                 }

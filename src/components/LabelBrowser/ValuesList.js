@@ -104,7 +104,7 @@ export const ValuesList = (props) => {
     const dispatch = useDispatch();
     const debug = useSelector((store) => store.debugMode);
     const apiUrl = useSelector((store) => store.apiUrl);
-  
+
     const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen);
     const CLEAR = "clear";
 
