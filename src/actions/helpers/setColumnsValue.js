@@ -1,7 +1,7 @@
 /**
  *
  * @param {*} columns : Table columns ;
- * @returns Default Time and Value column headers
+ * @returns Default Time and Value column headers with time formatter
  */
 
 

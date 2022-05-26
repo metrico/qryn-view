@@ -29,8 +29,6 @@ export default function loadLabelValues(label, labelList, apiUrl) {
     };
 
     return async (dispatch) => {
-        dispatch(setLoading(true))
-
         await axios.get(`${url}/loki/api/v1/label/${label.name}/values`, options)
             ?.then(response => {
                 if (response?.data?.data) {
@@ -51,13 +49,10 @@ export default function loadLabelValues(label, labelList, apiUrl) {
                     dispatch(setApiError('URL NOT FOUND'))
                     dispatch(setLabelValues([]))
                 }
-
-                dispatch(setLoading(false));
                 dispatch(setApiError(''))
                 dispatch(setLabelValues(response?.data?.data));
 
             }).catch(error => {
-                dispatch(setLoading(false))
                 const { message } = errorHandler(url, error,'lavelValues')
                 dispatch(setApiError(message || 'API NOT FOUND'))
                 dispatch(setLabelValues([]))

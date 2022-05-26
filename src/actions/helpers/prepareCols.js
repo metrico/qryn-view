@@ -1,12 +1,18 @@
+/**
+ * 
+ * @param {*} data query result
+ * @returns table column names extracted from response
+ */
+
 export function prepareCols(data) {
-    let cache = [];
+    let colNames = [];
     try {
         for (let header of data) {
             let metricKeys = Object.keys(header.metric);
 
             for (let metric in metricKeys) {
-                if (!cache.includes(metricKeys[metric])) {
-                    cache.push(metricKeys[metric]);
+                if (!colNames.includes(metricKeys[metric])) {
+                    colNames.push(metricKeys[metric]);
                 }
             }
         }
@@ -14,5 +20,5 @@ export function prepareCols(data) {
         console.log(e);
     }
 
-    return cache;
+    return colNames;
 }

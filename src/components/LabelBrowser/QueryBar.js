@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setQuery } from "../../actions";
 import loadLogs from "../../actions/loadLogs";
-import setLoading from "../../actions/setLoading";
 import { setLabelsBrowserOpen } from "../../actions/setLabelsBrowserOpen";
 import localService from "../../services/localService";
 import setQueryHistory from "../../actions/setQueryHistory";
@@ -12,8 +11,6 @@ import localUrl from "../../services/localUrl";
 import setLinksHistory from "../../actions/setLinksHistory";
 import QueryEditor from "../../plugins/queryeditor";
 
-import loadLabels from "../../actions/loadLabels";
-import { decodeQuery } from "../../helpers/UpdateStateFromQueryParams";
 import { css } from "@emotion/css";
 import { MobileTopQueryMenu, QueryBarContainer } from "./components/styled";
 import HistoryButton from "./components/HistoryButton/HistoryButton";
@@ -26,6 +23,8 @@ import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
 import { sendLabels } from "../../hooks/useLabels";
 import QueryTypeBar from "../QueryTypeBar";
+import { decodeQuery } from "../../helpers/decodeQuery";
+import setIsEmptyView from "../../actions/setIsEmptyView";
 
 export const QueryBar = () => {
     const dispatch = useDispatch();
@@ -49,12 +48,13 @@ export const QueryBar = () => {
         debug && dLog.logicQueryBar();
         const labels = sendLabels(apiUrl);
         if (isEmbed) dispatch(loadLogs());
-        if (query.length > 0) {
+        if (onQueryValid(query)) {
             debug && dLog.queryBarDispatch();
-            dispatch(setLoading(true));
             return labels.then((data) => {
                 decodeQuery(query, apiUrl, data);
             });
+        } else {
+            dispatch(setIsEmptyView(true))
         }
     }, []);
 
@@ -79,7 +79,6 @@ export const QueryBar = () => {
 
     const handleInputKeyDown = (e) => {
         if (e.code === "Enter" && e.ctrlKey) {
-            dispatch(setLoading(true));
             onSubmit(e);
         }
     };
@@ -96,8 +95,8 @@ export const QueryBar = () => {
                 });
                 dispatch(setQueryHistory(historyUpdated));
                 dispatch(setLabelsBrowserOpen(false));
+                
                 decodeQuery(queryInput, apiUrl, labels);
-                dispatch(setLoading(true));
                 dispatch(loadLogs());
                 const storedUrl = saveUrl.add({
                     data: window.location.href,
@@ -108,9 +107,11 @@ export const QueryBar = () => {
                 console.log(e);
             }
         } else {
+            dispatch(setIsEmptyView(true))
             console.log("Please make a log query", query);
         }
     };
+
     function handleHistoryClick(e) {
         dispatch(setHistoryOpen(!historyOpen));
     }

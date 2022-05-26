@@ -26,7 +26,7 @@ export function queryBuilder(labels, hasPipe = false, pipeLabels = []) {
 
     if (hasPipe) {
         postTags = actualQuery.split("}")[1];
-        const json = /[|json]/
+        const json = /[|json]/;
         const expParse = actualQuery.split(json);
         if (pipeParseOpts.some((s) => expParse[1].includes(s))) {
             const pipeTags = ` | ${pipeLabels}`;
@@ -59,15 +59,12 @@ export function queryBuilder(labels, hasPipe = false, pipeLabels = []) {
             });
         }
     }
-    
+
     return [preTags, "{", selectedLabels.join(","), "}", postTags].join("");
 }
 
 export function queryBuilderWithLabels(hasPipe = false, pipeLabels = []) {
-
     const labels = store.getState().labels;
-console.log(labels)
     const query = queryBuilder(labels, hasPipe, pipeLabels);
-
     store.dispatch(setQuery(query));
 }

@@ -1,6 +1,5 @@
 import axios from "axios";
 import { setLabels } from "./setLabels";
-import setLoading from "./setLoading";
 import { setApiError } from "./setApiError";
 import { createAlert } from "./createAlert";
 
@@ -38,7 +37,7 @@ export default function loadLabels(apiUrl) {
                         if (labels) {
                             dispatch(setLabels(labels || []));
                             dispatch(setApiError(""));
-                            dispatch(setLoading(false));
+               
                         }
                     } else {
                         dispatch(
@@ -49,7 +48,7 @@ export default function loadLabels(apiUrl) {
                         );
                     }
                 } else {
-                    dispatch(setLoading(false));
+             
 
                     dispatch(setApiError(""));
                     dispatch(setLabels([]));
@@ -62,7 +61,6 @@ export default function loadLabels(apiUrl) {
                         message: "API NOT FOUND",
                     })
                 );
-                dispatch(setLoading(false));
                 dispatch(setLabels([]));
             });
     };

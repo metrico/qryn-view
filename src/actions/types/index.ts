@@ -38,3 +38,12 @@ export type QueryOptions = {
 };
 
 export type QueryType = "range" | "instant";
+
+export type QueryParams = {
+    queryUrl?: string;
+    encodedQuery?: string;
+    limit?: number | string;
+    time?: number | string;
+    parsedTime?: number | string;
+    queryStep: number | string;
+};
