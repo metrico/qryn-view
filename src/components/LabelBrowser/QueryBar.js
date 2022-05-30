@@ -97,6 +97,7 @@ export const QueryBar = () => {
                 dispatch(setLabelsBrowserOpen(false));
                 
                 decodeQuery(queryInput, apiUrl, labels);
+                
                 dispatch(loadLogs());
                 const storedUrl = saveUrl.add({
                     data: window.location.href,

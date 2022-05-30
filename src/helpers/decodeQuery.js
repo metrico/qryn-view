@@ -93,12 +93,14 @@ export function decodeQuery(query, apiUrl, labels = []) {
             const labelWithValues = labelsWithValues.find(
                 (item) => item?.name === label?.name
             );
-            let values = labelWithValues.values;
-            values = label.values.concat(values);
+            let values = labelWithValues?.values;
+
+            values = label?.values?.concat(values);
+            
             values = values
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .filter((value, index, arr) => {
-                    return value.name !== arr[index - 1]?.name;
+                    return value?.name !== arr?.[index - 1]?.name;
                 })
                 .filter((value) => !!value);
 
