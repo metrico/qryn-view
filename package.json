@@ -6,7 +6,7 @@
     "url": "git+ssh://git@github.com/metrico/cloki-view.git"
   },
   "author": "joel@qxip.net",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "private": false,
   "dependencies": {
     "@emotion/css": "^11.7.1",
@@ -59,7 +59,7 @@
     "prod": "npm run webpack -- --env mode=production",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start": "npx webpack-dev-server", 
+    "start": "npx webpack-dev-server",
     "rs-start": "react-scripts start",
     "build-old": "webpack --mode production",
     "webpack-build": "webpack --config webpack.config.prod.js --mode=production",
