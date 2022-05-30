@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * @param {*} data query result
  * @returns table column names extracted from response
  */

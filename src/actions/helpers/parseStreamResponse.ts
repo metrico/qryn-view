@@ -1,17 +1,19 @@
-
 import setIsEmptyView from "../setIsEmptyView";
 import setLogs from "../setLogs";
 import setMatrixData from "../setMatrixData";
 import { setQueryTime } from "../setQueryTime";
 import { QueryResult } from "../types";
-import { getAsyncResponse, mapStreams, sortMessagesByTimestamp } from "./parseResponse";
+import {
+    getAsyncResponse,
+    mapStreams,
+    sortMessagesByTimestamp,
+} from "./parseResponse";
 
 /**
- * 
+ *
  * @param responseProps : QueryResult
  * process restult type: stream
  */
-
 
 // add here a table parser for matrix type responses/
 // add labels selector for matrix type responses

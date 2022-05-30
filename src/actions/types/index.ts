@@ -1,4 +1,4 @@
-import {AxiosRequestHeaders, Method} from 'axios'
+import { AxiosRequestHeaders, Method } from "axios";
 
 export type QueryResultType = "streams" | "vector" | "matrix";
 
