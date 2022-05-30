@@ -22,6 +22,11 @@ module.exports = {
                
             },
             {
+                test: /\.ts?x?$/i,
+                use: 'ts-loader',
+                exclude:'/node_modules/',
+            },
+            {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
                 
                 loader: "file-loader",
@@ -44,7 +49,7 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.js', '.jsx', '.css', '.scss', '.json']
+        extensions: ['.ts','.tsx','.js', '.jsx', '.css', '.scss', '.json']
     },
     optimization: {
         minimize: true,
