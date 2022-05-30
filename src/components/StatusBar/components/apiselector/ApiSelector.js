@@ -13,33 +13,35 @@ import {
     ApiSelectorStyled,
 } from "../../styled";
 import loadLabels from "../../../../actions/loadLabels";
+import onQueryValid from "../../../LabelBrowser/helpers/onQueryValid";
 
 export function ApiSelector() {
-    const apiUrl = useSelector((store) => store.apiUrl);
-    const apiError = useSelector((store) => store.apiErrors);
+    const { apiUrl, apiError, query } = useSelector((store) => store);
     const [editedUrl, setEditedUrl] = useState(apiUrl);
     const [apiSelectorOpen, setApiSelectorOpen] = useState(false);
     const dispatch = useDispatch();
     const API_URL = "API URL";
-    
+
     useEffect(() => {
         setEditedUrl(apiUrl);
     }, []);
 
     useEffect(() => {
         setEditedUrl(apiUrl);
-        console.log("labels loaded from apiURL")
         dispatch(loadLabels(apiUrl));
     }, [apiUrl]);
 
     useEffect(() => {
-        if (apiError.length > 0) {
+        if (apiError?.length > 0) {
             setApiSelectorOpen(true);
             dispatch(setLogs([]));
             dispatch(setMatrixData([]));
         } else {
             setApiSelectorOpen(false);
-            dispatch(loadLogs());
+            if (query?.length > 0 && onQueryValid(query)) {
+                 dispatch(loadLogs());
+            }
+           
         }
     }, [apiError]);
 
@@ -57,7 +59,6 @@ export function ApiSelector() {
         dispatch(setApiUrl(editedUrl));
 
         setEditedUrl(editedUrl);
-        console.log("set from onurlsubmit")
         dispatch(loadLabels(editedUrl));
 
         dispatch(setLabelsBrowserOpen(false));

@@ -28,6 +28,7 @@ export default function initialState() {
         queryType: urlState.queryType || 'range',
         logs: [],
         matrixData: [],
+        vectorData:{},
         loading: false,
         queryResolution: 1,
         start:
@@ -62,6 +63,7 @@ export default function initialState() {
         isEmbed: urlState.isEmbed || false,
         chartType: "line",
         notifications: [],
+        tableData:{},
         theme: urlState.theme || "dark",
         isEmptyView: false,
     };

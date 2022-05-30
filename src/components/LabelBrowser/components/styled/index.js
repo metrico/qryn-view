@@ -1,4 +1,4 @@
-import styled from "@emotion/styled";
+import styled from "@emotion/styled"
 
 import HistoryIcon from "@mui/icons-material/History";
 import { BtnSmall } from "../../../../theme/styles/Button";

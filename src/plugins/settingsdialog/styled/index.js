@@ -18,7 +18,7 @@ export const SettingCont = styled.div`
     flex: 1;
     flex-direction: column;
 
-    height: 650px;
+  
     background: ${({ theme }) => theme.widgetContainer};
 `;
 

@@ -1,13 +1,16 @@
-import { setLabels } from "../../actions/setLabels";
+
 import { queryBuilderWithLabels } from "../LabelBrowser/helpers/querybuilder";
 import store from "../../store/store";
-import loadLabelValues from "../../actions/loadLabelValues";
-import loadLogs from "../../actions/loadLogs";
+
+
 import { ZoomIn, ZoomOut } from "@mui/icons-material/";
 import { useSelector } from "react-redux";
 import { themes } from "../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
+import { setLabels } from "../../actions";
+import loadLabelValues from "../../actions/loadLabelValues";
+import loadLogs from "../../actions/loadLogs";
 
 const ValueTagsStyled = styled.div`
     color: ${(props) => props.theme.textPrimary};
@@ -18,19 +21,14 @@ const ValueTagsStyled = styled.div`
         background: ${(props) => props.theme.widgetContainer};
     }
 `;
-
-export default function ValueTags({ tags }) {
-    const theme = useSelector((store) => store.theme);
-    const isEmbed = useSelector((store) => store.isEmbed);
-    const query = useSelector((store) => store.query);
-    async function addLabel(e, key, value, isInverted = false) {
+export async function addLabel(e, key, value, isInverted = false, query) {
         e.preventDefault();
         e.stopPropagation();
-        const { labels, apiUrl } = store.getState();
+    const { labels, apiUrl } = store.getState();
         const label = labels.find((label) => label.name === key);
         const symb = isInverted ? "!=" : "=";
-        const isAlreadySelected = query.includes(`${key}="${value}"`);
-        const isAlreadyInverted = query.includes(`${key}!="${value}"`);
+    const isAlreadySelected = query.includes(`${key}="${value}"`);
+    const isAlreadyInverted = query.includes(`${key}!="${value}"`);
 
         if (
             (isAlreadyInverted && isInverted) ||
@@ -66,7 +64,6 @@ export default function ValueTags({ tags }) {
                 updatedLabel.selected = updatedLabel.values.some(
                     (value) => value.selected
                 );
-                console.log('labels set if no labelvalue')
                 store.dispatch(setLabels(updatedLabels));
             }
             queryBuilderWithLabels();
@@ -76,9 +73,15 @@ export default function ValueTags({ tags }) {
             queryBuilderWithLabels(true, [`${key}${symb}"${value}"`]);
             store.dispatch(loadLogs());
         }
-    }
+}
+    
+export default function ValueTags({ tags }) {
 
+    const theme = useSelector((store) => store.theme);
+    const isEmbed = useSelector((store) => store.isEmbed);
+    const query = useSelector((store) => store.query);
     return (
+
         <ThemeProvider theme={themes[theme]}>
             {Object.entries(tags).map(([key, value], k) => (
                 <ValueTagsStyled key={key}>
@@ -88,7 +91,7 @@ export default function ValueTags({ tags }) {
                                 <span
                                     aria-label="Filter for value"
                                     title="Filter for value"
-                                    onClick={(e) => addLabel(e, key, value)}
+                                    onClick={(e) => addLabel(e, key, value, false, query)}
                                     className={"icon"}
                                 >
                                     <ZoomIn
@@ -103,7 +106,7 @@ export default function ValueTags({ tags }) {
                                     aria-label="Filter out value"
                                     title="Filter out value"
                                     onClick={(e) =>
-                                        addLabel(e, key, value, true)
+                                        addLabel(e, key, value, true, query)
                                     }
                                     className={"icon"}
                                 >

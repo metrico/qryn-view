@@ -7,6 +7,9 @@ import EmptyView from "./EmptyView";
 import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
 import { LogRows } from "./LogRows";
+import { VectorTable } from "../VectorTable/VectorTable";
+
+
 class DataView extends Component {
     constructor(props) {
         super(props);
@@ -17,6 +20,7 @@ class DataView extends Component {
             matrixData: props.matrixData || [],
             loading: false,
             theme: props.theme,
+            vectorData: props.vectorData || [],
             isEmptyView: props.isEmptyView || false,
         };
     }
@@ -29,12 +33,14 @@ class DataView extends Component {
         return this.props.limit;
     };
 
+    
+
     render() {
         return (
             <ThemeProvider theme={themes[this.props.theme]}>
                 <DataViewStyled>
                     <DataViewCont>
-                        {this.props.messages.length > 0 && (
+                        { this.props.messages.length > 0 && (
                             <LogRows messages={this.props.messages} />
                         )}
                         {this.getMatrixForChart().length > 0 ? (
@@ -47,7 +53,8 @@ class DataView extends Component {
                         {this.props.loading && <Loader />}
 
                         {this.props.isEmptyView && <EmptyView />}
-
+                        {  this.props.vectorData?.dataRows?.length > 0 && !this.props.isEmptyView && (<VectorTable data={this.props.vectorData} />)}
+                        
                         <QueryHistory />
                     </DataViewCont>
                 </DataViewStyled>
@@ -62,6 +69,7 @@ const mapStateToProps = (state) => {
         limit: state.limit,
         loading: state.loading,
         matrixData: state.matrixData,
+        vectorData: state.vectorData,
         theme: state.theme,
         isEmptyView: state.isEmptyView,
     };

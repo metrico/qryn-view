@@ -1,9 +1,7 @@
 import axios from "axios";
 import { setLabels } from "./setLabels";
-import setLoading from "./setLoading";
 import { setApiError } from "./setApiError";
 import { createAlert } from "./createAlert";
-
 
 export default function loadLabels(apiUrl) {
     const origin = window.location.origin;
@@ -37,28 +35,32 @@ export default function loadLabels(apiUrl) {
                                 values: [],
                             }));
                         if (labels) {
-                            console.log("loding labels from loadLabels")
                             dispatch(setLabels(labels || []));
                             dispatch(setApiError(""));
-                            dispatch(setLoading(false));
+               
                         }
                     } else {
-                        dispatch(createAlert({type:'info',message:'No labels available for this API'}))
+                        dispatch(
+                            createAlert({
+                                type: "info",
+                                message: "No labels available for this API",
+                            })
+                        );
                     }
                 } else {
-                    dispatch(setLoading(false));
-                    
+             
+
                     dispatch(setApiError(""));
                     dispatch(setLabels([]));
-                
                 }
             })
             .catch((error) => {
-                dispatch(createAlert({
-                    type:"error",
-                    message:'API NOT FOUND'
-                }))
-                dispatch(setLoading(false));
+                dispatch(
+                    createAlert({
+                        type: "error",
+                        message: "API NOT FOUND",
+                    })
+                );
                 dispatch(setLabels([]));
             });
     };
