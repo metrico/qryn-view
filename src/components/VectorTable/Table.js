@@ -65,10 +65,11 @@ export function Table({ columns, data }) {
         []
     );
 
-    const options = useMemo(
-        () => ({ columns, data, defaultColumn }),
-        [columns, data, defaultColumn]
-    );
+    const options = useMemo(() => ({ columns, data, defaultColumn }), [
+        columns,
+        data,
+        defaultColumn,
+    ]);
 
     const {
         getTableProps,

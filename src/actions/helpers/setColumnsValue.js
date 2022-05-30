@@ -19,6 +19,7 @@ export function setColumnsTsValue(columns) {
                 Header: "Time",
                 accessor: "time",
                 Cell: (props) => timeFormatter(props),
+                width:190,
             },
             ...columns,
             {

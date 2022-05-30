@@ -11,6 +11,10 @@ import { getAsyncResponse } from './parseResponse';
  * 
  */
 
+// add here a table parser for matrix type responses/
+// add labels selector for matrix type responses
+
+
 export function parseMatrixResponse(responseProps: QueryResult) {
     const { result, debugMode, dispatch } = responseProps;
 

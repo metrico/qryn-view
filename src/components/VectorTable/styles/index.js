@@ -1,14 +1,14 @@
-import styled from '@emotion/styled'
+import styled from "@emotion/styled";
 
 export const TableStyles = styled.div`
     padding: 1rem;
-
+    display: block;
+    overflow: auto;
     .table {
         border-spacing: 0;
-   
-        border-radius:4px;
+        border-radius: 4px;
         font-size: 12px;
-        color: ${props => props.theme.textColor};
+        color: ${(props) => props.theme.textColor};
 
         .tr {
             display: block;
@@ -19,35 +19,34 @@ export const TableStyles = styled.div`
             }
         }
         .th {
-            background:${props => props.theme.buttonHover};
-            border-bottom:none;
-                :last-child {
-                    box-sizing: unset !important;
-                }
+            background: ${(props) => props.theme.buttonHover};
+            border-bottom: none;
+            :last-child {
+                box-sizing: unset !important;
             }
+        }
         .th,
         .td {
             display: block;
             flex: 1;
             margin: 0;
             padding: 0.5rem;
-            justify-content:space-between;
-            border-bottom: 1px solid ${props => props.theme.buttonBorder};
-            border-right: 1px solid ${props => props.theme.buttonBorder};
+            justify-content: space-between;
+            border-bottom: 1px solid ${(props) => props.theme.buttonBorder};
+            border-right: 1px solid ${(props) => props.theme.buttonBorder};
 
             ${"" /* In this example we use an absolutely position resizer,
      so this is required. */}
             position: relative;
-            white-space:nowrap;
+            white-space: nowrap;
             overflow:hidden;
-            .show-add-labels{
-                display:none;
+            .show-add-labels {
+                display: none;
             }
             &:hover {
-                .show-add-labels{
-                    display:flex;
-                    align-items:center;
-           
+                .show-add-labels {
+                    display: flex;
+                    align-items: center;
                 }
             }
 
@@ -55,11 +54,11 @@ export const TableStyles = styled.div`
                 border-right: 0;
                 padding-right: 0px;
             }
-        
+
             .resizer {
                 display: inline-block;
-                background: ${props => props.theme.buttonBorder};
-                width: 1px;
+                background: ${(props) => props.theme.buttonBorder};
+                width: 3px;
                 height: 100%;
                 position: absolute;
                 right: 0;
@@ -68,13 +67,13 @@ export const TableStyles = styled.div`
                 z-index: 1;
                 ${"" /* prevents from scrolling while dragging on touch devices */}
                 touch-action:none;
-
                 &.isResizing {
                     background: blue;
                 }
             }
         }
     }
+
     .pagination {
         padding: 0.5rem;
     }
@@ -84,7 +83,6 @@ export const getStyles = (props, align = "left") => [
     props,
     {
         style: {
-            
             alignItems: "center",
             display: "flex",
         },

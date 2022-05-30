@@ -12,6 +12,10 @@ import { getAsyncResponse, mapStreams, sortMessagesByTimestamp } from "./parseRe
  * process restult type: stream
  */
 
+
+// add here a table parser for matrix type responses/
+// add labels selector for matrix type responses
+
 export function parseStreamResponse(responseProps: QueryResult) {
     const { result, time, debugMode, queryType, dispatch } = responseProps;
 
