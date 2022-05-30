@@ -53,7 +53,7 @@ class DataView extends Component {
                         {this.props.loading && <Loader />}
 
                         {this.props.isEmptyView && <EmptyView />}
-                        {  this.props.vectorData?.dataRows?.length > 0 && (<VectorTable data={this.props.vectorData} />)}
+                        {  this.props.vectorData?.dataRows?.length > 0 && !this.props.isEmptyView && (<VectorTable data={this.props.vectorData} />)}
                         
                         <QueryHistory />
                     </DataViewCont>

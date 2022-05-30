@@ -34,6 +34,7 @@ export function parseVectorResponse(responseProps: QueryResult) {
                                 "🚧 loadLogs / getting no data from matrix"
                             );
                         dispatch(setIsEmptyView(true));
+                        dispatch(setVectorData({}))
                     }
                     dispatch(setIsEmptyView(false));
                 });
