@@ -23,7 +23,7 @@ export default function loadLabels(apiUrl) {
 
     return function (dispatch) {
         axios
-            .get(`${url.trim()}/loki/api/v1/labels`, options)
+            .get(`${url.trim()}/loki/api/v1/label`, options)
             ?.then((response) => {
                 if (response) {
                     if (response?.data?.data?.length > 0) {
