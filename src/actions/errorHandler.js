@@ -1,6 +1,6 @@
 export const errorHandler = (error) => {
 
-    const LABELS_URL = "/loki/api/v1/labels";
+    const LABELS_URL = "/loki/api/v1/label";
     const QUERY_URL = "/loki/api/v1/query_range";
 
     const { request, response } = error;
@@ -10,10 +10,10 @@ export const errorHandler = (error) => {
     let type = () => {
         switch(url) {
             case url?.includes(LABELS_URL):
-                return 'labels';
+                return 'label';
             case url?.includes(QUERY_URL):
                 return 'query'
-            default: return 'labels'
+            default: return 'label'
         }
     }
 
