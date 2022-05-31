@@ -6,7 +6,7 @@
     "url": "git+ssh://git@github.com/metrico/cloki-view.git"
   },
   "author": "joel@qxip.net",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "private": false,
   "dependencies": {
     "@emotion/css": "^11.7.1",
