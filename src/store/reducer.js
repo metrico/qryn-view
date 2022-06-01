@@ -71,11 +71,15 @@ const reducer = (state, action) => {
         case "SET_QUERY_TIME":
             return { ...state, time: action.time };
         case "SET_QUERY_RESOLUTION":
-            return {...state, queryResolution: action.queryResolution};
+            return { ...state, queryResolution: action.queryResolution };
         case "SET_IS_EMPTY_VIEW":
             return { ...state, isEmptyView: action.isEmptyView };
         case "SET_VECTOR_DATA":
-            return {...state, vectorData: action.vectorData}
+            return { ...state, vectorData: action.vectorData };
+        case "SET_RESPONSE_TYPE":
+            return { ...state, responseType: action.responseType };
+        case "SET_IS_TABLE_VIEW":
+            return { ...state, isTableView: action.isTableView };
         default:
             return { ...state };
     }

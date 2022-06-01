@@ -7,8 +7,8 @@ const debugLocal = () => {
     let isDebug = JSON.parse(localStorage.getItem("isDebug"));
     if (!isDebug) {
         localStorage.setItem("isDebug", JSON.stringify({ isActive: false }));
-        isDebug = {isActive:false}
-    } 
+        isDebug = { isActive: false };
+    }
 
     return isDebug;
 };
@@ -18,17 +18,17 @@ export default function initialState() {
     const historyService = localService().historyStore();
     const linkService = localUrl();
     const state = {
-        debugMode: debugLocal().isActive|| false,
+        debugMode: debugLocal().isActive || false,
         labels: [],
         labelValues: [],
         queryHistory: historyService.getAll() || [],
         linksHistory: linkService.getAll() || [],
         timeRange: [],
         query: urlState.query || "",
-        queryType: urlState.queryType || 'range',
+        queryType: urlState.queryType || "range",
         logs: [],
         matrixData: [],
-        vectorData:{},
+        vectorData: {},
         loading: false,
         queryResolution: 1,
         start:
@@ -38,7 +38,7 @@ export default function initialState() {
                     .subtract(5, "minutes")
                     .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
             ),
-        time: urlState.time || '',
+        time: urlState.time || "",
         stop:
             urlState.end ||
             new Date(moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
@@ -62,8 +62,10 @@ export default function initialState() {
         isSubmit: urlState.isSubmit || false,
         isEmbed: urlState.isEmbed || false,
         chartType: "line",
+        resposeType: "",
         notifications: [],
-        tableData:{},
+        tableData: {},
+        isTableView: false,
         theme: urlState.theme || "dark",
         isEmptyView: false,
     };

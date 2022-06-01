@@ -4,6 +4,7 @@ import store from "../../store/store";
 import setIsEmptyView from "../setIsEmptyView";
 import { parseResponse } from "./parseResponse";
 import { resetNoData } from "./resetNoData";
+import setResponseType from "../setResponseType";
 
 export async function processResponse(response: any, dispatch: Function) {
     const { time } = getTimeParams();
@@ -16,6 +17,9 @@ export async function processResponse(response: any, dispatch: Function) {
     if (response?.data?.data) {
         const result = response?.data?.data?.result;
         const type = response?.data?.data?.resultType;
+
+        dispatch(setResponseType(type))
+        
         const resultQuery: QueryResult = {
             result,
             time,
