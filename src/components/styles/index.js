@@ -15,3 +15,40 @@ export const MainViewStyled = styled.div`
         background: ${(props) => props.theme.scrollbarThumb} !important;
     }
 `;
+
+
+
+
+
+export const InputGroup = styled.div`
+    display: flex;
+    align-items:center;
+`;
+export const InlineGroup = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+export const SettingCont = styled.div`
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+  
+    background: ${({ theme }) => theme.widgetContainer};
+`;
+
+export const SettingsInputContainer = styled.div`
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+`;
+
+
+export const SettingLabel = styled.label`
+    font-size: 12px;
+    color: ${({ theme }) => theme.inputLabelColor};
+    margin-left: 10px;
+`;
+

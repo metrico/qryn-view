@@ -23,6 +23,7 @@ class DataView extends Component {
             tableData: props.tableData || {},
             isEmptyView: props.isEmptyView || false,
             isTableView: props.isTableView || false,
+            responseType: props.responseType || "",
         };
     }
 
@@ -39,10 +40,12 @@ class DataView extends Component {
             <ThemeProvider theme={themes[this.props.theme]}>
                 <DataViewStyled>
                     <DataViewCont>
-                        {this.props.messages.length > 0 && this.props.isTableView && (
-                            <LogRows messages={this.props.messages} />
-                        )}
-                        {this.getMatrixForChart().length > 0 && this.props.isTableView ? (
+                        {this.props.messages.length > 0 &&
+                            !this.props.isTableView && (
+                                <LogRows messages={this.props.messages} />
+                            )}
+                        {this.getMatrixForChart().length > 0 &&
+                        !this.props.isTableView ? (
                             <ClokiChart
                                 chartLimit={this.getLimit()}
                                 matrixData={this.getMatrixForChart()}
@@ -56,7 +59,11 @@ class DataView extends Component {
                             !this.props.isEmptyView && (
                                 <VectorTable data={this.props.vectorData} />
                             )}
-                        {this.props.tableData && !this.props.isTableView && <VectorTable data={this.props.tableData}/>}
+                        {this.props.tableData &&
+                            this.props?.responseType !== "vector" &&
+                            this.props.isTableView && (
+                                <VectorTable data={this.props.tableData} />
+                            )}
 
                         <QueryHistory />
                     </DataViewCont>
@@ -77,6 +84,7 @@ const mapStateToProps = (state) => {
         theme: state.theme,
         isEmptyView: state.isEmptyView,
         isTableView: state.isTableView,
+        responseType: state.responseType,
     };
 };
 

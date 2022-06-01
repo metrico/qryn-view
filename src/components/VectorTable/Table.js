@@ -162,6 +162,7 @@ export function Table({ columns, data }) {
                     itemCount={rows.length}
                     itemSize={26}
                     width={totalColumnsWidth + scrollbarWidth}
+                    
                 >
                     {RenderRow}
                 </FixedSizeList>

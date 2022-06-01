@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 export const TableStyles = styled.div`
     padding: 1rem;
     display: block;
-    overflow: auto;
+   overflow: auto;
     .table {
         border-spacing: 0;
         border-radius: 4px;
