@@ -16,10 +16,6 @@ export const MainViewStyled = styled.div`
     }
 `;
 
-
-
-
-
 export const InputGroup = styled.div`
     display: flex;
     align-items:center;
@@ -48,7 +44,7 @@ export const SettingsInputContainer = styled.div`
 
 export const SettingLabel = styled.label`
     font-size: 12px;
-    color: ${({ theme }) => theme.inputLabelColor};
+    color: ${({ theme }) => theme.textColor};
     margin-left: 10px;
 `;
 

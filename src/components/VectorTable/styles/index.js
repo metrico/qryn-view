@@ -1,15 +1,31 @@
 import styled from "@emotion/styled";
 
 export const TableStyles = styled.div`
+
     padding: 1rem;
     display: block;
     overflow: auto;
+        &::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: ${(props) => props.theme.scrollbarThumb};
+    }
     .table {
         border-spacing: 0;
         border-radius: 4px;
         font-size: 12px;
         color: ${(props) => props.theme.textColor};
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
 
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: ${(props) => props.theme.scrollbarThumb};
+    }
         .tr {
             display: block;
             :last-child {
