@@ -160,9 +160,8 @@ export function Table({ columns, data }) {
                 <FixedSizeList
                     height={tableHeight}
                     itemCount={rows.length}
-                    itemSize={26}
+                    itemSize={25}
                     width={totalColumnsWidth + scrollbarWidth}
-                    
                 >
                     {RenderRow}
                 </FixedSizeList>
