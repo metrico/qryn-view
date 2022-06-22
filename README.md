@@ -1,13 +1,11 @@
-<img src='https://user-images.githubusercontent.com/1423657/147935343-598c7dfd-1412-4bad-9ac6-636994810443.png' style="margin-left:-10px" width=220>
+<img src='https://user-images.githubusercontent.com/1423657/173144443-fc7ba783-d5bf-47f9-bf59-707693da5ed1.png' style="margin-left:-10px" width=220>
 
 [![Node.js CI](https://github.com/metrico/cloki-view/actions/workflows/npm_build_test.yml/badge.svg)](https://github.com/metrico/cloki-view/actions/workflows/npm_build_test.yml)
 [![CodeQL](https://github.com/metrico/cloki-view/actions/workflows/codeql-scanner.yml/badge.svg)](https://github.com/metrico/cloki-view/actions/workflows/codeql-scanner.yml)
 
-# :eye: cLoki View
+# :eye: qryn view
 
-### like Grafana Explore [^1], but for cLoki [^2]
-
-cLoki-view is a smart and minimal data explorer developed in React/JS and designed for LogQL APIs such as [cLoki](https://cloki.org)
+qryn-view is a smart and minimal data explorer developed in React/JS and designed for LogQL APIs such as [qryn](https://cloki.org)
 
 <img src="https://user-images.githubusercontent.com/1423657/152640509-82d7704a-4e9a-4a2b-9b7e-1819984c7581.png"/><img src="https://user-images.githubusercontent.com/1423657/155608224-8654694b-b999-4781-994a-5a87e39dfddf.png" />
 
@@ -52,13 +50,13 @@ cLoki-view can be controlled through URL parameters
 
 ------------
 
-### About cLoki
+### About qryn
 
-Consult the [cLoki Wiki](https://github.com/lmangani/cLoki/wiki/LogQL-Supported-Queries) for a detailed list of the project and its supported features, [changelog](https://github.com/lmangani/cLoki/wiki/Changelog) and [API functionality](https://github.com/lmangani/cLoki/wiki/HTTP-API)
+Consult the [qryn Wiki](https://github.com/metrico/qryn/wiki/LogQL-Supported-Queries) for a detailed list of the project and its supported features, [changelog](https://github.com/metrico/qryn/wiki/Changelog) and [API functionality](https://github.com/metrico/qryn/wiki/HTTP-API)
 
 ### Acknowledgements
 - (C) 2022 QXIP BV see LICENSE for details
 
-[^1]: cLoki is not affiliated or endorsed by Grafana Labs or ClickHouse Inc. All rights belong to their respective owners.
-[^2]: cLoki is part of the cLoki project, licensed under the AGPLv3 LICENSE by QXIP BV
+[^1]: qryn is not affiliated or endorsed by Grafana Labs or ClickHouse Inc. All rights belong to their respective owners.
+[^2]: qryn is part of the cLoki project, licensed under the AGPLv3 LICENSE by QXIP BV
 
