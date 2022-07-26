@@ -1,16 +1,10 @@
-
 import { queryBuilderWithLabels } from "../LabelBrowser/helpers/querybuilder";
-import store from "../../store/store";
-
 
 import { ZoomIn, ZoomOut } from "@mui/icons-material/";
 import { useSelector } from "react-redux";
 import { themes } from "../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
-import { setLabels } from "../../actions";
-import loadLabelValues from "../../actions/loadLabelValues";
-import loadLogs from "../../actions/loadLogs";
 
 const ValueTagsStyled = styled.div`
     color: ${(props) => props.theme.textPrimary};
@@ -21,67 +15,51 @@ const ValueTagsStyled = styled.div`
         background: ${(props) => props.theme.widgetContainer};
     }
 `;
-export async function addLabel(e, key, value, isInverted = false, query) {
-        e.preventDefault();
-        e.stopPropagation();
-    const { labels, apiUrl } = store.getState();
-        const label = labels.find((label) => label.name === key);
-        const symb = isInverted ? "!=" : "=";
-    const isAlreadySelected = query.includes(`${key}="${value}"`);
-    const isAlreadyInverted = query.includes(`${key}!="${value}"`);
 
-        if (
-            (isAlreadyInverted && isInverted) ||
-            (isAlreadySelected && !isInverted)
-        ) {
-            return;
-        }
-
-        if (label) {
-            const labelValue = label.values.find((tag) => tag.name === value);
-            if (labelValue?.selected && labelValue.inverted === isInverted) {
-                return;
-            }
-            if (labelValue) {
-                labelValue.selected =
-                    true || labelValue.inverted !== isInverted;
-                labelValue.inverted = !labelValue.inverted && isInverted;
-                label.selected = label.values.some((value) => value.selected);
-                store.dispatch(setLabels(labels));
-                
-            } else {
-                await store.dispatch(loadLabelValues(label, labels, apiUrl));
-                const updatedLabels = store.getState().labels;
-                const updatedLabel = updatedLabels.find(
-                    (label) => label.name === key
-                );
-                const labelValue = updatedLabel.values.find(
-                    (tag) => tag.name === value
-                );
-                labelValue.selected =
-                    true || labelValue.inverted !== isInverted;
-                labelValue.inverted = !labelValue.inverted && isInverted;
-                updatedLabel.selected = updatedLabel.values.some(
-                    (value) => value.selected
-                );
-                store.dispatch(setLabels(updatedLabels));
-            }
-            queryBuilderWithLabels();
-
-            store.dispatch(loadLogs());
-        } else {
-            queryBuilderWithLabels(true, [`${key}${symb}"${value}"`]);
-            store.dispatch(loadLogs());
-        }
+function alreadyExists(exp, op, k, v) {
+    return exp.includes(`${k}${op}"${v}"`);
 }
-    
-export default function ValueTags({ tags }) {
+
+/**
+ *
+ * @param {Event} e // event
+ * @param {String} key // label key
+ * @param {String} value // label value
+ * @param {Boolean} isExcluded // if it was excluded ('!=')
+ * @param {Object} queryObj // actual query object
+ * @returns
+ */
+
+export async function addLabel(e, key, value, isExcluded = false, queryObj) {
+    e.preventDefault();
+
+    e.stopPropagation();
+
+    const { expr, panel, id } = queryObj;
+
+    const isAlreadyExcluded = alreadyExists(expr, "!=", key, value);
+
+    const isAlreadySelected = alreadyExists(expr, "=", key, value);
+
+    if (
+        (isAlreadyExcluded && isExcluded) ||
+        (isAlreadySelected && !isExcluded)
+    ) {
+        return;
+    }
+
+    queryBuilderWithLabels(expr, panel, id, [key, value], isExcluded);
+}
+
+export default function ValueTags(props) {
+    const { tags, actQuery } = props;
 
     const theme = useSelector((store) => store.theme);
     const isEmbed = useSelector((store) => store.isEmbed);
-    const query = useSelector((store) => store.query);
-    return (
 
+    // add labels should add the labels to expresion and update labels on selectors
+
+    return (
         <ThemeProvider theme={themes[theme]}>
             {Object.entries(tags).map(([key, value], k) => (
                 <ValueTagsStyled key={key}>
@@ -91,7 +69,9 @@ export default function ValueTags({ tags }) {
                                 <span
                                     aria-label="Filter for value"
                                     title="Filter for value"
-                                    onClick={(e) => addLabel(e, key, value, false, query)}
+                                    onClick={(e) =>
+                                        addLabel(e, key, value, false, actQuery)
+                                    }
                                     className={"icon"}
                                 >
                                     <ZoomIn
@@ -106,7 +86,7 @@ export default function ValueTags({ tags }) {
                                     aria-label="Filter out value"
                                     title="Filter out value"
                                     onClick={(e) =>
-                                        addLabel(e, key, value, true, query)
+                                        addLabel(e, key, value, true, actQuery)
                                     }
                                     className={"icon"}
                                 >

@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setQuery } from "../../actions";
 import loadLogs from "../../actions/loadLogs";
-import { setLabelsBrowserOpen } from "../../actions/setLabelsBrowserOpen";
 import localService from "../../services/localService";
 import setQueryHistory from "../../actions/setQueryHistory";
-
 import setHistoryOpen from "../../actions/setHistoryOpen";
 import localUrl from "../../services/localUrl";
 import setLinksHistory from "../../actions/setLinksHistory";
 import QueryEditor from "../../plugins/queryeditor";
-
 import { css } from "@emotion/css";
 import { MobileTopQueryMenu, QueryBarContainer } from "./components/styled";
 import HistoryButton from "./components/HistoryButton/HistoryButton";
@@ -23,58 +19,79 @@ import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
 import { sendLabels } from "../../hooks/useLabels";
 import QueryTypeBar from "../QueryTypeBar";
-import { decodeQuery } from "../../helpers/decodeQuery";
+import { decodeQuery, decodeExpr } from "../../helpers/decodeQuery";
 import setIsEmptyView from "../../actions/setIsEmptyView";
+import { setPanelsData } from "../../actions/setPanelsData";
+import { updatePanels } from "./helpers/querybuilder";
 
-export const QueryBar = () => {
+export const QueryBar = (props) => {
+    const { queryType, limit, id } = props.data;
+
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
-    const labelsBrowserOpen = useSelector((store) => store.labelsBrowserOpen);
-    const debug = useSelector((store) => store.debugMode);
-    const query = useSelector((store) => store.query);
-    const apiUrl = useSelector((store) => store.apiUrl);
-    const historyOpen = useSelector((store) => store.historyOpen);
-    const isEmbed = useSelector((store) => store.isEmbed);
-    const theme = useSelector((store) => store.theme);
-    const [queryInput, setQueryInput] = useState(query);
+    const {
+        debug,
+        panels,
+        apiUrl,
+        historyOpen,
+        isEmbed,
+        theme,
+        labels,
+        queryHistory,
+        start,
+        stop,
+    } = useSelector((store) => store);
+
+    const [queryInput, setQueryInput] = useState(props.data.expr);
     const [queryValid, setQueryValid] = useState(false);
-    const [queryValue, setQueryValue] = useState(queryInit(query));
-    const labels = useSelector((store) => store.labels);
-    const queryHistory = useSelector((store) => store.queryHistory);
+    const [queryValue, setQueryValue] = useState(queryInit(props.data.expr));
+
+    useEffect(() => {});
     const saveUrl = localUrl();
+    const expr = useMemo(() => {
+        return props.data.expr;
+    }, [props.data.expr]);
 
     useEffect(() => {
-        const dLog = debugLog(query);
+        const dLog = debugLog(expr);
         debug && dLog.logicQueryBar();
-        const labels = sendLabels(apiUrl);
-        if (isEmbed) dispatch(loadLogs());
-        if (onQueryValid(query)) {
+        const labels = sendLabels(apiUrl, start, stop);
+
+        if (isEmbed)
+            dispatch(loadLogs(queryInput, queryType, limit, props.name, id));
+        if (onQueryValid(expr)) {
             debug && dLog.queryBarDispatch();
             return labels.then((data) => {
-                decodeQuery(query, apiUrl, data);
+                decodeQuery(data, expr, apiUrl, labels);
             });
         } else {
-            dispatch(setIsEmptyView(true))
+            dispatch(setIsEmptyView(true));
         }
     }, []);
 
     useEffect(() => {
-        setQueryInput(query);
-        setQueryValue([{ children: [{ text: query }] }]);
-        setQueryValid(onQueryValid(query));
-    }, [query]);
+        setQueryInput(expr);
 
-    const onValueDisplay = (e) => {
-        e.preventDefault();
-        const isOpen = labelsBrowserOpen ? false : true;
-        dispatch(setLabelsBrowserOpen(isOpen));
-    };
+        setQueryValue([{ children: [{ text: expr }] }]);
+
+        setQueryValid(onQueryValid(expr));
+    }, [expr]);
 
     function handleQueryChange(e) {
         setQueryValue(e);
 
         const multiline = e.map((text) => text.children[0].text).join("\n");
-        dispatch(setQuery(multiline));
+        const modPanels = { ...panels };
+
+        for (let query of modPanels[props.name].queries) {
+            if (query.id === props.data.id) {
+                query.expr = multiline;
+            }
+        }
+
+        const updatedPanels = updatePanels(props.name, ["expr"], [multiline]);
+
+        dispatch(setPanelsData(updatedPanels));
     }
 
     const handleInputKeyDown = (e) => {
@@ -82,10 +99,9 @@ export const QueryBar = () => {
             onSubmit(e);
         }
     };
+
     const onSubmit = (e) => {
         e.preventDefault();
-
-        dispatch(setQuery(queryInput));
 
         if (onQueryValid(queryInput)) {
             try {
@@ -93,29 +109,52 @@ export const QueryBar = () => {
                     data: queryInput,
                     url: window.location.hash,
                 });
+
                 dispatch(setQueryHistory(historyUpdated));
-                dispatch(setLabelsBrowserOpen(false));
-                
+
                 decodeQuery(queryInput, apiUrl, labels);
-                
-                dispatch(loadLogs());
+
+                const labelsDecoded = decodeExpr(props.data.expr);
+
+                const panelsUpdated = updatePanels(
+                    props.name,
+                    ["labels"],
+                    [labelsDecoded],
+                    props.data.id
+                );
+
+                dispatch(setPanelsData(panelsUpdated));
+
+                dispatch(
+                    loadLogs(
+                        queryInput,
+                        props.data.queryType,
+                        props.data.limit,
+                        props.name,
+                        props.data.id
+                    )
+                );
+
                 const storedUrl = saveUrl.add({
                     data: window.location.href,
                     description: "From Query Submit",
                 });
+
                 dispatch(setLinksHistory(storedUrl));
             } catch (e) {
                 console.log(e);
             }
         } else {
-            dispatch(setIsEmptyView(true))
-            console.log("Please make a log query", query);
+            dispatch(setIsEmptyView(true));
+
+            console.log("Please make a log query", expr);
         }
     };
 
     function handleHistoryClick(e) {
         dispatch(setHistoryOpen(!historyOpen));
     }
+
     return (
         !isEmbed && (
             <div
@@ -130,11 +169,7 @@ export const QueryBar = () => {
                                 display: flex;
                             `}
                         >
-                            <ShowLabelsButton
-                                onValueDisplay={onValueDisplay}
-                                labelsBrowserOpen={labelsBrowserOpen}
-                                isMobile={true}
-                            />
+                            <ShowLabelsButton {...props} isMobile={true} />
                             <HistoryButton
                                 queryLength={queryHistory.length}
                                 handleHistoryClick={handleHistoryClick}
@@ -149,13 +184,11 @@ export const QueryBar = () => {
                         />
                     </MobileTopQueryMenu>
                     <QueryBarContainer>
-                        <ShowLabelsButton
-                            onValueDisplay={onValueDisplay}
-                            labelsBrowserOpen={labelsBrowserOpen}
-                        />
+                        <ShowLabelsButton {...props} />
 
                         <QueryEditor
                             onQueryChange={handleQueryChange}
+                            defaultValue={expr || ""}
                             value={queryValue}
                             onKeyDown={handleInputKeyDown}
                         />
@@ -164,13 +197,14 @@ export const QueryBar = () => {
                             queryLength={queryHistory.length}
                             handleHistoryClick={handleHistoryClick}
                         />
+
                         <ShowLogsButton
                             disabled={!queryValid}
                             onClick={onSubmit}
                             isMobile={false}
                         />
                     </QueryBarContainer>
-                    <QueryTypeBar />
+                    <QueryTypeBar {...props} />
                 </ThemeProvider>
             </div>
         )

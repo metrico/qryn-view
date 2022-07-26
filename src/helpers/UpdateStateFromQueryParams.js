@@ -6,7 +6,6 @@ import { useLocation } from "react-router-dom";
 import {
     setApiUrl,
     setIsSubmit,
-    setQuery,
     setQueryLimit,
     setQueryTime,
     setQueryStep,
@@ -18,7 +17,6 @@ import {
 
 import setFromTime from "../actions/setFromTime";
 import setIsEmbed from "../actions/setIsEmbed";
-import { setLabelsBrowserOpen } from "../actions/setLabelsBrowserOpen";
 import setToTime from "../actions/setToTime";
 import { setUrlLocation } from "../actions/setUrlLocation";
 import { setUrlQueryParams } from "../actions/setUrlQueryParams";
@@ -68,7 +66,6 @@ export function UpdateStateFromQueryParams() {
 
     const STORE_ACTIONS = {
         apiUrl: setApiUrl,
-        query: setQuery,
         queryType: setQueryType,
         start: setStartTime,
         limit: setQueryLimit,
@@ -157,7 +154,6 @@ export function UpdateStateFromQueryParams() {
                     apiUrl,
                     labels
                 );
-                dispatch(setLabelsBrowserOpen(false));
             }
         } else {
             dispatch(setApiUrl(environment.apiUrl));

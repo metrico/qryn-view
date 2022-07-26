@@ -8,6 +8,9 @@ import CopyLinkButton from "../copylinkbutton/CopyLinkButton";
 import { themes } from '../../../../theme/themes';
 import { useSelector } from 'react-redux';
 import { ThemeProvider } from '@emotion/react';
+import SplitViewButton from "../SplitViewButton";
+
+
 export function StatusBarSelectors() {
 
     const [open, setOpen] = useState();
@@ -23,7 +26,9 @@ export function StatusBarSelectors() {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <div className={"status-options"}>
                 <div className={"status-selectors"}>
-                    <CopyLinkButton />
+                        <SplitViewButton />
+                        <CopyLinkButton />
+                     
                 </div>
 
                 <DateRangePicker isOpen={isOpen} />

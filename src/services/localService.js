@@ -2,7 +2,7 @@ import { nanoid } from "nanoid";
 
 function localService(item = null) {
 
-    const _APP = "cloki-query";
+    const _APP = "qryn-query";
     const _HISTORY_ITEM = _APP + "-history-item";
     const _LABELS_ITEM = _APP + '-labels-item';
     const cleanup = [];

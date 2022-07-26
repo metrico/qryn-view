@@ -1,10 +1,10 @@
 import { useSelector, useDispatch } from "react-redux";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { createAlert, setIsSubmit } from "../../../actions";
-import { notificationTypes } from "../../notifications/consts";
 import localUrl from "../../../services/localUrl";
 import setLinksHistory from "../../../actions/setLinksHistory";
 import { MenuItem } from "@mui/material";
+import { notificationTypes } from "../../../qryn-ui/notifications/consts";
 
 export default function CopyButton() {
     const dispatch = useDispatch();

@@ -13,6 +13,7 @@ const white = {
     w100: "hsl(0, 0%, 100%)", // buttons over lightgray
     w200: "hsl(0, 0%, 96%)",
     w300: "hsl(0, 0%, 92%)",
+    wb: "#f9f9f9",
     w400: "hsl(180, 5%, 96%)",
     w500: "hsl(0, 0%, 92%)",
     w600: "hsla(180,5%,96%,1)",
@@ -57,6 +58,7 @@ const orange = {
     or100: "hsl(39, 100%, 50%)",
 };
 const mainBgColor = white.w100;
+const shBgColor = white.wb;
 const logBgColor = white.w100;
 const tabActive = white.w100;
 const tabHeader = white.b400;
@@ -130,6 +132,7 @@ const lightTheme = {
     tabHeader,
     tabBg,
     mainBgColor,
+    shBgColor,
     secondaryWidgetContainer,
     widgetTitle,
     widgetTitleBorder,

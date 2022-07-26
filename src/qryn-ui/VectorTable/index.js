@@ -10,6 +10,6 @@ export class TableContainer extends PureComponent {
     }
 
     render() {
-        return <VectorTable columnsData={this.tableData} />;
+        return <VectorTable {...this.props} columnsData={this.tableData} />;
     }
 }

@@ -1,6 +1,26 @@
 import { environment } from "../environment/env.dev";
 import setDebug from "./setDebug";
 import * as moment from "moment";
+
+
+export const initialUrlState = {
+        query: '',
+    queryType: 'range',
+    start:'',
+    time:'',
+    to: '',
+    stop: '',
+    end: '',
+    from: '',
+    label: '',
+    limit: 100,
+    step: 100,
+    apiUrl: '',
+    isSubmit:false,
+    isEmbed:false,
+    theme: '',
+} 
+
 export default function stateFromQueryParams() {
     const debug = setDebug(environment.environment);
     if (debug) console.group("🚧 LOGIC/InitialState/FromQuery");
@@ -13,7 +33,7 @@ export default function stateFromQueryParams() {
     if (debug) console.log("🚧 LOGIC/urlFromHash", urlFromHash, hash.length);
 
     if (hash.length > 0) {
-        const startParams = {};
+        const startParams = {...initialUrlState};
         if (debug)
             console.log("🚧 LOGIC/startParams/BeforeURLFromHash", startParams);
         for (let [key, value] of urlFromHash.entries()) {
@@ -50,9 +70,9 @@ export default function stateFromQueryParams() {
             );
             startParams["label"] = `${startTs} - ${endTs}`;
         }
-        return startParams;
+        return startParams || initialUrlState;
     } else {
         if (debug) console.groupEnd("🚧 LOGIC/InitialState/FromQuery");
-        return {};
+        return initialUrlState;
     }
 }

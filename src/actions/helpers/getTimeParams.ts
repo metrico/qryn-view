@@ -23,7 +23,7 @@ export default function getTimeParams() {
         "&start=" + (from || parsedStart) + "&end=" + (to || parsedStop);
 
     if (findRangeByLabel(rl)) {
-        let rngeLabel = findRangeByLabel(rl); // this should be done before
+        let rangeLabel = findRangeByLabel(rl); 
     }
 
     store.dispatch(setStartTime(startS));

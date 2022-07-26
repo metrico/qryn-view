@@ -1,5 +1,4 @@
 import { ThemeProvider } from "@emotion/react";
-
 import { useSelector } from "react-redux";
 import { themes } from "../../theme/themes";
 import { EmptyViewContainer } from "./styled";

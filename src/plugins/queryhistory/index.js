@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import setQueryHistory from "../../actions/setQueryHistory";
 import loadLogs from "../../actions/loadLogs";
 import setHistoryOpen from "../../actions/setHistoryOpen";
-import { createAlert, setQuery } from "../../actions";
+import { createAlert } from "../../actions";
 import { format } from "date-fns";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import StarIcon from "@mui/icons-material/Star";
@@ -21,7 +21,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
 
-import { notificationTypes } from "../notifications/consts";
+
 import localUrl from "../../services/localUrl";
 
 import setLinksHistory from "../../actions/setLinksHistory";
@@ -52,6 +52,7 @@ import AlertDialog from "./components/AlertDialog/AlertDialog";
 import EmptyHistoryDisplay from "./components/EmptyHistoryDisplay/EmptyHistoryDisplay";
 import CloseButton from "./components/CloseButton/CloseButton";
 import { themes } from "../../theme/themes";
+import { notificationTypes } from "../../qryn-ui/notifications/consts";
 function QueryHistoryTabs(props) {
     const {
         historyTabHeader,
@@ -639,7 +640,6 @@ const QueryHistory = (props) => {
     }
 
     function handleSubmit(item) {
-        dispatch(setQuery(item.data));
         dispatch(loadLogs());
     }
 

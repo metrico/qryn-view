@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import {
     CHART_BAR_SERIES,
     CHART_LINE_SERIES,

@@ -23,14 +23,14 @@ const StyledMenu = styled((props) => (
         }}
         {...props}
     />
-))(({ theme,clokitheme }) => ({
+))(({ theme,qryntheme }) => ({
     "& .MuiPaper-root": {
         borderRadius: 6,
         marginTop: theme.spacing(1),
         minWidth: 180,
-        color:clokitheme.textColor,
-        border: `1px solid ${clokitheme.buttonBorder}`,
-        backgroundColor: clokitheme.buttonDefault,
+        color:qryntheme.textColor,
+        border: `1px solid ${qryntheme.buttonBorder}`,
+        backgroundColor: qryntheme.buttonDefault,
         "& .MuiMenu-list": {
             padding: "4px 0",
         },
@@ -38,11 +38,11 @@ const StyledMenu = styled((props) => (
             fontSize:12,
             "& .MuiSvgIcon-root": {
                 fontSize: 12,
-                color: clokitheme.textColor,
+                color: qryntheme.textColor,
                 marginRight: theme.spacing(1.5),
             },
             "&:active": {
-                backgroundColor: clokitheme.buttonDefault,
+                backgroundColor: qryntheme.buttonDefault,
             },
         },
     },
@@ -53,7 +53,7 @@ export default function ClokiMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const storeTheme = useSelector( store => store.theme)
-    const clokiTheme = themes[storeTheme]
+    const qrynTheme = themes[storeTheme]
   
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -69,7 +69,7 @@ export default function ClokiMenu() {
     return (
         <div>
             <MenuButton
-               theme={clokiTheme}
+               theme={qrynTheme}
                 id="basic-button"
                 aria-controls={open ? "basic-menu" : undefined}
                 aria-haspopup="true"
@@ -83,14 +83,14 @@ export default function ClokiMenu() {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                clokitheme={clokiTheme}
+                qryntheme={qrynTheme}
                 MenuListProps={{
                     "aria-labelledby": "basic-button",
                 }}
             >
                 <CopyButton />
                 <MenuItem onClick={handleSettingsOpen}>
-                    <DisplaySettingsIcon style={{ color:clokiTheme.textColor }} /> Query
+                    <DisplaySettingsIcon style={{ color:qrynTheme.textColor }} /> Query
                     Settings
                 </MenuItem>
             </StyledMenu>

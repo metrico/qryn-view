@@ -9,14 +9,14 @@ import Prism from "prismjs";
 import "prismjs/components/prism-promql";
 import "prismjs/components/prism-sql";
 import { themes } from "../../theme/themes";
-import { ThemeProvider } from '@emotion/react';
+import { ThemeProvider } from "@emotion/react";
 import { useSelector } from "react-redux";
 
 const CustomEditor = styled(Editable)`
     flex: 1;
-    background: ${props => props.theme.inputBg};
-    border: 1px solid ${props => props.theme.buttonBorder};
-    color: ${props => props.theme.textColor};
+    background: ${(props) => props.theme.inputBg};
+    border: 1px solid ${(props) => props.theme.buttonBorder};
+    color: ${(props) => props.theme.textColor};
     padding: 4px 8px;
     font-size: 1em;
     font-family: monospace;
@@ -94,8 +94,21 @@ function Leaf({ attributes, children, leaf }) {
     );
 }
 
-export default function QueryEditor({ onQueryChange, value, onKeyDown }) {
+export function getTokenLength(token) {
+    if (typeof token === "string") {
+        return token.length;
+    }
+
+    if (typeof token.content === "string") {
+        return token.content.length;
+    }
+
+    return token.content.reduce((l, t) => l + getTokenLength(t), 0);
+}
+
+export default function QueryEditor({ onQueryChange, value, onKeyDown, defaultValue }) {
     const theme = useSelector((store) => store.theme);
+
     const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
 
     const editor = useMemo(() => withHistory(withReact(createEditor())), []);
@@ -112,7 +125,7 @@ export default function QueryEditor({ onQueryChange, value, onKeyDown }) {
             const tokens = Prism.tokenize(node.text, Prism.languages[language]);
             let start = 0;
             for (const token of tokens) {
-                const length = getLength(token);
+                const length = getTokenLength(token);
                 const end = start + length;
 
                 if (typeof token !== "string") {
@@ -129,42 +142,38 @@ export default function QueryEditor({ onQueryChange, value, onKeyDown }) {
         [language]
     );
 
-    function getLength(token) {
-        if (typeof token === "string") {
-            return token.length;
-        } else if (typeof token.content === "string") {
-            return token.content.length;
-        } else {
-            return token.content.reduce((l, t) => l + getLength(t), 0);
-        }
-    }
-
     const [editorValue, setEditorValue] = useState(value);
 
     useEffect(() => {
         setEditorValue(value);
     }, []);
+
     useEffect(() => {
         setEditorValue(value);
         editor.children = value;
-    }, [value]);
+    }, [value, setEditorValue]);
+
     return (
         <ThemeProvider theme={themes[theme]}>
-        <QueryBar>
-            {/* <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+            <QueryBar>
+                {/* <select value={language} onChange={(e) => setLanguage(e.target.value)}>
         <option value={"sql"}>{"SQL"}</option>
         <option value={"promql"}>{"promQL"}</option>
       </select> */}
-            <Slate editor={editor} value={editorValue} onChange={onQueryChange}>
-                <CustomEditor
-                    decorate={decorate}
-                    renderLeaf={renderLeaf}
-                    placeholder="Enter a cLoki Query"
-                    onKeyDown={onKeyDown}
-                    spellCheck="false"
-                />
-            </Slate>
-        </QueryBar>
+                <Slate
+                    editor={editor}
+                    value={editorValue}
+                    onChange={onQueryChange}
+                >
+                    <CustomEditor
+                        decorate={decorate}
+                        renderLeaf={renderLeaf}
+                        placeholder={defaultValue}
+                        onKeyDown={onKeyDown}
+                        spellCheck="false"
+                    />
+                </Slate>
+            </QueryBar>
         </ThemeProvider>
     );
 }

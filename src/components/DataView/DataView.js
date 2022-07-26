@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { DataViewCont, DataViewStyled, Loader } from "./styled";
+import { DataViewCont, DataViewStyled, DataViewHeader, Loader } from "./styled";
 import ClokiChart from "../../plugins/charts";
 import QueryHistory from "../../plugins/queryhistory";
 import EmptyView from "./EmptyView";
 import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
 import { LogRows } from "./LogRows";
-import { VectorTable } from "../VectorTable/VectorTable";
+import { VectorTable } from "../../qryn-ui/VectorTable/VectorTable";
 
 class DataView extends Component {
     constructor(props) {
@@ -24,6 +24,9 @@ class DataView extends Component {
             isEmptyView: props.isEmptyView || false,
             isTableView: props.isTableView || false,
             responseType: props.responseType || "",
+            leftDataView: props.leftDataView || [],
+            rightDataView: props.rightDataView || [],
+            panels: props.panels,
         };
     }
 
@@ -36,34 +39,134 @@ class DataView extends Component {
     };
 
     render() {
+        const side = this.props.name;
+        const dtView = this.props[`${side}DataView`];
+
+        const actualQuery = () => {
+            return this.props.panels[side].queries.find(
+                (f) => f.id === dtView?.id
+            );
+        };
+
+        const { expr, idRef, limit, tableView } = actualQuery() || {
+            expr: "",
+            idRef: "A",
+            limit: 100,
+            tableView: false,
+        };
+
+        const isPanel = (panel) => {
+            return this.props.name === panel;
+        };
+
+        const dataViewType = (panel, type) => {
+            return isPanel(panel) && dtView?.type === type;
+        };
+
+        const isStream = (panel) => {
+            return dtView?.data?.length > 0 && dataViewType(panel, "stream");
+        };
+
+        const isMatrix = (panel) => {
+            return dataViewType(panel, "matrix");
+        };
+
+        const isVector = (panel) => {
+            return dataViewType(panel, "vector");
+        };
+
+        const resType = () => {
+            return {
+                vecType: isVector(this.props.name),
+                matType: isMatrix(this.props.name),
+                strType: isStream(this.props.name),
+            };
+        };
+
+        const dataViewData = () => {
+            return {
+                stream: {
+                    data: dtView?.data,
+                    tableData: dtView?.tableData,
+                },
+                matrix: {
+                    limit,
+                    data: dtView?.data,
+                    tableData: dtView?.tableData,
+                },
+                vector: dtView?.data,
+            };
+        };
+
+        const { stream, matrix, vector } = dataViewData();
+
+        const { strType, matType, vecType } = resType();
+
+        const isResponse = strType || matType || vecType;
+
+        const totalResults = dtView.total;
+
         return (
             <ThemeProvider theme={themes[this.props.theme]}>
+                <DataViewHeader>
+                    {/* add here the header opts: 
+                        source, limit, length, query ? 
+                        font size: smaller as possible
+                         */}
+                    {isResponse && (
+                        <>
+                            <span>query: {expr}</span>
+                            <span>limit: {limit}</span>
+                            <span>results: {totalResults}</span>
+                            <span>source: {idRef}</span>
+                        </>
+                    )}
+                </DataViewHeader>
                 <DataViewStyled>
                     <DataViewCont>
-                        {this.props.messages.length > 0 &&
-                            !this.props.isTableView && (
-                                <LogRows messages={this.props.messages} />
-                            )}
-                        {this.getMatrixForChart().length > 0 &&
-                        !this.props.isTableView ? (
-                            <ClokiChart
-                                chartLimit={this.getLimit()}
-                                matrixData={this.getMatrixForChart()}
+                        {strType && !tableView && (
+                            <LogRows
+                                {...this.props}
+                                messages={stream.data}
+                                actualQuery={actualQuery()}
                             />
-                        ) : null}
+                        )}
+
+                        {strType && tableView && (
+                            <VectorTable
+                                {...this.props}
+                                data={stream.tableData}
+                                actualQuery={actualQuery()}
+                            />
+                        )}
+
+                        {matType && !tableView && (
+                            <ClokiChart
+                                {...this.props}
+                                chartLimit={matrix.limit}
+                                matrixData={matrix.data}
+                                actualQuery={actualQuery()}
+                            />
+                        )}
+
+                        {matType && tableView && (
+                            <VectorTable
+                                {...this.props}
+                                actualQuery={actualQuery()}
+                                data={matrix.tableData}
+                            />
+                        )}
+
+                        {vecType && (
+                            <VectorTable
+                                {...this.props}
+                                data={vector}
+                                actualQuery={actualQuery()}
+                            />
+                        )}
 
                         {this.props.loading && <Loader />}
-
                         {this.props.isEmptyView && <EmptyView />}
-                        {this.props.vectorData?.dataRows?.length > 0 &&
-                            !this.props.isEmptyView && (
-                                <VectorTable data={this.props.vectorData} />
-                            )}
-                        {this.props.tableData &&
-                            this.props?.responseType !== "vector" &&
-                            this.props.isTableView && (
-                                <VectorTable data={this.props.tableData} />
-                            )}
 
                         <QueryHistory />
                     </DataViewCont>
@@ -85,6 +188,9 @@ const mapStateToProps = (state) => {
         isEmptyView: state.isEmptyView,
         isTableView: state.isTableView,
         responseType: state.responseType,
+        leftDataView: state.leftDataView,
+        rightDataView: state.rightDataView,
+        panels: state.panels,
     };
 };
 

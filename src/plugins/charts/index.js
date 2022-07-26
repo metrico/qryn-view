@@ -24,7 +24,13 @@ import {
 import UseTooltip from "./UseTooltip";
 import { CHART_OPTIONS } from "./consts";
 
-export default function ClokiChart({ matrixData }) {
+export default function ClokiChart(props) {
+
+
+    const {matrixData, actualQuery} = props
+
+    const {expr, queryType, limit, panel, id} = actualQuery
+
     const chartRef = useRef(null);
 
     const $q = window.jQuery;
@@ -158,7 +164,7 @@ export default function ClokiChart({ matrixData }) {
 
                 dispatch(setTimeRangeLabel(timeRangeLabel));
 
-                dispatch(loadLogs());
+                dispatch(loadLogs(expr, queryType, limit, panel, id));
             }, 400);
         } catch (e) {
             console.log("error on chart redraw", e);

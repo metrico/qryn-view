@@ -1,7 +1,7 @@
+import { setPanelsData } from "../../../actions/setPanelsData";
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setQueryLimit } from "../../../actions";
 
 const InputGroup = styled.div`
     display: flex;
@@ -28,17 +28,43 @@ const Input = styled.input`
     padding-left: 8px;
 `;
 
-export default function QueryLimit() {
+const JSONClone = (arr) => {
+    const arrToJSON = JSON.stringify(arr);
+    const actArr = JSON.parse(arrToJSON);
+    return actArr;
+};
+
+export default function QueryLimit(props) {
     const dispatch = useDispatch();
-    const limit = useSelector((store) => store.limit);
-    const [editedValue, setEditedValue] = useState(limit);
+    const panels = useSelector(({ panels }) => panels);
+    const [editedValue, setEditedValue] = useState(props.data.limit);
+
+    const limitFromProps = useMemo(() => props.data.limit, [props.data.limit]);
 
     useEffect(() => {
-        setEditedValue(limit);
-    }, [limit, setEditedValue]);
+        setEditedValue(limitFromProps);
+    }, [limitFromProps, setEditedValue]);
 
     function onLimitChange(e) {
-        dispatch(setQueryLimit(e.target.value));
+        const limitTxt = e.target.value;
+        const panelName = props.name;
+        const panel = panels[panelName];
+        const actPanels = JSONClone(panels);
+        let actQueries = JSONClone(panel.queries);
+        for (let query of actQueries) {
+            if (query.id === props.data.id) {
+                query.limit = limitTxt;
+            }
+        }
+
+        const finalPanel = {
+            ...actPanels,
+            [panelName]: {
+                queries: [...actQueries],
+            },
+        };
+
+        dispatch(setPanelsData(finalPanel));
     }
     return (
         <InputGroup>

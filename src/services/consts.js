@@ -1,4 +1,4 @@
-const _APP = "cloki-query";
+const _APP = "qryn-query";
 const _HISTORY_ITEM = _APP + "-history-item";
 const _TIMERANGE_ITEM = _APP + "-time-range-item";
 const _CHART_ITEM = _APP + "-chart-item";

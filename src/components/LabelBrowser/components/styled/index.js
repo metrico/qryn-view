@@ -27,6 +27,7 @@ export const ShowLabelsBtn = styled(BtnSmall)`
         border:1px solid ${(props)=>props.theme.buttonBorder};
     text-overflow: ellipsis;
     transition: 0.25s all;
+    padding-left:6px;
     justify-content: flex-start;
     color: ${({ theme }) => theme.textColor};
     height: 28px;
@@ -42,7 +43,7 @@ export const ShowLabelsBtn = styled(BtnSmall)`
 
 export const QueryBarContainer = styled.div`
     display: flex;
-    padding: 3px 6px;
+    padding: 6px;
     margin-top:5px;
     margin-left: 0px;
     background: ${({ theme }) => theme.widgetContainer};
@@ -77,6 +78,6 @@ export const MobileTopQueryMenu = styled.div`
     @media screen and (max-width: 864px) {
         display: flex;
         justify-content: space-between;
-        margin: 10px;
+        margin: 5px;
     }
 `;

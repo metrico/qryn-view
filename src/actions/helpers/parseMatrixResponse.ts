@@ -6,6 +6,8 @@ import { getAsyncResponse } from "./parseResponse";
 import { setTableData } from "../setTableData";
 import moment from "moment";
 import { sortBy } from "lodash";
+import { setLeftDataView } from "../setLeftDataView";
+import { setRightDataView } from "../setRightDataView";
 /**
  *
  * @param responseProps : QueryResult
@@ -20,10 +22,7 @@ import { sortBy } from "lodash";
 // time  / value
 
 function timeFormatter(props: any) {
-    console.log(props)
-    return moment(props.value).format(
-        "YYYY-MM-DDTHH:mm:ss.SSZ"
-    );
+    return moment(props.value).format("YYYY-MM-DDTHH:mm:ss.SSZ");
 }
 
 export function getMatrixTableRows(data: any[]) {
@@ -54,9 +53,13 @@ export function getMatrixTableResult(data: any[]) {
             maxWidth: 20,
         },
         { Header: "Metric", accessor: "metric" },
-        { Header: "Value", accessor: "value", width: 30,
+        {
+            Header: "Value",
+            accessor: "value",
+            width: 30,
             minWidth: 30,
-            maxWidth: 30, },
+            maxWidth: 30,
+        },
     ];
 
     const rows = getMatrixTableRows(data);
@@ -68,6 +71,7 @@ export function getMatrixTableResult(data: any[]) {
     }
 
     const length = rows.length;
+
     return {
         columnsData: headers,
         dataRows: sortBy(dataRows.flat(), (row) => row.time),
@@ -76,25 +80,39 @@ export function getMatrixTableResult(data: any[]) {
 }
 
 export function parseMatrixResponse(responseProps: QueryResult) {
-    const { result, debugMode, dispatch } = responseProps;
+    const { result, debugMode, dispatch, panel, id } = responseProps;
 
     // here should set the table response
- const tableResult = getMatrixTableResult(result);
-        console.log(tableResult);
-        dispatch(setTableData(tableResult));
-    try {
-       
+    const tableResult = getMatrixTableResult(result);
 
+    dispatch(setTableData(tableResult));
+    try {
         const idResult = addNanoId(result);
 
         getAsyncResponse(dispatch(setMatrixData(idResult || []))).then(() => {
+
             if (idResult.length === 0) {
+
                 if (debugMode)
                     console.log("🚧 loadLogs / getting no data from matrix");
                 dispatch(setIsEmptyView(true));
             }
             dispatch(setIsEmptyView(false));
         });
+
+        const panelData = {
+            id,
+            type: "matrix",
+            tableData: tableResult,
+            data: idResult,
+            total: idResult?.length || 0
+        };
+        
+        if (panel === "left") {
+            dispatch(setLeftDataView(panelData));
+        } else {
+            dispatch(setRightDataView(panelData));
+        }
     } catch (e) {
         if (debugMode)
             console.log(

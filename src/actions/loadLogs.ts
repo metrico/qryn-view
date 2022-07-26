@@ -8,17 +8,32 @@ import { getEndpointParams } from "./helpers/getEndpointParams";
 import { resetParams } from "./helpers/resetParams";
 import { resetNoData } from "./helpers/resetNoData";
 import { processResponse } from "./helpers/processResponse";
+import {  QueryType } from "./types";
 
-export default function loadLogs() {
+/**
+ * 
+ * @param queryInput  the expression text 
+ * @param queryType  the query type: range / instant
+ * @param limit  the query limit
+ * @param panel  the panel side: left / right
+ * @param id  the query ID
+ * @returns void 
+ */
+export default function loadLogs(
+    queryInput: string,
+    queryType: QueryType,
+    limit: number,
+    panel: string,
+    id: string
+) {
 
-    const { queryType, debugMode } = store.getState();
+    const { debugMode } = store.getState();
     const options = getQueryOptions();
-    const params = getEndpointParams();
+    const params = getEndpointParams(queryInput, limit);
     const endpoint = getEndpoint(queryType)(params);
 
     return async function (dispatch: Function) {
-        
-        await resetParams(dispatch);
+        await resetParams(dispatch,panel);
 
         let cancelToken: any;
 
@@ -32,14 +47,15 @@ export default function loadLogs() {
         await axios
             ?.get(endpoint, options)
             ?.then((response) => {
-                processResponse(response, dispatch);
+                // the panel should be set inside processResponse
+                processResponse(response, dispatch, panel, id);
             })
             .catch((error) => {
                 resetNoData(dispatch);
-                 dispatch(setIsEmptyView(true));
+                dispatch(setIsEmptyView(true));
+                dispatch(setLoading(false));
                 if (debugMode)
                     console.log("getting an error from response: ", error);
-      
             })
             .finally(() => {
                 dispatch(setLoading(false));

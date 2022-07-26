@@ -12,6 +12,8 @@ import {
 } from "./parseResponse";
 
 import moment from "moment";
+import { setLeftDataView } from "../setLeftDataView";
+import { setRightDataView } from "../setRightDataView";
 
 function timeFormatter(props: any) {
     return moment(parseInt(props.value) / 1000000).format(
@@ -36,7 +38,7 @@ export function getStreamTableRows(data: any[]) {
 export function getStreamTableResult(data: any[]) {
     const headers = [
         {
-            Header: "Time",   
+            Header: "Time",
             accessor: "time",
             Cell: (props: any) => timeFormatter(props),
             width: 20,
@@ -50,7 +52,7 @@ export function getStreamTableResult(data: any[]) {
             minWidth: 30,
             maxWidth: 30,
         },
-        { Header: "Log", accessor: "log" }, 
+        { Header: "Log", accessor: "log" },
     ];
 
     const rows = getStreamTableRows(data);
@@ -71,14 +73,12 @@ export function getStreamTableResult(data: any[]) {
 }
 
 export function parseStreamResponse(responseProps: QueryResult) {
-    const { result, time, debugMode, queryType, dispatch } = responseProps;
+    const { result, time, debugMode, queryType, panel, id, dispatch } =
+        responseProps;
 
-    // get the needed params from parent
     let messages = mapStreams(result);
     dispatch(setMatrixData([]));
-    console.log(messages);
     const tableResult = getStreamTableResult(result);
-    console.log(tableResult);
     dispatch(setTableData(tableResult));
     const messSorted = sortMessagesByTimestamp(messages);
     if (messSorted) {
@@ -89,9 +89,24 @@ export function parseStreamResponse(responseProps: QueryResult) {
                         console.log("🚧 loadLogs / getting no messages sorted");
                     dispatch(setIsEmptyView(true));
                 }
+
                 dispatch(setIsEmptyView(false));
-                //   dispatch(setLoading(false));
             });
+
+            const panelResult = {
+                id,
+                type: "stream",
+                tableData: tableResult,
+                data: messSorted || [],
+                total: messSorted?.length || 0,
+            };
+
+            if (panel === "left") {
+                dispatch(setLeftDataView(panelResult));
+            } else {
+                dispatch(setRightDataView(panelResult));
+            }
+
             if (queryType === "instant") {
                 dispatch(setQueryTime(time));
             }

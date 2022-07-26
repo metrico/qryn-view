@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import {
     addMonths,
@@ -30,19 +30,10 @@ import {
     setTimeRangeLabel,
     setStopTime,
 } from "../../../../actions";
-
 import { useSelector, useDispatch } from "react-redux";
 import useOutsideRef from "./hooks/useOutsideRef";
-
-import store from "../../../../store/store";
-
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { Tooltip } from "@mui/material";
-import loadLogs from "../../../../actions/loadLogs";
-import { setLabelsBrowserOpen } from "../../../../actions/setLabelsBrowserOpen";
-
-
-
 import TimeLabel from "./components/TimeLabel";
 import { DatePickerButton } from "../../styled";
 import { themes } from "../../../../theme/themes";
@@ -167,21 +158,11 @@ export function DateRangePickerMain(props) {
         }
     };
     const onClose = (e = null) => {
-        const { query } = store.getState();
         e?.preventDefault();
-        if (onQueryValid(query)) {
-            dispatch(setLabelsBrowserOpen(false));
-            dispatch(loadLogs());
-        } else {
-            console.log("Please make a log query", query);
-        }
         dispatch(setRangeOpen(false));
         isOpen(e);
     };
-    const onQueryValid = (query) => {
-        return query !== "{" && query !== "}" && query !== "{}" && query !== ""; // TODO: make a proper query validation
-    };
-    // helpers
+
     const inHoverRange = (day) => {
         return (
             dateStart &&

@@ -1,20 +1,21 @@
-import { setColumnsData } from '.';
-import setIsEmptyView from '../setIsEmptyView';
-import { setVectorData } from '../setVectorData';
-import {QueryResult} from '../types'
-import { getAsyncResponse } from './parseResponse';
+import { setColumnsData } from ".";
+import setIsEmptyView from "../setIsEmptyView";
+import { setLeftDataView } from "../setLeftDataView";
+import { setRightDataView } from "../setRightDataView";
+import { setVectorData } from "../setVectorData";
+import { QueryResult } from "../types";
+import { getAsyncResponse } from "./parseResponse";
 import { prepareCols } from "./prepareCols";
-import { prepareVectorRows } from './prepareVectorRows';
-
+import { prepareVectorRows } from "./prepareVectorRows";
 
 /**
- * 
+ *
  * @param responseProps : QueryResult
  * process restult type: vector
- * 
+ *
  */
 export function parseVectorResponse(responseProps: QueryResult) {
-    const { result, debugMode, dispatch } = responseProps;
+    const { result, debugMode, dispatch, panel, id } = responseProps;
     try {
         const colsData = prepareCols(result);
         if (colsData.length > 0) {
@@ -23,6 +24,8 @@ export function parseVectorResponse(responseProps: QueryResult) {
             const vectorTableData = {
                 columnsData,
                 dataRows,
+                panel,
+                id,
             };
             if (columnsData.length > 0 && dataRows.length > 0) {
                 getAsyncResponse(
@@ -34,10 +37,23 @@ export function parseVectorResponse(responseProps: QueryResult) {
                                 "🚧 loadLogs / getting no data from matrix"
                             );
                         dispatch(setIsEmptyView(true));
-                        dispatch(setVectorData({}))
+                        dispatch(setVectorData({}));
                     }
                     dispatch(setIsEmptyView(false));
                 });
+                const panelResult = {
+                    id,
+                    type: "vector",
+                    data: vectorTableData || {},
+                    total: vectorTableData?.dataRows?.length || 0
+                };
+
+                
+            if (panel === "left") {
+                dispatch(setLeftDataView(panelResult));
+            } else {
+                dispatch(setRightDataView(panelResult));
+            }
             }
         }
     } catch (e) {

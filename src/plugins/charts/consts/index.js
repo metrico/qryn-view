@@ -1,4 +1,4 @@
-const APP_NAME = "cloki_view";
+const APP_NAME = "qryn_view";
 export const LOCAL_CHART_TYPE = `${APP_NAME}_chart_type`;
 
 

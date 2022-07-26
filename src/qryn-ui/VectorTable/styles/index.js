@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 export const TableStyles = styled.div`
 
-    padding: 1rem;
+    
     display: block;
     overflow: auto;
         &::-webkit-scrollbar {

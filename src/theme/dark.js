@@ -1,5 +1,6 @@
 import defaultTheme from "@mui/material/styles/defaultTheme";
 
+
 const black = {
     b10: "hsla(0, 0%, 7%, 0.404)",
     b15: "hsl(0, 0%, 7%)",
@@ -57,6 +58,7 @@ const typography = {
     fontFamily: "Roboto, Helvetica, Arial, sans-serif",
 };
 const mainBgColor = black.b300;
+const shBgColor = black.b400; // a shadow color => for panels container
 const logBgColor = black.b100;
 const tabActive = black.b100;
 const tabHeader = black.b400;
@@ -130,6 +132,7 @@ const darkTheme = {
     tabHeader,
     tabBg,
     mainBgColor,
+    shBgColor,
     secondaryWidgetContainer,
     widgetTitle,
     widgetTitleBorder,
