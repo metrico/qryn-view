@@ -71,8 +71,8 @@ jobs:
       if: github.event_name != 'pull_request'
       uses: GuillaumeFalourd/create-other-repo-branch-action@v1
       with:
-        repository_owner: lmangani
-        repository_name: cloki
+        repository_owner: metrico
+        repository_name: qryn
         new_branch_name: view_${{steps.version.outputs.newTag}}
         new_branch_ref: master
         access_token: ${{ secrets.GH_PUSH }}
@@ -86,8 +86,8 @@ jobs:
         source-directory: 'build'
         target-directory: 'view'
         target-branch: view_${{steps.version.outputs.newTag}}
-        destination-github-username: 'lmangani'
-        destination-repository-name: 'cLoki'
+        destination-github-username: 'metrico'
+        destination-repository-name: 'qryn'
         user-email: lorenzo.mangani@gmail.com
         commit-message: Upgrade view to ${{steps.version.outputs.newTag}}
     - name: Deploy to gh-pages 🚀
