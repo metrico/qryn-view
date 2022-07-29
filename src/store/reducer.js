@@ -1,14 +1,6 @@
-export function panelReducer(state, action) {
-    switch (action.type) {
-        case "SET_PANEL_STATE":
-            return { ...state, panelState: action.panelState };
-        default:
-            return { ...state };
-    }
-}
+
 
 const reducer = (state, action) => {
-   
     switch (action.type) {
         case "SET_LABELS":
             return { ...state, labels: action.labels };
@@ -96,10 +88,14 @@ const reducer = (state, action) => {
             return { ...state, panels: action.panels };
         case "SET_DATA_VIEWS":
             return { ...state, dataViews: action.dataViews };
-     case "SET_RIGHT_DATAVIEW":
+        case "SET_RIGHT_DATAVIEW":
             return { ...state, rightDataView: action.rightDataView };
-     case "SET_LEFT_DATAVIEW":
+        case "SET_LEFT_DATAVIEW":
             return { ...state, leftDataView: action.leftDataView };
+        case "SET_RIGHT_PANEL":
+            return { ...state, right: action.right };
+            case "SET_LEFT_PANEL":
+            return { ...state, left: action.left };
         default:
             return { ...state };
     }

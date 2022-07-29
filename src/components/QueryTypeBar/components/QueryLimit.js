@@ -1,7 +1,8 @@
-import { setPanelsData } from "../../../actions/setPanelsData";
 import styled from "@emotion/styled";
 import { useEffect, useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { setRightPanel } from "../../../actions/setRightPanel";
+import { setLeftPanel } from "../../../actions/setLeftPanel";
 
 const InputGroup = styled.div`
     display: flex;
@@ -28,15 +29,12 @@ const Input = styled.input`
     padding-left: 8px;
 `;
 
-const JSONClone = (arr) => {
-    const arrToJSON = JSON.stringify(arr);
-    const actArr = JSON.parse(arrToJSON);
-    return actArr;
-};
-
 export default function QueryLimit(props) {
     const dispatch = useDispatch();
-    const panels = useSelector(({ panels }) => panels);
+    const { id } = props.data;
+
+    const left = useSelector((store) => store.left);
+    const right = useSelector((store) => store.right);
     const [editedValue, setEditedValue] = useState(props.data.limit);
 
     const limitFromProps = useMemo(() => props.data.limit, [props.data.limit]);
@@ -47,24 +45,26 @@ export default function QueryLimit(props) {
 
     function onLimitChange(e) {
         const limitTxt = e.target.value;
-        const panelName = props.name;
-        const panel = panels[panelName];
-        const actPanels = JSONClone(panels);
-        let actQueries = JSONClone(panel.queries);
-        for (let query of actQueries) {
-            if (query.id === props.data.id) {
-                query.limit = limitTxt;
-            }
+
+        if (props.name === "left") {
+            const leftC = [...left];
+            leftC.forEach((query) => {
+                if (query.id === id) {
+                    query.limit = limitTxt;
+                }
+            });
+            dispatch(setLeftPanel(leftC));
         }
 
-        const finalPanel = {
-            ...actPanels,
-            [panelName]: {
-                queries: [...actQueries],
-            },
-        };
-
-        dispatch(setPanelsData(finalPanel));
+        if (props.name === "right") {
+            const rightC = [...right];
+            rightC.forEach((query) => {
+                if (query.id === id) {
+                    query.limit = limitTxt;
+                }
+            });
+            dispatch(setRightPanel(rightC));
+        }
     }
     return (
         <InputGroup>

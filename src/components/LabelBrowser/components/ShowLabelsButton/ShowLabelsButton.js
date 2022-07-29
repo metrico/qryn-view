@@ -4,53 +4,48 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { themes } from "../../../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useMemo, useEffect } from "react";
-import { setPanelsData } from "../../../../actions/setPanelsData";
+import { useState, useEffect } from "react";
+
+import { setLeftPanel } from "../../../../actions/setLeftPanel";
+import { setRightPanel } from "../../../../actions/setRightPanel";
 
 export default function ShowLabelsButton(props) {
+    const { id } = props.data;
     const LOG_BROWSER = "Labels";
     const theme = useSelector((store) => store.theme);
     const labels = useSelector((store) => store.labels);
-    const panels = useSelector(({ panels }) => panels);
-    const dispatch = useDispatch()
-     const [isBrowserOpen, setIsBrowserOpen] = useState(props.data.browserOpen);
+    const left = useSelector((store) => store.left);
+    const right = useSelector((store) => store.right);
+    const dispatch = useDispatch();
+    const [isBrowserOpen, setIsBrowserOpen] = useState(props.data.browserOpen);
 
-    const query = useMemo(
-        () => panels[props.name].queries.find(({ id }) => id === props.data.id),
-        [props.data.id, props.name, panels]
-    );
-
-    const JSONClone = (arr) => {
-        const arrToJSON = JSON.stringify(arr);
-        const actArr = JSON.parse(arrToJSON);
-        return actArr;
-    };
-
-    useEffect(() => {
-        setIsBrowserOpen(query.browserOpen)
-    },[setIsBrowserOpen, query.browserOpen])
-   
-    function handleBrowserOpen(){
-        
-        const panelName = props.name;
-        const panel = panels[panelName]
-        const actPanels = JSONClone(panels)
-        let actQueries = JSONClone(panel.queries)
-
-        for (let query of actQueries) {
-            if (query.id === props.data.id) {
-                query.browserOpen = isBrowserOpen ? false : true
-            }
+    function handleBrowserOpen() {
+        if (props.name === "left") {
+            const leftC = [...left];
+            leftC.forEach((query) => {
+                if (query.id === id) {
+                    query.browserOpen = isBrowserOpen ? false : true;
+                }
+            });
+            dispatch(setLeftPanel(leftC));
         }
-        const finalPanel = {
-            ...actPanels,
-            [panelName]: {
-                queries: [...actQueries]
-            }
-        }
-        
-        dispatch(setPanelsData(finalPanel))
 
+        if (props.name === "right") {
+            const rightC = [...right];
+            rightC.forEach((query) => {
+                if (query.id === id) {
+                    query.browserOpen = isBrowserOpen ? false : true;
+                }
+            });
+            dispatch(setRightPanel(rightC));
+        }
+        setIsBrowserOpen((prev) => {
+            if (prev === true) {
+                return false;
+            } else {
+                return true;
+            }
+        });
     }
     return (
         <ThemeProvider theme={themes[theme]}>

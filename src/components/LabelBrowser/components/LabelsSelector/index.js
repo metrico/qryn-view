@@ -8,16 +8,6 @@ import useLabels from "./useLabels";
 import ValuesListStyled from "./ValuesListStyled";
 import labelHelpers from "./helpers";
 
-// modify data from panels
-
-// import { setPanelsData } from "../../../../actions/setPanelsData";
-// import {
-//     queryBuilder,
-//     updatePanels,
-//     parseQuery,
-//     queryBuilderWithLabels,
-//     decodeQuery,
-// } from "../../../../components/LabelBrowser/helpers/querybuilder";
 
 export default function LabelsSelector(props) {
     const { data} = props;

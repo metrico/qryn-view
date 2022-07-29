@@ -15,7 +15,10 @@ export default function QueriesContainer(props: any) {
         <QueriesContainerStyled>
             {queries &&
                 queries.map((query: any, idx: number) => (
-                    <QueryItem {...props} data={query} key={idx} />
+                    <QueryItem 
+                    {...props} 
+                    data={query} 
+                    key={idx} />
                 ))}
         </QueriesContainerStyled>
     );

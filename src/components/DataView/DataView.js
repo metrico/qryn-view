@@ -26,7 +26,8 @@ class DataView extends Component {
             responseType: props.responseType || "",
             leftDataView: props.leftDataView || [],
             rightDataView: props.rightDataView || [],
-            panels: props.panels,
+            left: props.left || [],
+            right: props.right || [],
         };
     }
 
@@ -39,11 +40,13 @@ class DataView extends Component {
     };
 
     render() {
+
+
         const side = this.props.name;
         const dtView = this.props[`${side}DataView`];
 
         const actualQuery = () => {
-            return this.props.panels[side].queries.find(
+            return this.props[side].find(
                 (f) => f.id === dtView?.id
             );
         };
@@ -188,9 +191,10 @@ const mapStateToProps = (state) => {
         isEmptyView: state.isEmptyView,
         isTableView: state.isTableView,
         responseType: state.responseType,
+        left: state.left,
+        right: state.right,
         leftDataView: state.leftDataView,
         rightDataView: state.rightDataView,
-        panels: state.panels,
     };
 };
 

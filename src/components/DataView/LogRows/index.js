@@ -73,15 +73,18 @@ export class LogRows extends PureComponent {
         });
 
     render() {
- 
-        const {panels,name} = this.props
+        const {name} = this.props
+
 
         // actual panel
-        const actPanel = panels[name]
+        const actPanel = this.props[name]
+
         // queries from panel
-        const queries = actPanel['queries'] || []
+        const queries = actPanel || []
+
         // active DataView data
         const actDataView = this.props[`${name}DataView`]
+        
         // 
         const sourceId = actDataView['id']
 

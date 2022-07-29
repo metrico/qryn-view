@@ -25,7 +25,6 @@ const debugLocal = (): boolean => {
 };
 
 export interface URLState {
-    query: string;
     queryType: string;
     start: string | Date;
     time: string;
@@ -33,6 +32,8 @@ export interface URLState {
     stop: string | Date;
     end: string | Date;
     from: string | Date;
+    left: any[];
+    right: any[];
     label: string;
     limit: string | number;
     step: string | number;
@@ -40,10 +41,10 @@ export interface URLState {
     isSubmit: boolean;
     isEmbed: boolean;
     theme: string;
+    isSplit: boolean;
 }
 
 export const initialUrlState = {
-    query: "",
     queryType: "range",
     start: "",
     time: "",
@@ -51,6 +52,8 @@ export const initialUrlState = {
     stop: "",
     end: "",
     from: "",
+    left: [],
+    right: [],
     label: "",
     limit: 100,
     step: 100,
@@ -58,6 +61,7 @@ export const initialUrlState = {
     isSubmit: false,
     isEmbed: false,
     theme: "",
+    isSplit: false,
 };
 
 export function date_fm(input: MomentInput): Moment {
@@ -75,7 +79,6 @@ export default function initialState() {
         queryHistory: historyService.getAll() || [],
         linksHistory: linkService.getAll() || [],
         timeRange: [],
-        query: urlState.query || "",
         queryType: urlState.queryType || "range",
         logs: [],
         matrixData: [],
@@ -112,37 +115,50 @@ export default function initialState() {
         apiUrl: urlState.apiUrl || environment.apiUrl || "",
         isSubmit: urlState.isSubmit || false,
         isEmbed: urlState.isEmbed || false,
-        panels: {
-            left: {
-                queries: [
-                    {
-                        id: nanoid(),
-                        idRef: "A",
-                        lastIdx: 1,
-                        panel: "left",
-                        queryType: "instant",
-                        limit: 100,
-                        step: 100,
-                        tableView: false,
-                        browserOpen: false,
-                        expr: "",
-                        labels: [], // name: selected:
-                        values: [], // label name selected
-                        response: {}, // the target should be just the last one
-                        // find query by ID and append response
-                    },
-                ],
+        // dont mention queries // its obvious
+        left: urlState['left']||[
+            {
+                id: nanoid(),
+                idRef: "A",
+                lastIdx: 1,
+                panel: "left",
+                queryType: "instant",
+                limit: 100,
+                step: 100,
+                tableView: false,
+                browserOpen: false,
+                expr: "",
+                labels: [], // name: selected:
+                values: [], // label name selected
+                //find query by ID and append response
             },
-            right: { queries: [] },
-        },
+        ],
+
+        right: urlState['right']||[
+            {
+                id: nanoid(),
+                idRef: "A",
+                lastIdx: 1,
+                panel: "right",
+                queryType: "instant",
+                limit: 100,
+                step: 100,
+                tableView: false,
+                browserOpen: false,
+                expr: "",
+                labels: [], // name: selected:
+                values: [], // label name selected
+                //find query by ID and append response
+            },
+        ],
 
         leftDataView: {
-            type: '',
-            data:[]
+            type: "",
+            data: [],
         },
         rightDataView: {
-            type: '',
-            data:[]
+            type: "",
+            data: [],
         },
 
         chartType: "line",

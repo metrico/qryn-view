@@ -14,6 +14,7 @@ export const HistoryButtonStyled = styled(BtnSmall)`
     color: ${(props)=> props.theme.textColor};
     background: ${(props) => props.theme.buttonDefault};
     border:1px solid ${(props)=>props.theme.buttonBorder};
+    height:28px;
     span {
         margin-left: 5px;
     }
@@ -57,6 +58,8 @@ export const ShowLogsBtn = styled(BtnSmall)`
     margin-left: 5px;
     transition: 0.25s all;
     justify-content: center;
+    padding: 3px 12px;
+    height:28px;
     &:hover {
         background: ${(props) => props.theme.primaryLight};
     }

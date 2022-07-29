@@ -4,12 +4,13 @@ import { useMemo, useState } from "react";
 import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
 import { useSelector, useDispatch } from "react-redux";
-import { setPanelsData } from "../../actions/setPanelsData";
 import { nanoid } from "nanoid";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
+import { setLeftPanel } from "../../actions/setLeftPanel";
+import { setRightPanel } from "../../actions/setRightPanel";
 const QueryContainer = styled.div``;
 
 const QueryItemToolbarStyled = styled.div`
@@ -44,13 +45,11 @@ const ShowQueryButton = styled.button`
 `;
 
 const OpenQuery = styled(KeyboardArrowDownOutlinedIcon)`
-
     font-size: 13px;
     color: ${({ theme }) => theme.textColor};
 `;
 
 const CloseQuery = styled(KeyboardArrowRightOutlinedIcon)`
-
     font-size: 13px;
     color: ${({ theme }) => theme.textColor};
 `;
@@ -82,6 +81,7 @@ export const QueryItemToolbar = (props) => (
 );
 
 export default function QueryItem(props) {
+    const { name } = props;
     const idRefs = useMemo(() => {
         const alpha = Array.from(Array(26)).map((e, i) => i + 65);
         const alphabet = alpha.map((x) => String.fromCharCode(x));
@@ -90,54 +90,69 @@ export default function QueryItem(props) {
 
     const dispatch = useDispatch();
     const theme = useSelector((store) => store.theme);
-    const panels = useSelector((store) => store.panels);
+    const leftPanel = useSelector((store) => store.left);
+    const rightPanel = useSelector((store) => store.right);
+
     const isQueryOpen = useState(true);
 
     const onDeleteQuery = () => {
-        const filtered =
-            panels[props.name].queries.length > 1
-                ? panels[props.name].queries.filter(
-                      (query) => query.id !== props.data.id
-                  )
-                : panels[props.name].queries;
-        dispatch(
-            setPanelsData({
-                ...panels,
-                [props.name]: {
-                    ...panels[props.name],
-                    queries: filtered,
-                },
-            })
-        );
+        const filterPanel = (panel) => {
+            if (panel.length > 1) {
+                return panel.filter((query) => query.id !== props.data.id);
+            } else {
+                return panel;
+            }
+        };
+        if (name === "left") {
+            const filtered = filterPanel(leftPanel);
+            dispatch(setLeftPanel(filtered));
+        }
+
+        if (name === "right") {
+            const filtered = filterPanel(rightPanel);
+            dispatch(setRightPanel(filtered));
+        }
     };
 
     const onAddQuery = () => {
-        const queries = panels[props.name].queries;
-        const lastIdx = queries[queries.length - 1].lastIdx;
+        const getIdref = (lastIdx) => {
+            if (lastIdx > idRefs.length - 1) {
+                return `${idRefs[0]}${lastIdx}`;
+            } else {
+                return idRefs[lastIdx];
+            }
+        };
 
-        const idRef =
-            lastIdx > idRefs.length - 1
-                ? `${idRefs[0]}${lastIdx}`
-                : idRefs[lastIdx];
+        const getLastIndex = (panel) => {
+            return panel[panel.length - 1].lastIdx;
+        };
 
-        dispatch(
-            setPanelsData({
-                ...panels,
-                [props.name]: {
-                    ...panels[props.name],
-                    queries: [
-                        ...panels[props.name].queries,
-                        {
-                            ...props.data,
-                            id: nanoid(),
-                            idRef,
-                            lastIdx: lastIdx + 1,
-                            cp: 0,
-                        },
-                    ],
-                },
-            })
-        );
+        const setNewPanel = (lastIdx, panel, idRef) => {
+            const newQuery = {
+                ...props.data,
+                id: nanoid(),
+                idRef,
+                lastIdx: lastIdx + 1,
+                cp: 0,
+            };
+            return [...panel, newQuery];
+        };
+
+        const setNewPanelData = (panel) => {
+            const lastIdx = getLastIndex(panel);
+            const idRef = getIdref(lastIdx);
+            return setNewPanel(lastIdx, panel, idRef);
+        };
+
+        if (name === "left") {
+            const lPanel = setNewPanelData(leftPanel);
+            dispatch(setLeftPanel(lPanel));
+        }
+
+        if (name === "right") {
+            const rPanel = setNewPanelData(rightPanel);
+            dispatch(setRightPanel(rPanel));
+        }
     };
 
     return (

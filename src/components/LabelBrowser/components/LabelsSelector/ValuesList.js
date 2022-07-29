@@ -5,12 +5,14 @@ import styled from "@emotion/styled";
 import { CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    updatePanels,
     decodeQuery,
 } from "../../../../components/LabelBrowser/helpers/querybuilder";
 
-import { setPanelsData } from "../../../../actions/setPanelsData";
+
+
 import { nanoid } from "nanoid";
+import { setLeftPanel } from "../../../../actions/setLeftPanel";
+import { setRightPanel } from "../../../../actions/setRightPanel";
 
 export const LoaderCont = styled.div`
     display: flex;
@@ -30,7 +32,8 @@ export default function ValuesList(props) {
     const dispatch = useDispatch();
 
     const { start, stop } = useSelector((store) => store);
-
+    const left = useSelector((store)=> store.left)
+    const right = useSelector((store)=> store.right)
     // get values hook
     const { response, signal, loading } = useLabelValues(
         props.label,
@@ -68,6 +71,7 @@ export default function ValuesList(props) {
 
     const resp = useMemo(() => {
         if (response?.data?.data?.length > 0) {
+
             return response?.data?.data?.map((val) => ({
                 label: props.label,
                 name: val,
@@ -75,6 +79,7 @@ export default function ValuesList(props) {
                 inverted: false,
                 id: nanoid(),
             }));
+
         } else {
             return [];
         }
@@ -93,6 +98,7 @@ export default function ValuesList(props) {
             let modValues = [];
 
             clonedValues.forEach((value) => {
+
                 if (valuesFromProps.some((s) => s.name === value.name)) {
                     const valueFound = valuesFromProps.find(
                         (f) => f.name === value.name
@@ -179,14 +185,26 @@ export default function ValuesList(props) {
 
         const filtered = labelsMod.filter((f) => f.selected);
 
-        const panelsUpdate = updatePanels(
-            props.name,
-            ["labels"],
-            [filtered],
-            props.data.id
-        );
+        if(props.name === 'left') {
+            const leftC = [...left]
+            leftC.forEach(query => {
+                if(query.id === props.data.id) {
+                    query.labels = filtered
+                }
+            })
+            dispatch(setLeftPanel(leftC))
+        }
 
-        dispatch(setPanelsData(panelsUpdate));
+        if(props.name === 'right') {
+            const rightC = [...right]
+            rightC.forEach(query => {
+                if(query.id === props.data.id) {
+                    query.labels = filtered
+                }
+            })
+            dispatch(setRightPanel(rightC))
+        }
+  
 
         setValsSelection(initialValues);
     };
@@ -227,6 +245,8 @@ export default function ValuesList(props) {
 export const LabelValue = (props) => {
     const dispatch = useDispatch();
     let { value, name, data, onValueClick } = props;
+    const left = useSelector((store)=> store.left)
+    const right = useSelector((store)=> store.right)
 
     const setValueStyle = (selected) =>
         selected
@@ -264,9 +284,27 @@ export const LabelValue = (props) => {
             "="
         );
 
-        const panelsUpdated = updatePanels(name, ["expr"], [newQuery], data.id);
 
-        dispatch(setPanelsData(panelsUpdated));
+        if(props.name === 'left') {
+            const leftC = [...left]
+            leftC.forEach(query => {
+                if(query.id === props.data.id) {
+                    query.expr = newQuery
+                }
+            })
+            dispatch(setLeftPanel(leftC))
+        }
+
+        if(props.name === 'right') {
+            const rightC = [...right]
+            rightC.forEach(query => {
+                if(query.id === props.data.id) {
+                    query.expr = newQuery
+                }
+            })
+            dispatch(setRightPanel(rightC))
+        }
+
 
         const valueUpdated = { ...value, selected: isSelected };
 

@@ -17,9 +17,11 @@ export async function resetParams(dispatch: Function,panel:string) {
     if (panel === 'left') {
            
     dispatch(setLeftDataView({type:'',data:[]}))
+      dispatch(setIsEmptyView(true))
     }
 
     if (panel === 'right') {
          dispatch(setRightDataView({type:'',data:[]}))
+       dispatch(setIsEmptyView(true))
     }
 }

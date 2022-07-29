@@ -21,17 +21,19 @@ import { sendLabels } from "../../hooks/useLabels";
 import QueryTypeBar from "../QueryTypeBar";
 import { decodeQuery, decodeExpr } from "../../helpers/decodeQuery";
 import setIsEmptyView from "../../actions/setIsEmptyView";
-import { setPanelsData } from "../../actions/setPanelsData";
-import { updatePanels } from "./helpers/querybuilder";
+
+import { useLocation } from "react-router-dom";
+import { setLeftPanel } from "../../actions/setLeftPanel";
+import { setRightPanel } from "../../actions/setRightPanel";
 
 export const QueryBar = (props) => {
     const { queryType, limit, id } = props.data;
-
+    const { hash } = useLocation();
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
     const {
         debug,
-        panels,
+
         apiUrl,
         historyOpen,
         isEmbed,
@@ -41,6 +43,8 @@ export const QueryBar = (props) => {
         start,
         stop,
     } = useSelector((store) => store);
+    const left = useSelector((store) => store.left);
+    const right = useSelector((store) => store.right);
 
     const [queryInput, setQueryInput] = useState(props.data.expr);
     const [queryValid, setQueryValid] = useState(false);
@@ -80,18 +84,36 @@ export const QueryBar = (props) => {
     function handleQueryChange(e) {
         setQueryValue(e);
 
+        const queryParams = new URLSearchParams(hash.replace("#", ""));
         const multiline = e.map((text) => text.children[0].text).join("\n");
-        const modPanels = { ...panels };
 
-        for (let query of modPanels[props.name].queries) {
-            if (query.id === props.data.id) {
-                query.expr = multiline;
-            }
+        if (props.name === "left") {
+            const leftC = [...left];
+            leftC.forEach((query) => {
+                if (query.id === id) {
+                    query.expr = multiline;
+                }
+            });
+
+            dispatch(setLeftPanel(leftC));
+            queryParams.set("left", encodeURIComponent(JSON.stringify(leftC)));
         }
 
-        const updatedPanels = updatePanels(props.name, ["expr"], [multiline]);
+        if (props.name === "right") {
+            const rightC = [...right];
+            rightC.forEach((query) => {
+                if (query.id === id) {
+                    query.expr = multiline;
+                }
+            });
+            dispatch(setRightPanel(rightC));
+            queryParams.set(
+                "right",
+                encodeURIComponent(JSON.stringify(rightC))
+            );
+        }
 
-        dispatch(setPanelsData(updatedPanels));
+        window.location.hash = queryParams;
     }
 
     const handleInputKeyDown = (e) => {
@@ -116,14 +138,26 @@ export const QueryBar = (props) => {
 
                 const labelsDecoded = decodeExpr(props.data.expr);
 
-                const panelsUpdated = updatePanels(
-                    props.name,
-                    ["labels"],
-                    [labelsDecoded],
-                    props.data.id
-                );
+                if (props.name === "left") {
+                    const leftC = [...left];
+                    leftC.forEach((query) => {
+                        if (query.id === id) {
+                            query.labels = [...labelsDecoded];
+                        }
+                    });
 
-                dispatch(setPanelsData(panelsUpdated));
+                    dispatch(setLeftPanel(leftC));
+                }
+
+                if (props.name === "right") {
+                    const rightC = [...right];
+                    rightC.forEach((query) => {
+                        if (query.id === id) {
+                            query.labels = [...labelsDecoded];
+                        }
+                    });
+                    dispatch(setRightPanel(rightC));
+                }
 
                 dispatch(
                     loadLogs(

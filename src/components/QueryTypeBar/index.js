@@ -1,13 +1,15 @@
 import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { themes } from "../../theme/themes";
 import { InputGroup, SettingLabel } from "../styles";
 import QueryLimit from "./components/QueryLimit";
 import QueryTypeSwitch from "./components/QueryTypeSwitch";
 import { Switch } from "@mui/material";
-import { setPanelsData } from "../../actions/setPanelsData";
+import { useLocation } from "react-router-dom";
+import { setLeftPanel } from "../../actions/setLeftPanel";
+import { setRightPanel } from "../../actions/setRightPanel";
 
 const QueryTypeCont = styled.div`
     display: flex;
@@ -18,81 +20,110 @@ const QueryTypeCont = styled.div`
 `;
 
 export default function QueryTypeBar(props) {
-
     const dispatch = useDispatch();
-
     const theme = useSelector((store) => store.theme);
-    const panels = useSelector((store) => store.panels);
+    const left = useSelector((store) => store.left);
+    const right = useSelector((store) => store.right);
+
     const responseType = useSelector((store) => store.responseType);
+
+    const { hash } = useLocation();
+    const { id } = props.data;
 
     const [isTableViewSet, setIsTableViewSet] = useState(props.data.tableView);
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(
         props.data.queryType
     );
-    const query = useMemo(() => {
-        return panels[props.name].queries.find((f) => f.id === props.data.id);
-    }, [props.data.id, props.name, panels]);
+
 
     useEffect(() => {
-        setQueryTypeSwitch(query.queryType);
-    }, [query.queryType, setQueryTypeSwitch]);
+
+        const urlParams = new URLSearchParams(hash.replace("#", ""));
+        const urlPanel = urlParams.get(props.name)
+
+        const parsedPanel = JSON.parse(decodeURIComponent(urlPanel))
+
+        if (parsedPanel?.length > 0) {
+            const queryMD = parsedPanel.find(
+                (f) => f.idRef === props.data.idRef
+            );
+
+            if (props.name === "left" && queryMD) {
+                const leftC = [...left];
+                leftC.forEach((query) => {
+                    if (query.idRef === props.data.idRef) {
+                        query.queryType = queryMD.queryType;
+                    }
+                });
+                dispatch(setLeftPanel(leftC));
+            }
+            if (props.name === "right" && queryMD) {
+                const rightC = [...right];
+                rightC.forEach((query) => {
+                    if (query.idRef === props.data.idRef) {
+                        query.queryType = queryMD.queryType;
+                    }
+                });
+                dispatch(setRightPanel(rightC));
+            }
+        }
+    }, []);
 
     useEffect(() => {
-        setIsTableViewSet(query.tableView);
-    }, [setIsTableViewSet, query.tableView]);
+        setIsTableViewSet(props.data.tableView);
+    }, [setIsTableViewSet, props.data.tableView]);
 
     const SWITCH_OPTIONS = [
         { value: "range", label: "Range" },
         { value: "instant", label: "Instant" },
     ];
 
-    const JSONClone = (arr) => {
-        const arrToJSON = JSON.stringify(arr);
-        const actArr = JSON.parse(arrToJSON);
-        return actArr;
-    };
-    
     function onSwitchChange(e) {
-        const panelName = props.name;
-        const panel = panels[panelName];
-        const actPanels = JSONClone(panels);
-        let actQueries = JSONClone(panel.queries);
-        for (let query of actQueries) {
-            if (query.id === props.data.id) {
-                query.queryType = e;
-            }
+        // modify query type switch value
+        if (props.name === "left") {
+            const leftC = [...left];
+            leftC.forEach((query) => {
+                if (query.id === id) {
+                    query.queryType = e;
+                }
+            });
+            dispatch(setLeftPanel(leftC));
         }
 
-        const finalPanel = {
-            ...actPanels,
-            [panelName]: {
-                queries: [...actQueries],
-            },
-        };
+        if (props.name === "right") {
+            const rightC = [...right];
+            rightC.forEach((query) => {
+                if (query.id === id) {
+                    query.queryType = e;
+                }
+            });
+            dispatch(setRightPanel(rightC));
+        }
 
-        dispatch(setPanelsData(finalPanel));
+        setQueryTypeSwitch(e);
     }
 
     function handleTableViewSwitch() {
-        const panelName = props.name
-        const panel = panels[panelName]
-        const actPanels = JSONClone(panels)
-        let actQueries = JSONClone(panel.queries)
-
-        for (let query of actQueries) {
-            if (query.id === props.data.id) {
-                query.tableView = isTableViewSet ? false : true
-            }
+        // modify table view switch value
+        if (props.name === "right") {
+            const rightC = [...right];
+            rightC.forEach((query) => {
+                if (query.id === id) {
+                    query.tableView = isTableViewSet ? false : true;
+                }
+            });
+            dispatch(setRightPanel(rightC));
         }
 
-        const finalPanel = {
-            ...actPanels,
-            [panelName]: {
-                queries: [...actQueries],
-            }
-        };
-
-        dispatch(setPanelsData(finalPanel))
+        if (props.name === "left") {
+            const leftC = [...left];
+            leftC.forEach((query) => {
+                if (query.id === id) {
+                    query.tableView = isTableViewSet ? false : true;
+                }
+            });
+            dispatch(setLeftPanel(leftC));
+        }
     }
 
     return (

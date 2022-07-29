@@ -11,7 +11,6 @@ export default function CopyLinkButton() {
     const LINK_COPIED = "Link Copied To Clipboard";
   
     const dispatch = useDispatch();
-    const query = useSelector((store) => store.query);
 
     function alertSuccess() {
         dispatch(
@@ -28,10 +27,10 @@ export default function CopyLinkButton() {
     function shareDefaultLink() {
         navigator.clipboard.writeText(window.location.href).then(
             function () {
-                if (query.length > 0) {
+           
                     storeHistory();
                     alertSuccess();
-                }
+              
             },
             function (err) {
                 console.err("error on copy", err);
@@ -55,18 +54,17 @@ export default function CopyLinkButton() {
         textArea.select();
 
         return new Promise((res, rej) => {
-            if (query.length > 0) {
+           
                 storeHistory();
-            }
+          
             alertSuccess();
             document.execCommand("copy") ? res() : rej();
             textArea.remove();
         });
     }
-    const setTitle =
-        query.length < 1 ? "Please add a query for sharing link" : "Copy Link";
+    const setTitle = "Copy Link";
 
-    const setActive = query.length > 0;
+    const setActive = true
 
     function copyLink(e) {
         e.preventDefault();

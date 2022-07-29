@@ -23,22 +23,23 @@ export const MainContainer = styled.div`
     }
     .panels-container {
         display: flex;
-        border-top: 1px solid ${({theme})=> theme.buttonBorder};
-        padding-top:5px;
-        margin-top:5px;
-        background:${({theme})=> theme.shBgColor};
-        height:calc(100vh - 45px);
-        
+        border-top: 1px solid ${({ theme }) => theme.buttonBorder};
+        padding-top: 5px;
+        margin-top: 5px;
+        background: ${({ theme }) => theme.shBgColor};
+        height: calc(100vh - 45px);
     }
 `;
 
 export default function Main() {
+
     UpdateStateFromQueryParams();
+
     const isSplit = useSelector((store) => store.isSplit);
     const isEmbed = useSelector((store) => store.isEmbed);
+    const theme = useSelector((store) => store.theme);
     const settingsDialogOpen = useSelector((store) => store.settingsDialogOpen);
 
-    const theme = useSelector((store) => store.theme);
 
     return (
         <ThemeProvider theme={themes[theme]}>

@@ -1,4 +1,5 @@
-import { setPanelsData } from "../../../actions/setPanelsData";
+import { setLeftPanel } from "../../../actions/setLeftPanel";
+import { setRightPanel } from "../../../actions/setRightPanel";
 import store from "../../../store/store";
 
 export const PIPE_PARSE = [
@@ -239,52 +240,36 @@ export function queryBuilderWithLabels(
     pipeLabels = []
 ) {
     const [key, val] = keyVal;
-
+    const dispatch = store.dispatch;
     const operator = () => {
         if (isInverted) {
             return "!=";
         }
         return "=";
     };
-
+    const { left, right } = store.getState();
     const queryStr = decodeQuery(expr, key, val, operator());
     // here will return without braces\
     //
     //   return [preTags, "{", selectedLabels.join(","), "}", postTags].join("");
 
-    const finalPanel = updatePanels(name, ["expr"], [queryStr], id);
-
-    store.dispatch(setPanelsData(finalPanel));
-}
-
-const JSONClone = (arr) => {
-    const arrToJSON = JSON.stringify(arr);
-    const actArr = JSON.parse(arrToJSON);
-    return actArr;
-};
-
-export function updatePanels(name, keys, vals, id) {
-    const { panels } = store.getState();
-
-    const panelName = name;
-    const panel = panels[panelName];
-
-    const actPanels = JSONClone(panels);
-
-    let actQueries = JSONClone(panel?.queries);
-
-    for (let query of actQueries) {
-        if (query.id === id) {
-            for (let key in keys) {
-                query[[keys[key]]] = vals[key];
+    if (name === "left") {
+        const leftC = [...left];
+        leftC.forEach((query) => {
+            if (query.id === id) {
+                query.expr = queryStr;
             }
-        }
+        });
+        dispatch(setLeftPanel(leftC));
     }
 
-    return {
-        ...actPanels,
-        [panelName]: {
-            queries: [...actQueries],
-        },
-    };
+    if (name === "right") {
+        const rightC = [...right];
+        rightC.forEach((query) => {
+            if (query.id === id) {
+                query.expr = queryStr;
+            }
+        });
+        dispatch(setRightPanel(rightC));
+    }
 }

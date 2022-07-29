@@ -34,7 +34,6 @@ export async function addLabel(e, key, value, isExcluded = false, queryObj) {
     e.preventDefault();
 
     e.stopPropagation();
-
     const { expr, panel, id } = queryObj;
 
     const isAlreadyExcluded = alreadyExists(expr, "!=", key, value);
