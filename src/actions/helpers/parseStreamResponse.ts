@@ -14,6 +14,7 @@ import {
 import moment from "moment";
 import { setLeftDataView } from "../setLeftDataView";
 import { setRightDataView } from "../setRightDataView";
+import store from "../../store/store";
 
 function timeFormatter(props: any) {
     return moment(parseInt(props.value) / 1000000).format(
@@ -72,15 +73,45 @@ export function getStreamTableResult(data: any[]) {
     };
 }
 
+// set current state and action to target dataview
+
+function setDataView(panel: string) {
+    if (panel === "left") {
+        return {
+            state: "leftDataView",
+            action: setLeftDataView,
+        };
+    }
+
+    else {
+        return {
+            state: "rightDataView",
+            action: setRightDataView,
+        };
+    }
+}
+
 export function parseStreamResponse(responseProps: QueryResult) {
     const { result, time, debugMode, queryType, panel, id, dispatch } =
         responseProps;
+    // get sorted messages
+    const messages = mapStreams(result);
+    // get current dataView and update action
 
-    let messages = mapStreams(result);
+    console.log(panel)
+    const dataView = setDataView(panel);
+
     dispatch(setMatrixData([]));
+
     const tableResult = getStreamTableResult(result);
     dispatch(setTableData(tableResult));
     const messSorted = sortMessagesByTimestamp(messages);
+    function unite(args: any) {
+        return [].concat.apply([], args).filter(function (elem, index, self) {
+            return self.indexOf(elem) === index;
+        });
+    }
+
     if (messSorted) {
         try {
             getAsyncResponse(dispatch(setLogs(messSorted || []))).then(() => {
@@ -92,20 +123,40 @@ export function parseStreamResponse(responseProps: QueryResult) {
 
                 dispatch(setIsEmptyView(false));
             });
-
+            const labelsList = Array.from(
+                new Set(messSorted?.map((m) => Object.keys(m.tags)))
+            );
+            const labels = unite(labelsList);
             const panelResult = {
                 id,
                 type: "stream",
                 tableData: tableResult,
                 data: messSorted || [],
+                labels: [...labels],
                 total: messSorted?.length || 0,
             };
 
-            if (panel === "left") {
-                dispatch(setLeftDataView(panelResult));
+            // new action
+            const { action, state } = dataView;
+            console.log(action, state);
+
+            const prevDV = store.getState()?.[state];
+            console.log(prevDV)
+
+            if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
+                let newPanel = [];
+                dispatch(action([]));
+                const filtered = prevDV.filter(
+                    (dv: any) => dv.id !== panelResult.id
+                );
+                newPanel = [...filtered, { ...panelResult }];
+                dispatch(action(newPanel));
             } else {
-                dispatch(setRightDataView(panelResult));
+                let newPanel = [...prevDV, panelResult];
+                dispatch(action(newPanel));
             }
+
+            //
 
             if (queryType === "instant") {
                 dispatch(setQueryTime(time));

@@ -295,7 +295,7 @@ export default function ClokiChart(props) {
     };
 
     return (
-        <div style={{ margin: "10px" }}>
+        <div style={{height:'inherit'}}>
             <ChartTools
                 matrixData={matrixData}
                 chartType={chartType}

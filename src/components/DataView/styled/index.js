@@ -13,11 +13,11 @@ export const DataViewStyled = styled.div`
     border-radius: 3px;
 
     &::-webkit-scrollbar {
-        width: 10px;
+        width: 5px;
     }
 
     &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
+        border-radius: 5px;
         background: ${({theme}) => theme.scrollbarThumb};
     }
 `;

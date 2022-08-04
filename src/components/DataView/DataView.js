@@ -44,7 +44,7 @@ class DataView extends Component {
 
         const side = this.props.name;
         const dtView = this.props[`${side}DataView`];
-
+       // console.log(dtView)
         const actualQuery = () => {
             return this.props[side].find(
                 (f) => f.id === dtView?.id

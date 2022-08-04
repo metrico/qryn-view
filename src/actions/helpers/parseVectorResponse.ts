@@ -1,4 +1,5 @@
 import { setColumnsData } from ".";
+import store from "../../store/store";
 import setIsEmptyView from "../setIsEmptyView";
 import { setLeftDataView } from "../setLeftDataView";
 import { setRightDataView } from "../setRightDataView";
@@ -14,8 +15,24 @@ import { prepareVectorRows } from "./prepareVectorRows";
  * process restult type: vector
  *
  */
+
+function setDataView(panel: string) {
+    if (panel === "left") {
+        return {
+            state: "leftDataView",
+            action: setLeftDataView,
+        };
+    } else {
+        return {
+            state: "rightDataView",
+            action: setRightDataView,
+        };
+    }
+}
+
 export function parseVectorResponse(responseProps: QueryResult) {
     const { result, debugMode, dispatch, panel, id } = responseProps;
+
     try {
         const colsData = prepareCols(result);
         if (colsData.length > 0) {
@@ -45,15 +62,27 @@ export function parseVectorResponse(responseProps: QueryResult) {
                     id,
                     type: "vector",
                     data: vectorTableData || {},
-                    total: vectorTableData?.dataRows?.length || 0
+                    total: vectorTableData?.dataRows?.length || 0,
                 };
+                const dataView = setDataView(panel)
+                const { action, state } = dataView;
+                console.log(action, state);
 
-                
-            if (panel === "left") {
-                dispatch(setLeftDataView(panelResult));
-            } else {
-                dispatch(setRightDataView(panelResult));
-            }
+                const prevDV = store.getState()?.[state];
+                console.log(prevDV);
+
+                if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
+                    let newPanel = [];
+                    dispatch(action([]));
+                    const filtered = prevDV.filter(
+                        (dv: any) => dv.id !== panelResult.id
+                    );
+                    newPanel = [...filtered, { ...panelResult }];
+                    dispatch(action(newPanel));
+                } else {
+                    let newPanel = [...prevDV, panelResult];
+                    dispatch(action(newPanel));
+                }
             }
         }
     } catch (e) {

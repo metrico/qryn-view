@@ -51,10 +51,12 @@ export const AddLabels = (props) => {
 };
 
 export function Table(props) {
+
     const { columns, data, actQuery } = props;
 
     const { responseType } = actQuery;
-    const [tableHeight, setTableHeight] = useState(window.innerHeight - 200);
+
+    const [tableHeight, setTableHeight] = useState(window.innerHeight -200);
 
     useEffect(() => {
         if (tableHeight !== window.innerHeight - 200)
@@ -161,7 +163,7 @@ export function Table(props) {
                 <FixedSizeList
                     height={tableHeight}
                     itemCount={rows.length}
-                    itemSize={25}
+                    itemSize={20}
                     width={totalColumnsWidth + scrollbarWidth}
                 >
                     {RenderRow}

@@ -16,12 +16,12 @@ export async function resetParams(dispatch: Function,panel:string) {
     dispatch(setVectorData([]));
     if (panel === 'left') {
            
-    dispatch(setLeftDataView({type:'',data:[]}))
-      dispatch(setIsEmptyView(true))
+    //dispatch(setLeftDataView([]))
+     // dispatch(setIsEmptyView(true))
     }
 
     if (panel === 'right') {
-         dispatch(setRightDataView({type:'',data:[]}))
-       dispatch(setIsEmptyView(true))
+        // dispatch(setRightDataView([]))
+      // dispatch(setIsEmptyView(true))
     }
 }

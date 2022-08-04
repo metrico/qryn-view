@@ -9,7 +9,7 @@ export const MainViewStyled = styled.div`
     flex-direction: column;
     background-color: ${(props) => props.theme.mainBgColor} !important;
     &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
+        border-radius: 5px;
         background: ${(props) => props.theme.scrollbarThumb} !important;
     }
 `;

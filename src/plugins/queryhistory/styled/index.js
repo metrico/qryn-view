@@ -152,7 +152,7 @@ export const QueryHistoryContainer = styled.div`
     }
 
     &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
+        border-radius: 5px;
         background: ${(props) => props.theme.scrollbarThumb};
     }
 `;

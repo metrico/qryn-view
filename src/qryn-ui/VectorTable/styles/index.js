@@ -6,11 +6,11 @@ export const TableStyles = styled.div`
     display: block;
     overflow: auto;
         &::-webkit-scrollbar {
-        width: 10px;
+        width: 5px;
     }
 
     &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
+        border-radius: 5px;
         background: ${(props) => props.theme.scrollbarThumb};
     }
     .table {
@@ -19,11 +19,11 @@ export const TableStyles = styled.div`
         font-size: 12px;
         color: ${(props) => props.theme.textColor};
     &::-webkit-scrollbar {
-        width: 10px;
+        width: 5px;
     }
 
     &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
+        border-radius: 5px;
         background: ${(props) => props.theme.scrollbarThumb};
     }
         .tr {
@@ -46,7 +46,6 @@ export const TableStyles = styled.div`
             display: block;
             flex: 1;
             margin: 0;
-            padding: 0.5rem;
             justify-content: space-between;
             border-bottom: 1px solid ${(props) => props.theme.buttonBorder};
             border-right: 1px solid ${(props) => props.theme.buttonBorder};
@@ -88,7 +87,7 @@ export const TableStyles = styled.div`
     }
 
     .pagination {
-        padding: 0.5rem;
+       // padding: 0.5rem;
     }
 `;
 

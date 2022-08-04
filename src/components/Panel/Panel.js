@@ -8,6 +8,7 @@ import styled from "@emotion/styled";
 import { useLocation } from "react-router-dom";
 import { setRightPanel } from "../../actions/setRightPanel";
 import { setLeftPanel } from "../../actions/setLeftPanel";
+import DataViews from "../DataView/DataViews";
 
 const PanelCont = styled.div`
     display: flex;
@@ -28,9 +29,10 @@ export default function Panel(props) {
     useEffect(() => {
         const params = new URLSearchParams(hash.replace("#", ""));
 
+
+
         const urlLeft = params.get("left");
         const urlRight = params.get("right");
-
         let leftQueries = [];
         let rightQueries = [];
 
@@ -51,6 +53,11 @@ export default function Panel(props) {
         }
     }, []);
 
+    // CHECK ALSO THAT DATAVIEWS IS AN ARRAY 
+
+    
+
+
     const panelData = useMemo(() => {
         if (name === "left") {
             return left;
@@ -63,7 +70,8 @@ export default function Panel(props) {
         <>
             <PanelCont isSplit={isSplit}>
                 <QueriesContainer {...props} queries={panelData} />
-                <DataView {...props} />
+                {/* <DataView {...props} /> */}
+                <DataViews {...props}/>
             </PanelCont>
         </>
     );

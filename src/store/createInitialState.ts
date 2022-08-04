@@ -152,14 +152,8 @@ export default function initialState() {
             },
         ],
 
-        leftDataView: {
-            type: "",
-            data: [],
-        },
-        rightDataView: {
-            type: "",
-            data: [],
-        },
+        leftDataView: [],
+        rightDataView: [],
 
         chartType: "line",
         resposeType: "",
