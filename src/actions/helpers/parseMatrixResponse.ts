@@ -125,10 +125,8 @@ export function parseMatrixResponse(responseProps: QueryResult) {
 
         // add this data to previous
         const { action, state } = dataView;
-        console.log(action, state);
 
         const prevDV = store.getState()?.[state];
-        console.log(prevDV);
 
         if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
             let newPanel = [];

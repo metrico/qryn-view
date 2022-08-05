@@ -20,12 +20,17 @@ const ViewStyled = styled.div`
     border: 1px solid gray;
     height: ${(props) =>
         props.size === "regular"
-            ? "350px"
-            : props.size === "min"
-            ? "18px"
-            : "fit-content"};
+            ? props.vheight.regularCont
+            : props.size === "max"
+            ? props.vheight.maxCont
+            : "20px"};
     .view-content {
-        height: calc(100% - 5px);
+        height: ${(props) =>
+            props.size === "regular"
+                ? props.vheight.regularView
+                : props.size === "max"
+                ? props.vheight.maxView
+                : "0px"};
         display: ${(props) =>
             props.size === "min"
                 ? "none"
@@ -72,12 +77,10 @@ const VHeader = styled.div`
 `;
 
 export default function DataViews(props) {
-    const step = useSelector((store) => store.step);
     const theme = useSelector((store) => store.theme);
 
     const [side] = useState(props.name);
 
-    const panel = useSelector((store) => store[`${props.name}`]);
     const dataViews = useSelector((store) => store[`${side}DataView`]);
 
     return (
@@ -92,28 +95,11 @@ export default function DataViews(props) {
     );
 }
 
-// Hook
-function useDimensions(targetRef) {
-    const [width, setWidth] = useState(targetRef?.current?.offsetWidth || 0);
-    const [height, setHeight] = useState(targetRef?.current?.offsetHeight || 0);
-
-    useEffect(() => {
-        setHeight(targetRef?.current?.offsetHeight);
-    }, [targetRef?.current?.offsetHeight, setHeight]);
-
-    useEffect(() => {
-        setWidth(targetRef?.current?.offsetWidth);
-    }, [targetRef?.current?.offsetWidth, setWidth]);
-
-    return { width, height };
-}
-
 export function DataViewItem(props) {
     // add a header for table view / json view
     const { dataView, name } = props;
-   
+    const { type, total } = dataView;
 
-  
     // panelSize: min , regular, full
     const panel = useSelector((store) => store[name]);
     const [panelSize, setPanelSize] = useState("regular");
@@ -127,8 +113,7 @@ export function DataViewItem(props) {
     }, [panel, dataView]);
 
     const [streamData, setStreamData] = useState(dataView.data);
-    const [tableData, setTableData] = useState(dataView.tableData || {})
-    console.log(tableData)
+    const [tableData, setTableData] = useState(dataView.tableData || {});
     useEffect(() => {
         setStreamData(dataView.data);
     }, [dataView.data, setStreamData]);
@@ -137,7 +122,7 @@ export function DataViewItem(props) {
     }, [dataView.tableData, setTableData]);
     const onStreamClose = () => {
         setStreamData([]);
-        setTableData([])
+        setTableData([]);
     };
 
     const onMinimize = () => {
@@ -148,97 +133,141 @@ export function DataViewItem(props) {
         setPanelSize((prev) => (prev !== "max" ? "max" : "regular"));
     };
 
-    if (actualQuery && dataView.type === "stream" && streamData.length > 0) {
+    const theight = useMemo(() => {
+        const totalRows = total * 20;
+
+        if (panelSize === "max") {
+            return totalRows;
+        }
+        if (panelSize === "min") {
+            return 0;
+        }
+        if (panelSize === "regular") {
+            return totalRows < 340 ? totalRows : 340;
+        } else {
+            return totalRows < 340 ? totalRows : 340;
+        }
+    }, [panelSize]);
+
+    const viewHeight = useMemo(() => {
+        const isMatrixTable = type === "matrix" && actualQuery.tableView;
+        const isStreamTable = type === "stream" && actualQuery.tableView;
+        let regularCont = "",
+            maxCont = "",
+            regularView = "",
+            maxView = "";
+        if (type === "vector" || isMatrixTable || isStreamTable) {
+            const regRows = total * 20;
+            const regCalc = regRows < 340 ? regRows : 340;
+
+            regularCont = `${regCalc + 40}px`;
+            regularView = `${regCalc + 20}px`;
+            maxCont = "fit-content";
+            maxView = "fit-content";
+        }
+
+        if (type === "stream" && !actualQuery.tableView) {
+            const regRows = total * 20;
+            const regCalc = regRows < 350 ? "fit-content" : "350px";
+            regularCont = regCalc;
+            regularView = regCalc;
+            maxCont = "fit-content";
+            maxView = "fit-content";
+        }
+
+        if (type === "matrix" && !actualQuery.tableView) {
+            regularCont = "fit-content";
+            regularView = "350px";
+            maxCont = "fit-content";
+            maxView = "fit-content";
+        }
+        return { regularCont, regularView, maxCont, maxView };
+    }, [total, type, actualQuery.tableView]);
+
+    if (actualQuery && type === "stream" && streamData.length > 0) {
         return (
-            <ViewStyled size={panelSize} >
+            <ViewStyled size={panelSize} vheight={viewHeight}>
                 <ViewHeader
                     onClose={onStreamClose}
                     onMinimize={onMinimize}
                     onMaximize={onMaximize}
                     actualQuery={actualQuery}
-                    {...props}
-                />
-                <div className="view-content">
-                {actualQuery?.tableView ? (
-                                <VectorTable
-                                {...props}
-                               
-                                data={tableData}
-                                actualQuery={actualQuery}
-                            />
-                    ):(<LogRows
-                        {...props}
-                        onClose={onStreamClose}
-                        messages={streamData}
-                        actualQuery={actualQuery}
-                    />)}
-                    
-                </div>
-            </ViewStyled>
-        );
-    }
-
-
-    if (actualQuery && dataView.type === "matrix" && streamData.length > 0) {
-        // return matrix type component
-        const { limit } = actualQuery;
-
-
-        return (
-            <ViewStyled size={panelSize}>
-                <ViewHeader
-                    onClose={onStreamClose}
-                    onMinimize={onMinimize}
-                    onMaximize={onMaximize}
-                    actualQuery={actualQuery}
+                    type={type}
                     {...props}
                 />
                 <div className="view-content">
                     {actualQuery?.tableView ? (
-                                <VectorTable
-                                {...props}
-                               
-                                data={tableData}
-                                actualQuery={actualQuery}
-                            />
-                    ):(        <ClokiChart
-                        {...props}
-                        chartLimit={limit}
-                        matrixData={streamData}
-                        actualQuery={actualQuery}
-                    />)}
-
-            
+                        <VectorTable
+                            {...props}
+                            height={theight}
+                            data={tableData}
+                            actualQuery={actualQuery}
+                        />
+                    ) : (
+                        <LogRows
+                            {...props}
+                            onClose={onStreamClose}
+                            messages={streamData}
+                            actualQuery={actualQuery}
+                        />
+                    )}
                 </div>
             </ViewStyled>
         );
     }
 
-
-
-    
-
-    if (
-        actualQuery &&
-        dataView.type === "vector" &&
-        streamData?.dataRows?.length > 0
-    ) {
-        // return vector type (table) component
-        console.log(actualQuery, streamData);
+    if (actualQuery && type === "matrix" && streamData.length > 0) {
+        // return matrix type component
+        const { limit } = actualQuery;
 
         return (
-            <ViewStyled size={panelSize} >
+            <ViewStyled size={panelSize} vheight={viewHeight}>
                 <ViewHeader
                     onClose={onStreamClose}
                     onMinimize={onMinimize}
                     onMaximize={onMaximize}
                     actualQuery={actualQuery}
+                    type={type}
                     {...props}
                 />
-                <div className="view-content"  id={actualQuery.id+'-view'}>
+                <div className="view-content">
+                    {actualQuery?.tableView ? (
+                        <VectorTable
+                            {...props}
+                            height={theight}
+                            data={tableData}
+                            actualQuery={actualQuery}
+                        />
+                    ) : (
+                        <ClokiChart
+                            {...props}
+                            chartLimit={limit}
+                            matrixData={streamData}
+                            actualQuery={actualQuery}
+                        />
+                    )}
+                </div>
+            </ViewStyled>
+        );
+    }
+
+    if (actualQuery && type === "vector" && streamData?.dataRows?.length > 0) {
+        // return vector type (table) component
+
+        return (
+            <ViewStyled size={panelSize} vheight={viewHeight}>
+                <ViewHeader
+                    onClose={onStreamClose}
+                    onMinimize={onMinimize}
+                    onMaximize={onMaximize}
+                    actualQuery={actualQuery}
+                    type={type}
+                    {...props}
+                />
+                <div className="view-content" id={actualQuery.id + "-view"}>
                     <VectorTable
                         {...props}
-                       
+                        height={theight}
                         data={streamData}
                         actualQuery={actualQuery}
                     />
@@ -259,9 +288,8 @@ const LabelChip = styled.div`
 
 export function ViewHeader(props) {
     const dispatch = useDispatch();
-    console.log(props);
     const theme = useSelector((store) => store.theme);
-    const { actualQuery, dataView, name } = props;
+    const { actualQuery, dataView, name, type } = props;
     const DataViewList = useSelector((store) => store[`${name}DataView`]);
     const action = (name) => {
         if (name === "left") {
@@ -270,10 +298,22 @@ export function ViewHeader(props) {
             return setRightDataView;
         }
     };
+
+    const headerType = useMemo(() => {
+        const isMatrixTable = type === "matrix" && actualQuery.tableView;
+        const isStreamTable = type === "stream" && actualQuery.tableView;
+        if (type === "matrix" && !actualQuery.tableView) {
+            return "Chart";
+        }
+        if (type === "stream" && !actualQuery.tableView) {
+            return "Logs";
+        }
+        if (type === "vector" || isMatrixTable || isStreamTable) {
+            return "Table";
+        }
+    }, [type, actualQuery.tableView]);
     function onClose() {
-        console.log(DataViewList);
         const filtered = DataViewList.filter((f) => f.id !== dataView.id) || [];
-        console.log(filtered);
         dispatch(action(name)([]));
         dispatch(action(name)(filtered));
         props.onClose();
@@ -284,17 +324,14 @@ export function ViewHeader(props) {
     function onMaximize() {
         props.onMaximize();
     }
-    /**
-     * expr
-     * limit
-     * idRef
-     * queryType
-     */
-    // update at dataview also
+
     return (
         <ThemeProvider theme={themes[theme]}>
             <VHeader>
                 <div className="view-header-info">
+                    <span>
+                        <span className="exp">{headerType}</span>
+                    </span>
                     <Tooltip title={actualQuery.expr}>
                         <span>
                             query:{" "}

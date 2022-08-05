@@ -51,17 +51,11 @@ export const AddLabels = (props) => {
 };
 
 export function Table(props) {
+    // modify height from props in here
 
-    const { columns, data, actQuery } = props;
+    const { columns, data, actQuery,height } = props;
 
     const { responseType } = actQuery;
-
-    const [tableHeight, setTableHeight] = useState(window.innerHeight -200);
-
-    useEffect(() => {
-        if (tableHeight !== window.innerHeight - 200)
-            setTableHeight(window.innerHeight - 200);
-    }, [setTableHeight, tableHeight]);
 
     const cellProps = (props, { cell }) => getStyles(props, cell.column.align);
 
@@ -161,7 +155,7 @@ export function Table(props) {
 
             <div {...getTableBodyProps()}>
                 <FixedSizeList
-                    height={tableHeight}
+                    height={height}
                     itemCount={rows.length}
                     itemSize={20}
                     width={totalColumnsWidth + scrollbarWidth}
