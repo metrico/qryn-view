@@ -17,7 +17,8 @@ import { VectorTable } from "../../qryn-ui/VectorTable/VectorTable";
 const ViewStyled = styled.div`
     margin: 5px;
     padding: 5px;
-    border: 1px solid gray;
+    border: 1px solid ${({theme})=> theme.buttonBorder};
+    border-radius:3px;
     height: ${(props) =>
         props.size === "regular"
             ? props.vheight.regularCont
@@ -154,9 +155,9 @@ export function DataViewItem(props) {
             return 0;
         }
         if (panelSize === "regular") {
-            return totalRows < 340 ? totalRows : 340;
+            return totalRows < 310 ? totalRows : 310;
         } else {
-            return totalRows < 340 ? totalRows : 340;
+            return totalRows < 310 ? totalRows : 310;
         }
     }, [panelSize]);
 
@@ -169,10 +170,10 @@ export function DataViewItem(props) {
             maxView = "";
         if (type === "vector" || isMatrixTable || isStreamTable) {
             const regRows = total * 20;
-            const regCalc = regRows < 340 ? regRows : 340;
+            const regCalc = regRows < 330 ? regRows : 330;
 
-            regularCont = `${regCalc + 40}px`;
-            regularView = `${regCalc + 20}px`;
+            regularCont = `${regCalc + 20}px`;
+            regularView = `${regCalc }px`;
             maxCont = "fit-content";
             maxView = "fit-content";
         }
