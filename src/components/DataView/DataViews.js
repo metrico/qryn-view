@@ -97,8 +97,8 @@ export default function DataViews(props) {
     return (
         <ThemeProvider theme={themes[theme]}>
             <DTCont>
-                {dataViews.length > 0 &&
-                    dataViews.map((dv, index) => (
+                {dataViews?.length > 0 &&
+                    dataViews?.map((dv, index) => (
                         <DataViewItem key={index} {...props} dataView={dv} />
                     ))}
             </DTCont>
@@ -161,8 +161,8 @@ export function DataViewItem(props) {
     }, [panelSize]);
 
     const viewHeight = useMemo(() => {
-        const isMatrixTable = type === "matrix" && actualQuery.tableView;
-        const isStreamTable = type === "stream" && actualQuery.tableView;
+        const isMatrixTable = type === "matrix" && actualQuery?.tableView;
+        const isStreamTable = type === "stream" && actualQuery?.tableView;
         let regularCont = "",
             maxCont = "",
             regularView = "",
@@ -177,7 +177,7 @@ export function DataViewItem(props) {
             maxView = "fit-content";
         }
 
-        if (type === "stream" && !actualQuery.tableView) {
+        if (type === "stream" && !actualQuery?.tableView) {
             const regRows = total * 20;
             const regCalc = regRows < 350 ? "fit-content" : "350px";
             regularCont = regCalc;
@@ -186,14 +186,14 @@ export function DataViewItem(props) {
             maxView = "fit-content";
         }
 
-        if (type === "matrix" && !actualQuery.tableView) {
+        if (type === "matrix" && !actualQuery?.tableView) {
             regularCont = "fit-content";
             regularView = "350px";
             maxCont = "fit-content";
             maxView = "fit-content";
         }
         return { regularCont, regularView, maxCont, maxView };
-    }, [total, type, actualQuery.tableView]);
+    }, [total, type, actualQuery?.tableView]);
 
     if (actualQuery && type === "stream" && streamData.length > 0) {
         return (
@@ -278,7 +278,7 @@ export function DataViewItem(props) {
                     type={type}
                     {...props}
                 />
-                <div className="view-content" id={actualQuery.id + "-view"}>
+                <div className="view-content" id={actualQuery?.id + "-view"}>
                     <VectorTable
                         {...props}
                         height={theight}
@@ -333,18 +333,18 @@ export function ViewHeader(props) {
     };
 
     const headerType = useMemo(() => {
-        const isMatrixTable = type === "matrix" && actualQuery.tableView;
-        const isStreamTable = type === "stream" && actualQuery.tableView;
-        if (type === "matrix" && !actualQuery.tableView) {
+        const isMatrixTable = type === "matrix" && actualQuery?.tableView;
+        const isStreamTable = type === "stream" && actualQuery?.tableView;
+        if (type === "matrix" && !actualQuery?.tableView) {
             return "Chart";
         }
-        if (type === "stream" && !actualQuery.tableView) {
+        if (type === "stream" && !actualQuery?.tableView) {
             return "Logs";
         }
         if (type === "vector" || isMatrixTable || isStreamTable) {
             return "Table";
         }
-    }, [type, actualQuery.tableView]);
+    }, [type, actualQuery?.tableView]);
     function onClose() {
         const filtered = DataViewList.filter((f) => f.id !== dataView.id) || [];
         dispatch(action(name)([]));
@@ -396,15 +396,15 @@ export function ViewHeader(props) {
                     <span>
                         <span className="exp">{headerType}</span>
                     </span>
-                    <Tooltip title={actualQuery.expr}>
+                    <Tooltip title={actualQuery?.expr}>
                         <span>
                             query:{" "}
-                            <span className="exp">{actualQuery.idRef}</span>
+                            <span className="exp">{actualQuery?.idRef}</span>
                         </span>
                     </Tooltip>
 
                     <span>
-                        limit: <span className="exp">{actualQuery.limit}</span>
+                        limit: <span className="exp">{actualQuery?.limit}</span>
                     </span>
                     <span>
                         count: <span className="exp">{total}</span>
