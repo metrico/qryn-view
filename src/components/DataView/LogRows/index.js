@@ -1,19 +1,14 @@
-import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
 import memoize from "memoize-one";
 import { PureComponent } from "react";
-import { useSelector } from "react-redux";
-import { themes } from "../../../theme/themes";
 import { formatDate, getRowColor } from "../helpers";
 import { LogRow, RowLogContent, RowTimestamp } from "../styled";
 import ValueTags from "../ValueTags";
 
 const RowsCont = styled.div`
-overflow:hidden;    
-overflow-y: auto;
-    height:calc(100% - 20px);
-
-   
+    overflow: hidden;
+    overflow-y: auto;
+    height: calc(100% - 20px);
 `;
 function Row(props) {
     const { toggleItemActive, index, log, actQuery } = props;
@@ -83,27 +78,10 @@ export class LogRows extends PureComponent {
         });
 
     render() {
-        const { name } = this.props;
-
-        // actual panel
-        const actPanel = this.props[name];
-
-        // queries from panel
-        const queries = actPanel || [];
-
-        // active DataView data
-
-        const actDataView = this.props.dataView;
-
-        //
-        const sourceId = actDataView["id"];
-
-        const actQuery = queries.find(({ id }) => id === sourceId);
-
         return (
             <RowsCont>
                 <Logs
-                    actQuery={actQuery}
+                    actQuery={this.props.actualQuery}
                     items={this.state.messages}
                     toggleItemActive={this.toggleItemActive}
                 />

@@ -61,6 +61,17 @@ const VHeader = styled.div`
     font-size: 12px;
     .header-actions {
         justify-self: flex-end;
+        .header-icon {
+            padding: 1px 2px;
+            margin: 0px 2px;
+            border-radius:3px;
+            cursor:pointer;
+            color: ${({theme})=> theme.textColor};
+            &:hover {
+                background: ${({theme})=> theme.buttonDefault};
+            }
+
+        }
     }
     .view-header-info {
         display: flex;
@@ -192,6 +203,7 @@ export function DataViewItem(props) {
                     onMinimize={onMinimize}
                     onMaximize={onMaximize}
                     actualQuery={actualQuery}
+                    total={total}
                     type={type}
                     {...props}
                 />
@@ -227,6 +239,7 @@ export function DataViewItem(props) {
                     onMinimize={onMinimize}
                     onMaximize={onMaximize}
                     actualQuery={actualQuery}
+                    total={total}
                     type={type}
                     {...props}
                 />
@@ -261,6 +274,7 @@ export function DataViewItem(props) {
                     onMinimize={onMinimize}
                     onMaximize={onMaximize}
                     actualQuery={actualQuery}
+                    total={total}
                     type={type}
                     {...props}
                 />
@@ -289,7 +303,7 @@ const LabelChip = styled.div`
 export function ViewHeader(props) {
     const dispatch = useDispatch();
     const theme = useSelector((store) => store.theme);
-    const { actualQuery, dataView, name, type } = props;
+    const { actualQuery, dataView, name, type, total } = props;
     const DataViewList = useSelector((store) => store[`${name}DataView`]);
     const action = (name) => {
         if (name === "left") {
@@ -344,7 +358,7 @@ export function ViewHeader(props) {
                     </span>
                     <span>
                         count:{" "}
-                        <span className="exp">{dataView.data.length}</span>
+                        <span className="exp">{total}</span>
                     </span>
                     {dataView.labels && (
                         <span>
@@ -371,15 +385,20 @@ export function ViewHeader(props) {
 
                 <div className="header-actions">
                     <CropSquareIcon
+                    className="header-icon"
                         onClick={onMaximize}
                         style={{ fontSize: "12px" }}
                     />
                     <MinimizeIcon
+                    className="header-icon"
                         onClick={onMinimize}
                         style={{ fontSize: "12px" }}
                     />
 
-                    <CloseIcon onClick={onClose} style={{ fontSize: "12px" }} />
+                    <CloseIcon 
+                    className="header-icon"
+                    onClick={onClose} 
+                    style={{ fontSize: "12px" }} />
                 </div>
             </VHeader>
         </ThemeProvider>
