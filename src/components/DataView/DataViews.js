@@ -17,8 +17,8 @@ import { VectorTable } from "../../qryn-ui/VectorTable/VectorTable";
 const ViewStyled = styled.div`
     margin: 5px;
     padding: 5px;
-    border: 1px solid ${({theme})=> theme.buttonBorder};
-    border-radius:3px;
+    border: 1px solid ${({ theme }) => theme.buttonBorder};
+    border-radius: 3px;
     height: ${(props) =>
         props.size === "regular"
             ? props.vheight.regularCont
@@ -65,13 +65,12 @@ const VHeader = styled.div`
         .header-icon {
             padding: 1px 2px;
             margin: 0px 2px;
-            border-radius:3px;
-            cursor:pointer;
-            color: ${({theme})=> theme.textColor};
+            border-radius: 3px;
+            cursor: pointer;
+            color: ${({ theme }) => theme.textColor};
             &:hover {
-                background: ${({theme})=> theme.buttonDefault};
+                background: ${({ theme }) => theme.buttonDefault};
             }
-
         }
     }
     .view-header-info {
@@ -173,7 +172,7 @@ export function DataViewItem(props) {
             const regCalc = regRows < 330 ? regRows : 330;
 
             regularCont = `${regCalc + 20}px`;
-            regularView = `${regCalc }px`;
+            regularView = `${regCalc}px`;
             maxCont = "fit-content";
             maxView = "fit-content";
         }
@@ -295,10 +294,29 @@ export function DataViewItem(props) {
 }
 
 const LabelChip = styled.div`
-    margin: 0px 4px;
-    padding: 2px 5px;
+    margin: 0px 2px;
+    padding: 2px;
+    font-size: 10px;
     border: 1px solid ${({ theme }) => theme.buttonBorder};
     border-radius: 3px;
+`;
+
+const HeadLabelsCont = styled.div`
+    display: flex;
+    align-items: center;
+    margin: 0px 12px;
+    flex: 1;
+    max-width: 450px;
+    overflow-x: auto;
+    &::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background: ${({ theme }) => theme.scrollbarThumb};
+    }
 `;
 
 export function ViewHeader(props) {
@@ -339,6 +357,37 @@ export function ViewHeader(props) {
     function onMaximize() {
         props.onMaximize();
     }
+    const labelsLegend = useMemo(
+        () => dataView?.labels?.join("  |  ") || "",
+        [dataView.labels]
+    );
+    const labelsList = useMemo(() => {
+        if (dataView?.labels?.length) {
+            if (dataView?.labels.length > 4) {
+                const cropped = [...dataView.labels].slice(0, 4);
+                return (
+                    <>
+                        {cropped.map((name, index) => (
+                            <LabelChip key={index}>
+                                <ViewLabel name={name} {...props.theme} />
+                            </LabelChip>
+                        ))}{" "}
+                        ...
+                    </>
+                );
+            } else {
+                return (
+                    <>
+                        {dataView.labels.map((name, index) => (
+                            <LabelChip key={index}>
+                                <ViewLabel name={name} {...props.theme} />
+                            </LabelChip>
+                        ))}
+                    </>
+                );
+            }
+        }
+    });
 
     return (
         <ThemeProvider theme={themes[theme]}>
@@ -358,48 +407,35 @@ export function ViewHeader(props) {
                         limit: <span className="exp">{actualQuery.limit}</span>
                     </span>
                     <span>
-                        count:{" "}
-                        <span className="exp">{total}</span>
+                        count: <span className="exp">{total}</span>
                     </span>
                     {dataView.labels && (
                         <span>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    margin: "0px 12px",
-                                }}
-                            >
+                            <HeadLabelsCont title={labelsLegend}>
                                 labels:
-                                {dataView.labels.map((name, index) => (
-                                    <LabelChip key={index}>
-                                        <ViewLabel
-                                            name={name}
-                                            {...props.theme}
-                                        />
-                                    </LabelChip>
-                                ))}
-                            </div>
+                                {labelsList}
+                            </HeadLabelsCont>
                         </span>
                     )}
                 </div>
 
                 <div className="header-actions">
                     <CropSquareIcon
-                    className="header-icon"
+                        className="header-icon"
                         onClick={onMaximize}
                         style={{ fontSize: "12px" }}
                     />
                     <MinimizeIcon
-                    className="header-icon"
+                        className="header-icon"
                         onClick={onMinimize}
                         style={{ fontSize: "12px" }}
                     />
 
-                    <CloseIcon 
-                    className="header-icon"
-                    onClick={onClose} 
-                    style={{ fontSize: "12px" }} />
+                    <CloseIcon
+                        className="header-icon"
+                        onClick={onClose}
+                        style={{ fontSize: "12px" }}
+                    />
                 </div>
             </VHeader>
         </ThemeProvider>

@@ -97,8 +97,6 @@ export function parseStreamResponse(responseProps: QueryResult) {
     // get sorted messages
     const messages = mapStreams(result);
     // get current dataView and update action
-
-    console.log(panel)
     const dataView = setDataView(panel);
 
     dispatch(setMatrixData([]));
@@ -138,11 +136,7 @@ export function parseStreamResponse(responseProps: QueryResult) {
 
             // new action
             const { action, state } = dataView;
-            console.log(action, state);
-
             const prevDV = store.getState()?.[state];
-            console.log(prevDV)
-
             if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
                 let newPanel = [];
                 dispatch(action([]));

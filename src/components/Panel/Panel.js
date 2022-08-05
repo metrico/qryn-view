@@ -1,9 +1,6 @@
-import DataView from "../DataView/DataView";
 import QueriesContainer from "../QueriesContainer/QueriesContainer";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useMemo } from "react";
-import { nanoid } from "nanoid";
-
 import styled from "@emotion/styled";
 import { useLocation } from "react-router-dom";
 import { setRightPanel } from "../../actions/setRightPanel";
@@ -70,7 +67,6 @@ export default function Panel(props) {
         <>
             <PanelCont isSplit={isSplit}>
                 <QueriesContainer {...props} queries={panelData} />
-                {/* <DataView {...props} /> */}
                 <DataViews {...props}/>
             </PanelCont>
         </>

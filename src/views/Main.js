@@ -7,6 +7,7 @@ import { Notification } from "../qryn-ui/notifications";
 import SettingsDialog from "../plugins/settingsdialog/SettingsDialog";
 import { UpdateStateFromQueryParams } from "../helpers/UpdateStateFromQueryParams";
 import StatusBar from "../components/StatusBar";
+import QueryHistory from "../plugins/queryhistory";
 
 export const MainContainer = styled.div`
     position: absolute;
@@ -52,6 +53,7 @@ export default function Main() {
             </MainContainer>
             <Notification />
             <SettingsDialog open={settingsDialogOpen} />
+            <QueryHistory />
         </ThemeProvider>
     );
 }

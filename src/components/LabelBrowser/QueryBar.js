@@ -128,7 +128,13 @@ export const QueryBar = (props) => {
         if (onQueryValid(queryInput)) {
             try {
                 const historyUpdated = historyService.add({
-                    data: queryInput,
+                    data: JSON.stringify({
+                        queryInput,
+                        queryType: props.data.queryType,
+                        limit: props.data.limit,
+                        panel: props.name,
+                        id: props.data.id,
+                    }),
                     url: window.location.hash,
                 });
 

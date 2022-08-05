@@ -141,6 +141,7 @@ export default function QueryTypeBar(props) {
                         <SettingLabel>Table View</SettingLabel>
                         <Switch
                             checked={isTableViewSet}
+                            size={'small'}
                             onChange={handleTableViewSwitch}
                             inputProps={{ "aria-label": "controlled" }}
                         />
