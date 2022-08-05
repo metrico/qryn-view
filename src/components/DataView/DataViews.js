@@ -13,6 +13,7 @@ import CropSquareIcon from "@mui/icons-material/CropSquare";
 import { Tooltip } from "@mui/material";
 import ClokiChart from "../../plugins/charts";
 import { VectorTable } from "../../qryn-ui/VectorTable/VectorTable";
+import EmptyView from "./EmptyView";
 
 const ViewStyled = styled.div`
     margin: 5px;
@@ -289,7 +290,21 @@ export function DataViewItem(props) {
             </ViewStyled>
         );
     } else {
-        return null;
+        return (
+            <ViewStyled size={panelSize} vheight={viewHeight}>
+                <ViewHeader
+                    onClose={onStreamClose}
+                    onMinimize={onMinimize}
+                    onMaximize={onMaximize}
+                    actualQuery={actualQuery}
+                    total={total}
+                    type={type}
+                    fixedSize={true}
+                    {...props}
+                />
+                <EmptyView />
+            </ViewStyled>
+        );
     }
 }
 
@@ -320,6 +335,7 @@ const HeadLabelsCont = styled.div`
 `;
 
 export function ViewHeader(props) {
+    const { fixedSize } = props || { fixedSize: false };
     const dispatch = useDispatch();
     const theme = useSelector((store) => store.theme);
     const { actualQuery, dataView, name, type, total } = props;
@@ -387,7 +403,7 @@ export function ViewHeader(props) {
                 );
             }
         }
-    });
+    }, [dataView.labels, props.theme]);
 
     return (
         <ThemeProvider theme={themes[theme]}>
@@ -409,7 +425,7 @@ export function ViewHeader(props) {
                     <span>
                         count: <span className="exp">{total}</span>
                     </span>
-                    {dataView.labels && (
+                    {dataView?.labels?.length > 0 && (
                         <span>
                             <HeadLabelsCont title={labelsLegend}>
                                 labels:
@@ -420,16 +436,20 @@ export function ViewHeader(props) {
                 </div>
 
                 <div className="header-actions">
-                    <CropSquareIcon
-                        className="header-icon"
-                        onClick={onMaximize}
-                        style={{ fontSize: "12px" }}
-                    />
-                    <MinimizeIcon
-                        className="header-icon"
-                        onClick={onMinimize}
-                        style={{ fontSize: "12px" }}
-                    />
+                    {!fixedSize && (
+                        <>
+                            <CropSquareIcon
+                                className="header-icon"
+                                onClick={onMaximize}
+                                style={{ fontSize: "12px" }}
+                            />
+                            <MinimizeIcon
+                                className="header-icon"
+                                onClick={onMinimize}
+                                style={{ fontSize: "12px" }}
+                            />
+                        </>
+                    )}
 
                     <CloseIcon
                         className="header-icon"

@@ -110,6 +110,15 @@ export function parseStreamResponse(responseProps: QueryResult) {
         });
     }
 
+    let panelResult = {
+        id,
+        type: "stream",
+        tableData: {},
+        data:  [{}],
+        labels: [],
+        total:  0,
+    }
+
     if (messSorted) {
         try {
             getAsyncResponse(dispatch(setLogs(messSorted || []))).then(() => {
@@ -125,11 +134,11 @@ export function parseStreamResponse(responseProps: QueryResult) {
                 new Set(messSorted?.map((m) => Object.keys(m.tags)))
             );
             const labels = unite(labelsList);
-            const panelResult = {
+            panelResult = {
                 id,
                 type: "stream",
                 tableData: tableResult,
-                data: messSorted || [],
+                data: messSorted ,
                 labels: [...labels],
                 total: messSorted?.length || 0,
             };
@@ -158,5 +167,7 @@ export function parseStreamResponse(responseProps: QueryResult) {
         } catch (e) {
             console.log(e);
         }
+    } else {
+        dispatch(setIsEmptyView(true));
     }
 }

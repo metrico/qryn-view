@@ -28,7 +28,9 @@ export const EmptyViewContainer = styled.div`
     justify-content: center;
     flex:1;
     height:100%;
-    font-size: 1em;
+    font-size: .75em;
+    letter-spacing: 1px;
+    padding:30px;
     color: ${({ theme }) => theme.textOff};
     background: ${({ theme }) => theme.secondaryWidgetContainer};
     text-align: center;
