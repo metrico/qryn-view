@@ -6,7 +6,7 @@
 
 # :eye: qryn view
 
-qryn-view is a smart and minimal LOgQL API data explorer developed in React/JS and designed for [qryn](https://cloki.org)
+*qryn-view* is a smart and minimal LOgQL API data explorer developed in React/JS and designed for [qryn](https://cloki.org)
 
 <img src="https://user-images.githubusercontent.com/1423657/152640509-82d7704a-4e9a-4a2b-9b7e-1819984c7581.png"/><img src="https://user-images.githubusercontent.com/1423657/155608224-8654694b-b999-4781-994a-5a87e39dfddf.png" /><img src="https://user-images.githubusercontent.com/1423657/182931606-4bffa314-1aef-4712-8229-716e43e4efc3.png" />
 
@@ -15,6 +15,8 @@ qryn-view is a smart and minimal LOgQL API data explorer developed in React/JS a
 - Label Browser
 - Display Logs & Charts
 - Timerange Selector
+- Split data view
+- Multi query execution
 - Query History
 - Mobile View
 - Embeddable Results
