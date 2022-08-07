@@ -95,16 +95,19 @@ export default function DataViews(props) {
 
     const dataViews = useSelector((store) => store[`${side}DataView`]);
 
-    return (
-        <ThemeProvider theme={themes[theme]}>
-            <DTCont>
-                {dataViews?.length > 0 &&
-                    dataViews?.map((dv, index) => (
+    if (dataViews.length > 0) {
+        return (
+            <ThemeProvider theme={themes[theme]}>
+                <DTCont>
+                    {dataViews?.map((dv, index) => (
                         <DataViewItem key={index} {...props} dataView={dv} />
                     ))}
-            </DTCont>
-        </ThemeProvider>
-    );
+                </DTCont>
+            </ThemeProvider>
+        );
+    }
+
+    return null;
 }
 
 export function DataViewItem(props) {
@@ -282,7 +285,7 @@ export function DataViewItem(props) {
                 <div className="view-content" id={actualQuery?.id + "-view"}>
                     <VectorTable
                         {...props}
-                        height={theight}
+                        height={"theight"}
                         data={streamData}
                         actualQuery={actualQuery}
                     />
@@ -291,18 +294,18 @@ export function DataViewItem(props) {
         );
     } else {
         return (
-            <ViewStyled size={panelSize} vheight={viewHeight}>
+            <ViewStyled size={panelSize} vheight={"regular"}>
                 <ViewHeader
                     onClose={onStreamClose}
                     onMinimize={onMinimize}
                     onMaximize={onMaximize}
                     actualQuery={actualQuery}
                     total={total}
-                    type={type}
+                    type={'empty'}
                     fixedSize={true}
                     {...props}
                 />
-                <EmptyView />
+               <EmptyView />
             </ViewStyled>
         );
     }
@@ -360,6 +363,9 @@ export function ViewHeader(props) {
         if (type === "vector" || isMatrixTable || isStreamTable) {
             return "Table";
         }
+        if( type ==='empty') {
+            return 'No Results'
+        }
     }, [type, actualQuery?.tableView]);
     function onClose() {
         const filtered = DataViewList.filter((f) => f.id !== dataView.id) || [];
@@ -412,7 +418,7 @@ export function ViewHeader(props) {
                     <span>
                         <span className="exp">{headerType}</span>
                     </span>
-                    <Tooltip title={actualQuery?.expr}>
+                    <Tooltip title={actualQuery?.expr || ''}>
                         <span>
                             query:{" "}
                             <span className="exp">{actualQuery?.idRef}</span>

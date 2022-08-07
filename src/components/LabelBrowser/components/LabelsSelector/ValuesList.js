@@ -244,7 +244,7 @@ export default function ValuesList(props) {
 
 export const LabelValue = (props) => {
     const dispatch = useDispatch();
-    let { value, name, data, onValueClick } = props;
+    let { value, data, onValueClick } = props;
     const left = useSelector((store)=> store.left)
     const right = useSelector((store)=> store.right)
 

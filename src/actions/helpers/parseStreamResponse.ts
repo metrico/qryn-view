@@ -81,9 +81,7 @@ function setDataView(panel: string) {
             state: "leftDataView",
             action: setLeftDataView,
         };
-    }
-
-    else {
+    } else {
         return {
             state: "rightDataView",
             action: setRightDataView,
@@ -114,10 +112,10 @@ export function parseStreamResponse(responseProps: QueryResult) {
         id,
         type: "stream",
         tableData: {},
-        data:  [{}],
+        data: [{}],
         labels: [],
-        total:  0,
-    }
+        total: 0,
+    };
 
     if (messSorted) {
         try {
@@ -138,7 +136,7 @@ export function parseStreamResponse(responseProps: QueryResult) {
                 id,
                 type: "stream",
                 tableData: tableResult,
-                data: messSorted ,
+                data: messSorted,
                 labels: [...labels],
                 total: messSorted?.length || 0,
             };
@@ -168,6 +166,18 @@ export function parseStreamResponse(responseProps: QueryResult) {
             console.log(e);
         }
     } else {
-        dispatch(setIsEmptyView(true));
+        const { action, state } = dataView;
+        const prevDV = store.getState()?.[state];
+        if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
+            let newPanel = [];
+            dispatch(action([]));
+            const filtered =
+                prevDV?.filter((dv: any) => dv.id !== panelResult.id) || [];
+            newPanel = [...filtered, { ...panelResult }];
+            dispatch(action(newPanel));
+        } else {
+            let newPanel = [...prevDV, panelResult];
+            dispatch(action(newPanel));
+        }
     }
 }

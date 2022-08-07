@@ -6,21 +6,38 @@ import { parseResponse } from "./parseResponse";
 import { resetNoData } from "./resetNoData";
 import setResponseType from "../setResponseType";
 
-export async function processResponse(response: any, dispatch: Function, panel:string,id:string) {
+export async function processResponse(
+    response: any,
+    dispatch: Function,
+    panel: string,
+    id: string
+) {
+  
     const { time } = getTimeParams();
-      const { queryType, debugMode } = store.getState();
+    const { queryType, debugMode } = store.getState();
     if (response?.data?.streams?.length === 0) {
-        if (debugMode)
-            console.log("🚧 loadLogs / getting no data from streams");
+        const resultQuery: QueryResult = {
+            result: [],
+            time,
+            debugMode,
+            queryType,
+            dispatch,
+            type: "streams",
+            panel,
+            id,
+        };
+
+        parseResponse(resultQuery);
         dispatch(setIsEmptyView(true));
     }
-    
+
+    // empty response would respond as data.data = {streams:[]}
     if (response?.data?.data) {
         const result = response?.data?.data?.result;
         const type = response?.data?.data?.resultType;
 
-        dispatch(setResponseType(type))
-        
+        dispatch(setResponseType(type));
+
         const resultQuery: QueryResult = {
             result,
             time,
@@ -29,7 +46,7 @@ export async function processResponse(response: any, dispatch: Function, panel:s
             dispatch,
             type,
             panel,
-            id
+            id,
         };
 
         parseResponse(resultQuery);

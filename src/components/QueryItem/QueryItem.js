@@ -1,6 +1,6 @@
 import LabelBrowser from "../LabelBrowser";
 import styled from "@emotion/styled";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,6 +11,9 @@ import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRig
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import { setLeftPanel } from "../../actions/setLeftPanel";
 import { setRightPanel } from "../../actions/setRightPanel";
+import loadLogs from "../../actions/loadLogs";
+import { setRightDataView } from "../../actions/setRightDataView";
+import { setLeftDataView } from "../../actions/setLeftDataView";
 const QueryContainer = styled.div``;
 
 const QueryItemToolbarStyled = styled.div`
@@ -81,10 +84,16 @@ export const QueryItemToolbar = (props) => (
 );
 
 export default function QueryItem(props) {
+    // first data load
+    useEffect(() => {
+        const { expr, queryType, limit, panel, id } = props.data;
+        dispatch(loadLogs(expr, queryType, limit, panel, id));
+    }, []);
+
     const { name } = props;
     const idRefs = useMemo(() => {
         const alpha = Array.from(Array(26)).map((e, i) => i + 65);
-        const alphabet = alpha.map((x) => String.fromCharCode(x));
+        const alphabet = alpha.map((x) => name?.slice(0,1)?.toUpperCase() + '-' + String.fromCharCode(x));
         return alphabet;
     }, []);
 
@@ -92,6 +101,8 @@ export default function QueryItem(props) {
     const theme = useSelector((store) => store.theme);
     const leftPanel = useSelector((store) => store.left);
     const rightPanel = useSelector((store) => store.right);
+    const leftDV = useSelector((store)=> store.leftDataView)
+    const rightDV = useSelector((store)=> store.rightDataView)
 
     const isQueryOpen = useState(true);
 
@@ -105,12 +116,17 @@ export default function QueryItem(props) {
         };
         if (name === "left") {
             const filtered = filterPanel(leftPanel);
+            const viewFiltered = filterPanel(leftDV)
+
             dispatch(setLeftPanel(filtered));
+            dispatch(setLeftDataView(viewFiltered))
         }
 
         if (name === "right") {
             const filtered = filterPanel(rightPanel);
+            const viewFiltered = filterPanel(rightDV)
             dispatch(setRightPanel(filtered));
+            dispatch(setRightDataView(viewFiltered))
         }
     };
 

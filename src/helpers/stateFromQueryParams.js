@@ -15,7 +15,7 @@ export const initialUrlState = {
     left: [
         {
             id: nanoid(),
-            idRef: "A",
+            idRef: "L-A",
             lastIdx: 1,
             panel: "left",
             queryType: "instant",
@@ -34,7 +34,7 @@ export const initialUrlState = {
     right: [
         {
             id: nanoid(),
-            idRef: "A",
+            idRef: "R-A",
             lastIdx: 1,
             panel: "right",
             queryType: "instant",

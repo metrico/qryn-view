@@ -27,7 +27,6 @@ export default function Panel(props) {
         const params = new URLSearchParams(hash.replace("#", ""));
 
 
-
         const urlLeft = params.get("left");
         const urlRight = params.get("right");
         let leftQueries = [];
@@ -40,7 +39,7 @@ export default function Panel(props) {
         if (urlRight) {
             rightQueries = JSON.parse(decodeURIComponent(urlRight));
         }
-
+      
         if (props.name === "right" && rightQueries.length > 0) {
             dispatch(setRightPanel(rightQueries));
         }
