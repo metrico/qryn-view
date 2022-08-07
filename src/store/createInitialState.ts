@@ -116,7 +116,7 @@ export default function initialState() {
         isSubmit: urlState.isSubmit || false,
         isEmbed: urlState.isEmbed || false,
         // dont mention queries // its obvious
-        left: urlState['left']||[
+        left: urlState["left"] || [
             {
                 id: nanoid(),
                 idRef: "A",
@@ -134,7 +134,7 @@ export default function initialState() {
             },
         ],
 
-        right: urlState['right']||[
+        right: urlState["right"] || [
             {
                 id: nanoid(),
                 idRef: "A",

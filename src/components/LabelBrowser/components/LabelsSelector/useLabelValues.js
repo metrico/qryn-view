@@ -65,7 +65,7 @@ export default function useLabelValues(label, start, end) {
 
     return {
         response,
-        controller: options.controller,
+        controller: options.signal,
         loading,
     };
 }
