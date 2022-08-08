@@ -130,7 +130,6 @@ export default function initialState() {
                 expr: "",
                 labels: [], // name: selected:
                 values: [], // label name selected
-                //find query by ID and append response
             },
         ],
 
@@ -148,7 +147,6 @@ export default function initialState() {
                 expr: "",
                 labels: [], // name: selected:
                 values: [], // label name selected
-                //find query by ID and append response
             },
         ],
 

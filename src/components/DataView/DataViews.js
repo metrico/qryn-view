@@ -285,7 +285,7 @@ export function DataViewItem(props) {
                 <div className="view-content" id={actualQuery?.id + "-view"}>
                     <VectorTable
                         {...props}
-                        height={"theight"}
+                        height={theight}
                         data={streamData}
                         actualQuery={actualQuery}
                     />

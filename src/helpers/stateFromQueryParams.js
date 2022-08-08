@@ -27,7 +27,7 @@ export const initialUrlState = {
             labels: [], // name: selected:
             values: [], // label name selected
             response: {}, // the target should be just the last one
-            // find query by ID and append response
+
         },
     ],
 
@@ -46,7 +46,6 @@ export const initialUrlState = {
             labels: [], // name: selected:
             values: [], // label name selected
             response: {}, // the target should be just the last one
-            // find query by ID and append response
         },
     ],
 

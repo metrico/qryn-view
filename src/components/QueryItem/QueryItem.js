@@ -14,6 +14,7 @@ import { setRightPanel } from "../../actions/setRightPanel";
 import loadLogs from "../../actions/loadLogs";
 import { setRightDataView } from "../../actions/setRightDataView";
 import { setLeftDataView } from "../../actions/setLeftDataView";
+import { setSplitView } from "../StatusBar/components/SplitViewButton/setSplitView";
 const QueryContainer = styled.div``;
 
 const QueryItemToolbarStyled = styled.div`
@@ -57,31 +58,117 @@ const CloseQuery = styled(KeyboardArrowRightOutlinedIcon)`
     color: ${({ theme }) => theme.textColor};
 `;
 
-export const QueryItemToolbar = (props) => (
-    <QueryItemToolbarStyled>
-        <div className="query-title">
-            <ShowQueryButton
-                onClick={() => {
-                    props.isQueryOpen[1](props.isQueryOpen[0] ? false : true);
-                }}
-            >
-                {props.isQueryOpen[0] ? <OpenQuery /> : <CloseQuery />}
-            </ShowQueryButton>
-            <p className="query-id">{props.data.idRef}</p>
-        </div>
+function QueryId(props) {
+    const [isEditing, setIsEditing] = useState(false);
+    const [idText, setIdText] = useState(props.data.idRef);
 
-        <div className="query-tools">
-            <AddOutlinedIcon
-                style={{ fontSize: "15px", cursor: "pointer", padding: "3px" }}
-                onClick={props.onAddQuery}
-            />
-            <DeleteOutlineIcon
-                style={{ fontSize: "15px", cursor: "pointer", padding: "3px" }}
-                onClick={props.onDeleteQuery}
-            />
-        </div>
-    </QueryItemToolbarStyled>
-);
+    function onIdTextChange(e) {
+        e.preventDefault();
+        const txt = e.target.value;
+        setIdText(txt);
+    }
+
+    function closeInput(e) {
+        props.onIdRefUpdate(idText);
+        setIsEditing(false);
+    }
+
+    function handleKeydown(e) {
+        if (e.key === "Enter") {
+            props.onIdRefUpdate(idText);
+            setIsEditing(false);
+        }
+    }
+
+    if (isEditing === true) {
+        return (
+            <>
+                <input
+                    style={{
+                        background: "transparent",
+                        border: "none",
+                        outline: "none",
+                    }}
+                    value={idText}
+                    placeholder={idText}
+                    onChange={onIdTextChange}
+                    onKeyDown={handleKeydown}
+                    onBlur={closeInput}
+                />
+            </>
+        );
+    } else {
+        return (
+            <>
+                <p className="query-id" onClick={(e) => setIsEditing(true)}>
+                    {idText}
+                </p>
+            </>
+        );
+    }
+}
+export function QueryItemToolbar(props) {
+    
+    const dispatch = useDispatch();
+    // update panel on id change
+    const panel = useSelector((store) => store[props.name]);
+
+    const panelAction = (panel, data) => {
+        if (panel === "left") {
+            return setLeftPanel(data);
+        } else {
+            return setRightPanel(data);
+        }
+    };
+
+    function onIdRefUpdate(e) {
+        const cPanel = [...panel];
+        cPanel.forEach((panel) => {
+            if (panel.id === props.data.id) {
+                panel.idRef = e;
+            }
+        });
+
+        dispatch(panelAction(props.name, cPanel));
+    }
+
+    return (
+        <QueryItemToolbarStyled>
+            <div className="query-title">
+                <ShowQueryButton
+                    onClick={() => {
+                        props.isQueryOpen[1](
+                            props.isQueryOpen[0] ? false : true
+                        );
+                    }}
+                >
+                    {props.isQueryOpen[0] ? <OpenQuery /> : <CloseQuery />}
+                </ShowQueryButton>
+
+                <QueryId onIdRefUpdate={onIdRefUpdate} {...props} />
+            </div>
+
+            <div className="query-tools">
+                <AddOutlinedIcon
+                    style={{
+                        fontSize: "15px",
+                        cursor: "pointer",
+                        padding: "3px",
+                    }}
+                    onClick={props.onAddQuery}
+                />
+                <DeleteOutlineIcon
+                    style={{
+                        fontSize: "15px",
+                        cursor: "pointer",
+                        padding: "3px",
+                    }}
+                    onClick={props.onDeleteQuery}
+                />
+            </div>
+        </QueryItemToolbarStyled>
+    );
+}
 
 export default function QueryItem(props) {
     // first data load
@@ -93,7 +180,10 @@ export default function QueryItem(props) {
     const { name } = props;
     const idRefs = useMemo(() => {
         const alpha = Array.from(Array(26)).map((e, i) => i + 65);
-        const alphabet = alpha.map((x) => name?.slice(0,1)?.toUpperCase() + '-' + String.fromCharCode(x));
+        const alphabet = alpha.map(
+            (x) =>
+                name?.slice(0, 1)?.toUpperCase() + "-" + String.fromCharCode(x)
+        );
         return alphabet;
     }, []);
 
@@ -101,8 +191,8 @@ export default function QueryItem(props) {
     const theme = useSelector((store) => store.theme);
     const leftPanel = useSelector((store) => store.left);
     const rightPanel = useSelector((store) => store.right);
-    const leftDV = useSelector((store)=> store.leftDataView)
-    const rightDV = useSelector((store)=> store.rightDataView)
+    const leftDV = useSelector((store) => store.leftDataView);
+    const rightDV = useSelector((store) => store.rightDataView);
 
     const isQueryOpen = useState(true);
 
@@ -116,17 +206,20 @@ export default function QueryItem(props) {
         };
         if (name === "left") {
             const filtered = filterPanel(leftPanel);
-            const viewFiltered = filterPanel(leftDV)
+            const viewFiltered = filterPanel(leftDV);
 
             dispatch(setLeftPanel(filtered));
-            dispatch(setLeftDataView(viewFiltered))
+            dispatch(setLeftDataView(viewFiltered));
         }
 
         if (name === "right") {
             const filtered = filterPanel(rightPanel);
-            const viewFiltered = filterPanel(rightDV)
+            const viewFiltered = filterPanel(rightDV);
             dispatch(setRightPanel(filtered));
-            dispatch(setRightDataView(viewFiltered))
+            dispatch(setRightDataView(viewFiltered));
+            if (filtered.length === 0) {
+                dispatch(setSplitView(false));
+            }
         }
     };
 

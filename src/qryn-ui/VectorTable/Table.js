@@ -155,7 +155,7 @@ export function Table(props) {
 
             <div {...getTableBodyProps()}>
                 <FixedSizeList
-                    height={height}
+                    height={parseInt(height) || 200}
                     itemCount={rows.length}
                     itemSize={20}
                     width={totalColumnsWidth + scrollbarWidth}
