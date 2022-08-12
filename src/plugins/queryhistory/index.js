@@ -376,7 +376,7 @@ function QueryHistoryTab({
                                         className={"open-icon"}
                                     />
                                     <span className={"open-text"}>
-                                        {"Show Logs"}
+                                        {"Show Results"}
                                     </span>
                                 </SubmitButton>
                             </Tooltip>

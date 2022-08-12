@@ -33,7 +33,7 @@ export default function CopyLinkButton() {
               
             },
             function (err) {
-                console.err("error on copy", err);
+                console.log("error on copy", err);
             }
         );
     }

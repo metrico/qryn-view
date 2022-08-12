@@ -43,8 +43,8 @@ export default function loadLogs(
 
         cancelToken = axios.CancelToken.source();
         options.cancelToken = cancelToken.token;
-
-        await axios
+        try{
+            await axios
             ?.get(endpoint, options)
             ?.then((response) => {
                 // the panel should be set inside processResponse
@@ -60,5 +60,9 @@ export default function loadLogs(
             .finally(() => {
                 dispatch(setLoading(false));
             });
+        } catch(e) {
+            console.log(e)
+        }
+    
     };
 }

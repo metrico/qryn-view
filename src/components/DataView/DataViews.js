@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { themes } from "../../theme/themes";
@@ -10,10 +10,12 @@ import MinimizeIcon from "@mui/icons-material/Minimize";
 import { setLeftDataView } from "../../actions/setLeftDataView";
 import { setRightDataView } from "../../actions/setRightDataView";
 import CropSquareIcon from "@mui/icons-material/CropSquare";
-import { Tooltip } from "@mui/material";
+import { Dialog, Tooltip } from "@mui/material";
 import ClokiChart from "../../plugins/charts";
 import { VectorTable } from "../../qryn-ui/VectorTable/VectorTable";
 import EmptyView from "./EmptyView";
+import { useMediaQuery } from "react-responsive";
+import InfoIcon from "@mui/icons-material/Info";
 
 const ViewStyled = styled.div`
     margin: 5px;
@@ -47,6 +49,7 @@ const ViewStyled = styled.div`
 const DTCont = styled.div`
     overflow-y: auto;
     margin: 3px;
+    max-height:100vh;
     &::-webkit-scrollbar {
         background: transparent;
     }
@@ -301,11 +304,11 @@ export function DataViewItem(props) {
                     onMaximize={onMaximize}
                     actualQuery={actualQuery}
                     total={total}
-                    type={'empty'}
+                    type={"empty"}
                     fixedSize={true}
                     {...props}
                 />
-               <EmptyView />
+                <EmptyView />
             </ViewStyled>
         );
     }
@@ -340,6 +343,8 @@ const HeadLabelsCont = styled.div`
 export function ViewHeader(props) {
     const { fixedSize } = props || { fixedSize: false };
     const dispatch = useDispatch();
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+    const [open, setOpen] = useState(false);
     const theme = useSelector((store) => store.theme);
     const { actualQuery, dataView, name, type, total } = props;
     const DataViewList = useSelector((store) => store[`${name}DataView`]);
@@ -363,10 +368,11 @@ export function ViewHeader(props) {
         if (type === "vector" || isMatrixTable || isStreamTable) {
             return "Table";
         }
-        if( type ==='empty') {
-            return 'No Results'
+        if (type === "empty") {
+            return "No Results";
         }
     }, [type, actualQuery?.tableView]);
+
     function onClose() {
         const filtered = DataViewList.filter((f) => f.id !== dataView.id) || [];
         dispatch(action(name)([]));
@@ -379,6 +385,7 @@ export function ViewHeader(props) {
     function onMaximize() {
         props.onMaximize();
     }
+
     const labelsLegend = useMemo(
         () => dataView?.labels?.join("  |  ") || "",
         [dataView.labels]
@@ -411,6 +418,8 @@ export function ViewHeader(props) {
         }
     }, [dataView.labels, props.theme]);
 
+    const { idRef, expr, limit, queryType } = actualQuery;
+
     return (
         <ThemeProvider theme={themes[theme]}>
             <VHeader>
@@ -418,20 +427,27 @@ export function ViewHeader(props) {
                     <span>
                         <span className="exp">{headerType}</span>
                     </span>
-                    <Tooltip title={actualQuery?.expr || ''}>
+                    <Tooltip title={actualQuery?.expr || ""}>
                         <span>
-                            query:{" "}
+                            {" "}
                             <span className="exp">{actualQuery?.idRef}</span>
                         </span>
                     </Tooltip>
+                    {!isTabletOrMobile && (
+                        <>
+                            <span>
+                                limit:{" "}
+                                <span className="exp">
+                                    {actualQuery?.limit}
+                                </span>
+                            </span>
+                            <span>
+                                count: <span className="exp">{total}</span>
+                            </span>
+                        </>
+                    )}
 
-                    <span>
-                        limit: <span className="exp">{actualQuery?.limit}</span>
-                    </span>
-                    <span>
-                        count: <span className="exp">{total}</span>
-                    </span>
-                    {dataView?.labels?.length > 0 && (
+                    {dataView?.labels?.length > 0 && !isTabletOrMobile && (
                         <span>
                             <HeadLabelsCont title={labelsLegend}>
                                 labels:
@@ -444,6 +460,11 @@ export function ViewHeader(props) {
                 <div className="header-actions">
                     {!fixedSize && (
                         <>
+                            <InfoIcon
+                                className="header-icon"
+                                style={{ fontSize: "12px" }}
+                                onClick={(e) => setOpen(true)}
+                            />
                             <CropSquareIcon
                                 className="header-icon"
                                 onClick={onMaximize}
@@ -463,6 +484,18 @@ export function ViewHeader(props) {
                         style={{ fontSize: "12px" }}
                     />
                 </div>
+                {open && (
+                    <InfoDialog
+                        labels={dataView.labels || []}
+                        limit={limit}
+                        expr={expr}
+                        queryType={queryType}
+                        idRef={idRef}
+                        open={open}
+                        total={total}
+                        onClose={(e) => setOpen(false)}
+                    />
+                )}
             </VHeader>
         </ThemeProvider>
     );
@@ -472,4 +505,112 @@ export function ViewLabel(props) {
     const { name } = props;
 
     return <>{name}</>;
+}
+
+const StyledInfoContent = styled.div`
+    background: ${({ theme }) => theme.widgetContainer};
+    color: ${({ theme }) => theme.textColor};
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    max-width:200px;
+    div {
+        width:100%;
+        overflow-wrap:break-word;
+        font-family:monospace;
+    }
+    p {
+        padding: 10px;
+        flex: 1;
+        font-size: 12px;
+        span.label {
+            background: ${({ theme }) => theme.buttonBorder};
+            color: ${({ theme }) => theme.widgetContainer};
+            margin: 2px;
+            padding: 2px;
+            border-radius: 2px;
+        }
+    }
+    h4 {
+        margin-bottom: 20px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid ${({ theme }) => theme.buttonBorder};
+    }
+    pre {
+        font-family: monospace;
+    }
+    small {
+        font-size: 10px;
+    }
+`;
+/**
+ *
+ * @param {
+ * expr,
+ * idRef,
+ * labels,
+ * limit,
+ * queryType,
+ * total }
+ * @returns A styled
+ */
+const InfoContent = ({ expr, idRef, labels, limit, queryType, total }) => {
+    return (
+        <StyledInfoContent>
+            <h4>{idRef}</h4>
+            <div><p>{expr}</p></div>
+            <p>Query Type: {queryType}</p>
+            <p>
+                Labels:
+                {labels?.length > 0 &&
+                    labels.map((val, key) => (
+                        <span className={"label"} key={key}>
+                            {val}
+                        </span>
+                    ))}
+            </p>
+            <p>Limit: {limit}</p>
+            <p>Total: {total}</p>
+        </StyledInfoContent>
+    );
+};
+
+/**
+ * 
+ * @param { 
+ *  expr,
+    idRef,
+    labels,
+    queryType,
+    limit,
+    total,
+    onClose,
+    open,} param0 
+ * @returns Dialog with information about current query
+ */
+export function InfoDialog({
+    expr,
+    idRef,
+    labels,
+    queryType,
+    limit,
+    total,
+    onClose,
+    open,
+}) {
+    const theme = useSelector((store) => store.theme);
+    return (
+        <ThemeProvider theme={themes[theme]}>
+            <Dialog open={open} onClose={onClose}>
+                <InfoContent
+                    expr={expr}
+                    idRef={idRef}
+                    labels={labels}
+                    queryType={queryType}
+                    limit={limit}
+                    total={total}
+                />
+            </Dialog>
+        </ThemeProvider>
+    );
 }

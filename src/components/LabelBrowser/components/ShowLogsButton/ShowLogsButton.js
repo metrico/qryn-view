@@ -4,7 +4,7 @@ import { ThemeProvider } from "@emotion/react";
 import { useSelector } from "react-redux";
 
 export default function ShowLogsButton({ disabled, onClick, isMobile }) {
-    const SHOW_LOGS = "Show Logs";
+    const SHOW_LOGS = "Show Results";
     const theme = useSelector((store) => store.theme);
     return (
         <ThemeProvider theme={themes[theme]}>

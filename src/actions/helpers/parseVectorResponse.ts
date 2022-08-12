@@ -66,11 +66,7 @@ export function parseVectorResponse(responseProps: QueryResult) {
                 };
                 const dataView = setDataView(panel)
                 const { action, state } = dataView;
-                console.log(action, state);
-
                 const prevDV = store.getState()?.[state];
-                console.log(prevDV);
-
                 if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
                     let newPanel = [];
                     dispatch(action([]));

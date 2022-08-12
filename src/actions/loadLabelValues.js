@@ -53,7 +53,7 @@ export default function loadLabelValues(label, labelList='', apiUrl='') {
                 const { message } = errorHandler(url, error, "lavelValues");
                 dispatch(setApiError(message || "API NOT FOUND"));
 
-                console.error(error);
+                console.log(error);
                 return [];
             });
     };

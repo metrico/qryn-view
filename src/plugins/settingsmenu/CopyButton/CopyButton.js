@@ -32,7 +32,7 @@ export default function CopyButton() {
                         );
                     },
                     function (err) {
-                        console.err("error on copy", err);
+                        console.log("error on copy", err);
                     }
                 );
             } else {

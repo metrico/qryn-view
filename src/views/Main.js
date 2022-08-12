@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
-import { useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { themes } from "../theme/themes";
 import Panel from "../components/Panel/Panel";
 import { Notification } from "../qryn-ui/notifications";
@@ -8,6 +8,8 @@ import SettingsDialog from "../plugins/settingsdialog/SettingsDialog";
 import { UpdateStateFromQueryParams } from "../helpers/UpdateStateFromQueryParams";
 import StatusBar from "../components/StatusBar";
 import QueryHistory from "../plugins/queryhistory";
+import { useMediaQuery } from "react-responsive";
+import MainTabs from "./MainTabs.js";
 
 export const MainContainer = styled.div`
     position: absolute;
@@ -33,29 +35,41 @@ export const MainContainer = styled.div`
 `;
 
 export default function Main() {
-
     UpdateStateFromQueryParams();
-
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
     const isSplit = useSelector((store) => store.isSplit);
     const isEmbed = useSelector((store) => store.isEmbed);
     const theme = useSelector((store) => store.theme);
     const settingsDialogOpen = useSelector((store) => store.settingsDialogOpen);
 
-
-    return (
-        <ThemeProvider theme={themes[theme]}>
-            <MainContainer>
+    if (!isTabletOrMobile) {
+        return (
+            <ThemeProvider theme={themes[theme]}>
+                <MainContainer>
+                    {!isEmbed && <StatusBar />}
+                    <div className="panels-container">
+                        <Panel name="left" />
+                        {isSplit && <Panel name="right" />}
+                    </div>
+                </MainContainer>
+                {/* <Notification /> */}
+                <SettingsDialog open={settingsDialogOpen} />
+                <QueryHistory />
+            </ThemeProvider>
+        );
+    } else {
+        // dispatch(setSplitView(false));
+        return (
+            <ThemeProvider theme={themes[theme]}>
                 {!isEmbed && <StatusBar />}
-                <div className="panels-container">
-                    <Panel name="left" />
-                    {isSplit && <Panel name="right" />}
-                </div>
-            </MainContainer>
-            <Notification />
-            <SettingsDialog open={settingsDialogOpen} />
-            <QueryHistory />
-        </ThemeProvider>
-    );
-}
 
-// this one should include the two panels
+                <MainContainer>
+                    <MainTabs />
+                </MainContainer>
+                <Notification /> 
+                <SettingsDialog open={settingsDialogOpen} />
+                <QueryHistory />
+            </ThemeProvider>
+        );
+    }
+}

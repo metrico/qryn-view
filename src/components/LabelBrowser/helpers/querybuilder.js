@@ -41,7 +41,7 @@ const parseLog = {
         query
             ?.match(/[^{}]+(?=})/g)
             ?.map((m) => m.split(","))
-            ?.flat() || [], // fix removing from array
+            ?.flat() || [], 
     addLabel: (op, keySubtValue, keyValue) => {
         if (op === "!=") {
             return keySubtValue;

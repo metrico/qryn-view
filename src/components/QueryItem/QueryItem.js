@@ -15,6 +15,7 @@ import loadLogs from "../../actions/loadLogs";
 import { setRightDataView } from "../../actions/setRightDataView";
 import { setLeftDataView } from "../../actions/setLeftDataView";
 import { setSplitView } from "../StatusBar/components/SplitViewButton/setSplitView";
+
 const QueryContainer = styled.div``;
 
 const QueryItemToolbarStyled = styled.div`
@@ -149,6 +150,7 @@ export function QueryItemToolbar(props) {
             </div>
 
             <div className="query-tools">
+ 
                 <AddOutlinedIcon
                     style={{
                         fontSize: "15px",

@@ -1,8 +1,10 @@
 import styled from "@emotion/styled";
 import memoize from "memoize-one";
 import { PureComponent } from "react";
+import { useMediaQuery } from "react-responsive";
 import { formatDate, getRowColor } from "../helpers";
 import { LogRow, RowLogContent, RowTimestamp } from "../styled";
+
 import ValueTags from "../ValueTags";
 
 const RowsCont = styled.div`
@@ -11,6 +13,8 @@ const RowsCont = styled.div`
     height: calc(100% - 20px);
 `;
 function Row(props) {
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+
     const { toggleItemActive, index, log, actQuery } = props;
 
     return (
@@ -21,8 +25,15 @@ function Row(props) {
             }}
         >
             <div className="log-ts-row">
-                <RowTimestamp>{formatDate(log.timestamp)}</RowTimestamp>
-                <RowLogContent>{log.text}</RowLogContent>
+                {!isTabletOrMobile && (
+                    <RowTimestamp>{formatDate(log.timestamp)}</RowTimestamp>
+                )}
+                <RowLogContent>
+                    {isTabletOrMobile && <p>{formatDate(log.timestamp)}</p>}
+                   <p>
+                   {log.text}
+                   </p> 
+                </RowLogContent>
             </div>
 
             {log.showLabels && (

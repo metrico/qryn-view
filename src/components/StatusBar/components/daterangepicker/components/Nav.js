@@ -172,7 +172,7 @@ export const PickerNav = (props) => {
             props.onClose(e);
         } else if (!isValidInterval) {
             // TODO: Add a warning/error on screen when we get to it
-            console.error("Invalid time range");
+            console.log("Invalid time range");
         }
     };
 
