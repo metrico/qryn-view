@@ -60,15 +60,16 @@ export function getTimeSpan(data) {
     const first = tsArray[0];
     //const last = tsArray[tsArray.length - 1] ;
     const last = tsArray[tsArray.length - 1];
+    const timeDiff = last - first
 
-    const timeSpan = (last - first) / 1000 / 86400;
+
+    const timeSpan = timeDiff / 1000 / 86400;
 
     return { first, last, timeSpan };
 }
 
 export function formatDateRange(data) {
     const { timeSpan, first, last } = getTimeSpan(data);
-
     const formatted =
         timeSpan > 1
             ? "%m/%d %H:%M"

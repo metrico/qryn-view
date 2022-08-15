@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { themes } from "../../theme/themes";
@@ -49,7 +49,7 @@ const ViewStyled = styled.div`
 const DTCont = styled.div`
     overflow-y: auto;
     margin: 3px;
-    max-height:100vh;
+    max-height: 100vh;
     &::-webkit-scrollbar {
         background: transparent;
     }
@@ -117,7 +117,7 @@ export function DataViewItem(props) {
     // add a header for table view / json view
     const { dataView, name } = props;
     const { type, total } = dataView;
-
+    const viewRef = useRef(null);
     // panelSize: min , regular, full
     const panel = useSelector((store) => store[name]);
     const [panelSize, setPanelSize] = useState("regular");
@@ -129,6 +129,14 @@ export function DataViewItem(props) {
         }
         return found;
     }, [panel, dataView]);
+    const [viewWidth, setViewWidth] = useState(0);
+
+    useEffect(() => {
+        if(viewRef?.current?.clientWidth) {
+            setViewWidth(viewRef.current.clientWidth);
+        }
+       
+    }, [viewRef?.current?.clientWidth]);
 
     const [streamData, setStreamData] = useState(dataView.data);
     const [tableData, setTableData] = useState(dataView.tableData || {});
@@ -204,7 +212,7 @@ export function DataViewItem(props) {
 
     if (actualQuery && type === "stream" && streamData.length > 0) {
         return (
-            <ViewStyled size={panelSize} vheight={viewHeight}>
+            <ViewStyled ref={viewRef} size={panelSize} vheight={viewHeight}>
                 <ViewHeader
                     onClose={onStreamClose}
                     onMinimize={onMinimize}
@@ -240,7 +248,7 @@ export function DataViewItem(props) {
         const { limit } = actualQuery;
 
         return (
-            <ViewStyled size={panelSize} vheight={viewHeight}>
+            <ViewStyled ref={viewRef} size={panelSize} vheight={viewHeight}>
                 <ViewHeader
                     onClose={onStreamClose}
                     onMinimize={onMinimize}
@@ -261,6 +269,7 @@ export function DataViewItem(props) {
                     ) : (
                         <ClokiChart
                             {...props}
+                            tWidth={viewWidth}
                             chartLimit={limit}
                             matrixData={streamData}
                             actualQuery={actualQuery}
@@ -275,7 +284,7 @@ export function DataViewItem(props) {
         // return vector type (table) component
 
         return (
-            <ViewStyled size={panelSize} vheight={viewHeight}>
+            <ViewStyled ref={viewRef} size={panelSize} vheight={viewHeight}>
                 <ViewHeader
                     onClose={onStreamClose}
                     onMinimize={onMinimize}
@@ -297,7 +306,7 @@ export function DataViewItem(props) {
         );
     } else {
         return (
-            <ViewStyled size={panelSize} vheight={"regular"}>
+            <ViewStyled ref={viewRef} size={panelSize} vheight={"regular"}>
                 <ViewHeader
                     onClose={onStreamClose}
                     onMinimize={onMinimize}
@@ -513,11 +522,11 @@ const StyledInfoContent = styled.div`
     display: flex;
     flex-direction: column;
     padding: 20px;
-    max-width:200px;
+    max-width: 200px;
     div {
-        width:100%;
-        overflow-wrap:break-word;
-        font-family:monospace;
+        width: 100%;
+        overflow-wrap: break-word;
+        font-family: monospace;
     }
     p {
         padding: 10px;
@@ -558,7 +567,9 @@ const InfoContent = ({ expr, idRef, labels, limit, queryType, total }) => {
     return (
         <StyledInfoContent>
             <h4>{idRef}</h4>
-            <div><p>{expr}</p></div>
+            <div>
+                <p>{expr}</p>
+            </div>
             <p>Query Type: {queryType}</p>
             <p>
                 Labels:

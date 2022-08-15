@@ -7,7 +7,7 @@ import loadLogs from "../../actions/loadLogs";
 import { useDispatch } from "react-redux";
 import { setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
 import * as moment from "moment";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { format } from "date-fns";
 import ChartTools from "./ChartTools";
 import ChartLabelsList from "./ChartLabelList";
@@ -25,12 +25,9 @@ import UseTooltip from "./UseTooltip";
 import { CHART_OPTIONS } from "./consts";
 
 export default function ClokiChart(props) {
-
-
-    const {matrixData, actualQuery} = props
-
-    const {expr, queryType, limit, panel, id} = actualQuery
-
+    const { matrixData, actualQuery } = props;
+    const { tWidth } = props;
+    const { expr, queryType, limit, panel, id } = actualQuery;
     const chartRef = useRef(null);
 
     const $q = window.jQuery;
@@ -42,36 +39,46 @@ export default function ClokiChart(props) {
     const [allData] = useState(getDataParsed(false));
     const [labels, setLabels] = useState([]);
     const [element, setElement] = useState(chartRef.current);
+    const chartOpts = useMemo(() => {
+        if (tWidth) {
+            const chartOp = { ...CHART_OPTIONS };
+            chartOp["xaxis"]["ticks"] = Math.round(tWidth / 120);
+            return chartOp;
+        } else {
+            return CHART_OPTIONS;
+        }
+    }, [tWidth]);
 
-    const [chartOptions, setChartOptions] = useState(CHART_OPTIONS);
+    const [chartOptions, setChartOptions] = useState(chartOpts);
 
     const [chartType, setChartType] = useState(getTypeFromLocal() || "line");
 
     function getDataParsed(spliced) {
-        let parsed = [{
-            data: [],
-            label: [],
-            isVisible: true,
-            id:'',
-        }]
+        let parsed = [
+            {
+                data: [],
+                label: [],
+                isVisible: true,
+                id: "",
+            },
+        ];
 
-        if(matrixData.length > 0) {
-            
-         parsed = [...matrixData]?.map((m) => ({
-            data: formatTs(m?.values),
-            label: formatLabel(m?.metric),
-            isVisible: true,
-            id: m.id,
-        }));
+        if (matrixData.length > 0) {
+            parsed = [...matrixData]?.map((m) => ({
+                data: formatTs(m?.values),
+                label: formatLabel(m?.metric),
+                isVisible: true,
+                id: m.id,
+            }));
 
-        if (spliced) {
-            const splicedData = parsed?.splice(0, 20);
-            return splicedData;
-        } else {
-            return parsed;
+            if (spliced) {
+                const splicedData = parsed?.splice(0, 20);
+                return splicedData;
+            } else {
+                return parsed;
+            }
         }
-    }
-    return parsed
+        return parsed;
     }
 
     function plotChartData(data, type, element) {
@@ -216,6 +223,7 @@ export default function ClokiChart(props) {
                     };
                 }
             });
+
             const { timeformat, min, max } = formatDateRange(dataSelected);
 
             let plot = $q.plot(
@@ -306,7 +314,7 @@ export default function ClokiChart(props) {
     };
 
     return (
-        <div style={{height:'inherit'}}>
+        <div style={{ height: "inherit" }}>
             <ChartTools
                 matrixData={matrixData}
                 chartType={chartType}
@@ -320,8 +328,8 @@ export default function ClokiChart(props) {
                 ref={chartRef}
                 id={"chart-container"}
                 style={{
-                    width: "100%",
-                    height: "220px",
+                    flex: "1",
+                    height: "180px",
                     display: "block",
                     position: "relative",
                 }}

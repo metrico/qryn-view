@@ -1,15 +1,15 @@
 const APP_NAME = "qryn_view";
 export const LOCAL_CHART_TYPE = `${APP_NAME}_chart_type`;
-
-
-
 export const CHART_OPTIONS = {
     xaxis: {
         show: true,
         mode: "time",
         timezone: "local",
         timeformat: "%Y-%m-%d %H:%M:%S",
-      
+        reserveSpace: false,
+        shadowSize: 0,
+        showTickLabels: "all",
+        autoScale: true,
     },
     grid: {
         show: true,
@@ -21,12 +21,10 @@ export const CHART_OPTIONS = {
         highlightColor: "blue",
         mouseActiveRadius: 30,
         borderWidth: 0,
-        margin: { left: 20, right: -10 },
         minBorderMargin: 0,
         labelMarginX: 0,
         labelMarginY: 0,
-        reserveSpace: false,
-        shadowSize: 0,
+        margin: { left: 5, right: 5 },
     },
     legend: {
         noColumns: 0,
