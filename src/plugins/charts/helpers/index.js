@@ -16,7 +16,7 @@ export function isFloat(x) {
 }
 
 export function getSortedItems(list) {
-    return list.filter(
+    return list?.filter(
         (f) => parseFloat(f.value) === parseFloat(f.item.datapoint[1])
     );
 }
@@ -49,7 +49,11 @@ export function makeTolltipItems(list) {
 
 export function getItemsLength(list) {
     const sList = getSortedItems(list)
-    return sList.sort((a,b) => (a.label.length > b.label.length ? 0 : 1))[0].label.length
+  
+    if(sList?.length > 0) {
+        return sList?.sort((a,b) => (a.label.length > b.label.length ? 0 : 1))[0].label.length
+    } 
+    
 }
 
 export function getTimeSpan(data) {
@@ -155,6 +159,7 @@ export function showSeries(series, type) {
         lines,
         points,
         isVisible: true,
+        
     };
 }
 

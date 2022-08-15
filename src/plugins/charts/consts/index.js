@@ -8,8 +8,7 @@ export const CHART_OPTIONS = {
         timeformat: "%Y-%m-%d %H:%M:%S",
         reserveSpace: false,
         shadowSize: 0,
-        showTickLabels: "all",
-        autoScale: true,
+        alignTicksWithAxis:null,
     },
     grid: {
         show: true,
@@ -24,6 +23,7 @@ export const CHART_OPTIONS = {
         minBorderMargin: 0,
         labelMarginX: 0,
         labelMarginY: 0,
+        shadowSize:0,
         margin: { left: 5, right: 5 },
     },
     legend: {
@@ -59,14 +59,14 @@ export const CHART_OPTIONS = {
 
 export const CHART_BAR_SERIES = {
     lines: { show: false, lineWidth: 1.5, shadowSize: 0 },
-    bars: { show: true, barWidth: 100, shadowSize: 0 },
-    points: { show: true, radius: 1, shadowSize: 0 },
+    bars: { show: true, barWidth: 500, shadowSize: 0 },
+    points: { show: true, radius: .25, shadowSize: 0 },
 };
 
 export const CHART_LINE_SERIES = {
-    lines: { show: true, lineWidth: 1.5, shadowSize: 0 },
+    lines: { show: true, lineWidth: 1, shadowSize: 0},
     bars: { show: false, barWidth: 100, shadowSize: 0 },
-    points: { show: true, radius: 1, shadowSize: 0 },
+    points: { show: false, radius: 1, shadowSize: 0 },
 };
 export const CHART_POINT_SERIES = {
     lines: { show: false, lineWidth: 1.5, shadowSize: 0 },

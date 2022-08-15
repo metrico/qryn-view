@@ -92,8 +92,9 @@ const VHeader = styled.div`
 `;
 
 export default function DataViews(props) {
-    const theme = useSelector((store) => store.theme);
 
+    const theme = useSelector((store) => store.theme);
+  
     const [side] = useState(props.name);
 
     const dataViews = useSelector((store) => store[`${side}DataView`]);
@@ -119,9 +120,10 @@ export function DataViewItem(props) {
     const { type, total } = dataView;
     const viewRef = useRef(null);
     // panelSize: min , regular, full
+    const isSplit = useSelector((store) => store.isSplit)
     const panel = useSelector((store) => store[name]);
     const [panelSize, setPanelSize] = useState("regular");
-
+    // get actual query from panel
     const actualQuery = useMemo(() => {
         let found = {};
         if (panel && dataView) {
@@ -138,11 +140,11 @@ export function DataViewItem(props) {
        
     }, [viewRef?.current?.clientWidth]);
 
-    const [streamData, setStreamData] = useState(dataView.data);
+    const [streamData, setStreamData] = useState(dataView.data); // 
     const [tableData, setTableData] = useState(dataView.tableData || {});
     useEffect(() => {
         setStreamData(dataView.data);
-    }, [dataView.data, setStreamData]);
+    }, [dataView.data, setStreamData,isSplit]);
     useEffect(() => {
         setTableData(dataView.tableData || {});
     }, [dataView.tableData, setTableData]);

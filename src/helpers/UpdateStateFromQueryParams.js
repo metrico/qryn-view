@@ -42,19 +42,19 @@ export function UpdateStateFromQueryParams() {
     const left = useSelector((store) => store.left);
     const right = useSelector((store) => store.right);
     const theme = useSelector((store) => store.theme);
-
+    const isSplit = useSelector((store) => store.isSplit);
     const [themeSet, setThemeSet] = useState(isLightTheme ? "light" : theme);
 
     useEffect(() => {
         setThemeSet(theme);
     }, [theme]);
-    const isSplit = useSelector((store) => store.isSplit);
+  
 
     const STORE_KEYS = {
         apiUrl,
         start,
         step,
-        end: stop,
+        stop,
         from,
         to,
         time,
@@ -70,7 +70,7 @@ export function UpdateStateFromQueryParams() {
         apiUrl: setApiUrl,
         start: setStartTime,
         step: setQueryStep,
-        end: setStopTime,
+        stop: setStopTime,
         from: setFromTime,
         to: setToTime,
         time: setQueryTime,
@@ -85,12 +85,12 @@ export function UpdateStateFromQueryParams() {
     const STRING_VALUES = ["step", "apiUrl", "theme", "time"];
     const ARRAY_VALUES = ["left", "right"];
 
-    const TIME_VALUES = ["start", "end"];
+    const TIME_VALUES = ["start", "stop"];
 
     const BOOLEAN_VALUES = ["isSubmit", "isSplit", "isEmbed"];
 
     const encodeTs = (ts) => {
-        return ts.getTime() + "000000";
+        return ts?.getTime() + "000000";
     };
 
     const { hash } = useLocation();

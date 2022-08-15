@@ -72,13 +72,16 @@ export default function UseTooltip(plot) {
                 ${labelsFormatted}
                 </div>
                 `;
-                const labelLength =  getItemsLength(labelsList)
-                showTooltip(
-                    item.pageX,
-                    item.pageY,
-                    tooltipTemplate,
-                    labelLength
-                );
+                if(labelsList?.length > 0) {
+                    const labelLength =  getItemsLength(labelsList)
+                    showTooltip(
+                        item.pageX,
+                        item.pageY,
+                        tooltipTemplate,
+                        labelLength
+                    );
+                }
+              
             }
         } else {
             $q("#tooltip").remove();

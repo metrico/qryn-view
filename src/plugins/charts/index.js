@@ -4,13 +4,15 @@ import "react-flot/flot/jquery.flot.time.min";
 import "react-flot/flot/jquery.flot.selection.min";
 import "react-flot/flot/jquery.flot.crosshair.min";
 import loadLogs from "../../actions/loadLogs";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
 import * as moment from "moment";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { format } from "date-fns";
 import ChartTools from "./ChartTools";
 import ChartLabelsList from "./ChartLabelList";
+import styled from "@emotion/styled";
+
 import {
     getTypeFromLocal,
     formatTs,
@@ -23,20 +25,58 @@ import {
 } from "./helpers";
 import UseTooltip from "./UseTooltip";
 import { CHART_OPTIONS } from "./consts";
+import { themes } from "../../theme/themes";
+import { ThemeProvider } from "@emotion/react";
+const ChartCont = styled.div`
+    height: inherit;
+   background: ${({theme})=>theme.chartBg}
+`;
 
+export const UseMatrixData = (spliced,data) => {
+    const MD = useMemo(()=>{
+        let parsed = [
+            {
+                data: [],
+                label: [],
+                isVisible: true,
+                shadowSize: 0,
+                id: "",
+            },
+        ];
+
+        if (data?.length > 0) {
+            parsed = [...data]?.map((m) => ({
+                data: formatTs(m?.values),
+                label: formatLabel(m?.metric),
+                isVisible: true,
+                shadowSize: 0,
+                id: m.id,
+            }));
+
+            if (spliced) {
+                const splicedData = parsed?.splice(0, 20);
+                return splicedData;
+            } else {
+                return parsed;
+            }
+        }
+        return parsed;
+    },[spliced,data])
+    return MD
+}
 export default function ClokiChart(props) {
     const { matrixData, actualQuery } = props;
     const { tWidth } = props;
     const { expr, queryType, limit, panel, id } = actualQuery;
     const chartRef = useRef(null);
-
+    const theme = useSelector(({ theme }) => theme);
     const $q = window.jQuery;
     $q.fn.UseTooltip = UseTooltip;
-
+    const matrix = UseMatrixData(true, matrixData)
     const dispatch = useDispatch();
     const [isSpliced, setIsSpliced] = useState(true);
-    const [chartData, setChartData] = useState(getDataParsed(isSpliced));
-    const [allData] = useState(getDataParsed(false));
+    const [chartData, setChartData] = useState(matrix);
+    const [allData] = useState(UseMatrixData(false, matrixData));
     const [labels, setLabels] = useState([]);
     const [element, setElement] = useState(chartRef.current);
     const chartOpts = useMemo(() => {
@@ -53,33 +93,7 @@ export default function ClokiChart(props) {
 
     const [chartType, setChartType] = useState(getTypeFromLocal() || "line");
 
-    function getDataParsed(spliced) {
-        let parsed = [
-            {
-                data: [],
-                label: [],
-                isVisible: true,
-                id: "",
-            },
-        ];
 
-        if (matrixData.length > 0) {
-            parsed = [...matrixData]?.map((m) => ({
-                data: formatTs(m?.values),
-                label: formatLabel(m?.metric),
-                isVisible: true,
-                id: m.id,
-            }));
-
-            if (spliced) {
-                const splicedData = parsed?.splice(0, 20);
-                return splicedData;
-            } else {
-                return parsed;
-            }
-        }
-        return parsed;
-    }
 
     function plotChartData(data, type, element) {
         const chartSeries = setChartTypeSeries(type);
@@ -130,6 +144,7 @@ export default function ClokiChart(props) {
                         bars: { ...series.bars, show: false },
                         points: { ...series.points, show: false },
                         isVisible: false,
+                        shadowSize: 0,
                     };
                 } else {
                     return {
@@ -138,6 +153,7 @@ export default function ClokiChart(props) {
                         lines,
                         points,
                         isVisible: true,
+                        shadowSize: 0,
                     };
                 }
             });
@@ -249,6 +265,7 @@ export default function ClokiChart(props) {
                     lines,
                     points,
                     isVisible: true,
+                    shadowSize: 0,
                 };
             });
             const { timeformat, min, max } = formatDateRange(newData);
@@ -272,7 +289,8 @@ export default function ClokiChart(props) {
         setElement(chartRef.current);
         setLabels(chartData?.map(({ label }) => label));
         $q(chartRef.current).bind("plotselected", setRanges);
-        setChartData(getDataParsed(isSpliced));
+        //setChartData(getDataParsed(isSpliced));
+        setChartData(matrix)
         localStorage.setItem("labelsSelected", JSON.stringify([]));
     }, []);
 
@@ -314,28 +332,30 @@ export default function ClokiChart(props) {
     };
 
     return (
-        <div style={{ height: "inherit" }}>
-            <ChartTools
-                matrixData={matrixData}
-                chartType={chartType}
-                handleNoLimitData={handleNoLimitData}
-                handleLimitData={handleLimitData}
-                isSpliced={isSpliced}
-                onSetChartType={onSetChartType}
-            />
+        <ThemeProvider theme={themes[theme]}>
+            <ChartCont>
+                <ChartTools
+                    matrixData={matrixData}
+                    chartType={chartType}
+                    handleNoLimitData={handleNoLimitData}
+                    handleLimitData={handleLimitData}
+                    isSpliced={isSpliced}
+                    onSetChartType={onSetChartType}
+                />
 
-            <div
-                ref={chartRef}
-                id={"chart-container"}
-                style={{
-                    flex: "1",
-                    height: "180px",
-                    display: "block",
-                    position: "relative",
-                }}
-            ></div>
+                <div
+                    ref={chartRef}
+                    id={"chart-container"}
+                    style={{
+                        flex: "1",
+                        height: "180px",
+                        display: "block",
+                        position: "relative",
+                    }}
+                ></div>
 
-            <ChartLabelsList onLabelClick={onLabelClick} labels={labels} />
-        </div>
+                <ChartLabelsList onLabelClick={onLabelClick} labels={labels} />
+            </ChartCont>
+        </ThemeProvider>
     );
 }

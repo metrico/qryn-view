@@ -5,7 +5,7 @@ import { createAlert } from "./createAlert";
 function getTimeParsed(time) {
     return time.getTime() + "000000";
 }
-export default function loadLabels(apiUrl, start, end) {
+export default function loadLabels(apiUrl, start, stop) {
     const origin = window.location.origin;
     const url = apiUrl;
     const headers = {
@@ -24,7 +24,7 @@ export default function loadLabels(apiUrl, start, end) {
     };
 
     const nanoStart = getTimeParsed(start);
-    const nanoEnd = getTimeParsed(end);
+    const nanoEnd = getTimeParsed(stop);
 
     return function (dispatch) {
         axios

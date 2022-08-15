@@ -54,7 +54,7 @@ const localUrl = () => {
             "yyyy-MM-dd HH:mm:ss"
         );
         const toDate = format(
-            parseInt(paramsData.end) / 1000000,
+            parseInt(paramsData.stop) / 1000000,
             "yyyy-MM-dd HH:mm:ss"
         );
 

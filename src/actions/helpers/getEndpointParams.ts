@@ -6,7 +6,6 @@ export function getEndpointParams(query:string,limit:number):QueryParams {
     const localStore = store.getState();
     const { step, apiUrl } = localStore;
     const { parsedTime, time } = getTimeParams();
-
     const url = apiUrl;
     const queryStep = `&step=${step || 120}`;
     const encodedQuery = `${encodeURIComponent(query)}`;

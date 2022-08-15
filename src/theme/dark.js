@@ -83,6 +83,7 @@ const inputTextFocus = orange.or100;
 const highlitedButton = orange.or100;
 const inputLabelColor = lightgrey.lg400;
 const inputLabelBg = black.bg10;
+const chartBg = '#111';
 const historyRow = '#6c6b6b38';
 const viewBg = black.b300;
 const scrollbarThumb = "hsla(0, 0%, 48%, 0.5)";
@@ -115,6 +116,7 @@ const darkTheme = {
     textPrimary,
     textPrimaryAccent,
     viewBg,
+    chartBg,
     historyRow,
     scrollbarThumb,
     critical,

@@ -30,7 +30,6 @@ export interface URLState {
     time: string;
     to: string | null;
     stop: string | Date;
-    end: string | Date;
     from: string | Date;
     left: any[];
     right: any[];
@@ -50,7 +49,6 @@ export const initialUrlState = {
     time: "",
     to: "",
     stop: "",
-    end: "",
     from: "",
     left: [],
     right: [],
@@ -93,8 +91,7 @@ export default function initialState() {
                     .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
             ),
         time: urlState.time || "", // for instant queries
-        stop:
-            urlState.end ||
+        stop: urlState.stop ||
             new Date(moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
         from: urlState.from || null,
         to: urlState.to || null,
@@ -122,7 +119,7 @@ export default function initialState() {
                 idRef: "L-A",
                 lastIdx: 1,
                 panel: "left",
-                queryType: "instant",
+                queryType: "range",
                 limit: 100,
                 step: 100,
                 tableView: false,
@@ -139,7 +136,7 @@ export default function initialState() {
                 idRef: "R-A",
                 lastIdx: 1,
                 panel: "right",
-                queryType: "instant",
+                queryType: "range",
                 limit: 100,
                 step: 100,
                 tableView: false,

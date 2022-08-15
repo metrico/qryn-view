@@ -661,7 +661,7 @@ const QueryHistory = (props) => {
             limit: 100,
             panel: "left",
             queryInput: "",
-            queryType: "instant",
+            queryType: "range",
         };
         let logData = {};
         try {

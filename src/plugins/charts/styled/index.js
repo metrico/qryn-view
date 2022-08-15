@@ -6,7 +6,7 @@ export const LabelsContainer = styled("div")`
 
     display: flex;
     flex-wrap: wrap;
-    max-height: calc(100% - 300px);
+    max-height: calc(100% - 285px);
     overflow-y: auto;
     margin: 10px 20px;
     padding-bottom: 10px;

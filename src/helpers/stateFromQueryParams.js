@@ -10,7 +10,6 @@ export const initialUrlState = {
     time: "",
     to: "",
     stop: "",
-    end: "",
     from: "",
     left: [
         {
@@ -77,7 +76,7 @@ export default function stateFromQueryParams() {
         for (let [key, value] of urlFromHash.entries()) {
             if (debug) console.log("🚧 LOGIC/startParams/", key, value);
 
-            if (key === "end" || key === "start") {
+            if (key === "stop" || key === "start") {
                 const croppedTime = parseInt(value) / 1000000;
                 startParams[key] = new Date(
                     moment(croppedTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ")

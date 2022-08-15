@@ -96,7 +96,7 @@ export const generateYears = (relativeTo, count) => {
     const half = Math.floor(count / 2);
     return Array(count)
         ?.fill(0)
-        ?.map((y, i) => relativeTo?.getFullYear() - half + i); // TODO: make part of the state
+        ?.map((y, i) => relativeTo?.getFullYear() - half + i); 
 };
 
 export const isSameRange = (first, second) => {
