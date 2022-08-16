@@ -3,6 +3,10 @@ import loadLabelValues from "../actions/loadLabelValues";
 import store from "../store/store";
 
 export function decodeQuery(query, apiUrl, labels = []) {
+
+   if(typeof query !== 'string'){
+    return
+   }
     const queryArr = query
         ?.match(/[^{\}]+(?=})/g, "$1")
         ?.map((m) => m.split(","))

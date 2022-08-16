@@ -8,7 +8,6 @@ export const CHART_OPTIONS = {
         timeformat: "%Y-%m-%d %H:%M:%S",
         reserveSpace: false,
         shadowSize: 0,
-        alignTicksWithAxis:null,
     },
     grid: {
         show: true,
@@ -64,7 +63,7 @@ export const CHART_BAR_SERIES = {
 };
 
 export const CHART_LINE_SERIES = {
-    lines: { show: true, lineWidth: 1, shadowSize: 0},
+    lines: { show: true, lineWidth: 1,shadowSize: 0 },
     bars: { show: false, barWidth: 100, shadowSize: 0 },
     points: { show: false, radius: 1, shadowSize: 0 },
 };

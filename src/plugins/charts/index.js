@@ -7,7 +7,7 @@ import loadLogs from "../../actions/loadLogs";
 import { useDispatch, useSelector } from "react-redux";
 import { setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
 import * as moment from "moment";
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { format } from "date-fns";
 import ChartTools from "./ChartTools";
 import ChartLabelsList from "./ChartLabelList";
@@ -82,7 +82,7 @@ export default function ClokiChart(props) {
     const chartOpts = useMemo(() => {
         if (tWidth) {
             const chartOp = { ...CHART_OPTIONS };
-            chartOp["xaxis"]["ticks"] = Math.round(tWidth / 120);
+            chartOp["xaxis"]["ticks"] = Math.round(tWidth / 125);
             return chartOp;
         } else {
             return CHART_OPTIONS;
@@ -92,8 +92,6 @@ export default function ClokiChart(props) {
     const [chartOptions, setChartOptions] = useState(chartOpts);
 
     const [chartType, setChartType] = useState(getTypeFromLocal() || "line");
-
-
 
     function plotChartData(data, type, element) {
         const chartSeries = setChartTypeSeries(type);

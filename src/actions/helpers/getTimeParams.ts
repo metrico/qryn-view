@@ -61,8 +61,11 @@ export default function getTimeParams() {
 
     const parsedTime =
         "&start=" + (from || parsedStart) + "&end=" + (to || parsedStop);
-
+    const diffSt = parseInt(from || parsedStart)
+    const diffEnd = parseInt(to || parsedStop)
+    const tDiff = (diffEnd - diffSt)/1000000
     return {
+        tDiff,
         time: prevInstantTime,
         parsedTime,
     };
