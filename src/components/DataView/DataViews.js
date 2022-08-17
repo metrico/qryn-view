@@ -524,7 +524,6 @@ const StyledInfoContent = styled.div`
     display: flex;
     flex-direction: column;
     padding: 20px;
-    max-width: 200px;
     div {
         width: 100%;
         overflow-wrap: break-word;

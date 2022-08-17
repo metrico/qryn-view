@@ -9,7 +9,6 @@ import styled from "@emotion/styled";
 const ValueTagsStyled = styled.div`
     color: ${(props) => props.theme.textPrimary};
     flex: 1;
-    z-index: 10000;
     display: flex;
     &:hover {
         background: ${(props) => props.theme.widgetContainer};

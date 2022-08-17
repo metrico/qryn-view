@@ -15,10 +15,11 @@
 - Label Browser
 - Display Logs & Charts
 - Timerange Selector
-- Split data view
+- Split data views
 - Multi query execution
 - Query History
 - Mobile View
+- Copy Link
 - Embeddable Results
 - 100% Client-Side
 
@@ -41,15 +42,16 @@ Use the [public client](https://view.cloki.org) _(no data goes through the serve
 ##### URL Parameters
 cLoki-view can be controlled through URL parameters
 
-| param | description |  |
+| param | description | default |
 |-------|-------------|---------|
 | `apiUrl` | _LogQL API URL_ | http://localhost:3100 |
-| `query`  | _LogQL query_   | |
-| `from`   | _timestamp Ns_  | |
-| `to`     | _timestamp Ns_  | |
-| `limit`  | _query limit_   | |
-| `step`   | _query step_    | |
+| `start`   | _timestamp Ns_  | now |
+| `stop`     | _timestamp Ns_  | |
+| `step`   | _query step_    | 5 |
 | `isEmbed` | _embed mode_   | false |
+| `theme` | _application theme_ | dark |
+| `left` | _left panel queries details_ | |
+| `right` | _right panel queries details_ | |
 
 
 ------------
@@ -62,5 +64,5 @@ Consult the [qryn Wiki](https://github.com/metrico/qryn/wiki/LogQL-Supported-Que
 - (C) 2022 QXIP BV see LICENSE for details
 
 [^1]: qryn is not affiliated or endorsed by Grafana Labs or ClickHouse Inc. All rights belong to their respective owners.
-[^2]: qryn is part of the cLoki project, licensed under the AGPLv3 LICENSE by QXIP BV
+[^2]: qryn-view is part of the qryn project, licensed under the AGPLv3 LICENSE by QXIP BV
 

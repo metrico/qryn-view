@@ -207,19 +207,19 @@ export default function QueryItem(props) {
             }
         };
         if (name === "left") {
-            const filtered = filterPanel(leftPanel);
-            const viewFiltered = filterPanel(leftDV);
+            const lfiltered = filterPanel(leftPanel);
+            const lviewFiltered = filterPanel(leftDV);
 
-            dispatch(setLeftPanel(filtered));
-            dispatch(setLeftDataView(viewFiltered));
+            dispatch(setLeftPanel(lfiltered));
+            dispatch(setLeftDataView(lviewFiltered));
         }
 
         if (name === "right") {
-            const filtered = filterPanel(rightPanel);
-            const viewFiltered = filterPanel(rightDV);
-            dispatch(setRightPanel(filtered));
-            dispatch(setRightDataView(viewFiltered));
-            if (filtered.length === 0) {
+            const rfiltered = filterPanel(rightPanel);
+            const rviewFiltered = filterPanel(rightDV);
+            dispatch(setRightPanel(rfiltered));
+            dispatch(setRightDataView(rviewFiltered));
+            if (rfiltered.length === 0) {
                 dispatch(setSplitView(false));
             }
         }
