@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { themes } from "../theme/themes";
 import Panel from "../components/Panel/Panel";
 import { Notification } from "../qryn-ui/notifications";
@@ -10,6 +10,7 @@ import StatusBar from "../components/StatusBar";
 import QueryHistory from "../plugins/queryhistory";
 import { useMediaQuery } from "react-responsive";
 import MainTabs from "./MainTabs.js";
+import { useMemo } from "react";
 
 export const MainContainer = styled.div`
     position: absolute;
@@ -34,6 +35,47 @@ export const MainContainer = styled.div`
     }
 `;
 
+/**
+ *
+ * @param {theme, isEmbed, settingsDialogOpen}
+ * @returns Mobile View
+ */
+export function MobileView({ theme, isEmbed, settingsDialogOpen }) {
+    return (
+        <ThemeProvider theme={theme}>
+            {!isEmbed && <StatusBar />}
+
+            <MainContainer>
+                <MainTabs />
+            </MainContainer>
+
+            <Notification />
+            <SettingsDialog open={settingsDialogOpen} />
+            <QueryHistory />
+        </ThemeProvider>
+    );
+}
+/**
+ *
+ * @param {theme, isEmbed, isSplit, settingsDialogOpen}
+ * @returns Desktop View
+ */
+export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
+    return (
+        <ThemeProvider theme={theme}>
+            <MainContainer>
+                {!isEmbed && <StatusBar />}
+                <div className="panels-container">
+                    <Panel name="left" />
+                    {isSplit && <Panel name="right" />}
+                </div>
+            </MainContainer>
+            <SettingsDialog open={settingsDialogOpen} />
+            <QueryHistory />
+        </ThemeProvider>
+    );
+}
+
 export default function Main() {
     UpdateStateFromQueryParams();
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
@@ -41,35 +83,26 @@ export default function Main() {
     const isEmbed = useSelector((store) => store.isEmbed);
     const theme = useSelector((store) => store.theme);
     const settingsDialogOpen = useSelector((store) => store.settingsDialogOpen);
+    const themeMemo = useMemo(() => themes[theme], [theme]);
 
     if (!isTabletOrMobile) {
+        // desktop view
         return (
-            <ThemeProvider theme={themes[theme]}>
-                <MainContainer>
-                    {!isEmbed && <StatusBar />}
-                    <div className="panels-container">
-                        <Panel name="left" />
-                        {isSplit && <Panel name="right" />}
-                    </div>
-                </MainContainer>
-                {/* <Notification /> */}
-                <SettingsDialog open={settingsDialogOpen} />
-                <QueryHistory />
-            </ThemeProvider>
+            <DesktopView
+                isEmbed={isEmbed}
+                isSplit={isSplit}
+                theme={themeMemo}
+                settingsDialogOpen={settingsDialogOpen}
+            />
         );
     } else {
-        // dispatch(setSplitView(false));
+        // mobile view
         return (
-            <ThemeProvider theme={themes[theme]}>
-                {!isEmbed && <StatusBar />}
-
-                <MainContainer>
-                    <MainTabs />
-                </MainContainer>
-                <Notification /> 
-                <SettingsDialog open={settingsDialogOpen} />
-                <QueryHistory />
-            </ThemeProvider>
+            <MobileView
+                isEmbed={isEmbed}
+                theme={themeMemo}
+                settingsDialogOpen={settingsDialogOpen}
+            />
         );
     }
 }

@@ -79,8 +79,8 @@ export const LogRow = styled.div`
 
     p {
         display: inline-block;
+        overflow-wrap: anywhere;
     }
-
     border-left: 4px solid ${({rowColor}) => rowColor};
     .log-ts-row {
         display: flex;
