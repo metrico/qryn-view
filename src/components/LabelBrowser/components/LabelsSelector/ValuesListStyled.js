@@ -96,15 +96,19 @@ const ValuesListStyled = styled.div`
     .values-container {
         .values-container-column {
             display: flex;
+            flex-wrap:wrap;
             max-width: 100%;
             .values-column {
                 margin: 5px;
                 border-radius: 3px;
-                height: auto;
-                min-height: 100px;
-                min-width: 175px;
+                height:fit-content;
+                min-width: 35%;
                 flex: 1;
+                background: ${(props) => props.theme.buttonHover};
                 .column {
+                    border: 1px solid ${(props) => props.theme.buttonBorder};
+                    background: ${(props) => props.theme.widgetContainer};
+                    border-top:none;
                     max-height: 350px;
                     &::-webkit-scrollbar {
                         width: 10px;
@@ -117,15 +121,19 @@ const ValuesListStyled = styled.div`
                     }
                 }
                 .values-column-title {
-                    padding: 8px;
+                    padding: 4px;
                     font-size: 1em;
                     border-radius: 4px 4px 0px 0px;
                     display: flex;
                     flex: 1;
                     transition: 0.2s all;
-
                     justify-content: space-between;
-
+                    color: ${(props) => props.theme.textColor};
+                    background: ${(props) => props.theme.widgetContainer};
+                    border: 1px solid ${(props) => props.theme.buttonBorder};
+                    .key {
+                       letter-spacing:1px;
+                    }
                     .close-column {
                         align-self: flex-end;
                         justify-self: end;
@@ -146,14 +154,6 @@ const ValuesListStyled = styled.div`
                     }
                 }
             }
-        }
-        .values-column {
-            background: ${(props) => props.theme.buttonHover};
-        }
-        .values-column-title {
-            color: ${(props) => props.theme.textColor};
-            background: ${(props) => props.theme.historyRow};
-            border-bottom: 2px solid ${(props) => props.theme.widgetTitleBorder};
         }
     }
 `;

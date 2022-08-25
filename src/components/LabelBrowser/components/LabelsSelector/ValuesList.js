@@ -213,7 +213,7 @@ export default function ValuesList(props) {
         <div className="values-column">
             <div className="values-column-title">
                 <span>
-                    {props.label} {resp?.length}
+                    <span className="key">{props.label}</span> | {resp?.length}
                 </span>
                 <span
                     className={"close-column"}

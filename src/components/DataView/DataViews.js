@@ -533,6 +533,8 @@ const StyledInfoContent = styled.div`
         padding: 10px;
         flex: 1;
         font-size: 12px;
+        display:flex;
+        flex-wrap: wrap;
         span.label {
             background: ${({ theme }) => theme.buttonBorder};
             color: ${({ theme }) => theme.widgetContainer};
