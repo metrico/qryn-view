@@ -157,7 +157,7 @@ export function Table(props) {
                 <FixedSizeList
                     height={parseInt(height) || 200}
                     itemCount={rows.length}
-                    itemSize={20}
+                    itemSize={25}
                     width={totalColumnsWidth + scrollbarWidth}
                 >
                     {RenderRow}

@@ -37,6 +37,7 @@ export const TableStyles = styled.div`
         .th {
             background: ${(props) => props.theme.buttonHover};
             border-bottom: none;
+            padding:3px;
             :last-child {
                 box-sizing: unset !important;
             }
@@ -49,7 +50,7 @@ export const TableStyles = styled.div`
             justify-content: space-between;
             border-bottom: 1px solid ${(props) => props.theme.buttonBorder};
             border-right: 1px solid ${(props) => props.theme.buttonBorder};
-
+            padding:3px;
             position:relative;
             white-space: nowrap;
             overflow: hidden;
