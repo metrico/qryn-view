@@ -531,9 +531,10 @@ const StyledInfoContent = styled.div`
     }
     p {
         padding: 10px;
-        flex: 1;
         font-size: 12px;
         display:flex;
+        flex: 1;
+        align-items:center;
         flex-wrap: wrap;
         span.label {
             background: ${({ theme }) => theme.buttonBorder};
@@ -555,6 +556,7 @@ const StyledInfoContent = styled.div`
         font-size: 10px;
     }
 `;
+
 /**
  *
  * @param {
@@ -566,6 +568,7 @@ const StyledInfoContent = styled.div`
  * total }
  * @returns A styled
  */
+
 const InfoContent = ({ expr, idRef, labels, limit, queryType, total }) => {
     return (
         <StyledInfoContent>
