@@ -1,8 +1,8 @@
-import { queryBuilderWithLabels } from "../LabelBrowser/helpers/querybuilder";
+import { queryBuilderWithLabels } from "../../LabelBrowser/helpers/querybuilder";
 
 import { ZoomIn, ZoomOut } from "@mui/icons-material/";
 import { useSelector } from "react-redux";
-import { themes } from "../../theme/themes";
+import { themes } from "../../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
 

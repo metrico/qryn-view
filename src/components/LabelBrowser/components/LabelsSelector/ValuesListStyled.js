@@ -131,9 +131,6 @@ const ValuesListStyled = styled.div`
                     color: ${(props) => props.theme.textColor};
                     background: ${(props) => props.theme.widgetContainer};
                     border: 1px solid ${(props) => props.theme.buttonBorder};
-                    .key {
-                       letter-spacing:1px;
-                    }
                     .close-column {
                         align-self: flex-end;
                         justify-self: end;

@@ -1,13 +1,11 @@
 import { ThemeProvider } from "@emotion/react";
 import { useSelector } from "react-redux";
-import { themes } from "../../theme/themes";
-import { EmptyViewContainer } from "./styled";
+import { themes } from "../../../theme/themes";
+import { EmptyViewContainer } from "../styled";
 
-export default function EmptyView() {
+export default function EmptyViewCont() {
     const theme = useSelector((store) => store.theme);
     const loading = useSelector((store) => store.loading);
-
-
     return (
         !loading && (
             <ThemeProvider theme={themes[theme]}>
@@ -18,6 +16,5 @@ export default function EmptyView() {
                 </EmptyViewContainer>
             </ThemeProvider>
         )
-    )
-
+    );
 }

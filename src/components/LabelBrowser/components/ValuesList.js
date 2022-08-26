@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
 import styled from "@emotion/styled";
 import { ThemeProvider } from "@emotion/react";
-import { themes } from "../../theme/themes";
-import LabelsSelector from "./components/LabelsSelector";
+import { themes } from "../../../theme/themes";
+import LabelsSelector from "./LabelsSelector";
 import { useEffect, useMemo, useState } from "react";
 
 const ErrorContainer = styled.div`

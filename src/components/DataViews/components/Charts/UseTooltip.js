@@ -8,6 +8,7 @@ import {
 } from "./helpers";
 
 const $q = window.jQuery;
+
 export default function UseTooltip(plot) {
     let previousPoint = null;
     $q("#tooltip").remove();

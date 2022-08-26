@@ -9,37 +9,37 @@ import { Dialog, Switch } from "@mui/material";
 import { useMediaQuery } from "react-responsive";
 import CloseIcon from "@mui/icons-material/Close";
 /**Actions */
-import loadLogs from "../../actions/loadLogs";
-import setQueryHistory from "../../actions/setQueryHistory";
-import setHistoryOpen from "../../actions/setHistoryOpen";
-import setLinksHistory from "../../actions/setLinksHistory";
-import setIsEmptyView from "../../actions/setIsEmptyView";
-import { setLeftPanel } from "../../actions/setLeftPanel";
-import { setRightPanel } from "../../actions/setRightPanel";
+import loadLogs from "../../../actions/loadLogs";
+import setQueryHistory from "../../../actions/setQueryHistory";
+import setHistoryOpen from "../../../actions/setHistoryOpen";
+import setLinksHistory from "../../../actions/setLinksHistory";
+import setIsEmptyView from "../../../actions/setIsEmptyView";
+import { setLeftPanel } from "../../../actions/setLeftPanel";
+import { setRightPanel } from "../../../actions/setRightPanel";
 /**Services */
-import localService from "../../services/localService";
-import localUrl from "../../services/localUrl";
+import localService from "../../../services/localService";
+import localUrl from "../../../services/localUrl";
 /**Plugins */
-import QueryEditor from "../../plugins/queryeditor";
-import { MobileTopQueryMenu, QueryBarContainer } from "./components/styled";
+import QueryEditor from "../../../plugins/queryeditor";
+import { MobileTopQueryMenu, QueryBarContainer } from "./styled";
 /**Buttons */
-import HistoryButton from "./components/HistoryButton/HistoryButton";
-import ShowLabelsButton from "./components/ShowLabelsButton/ShowLabelsButton";
-import ShowLogsButton from "./components/ShowLogsButton/ShowLogsButton";
-import ShowQuerySettingsButton from "./components/ShowQuerySettingsButton/ShowQuerySettingsButton";
+import HistoryButton from "./Buttons/HistoryButton";
+import ShowLabelsButton from "./Buttons/ShowLabelsButton";
+import ShowLogsButton from "./Buttons/ShowLogsButton";
+import ShowQuerySettingsButton from "./Buttons/ShowQuerySettingsButton";
 /**Helpers */
-import queryInit from "./helpers/queryInit";
-import onQueryValid from "./helpers/onQueryValid";
-import debugLog from "./helpers/debugLog";
-import { decodeQuery, decodeExpr } from "../../helpers/decodeQuery";
+import queryInit from "../helpers/queryInit";
+import onQueryValid from "../helpers/onQueryValid";
+import debugLog from "../helpers/debugLog";
+import { decodeQuery, decodeExpr } from "../../../helpers/decodeQuery";
 /**Hooks */
-import { sendLabels } from "../../hooks/useLabels";
+import { sendLabels } from "../../../hooks/useLabels";
 /**Components */
-import QueryTypeBar from "../QueryTypeBar";
-import QueryTypeSwitch from "../QueryTypeBar/components/QueryTypeSwitch";
-import QueryLimit from "../QueryTypeBar/components/QueryLimit";
+import QueryTypeBar from "../../QueryTypeBar";
+import QueryTypeSwitch from "../../QueryTypeBar/components/QueryTypeSwitch";
+import QueryLimit from "../../QueryTypeBar/components/QueryLimit";
 /**Theme */
-import { themes } from "../../theme/themes";
+import { themes } from "../../../theme/themes";
 
 /**Styled*/
 import {
@@ -49,7 +49,7 @@ import {
     SettingCloseBtn,
     SettingsInputContainer,
     SettingLabel,
-} from "./components/styled";
+} from "./styled";
 
 export const QueryBar = (props) => {
     const { data, name } = props;
@@ -299,7 +299,6 @@ export const QueryBar = (props) => {
 
 export const QuerySetting = (props) => {
     const dispatch = useDispatch();
-    const theme = useSelector((store) => store.theme);
     const left = useSelector((store) => store.left);
     const right = useSelector((store) => store.right);
 

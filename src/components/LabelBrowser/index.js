@@ -1,5 +1,5 @@
-import { QueryBar } from "./QueryBar";
-import { ValuesList } from "./ValuesList";
+import { QueryBar } from "./components/QueryBar";
+import { ValuesList } from "./components/ValuesList";
 
 export default function LabelBrowser(props) {
     return (

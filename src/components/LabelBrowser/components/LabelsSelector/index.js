@@ -59,6 +59,7 @@ export default function LabelsSelector(props) {
     const [labelsSelected, setLabelsSelected] = useState([]);
 
     // memoize currently selected labels
+    
     const selected = useMemo(() => labelsSelected, [labelsSelected]);
 
     // match labels from query state with new labels from request to API
@@ -114,7 +115,9 @@ export default function LabelsSelector(props) {
                         )}
                     </div>
 
-                    <ValuesSelector {...props} labelsSelected={selected} />
+                    <ValuesSelector 
+                    {...props} 
+                    labelsSelected={selected} />
                 </div>
             </ValuesListStyled>
         </ThemeProvider>

@@ -1,93 +1,59 @@
+//React
+import { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+//Flot
 import "./jquery-loader";
 import ReactFlot from "react-flot";
 import "react-flot/flot/jquery.flot.time.min";
 import "react-flot/flot/jquery.flot.selection.min";
 import "react-flot/flot/jquery.flot.crosshair.min";
-import loadLogs from "../../actions/loadLogs";
-import { useDispatch, useSelector } from "react-redux";
-import { setStartTime, setStopTime, setTimeRangeLabel } from "../../actions";
+//Packages
 import * as moment from "moment";
-import { useState, useEffect, useRef, useMemo } from "react";
 import { format } from "date-fns";
-import ChartTools from "./ChartTools";
-import ChartLabelsList from "./ChartLabelList";
-import styled from "@emotion/styled";
+
+//Global
+import {
+    setStartTime,
+    setStopTime,
+    setTimeRangeLabel,
+} from "../../../../actions";
+import loadLogs from "../../../../actions/loadLogs";
 
 import {
     getTypeFromLocal,
-    formatTs,
     getSeriesFromChartType,
     setChartTypeSeries,
     setTypeToLocal,
     formatDateRange,
-    formatLabel,
     getNewData,
 } from "./helpers";
 import UseTooltip from "./UseTooltip";
-import { CHART_OPTIONS } from "./consts";
-import { themes } from "../../theme/themes";
-import { ThemeProvider } from "@emotion/react";
-const ChartCont = styled.div`
-    height: inherit;
-   background: ${({theme})=>theme.chartBg}
-`;
+import { useChartOptions, useMatrixData, useTheme } from "./hooks";
+import { FlotChart } from "./FlotChart";
 
-export const UseMatrixData = (spliced,data) => {
-    const MD = useMemo(()=>{
-        let parsed = [
-            {
-                data: [],
-                label: [],
-                isVisible: true,
-                shadowSize: 0,
-                id: "",
-            },
-        ];
-
-        if (data?.length > 0) {
-            parsed = [...data]?.map((m) => ({
-                data: formatTs(m?.values),
-                label: formatLabel(m?.metric),
-                isVisible: true,
-                shadowSize: 0,
-                id: m.id,
-            }));
-
-            if (spliced) {
-                const splicedData = parsed?.splice(0, 20);
-                return splicedData;
-            } else {
-                return parsed;
-            }
-        }
-        return parsed;
-    },[spliced,data])
-    return MD
-}
 export default function ClokiChart(props) {
     const { matrixData, actualQuery } = props;
     const { tWidth } = props;
     const { expr, queryType, limit, panel, id } = actualQuery;
     const chartRef = useRef(null);
-    const theme = useSelector(({ theme }) => theme);
+    const storeTheme = useSelector(({ theme }) => theme);
+
+    const theme = useTheme(storeTheme);
+
     const $q = window.jQuery;
     $q.fn.UseTooltip = UseTooltip;
-    const matrix = UseMatrixData(true, matrixData)
+
+    const matrix = useMatrixData(true, matrixData);
     const dispatch = useDispatch();
+
     const [isSpliced, setIsSpliced] = useState(true);
     const [chartData, setChartData] = useState(matrix);
-    const [allData] = useState(UseMatrixData(false, matrixData));
+
+    const [allData] = useState(useMatrixData(false, matrixData));
     const [labels, setLabels] = useState([]);
     const [element, setElement] = useState(chartRef.current);
-    const chartOpts = useMemo(() => {
-        if (tWidth) {
-            const chartOp = { ...CHART_OPTIONS };
-            chartOp["xaxis"]["ticks"] = Math.round(tWidth / 125);
-            return chartOp;
-        } else {
-            return CHART_OPTIONS;
-        }
-    }, [tWidth]);
+
+    const chartOpts = useChartOptions({ tWidth });
 
     const [chartOptions, setChartOptions] = useState(chartOpts);
 
@@ -288,7 +254,7 @@ export default function ClokiChart(props) {
         setLabels(chartData?.map(({ label }) => label));
         $q(chartRef.current).bind("plotselected", setRanges);
         //setChartData(getDataParsed(isSpliced));
-        setChartData(matrix)
+        setChartData(matrix);
         localStorage.setItem("labelsSelected", JSON.stringify([]));
     }, []);
 
@@ -329,31 +295,22 @@ export default function ClokiChart(props) {
         setIsSpliced(true);
     };
 
-    return (
-        <ThemeProvider theme={themes[theme]}>
-            <ChartCont>
-                <ChartTools
-                    matrixData={matrixData}
-                    chartType={chartType}
-                    handleNoLimitData={handleNoLimitData}
-                    handleLimitData={handleLimitData}
-                    isSpliced={isSpliced}
-                    onSetChartType={onSetChartType}
-                />
+    if (matrixData) {
+        const flotChartProps = {
+            theme,
+            matrixData,
+            chartType,
+            handleLimitData,
+            handleNoLimitData,
+            isSpliced,
+            onSetChartType,
+            chartRef,
+            onLabelClick,
+            labels,
+        };
 
-                <div
-                    ref={chartRef}
-                    id={"chart-container"}
-                    style={{
-                        flex: "1",
-                        height: "180px",
-                        display: "block",
-                        position: "relative",
-                    }}
-                ></div>
+        return <FlotChart {...flotChartProps} />;
+    }
 
-                <ChartLabelsList onLabelClick={onLabelClick} labels={labels} />
-            </ChartCont>
-        </ThemeProvider>
-    );
+    return null;
 }

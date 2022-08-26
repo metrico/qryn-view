@@ -10,7 +10,8 @@ import { FixedSizeList } from "react-window";
 import { scrollbarWidth } from "./helpers";
 import { getStyles } from "./styles";
 import { ZoomIn, ZoomOut } from "@mui/icons-material/";
-import { addLabel } from "../../components/DataView/ValueTags";
+import { addLabel } from "../../ValueTags";
+
 
 export const AddLabels = (props) => {
     // get queryObject from parent

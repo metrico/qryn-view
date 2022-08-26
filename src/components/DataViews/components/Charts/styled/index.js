@@ -113,3 +113,8 @@ export const ShowSeries = styled.div`
         background: ${(props) => props.theme.buttonHover};
     }
 `;
+
+export const ChartCont = styled.div`
+    height: inherit;
+   background: ${({theme})=>theme.chartBg}
+`;
