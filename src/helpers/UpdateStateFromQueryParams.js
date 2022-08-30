@@ -131,14 +131,23 @@ export function UpdateStateFromQueryParams() {
 
                         dispatch(STORE_ACTIONS[param](paramDate));
                     } else if (BOOLEAN_VALUES.includes(param)) {
-                        const val = JSON.parse(startParams[param]);
+                        try {
+                            const val = JSON.parse(startParams[param]);
 
-                        dispatch(STORE_ACTIONS[param](val));
+                            dispatch(STORE_ACTIONS[param](val));
+                        } catch (e) {
+                            console.log(e);
+                        }
                     } else if (ARRAY_VALUES.includes(param)) {
-                        const parsed = JSON.parse(
-                            decodeURIComponent(startParams[param])
-                        );
-                        dispatch(STORE_ACTIONS[param](parsed));
+                        console.log(startParams[param]);
+                        try {
+                            const parsed = JSON.parse(
+                                decodeURIComponent(startParams[param])
+                            );
+                            dispatch(STORE_ACTIONS[param](parsed));
+                        } catch (e) {
+                            console.log(e);
+                        }
                     }
                 });
             }
@@ -156,13 +165,21 @@ export function UpdateStateFromQueryParams() {
                     const time_value = STORE_KEYS[param]?.getTime() * 1000000;
                     urlFromHash.set(param, time_value.toString());
                 } else if (BOOLEAN_VALUES.includes(param)) {
-                    urlFromHash.set(param, JSON.parse(STORE_KEYS[param]));
+                    try {
+                        urlFromHash.set(param, JSON.parse(STORE_KEYS[param]));
+                    } catch (e) {
+                        console.log(e);
+                    }
                 } else if (ARRAY_VALUES.includes(param)) {
-                    const encodedArray = encodeURIComponent(
-                        JSON.stringify(STORE_KEYS[param])
-                    );
+                    try {
+                        const encodedArray = encodeURIComponent(
+                            JSON.stringify(STORE_KEYS[param])
+                        );
 
-                    urlFromHash.set(param, encodedArray);
+                        urlFromHash.set(param, encodedArray);
+                    } catch (e) {
+                        console.log(e);
+                    }
                 }
             });
             window.location.hash = urlFromHash;
@@ -196,10 +213,14 @@ export function UpdateStateFromQueryParams() {
                     BOOLEAN_VALUES.includes(store_key) &&
                     previousParams[store_key] !== STORE_KEYS[store_key]
                 ) {
-                    paramsFromHash.set(
-                        store_key,
-                        JSON.parse(STORE_KEYS[store_key])
-                    );
+                    try {
+                        paramsFromHash.set(
+                            store_key,
+                            JSON.parse(STORE_KEYS[store_key])
+                        );
+                    } catch (e) {
+                        console.log(e);
+                    }
                 } else if (store_key === "left") {
                     const parsed = encodeURIComponent(JSON.stringify(left));
 
