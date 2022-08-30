@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const LogRow = styled.div`
+export const LogRowStyled = styled.div`
     color: ${({theme}) => theme.textColor};
     font-size: 12px;
     cursor: pointer;
@@ -38,4 +38,10 @@ export const RowTimestamp = styled.span`
     white-space: nowrap;
     font-size: 12px;
     line-height: 1.5;
+`;
+
+export const RowsCont = styled.div`
+    overflow: hidden;
+    overflow-y: auto;
+    height: calc(100% - 20px);
 `;

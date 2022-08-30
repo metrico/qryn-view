@@ -62,10 +62,10 @@ const CloseQuery = styled(KeyboardArrowRightOutlinedIcon)`
 function QueryId(props) {
     const [isEditing, setIsEditing] = useState(false);
     const [idText, setIdText] = useState(props.data.idRef);
-    const storeTheme = useSelector(({theme})=>theme)
-    const theme = useMemo(()=>{
-       return themes[storeTheme]
-    },[storeTheme])
+    const storeTheme = useSelector(({ theme }) => theme);
+    const theme = useMemo(() => {
+        return themes[storeTheme];
+    }, [storeTheme]);
     function onIdTextChange(e) {
         e.preventDefault();
         const txt = e.target.value;
@@ -92,8 +92,7 @@ function QueryId(props) {
                         background: "transparent",
                         border: "none",
                         outline: "none",
-                        color: theme.textColor
-
+                        color: theme.textColor,
                     }}
                     value={idText}
                     placeholder={idText}
@@ -114,11 +113,11 @@ function QueryId(props) {
     }
 }
 export function QueryItemToolbar(props) {
-    
     const dispatch = useDispatch();
     // update panel on id change
+    const {data:{expr}} = props
     const panel = useSelector((store) => store[props.name]);
-
+    const isEmbed = useSelector((store) => store.isEmbed);
     const panelAction = (panel, data) => {
         if (panel === "left") {
             return setLeftPanel(data);
@@ -141,7 +140,7 @@ export function QueryItemToolbar(props) {
     return (
         <QueryItemToolbarStyled>
             <div className="query-title">
-                <ShowQueryButton
+              {!isEmbed &&  <ShowQueryButton
                     onClick={() => {
                         props.isQueryOpen[1](
                             props.isQueryOpen[0] ? false : true
@@ -149,30 +148,31 @@ export function QueryItemToolbar(props) {
                     }}
                 >
                     {props.isQueryOpen[0] ? <OpenQuery /> : <CloseQuery />}
-                </ShowQueryButton>
+                </ShowQueryButton>} 
 
                 <QueryId onIdRefUpdate={onIdRefUpdate} {...props} />
+                {isEmbed && <p style={{marginLeft:'20px',fontFamily:'monospace'}}>{expr}</p>}
             </div>
-
-            <div className="query-tools">
- 
-                <AddOutlinedIcon
-                    style={{
-                        fontSize: "15px",
-                        cursor: "pointer",
-                        padding: "3px",
-                    }}
-                    onClick={props.onAddQuery}
-                />
-                <DeleteOutlineIcon
-                    style={{
-                        fontSize: "15px",
-                        cursor: "pointer",
-                        padding: "3px",
-                    }}
-                    onClick={props.onDeleteQuery}
-                />
-            </div>
+            {!isEmbed && (
+                <div className="query-tools">
+                    <AddOutlinedIcon
+                        style={{
+                            fontSize: "15px",
+                            cursor: "pointer",
+                            padding: "3px",
+                        }}
+                        onClick={props.onAddQuery}
+                    />
+                    <DeleteOutlineIcon
+                        style={{
+                            fontSize: "15px",
+                            cursor: "pointer",
+                            padding: "3px",
+                        }}
+                        onClick={props.onDeleteQuery}
+                    />
+                </div>
+            )}
         </QueryItemToolbarStyled>
     );
 }

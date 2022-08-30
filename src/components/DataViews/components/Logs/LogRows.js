@@ -1,72 +1,95 @@
-import styled from "@emotion/styled";
-import memoize from "memoize-one";
-import { PureComponent } from "react";
+import { PureComponent, useMemo } from "react";
 import { useMediaQuery } from "react-responsive";
+import { LogRowStyled, RowLogContent, RowTimestamp, RowsCont } from "./styled";
+import { createItemData, formatDate, getRowColor } from "./helpers";
+import {ValueTagsCont} from "../ValueTags";
 
-import { LogRow, RowLogContent, RowTimestamp } from "./styled"
-import { formatDate, getRowColor } from "../../helpers";
-import ValueTags from "../ValueTags";
+/**
+ *
+ * @props {text, dateFormated, isMobile}
+ * @returns Formatted log text line
+ */
 
-const RowsCont = styled.div`
-    overflow: hidden;
-    overflow-y: auto;
-    height: calc(100% - 20px);
-`;
-function Row(props) {
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
-
-    const { toggleItemActive, index, log, actQuery } = props;
-
+function LogRow({ text, dateFormated, isMobile }) {
     return (
-        <LogRow
-            rowColor={getRowColor(log.tags)}
-            onClick={() => {
-                toggleItemActive(index);
-            }}
-        >
-            <div className="log-ts-row">
-                {!isTabletOrMobile && (
-                    <RowTimestamp>{formatDate(log.timestamp)}</RowTimestamp>
-                )}
-                <RowLogContent>
-                    {isTabletOrMobile && <p>{formatDate(log.timestamp)}</p>}
-                   <p>
-                   {log.text}
-                   </p> 
-                </RowLogContent>
-            </div>
-
-            {log.showLabels && (
-                <div className="value-tags-container">
-                    <ValueTags actQuery={actQuery} tags={log.tags} />
-                </div>
-            )}
-        </LogRow>
+        <div className="log-ts-row">
+            {!isMobile && <RowTimestamp>{dateFormated}</RowTimestamp>}
+            <RowLogContent>
+                {isMobile && <p>{dateFormated}</p>}
+                <p>{text}</p>
+            </RowLogContent>
+        </div>
     );
 }
 
-const createItemData = memoize((items, toggleItemActive) => ({
-    items,
-    toggleItemActive,
-}));
+/**
+ *
+ * @props {toggleItemActive, index, log, actQuery, isMobile}
+ * @returns Log Line With log line tags options
+ */
 
-function Logs(props) {
-    const { items, toggleItemActive } = props;
+function Row({ toggleItemActive, index, log, actQuery, isMobile }) {
+    const { tags, timestamp, text, showLabels } = log;
+    const rowColor = useMemo(() => getRowColor(tags), [tags]);
+    const dateFormated = useMemo(() => formatDate(timestamp), [timestamp]);
+
+    const valueTagsProps = {
+        actQuery,
+        tags,
+        showLabels,
+    };
+
+    const logRowProps = {
+        dateFormated,
+        text,
+        isMobile,
+    };
+
+    const rowProps = {
+        rowColor,
+        onClick: () => {
+            toggleItemActive(index);
+        },
+    };
+
+    return (
+        <LogRowStyled {...rowProps}>
+            <LogRow {...logRowProps} />
+            <ValueTagsCont {...valueTagsProps} />
+        </LogRowStyled>
+    );
+}
+
+
+/**
+ *
+ * @props {items, toggleItemActive, actQuery}
+ * @returns  iterable of rows (items)
+ */
+
+function Logs({ items, toggleItemActive, actQuery }) {
     const itemData = createItemData(items, toggleItemActive);
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+
     return (
         itemData &&
         itemData.items.map((log, key) => (
             <Row
-                {...props}
+                actQuery={actQuery}
                 key={key}
                 index={key}
                 log={log}
+                isMobile={isTabletOrMobile}
                 toggleItemActive={toggleItemActive}
             />
         ))
     );
 }
-/// pass the
+
+/**
+ * @props {messages, actualQuery}
+ * returns: the container for the rows view
+ */
 export class LogRows extends PureComponent {
     constructor(props) {
         super(props);

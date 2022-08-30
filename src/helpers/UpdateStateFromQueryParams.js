@@ -48,8 +48,6 @@ export function UpdateStateFromQueryParams() {
     useEffect(() => {
         setThemeSet(theme);
     }, [theme]);
-  
-
     const STORE_KEYS = {
         apiUrl,
         start,

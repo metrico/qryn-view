@@ -21,6 +21,7 @@ export function ViewHeader(props) {
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
     const [open, setOpen] = useState(false);
     const theme = useSelector((store) => store.theme);
+    const isEmbed = useSelector((store)=> store.isEmbed)
     const { actualQuery, dataView, name, type, total } = props;
     const DataViewList = useSelector((store) => store[`${name}DataView`]);
     const action = (name) => {
@@ -152,12 +153,14 @@ export function ViewHeader(props) {
                             />
                         </>
                     )}
-
-                    <CloseIcon
-                        className="header-icon"
-                        onClick={onClose}
-                        style={{ fontSize: "12px" }}
-                    />
+                    {!isEmbed && 
+                           <CloseIcon
+                           className="header-icon"
+                           onClick={onClose}
+                           style={{ fontSize: "12px" }}
+                       />
+                    }
+             
                 </div>
                 {open && (
                     <InfoDialog

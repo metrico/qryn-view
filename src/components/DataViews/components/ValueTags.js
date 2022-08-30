@@ -29,6 +29,17 @@ function alreadyExists(exp, op, k, v) {
  * @returns
  */
 
+ export function ValueTagsCont({ actQuery, tags, showLabels }) {
+    if (showLabels) {
+        return (
+            <div className="value-tags-container">
+                <ValueTags tags={tags} actQuery={actQuery} />
+            </div>
+        );
+    }
+    return null;
+}
+
 export async function addLabel(e, key, value, isExcluded = false, queryObj) {
     e.preventDefault();
 
@@ -48,6 +59,7 @@ export async function addLabel(e, key, value, isExcluded = false, queryObj) {
 
     queryBuilderWithLabels(expr, panel, id, [key, value], isExcluded);
 }
+
 
 export default function ValueTags(props) {
     const { tags, actQuery } = props;
