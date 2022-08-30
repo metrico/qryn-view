@@ -18,53 +18,49 @@ const QueryTypeCont = styled.div`
     color: ${(props) => props.color};
     height: 26px;
 `;
+export function panelAction(name, value) {
+    if (name === "left") {
+        return setLeftPanel(value);
+    }
+    return setRightPanel(value);
+}
+
+export const SWITCH_OPTIONS = [
+    { value: "range", label: "Range" },
+    { value: "instant", label: "Instant" },
+];
 
 export default function QueryTypeBar(props) {
     const dispatch = useDispatch();
+    const { name, data } = props;
     const theme = useSelector((store) => store.theme);
-    const left = useSelector((store) => store.left);
-    const right = useSelector((store) => store.right);
+    const panelQuery = useSelector((store) => store[name]);
 
     const responseType = useSelector((store) => store.responseType);
 
     const { hash } = useLocation();
-    const { id } = props.data;
+    const { id, queryType, tableView, idRef } = data;
 
-    const [isTableViewSet, setIsTableViewSet] = useState(props.data.tableView);
-    const [queryTypeSwitch, setQueryTypeSwitch] = useState(
-        props.data.queryType
-    );
-
+    const [isTableViewSet, setIsTableViewSet] = useState(tableView);
+    const [queryTypeSwitch, setQueryTypeSwitch] = useState(queryType);
 
     useEffect(() => {
-
         const urlParams = new URLSearchParams(hash.replace("#", ""));
-        const urlPanel = urlParams.get(props.name)
+        const urlPanel = urlParams.get(name);
 
-        const parsedPanel = JSON.parse(decodeURIComponent(urlPanel))
+        const parsedPanel = JSON.parse(decodeURIComponent(urlPanel));
 
         if (parsedPanel?.length > 0) {
-            const queryMD = parsedPanel.find(
-                (f) => f.idRef === props.data.idRef
-            );
+            const queryMD = parsedPanel.find((f) => f.idRef === idRef);
 
-            if (props.name === "left" && queryMD) {
-                const leftC = [...left];
-                leftC.forEach((query) => {
-                    if (query.idRef === props.data.idRef) {
+            if (queryMD) {
+                const panel = [...panelQuery];
+                panel.forEach((query) => {
+                    if (query.idRef === idRef) {
                         query.queryType = queryMD.queryType;
                     }
                 });
-                dispatch(setLeftPanel(leftC));
-            }
-            if (props.name === "right" && queryMD) {
-                const rightC = [...right];
-                rightC.forEach((query) => {
-                    if (query.idRef === props.data.idRef) {
-                        query.queryType = queryMD.queryType;
-                    }
-                });
-                dispatch(setRightPanel(rightC));
+                dispatch(panelAction(name, panel));
             }
         }
     }, []);
@@ -73,57 +69,27 @@ export default function QueryTypeBar(props) {
         setIsTableViewSet(props.data.tableView);
     }, [setIsTableViewSet, props.data.tableView]);
 
-    const SWITCH_OPTIONS = [
-        { value: "range", label: "Range" },
-        { value: "instant", label: "Instant" },
-    ];
-
     function onSwitchChange(e) {
         // modify query type switch value
-        if (props.name === "left") {
-            const leftC = [...left];
-            leftC.forEach((query) => {
-                if (query.id === id) {
-                    query.queryType = e;
-                }
-            });
-            dispatch(setLeftPanel(leftC));
-        }
-
-        if (props.name === "right") {
-            const rightC = [...right];
-            rightC.forEach((query) => {
-                if (query.id === id) {
-                    query.queryType = e;
-                }
-            });
-            dispatch(setRightPanel(rightC));
-        }
-
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.queryType = e;
+            }
+        });
+        dispatch(panelAction(name, panel));
         setQueryTypeSwitch(e);
     }
 
     function handleTableViewSwitch() {
         // modify table view switch value
-        if (props.name === "right") {
-            const rightC = [...right];
-            rightC.forEach((query) => {
-                if (query.id === id) {
-                    query.tableView = isTableViewSet ? false : true;
-                }
-            });
-            dispatch(setRightPanel(rightC));
-        }
-
-        if (props.name === "left") {
-            const leftC = [...left];
-            leftC.forEach((query) => {
-                if (query.id === id) {
-                    query.tableView = isTableViewSet ? false : true;
-                }
-            });
-            dispatch(setLeftPanel(leftC));
-        }
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.tableView = isTableViewSet ? false : true;
+            }
+        });
+        dispatch(panelAction(name, panel));
     }
 
     return (
@@ -141,7 +107,7 @@ export default function QueryTypeBar(props) {
                         <SettingLabel>Table View</SettingLabel>
                         <Switch
                             checked={isTableViewSet}
-                            size={'small'}
+                            size={"small"}
                             onChange={handleTableViewSwitch}
                             inputProps={{ "aria-label": "controlled" }}
                         />

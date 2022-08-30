@@ -29,14 +29,19 @@ const Input = styled.input`
     padding-left: 8px;
 `;
 
+export function panelAction(name, value) {
+    if (name === "left") {
+        return setLeftPanel(value);
+    }
+    return setRightPanel(value);
+}
+
 export default function QueryLimit(props) {
     const dispatch = useDispatch();
     const { id } = props.data;
-
-    const left = useSelector((store) => store.left);
-    const right = useSelector((store) => store.right);
+    const { name } = props;
+    const panelQuery = useSelector((store) => store[name]);
     const [editedValue, setEditedValue] = useState(props.data.limit);
-
     const limitFromProps = useMemo(() => props.data.limit, [props.data.limit]);
 
     useEffect(() => {
@@ -45,27 +50,17 @@ export default function QueryLimit(props) {
 
     function onLimitChange(e) {
         const limitTxt = e.target.value;
+        const panel = [...panelQuery];
 
-        if (props.name === "left") {
-            const leftC = [...left];
-            leftC.forEach((query) => {
-                if (query.id === id) {
-                    query.limit = limitTxt;
-                }
-            });
-            dispatch(setLeftPanel(leftC));
-        }
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.limit = limitTxt;
+            }
+        });
 
-        if (props.name === "right") {
-            const rightC = [...right];
-            rightC.forEach((query) => {
-                if (query.id === id) {
-                    query.limit = limitTxt;
-                }
-            });
-            dispatch(setRightPanel(rightC));
-        }
+        dispatch(panelAction(name, panel));
     }
+
     return (
         <InputGroup>
             <Label>Query Limit</Label>

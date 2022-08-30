@@ -50,7 +50,16 @@ import {
     SettingsInputContainer,
     SettingLabel,
 } from "./styled";
-
+export function panelAction(name, value) {
+    if (name === "left") {
+        return setLeftPanel(value);
+    }
+    return setRightPanel(value);
+}
+export const SWITCH_OPTIONS = [
+    { value: "range", label: "Range" },
+    { value: "instant", label: "Instant" },
+];
 export const QueryBar = (props) => {
     const { data, name } = props;
     const { queryType, limit, id } = data;
@@ -68,8 +77,7 @@ export const QueryBar = (props) => {
         start,
         stop,
     } = useSelector((store) => store);
-    const left = useSelector((store) => store.left);
-    const right = useSelector((store) => store.right);
+    const panelQuery = useSelector((store) => store[name]);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
     const [queryInput, setQueryInput] = useState(data.expr);
     const [queryValid, setQueryValid] = useState(false);
@@ -108,36 +116,16 @@ export const QueryBar = (props) => {
 
     function handleQueryChange(e) {
         setQueryValue(e);
-
         const queryParams = new URLSearchParams(hash.replace("#", ""));
         const multiline = e.map((text) => text.children[0].text).join("\n");
-
-        if (name === "left") {
-            const leftC = [...left];
-            leftC.forEach((query) => {
-                if (query.id === id) {
-                    query.expr = multiline;
-                }
-            });
-
-            dispatch(setLeftPanel(leftC));
-            queryParams.set("left", encodeURIComponent(JSON.stringify(leftC)));
-        }
-
-        if (name === "right") {
-            const rightC = [...right];
-            rightC.forEach((query) => {
-                if (query.id === id) {
-                    query.expr = multiline;
-                }
-            });
-            dispatch(setRightPanel(rightC));
-            queryParams.set(
-                "right",
-                encodeURIComponent(JSON.stringify(rightC))
-            );
-        }
-
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.expr = multiline;
+            }
+        });
+        dispatch(panelAction(name, panel));
+        queryParams.set("left", encodeURIComponent(JSON.stringify(panel)));
         window.location.hash = queryParams;
     }
 
@@ -169,26 +157,15 @@ export const QueryBar = (props) => {
 
                 const labelsDecoded = decodeExpr(data.expr);
 
-                if (name === "left") {
-                    const leftC = [...left];
-                    leftC.forEach((query) => {
-                        if (query.id === id) {
-                            query.labels = [...labelsDecoded];
-                        }
-                    });
+                const panel = [...panelQuery];
+                panel.forEach((query) => {
+                    if (query.id === id) {
+                        query.labels = [...labelsDecoded];
+                        query.browserOpen = false;
+                    }
+                });
 
-                    dispatch(setLeftPanel(leftC));
-                }
-
-                if (name === "right") {
-                    const rightC = [...right];
-                    rightC.forEach((query) => {
-                        if (query.id === id) {
-                            query.labels = [...labelsDecoded];
-                        }
-                    });
-                    dispatch(setRightPanel(rightC));
-                }
+                dispatch(panelAction(name, panel));
 
                 dispatch(loadLogs(queryInput, queryType, limit, name, id));
 
@@ -211,21 +188,11 @@ export const QueryBar = (props) => {
     function handleHistoryClick(e) {
         dispatch(setHistoryOpen(!historyOpen));
     }
-
-    function onClose() {
-        if (open) {
-            setOpen(false);
-        } else {
-            setOpen(true);
-        }
-    }
-
     function showQuerySettings() {
-        if (open) {
-            setOpen(false);
-        } else {
-            setOpen(true);
-        }
+        setOpen( open ? false: true)
+    }
+    function onClose() {
+        showQuerySettings()
     }
     return (
         !isEmbed && (
@@ -286,9 +253,11 @@ export const QueryBar = (props) => {
                     {!isTabletOrMobile && <QueryTypeBar {...props} />}
                     {isTabletOrMobile && (
                         <QuerySetting
+                            {...props}
                             open={open}
                             handleClose={onClose}
-                            {...props}
+                            actPanel={panelQuery}
+                            name={name}
                         />
                     )}
                 </ThemeProvider>
@@ -299,15 +268,12 @@ export const QueryBar = (props) => {
 
 export const QuerySetting = (props) => {
     const dispatch = useDispatch();
-    const left = useSelector((store) => store.left);
-    const right = useSelector((store) => store.right);
 
     const responseType = useSelector((store) => store.responseType);
 
     const { hash } = useLocation();
-    const { id } = props.data;
-    const { open, handleClose } = props;
-
+    const { id, idRef } = props.data;
+    const { open, handleClose, actPanel, name } = props;
     const [isTableViewSet, setIsTableViewSet] = useState(props.data.tableView);
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(
         props.data.queryType
@@ -315,32 +281,19 @@ export const QuerySetting = (props) => {
 
     useEffect(() => {
         const urlParams = new URLSearchParams(hash.replace("#", ""));
-        const urlPanel = urlParams.get(props.name);
-
+        const urlPanel = urlParams.get(name);
         const parsedPanel = JSON.parse(decodeURIComponent(urlPanel));
-
         if (parsedPanel?.length > 0) {
-            const queryMD = parsedPanel.find(
-                (f) => f.idRef === props.data.idRef
-            );
+            const queryMD = parsedPanel.find((f) => f.idRef === idRef);
 
-            if (props.name === "left" && queryMD) {
-                const leftC = [...left];
-                leftC.forEach((query) => {
-                    if (query.idRef === props.data.idRef) {
+            if (queryMD) {
+                const panel = [...actPanel];
+                panel.forEach((query) => {
+                    if (query.idRef === idRef) {
                         query.queryType = queryMD.queryType;
                     }
                 });
-                dispatch(setLeftPanel(leftC));
-            }
-            if (props.name === "right" && queryMD) {
-                const rightC = [...right];
-                rightC.forEach((query) => {
-                    if (query.idRef === props.data.idRef) {
-                        query.queryType = queryMD.queryType;
-                    }
-                });
-                dispatch(setRightPanel(rightC));
+                dispatch(panelAction(name, panel));
             }
         }
     }, []);
@@ -349,57 +302,30 @@ export const QuerySetting = (props) => {
         setIsTableViewSet(props.data.tableView);
     }, [setIsTableViewSet, props.data.tableView]);
 
-    const SWITCH_OPTIONS = [
-        { value: "range", label: "Range" },
-        { value: "instant", label: "Instant" },
-    ];
+ 
 
     function onSwitchChange(e) {
         // modify query type switch value
-        if (props.name === "left") {
-            const leftC = [...left];
-            leftC.forEach((query) => {
-                if (query.id === id) {
-                    query.queryType = e;
-                }
-            });
-            dispatch(setLeftPanel(leftC));
-        }
+        const panel = [...actPanel];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.queryType = e;
+            }
+        });
 
-        if (props.name === "right") {
-            const rightC = [...right];
-            rightC.forEach((query) => {
-                if (query.id === id) {
-                    query.queryType = e;
-                }
-            });
-            dispatch(setRightPanel(rightC));
-        }
-
+        dispatch(panelAction(name, panel));
         setQueryTypeSwitch(e);
     }
 
     function handleTableViewSwitch() {
         // modify table view switch value
-        if (props.name === "right") {
-            const rightC = [...right];
-            rightC.forEach((query) => {
-                if (query.id === id) {
-                    query.tableView = isTableViewSet ? false : true;
-                }
-            });
-            dispatch(setRightPanel(rightC));
-        }
-
-        if (props.name === "left") {
-            const leftC = [...left];
-            leftC.forEach((query) => {
-                if (query.id === id) {
-                    query.tableView = isTableViewSet ? false : true;
-                }
-            });
-            dispatch(setLeftPanel(leftC));
-        }
+        const panel = [...actPanel];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.tableView = isTableViewSet ? false : true;
+            }
+        });
+        dispatch(panelAction(name, panel));
     }
 
     return (

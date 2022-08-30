@@ -4,48 +4,42 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { themes } from "../../../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
-
+import { useEffect, useMemo, useState } from "react";
 import { setLeftPanel } from "../../../../actions/setLeftPanel";
 import { setRightPanel } from "../../../../actions/setRightPanel";
 
+export function panelAction(name, value) {
+    if (name === "left") {
+        return setLeftPanel(value);
+    }
+    return setRightPanel(value);
+}
+
 export default function ShowLabelsButton(props) {
-    const { id } = props.data;
-    const LOG_BROWSER = "Labels";
+    const dispatch = useDispatch();
+    const { name } = props;
+    const { id, browserOpen } = props.data;
+    const open = useMemo(() => browserOpen, [browserOpen]);
     const theme = useSelector((store) => store.theme);
     const labels = useSelector((store) => store.labels);
-    const left = useSelector((store) => store.left);
-    const right = useSelector((store) => store.right);
-    const dispatch = useDispatch();
-    const [isBrowserOpen, setIsBrowserOpen] = useState(props.data.browserOpen);
+    const panelQuery = useSelector((store) => store[name]);
+    
+
+    const [isBrowserOpen, setIsBrowserOpen] = useState(open);
+
+    useEffect(() => {
+        setIsBrowserOpen(open);
+    }, [open]);
 
     function handleBrowserOpen() {
-        if (props.name === "left") {
-            const leftC = [...left];
-            leftC.forEach((query) => {
-                if (query.id === id) {
-                    query.browserOpen = isBrowserOpen ? false : true;
-                }
-            });
-            dispatch(setLeftPanel(leftC));
-        }
-
-        if (props.name === "right") {
-            const rightC = [...right];
-            rightC.forEach((query) => {
-                if (query.id === id) {
-                    query.browserOpen = isBrowserOpen ? false : true;
-                }
-            });
-            dispatch(setRightPanel(rightC));
-        }
-        setIsBrowserOpen((prev) => {
-            if (prev === true) {
-                return false;
-            } else {
-                return true;
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.browserOpen = isBrowserOpen ? false : true;
             }
         });
+        dispatch(panelAction(name, panel));
+        setIsBrowserOpen(open);
     }
     return (
         <ThemeProvider theme={themes[theme]}>
@@ -67,8 +61,8 @@ export default function ShowLabelsButton(props) {
                     <KeyboardArrowRightIcon
                         style={{ height: "18px", width: "18px" }}
                     />
-                )}{" "}
-                {LOG_BROWSER}
+                )}
+                {'Labels'}
             </ShowLabelsBtn>
         </ThemeProvider>
     );

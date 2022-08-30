@@ -214,7 +214,6 @@ export default function QueryItem(props) {
         if (name === "left") {
             const lfiltered = filterPanel(leftPanel);
             const lviewFiltered = filterPanel(leftDV);
-
             dispatch(setLeftPanel(lfiltered));
             dispatch(setLeftDataView(lviewFiltered));
         }

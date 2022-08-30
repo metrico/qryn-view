@@ -139,7 +139,6 @@ export function UpdateStateFromQueryParams() {
                             console.log(e);
                         }
                     } else if (ARRAY_VALUES.includes(param)) {
-                        console.log(startParams[param]);
                         try {
                             const parsed = JSON.parse(
                                 decodeURIComponent(startParams[param])

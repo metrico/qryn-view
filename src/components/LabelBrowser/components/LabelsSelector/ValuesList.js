@@ -4,11 +4,7 @@ import useLabelValues from "./useLabelValues";
 import styled from "@emotion/styled";
 import { CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    decodeQuery,
-} from "../../../../components/LabelBrowser/helpers/querybuilder";
-
-
+import { decodeQuery } from "../../../../components/LabelBrowser/helpers/querybuilder";
 
 import { nanoid } from "nanoid";
 import { setLeftPanel } from "../../../../actions/setLeftPanel";
@@ -28,12 +24,18 @@ export const Loader = styled(CircularProgress)`
     height: 30px;
 `;
 
+export function panelAction(name, value) {
+    if (name === "left") {
+        return setLeftPanel(value);
+    }
+    return setRightPanel(value)
+}
 export default function ValuesList(props) {
     const dispatch = useDispatch();
-
+    const { name } = props;
     const { start, stop } = useSelector((store) => store);
-    const left = useSelector((store)=> store.left)
-    const right = useSelector((store)=> store.right)
+    const panelQuery = useSelector((store) => store[name]);
+
     // get values hook
     const { response, signal, loading } = useLabelValues(
         props.label,
@@ -53,7 +55,6 @@ export default function ValuesList(props) {
 
     const [valsSelection, setValsSelection] = useState([]);
 
-
     const valuesFromProps = useMemo(() => {
         if (props?.data?.labels?.length < 1) {
             return [];
@@ -68,10 +69,8 @@ export default function ValuesList(props) {
         return actLabel?.values;
     }, [props.data.labels]);
 
-
     const resp = useMemo(() => {
         if (response?.data?.data?.length > 0) {
-
             return response?.data?.data?.map((val) => ({
                 label: props.label,
                 name: val,
@@ -79,7 +78,6 @@ export default function ValuesList(props) {
                 inverted: false,
                 id: nanoid(),
             }));
-
         } else {
             return [];
         }
@@ -98,7 +96,6 @@ export default function ValuesList(props) {
             let modValues = [];
 
             clonedValues.forEach((value) => {
-
                 if (valuesFromProps.some((s) => s.name === value.name)) {
                     const valueFound = valuesFromProps.find(
                         (f) => f.name === value.name
@@ -184,28 +181,13 @@ export default function ValuesList(props) {
         }
 
         const filtered = labelsMod.filter((f) => f.selected);
-
-        if(props.name === 'left') {
-            const leftC = [...left]
-            leftC.forEach(query => {
-                if(query.id === props.data.id) {
-                    query.labels = filtered
-                }
-            })
-            dispatch(setLeftPanel(leftC))
-        }
-
-        if(props.name === 'right') {
-            const rightC = [...right]
-            rightC.forEach(query => {
-                if(query.id === props.data.id) {
-                    query.labels = filtered
-                }
-            })
-            dispatch(setRightPanel(rightC))
-        }
-  
-
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === props.data.id) {
+                query.labels = filtered;
+            }
+        });
+        dispatch(panelAction(name, panel));
         setValsSelection(initialValues);
     };
 
@@ -234,6 +216,7 @@ export default function ValuesList(props) {
                             {...props}
                             key={key}
                             value={value}
+                            actPanel={panelQuery}
                             onValueClick={onValueClick}
                         />
                     ))}
@@ -244,10 +227,7 @@ export default function ValuesList(props) {
 
 export const LabelValue = (props) => {
     const dispatch = useDispatch();
-    let { value, data, onValueClick } = props;
-    const left = useSelector((store)=> store.left)
-    const right = useSelector((store)=> store.right)
-
+    let { value, data, onValueClick, actPanel, name } = props;
     const setValueStyle = (selected) =>
         selected
             ? {
@@ -283,31 +263,14 @@ export const LabelValue = (props) => {
             value.name,
             "="
         );
-
-
-        if(props.name === 'left') {
-            const leftC = [...left]
-            leftC.forEach(query => {
-                if(query.id === props.data.id) {
-                    query.expr = newQuery
-                }
-            })
-            dispatch(setLeftPanel(leftC))
-        }
-
-        if(props.name === 'right') {
-            const rightC = [...right]
-            rightC.forEach(query => {
-                if(query.id === props.data.id) {
-                    query.expr = newQuery
-                }
-            })
-            dispatch(setRightPanel(rightC))
-        }
-
-
+        const panel = [...actPanel];
+        panel.forEach((query) => {
+            if (query.id === props.data.id) {
+                query.expr = newQuery;
+            }
+        });
+        dispatch(panelAction(name, panel));
         const valueUpdated = { ...value, selected: isSelected };
-
         onValueClick(valueUpdated);
     };
 

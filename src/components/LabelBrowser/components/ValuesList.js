@@ -39,39 +39,25 @@ export const LabelsFetchError = () => {
 
 export const ValuesList = (props) => {
     const theme = useSelector((store) => store.theme);
-
-    const left = useSelector((store) => store.left);
-    const right = useSelector((store) => store.right);
-
+    const { name } = props;
+    const { id } = props.data;
+    const panelQuery = useSelector((store) => store[name]);
     const browserOpen = useMemo(() => {
         let isOpen = false;
-        if (props.name === "left") {
-            const actQuery = left.find((f) => f.id === props.data.id);
-            isOpen = actQuery["browserOpen"];
-        }
-        if (props.name === "right") {
-            const actQuery = right.find((f) => f.id === props.data.id);
-            isOpen = actQuery["browserOpen"];
-        }
+        const actQuery = panelQuery.find((f) => f.id === id);
+        isOpen = actQuery["browserOpen"];
         return isOpen;
-    }, [left, right, props.name, props.data.id]);
+    }, [panelQuery, id]);
 
     const [open, setOpen] = useState(browserOpen);
 
     useEffect(() => {
         let isOpen = false;
-        if (props.name === "left") {
-            const actQuery = left.find((f) => f.id === props.data.id);
-            isOpen = actQuery["browserOpen"];
-        }
-        if (props.name === "right") {
-            const actQuery = right.find((f) => f.id === props.data.id);
-            isOpen = actQuery["browserOpen"];
-        }
+        const actQuery = panelQuery.find((f) => f.id === id);
+        isOpen = actQuery["browserOpen"];
         setOpen(isOpen);
-    }, [left, right, props.data.id, props.name]);
+    }, [panelQuery, id]);
 
-  
     return (
         open && (
             <ThemeProvider theme={themes[theme]}>
