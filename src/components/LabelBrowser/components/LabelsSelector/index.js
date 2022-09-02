@@ -8,14 +8,17 @@ import useLabels from "./useLabels";
 import ValuesListStyled from "./ValuesListStyled";
 import labelHelpers from "./helpers";
 
-
 export default function LabelsSelector(props) {
     const { data} = props;
-    const { JSONClone, updateLabel, updateLabelSelected } = labelHelpers;
+    const { 
+        JSONClone, 
+        updateLabel, 
+        updateLabelSelected 
+    } = labelHelpers;
 
     const { theme } = useSelector((store) => store);
 
-    const { response, controller, loading } = useLabels();
+    const { response, loading } = useLabels();
 
     const [labelsResponse, setLabelsResponse] = useState([]);
 

@@ -174,17 +174,12 @@ export function decodeQuery(query, key, value, op) {
     if (!isQuery) {
         return newQuery(keyValue, op, tags);
     }
-
     return editQuery(query, keyValue, op, tags);
 }
 
 // can we get labels from store?
 
 export function queryBuilder(labels, expr, hasPipe = false, pipeLabels = []) {
-    // here we will take labels and values and match them
-    // passing labels selected from each query
-    // get actual query from props // => expr
-    // get values from label
 
     const actualQuery = expr;
     const preTags = actualQuery.split("{")[0];

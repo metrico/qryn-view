@@ -95,7 +95,7 @@ export function decodeQuery(query, apiUrl, labels = []) {
                 loadLabelValues(cleanLabel, newLabels, apiUrl)
             );
 
-            const labelsWithValues = store.getState().labels;
+            const labelsWithValues = labels;
             const labelWithValues = labelsWithValues.find(
                 (item) => item?.name === label?.name
             );

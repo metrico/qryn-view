@@ -30,7 +30,6 @@ import ShowQuerySettingsButton from "./Buttons/ShowQuerySettingsButton";
 /**Helpers */
 import queryInit from "../helpers/queryInit";
 import onQueryValid from "../helpers/onQueryValid";
-import debugLog from "../helpers/debugLog";
 import { decodeQuery, decodeExpr } from "../../../helpers/decodeQuery";
 /**Hooks */
 import { sendLabels } from "../../../hooks/useLabels";
@@ -67,12 +66,10 @@ export const QueryBar = (props) => {
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
     const {
-        debug,
         apiUrl,
         historyOpen,
         isEmbed,
         theme,
-        labels,
         queryHistory,
         start,
         stop,
@@ -91,15 +88,28 @@ export const QueryBar = (props) => {
     }, [data.expr]);
 
     useEffect(() => {
-        const dLog = debugLog(expr);
-        debug && dLog.logicQueryBar();
         const labels = sendLabels(apiUrl, start, stop);
-
         if (isEmbed) dispatch(loadLogs(queryInput, queryType, limit, name, id));
         if (onQueryValid(expr)) {
-            debug && dLog.queryBarDispatch();
             return labels.then((data) => {
-                decodeQuery(data, expr, apiUrl, labels);
+                const prevLabels = [...props.data.labels];
+                const prevMap = prevLabels.map((m) => m.name) || [];
+                const newLabels = [...data];
+                if (newLabels.length > 0) {
+                    if (prevMap.length > 0) {
+                        newLabels.forEach((l) => {
+                            const labelFound = prevMap.includes(l.name);
+                            if (labelFound) {
+                                const pl = prevLabels.find(
+                                    (f) => f.name === l.name
+                                );
+                                l = { ...pl };
+                            }
+                        });
+                    }
+
+                    decodeQuery(expr, apiUrl, newLabels);
+                }
             });
         } else {
             dispatch(setIsEmptyView(true));
@@ -153,8 +163,7 @@ export const QueryBar = (props) => {
 
                 dispatch(setQueryHistory(historyUpdated));
 
-                decodeQuery(queryInput, apiUrl, labels);
-
+                decodeQuery(queryInput, apiUrl, props.data.labels);
                 const labelsDecoded = decodeExpr(data.expr);
 
                 const panel = [...panelQuery];
@@ -189,10 +198,10 @@ export const QueryBar = (props) => {
         dispatch(setHistoryOpen(!historyOpen));
     }
     function showQuerySettings() {
-        setOpen( open ? false: true)
+        setOpen(open ? false : true);
     }
     function onClose() {
-        showQuerySettings()
+        showQuerySettings();
     }
     return (
         !isEmbed && (
@@ -301,8 +310,6 @@ export const QuerySetting = (props) => {
     useEffect(() => {
         setIsTableViewSet(props.data.tableView);
     }, [setIsTableViewSet, props.data.tableView]);
-
- 
 
     function onSwitchChange(e) {
         // modify query type switch value

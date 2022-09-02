@@ -1,29 +1,33 @@
 import { useMemo } from "react";
 
 function LabelItem(props) {
-    const isSelected = useMemo(() => props.selected, [props.selected]);
+    const { selected, label } = props;
+    const isSelected = useMemo(() => selected, [selected]);
+
+    const selectedStyle = useMemo(() => {
+        if (isSelected)
+            return {
+                borderColor: "#11abab",
+                color: "#11abab",
+            };
+        else return {};
+    }, [isSelected]);
     return (
-        <small
-            style={
-                isSelected ? { borderColor: "#11abab", color: "#11abab" } : {}
-            }
-            onClick={(e) => props.onClick(props.label)}
-        >
-            {props.label}
+        <small style={selectedStyle} onClick={(e) => props.onClick(label)}>
+            {label}
         </small>
     );
 }
 
 export default function LabelsList(props) {
-    const onLabelSelected = (label) => {
-        props.onLabelSelected(label);
-    };
+
+    const { labels } = props;
 
     const onClick = (e) => {
-        onLabelSelected(e);
+        props.onLabelSelected(e);
     };
 
-    const lsList = useMemo(() => props.labels, [props.labels]);
+    const lsList = useMemo(() => labels, [labels]);
 
     return (
         <div className="valuelist-content">
