@@ -23,10 +23,10 @@
 - Embeddable Results
 - 100% Client-Side
 
-
+------------
 ### Usage
 
-Use the [public client](https://view.cloki.org) _(no data goes through the server)_ or [build](BUILD.md) and run your own instance
+_Use the [public client](https://view.cloki.org) _(no data goes through the server)_ or [build](BUILD.md) and run your own instance_
 
 #### Environment Variables:
 
@@ -38,9 +38,9 @@ Use the [public client](https://view.cloki.org) _(no data goes through the serve
 ```bash
 ~/$ HOST=localhost PORT=8080 API_URL=http://cloki-host:3100 npm start
 ```
-
+------------
 ##### URL Parameters
-cLoki-view can be controlled through URL parameters
+_cLoki-view can be controlled through URL parameters__
 
 | param | description | default |
 |-------|-------------|---------|
@@ -55,6 +55,17 @@ cLoki-view can be controlled through URL parameters
 
 
 ------------
+
+#### Query Data (logql) inside left or right panel
+_JSON stringifyed and URL encoded_
+
+- *id*: query ID
+- *idRef* Title for a query
+- *expr* query expression
+- *limit* query limit
+
+------------
+
 
 ### About qryn
 
