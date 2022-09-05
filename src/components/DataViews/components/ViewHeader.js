@@ -153,13 +153,13 @@ export function ViewHeader(props) {
                             />
                         </>
                     )}
-                    {!isEmbed && 
+                    {/* {!isEmbed && 
                            <CloseIcon
                            className="header-icon"
                            onClick={onClose}
                            style={{ fontSize: "12px" }}
                        />
-                    }
+                    } */}
              
                 </div>
                 {open && (

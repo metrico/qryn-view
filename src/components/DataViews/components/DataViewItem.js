@@ -14,9 +14,8 @@ export function DataViewItem(props) {
     const viewRef = useRef(null);
     const isSplit = useSelector((store) => store.isSplit);
     const panel = useSelector((store) => store[name]);
-        // panelSize: min , regular, full
-    const isEmbed = useSelector((store)=> store.isEmbed)
-    const [panelSize, setPanelSize] = useState(isEmbed? "max" : "regular");
+        // panelSize: min , regular, max
+    const [panelSize, setPanelSize] = useState("max");
     // get actual query from panel
     const actualQuery = useActualQuery({ panel, dataView });
 
