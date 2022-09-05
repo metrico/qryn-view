@@ -27,9 +27,6 @@ export const MainContainer = styled.div`
     }
     .panels-container {
         display: flex;
-        border-top: 1px solid ${({ theme }) => theme.buttonBorder};
-        padding-top: 5px;
-        margin-top: 5px;
         background: ${({ theme }) => theme.shBgColor};
         height: calc(100vh - 45px);
     }
@@ -40,6 +37,7 @@ export const MainContainer = styled.div`
  * @param {theme, isEmbed, settingsDialogOpen}
  * @returns Mobile View
  */
+
 export function MobileView({ theme, isEmbed, settingsDialogOpen }) {
     return (
         <ThemeProvider theme={theme}>

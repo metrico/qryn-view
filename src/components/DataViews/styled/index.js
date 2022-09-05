@@ -72,7 +72,7 @@ export const Loader = styled(CircularProgress)`
 
 export const DataviewsContainer = styled.div`
     overflow-y: auto;
-    margin: 3px;
+    margin: 2px;
     max-height: 100vh;
     &::-webkit-scrollbar {
         background: transparent;

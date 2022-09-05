@@ -14,7 +14,7 @@ export const MenuButton = styled(BtnSmall)`
 export const StatusBarCont = styled.div`
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    padding: 10px 7px 4px 5px;
     background: ${({theme})=>theme.widgetContainer}
 `;
 

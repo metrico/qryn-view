@@ -2,8 +2,9 @@ import styled from "@emotion/styled";
 
 
 export const ViewStyled = styled.div`
-    margin: 5px;
+    margin: 4px;
     padding: 5px;
+    margin-top:0px;
     border: 1px solid ${({ theme }) => theme.buttonBorder};
     border-radius: 3px;
     height: ${(props) =>

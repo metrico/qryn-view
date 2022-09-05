@@ -21,7 +21,6 @@ const QueryContainer = styled.div``;
 const QueryItemToolbarStyled = styled.div`
     background: ${({ theme }) => `${theme.secondaryWidgetContainer}`};
     color: ${({ theme }) => `${theme.textColor}`};
-    padding: 5px;
     display: flex;
     justify-content: space-between;
     align-items: center;
