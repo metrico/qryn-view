@@ -8,6 +8,9 @@ export const MainViewStyled = styled.div`
     flex:1;
     flex-direction: column;
     background-color: ${(props) => props.theme.mainBgColor} !important;
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
     &::-webkit-scrollbar-thumb {
         border-radius: 5px;
         background: ${(props) => props.theme.scrollbarThumb} !important;

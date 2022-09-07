@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-export const useViewHeight = ({ type, actualQuery, total }) => {
+export const useViewHeight = ({ type, actualQuery, total, dataView }) => {
     const viewHeight = useMemo(() => {
         const isMatrixTable = type === "matrix" && actualQuery?.tableView;
         const isStreamTable = type === "stream" && actualQuery?.tableView;
@@ -8,18 +8,28 @@ export const useViewHeight = ({ type, actualQuery, total }) => {
             maxCont = "",
             regularView = "",
             maxView = "";
-        if (type === "vector" || isMatrixTable || isStreamTable) {
-            const regRows = total * 20;
+        if (isMatrixTable) {
+            const regRows = dataView?.tableData?.total * 25;
             const regCalc = regRows < 330 ? regRows : 330;
 
-            regularCont = `${regCalc + 20}px`;
+            regularCont = `${regCalc + 25}px`;
+            regularView = `${regCalc}px`;
+            maxCont = "fit-content";
+            maxView = "fit-content";
+        }
+
+        if (type === "vector" || isStreamTable) {
+            const regRows = total * 25;
+            const regCalc = regRows < 330 ? regRows : 330;
+
+            regularCont = `${regCalc + 25}px`;
             regularView = `${regCalc}px`;
             maxCont = "fit-content";
             maxView = "fit-content";
         }
 
         if (type === "stream" && !actualQuery?.tableView) {
-            const regRows = total * 20;
+            const regRows = total * 25;
             const regCalc = regRows < 350 ? "fit-content" : "350px";
             regularCont = regCalc;
             regularView = regCalc;
@@ -29,7 +39,7 @@ export const useViewHeight = ({ type, actualQuery, total }) => {
 
         if (type === "matrix" && !actualQuery?.tableView) {
             regularCont = "fit-content";
-            regularView = "350px";
+            regularView = "400px";
             maxCont = "fit-content";
             maxView = "fit-content";
         }
@@ -39,9 +49,15 @@ export const useViewHeight = ({ type, actualQuery, total }) => {
     return viewHeight;
 };
 
-export const useTableHeight = ({ total, panelSize }) => {
+export const useTableHeight = ({ total, panelSize, dataView }) => {
+    let tableTotal = 0;
+    if (dataView.type === "matrix") {
+        tableTotal = dataView?.tableData?.total;
+    } else {
+        tableTotal = total;
+    }
     const theight = useMemo(() => {
-        const totalRows = total * 20;
+        const totalRows = tableTotal * 25;
 
         if (panelSize === "max") {
             return totalRows;

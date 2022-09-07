@@ -31,8 +31,6 @@ import setDebugMode from "../../actions/setDebugMode";
 export default function SettingsDialog({ open, onClose }) {
     const dispatch = useDispatch();
     const apiUrl = useSelector((store) => store.apiUrl);
-    const limit = useSelector((store) => store.limit);
-    const step = useSelector((store) => store.step);
     const theme = useSelector((store) => store.theme);
 
     const debugMode = useSelector((store) => store.debugMode);
@@ -64,16 +62,6 @@ export default function SettingsDialog({ open, onClose }) {
 
     function handleApiClick() {
         dispatch(setApiUrl(apiEdited));
-    }
-
-    function handleStepChange(e) {
-        const value = e.target.value;
-        dispatch(setQueryStep(value));
-    }
-
-    function handleLimitChange(e) {
-        const value = e.target.value;
-        dispatch(setQueryLimit(value));
     }
 
     function handleThemeSwitch() {
@@ -122,24 +110,6 @@ export default function SettingsDialog({ open, onClose }) {
                             </SettingButton>
                         </InlineGroup>
                     </InputGroup>
-
-                    <InputGroup>
-                        <SettingLabel>Step</SettingLabel>
-
-                        <SettingInput
-                            value={step}
-                            onChange={handleStepChange}
-                        />
-                    </InputGroup>
-
-                    <InputGroup>
-                        <SettingLabel>Limit</SettingLabel>
-                        <SettingInput
-                            value={limit}
-                            onChange={handleLimitChange}
-                        />
-                    </InputGroup>
-
                     <InputGroup>
                         <SettingLabel>Theme: {theme}</SettingLabel>
                         <Switch

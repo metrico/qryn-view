@@ -71,12 +71,11 @@ export function getMatrixTableResult(data: any[]) {
         dataRows.push(row.rows);
     }
 
-    const length = rows.length;
-
+    const dr = sortBy(dataRows.flat(), (row) => row.time)
     return {
         columnsData: headers,
-        dataRows: sortBy(dataRows.flat(), (row) => row.time),
-        length,
+        dataRows: dr,
+        total: dr.length
     };
 }
 
@@ -114,7 +113,7 @@ export function parseMatrixResponse(responseProps: QueryResult) {
             }
             dispatch(setIsEmptyView(false));
         });
-
+        // get table total as chart total is less that table total rows
         const panelResult = {
             id,
             type: "matrix",

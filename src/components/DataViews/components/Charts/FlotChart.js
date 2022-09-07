@@ -5,7 +5,6 @@ import { ChartCont } from "./styled";
 
 
 export function FlotChart(props) {
-    
     const {
         theme,
         matrixData,
@@ -30,18 +29,19 @@ export function FlotChart(props) {
                     isSpliced={isSpliced}
                     onSetChartType={onSetChartType}
                 />
-
+                <div className="chart-cont">
                 <div
                     ref={chartRef}
                     id={"chart-container"}
                     style={{
                         flex: "1",
-                        height: "180px",
+                        minHeight:'180px',
+                        height:'100%',
                         display: "block",
                         position: "relative",
                     }}
                 ></div>
-
+                </div>
                 <ChartLabelsList onLabelClick={onLabelClick} labels={labels} />
             </ChartCont>
         </ThemeProvider>

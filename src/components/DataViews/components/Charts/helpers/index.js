@@ -88,7 +88,7 @@ export function formatDateRange(data) {
 }
 
 export function formatTs(values) {
-    return values.map(([ts, val]) => [ts * 1000, val]);
+    return values?.map(([ts, val]) => [ts * 1000, val]) || [];
 }
 
 export function getSeriesFromChartType(type) {
@@ -132,13 +132,17 @@ export function setTypeToLocal(type) {
 }
 
 export function formatLabel(labels) {
-    return (
-        "{ " +
-        Object.entries(labels)
-            .map(([key, value]) => `${key}="${value}"`)
-            .join(", ") +
-        " }"
-    );
+    if(labels) {
+        return (
+            "{ " +
+            Object.entries(labels)
+                .map(([key, value]) => `${key}="${value}"`)
+                .join(", ") +
+            " }"
+        );
+    }
+    else return ''
+  
 }
 
 export function hideSeries(series) {

@@ -19,6 +19,9 @@ const StyledList = styled.div`
         width: 5px;
         background: ${props => props.theme.buttonHover};
     }
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
 
     &::-webkit-scrollbar-thumb {
         border-radius: 5px;

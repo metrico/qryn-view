@@ -15,6 +15,9 @@ export const DataViewStyled = styled.div`
     &::-webkit-scrollbar {
         width: 5px;
     }
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
 
     &::-webkit-scrollbar-thumb {
         border-radius: 5px;
@@ -73,11 +76,16 @@ export const Loader = styled(CircularProgress)`
 export const DataviewsContainer = styled.div`
     overflow-y: auto;
     margin: 2px;
+    display:flex;
+    flex-direction:column;
+    flex:1;
     max-height: 100vh;
     &::-webkit-scrollbar {
         background: transparent;
     }
-
+    ::-webkit-scrollbar-corner {
+        background: transparent;
+      }
     &::-webkit-scrollbar-thumb {
         background: transparent;
     }
@@ -134,7 +142,9 @@ export const HeadLabelsCont = styled.div`
         width: 5px;
         height: 5px;
     }
-
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
     &::-webkit-scrollbar-thumb {
         border-radius: 5px;
         background: ${({ theme }) => theme.scrollbarThumb};

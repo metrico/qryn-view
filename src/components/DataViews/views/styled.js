@@ -7,6 +7,10 @@ export const ViewStyled = styled.div`
     margin-top:0px;
     border: 1px solid ${({ theme }) => theme.buttonBorder};
     border-radius: 3px;
+    display:flex;
+    flex-direction:column;
+    flex:${({size})=> size === 'min' ? 0 : 1};
+ 
     height: ${(props) =>
         props.size === "regular"
             ? props.vheight.regularCont
@@ -28,5 +32,6 @@ export const ViewStyled = styled.div`
                 : "flex"};
         flex-direction: ${(props) =>
             props.size === "regular" ? "column" : "column"};
+        flex:1;
     }
 `;

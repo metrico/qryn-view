@@ -9,6 +9,9 @@
     &::-webkit-scrollbar {
         width: 5px;
     }
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
     &::-webkit-scrollbar-thumb {
         border-radius: 5px;
         background: $grey-light;
