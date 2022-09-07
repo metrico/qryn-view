@@ -26,9 +26,12 @@ const DateSelect = styled.select`
         width: 5px;
         background: ${props => props.theme.inputBg};
     }
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
 
     &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
+        border-radius: 5px;
         background: ${props => props.theme.scrollbarThumb};
     }
 `;

@@ -96,7 +96,7 @@ export const generateYears = (relativeTo, count) => {
     const half = Math.floor(count / 2);
     return Array(count)
         ?.fill(0)
-        ?.map((y, i) => relativeTo?.getFullYear() - half + i); // TODO: make part of the state
+        ?.map((y, i) => relativeTo?.getFullYear() - half + i); 
 };
 
 export const isSameRange = (first, second) => {
@@ -139,6 +139,11 @@ export const getDefaultRanges = (date) => [
     {
         label: "Last 30 minutes",
         dateStart: addMinutes(date, -30),
+        dateEnd: date,
+    },
+    {
+        label: "Last 1 hour",
+        dateStart: addHours(date, -1),
         dateEnd: date,
     },
     {

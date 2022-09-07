@@ -92,8 +92,3 @@ export async function parseResponse(responseProps: QueryResult) {
     const { type }: { type: QueryResultType } = responseProps;
     responseActions[type](responseProps);
 }
-
-
-
-
-

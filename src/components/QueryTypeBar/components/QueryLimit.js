@@ -1,7 +1,9 @@
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setQueryLimit } from "../../../actions";
+import { setRightPanel } from "../../../actions/setRightPanel";
+import { setLeftPanel } from "../../../actions/setLeftPanel";
+import { Tooltip } from "@mui/material";
 
 const InputGroup = styled.div`
     display: flex;
@@ -28,26 +30,52 @@ const Input = styled.input`
     padding-left: 8px;
 `;
 
-export default function QueryLimit() {
+export function panelAction(name, value) {
+    if (name === "left") {
+        return setLeftPanel(value);
+    }
+    return setRightPanel(value);
+}
+
+export default function QueryLimit(props) {
     const dispatch = useDispatch();
-    const limit = useSelector((store) => store.limit);
-    const [editedValue, setEditedValue] = useState(limit);
+    const { id } = props.data;
+    const { name } = props;
+    const panelQuery = useSelector((store) => store[name]);
+    const [editedValue, setEditedValue] = useState(props.data.limit);
+    const limitFromProps = useMemo(() => props.data.limit, [props.data.limit]);
 
     useEffect(() => {
-        setEditedValue(limit);
-    }, [limit, setEditedValue]);
+        setEditedValue(limitFromProps);
+    }, [limitFromProps, setEditedValue]);
 
     function onLimitChange(e) {
-        dispatch(setQueryLimit(e.target.value));
+        let limitTxt = e.target.value;
+        if(limitTxt > 20000) {
+            limitTxt = 20000
+        }
+        const panel = [...panelQuery];
+
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.limit = limitTxt;
+            }
+        });
+
+        dispatch(panelAction(name, panel));
     }
+
     return (
         <InputGroup>
+       
             <Label>Query Limit</Label>
+            <Tooltip title="max 20000">
             <Input
                 type={"number"}
                 value={editedValue}
                 onChange={onLimitChange}
             />
+            </Tooltip>
         </InputGroup>
     );
 }

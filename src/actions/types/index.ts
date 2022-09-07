@@ -14,6 +14,9 @@ export type QueryResult = {
     queryType?: string;
     dispatch: Function;
     type: QueryResultType;
+    panel: string;
+    id: string
+    ts: number
 };
 
 export type Message = {

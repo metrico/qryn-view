@@ -6,7 +6,7 @@
 
 # :eye: qryn view
 
-qryn-view is a smart and minimal LOgQL API data explorer developed in React/JS and designed for [qryn](https://cloki.org)
+*qryn-view* is a smart and minimal LOgQL API data explorer developed in React/JS and designed for [qryn](https://cloki.org)
 
 <img src="https://user-images.githubusercontent.com/1423657/152640509-82d7704a-4e9a-4a2b-9b7e-1819984c7581.png"/><img src="https://user-images.githubusercontent.com/1423657/155608224-8654694b-b999-4781-994a-5a87e39dfddf.png" /><img src="https://user-images.githubusercontent.com/1423657/182931606-4bffa314-1aef-4712-8229-716e43e4efc3.png" />
 
@@ -15,15 +15,18 @@ qryn-view is a smart and minimal LOgQL API data explorer developed in React/JS a
 - Label Browser
 - Display Logs & Charts
 - Timerange Selector
+- Split data views
+- Multi query execution
 - Query History
 - Mobile View
+- Copy Link
 - Embeddable Results
 - 100% Client-Side
 
-
+------------
 ### Usage
 
-Use the [public client](https://view.cloki.org) _(no data goes through the server)_ or [build](BUILD.md) and run your own instance
+_Use the [public client](https://view.cloki.org) _(no data goes through the server)_ or [build](BUILD.md) and run your own instance_
 
 #### Environment Variables:
 
@@ -35,22 +38,34 @@ Use the [public client](https://view.cloki.org) _(no data goes through the serve
 ```bash
 ~/$ HOST=localhost PORT=8080 API_URL=http://cloki-host:3100 npm start
 ```
-
+------------
 ##### URL Parameters
-cLoki-view can be controlled through URL parameters
+_cLoki-view can be controlled through URL parameters__
 
-| param | description |  |
+| param | description | default |
 |-------|-------------|---------|
 | `apiUrl` | _LogQL API URL_ | http://localhost:3100 |
-| `query`  | _LogQL query_   | |
-| `from`   | _timestamp Ns_  | |
-| `to`     | _timestamp Ns_  | |
-| `limit`  | _query limit_   | |
-| `step`   | _query step_    | |
+| `start`   | _timestamp Ns_  | now |
+| `stop`     | _timestamp Ns_  | |
+| `step`   | _query step_    | 5 |
 | `isEmbed` | _embed mode_   | false |
+| `theme` | _application theme_ | dark |
+| `left` | _left panel queries details_ | |
+| `right` | _right panel queries details_ | |
 
 
 ------------
+
+#### Query Data (logql) inside left or right panel
+_JSON stringifyed and URL encoded_
+
+- *id*: query ID
+- *idRef* Title for a query
+- *expr* query expression
+- *limit* query limit
+
+------------
+
 
 ### About qryn
 
@@ -60,5 +75,5 @@ Consult the [qryn Wiki](https://github.com/metrico/qryn/wiki/LogQL-Supported-Que
 - (C) 2022 QXIP BV see LICENSE for details
 
 [^1]: qryn is not affiliated or endorsed by Grafana Labs or ClickHouse Inc. All rights belong to their respective owners.
-[^2]: qryn is part of the cLoki project, licensed under the AGPLv3 LICENSE by QXIP BV
+[^2]: qryn-view is part of the qryn project, licensed under the AGPLv3 LICENSE by QXIP BV
 

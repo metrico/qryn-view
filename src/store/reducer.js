@@ -1,3 +1,5 @@
+
+
 const reducer = (state, action) => {
     switch (action.type) {
         case "SET_LABELS":
@@ -71,11 +73,29 @@ const reducer = (state, action) => {
         case "SET_QUERY_TIME":
             return { ...state, time: action.time };
         case "SET_QUERY_RESOLUTION":
-            return {...state, queryResolution: action.queryResolution};
+            return { ...state, queryResolution: action.queryResolution };
         case "SET_IS_EMPTY_VIEW":
             return { ...state, isEmptyView: action.isEmptyView };
         case "SET_VECTOR_DATA":
-            return {...state, vectorData: action.vectorData}
+            return { ...state, vectorData: action.vectorData };
+        case "SET_RESPONSE_TYPE":
+            return { ...state, responseType: action.responseType };
+        case "SET_IS_TABLE_VIEW":
+            return { ...state, isTableView: action.isTableView };
+        case "SET_SPLIT_VIEW":
+            return { ...state, isSplit: action.isSplit };
+        case "SET_PANELS_DATA":
+            return { ...state, panels: action.panels };
+        case "SET_DATA_VIEWS":
+            return { ...state, dataViews: action.dataViews };
+        case "SET_RIGHT_DATAVIEW":
+            return { ...state, rightDataView: action.rightDataView };
+        case "SET_LEFT_DATAVIEW":
+            return { ...state, leftDataView: action.leftDataView };
+        case "SET_RIGHT_PANEL":
+            return { ...state, right: action.right };
+            case "SET_LEFT_PANEL":
+            return { ...state, left: action.left };
         default:
             return { ...state };
     }

@@ -20,14 +20,11 @@ import styled from "@emotion/styled";
 const AlertCont = styled.div`
     background: ${(props) => props.theme.widgetContainer};
     #alert-dialog-title {
-       color:  ${(props) => props.theme.textColor};
+        color: ${(props) => props.theme.textColor};
     }
     #alert-dialog-description {
-         
-          color:  ${(props) => props.theme.textOff};
-          font-weight: normal;
-        
-       
+        color: ${(props) => props.theme.textOff};
+        font-weight: normal;
     }
 `;
 export default function AlertDialog({ clearHistory, dialogType }) {

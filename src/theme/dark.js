@@ -1,5 +1,6 @@
 import defaultTheme from "@mui/material/styles/defaultTheme";
 
+
 const black = {
     b10: "hsla(0, 0%, 7%, 0.404)",
     b15: "hsl(0, 0%, 7%)",
@@ -57,6 +58,7 @@ const typography = {
     fontFamily: "Roboto, Helvetica, Arial, sans-serif",
 };
 const mainBgColor = black.b300;
+const shBgColor = black.b400; // a shadow color => for panels container
 const logBgColor = black.b100;
 const tabActive = black.b100;
 const tabHeader = black.b400;
@@ -81,9 +83,10 @@ const inputTextFocus = orange.or100;
 const highlitedButton = orange.or100;
 const inputLabelColor = lightgrey.lg400;
 const inputLabelBg = black.bg10;
+const chartBg = '#111';
 const historyRow = '#6c6b6b38';
 const viewBg = black.b300;
-const scrollbarThumb = "hsla(0, 0%, 48%, 0.122)";
+const scrollbarThumb = "hsla(0, 0%, 48%, 0.5)";
 const critical = "hsl(300, 100%, 25%)";
 const error = "hsl(0, 100%, 50%)";
 const warning = "hsl(60, 100%, 50%)";
@@ -113,6 +116,7 @@ const darkTheme = {
     textPrimary,
     textPrimaryAccent,
     viewBg,
+    chartBg,
     historyRow,
     scrollbarThumb,
     critical,
@@ -130,6 +134,7 @@ const darkTheme = {
     tabHeader,
     tabBg,
     mainBgColor,
+    shBgColor,
     secondaryWidgetContainer,
     widgetTitle,
     widgetTitleBorder,

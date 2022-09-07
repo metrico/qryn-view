@@ -2,6 +2,7 @@ import styled from "@emotion/styled"
 
 import HistoryIcon from "@mui/icons-material/History";
 import { BtnSmall } from "../../../../theme/styles/Button";
+import { InputSmall } from "../../../../theme/styles/Input";
 
 export const HistoryIconStyled = styled(HistoryIcon)`
     height: 18px;
@@ -14,6 +15,7 @@ export const HistoryButtonStyled = styled(BtnSmall)`
     color: ${(props)=> props.theme.textColor};
     background: ${(props) => props.theme.buttonDefault};
     border:1px solid ${(props)=>props.theme.buttonBorder};
+    height:28px;
     span {
         margin-left: 5px;
     }
@@ -27,6 +29,7 @@ export const ShowLabelsBtn = styled(BtnSmall)`
         border:1px solid ${(props)=>props.theme.buttonBorder};
     text-overflow: ellipsis;
     transition: 0.25s all;
+    padding-left:6px;
     justify-content: flex-start;
     color: ${({ theme }) => theme.textColor};
     height: 28px;
@@ -42,7 +45,7 @@ export const ShowLabelsBtn = styled(BtnSmall)`
 
 export const QueryBarContainer = styled.div`
     display: flex;
-    padding: 3px 6px;
+    padding: 6px;
     margin-top:5px;
     margin-left: 0px;
     background: ${({ theme }) => theme.widgetContainer};
@@ -56,6 +59,8 @@ export const ShowLogsBtn = styled(BtnSmall)`
     margin-left: 5px;
     transition: 0.25s all;
     justify-content: center;
+    padding: 3px 12px;
+    height:28px;
     &:hover {
         background: ${(props) => props.theme.primaryLight};
     }
@@ -72,11 +77,103 @@ export const ShowLogsBtn = styled(BtnSmall)`
     }
 `;
 
+export const ShowSettingsBtn = styled(BtnSmall)`
+    background: none;
+    margin-left: 5px;
+    color: ${(props)=> props.theme.textColor};
+    background: ${(props) => props.theme.buttonDefault};
+    border:1px solid ${(props)=>props.theme.buttonBorder};
+    height:28px;
+    span {
+        margin-left: 5px;
+    }
+    @media screen and (max-width: 864px) {
+        display: ${(props) => (props.isMobile ? "flex" : "none")};
+    }
+`;
+
 export const MobileTopQueryMenu = styled.div`
     display: none;
     @media screen and (max-width: 864px) {
         display: flex;
-        justify-content: space-between;
-        margin: 10px;
+        justify-content: space-between
     }
+`;
+
+
+
+export const InputGroup = styled.div`
+    display: flex;
+    flex:1;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 20px;
+    margin-right:10px;
+`;
+export const InlineGroup = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+export const SettingCont = styled.div`
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+  
+    background: ${({ theme }) => theme.widgetContainer};
+`;
+
+export const SettingsInputContainer = styled.div`
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    .options-input{
+        margin:10px;
+        display:flex;
+    }
+`;
+
+export const SettingInput = styled(InputSmall)`
+    background: ${({ theme }) => theme.inputBg};
+    margin: 5px;
+    flex: 1;
+    padding: 5px 12px;
+    border: 1px solid ${({ theme }) => theme.buttonBorder};
+    color: ${({ theme }) => theme.textColor};
+    &:focus {
+        border: 1px solid ${({ theme }) => theme.buttonHover};
+    }
+`;
+export const SettingButton = styled(BtnSmall)`
+    background: ${({ theme }) => theme.primaryDark};
+    color: ${({ theme }) => theme.buttonText};
+    height: 30px;
+    &:hover {
+        background: ${({ theme }) => theme.primaryLight};
+    }
+`;
+
+export const SettingLabel = styled.label`
+    font-size: 12px;
+    color: ${({ theme }) => theme.inputLabelColor};
+    margin-left: 10px;
+`;
+
+export const SettingHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    h3 {
+        margin-left: 10px;
+        font-size: 1em;
+        color: ${({ theme }) => theme.textColor};
+    }
+`;
+export const SettingCloseBtn = styled(BtnSmall)`
+    background: none;
+    padding: 0;
+    color: ${({ theme }) => theme.textColor};
 `;
