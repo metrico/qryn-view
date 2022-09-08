@@ -8,7 +8,9 @@ export const TableStyles = styled.div`
         &::-webkit-scrollbar {
         width: 5px;
     }
-
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
     &::-webkit-scrollbar-thumb {
         border-radius: 5px;
         background: ${(props) => props.theme.scrollbarThumb};
@@ -21,7 +23,9 @@ export const TableStyles = styled.div`
     &::-webkit-scrollbar {
         width: 5px;
     }
-
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
     &::-webkit-scrollbar-thumb {
         border-radius: 5px;
         background: ${(props) => props.theme.scrollbarThumb};

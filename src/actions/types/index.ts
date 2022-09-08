@@ -16,6 +16,7 @@ export type QueryResult = {
     type: QueryResultType;
     panel: string;
     id: string
+    ts: number
 };
 
 export type Message = {

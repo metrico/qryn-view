@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setRightPanel } from "../../../actions/setRightPanel";
 import { setLeftPanel } from "../../../actions/setLeftPanel";
+import { Tooltip } from "@mui/material";
 
 const InputGroup = styled.div`
     display: flex;
@@ -49,7 +50,10 @@ export default function QueryLimit(props) {
     }, [limitFromProps, setEditedValue]);
 
     function onLimitChange(e) {
-        const limitTxt = e.target.value;
+        let limitTxt = e.target.value;
+        if(limitTxt > 20000) {
+            limitTxt = 20000
+        }
         const panel = [...panelQuery];
 
         panel.forEach((query) => {
@@ -63,12 +67,15 @@ export default function QueryLimit(props) {
 
     return (
         <InputGroup>
+       
             <Label>Query Limit</Label>
+            <Tooltip title="max 20000">
             <Input
                 type={"number"}
                 value={editedValue}
                 onChange={onLimitChange}
             />
+            </Tooltip>
         </InputGroup>
     );
 }

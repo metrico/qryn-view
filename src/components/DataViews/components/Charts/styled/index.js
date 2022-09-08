@@ -6,14 +6,17 @@ export const LabelsContainer = styled("div")`
 
     display: flex;
     flex-wrap: wrap;
-    max-height: calc(100% - 285px);
+    max-height:60px;
     overflow-y: auto;
-    margin: 10px 20px;
+    margin: 10px;
     padding-bottom: 10px;
     &::-webkit-scrollbar {
         width: 5px;
+        height: 5px;
     }
-
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
     &::-webkit-scrollbar-thumb {
         border-radius: 5px;
         background: ${(props) => props.theme.scrollbarThumb};
@@ -116,5 +119,11 @@ export const ShowSeries = styled.div`
 
 export const ChartCont = styled.div`
     height: inherit;
-   background: ${({theme})=>theme.chartBg}
+    display:flex;
+    flex-direction:column;
+    flex:1;
+   background: ${({theme})=>theme.chartBg};
+   .chart-cont {
+    flex:1;
+   }
 `;

@@ -25,6 +25,7 @@ export async function processResponse(
             type: "streams",
             panel,
             id,
+            ts: Date.now()
         };
 
         parseResponse(resultQuery);
@@ -47,6 +48,7 @@ export async function processResponse(
             type,
             panel,
             id,
+            ts: Date.now()
         };
 
         parseResponse(resultQuery);

@@ -150,7 +150,9 @@ export const QueryHistoryContainer = styled.div`
         width: 5px;
         background: ${(props) => props.theme.buttonDefault};
     }
-
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
     &::-webkit-scrollbar-thumb {
         border-radius: 5px;
         background: ${(props) => props.theme.scrollbarThumb};

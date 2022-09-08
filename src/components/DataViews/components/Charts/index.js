@@ -297,6 +297,7 @@ export default function ClokiChart(props) {
 
     if (matrixData) {
         const flotChartProps = {
+            height: props.vHeight,
             theme,
             matrixData,
             chartType,

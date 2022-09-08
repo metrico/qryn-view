@@ -54,7 +54,9 @@ const ValuesListStyled = styled.div`
         &::-webkit-scrollbar {
             width: 10px;
         }
-
+        &::-webkit-scrollbar-corner {
+            background: transparent;
+          }
         &::-webkit-scrollbar-thumb {
             border-radius: 10px;
             background: $grey-light;
@@ -115,6 +117,9 @@ const ValuesListStyled = styled.div`
                         color: #58585898;
                         background: #ffffff1f;
                     }
+                    &::-webkit-scrollbar-corner {
+                        background: transparent;
+                      }
                     &::-webkit-scrollbar-thumb {
                         border-radius: 10px;
                         background: $grey-light;

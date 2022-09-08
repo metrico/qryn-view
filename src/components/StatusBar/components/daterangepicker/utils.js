@@ -142,6 +142,11 @@ export const getDefaultRanges = (date) => [
         dateEnd: date,
     },
     {
+        label: "Last 1 hour",
+        dateStart: addHours(date, -1),
+        dateEnd: date,
+    },
+    {
         label: "Last 3 hours",
         dateStart: addHours(date, -3),
         dateEnd: date,
