@@ -58,7 +58,7 @@ export function mapStreams(streams: any[]) {
                 timestamp: fromNanoSec(ts),
                 text,
                 tags: stream.stream || {},
-                showTs: true,
+                isShowTs: true,
                 showLabels: false,
                 id: nanoid(),
             });

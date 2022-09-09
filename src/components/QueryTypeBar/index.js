@@ -39,9 +39,10 @@ export default function QueryTypeBar(props) {
     const responseType = useSelector((store) => store.responseType);
 
     const { hash } = useLocation();
-    const { id, queryType, tableView, idRef } = data;
+    const { id, queryType, tableView, idRef, isShowTs } = data;
 
     const [isTableViewSet, setIsTableViewSet] = useState(tableView);
+    const [isShowTsSet, setIsShowTsSet] = useState(isShowTs || false);
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(queryType);
 
     useEffect(() => {
@@ -68,6 +69,9 @@ export default function QueryTypeBar(props) {
     useEffect(() => {
         setIsTableViewSet(props.data.tableView);
     }, [setIsTableViewSet, props.data.tableView]);
+    useEffect(() => {
+        setIsShowTsSet(props.data.isShowTs);
+    }, [setIsShowTsSet, props.data.isShowTs]);
 
     function onSwitchChange(e) {
         // modify query type switch value
@@ -92,6 +96,17 @@ export default function QueryTypeBar(props) {
         dispatch(panelAction(name, panel));
     }
 
+    function handleShowTsSwitch() {
+        // modify table view switch value
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.isShowTs = isShowTsSet ? false : true;
+            }
+        });
+        dispatch(panelAction(name, panel));
+    }
+
     return (
         <ThemeProvider theme={themes[theme]}>
             <QueryTypeCont>
@@ -102,7 +117,8 @@ export default function QueryTypeBar(props) {
                 />
                 <QueryLimit {...props} />
 
-                {responseType !== "vector" && (
+                {responseType !== "vector" && (<>
+               
                     <InputGroup>
                         <SettingLabel>Table View</SettingLabel>
                         <Switch
@@ -112,6 +128,16 @@ export default function QueryTypeBar(props) {
                             inputProps={{ "aria-label": "controlled" }}
                         />
                     </InputGroup>
+                               <InputGroup>
+                               <SettingLabel>Timestamp</SettingLabel>
+                               <Switch
+                                   checked={isShowTsSet}
+                                   size={"small"}
+                                   onChange={handleShowTsSwitch}
+                                   inputProps={{ "aria-label": "controlled-ts" }}
+                               />
+                           </InputGroup>
+                           </>
                 )}
             </QueryTypeCont>
         </ThemeProvider>

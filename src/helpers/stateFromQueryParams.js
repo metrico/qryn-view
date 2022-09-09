@@ -21,6 +21,7 @@ export const initialUrlState = {
             limit: 100,
             step: 5,
             tableView: false,
+            isShowTs: true,
             browserOpen: false,
             expr: "",
             labels: [], // name: selected:
@@ -40,6 +41,7 @@ export const initialUrlState = {
             limit: 100,
             step: 5,
             tableView: false,
+            isShowTs: true,
             browserOpen: false,
             expr: "",
             labels: [], // name: selected:

@@ -123,6 +123,7 @@ export default function initialState() {
                 limit: 100,
                 step: 100,
                 tableView: false,
+                isShowTs: true,
                 browserOpen: false,
                 expr: "",
                 labels: [], // name: selected:
@@ -140,6 +141,7 @@ export default function initialState() {
                 limit: 100,
                 step: 100,
                 tableView: false,
+                isShowTs: true,
                 browserOpen: false,
                 expr: "",
                 labels: [], // name: selected:

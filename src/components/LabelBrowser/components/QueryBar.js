@@ -284,10 +284,10 @@ export const QuerySetting = (props) => {
     const { id, idRef } = props.data;
     const { open, handleClose, actPanel, name } = props;
     const [isTableViewSet, setIsTableViewSet] = useState(props.data.tableView);
+    const [isShowTsSet, setIsShowTsSet] = useState(props.data.isShowTs)
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(
         props.data.queryType
     );
-
     useEffect(() => {
         const urlParams = new URLSearchParams(hash.replace("#", ""));
         const urlPanel = urlParams.get(name);
@@ -311,6 +311,10 @@ export const QuerySetting = (props) => {
         setIsTableViewSet(props.data.tableView);
     }, [setIsTableViewSet, props.data.tableView]);
 
+    useEffect(()=>{
+        setIsShowTsSet(props.data.isShowTs)
+    }, [setIsShowTsSet, props.data.isShowTs])
+
     function onSwitchChange(e) {
         // modify query type switch value
         const panel = [...actPanel];
@@ -333,6 +337,18 @@ export const QuerySetting = (props) => {
             }
         });
         dispatch(panelAction(name, panel));
+    }
+
+    function handleTsSwitch() {
+
+        const panel = [...actPanel];
+        panel.forEach((query)=>{
+            if(query.id === id) {
+                query.isShowTs = isShowTsSet ? false : true;
+            }
+        })
+
+        dispatch(panelAction(name,panel))
     }
 
     return (
@@ -369,8 +385,20 @@ export const QuerySetting = (props) => {
                                     inputProps={{ "aria-label": "controlled" }}
                                 />
                             </InputGroup>
+                            <InputGroup>
+                                     <SettingLabel>Timestamp</SettingLabel>
+                                     <Switch
+                                         checked={isShowTsSet}
+                                         size={"small"}
+                                         onChange={handleTsSwitch}
+                                         inputProps={{ "aria-label": "controlled-ts" }}
+                                     />
+                                 </InputGroup>
                         </div>
                     )}
+                
+                       
+                   
                 </SettingsInputContainer>
             </SettingCont>
         </Dialog>

@@ -24,7 +24,7 @@ export type Message = {
     timestamp: number;
     text: string;
     tags: object;
-    showTs: boolean;
+    isShowTs: boolean;
     showLabels: boolean;
     id: string;
 };
