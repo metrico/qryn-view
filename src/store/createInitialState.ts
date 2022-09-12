@@ -95,7 +95,7 @@ export default function initialState() {
             new Date(moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
         from: urlState.from || null,
         to: urlState.to || null,
-        label: urlState.label || "Last 5 minutes",
+        label: urlState.label,
         messages: [],
         limitLoad: false,
         limit: urlState.limit || 100,
