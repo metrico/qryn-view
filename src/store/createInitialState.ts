@@ -113,6 +113,7 @@ export default function initialState() {
         isSubmit: urlState.isSubmit || false,
         isEmbed: urlState.isEmbed || false,
         // dont mention queries // its obvious
+
         left: urlState["left"] || [
             {
                 id: nanoid(),
@@ -151,7 +152,50 @@ export default function initialState() {
 
         leftDataView: [],
         rightDataView: [],
+        labelLinks: [
+            {
+                id: nanoid(),
+                dataSource: 'Loki',
+                name: 'traceId',
+                regex: /^.*?traceI[d|D]=(\w+).*$/,
+                query: '${__value.raw}',
+                urlLabel: '',
+                internalLink: true,
+                linkType: 'Tempo'
+            },
+            {
+                id: nanoid(),
+                dataSource: 'Loki',
+                name: 'traceID',
+                regex: /^.*?"traceID":"(\w+)".*$/,
+                query: '${__value.raw}',
+                urlLabel: '',
+                internalLink: true,
+                linkType: 'Tempo'
+            }
+        ],
+        dataSources: [{
+            type: 'Loki',
+            name: 'Loki',
+            url: 'http://loki:3000',
+            icon: 'loki_icon'
+        },
+        {
+            type: 'Tempo',
+            name: 'Tempo',
+            url: 'http://tempo:3000',
+            icon: 'tempo_icon'
+        },
+        {
+            type: 'Prometheus',
+            name: 'PromQl',
+            url: 'http://promql:3000',
+            icon: 'promql_icon'
+        },
 
+        ],
+
+        linkTypes: ['Tempo', 'Loki', 'Prom'],
         chartType: "line",
         resposeType: "",
         notifications: [],

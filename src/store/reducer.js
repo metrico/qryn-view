@@ -1,5 +1,3 @@
-
-
 const reducer = (state, action) => {
     switch (action.type) {
         case "SET_LABELS":
@@ -94,8 +92,10 @@ const reducer = (state, action) => {
             return { ...state, leftDataView: action.leftDataView };
         case "SET_RIGHT_PANEL":
             return { ...state, right: action.right };
-            case "SET_LEFT_PANEL":
+        case "SET_LEFT_PANEL":
             return { ...state, left: action.left };
+        case "SET_LABEL_LINKS":
+            return { ...state, labelLinks: action.labelLinks };
         default:
             return { ...state };
     }

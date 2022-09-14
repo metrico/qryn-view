@@ -49,9 +49,6 @@ export default function getTimeParams() {
         parsedStart = pStart;
         parsedStop = pStop;
 
-        // if relative time : set start and stop
-        // according to relative time
-
         store.dispatch(setStartTime(dateStart));
         store.dispatch(setStopTime(dateEnd));
     } else {
