@@ -4,38 +4,38 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { themes } from "../../theme/themes";
 import Logo from "./assets/qryn-logo.png";
-import promql_icon from "./assets/promql_icon.png";
-import loki_icon from "./assets/loki_icon.png";
-import tempo_icon from "./assets/tempo_icon.png";
+import metrics_icon from "./assets/metrics_icon.png";
+import logs_icon from "./assets/logs_icon.png";
+import traces_icon from "./assets/traces_icon.png";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 export const Icon = ({ icon }) => {
     switch (icon) {
-        case "promql_icon":
+        case "metrics_icon":
             return (
                 <img
                     height="40px"
                     className="logo"
-                    src={promql_icon}
-                    alt="promql"
+                    src={metrics_icon}
+                    alt="metrics"
                 />
             );
-        case "loki_icon":
+        case "logs_icon":
             return (
                 <img
                     height="40px"
                     className="logo"
-                    src={loki_icon}
-                    alt="loki"
+                    src={logs_icon}
+                    alt="logs"
                 />
             );
-        case "tempo_icon":
+        case "traces_icon":
             return (
                 <img
                     height="40px"
                     className="logo"
-                    src={tempo_icon}
-                    alt="tempo"
+                    src={traces_icon}
+                    alt="traces"
                 />
             );
         default:
@@ -43,8 +43,8 @@ export const Icon = ({ icon }) => {
                 <img
                     height="40px"
                     className="logo"
-                    src={loki_icon}
-                    alt="loki"
+                    src={logs_icon}
+                    alt="logs"
                 />
             );
     }
@@ -88,7 +88,7 @@ const PageContainer = styled.div`
         background: ${({ theme }) => theme.viewBg};
         margin-bottom: 10px;
         border-radius: 3px;
-        padding-bottom: 20px;
+        padding-bottom: 14px;
         display: flex;
         .logo {
             padding: 10px;

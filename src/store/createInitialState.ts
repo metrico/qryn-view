@@ -155,47 +155,47 @@ export default function initialState() {
         labelLinks: [
             {
                 id: nanoid(),
-                dataSource: 'Loki',
+                dataSource: 'Logs',
                 name: 'traceId',
                 regex: /^.*?traceI[d|D]=(\w+).*$/,
                 query: '${__value.raw}',
                 urlLabel: '',
                 internalLink: true,
-                linkType: 'Tempo'
+                linkType: 'Traces'
             },
             {
                 id: nanoid(),
-                dataSource: 'Loki',
+                dataSource: 'Logs',
                 name: 'traceID',
                 regex: /^.*?"traceID":"(\w+)".*$/,
                 query: '${__value.raw}',
                 urlLabel: '',
                 internalLink: true,
-                linkType: 'Tempo'
+                linkType: 'Traces'
             }
         ],
         dataSources: [{
-            type: 'Loki',
-            name: 'Loki',
-            url: 'http://loki:3000',
-            icon: 'loki_icon'
+            type: 'logs',
+            name: 'Logs',
+            url: 'http://qryn:3000',
+            icon: 'logs_icon'
         },
         {
-            type: 'Tempo',
-            name: 'Tempo',
-            url: 'http://tempo:3000',
-            icon: 'tempo_icon'
+            type: 'traces',
+            name: 'Traces',
+            url: 'http://traces:3000',
+            icon: 'traces_icon'
         },
         {
-            type: 'Prometheus',
-            name: 'PromQl',
-            url: 'http://promql:3000',
-            icon: 'promql_icon'
+            type: 'metrics',
+            name: 'Metrics',
+            url: 'http://metrics:3000',
+            icon: 'metrics_icon'
         },
 
         ],
 
-        linkTypes: ['Tempo', 'Loki', 'Prom'],
+        linkTypes: ['logs', 'traces', 'metrics'],
         chartType: "line",
         resposeType: "",
         notifications: [],
