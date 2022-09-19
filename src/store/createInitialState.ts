@@ -156,6 +156,7 @@ export default function initialState() {
             {
                 id: nanoid(),
                 dataSource: 'Logs',
+                ds_id:'logs',
                 name: 'traceId',
                 regex: /^.*?traceI[d|D]=(\w+).*$/,
                 query: '${__value.raw}',
@@ -166,6 +167,7 @@ export default function initialState() {
             {
                 id: nanoid(),
                 dataSource: 'Logs',
+                ds_id:'logs',
                 name: 'traceID',
                 regex: /^.*?"traceID":"(\w+)".*$/,
                 query: '${__value.raw}',

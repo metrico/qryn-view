@@ -1,6 +1,5 @@
 import { ThemeProvider } from "@emotion/react";
-import styled from "@emotion/styled";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { themes } from "../../theme/themes";
 import Logo from "./assets/qryn-logo.png";
@@ -8,6 +7,132 @@ import metrics_icon from "./assets/metrics_icon.png";
 import logs_icon from "./assets/logs_icon.png";
 import traces_icon from "./assets/traces_icon.png";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import {
+    PageContainer,
+    Label,
+    Input,
+    InputGroup,
+    InputCol,
+    LinkFieldsGroup,
+    SettingsTitle,
+    DatsourceSettingsCont,
+} from "./styles";
+import { useLinkedFields } from "./hooks/useLinkedField";
+
+const DataSourceField = (props) => {
+    const { value, label, onChange } = props;
+    return (
+        <InputGroup>
+            <Label>{label}</Label>
+            <Input className="ds-input" onChange={onChange} value={value} />
+        </InputGroup>
+    );
+};
+
+/**
+ * 
+ * 
+dataSource: "Logs"
+ds_id: "logs"
+id: "-l6hS3i3MDhlQIkQCAJcc"
+internalLink: true
+linkType: "Traces"
+name: "traceId"
+query: "${__value.raw}"
+regex: /^.*?traceI[d|D]=(\w+).*$/
+urlLabel: ""
+ */
+
+export const LinkedField = (props) => {
+    const { name, query, regex, urlLabel } = props;
+
+    const onNameChange = (e) => {};
+    const onUrlLabelChange = (e) => {};
+    const onQueryChange = (e) => {};
+    const onRegexChange = (e) => {};
+
+    return (
+        <LinkFieldsGroup>
+            <InputCol>
+                <DataSourceField
+                    value={name}
+                    label={"Name"}
+                    onChange={onNameChange}
+                />
+                <DataSourceField
+                    value={urlLabel}
+                    label={"URL Label"}
+                    onChange={onUrlLabelChange}
+                />
+            </InputCol>
+            <InputCol>
+                <DataSourceField
+                    value={query}
+                    label={"Query"}
+                    onChange={onQueryChange}
+                />
+                <DataSourceField
+                    value={regex}
+                    label={"Regex"}
+                    onChange={onRegexChange}
+                />
+            </InputCol>
+        </LinkFieldsGroup>
+    );
+};
+
+export const LinkedFields = (props) => {
+    const { linkedFields } = props;
+    if (linkedFields?.length > 0) {
+        return (
+            <div className="linked-fields-cont">
+                <SettingsTitle>Linked Fields</SettingsTitle>
+                {linkedFields?.map((val, key) => (
+                    <LinkedField key={key} {...val} />
+                ))}
+            </div>
+        );
+    }
+
+    return null;
+};
+
+export const DatasourceSettings = (props) => {
+    const { open, linkedFields, name, url } = props;
+
+    const isOpen = useMemo(() => open, [open]);
+
+    const onNameChange = (e) => {
+        console.log(e);
+    };
+
+    const onUrlChange = (e) => {
+        console.log(e);
+    };
+
+    if (isOpen) {
+        return (
+            <DatsourceSettingsCont>
+                <SettingsTitle>Datasource Settings</SettingsTitle>
+                <InputCol>
+                    <DataSourceField
+                        value={name}
+                        label={"Name"}
+                        onChange={onNameChange}
+                    />
+                    <DataSourceField
+                        value={url}
+                        label={"URL"}
+                        onChange={onUrlChange}
+                    />
+                </InputCol>
+                <LinkedFields linkedFields={linkedFields} />
+            </DatsourceSettingsCont>
+        );
+    }
+
+    return null;
+};
 
 export const Icon = ({ icon }) => {
     switch (icon) {
@@ -49,94 +174,59 @@ export const Icon = ({ icon }) => {
             );
     }
 };
-const PageContainer = styled.div`
-    margin: 0px;
-    padding: 0px;
-    left: 0;
-    top: 0;
-    border-radius: 3px;
-    background: ${({ theme }) => theme.viewBg};
-    color: ${({ theme }) => theme.textColor};
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    height: 100%;
-    .cont {
-        padding: 10px;
-        margin: 10px;
-        background: ${({ theme }) => theme.widgetContainer};
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-    }
-    .ds-header {
-        padding: 10px;
-        padding-bottom: 20px;
-        font-size: 24px;
-        display: flex;
-        align-items: center;
-        padding-left: 0px;
-        .logo {
-            margin-right: 10px;
-        }
-    }
-    .ds-item {
-        padding: 10px;
-        background: ${({ theme }) => theme.viewBg};
-        margin-bottom: 10px;
-        border-radius: 3px;
-        padding-bottom: 14px;
-        display: flex;
-        .logo {
-            padding: 10px;
-            padding-right: 20px;
-            padding-left: 0px;
-        }
-        .ds-text {
-            display: flex;
-            flex-direction: column;
-            flex:1;
-        }
-        .ds-type {
-            font-size: 18px;
-            padding: 10px;
-            padding-left: 0px;
-        }
-        small {
-            font-size: 12px;
-        }
-        .setting-icon {
-            justify-self:flex-end;
-        }
-    }
-`;
 
-export function DataSourceItem({ type, name, url, icon }) {
+export function DataSourceItem({ type, name, url, icon, linkedFields }) {
+    const [open, setOpen] = useState(false);
+
+    const onOpenSettings = (e) => {
+        setOpen((evt) => (evt ? false : true));
+    };
     return (
-        <div className="ds-item">
-            <Icon icon={icon} />
-            <div className="ds-text">
-                <div className="ds-type">{type}</div>
-                <small>
-                    {" "}
-                    {name} | {url}
-                </small>
+        <div className="ds-cont">
+            <div className="ds-item">
+                <Icon icon={icon} />
+                <div className="ds-text">
+                    <div className="ds-type">{type}</div>
+                    <small>
+                        {" "}
+                        {name} | {url}
+                    </small>
+                </div>
+                <SettingsOutlinedIcon
+                    onClick={onOpenSettings}
+                    className="setting-icon"
+                    fontSize="small"
+                />
             </div>
-            <SettingsOutlinedIcon className="setting-icon"/>
+            <div className="ds-settings">
+                <DatasourceSettings
+                    linkedFields={linkedFields}
+                    name={name}
+                    url={url}
+                    open={open}
+                />
+            </div>
         </div>
     );
 }
 
 export function DataSourcesList() {
+    // get here each linked fields
+
     const ds = useSelector(({ dataSources }) => dataSources);
+    const lf = useSelector(({ labelLinks }) => labelLinks);
+
+    const linked_fields = useLinkedFields(lf);
+
     if (ds?.length > 0) {
         return (
             <div>
                 {ds.map((item, idx) => (
-                    <DataSourceItem key={idx} {...item} />
+                    <DataSourceItem
+                        key={idx}
+                        {...item}
+                        linkedFields={linked_fields[item.type]}
+                    />
                 ))}
             </div>
         );
