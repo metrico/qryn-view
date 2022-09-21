@@ -7,25 +7,81 @@ import metrics_icon from "./assets/metrics_icon.png";
 import logs_icon from "./assets/logs_icon.png";
 import traces_icon from "./assets/traces_icon.png";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+
 import {
     PageContainer,
     Label,
     Input,
     InputGroup,
     InputCol,
+    InputCont,
     LinkFieldsGroup,
     SettingsTitle,
     DatsourceSettingsCont,
+    DsButtonStyled,
 } from "./styles";
+
 import { useLinkedFields } from "./hooks/useLinkedField";
+import { Switch } from "@mui/material";
 
 const DataSourceField = (props) => {
-    const { value, label, onChange } = props;
+    const { value, label, onChange, locked } = props;
     return (
         <InputGroup>
             <Label>{label}</Label>
-            <Input className="ds-input" onChange={onChange} value={value} />
+            <Input
+                className="ds-input"
+                disabled={locked}
+                onChange={onChange}
+                value={value}
+            />
         </InputGroup>
+    );
+};
+
+const DataSourceSwitch = (props) => {
+    const { value, onChange, locked } = props;
+    return (
+        <InputGroup>
+            <Label>Internal Link</Label>
+            <Switch
+                disabled={locked}
+                size={"small"}
+                checked={value}
+                onChange={onChange}
+            />
+        </InputGroup>
+    );
+};
+
+const DataSourceSelect = (props) => {
+    const { value, locked, onChange } = props;
+    const ds = useSelector(({ dataSources }) => dataSources);
+
+    return (
+        <InputGroup>
+            <select
+                disabled={locked}
+                defaultValue={value.toLowerCase()}
+                onChange={onChange}
+            >
+                {ds?.map((field, key) => (
+                    <option key={key} value={field.value}>
+                        {field.name}
+                    </option>
+                ))}
+            </select>
+        </InputGroup>
+    );
+};
+
+const SettingButton = (props) => {
+    const { value, onClick, editing, primary } = props;
+    return (
+        <DsButtonStyled onClick={onClick} editing={editing} primary={primary}>
+            {value}
+        </DsButtonStyled>
     );
 };
 
@@ -44,12 +100,24 @@ urlLabel: ""
  */
 
 export const LinkedField = (props) => {
-    const { name, query, regex, urlLabel } = props;
+    const {
+        name,
+        query,
+        regex,
+        url,
+        urlLabel,
+        internalLink,
+        linkType,
+        locked,
+    } = props;
 
     const onNameChange = (e) => {};
     const onUrlLabelChange = (e) => {};
+    const onUrlChange = (e) => {};
     const onQueryChange = (e) => {};
     const onRegexChange = (e) => {};
+    const onInternalLinkChange = (e) => {};
+    const onDataSourceSelect = (e) => {};
 
     return (
         <LinkFieldsGroup>
@@ -57,11 +125,19 @@ export const LinkedField = (props) => {
                 <DataSourceField
                     value={name}
                     label={"Name"}
+                    locked={locked}
                     onChange={onNameChange}
+                />
+                <DataSourceField
+                    value={regex}
+                    label={"Regex"}
+                    locked={locked}
+                    onChange={onRegexChange}
                 />
                 <DataSourceField
                     value={urlLabel}
                     label={"URL Label"}
+                    locked={locked}
                     onChange={onUrlLabelChange}
                 />
             </InputCol>
@@ -69,12 +145,28 @@ export const LinkedField = (props) => {
                 <DataSourceField
                     value={query}
                     label={"Query"}
+                    locked={locked}
                     onChange={onQueryChange}
                 />
+
                 <DataSourceField
-                    value={regex}
-                    label={"Regex"}
-                    onChange={onRegexChange}
+                    value={url}
+                    label={"URL"}
+                    locked={locked}
+                    onChange={onUrlChange}
+                />
+            </InputCol>
+            <InputCol>
+                <DataSourceSwitch
+                    value={internalLink}
+                    locked={locked}
+                    onChange={onInternalLinkChange}
+                />
+
+                <DataSourceSelect
+                    value={linkType}
+                    locked={locked}
+                    onChange={onDataSourceSelect}
                 />
             </InputCol>
         </LinkFieldsGroup>
@@ -83,14 +175,50 @@ export const LinkedField = (props) => {
 
 export const LinkedFields = (props) => {
     const { linkedFields } = props;
+    const [isEditing, setIsEditing] = useState(false);
+    const onClickSubmit = (e) => {
+        setIsEditing((isEditing) => (isEditing ? false : true));
+    };
+    const onClickEdit = (e) => {
+        setIsEditing((editing) => (editing ? false : true));
+    };
+    const onClickCancel = (e) => {
+        setIsEditing((editing) => (editing ? false : true));
+    };
     if (linkedFields?.length > 0) {
         return (
-            <div className="linked-fields-cont">
-                <SettingsTitle>Linked Fields</SettingsTitle>
-                {linkedFields?.map((val, key) => (
-                    <LinkedField key={key} {...val} />
-                ))}
-            </div>
+            <>
+                <SettingsTitle>
+                    Linked Fields
+                    <div className="edit-buttons">
+                        <SettingButton
+                            value={"Save"}
+                            onClick={onClickSubmit}
+                            editing={isEditing}
+                            primary={true}
+                        />
+                        <SettingButton
+                            value={"Cancel"}
+                            onClick={onClickCancel}
+                            editing={isEditing}
+                            primary={false}
+                        />
+                        <EditOutlinedIcon
+                            fontSize={"small"}
+                            style={{
+                                cursor: "pointer",
+                                display: isEditing ? "none" : "flex",
+                            }}
+                            onClick={onClickEdit}
+                        />
+                    </div>
+                </SettingsTitle>
+                <InputCont>
+                    {linkedFields?.map((val, key) => (
+                        <LinkedField key={key} {...val} locked={!isEditing} />
+                    ))}
+                </InputCont>
+            </>
         );
     }
 
@@ -101,7 +229,7 @@ export const DatasourceSettings = (props) => {
     const { open, linkedFields, name, url } = props;
 
     const isOpen = useMemo(() => open, [open]);
-
+    const [isEditing, setIsEditing] = useState(false);
     const onNameChange = (e) => {
         console.log(e);
     };
@@ -110,23 +238,64 @@ export const DatasourceSettings = (props) => {
         console.log(e);
     };
 
+    const onClickEdit = (e) => {
+        setIsEditing((editing) => (editing ? false : true));
+    };
+
+    const onClickSubmit = (e) => {
+        setIsEditing((editing) => (editing ? false : true));
+    };
+
+    const onClickCancel = (e) => {
+        setIsEditing((editing) => (editing ? false : true));
+    };
+
     if (isOpen) {
         return (
             <DatsourceSettingsCont>
-                <SettingsTitle>Datasource Settings</SettingsTitle>
-                <InputCol>
-                    <DataSourceField
-                        value={name}
-                        label={"Name"}
-                        onChange={onNameChange}
-                    />
-                    <DataSourceField
-                        value={url}
-                        label={"URL"}
-                        onChange={onUrlChange}
-                    />
-                </InputCol>
-                <LinkedFields linkedFields={linkedFields} />
+                <SettingsTitle>
+                    Datasource Settings{" "}
+                    <div className="edit-buttons">
+                        <SettingButton
+                            value={"Save"}
+                            onClick={onClickSubmit}
+                            editing={isEditing}
+                            primary={true}
+                        />
+
+                        <SettingButton
+                            value={"Cancel"}
+                            onClick={onClickCancel}
+                            editing={isEditing}
+                            primary={false}
+                        />
+                        <EditOutlinedIcon
+                            fontSize={"small"}
+                            style={{
+                                cursor: "pointer",
+                                display: isEditing ? "none" : "flex",
+                            }}
+                            onClick={onClickEdit}
+                        />
+                    </div>
+                </SettingsTitle>
+                <InputCont>
+                    <InputCol>
+                        <DataSourceField
+                            locked={!isEditing}
+                            value={name}
+                            label={"Name"}
+                            onChange={onNameChange}
+                        />
+                        <DataSourceField
+                            locked={!isEditing}
+                            value={url}
+                            label={"URL"}
+                            onChange={onUrlChange}
+                        />
+                    </InputCol>
+                </InputCont>
+                <LinkedFields locked={!isEditing} linkedFields={linkedFields} />
             </DatsourceSettingsCont>
         );
     }

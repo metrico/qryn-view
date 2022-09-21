@@ -161,6 +161,7 @@ export default function initialState() {
                 regex: /^.*?traceI[d|D]=(\w+).*$/,
                 query: '${__value.raw}',
                 urlLabel: '',
+                url:'',
                 internalLink: true,
                 linkType: 'Traces'
             },
@@ -172,30 +173,35 @@ export default function initialState() {
                 regex: /^.*?"traceID":"(\w+)".*$/,
                 query: '${__value.raw}',
                 urlLabel: '',
+                url:'',
                 internalLink: true,
                 linkType: 'Traces'
             }
         ],
         dataSources: [{
             type: 'logs',
+            value: 'logs',
             name: 'Logs',
             url: 'http://qryn:3000',
             icon: 'logs_icon'
         },
         {
             type: 'traces',
+            value: 'traces',
             name: 'Traces',
             url: 'http://traces:3000',
             icon: 'traces_icon'
         },
         {
             type: 'metrics',
+            value: 'metrics',
             name: 'Metrics',
             url: 'http://metrics:3000',
             icon: 'metrics_icon'
         },
 
         ],
+
 
         linkTypes: ['logs', 'traces', 'metrics'],
         chartType: "line",
