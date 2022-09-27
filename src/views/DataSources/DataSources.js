@@ -8,6 +8,8 @@ import logs_icon from "./assets/logs_icon.png";
 import traces_icon from "./assets/traces_icon.png";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
     PageContainer,
     Label,
@@ -25,6 +27,9 @@ import { useLinkedFields } from "./hooks/useLinkedField";
 import { Switch } from "@mui/material";
 import setLinkedFields from "./store/setLinkedFields";
 import setDataSources from "./store/setDataSources";
+import { defaultLinkedFields, defaultDataSources } from "./store/defaults";
+import { LinkedFieldItem } from "./classes/LinkedFieldItem";
+import { useNavigate } from "react-router-dom";
 
 const DataSourceField = (props) => {
     const { value, label, onChange, locked } = props;
@@ -55,19 +60,25 @@ const DataSourceSwitch = (props) => {
         </InputGroup>
     );
 };
-
+// inject options first
 const DataSourceSelect = (props) => {
-    const { value, locked, onChange } = props;
-    const ds = useSelector(({ dataSources }) => dataSources);
+    const { value, locked, onChange, opts, label } = props;
+
+    const formattedSelect = useMemo(() => {
+        if (typeof opts[0] === "string") {
+            return opts.map((k) => ({ value: k, name: k }));
+        } else return opts;
+    }, [opts]);
 
     return (
         <InputGroup>
+            {label?.length > 0 && <Label>{label}</Label>}
             <select
                 disabled={locked}
                 defaultValue={value.toLowerCase()}
                 onChange={onChange}
             >
-                {ds?.map((field, key) => (
+                {formattedSelect?.map((field, key) => (
                     <option key={key} value={field.value}>
                         {field.name}
                     </option>
@@ -101,6 +112,12 @@ urlLabel: ""
  */
 
 export const LinkedField = (props) => {
+    // pass fields in here
+    // rename this as '' datasource properties
+    // have the hability to display: fixed fields
+    // multiplier fields (add - remove )
+    // we must have controls for types of groups of fields
+
     const {
         id,
         name,
@@ -115,6 +132,7 @@ export const LinkedField = (props) => {
 
     const dispatch = useDispatch();
     const state = useSelector((store) => store.linkedFields);
+    const dataSources = useSelector((store) => store.dataSources);
     const onLinkedFieldChange = (prop, value) => {
         const arrayClone = JSON.parse(JSON.stringify(state));
         arrayClone.forEach((field) => {
@@ -125,7 +143,7 @@ export const LinkedField = (props) => {
 
         return arrayClone;
     };
-
+    // pass to each field name and action
     const onNameChange = (e) => {
         const value = e.target.value;
         const newVal = onLinkedFieldChange("name", value);
@@ -169,6 +187,13 @@ export const LinkedField = (props) => {
         dispatch(setLinkedFields(newVal));
     };
 
+    const onLinkedFieldRemove = (e) => {
+        const stateCP = JSON.parse(JSON.stringify(state));
+        const filtered = stateCP.filter((f) => f.id !== id);
+        localStorage.setItem("linkedFields", JSON.stringify(filtered));
+        dispatch(setLinkedFields(filtered));
+    };
+
     return (
         <LinkFieldsGroup>
             <InputCol>
@@ -189,6 +214,13 @@ export const LinkedField = (props) => {
                     label={"URL Label"}
                     locked={locked}
                     onChange={onUrlLabelChange}
+                />
+                <DeleteForeverIcon
+                    onClick={onLinkedFieldRemove}
+                    style={{
+                        cursor: "pointer",
+                        display: locked ? "none" : "inline-block",
+                    }}
                 />
             </InputCol>
             <InputCol>
@@ -214,8 +246,10 @@ export const LinkedField = (props) => {
                 />
 
                 <DataSourceSelect
+                    label={""}
                     value={linkType}
                     locked={locked}
+                    opts={dataSources}
                     onChange={onDataSourceSelect}
                 />
             </InputCol>
@@ -224,7 +258,9 @@ export const LinkedField = (props) => {
 };
 
 export const LinkedFields = (props) => {
-    const { linkedFields } = props;
+    const { linkedFields, name } = props;
+
+    const dispatch = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
     const onClickSubmit = (e) => {
         setIsEditing((isEditing) => (isEditing ? false : true));
@@ -235,6 +271,18 @@ export const LinkedFields = (props) => {
     const onClickCancel = (e) => {
         setIsEditing((editing) => (editing ? false : true));
     };
+
+    const onAddLinkedField = () => {
+        const newLinked = new LinkedFieldItem();
+        newLinked.dataSource = name;
+        newLinked.create();
+        const linkedClone = JSON.parse(JSON.stringify(linkedFields));
+        const newList = [...linkedClone, newLinked];
+
+        localStorage.setItem("linkedFields", JSON.stringify(newList));
+        dispatch(setLinkedFields(newList));
+    };
+
     if (linkedFields?.length > 0) {
         return (
             <>
@@ -253,11 +301,22 @@ export const LinkedFields = (props) => {
                             editing={isEditing}
                             primary={false}
                         />
+
+                        <AddIcon
+                            fontSize={"small"}
+                            style={{
+                                cursor: "pointer",
+                                display: isEditing ? "none" : "flex",
+                            }}
+                            onClick={onAddLinkedField}
+                        />
+
                         <EditOutlinedIcon
                             fontSize={"small"}
                             style={{
                                 cursor: "pointer",
                                 display: isEditing ? "none" : "flex",
+                                marginLeft: "30px",
                             }}
                             onClick={onClickEdit}
                         />
@@ -280,8 +339,7 @@ export const DatasourceSettings = (props) => {
     const dispatch = useDispatch();
 
     const state = useSelector(({ dataSources }) => dataSources);
-
-    
+    const visTypes = useSelector(({ visTypes }) => visTypes);
     const onLinkedFieldChange = (prop, value) => {
         const arrayClone = JSON.parse(JSON.stringify(state));
         arrayClone.forEach((field) => {
@@ -299,22 +357,22 @@ export const DatasourceSettings = (props) => {
         const value = e.target.value;
         const newVal = onLinkedFieldChange("name", value);
         localStorage.setItem("dataSources", JSON.stringify(newVal));
-       dispatch(setDataSources(newVal));
+        dispatch(setDataSources(newVal));
     };
 
     const onUrlChange = (e) => {
         const value = e.target.value;
         const newVal = onLinkedFieldChange("url", value);
         localStorage.setItem("dataSources", JSON.stringify(newVal));
-       dispatch(setDataSources(newVal));
+        dispatch(setDataSources(newVal));
     };
 
     const onVisTypeChange = (e) => {
         const value = e.target.value;
-        const newVal = onLinkedFieldChange("visType", value)
-        localStorage.setItem("dataSources", JSON.stringify(newVal))
-        dispatch(setDataSources(newVal))
-    }
+        const newVal = onLinkedFieldChange("visType", value);
+        localStorage.setItem("dataSources", JSON.stringify(newVal));
+        dispatch(setDataSources(newVal));
+    };
 
     const onClickEdit = (e) => {
         setIsEditing((editing) => (editing ? false : true));
@@ -326,6 +384,13 @@ export const DatasourceSettings = (props) => {
 
     const onClickCancel = (e) => {
         setIsEditing((editing) => (editing ? false : true));
+    };
+
+    const onReset = (e) => {
+        const linkedDefaults = [...defaultLinkedFields];
+
+        localStorage.setItem("linkedFields", JSON.stringify(linkedDefaults));
+        dispatch(setLinkedFields(linkedDefaults));
     };
 
     if (isOpen) {
@@ -347,11 +412,18 @@ export const DatasourceSettings = (props) => {
                             editing={isEditing}
                             primary={false}
                         />
+                        <SettingButton
+                            value={"Reset"}
+                            onClick={onReset}
+                            editing={true}
+                            primary={false}
+                        />
                         <EditOutlinedIcon
                             fontSize={"small"}
                             style={{
                                 cursor: "pointer",
                                 display: isEditing ? "none" : "flex",
+                                marginLeft: "30px",
                             }}
                             onClick={onClickEdit}
                         />
@@ -371,15 +443,20 @@ export const DatasourceSettings = (props) => {
                             label={"URL"}
                             onChange={onUrlChange}
                         />
-                                    <DataSourceField
+                        <DataSourceSelect
                             locked={!isEditing}
-                            value={visType}
                             label={"Preferred Visualization Type"}
+                            opts={visTypes}
+                            value={visType}
                             onChange={onVisTypeChange}
                         />
                     </InputCol>
                 </InputCont>
-                <LinkedFields locked={!isEditing} linkedFields={linkedFields} />
+                <LinkedFields
+                    {...props}
+                    locked={!isEditing}
+                    linkedFields={linkedFields}
+                />
             </DatsourceSettingsCont>
         );
     }
@@ -428,7 +505,15 @@ export const Icon = ({ icon }) => {
     }
 };
 
-export function DataSourceItem({ type, name, url, icon, linkedFields, id, visType }) {
+export function DataSourceItem({
+    type,
+    name,
+    url,
+    icon,
+    linkedFields,
+    id,
+    visType,
+}) {
     const [open, setOpen] = useState(false);
 
     const onOpenSettings = (e) => {
@@ -439,10 +524,10 @@ export function DataSourceItem({ type, name, url, icon, linkedFields, id, visTyp
             <div className="ds-item">
                 <Icon icon={icon} />
                 <div className="ds-text">
-                    <div className="ds-type">{type}</div>
+                    <div className="ds-type">{name}</div>
                     <small>
                         {" "}
-                        {name} | {url}
+                        {type} | {url}
                     </small>
                 </div>
                 <SettingsOutlinedIcon
@@ -466,30 +551,10 @@ export function DataSourceItem({ type, name, url, icon, linkedFields, id, visTyp
 }
 
 export function DataSourcesList() {
-    // get here each linked fields
-    
-    // const dispatch = useDispatch()
-
-    // const dataSources = JSON.parse(localStorage.getItem("dataSources"));
-
-    // if(dataSources?.length) {
-    // dispatch(setDataSources(dataSources))    
-    // }
-
-    
-
-    // const linkedFields = JSON.parse(localStorage.getItem("linkedFields"));
-
-    // if(linkedFields?.length) {
-    //     dispatch(setLinkedFields(linkedFields))
-    // }
-
-
     const ds = useSelector(({ dataSources }) => dataSources);
     const lf = useSelector(({ linkedFields }) => linkedFields);
 
     const linked_fields = useLinkedFields(lf);
-
 
     if (ds?.length > 0) {
         return (
@@ -498,7 +563,7 @@ export function DataSourcesList() {
                     <DataSourceItem
                         key={idx}
                         {...item}
-                        linkedFields={linked_fields[item.type]}
+                        linkedFields={linked_fields[item.name]}
                     />
                 ))}
             </div>
@@ -512,8 +577,12 @@ export function DataSourcesList() {
 }
 
 export function DataSourcesHeader() {
+    const navigate = useNavigate();
     return (
         <div className="ds-header">
+            <div
+            style={{display:'flex',alignItems:'center'}}
+            >
             <img
                 src={Logo}
                 alt={"qryyn View"}
@@ -521,14 +590,19 @@ export function DataSourcesHeader() {
                 className={"logo"}
             />{" "}
             <h1>Data Sources</h1>
+            </div>
+   
+            <SettingButton
+                value={"Back"}
+                onClick={() => navigate(-1)}
+                editing={true}
+                primary={false}
+            />
         </div>
     );
 }
 
 export default function DataSources() {
-
-
-    
     const themeState = useSelector((store) => store.theme) || "light";
 
     const theme = useMemo(() => {

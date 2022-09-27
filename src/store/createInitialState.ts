@@ -4,6 +4,13 @@ import { environment } from "../environment/env.dev";
 import stateFromQueryParams from "../helpers/stateFromQueryParams";
 import localService from "../services/localService";
 import localUrl from "../services/localUrl";
+import {
+    defaultLinkedFields,
+    defaultDataSources,
+    defaultDatasourcesFieldTypes,
+    defaultLogsLinkedFieldTypes,
+    defaultLinkedFieldTypes,
+} from "../views/DataSources/store/defaults";
 
 export interface IsDebug {
     isActive: boolean;
@@ -67,34 +74,30 @@ export function date_fm(input: MomentInput): Moment {
 }
 
 export default function initialState() {
-
     const settingsState = () => {
-        const dsSettings = localStorage.getItem("dataSources") || undefined
-        const lfSettings = localStorage.getItem("linkedFields") || undefined
-        let hasDsSettings = false
-        let hasLfSettings = false
-        let dataSourceSettings = []
-        let linkedFieldsSettings = []
-        if(dsSettings !== undefined) {
+        const dsSettings = localStorage.getItem("dataSources") || undefined;
+        const lfSettings = localStorage.getItem("linkedFields") || undefined;
+        let hasDsSettings = false;
+        let hasLfSettings = false;
+        let dataSourceSettings = [];
+        let linkedFieldsSettings = [];
+        if (dsSettings !== undefined) {
             hasDsSettings = true;
             try {
-                dataSourceSettings = JSON.parse(dsSettings)
-            } catch(e) {
-                hasDsSettings = false
-                dataSourceSettings = []
+                dataSourceSettings = JSON.parse(dsSettings);
+            } catch (e) {
+                hasDsSettings = false;
+                dataSourceSettings = [];
             }
-            
-
         }
 
-        if(lfSettings !== undefined) {
+        if (lfSettings !== undefined) {
             hasLfSettings = true;
             try {
-                linkedFieldsSettings = JSON.parse(lfSettings)
-
-            }catch(e) {
+                linkedFieldsSettings = JSON.parse(lfSettings);
+            } catch (e) {
                 hasLfSettings = false;
-                linkedFieldsSettings = []
+                linkedFieldsSettings = [];
             }
         }
 
@@ -102,10 +105,9 @@ export default function initialState() {
             hasDsSettings,
             hasLfSettings,
             dataSourceSettings,
-            linkedFieldsSettings
-        }
-
-    }
+            linkedFieldsSettings,
+        };
+    };
 
     const urlState: URLState = stateFromQueryParams() || initialUrlState;
     const historyService = localService().historyStore();
@@ -193,62 +195,16 @@ export default function initialState() {
 
         leftDataView: [],
         rightDataView: [],
-        linkedFields: settingsState()['hasLfSettings'] ?  settingsState()['linkedFieldsSettings']: [
-            {
-                id: nanoid(),
-                dataSource: "Logs",
-                ds_id: "logs",
-                name: "traceId",
-                regex: "^.*?traceI[d|D]=(w+).*$",
-                query: "${__value.raw}",
-                urlLabel: "",
-                url: "",
-                internalLink: true,
-                linkType: "Traces",
-            },
-            {
-                id: nanoid(),
-                dataSource: "Logs",
-                ds_id: "logs",
-                name: "traceID",
-                regex: '^.*?"traceID":"(w+)".*$/',
-                query: "${__value.raw}",
-                urlLabel: "",
-                url: "",
-                internalLink: true,
-                linkType: "Traces",
-            },
-        ],
-        dataSources: settingsState()['hasDsSettings'] ? settingsState()['dataSourceSettings']: [
-            {
-                id: nanoid(),
-                type: "logs",
-                value: "logs",
-                name: "Logs",
-                url: "http://qryn:3000",
-                icon: "logs_icon",
-                visType:"logs"
-            },
-            {
-                id: nanoid(),
-                type: "traces",
-                value: "traces",
-                name: "Traces",
-                url: "http://traces:3000",
-                icon: "traces_icon",
-                visType:"trace"
-            },
-            {
-                id: nanoid(),
-                type: "metrics",
-                value: "metrics",
-                name: "Metrics",
-                url: "http://metrics:3000",
-                icon: "metrics_icon",
-                visType:"chart"
-            },
-        ],
+        linkedFields: settingsState()["hasLfSettings"]
+            ? settingsState()["linkedFieldsSettings"]
+            :defaultLinkedFields,
+        dataSources: settingsState()["hasDsSettings"]
+            ? settingsState()["dataSourceSettings"]
+            : defaultDataSources,
+        linkedFieldTypes:defaultLinkedFieldTypes,
+        dataSourcesFieldTypes:defaultDatasourcesFieldTypes,
         linkTypes: ["logs", "traces", "metrics"],
+        visTypes: ["chart", "logs", "table", "trace", "graph"],
         chartType: "line",
         resposeType: "",
         notifications: [],

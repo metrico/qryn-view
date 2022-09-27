@@ -12,6 +12,7 @@ export const PageContainer = styled.div`
     position: absolute;
     width: 100%;
     height: 100%;
+    overflow-y:auto;
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -29,6 +30,8 @@ export const PageContainer = styled.div`
         padding-bottom: 20px;
         font-size: 24px;
         display: flex;
+        width:100%;
+        justify-content:space-between;
         align-items: center;
         padding-left: 0px;
         .logo {
@@ -120,6 +123,7 @@ export const InputCol = styled.div`
     margin: 15px 0px;
     margin-left: 14px;
     flex-wrap: wrap;
+    align-items:center;
 `;
 export const InputCont = styled.div`
     padding: 10px;

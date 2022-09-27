@@ -6,10 +6,10 @@ export function useLinkedFields (linkedFields) {
         let fo = {};
         for (let field of linkedFields) {
             if(Object.keys(fo).length > 0) {
-                fo[field.ds_id].push(field)
+                fo[field.dataSource].push(field)
             } else {
-                fo[field.ds_id] = []
-                fo[field.ds_id].push(field)
+                fo[field.dataSource] = []
+                fo[field.dataSource].push(field)
             }
         }
         return fo

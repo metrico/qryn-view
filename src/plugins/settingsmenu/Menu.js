@@ -2,6 +2,7 @@ import * as React from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
+import TuneIcon from '@mui/icons-material/Tune';
 import { useDispatch, useSelector } from "react-redux";
 import CopyButton from "./CopyButton/CopyButton";
 import { styled } from "@mui/material/styles";
@@ -9,6 +10,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen";
 import { MenuButton } from "./styled";
 import {themes} from '../../theme/themes'
+import { Link } from "react-router-dom";
 const StyledMenu = styled((props) => (
     
     <Menu
@@ -66,6 +68,9 @@ export default function ClokiMenu() {
 
         handleClose();
     };
+    const handleDsClick = () => {
+
+    }
     return (
         <div>
             <MenuButton
@@ -93,6 +98,11 @@ export default function ClokiMenu() {
                     <DisplaySettingsIcon style={{ color:qrynTheme.textColor }} /> Query
                     Settings
                 </MenuItem>
+                <MenuItem>
+                <TuneIcon style={{color:qrynTheme.textColor}}/>
+                <Link to="datasources" style={{color:qrynTheme.textColor}}>Datasources</Link>
+                </MenuItem>
+
             </StyledMenu>
         </div>
     );
