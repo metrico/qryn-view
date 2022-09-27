@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@emotion/react";
 import { useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { themes } from "../../theme/themes";
 import Logo from "./assets/qryn-logo.png";
 import metrics_icon from "./assets/metrics_icon.png";
@@ -8,7 +8,6 @@ import logs_icon from "./assets/logs_icon.png";
 import traces_icon from "./assets/traces_icon.png";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-
 import {
     PageContainer,
     Label,
@@ -24,6 +23,8 @@ import {
 
 import { useLinkedFields } from "./hooks/useLinkedField";
 import { Switch } from "@mui/material";
+import setLinkedFields from "./store/setLinkedFields";
+import setDataSources from "./store/setDataSources";
 
 const DataSourceField = (props) => {
     const { value, label, onChange, locked } = props;
@@ -101,6 +102,7 @@ urlLabel: ""
 
 export const LinkedField = (props) => {
     const {
+        id,
         name,
         query,
         regex,
@@ -111,13 +113,61 @@ export const LinkedField = (props) => {
         locked,
     } = props;
 
-    const onNameChange = (e) => {};
-    const onUrlLabelChange = (e) => {};
-    const onUrlChange = (e) => {};
-    const onQueryChange = (e) => {};
-    const onRegexChange = (e) => {};
-    const onInternalLinkChange = (e) => {};
-    const onDataSourceSelect = (e) => {};
+    const dispatch = useDispatch();
+    const state = useSelector((store) => store.linkedFields);
+    const onLinkedFieldChange = (prop, value) => {
+        const arrayClone = JSON.parse(JSON.stringify(state));
+        arrayClone.forEach((field) => {
+            if (field.id === id) {
+                field[prop] = value;
+            }
+        });
+
+        return arrayClone;
+    };
+
+    const onNameChange = (e) => {
+        const value = e.target.value;
+        const newVal = onLinkedFieldChange("name", value);
+        localStorage.setItem("linkedFields", JSON.stringify(newVal));
+        dispatch(setLinkedFields(newVal));
+    };
+    const onUrlLabelChange = (e) => {
+        const value = e.target.value;
+        const newVal = onLinkedFieldChange("urlLabel", value);
+        localStorage.setItem("linkedFields", JSON.stringify(newVal));
+        dispatch(setLinkedFields(newVal));
+    };
+    const onUrlChange = (e) => {
+        const value = e.target.value;
+        const newVal = onLinkedFieldChange("url", value);
+        localStorage.setItem("linkedFields", JSON.stringify(newVal));
+        dispatch(setLinkedFields(newVal));
+    };
+    const onQueryChange = (e) => {
+        const value = e.target.value;
+        const newVal = onLinkedFieldChange("query", value);
+        localStorage.setItem("linkedFields", JSON.stringify(newVal));
+        dispatch(setLinkedFields(newVal));
+    };
+    const onRegexChange = (e) => {
+        const value = e.target.value;
+        const newVal = onLinkedFieldChange("regex", value);
+        localStorage.setItem("linkedFields", JSON.stringify(newVal));
+        dispatch(setLinkedFields(newVal));
+    };
+    const onInternalLinkChange = (e) => {
+        const value = e.target.checked;
+        const newVal = onLinkedFieldChange("internalLink", value);
+        localStorage.setItem("linkedFields", JSON.stringify(newVal));
+        dispatch(setLinkedFields(newVal));
+    };
+    const onDataSourceSelect = (e) => {
+        const value = e.target.value;
+        const newVal = onLinkedFieldChange("linkType", value);
+        localStorage.setItem("linkedFields", JSON.stringify(newVal));
+        dispatch(setLinkedFields(newVal));
+    };
 
     return (
         <LinkFieldsGroup>
@@ -226,17 +276,45 @@ export const LinkedFields = (props) => {
 };
 
 export const DatasourceSettings = (props) => {
-    const { open, linkedFields, name, url } = props;
+    const { open, linkedFields, name, url, id, visType } = props;
+    const dispatch = useDispatch();
+
+    const state = useSelector(({ dataSources }) => dataSources);
+
+    
+    const onLinkedFieldChange = (prop, value) => {
+        const arrayClone = JSON.parse(JSON.stringify(state));
+        arrayClone.forEach((field) => {
+            if (field.id === id) {
+                field[prop] = value;
+            }
+        });
+
+        return arrayClone;
+    };
 
     const isOpen = useMemo(() => open, [open]);
     const [isEditing, setIsEditing] = useState(false);
     const onNameChange = (e) => {
-        console.log(e);
+        const value = e.target.value;
+        const newVal = onLinkedFieldChange("name", value);
+        localStorage.setItem("dataSources", JSON.stringify(newVal));
+       dispatch(setDataSources(newVal));
     };
 
     const onUrlChange = (e) => {
-        console.log(e);
+        const value = e.target.value;
+        const newVal = onLinkedFieldChange("url", value);
+        localStorage.setItem("dataSources", JSON.stringify(newVal));
+       dispatch(setDataSources(newVal));
     };
+
+    const onVisTypeChange = (e) => {
+        const value = e.target.value;
+        const newVal = onLinkedFieldChange("visType", value)
+        localStorage.setItem("dataSources", JSON.stringify(newVal))
+        dispatch(setDataSources(newVal))
+    }
 
     const onClickEdit = (e) => {
         setIsEditing((editing) => (editing ? false : true));
@@ -293,6 +371,12 @@ export const DatasourceSettings = (props) => {
                             label={"URL"}
                             onChange={onUrlChange}
                         />
+                                    <DataSourceField
+                            locked={!isEditing}
+                            value={visType}
+                            label={"Preferred Visualization Type"}
+                            onChange={onVisTypeChange}
+                        />
                     </InputCol>
                 </InputCont>
                 <LinkedFields locked={!isEditing} linkedFields={linkedFields} />
@@ -344,7 +428,7 @@ export const Icon = ({ icon }) => {
     }
 };
 
-export function DataSourceItem({ type, name, url, icon, linkedFields }) {
+export function DataSourceItem({ type, name, url, icon, linkedFields, id, visType }) {
     const [open, setOpen] = useState(false);
 
     const onOpenSettings = (e) => {
@@ -369,10 +453,12 @@ export function DataSourceItem({ type, name, url, icon, linkedFields }) {
             </div>
             <div className="ds-settings">
                 <DatasourceSettings
+                    id={id}
                     linkedFields={linkedFields}
                     name={name}
                     url={url}
                     open={open}
+                    visType={visType}
                 />
             </div>
         </div>
@@ -381,11 +467,29 @@ export function DataSourceItem({ type, name, url, icon, linkedFields }) {
 
 export function DataSourcesList() {
     // get here each linked fields
+    
+    // const dispatch = useDispatch()
+
+    // const dataSources = JSON.parse(localStorage.getItem("dataSources"));
+
+    // if(dataSources?.length) {
+    // dispatch(setDataSources(dataSources))    
+    // }
+
+    
+
+    // const linkedFields = JSON.parse(localStorage.getItem("linkedFields"));
+
+    // if(linkedFields?.length) {
+    //     dispatch(setLinkedFields(linkedFields))
+    // }
+
 
     const ds = useSelector(({ dataSources }) => dataSources);
-    const lf = useSelector(({ labelLinks }) => labelLinks);
+    const lf = useSelector(({ linkedFields }) => linkedFields);
 
     const linked_fields = useLinkedFields(lf);
+
 
     if (ds?.length > 0) {
         return (
@@ -422,7 +526,10 @@ export function DataSourcesHeader() {
 }
 
 export default function DataSources() {
-    const themeState = useSelector(({ theme }) => theme);
+
+
+    
+    const themeState = useSelector((store) => store.theme) || "light";
 
     const theme = useMemo(() => {
         return themes[themeState];

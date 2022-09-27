@@ -1,3 +1,5 @@
+import { nanoid } from "nanoid";
+
 interface DataSourceHeader {
     name: string;
     isDefault: boolean;
@@ -30,6 +32,7 @@ interface SettingsAlerting {
 }
 
 interface LinkedField {
+    id:string;
     name: string;
     regex: RegExp;
     query: string;
@@ -106,12 +109,11 @@ export class LogsDataSource {
             forwardOAuthIdentity: false,
         };
 
-    
-
         this.customHTTPHeader = {
             header: "",
             value: "",
         };
+
         this.settingsAlerting = {
             manageAlertsViaAlertingUI: false,
             alertManagerDataSource: "",
@@ -119,7 +121,7 @@ export class LogsDataSource {
         };
     
         this.linkedFields = [
-            {
+            {   id:nanoid(),
                 name: "traceId",
                 regex: /^.*?traceI[d|D]=(\w+).*$/,
                 query: "${__value.raw}",
@@ -128,7 +130,7 @@ export class LogsDataSource {
                 internalLink: true,
                 dataSource: "Tempo",
             },
-            {
+            {   id:nanoid(),
                 name: "traceID",
                 regex: /^.*?"traceID":"(\w+)".*$/,
                 query: "${__value.raw}",
@@ -140,10 +142,24 @@ export class LogsDataSource {
         ];
     }
 
-
-
     setLinkField(val:LinkedField) {
         this.linkedFields = [...this.linkedFields, val]
     }
 
+    removeLinkedField(val:LinkedField) {
+       let  linkedFieldsCopy = JSON.parse(JSON.stringify(this.linkedFields))
+       const filtered = linkedFieldsCopy.filter((lf:LinkedField)=> lf.id !== val.id)
+       this.linkedFields = filtered;
+    }
+
+    updateLinkedField(val:LinkedField) {
+        let linkedFieldsCopy = JSON.parse(JSON.stringify(this.linkedFields))
+        linkedFieldsCopy.forEach((field:LinkedField)=> {
+            if (field.id === val.id) {
+                field = {...val}
+            }
+        })
+    }
+
 }
+

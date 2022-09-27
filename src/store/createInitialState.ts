@@ -67,6 +67,46 @@ export function date_fm(input: MomentInput): Moment {
 }
 
 export default function initialState() {
+
+    const settingsState = () => {
+        const dsSettings = localStorage.getItem("dataSources") || undefined
+        const lfSettings = localStorage.getItem("linkedFields") || undefined
+        let hasDsSettings = false
+        let hasLfSettings = false
+        let dataSourceSettings = []
+        let linkedFieldsSettings = []
+        if(dsSettings !== undefined) {
+            hasDsSettings = true;
+            try {
+                dataSourceSettings = JSON.parse(dsSettings)
+            } catch(e) {
+                hasDsSettings = false
+                dataSourceSettings = []
+            }
+            
+
+        }
+
+        if(lfSettings !== undefined) {
+            hasLfSettings = true;
+            try {
+                linkedFieldsSettings = JSON.parse(lfSettings)
+
+            }catch(e) {
+                hasLfSettings = false;
+                linkedFieldsSettings = []
+            }
+        }
+
+        return {
+            hasDsSettings,
+            hasLfSettings,
+            dataSourceSettings,
+            linkedFieldsSettings
+        }
+
+    }
+
     const urlState: URLState = stateFromQueryParams() || initialUrlState;
     const historyService = localService().historyStore();
     const linkService = localUrl();
@@ -91,7 +131,8 @@ export default function initialState() {
                     .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
             ),
         time: urlState.time || "", // for instant queries
-        stop: urlState.stop ||
+        stop:
+            urlState.stop ||
             new Date(moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
         from: urlState.from || null,
         to: urlState.to || null,
@@ -152,58 +193,62 @@ export default function initialState() {
 
         leftDataView: [],
         rightDataView: [],
-        labelLinks: [
+        linkedFields: settingsState()['hasLfSettings'] ?  settingsState()['linkedFieldsSettings']: [
             {
                 id: nanoid(),
-                dataSource: 'Logs',
-                ds_id:'logs',
-                name: 'traceId',
-                regex: /^.*?traceI[d|D]=(\w+).*$/,
-                query: '${__value.raw}',
-                urlLabel: '',
-                url:'',
+                dataSource: "Logs",
+                ds_id: "logs",
+                name: "traceId",
+                regex: "^.*?traceI[d|D]=(w+).*$",
+                query: "${__value.raw}",
+                urlLabel: "",
+                url: "",
                 internalLink: true,
-                linkType: 'Traces'
+                linkType: "Traces",
             },
             {
                 id: nanoid(),
-                dataSource: 'Logs',
-                ds_id:'logs',
-                name: 'traceID',
-                regex: /^.*?"traceID":"(\w+)".*$/,
-                query: '${__value.raw}',
-                urlLabel: '',
-                url:'',
+                dataSource: "Logs",
+                ds_id: "logs",
+                name: "traceID",
+                regex: '^.*?"traceID":"(w+)".*$/',
+                query: "${__value.raw}",
+                urlLabel: "",
+                url: "",
                 internalLink: true,
-                linkType: 'Traces'
-            }
+                linkType: "Traces",
+            },
         ],
-        dataSources: [{
-            type: 'logs',
-            value: 'logs',
-            name: 'Logs',
-            url: 'http://qryn:3000',
-            icon: 'logs_icon'
-        },
-        {
-            type: 'traces',
-            value: 'traces',
-            name: 'Traces',
-            url: 'http://traces:3000',
-            icon: 'traces_icon'
-        },
-        {
-            type: 'metrics',
-            value: 'metrics',
-            name: 'Metrics',
-            url: 'http://metrics:3000',
-            icon: 'metrics_icon'
-        },
-
+        dataSources: settingsState()['hasDsSettings'] ? settingsState()['dataSourceSettings']: [
+            {
+                id: nanoid(),
+                type: "logs",
+                value: "logs",
+                name: "Logs",
+                url: "http://qryn:3000",
+                icon: "logs_icon",
+                visType:"logs"
+            },
+            {
+                id: nanoid(),
+                type: "traces",
+                value: "traces",
+                name: "Traces",
+                url: "http://traces:3000",
+                icon: "traces_icon",
+                visType:"trace"
+            },
+            {
+                id: nanoid(),
+                type: "metrics",
+                value: "metrics",
+                name: "Metrics",
+                url: "http://metrics:3000",
+                icon: "metrics_icon",
+                visType:"chart"
+            },
         ],
-
-
-        linkTypes: ['logs', 'traces', 'metrics'],
+        linkTypes: ["logs", "traces", "metrics"],
         chartType: "line",
         resposeType: "",
         notifications: [],
