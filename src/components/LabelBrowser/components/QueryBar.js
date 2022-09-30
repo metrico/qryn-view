@@ -9,7 +9,7 @@ import { Dialog, Switch } from "@mui/material";
 import { useMediaQuery } from "react-responsive";
 import CloseIcon from "@mui/icons-material/Close";
 /**Actions */
-import loadLogs from "../../../actions/loadLogs";
+import getData from "../../../actions/getData";
 import setQueryHistory from "../../../actions/setQueryHistory";
 import setHistoryOpen from "../../../actions/setHistoryOpen";
 import setLinksHistory from "../../../actions/setLinksHistory";
@@ -61,7 +61,7 @@ export const SWITCH_OPTIONS = [
 ];
 export const QueryBar = (props) => {
     const { data, name } = props;
-    const { queryType, limit, id } = data;
+    const { queryType, limit, id, dataSourceType } = data;
     const { hash } = useLocation();
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
@@ -80,7 +80,6 @@ export const QueryBar = (props) => {
     const [queryValid, setQueryValid] = useState(false);
     const [queryValue, setQueryValue] = useState(queryInit(data.expr));
     const [open, setOpen] = useState(false);
-
     useEffect(() => {});
     const saveUrl = localUrl();
     const expr = useMemo(() => {
@@ -88,8 +87,8 @@ export const QueryBar = (props) => {
     }, [data.expr]);
 
     useEffect(() => {
-        const labels = sendLabels(apiUrl, start, stop);
-        if (isEmbed) dispatch(loadLogs(queryInput, queryType, limit, name, id));
+        const labels = sendLabels(dataSourceType, apiUrl, start, stop);
+        if (isEmbed) dispatch(getData(dataSourceType,queryInput, queryType, limit, name, id));
         if (onQueryValid(expr)) {
             return labels.then((data) => {
                 const prevLabels = [...props.data.labels];
@@ -152,6 +151,7 @@ export const QueryBar = (props) => {
             try {
                 const historyUpdated = historyService.add({
                     data: JSON.stringify({
+                        type:'logs',
                         queryInput,
                         queryType,
                         limit,
@@ -175,8 +175,7 @@ export const QueryBar = (props) => {
                 });
 
                 dispatch(panelAction(name, panel));
-
-                dispatch(loadLogs(queryInput, queryType, limit, name, id));
+                dispatch(getData(dataSourceType,queryInput, queryType, limit, name, id));
 
                 const storedUrl = saveUrl.add({
                     data: window.location.href,

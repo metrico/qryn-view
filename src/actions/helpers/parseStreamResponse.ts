@@ -122,7 +122,7 @@ export function parseStreamResponse(responseProps: QueryResult) {
             getAsyncResponse(dispatch(setLogs(messSorted || []))).then(() => {
                 if (messSorted.length === 0) {
                     if (debugMode)
-                        console.log("🚧 loadLogs / getting no messages sorted");
+                        console.log("🚧 getData / getting no messages sorted");
                     dispatch(setIsEmptyView(true));
                 }
 

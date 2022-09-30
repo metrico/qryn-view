@@ -10,6 +10,7 @@ import labelHelpers from "./helpers";
 
 export default function LabelsSelector(props) {
     const { data} = props;
+    const {dataSourceType} = data
     const { 
         JSONClone, 
         updateLabel, 
@@ -18,7 +19,7 @@ export default function LabelsSelector(props) {
 
     const { theme } = useSelector((store) => store);
 
-    const { response, loading } = useLabels();
+    const { response, loading } = useLabels(dataSourceType);
 
     const [labelsResponse, setLabelsResponse] = useState([]);
 

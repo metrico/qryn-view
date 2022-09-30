@@ -6,19 +6,40 @@ function getTimeParsed(time) {
     return time.getTime() + "000000";
 }
 
-export default function useLabels() {
-    const {start,stop,apiUrl} = useSelector(store =>store)
-    const nanoStart = getTimeParsed(start);
-    const nanoEnd = getTimeParsed(stop);
+function getTimeSec(time) {
+    return Math.round(time.getTime() / 1000);
+}
+
+const getUrlFromType = (apiUrl, type, start, end) => {
+    if (type === "metrics") {
+        return `${apiUrl}/api/v1/labels`;
+    } else {
+        return `${apiUrl}/loki/api/v1/label?start=${start}&end=${end}`;
+    }
+};
+const getTimestamp = (time, type) =>
+    ({
+        metrics: getTimeSec(time),
+        logs: getTimeParsed(time),
+    }[type]);
+export default function useLabels(type) {
+    const { start, stop, apiUrl } = useSelector((store) => store);
+
+    let timeStart, timeEnd;
+
+    timeStart = getTimestamp(start, type);
+    timeEnd = getTimestamp(stop, type);
 
     const controller = new AbortController();
 
-    const [url,setUrl] = useState(`${apiUrl}/loki/api/v1/label?start=${nanoStart}&end=${nanoEnd}`);
-    
+    const [url, setUrl] = useState(
+        getUrlFromType(apiUrl, type, timeStart, timeEnd)
+    );
+
     useEffect(() => {
-        setUrl(`${apiUrl}/loki/api/v1/label?start=${nanoStart}&end=${nanoEnd}`)
-    }, [setUrl])
-    
+        setUrl(getUrlFromType(apiUrl, type, timeStart, timeEnd));
+    }, [setUrl, type]);
+
     const origin = useState(window.location.origin);
 
     const headers = useState({
@@ -56,9 +77,6 @@ export default function useLabels() {
 
         apiRequest();
     }, [options, url]);
-    
-    
-
 
     return {
         response,

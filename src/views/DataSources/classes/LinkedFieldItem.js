@@ -1,5 +1,7 @@
 import { nanoid } from "nanoid";
 
+
+// type : LOGS
 export class LinkedFieldItem {
     constructor() {
         this.id = nanoid();

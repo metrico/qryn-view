@@ -35,7 +35,7 @@ export function sortMessagesByTimestamp(
     const mess = messages?.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
     const duration = performance.now() - startTime;
     if (debugMode)
-        console.log("🚧 loadLogs / sorting logs took: ", duration, " ms");
+        console.log("🚧 getData / sorting logs took: ", duration, " ms");
     return mess;
 }
 
@@ -68,7 +68,7 @@ export function mapStreams(streams: any[]) {
     const duration = performance.now() - startTime;
 
     if (debugMode)
-        console.log("🚧 loadLogs / mapping logs took: ", duration, " ms");
+        console.log("🚧 getData / mapping logs took: ", duration, " ms");
     return sortMessagesByTimestamp(messages);
 }
 
@@ -81,6 +81,7 @@ export const responseActions = {
     streams: (props: QueryResult) => parseStreamResponse(props),
     vector: (props: QueryResult) => parseVectorResponse(props),
     matrix: (props: QueryResult) => parseMatrixResponse(props),
+    scalar: (props: QueryResult) => parseMatrixResponse(props)
 };
 
 /**

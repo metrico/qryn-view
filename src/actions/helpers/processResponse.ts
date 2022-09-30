@@ -7,13 +7,14 @@ import { resetNoData } from "./resetNoData";
 import setResponseType from "../setResponseType";
 
 export async function processResponse(
+    type:string,
     response: any,
     dispatch: Function,
     panel: string,
     id: string
 ) {
   
-    const { time } = getTimeParams();
+    const { time } = getTimeParams(type);
     const { queryType, debugMode } = store.getState();
     if (response?.data?.streams?.length === 0) {
         const resultQuery: QueryResult = {

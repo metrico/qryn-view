@@ -15,6 +15,7 @@ function getInstantEP(params: QueryParams): string {
 }
 
 export function getEndpoint(type: QueryType) {
+
     return (params: QueryParams) =>
         ({
             range: getRangeEP(params),

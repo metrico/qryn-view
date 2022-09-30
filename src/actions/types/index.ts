@@ -1,6 +1,6 @@
 import { AxiosRequestHeaders, Method } from "axios";
 
-export type QueryResultType = "streams" | "vector" | "matrix";
+export type QueryResultType = "streams" | "vector" | "matrix" | "scalar";
 
 export type Endpoint = {
     instant: string;

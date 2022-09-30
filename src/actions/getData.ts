@@ -20,21 +20,29 @@ import { getTimeSpan } from "./helpers/getTimeSpan";
  * @param id  the query ID
  * @returns void
  */
-export default function loadLogs(
+
+
+// this one should load logs and metrics data 
+// just change endpoint
+
+
+
+export default function getData(
+    type: string,
     queryInput: string,
     queryType: QueryType,
     limit: number,
     panel: string,
     id: string
 ) {
-
     const { debugMode } = store.getState();
     const options = getQueryOptions();
     const tSpan = getTimeSpan(queryInput)
-    const params = getEndpointParams(queryInput, limit, tSpan);
+    const params = getEndpointParams(type, queryInput, limit, tSpan);
     const endpoint = getEndpoint(queryType)(params);
 
     return async function (dispatch: Function) {
+
         await resetParams(dispatch, panel);
 
         let cancelToken: any;
@@ -42,15 +50,15 @@ export default function loadLogs(
         if (typeof cancelToken != typeof undefined) {
             cancelToken.cancel("Cancelling the previous request");
         }
-
+        
         cancelToken = axios.CancelToken.source();
         options.cancelToken = cancelToken.token;
+
         try {
             await axios
                 ?.get(endpoint, options)
                 ?.then((response) => {
-                    // the panel should be set inside processResponse
-                    processResponse(response, dispatch, panel, id);
+                    processResponse(type, response, dispatch, panel, id);
                 })
                 .catch((error) => {
                     resetNoData(dispatch);
@@ -62,6 +70,7 @@ export default function loadLogs(
                 .finally(() => {
                     dispatch(setLoading(false));
                 });
+                
         } catch (e) {
             console.log(e);
         }

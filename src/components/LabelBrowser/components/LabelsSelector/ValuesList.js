@@ -60,8 +60,6 @@ export const LabelValue = (props) => {
             value.name,
             "="
         );
-      //  console.log(newQuery)
-
         const panel = [...actPanel];
         panel.forEach((query) => {
             if (query.id === props.data.id) {

@@ -51,7 +51,7 @@ export function parseVectorResponse(responseProps: QueryResult) {
                     if (result.length === 0) {
                         if (debugMode)
                             console.log(
-                                "🚧 loadLogs / getting no data from matrix"
+                                "🚧 getData / getting no data from matrix"
                             );
                         dispatch(setIsEmptyView(true));
                         dispatch(setVectorData({}));
@@ -84,7 +84,7 @@ export function parseVectorResponse(responseProps: QueryResult) {
     } catch (e) {
         if (debugMode)
             console.log(
-                "🚧 loadLogs / getting an error from rendering vector type streams"
+                "🚧 getData / getting an error from rendering vector type streams"
             );
         console.log(e);
     }
