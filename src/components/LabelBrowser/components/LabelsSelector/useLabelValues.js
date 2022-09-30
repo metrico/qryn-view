@@ -6,7 +6,12 @@ function getTimeParsed(time) {
     return time.getTime() + "000000";
 }
 
-export default function useLabelValues(label, start, end) {
+const getUrlType = (api, type, label, start, end) => ({
+    'metrics': `${api}/api/v1/label/${label}/values`,
+    'logs':`${api}/loki/api/v1/label/${label}/values?start=${start}&end=${end}`,
+})[type]
+
+export default function useLabelValues(type, label, start, end) {
     const nanoStart = getTimeParsed(start);
     const nanoEnd = getTimeParsed(end);
 
@@ -15,12 +20,13 @@ export default function useLabelValues(label, start, end) {
     const apiUrl = useSelector((store) => store.apiUrl);
 
     const [url, setUrl] = useState(
-        `${apiUrl}/loki/api/v1/label/${label}/values?start=${nanoStart}&end=${nanoEnd}`
+        getUrlType(apiUrl, type, label, nanoStart, nanoEnd)
+       
     );
 
     useEffect(() => {
         setUrl(
-            `${apiUrl}/loki/api/v1/label/${label}/values?start=${nanoStart}&end=${nanoEnd}`
+            getUrlType(apiUrl, type, label, nanoStart, nanoEnd)
         );
     }, [label, setUrl]);
 

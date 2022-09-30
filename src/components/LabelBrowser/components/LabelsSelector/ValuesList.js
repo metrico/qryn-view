@@ -85,13 +85,15 @@ export const LabelValue = (props) => {
 
 export default function ValuesList(props) {
     const dispatch = useDispatch();
-    const { name } = props;
+    const { name, data } = props;
+    const {dataSourceType} = data
     const { start, stop } = useSelector((store) => store);
     const panelQuery = useSelector((store) => store[name]);
 
     // get values hook
 
     const { response, controller, loading } = useLabelValues(
+        dataSourceType,
         props.label,
         start,
         stop
