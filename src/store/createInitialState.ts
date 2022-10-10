@@ -173,6 +173,7 @@ export default function initialState() {
                 expr: "",
                 labels: [], // name: selected:
                 values: [], // label name selected
+                direction: 'forward'
             },
         ],
 
@@ -192,6 +193,7 @@ export default function initialState() {
                 expr: "",
                 labels: [], // name: selected:
                 values: [], // label name selected
+                direction: 'forward'
             },
         ],
 

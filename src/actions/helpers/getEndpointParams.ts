@@ -1,12 +1,13 @@
 import store from "../../store/store";
-import { QueryParams } from "../types";
+import { QueryParams, QueryDirection } from "../types";
 import getTimeParams from "./getTimeParams";
 
 export function getEndpointParams(
     type: string,
     query: string,
     limit: number,
-    tSpan: number
+    tSpan: number,
+    direction:QueryDirection,
 ): QueryParams {
     const localStore = store.getState();
     const { apiUrl, isSplit } = localStore;
@@ -41,6 +42,7 @@ export function getEndpointParams(
         time,
         queryStep,
         limit,
+        direction,
     };
 }
 

@@ -29,17 +29,41 @@ export async function getAsyncResponse(
  */
 
 export function sortMessagesByTimestamp(
-    messages: Message[] //:array sort by timestamp
+    messages: Message[], //:array sort by timestamp,
+    direction="forward"
 ) {
-    const startTime = performance.now();
-    const mess = messages?.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
-    const duration = performance.now() - startTime;
-    if (debugMode)
-        console.log("🚧 getData / sorting logs took: ", duration, " ms");
-    return mess;
+
+    if(direction === 'forward') {
+        return sortMessagesByTimestampAsc(messages)
+    } else {
+        return sortMessagesByTimestampDesc(messages)
+    }
+
+  
+
 }
 
+export function sortMessagesByTimestampAsc(
+    messages: Message[]
+){
 
+    const startTime = performance.now();
+    const mess = messages?.sort((a,b)=> (a.timestamp < b.timestamp ? 1 : -1));
+    const duration = performance.now() - startTime;
+    if(debugMode) console.log("🚧 getData / sorting logs took: ", duration, " ms")
+    return mess
+}
+
+export function sortMessagesByTimestampDesc(
+    messages: Message[]
+){
+  
+    const startTime = performance.now();
+    const mess = messages?.sort((a,b)=> (a.timestamp < b.timestamp ? -1 : 1));
+    const duration = performance.now() - startTime;
+    if(debugMode) console.log("🚧 getData / sorting logs took: ", duration, " ms")
+    return mess
+}
 
 /**
  * 
@@ -47,7 +71,7 @@ export function sortMessagesByTimestamp(
  * @returns streams parsed as message tyoe objects
  */
 
-export function mapStreams(streams: any[]) {
+export function mapStreams(streams: any[], direction="forward") {
     const startTime = performance.now();
     let messages: Message[] = [];
 
@@ -69,7 +93,7 @@ export function mapStreams(streams: any[]) {
 
     if (debugMode)
         console.log("🚧 getData / mapping logs took: ", duration, " ms");
-    return sortMessagesByTimestamp(messages);
+    return sortMessagesByTimestamp(messages, direction);
 }
 
 

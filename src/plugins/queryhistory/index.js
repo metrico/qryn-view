@@ -662,6 +662,7 @@ const QueryHistory = (props) => {
             panel: "left",
             queryInput: "",
             queryType: "range",
+            direction: "forward",
         };
         let logData = {};
         try {
@@ -670,8 +671,26 @@ const QueryHistory = (props) => {
             logData = { ...initialObj };
         }
 
-        const { id, limit, panel, queryInput, queryType, dataSourceType } = logData;
-        dispatch(getData(dataSourceType,queryInput, queryType, limit, panel, id));
+        const {
+            id,
+            limit,
+            panel,
+            queryInput,
+            queryType,
+            dataSourceType,
+            direction,
+        } = logData;
+        dispatch(
+            getData(
+                dataSourceType,
+                queryInput,
+                queryType,
+                limit,
+                panel,
+                id,
+                direction
+            )
+        );
     }
 
     function handleLinkSubmit(link) {
@@ -770,7 +789,7 @@ const QueryHistory = (props) => {
     function handleClose() {
         dispatch(setHistoryOpen(false));
     }
-    
+
     function clearHistory() {
         const historyClean = historyService.clean();
         dispatch(setQueryHistory(historyClean));

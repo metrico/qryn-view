@@ -17,11 +17,21 @@ import { QueryItemToolbar } from "./QueryItemToolbar";
 const QueryContainer = styled.div``;
 
 export default function QueryItem(props) {
-
     // first data load
     useEffect(() => {
-        const { expr, queryType, limit, panel, id, dataSourceType } = props.data;
-        dispatch(getData(dataSourceType,expr, queryType, limit, panel, id));
+        const { expr, queryType, limit, panel, id, dataSourceType, direction } =
+            props.data;
+        dispatch(
+            getData(
+                dataSourceType,
+                expr,
+                queryType,
+                limit,
+                panel,
+                id,
+                direction
+            )
+        );
     }, []);
 
     const { name } = props;

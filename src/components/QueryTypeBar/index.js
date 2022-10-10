@@ -30,6 +30,11 @@ export const SWITCH_OPTIONS = [
     { value: "instant", label: "Instant" },
 ];
 
+export const DIRECTION_SWITCH_OPTIONS = [
+    { value: "forward", label: "Forward" },
+    { value: "backwards", label: "Backwards" },
+];
+
 export default function QueryTypeBar(props) {
     const dispatch = useDispatch();
     const { name, data } = props;
@@ -39,11 +44,12 @@ export default function QueryTypeBar(props) {
     const responseType = useSelector((store) => store.responseType);
 
     const { hash } = useLocation();
-    const { id, queryType, tableView, idRef, isShowTs } = data;
+    const { id, queryType, tableView, idRef, isShowTs, direction } = data;
 
     const [isTableViewSet, setIsTableViewSet] = useState(tableView);
     const [isShowTsSet, setIsShowTsSet] = useState(isShowTs || false);
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(queryType);
+    const [directionSwitch, setDirectionSwitch] = useState(direction);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(hash.replace("#", ""));
@@ -59,6 +65,7 @@ export default function QueryTypeBar(props) {
                 panel.forEach((query) => {
                     if (query.idRef === idRef) {
                         query.queryType = queryMD.queryType;
+                        query.direction = queryMD.direction;
                     }
                 });
                 dispatch(panelAction(name, panel));
@@ -83,6 +90,18 @@ export default function QueryTypeBar(props) {
         });
         dispatch(panelAction(name, panel));
         setQueryTypeSwitch(e);
+    }
+
+    function onDirectionSwitchChange(e) {
+        // modify query type switch value
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.direction = e;
+            }
+        });
+        dispatch(panelAction(name, panel));
+        setDirectionSwitch(e);
     }
 
     function handleTableViewSwitch() {
@@ -111,33 +130,40 @@ export default function QueryTypeBar(props) {
         <ThemeProvider theme={themes[theme]}>
             <QueryTypeCont>
                 <QueryTypeSwitch
+                    label={"Query Type"}
                     options={SWITCH_OPTIONS}
                     onChange={onSwitchChange}
                     defaultActive={queryTypeSwitch}
                 />
+                <QueryTypeSwitch
+                    label={"Direction"}
+                    options={DIRECTION_SWITCH_OPTIONS}
+                    onChange={onDirectionSwitchChange}
+                    defaultActive={directionSwitch}
+                />
                 <QueryLimit {...props} />
 
-                {responseType !== "vector" && (<>
-               
-                    <InputGroup>
-                        <SettingLabel>Table View</SettingLabel>
-                        <Switch
-                            checked={isTableViewSet}
-                            size={"small"}
-                            onChange={handleTableViewSwitch}
-                            inputProps={{ "aria-label": "controlled" }}
-                        />
-                    </InputGroup>
-                               <InputGroup>
-                               <SettingLabel>Timestamp</SettingLabel>
-                               <Switch
-                                   checked={isShowTsSet}
-                                   size={"small"}
-                                   onChange={handleShowTsSwitch}
-                                   inputProps={{ "aria-label": "controlled-ts" }}
-                               />
-                           </InputGroup>
-                           </>
+                {responseType !== "vector" && (
+                    <>
+                        <InputGroup>
+                            <SettingLabel>Table View</SettingLabel>
+                            <Switch
+                                checked={isTableViewSet}
+                                size={"small"}
+                                onChange={handleTableViewSwitch}
+                                inputProps={{ "aria-label": "controlled" }}
+                            />
+                        </InputGroup>
+                        <InputGroup>
+                            <SettingLabel>Timestamp</SettingLabel>
+                            <Switch
+                                checked={isShowTsSet}
+                                size={"small"}
+                                onChange={handleShowTsSwitch}
+                                inputProps={{ "aria-label": "controlled-ts" }}
+                            />
+                        </InputGroup>
+                    </>
                 )}
             </QueryTypeCont>
         </ThemeProvider>

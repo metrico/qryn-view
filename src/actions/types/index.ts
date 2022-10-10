@@ -15,8 +15,10 @@ export type QueryResult = {
     dispatch: Function;
     type: QueryResultType;
     panel: string;
-    id: string
-    ts: number
+    id: string;
+    ts: number;
+    direction: QueryDirection
+
 };
 
 export type Message = {
@@ -41,7 +43,7 @@ export type QueryOptions = {
 };
 
 export type QueryType = "range" | "instant";
-
+export type QueryDirection = "forward" | 'backwards'
 export type QueryParams = {
     queryUrl?: string;
     encodedQuery?: string;
@@ -49,4 +51,5 @@ export type QueryParams = {
     time?: number | string;
     parsedTime?: number | string;
     queryStep: number | string;
+    direction: QueryDirection;
 };

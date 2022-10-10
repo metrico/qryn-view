@@ -59,9 +59,14 @@ export const SWITCH_OPTIONS = [
     { value: "range", label: "Range" },
     { value: "instant", label: "Instant" },
 ];
+
+export const DIRECTION_SWITCH_OPTIONS = [
+    {value: "forward", label : "Forward"},
+    {value: "backwards", label: "Backwards"}
+]
 export const QueryBar = (props) => {
     const { data, name } = props;
-    const { queryType, limit, id, dataSourceType } = data;
+    const { queryType, limit, id, dataSourceType, direction } = data;
     const { hash } = useLocation();
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
@@ -88,7 +93,7 @@ export const QueryBar = (props) => {
 
     useEffect(() => {
         const labels = sendLabels(dataSourceType, apiUrl, start, stop);
-        if (isEmbed) dispatch(getData(dataSourceType,queryInput, queryType, limit, name, id));
+        if (isEmbed) dispatch(getData(dataSourceType,queryInput, queryType, limit, name, id, direction));
         if (onQueryValid(expr)) {
             return labels.then((data) => {
                 const prevLabels = [...props.data.labels];
@@ -175,7 +180,7 @@ export const QueryBar = (props) => {
                 });
 
                 dispatch(panelAction(name, panel));
-                dispatch(getData(dataSourceType,queryInput, queryType, limit, name, id));
+                dispatch(getData(dataSourceType,queryInput, queryType, limit, name, id, direction));
 
                 const storedUrl = saveUrl.add({
                     data: window.location.href,
@@ -287,6 +292,9 @@ export const QuerySetting = (props) => {
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(
         props.data.queryType
     );
+    const [directionSwitch, setDirectionSwitch] = useState(
+        props.data.direction
+    );
     useEffect(() => {
         const urlParams = new URLSearchParams(hash.replace("#", ""));
         const urlPanel = urlParams.get(name);
@@ -299,6 +307,7 @@ export const QuerySetting = (props) => {
                 panel.forEach((query) => {
                     if (query.idRef === idRef) {
                         query.queryType = queryMD.queryType;
+                        query.direction = queryMD.direction;
                     }
                 });
                 dispatch(panelAction(name, panel));
@@ -325,6 +334,18 @@ export const QuerySetting = (props) => {
 
         dispatch(panelAction(name, panel));
         setQueryTypeSwitch(e);
+    }
+    function onDirectionSwitchChange(e) {
+        // modify query type switch value
+        const panel = [...actPanel];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.direction = e;
+            }
+        });
+
+        dispatch(panelAction(name, panel));
+        setDirectionSwitch(e);
     }
 
     function handleTableViewSwitch() {
@@ -364,9 +385,18 @@ export const QuerySetting = (props) => {
                 <SettingsInputContainer>
                     <div className="options-input">
                         <QueryTypeSwitch
+                            label={"Query Type"}
                             options={SWITCH_OPTIONS}
                             onChange={onSwitchChange}
                             defaultActive={queryTypeSwitch}
+                        />
+                    </div>
+                    <div className="options-input">
+                        <QueryTypeSwitch
+                            label={"Direction"}
+                            options={DIRECTION_SWITCH_OPTIONS}
+                            onChange={onDirectionSwitchChange}
+                            defaultActive={directionSwitch}
                         />
                     </div>
                     <div className="options-input">

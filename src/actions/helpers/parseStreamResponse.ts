@@ -90,18 +90,19 @@ function setDataView(panel: string) {
 }
 
 export function parseStreamResponse(responseProps: QueryResult) {
-    const { result, time, debugMode, queryType, panel, id, dispatch } =
+    const { result, time, debugMode, queryType, panel, id, dispatch, direction } =
         responseProps;
     // get sorted messages
-    const messages = mapStreams(result);
+    const messages = mapStreams(result, direction);
     // get current dataView and update action
     const dataView = setDataView(panel);
 
     dispatch(setMatrixData([]));
 
     const tableResult = getStreamTableResult(result);
-    dispatch(setTableData(tableResult));
-    const messSorted = sortMessagesByTimestamp(messages);
+    dispatch(setTableData(tableResult)); 
+
+    const messSorted = sortMessagesByTimestamp(messages, direction);
     function unite(args: any) {
         return [].concat.apply([], args).filter(function (elem, index, self) {
             return self.indexOf(elem) === index;

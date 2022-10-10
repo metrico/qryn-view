@@ -8,7 +8,7 @@ import { getEndpointParams } from "./helpers/getEndpointParams";
 import { resetParams } from "./helpers/resetParams";
 import { resetNoData } from "./helpers/resetNoData";
 import { processResponse } from "./helpers/processResponse";
-import { QueryType } from "./types";
+import { QueryType, QueryDirection } from "./types";
 import { getTimeSpan } from "./helpers/getTimeSpan";
 
 /**
@@ -21,11 +21,8 @@ import { getTimeSpan } from "./helpers/getTimeSpan";
  * @returns void
  */
 
-
-// this one should load logs and metrics data 
+// this one should load logs and metrics data
 // just change endpoint
-
-
 
 export default function getData(
     type: string,
@@ -33,16 +30,16 @@ export default function getData(
     queryType: QueryType,
     limit: number,
     panel: string,
-    id: string
+    id: string,
+    direction: QueryDirection = "forward"
 ) {
     const { debugMode } = store.getState();
     const options = getQueryOptions();
-    const tSpan = getTimeSpan(queryInput)
-    const params = getEndpointParams(type, queryInput, limit, tSpan);
+    const tSpan = getTimeSpan(queryInput);
+    const params = getEndpointParams(type, queryInput, limit, tSpan, direction);
     const endpoint = getEndpoint(queryType)(params);
 
     return async function (dispatch: Function) {
-
         await resetParams(dispatch, panel);
 
         let cancelToken: any;
@@ -50,7 +47,7 @@ export default function getData(
         if (typeof cancelToken != typeof undefined) {
             cancelToken.cancel("Cancelling the previous request");
         }
-        
+
         cancelToken = axios.CancelToken.source();
         options.cancelToken = cancelToken.token;
 
@@ -58,7 +55,17 @@ export default function getData(
             await axios
                 ?.get(endpoint, options)
                 ?.then((response) => {
-                    processResponse(type, response, dispatch, panel, id);
+
+
+                    console.log(response)
+                    processResponse(
+                        type,
+                        response,
+                        dispatch,
+                        panel,
+                        id,
+                        direction
+                    );
                 })
                 .catch((error) => {
                     resetNoData(dispatch);
@@ -70,7 +77,6 @@ export default function getData(
                 .finally(() => {
                     dispatch(setLoading(false));
                 });
-                
         } catch (e) {
             console.log(e);
         }
