@@ -289,6 +289,7 @@ export const QuerySetting = (props) => {
     const { open, handleClose, actPanel, name } = props;
     const [isTableViewSet, setIsTableViewSet] = useState(props.data.tableView);
     const [isShowTsSet, setIsShowTsSet] = useState(props.data.isShowTs)
+    const [isSequenceDiagramViewSet, setIsSequenceDiagramViewSet] = useState(props.data.sequenceDiagramView);
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(
         props.data.queryType
     );
@@ -319,6 +320,9 @@ export const QuerySetting = (props) => {
         setIsTableViewSet(props.data.tableView);
     }, [setIsTableViewSet, props.data.tableView]);
 
+    useEffect(() => {
+        setIsSequenceDiagramViewSet(props.data.sequenceDiagramView);
+    }, [setIsSequenceDiagramViewSet, props.data.sequenceDiagramView]);
     useEffect(()=>{
         setIsShowTsSet(props.data.isShowTs)
     }, [setIsShowTsSet, props.data.isShowTs])
@@ -349,6 +353,16 @@ export const QuerySetting = (props) => {
     }
 
     function handleTableViewSwitch() {
+        // modify table view switch value
+        const panel = [...actPanel];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.tableView = isTableViewSet ? false : true;
+            }
+        });
+        dispatch(panelAction(name, panel));
+    }
+    function handleSequenceDiagramViewSwitch() {
         // modify table view switch value
         const panel = [...actPanel];
         panel.forEach((query) => {
@@ -415,6 +429,15 @@ export const QuerySetting = (props) => {
                                 />
                             </InputGroup>
                             <InputGroup>
+                                <SettingLabel>Sequence Diagram View</SettingLabel>
+                                <Switch
+                                    checked={isSequenceDiagramViewSet}
+                                    size={"small"}
+                                    onChange={handleSequenceDiagramViewSwitch}
+                                    inputProps={{ "aria-label": "controlled" }}
+                                />
+                            </InputGroup>
+                            <InputGroup>
                                      <SettingLabel>Timestamp</SettingLabel>
                                      <Switch
                                          checked={isShowTsSet}
@@ -422,7 +445,7 @@ export const QuerySetting = (props) => {
                                          onChange={handleTsSwitch}
                                          inputProps={{ "aria-label": "controlled-ts" }}
                                      />
-                                 </InputGroup>
+                            </InputGroup>
                         </div>
                     )}
                 

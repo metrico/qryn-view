@@ -23,6 +23,7 @@ export const initialUrlState = {
             step: 5,
             tableView: false,
             isShowTs: true,
+            sequenceDiagramView: false,
             browserOpen: false,
             expr: "",
             labels: [], // name: selected:
@@ -44,6 +45,7 @@ export const initialUrlState = {
             step: 5,
             tableView: false,
             isShowTs: true,
+            sequenceDiagramView: false,
             browserOpen: false,
             expr: "",
             labels: [], // name: selected:

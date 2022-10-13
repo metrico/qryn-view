@@ -55,6 +55,7 @@
     "slate": "^0.73.1",
     "slate-history": "^0.66.0",
     "slate-react": "^0.74.2",
+    "snapsvg": "^0.5.1",
     "tinycolor2": "^1.4.2"
   },
   "scripts": {

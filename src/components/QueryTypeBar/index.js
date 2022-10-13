@@ -10,13 +10,18 @@ import { Switch } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { setLeftPanel } from "../../actions/setLeftPanel";
 import { setRightPanel } from "../../actions/setRightPanel";
-
 const QueryTypeCont = styled.div`
     display: flex;
     padding: 4px;
     background: ${(props) => props.theme.widgetContainer};
     color: ${(props) => props.color};
-    height: 26px;
+    height: 28px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    &::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
 `;
 export function panelAction(name, value) {
     if (name === "left") {
@@ -47,6 +52,7 @@ export default function QueryTypeBar(props) {
     const { id, queryType, tableView, idRef, isShowTs, direction } = data;
 
     const [isTableViewSet, setIsTableViewSet] = useState(tableView);
+    const [isSequenceDiagramViewSet, setIsSequenceDiagramViewSet] = useState(props.data.sequenceDiagramView);
     const [isShowTsSet, setIsShowTsSet] = useState(isShowTs || false);
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(queryType);
     const [directionSwitch, setDirectionSwitch] = useState(direction);
@@ -80,6 +86,9 @@ export default function QueryTypeBar(props) {
         setIsShowTsSet(props.data.isShowTs);
     }, [setIsShowTsSet, props.data.isShowTs]);
 
+    useEffect(() => {
+        setIsSequenceDiagramViewSet(props.data.sequenceDiagramView);
+    }, [setIsSequenceDiagramViewSet, props.data.sequenceDiagramView]);
     function onSwitchChange(e) {
         // modify query type switch value
         const panel = [...panelQuery];
@@ -114,7 +123,16 @@ export default function QueryTypeBar(props) {
         });
         dispatch(panelAction(name, panel));
     }
-
+    function handleSequenceDiagramViewSwitch() {
+        // modify sequence diagram view switch value
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.sequenceDiagramView = isSequenceDiagramViewSet ? false : true;
+            }
+        });
+        dispatch(panelAction(name, panel));
+    }
     function handleShowTsSwitch() {
         // modify table view switch value
         const panel = [...panelQuery];
@@ -125,7 +143,6 @@ export default function QueryTypeBar(props) {
         });
         dispatch(panelAction(name, panel));
     }
-
     return (
         <ThemeProvider theme={themes[theme]}>
             <QueryTypeCont>
@@ -164,6 +181,19 @@ export default function QueryTypeBar(props) {
                             />
                         </InputGroup>
                     </>
+                )}
+                {responseType !== "vector" && (
+                    <span style={{display: 'flex'}}>
+                        <InputGroup>
+                            <SettingLabel>Sequence Diagram View</SettingLabel>
+                            <Switch
+                                checked={isSequenceDiagramViewSet}
+                                size={"small"}
+                                onChange={handleSequenceDiagramViewSwitch}
+                                inputProps={{ "aria-label": "controlled" }}
+                            />
+                        </InputGroup>
+                    </span>
                 )}
             </QueryTypeCont>
         </ThemeProvider>

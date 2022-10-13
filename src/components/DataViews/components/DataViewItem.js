@@ -5,6 +5,7 @@ import { EmptyView } from "../views/EmptyView";
 import LogsView from "../views/LogsView";
 import { MatrixView } from "../views/MatrixView";
 import { VectorView } from "../views/VectorView";
+import { SequenceDiagram } from "./Sequence-diagram/SequenceDiagram";
 
 export function DataViewItem(props) {
     // add a header for table view / json view
@@ -59,6 +60,30 @@ export function DataViewItem(props) {
     const viewHeight = useViewHeight({ type, actualQuery, total, dataView});
 
 
+    if (actualQuery && actualQuery.sequenceDiagramView) {
+        console.log(actualQuery)
+        const valuesToUse = {
+            source: 'source',
+            destination: 'destination'
+        }
+        const sequenceProps = {
+            viewRef,
+            panelSize,
+            viewHeight,
+            onStreamClose,
+            onMaximize,
+            onMinimize,
+            actualQuery,
+            total,
+            type,
+            theight,
+            tableData,
+            streamData,
+            valuesToUse,
+            ...props,
+        };
+        return <SequenceDiagram {...sequenceProps}/>
+    }
     if (actualQuery && type === "matrix" && streamData.length > 0) {
         // return matrix type component
         const { limit } = actualQuery;
@@ -101,7 +126,6 @@ export function DataViewItem(props) {
 
         return <LogsView {...logsProps} />;
     }
-
     if (actualQuery && type === "vector" && streamData?.dataRows?.length > 0) {
         // return vector type (table) component
         const vectorProps = {

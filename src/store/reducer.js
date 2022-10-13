@@ -81,6 +81,8 @@ const reducer = (state, action) => {
             return { ...state, responseType: action.responseType };
         case "SET_IS_TABLE_VIEW":
             return { ...state, isTableView: action.isTableView };
+        case "SET_IS_SEQUENCE_DIAGRAM_VIEW":
+            return { ...state, isTableView: action.isSequenceDiagramView };
         case "SET_SPLIT_VIEW":
             return { ...state, isSplit: action.isSplit };
         case "SET_PANELS_DATA":

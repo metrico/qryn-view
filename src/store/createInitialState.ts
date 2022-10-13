@@ -169,6 +169,7 @@ export default function initialState() {
                 step: 100,
                 tableView: false,
                 isShowTs: true,
+                sequenceDiagramView: false,
                 browserOpen: false,
                 expr: "",
                 labels: [], // name: selected:
@@ -189,6 +190,7 @@ export default function initialState() {
                 step: 100,
                 tableView: false,
                 isShowTs: true,
+                sequenceDiagramView: false,
                 browserOpen: false,
                 expr: "",
                 labels: [], // name: selected:
@@ -214,6 +216,7 @@ export default function initialState() {
         notifications: [],
         tableData: {},
         isTableView: false,
+        isSequenceDiagramView: false,
         theme: urlState.theme || "dark",
         isEmptyView: false,
         isSplit: false,
