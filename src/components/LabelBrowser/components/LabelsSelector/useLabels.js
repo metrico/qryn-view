@@ -22,6 +22,7 @@ const getTimestamp = (time, type) =>
         metrics: getTimeSec(time),
         logs: getTimeParsed(time),
     }[type]);
+    
 export default function useLabels(type) {
     const { start, stop, apiUrl } = useSelector((store) => store);
 
