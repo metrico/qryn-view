@@ -77,7 +77,7 @@ export default function useLabels(type) {
         };
 
         apiRequest();
-    }, [options, url]);
+    }, [options, url, apiUrl]);
 
     return {
         response,

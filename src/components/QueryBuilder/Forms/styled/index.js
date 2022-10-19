@@ -7,7 +7,6 @@ export const InputGroup = styled.div`
     display: flex;
     margin-right: 10px;
     flex-direction: row;
-    margin-top: 5px;
     align-items: center;
     select {
         background: ${(props) => props.theme.inputBg};
