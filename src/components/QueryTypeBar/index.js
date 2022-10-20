@@ -49,7 +49,7 @@ export default function QueryTypeBar(props) {
     const [isTableViewSet, setIsTableViewSet] = useState(tableView);
     const [isShowTsSet, setIsShowTsSet] = useState(isShowTs || false);
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(queryType);
-    const [directionSwitch, setDirectionSwitch] = useState(direction);
+    const [directionSwitch, setDirectionSwitch] = useState(direction || 'forward');
 
     useEffect(() => {
         const urlParams = new URLSearchParams(hash.replace("#", ""));

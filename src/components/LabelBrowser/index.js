@@ -9,7 +9,6 @@ const isEmbed = useSelector(store=>store.isEmbed)
         <div style={{ margin: "3px 0px" }}>
             <QueryBar {...props} className={"query-bar-placeholder"} />
             {!isEmbed && <ValuesList {...props} />}
-            <LabelSelectors {...props}/>
         </div>
     );
 }

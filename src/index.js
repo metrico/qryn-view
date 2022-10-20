@@ -12,7 +12,6 @@ import errorInterceptor from './helpers/error.interceptor';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import DataSources from './views/DataSources/DataSources';
-import Flow from './views/Flow';
 
 errorInterceptor(axios)
 
@@ -24,7 +23,6 @@ ReactDOM.render(
         <Route exact path="/" element={<App />} />
         <Route exact path="/search" element={<App />} />
         <Route exact path="/datasources" element={<DataSources/>}/>
-        <Route exact path="/flow" element={<Flow/>} />
       </Routes>
     </BrowserRouter>
     </Provider>
