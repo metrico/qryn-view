@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 
 function LabelItem(props) {
-    const { selected, label } = props;
+
+    const { selected, label, type } = props;
+   
     const isSelected = useMemo(() => selected, [selected]);
 
     const selectedStyle = useMemo(() => {
@@ -13,24 +15,54 @@ function LabelItem(props) {
         else return {};
     }, [isSelected]);
     return (
-        <small style={selectedStyle} onClick={(e) => props.onClick(label)}>
+        <small
+            className={type}
+            style={selectedStyle}
+            onClick={(e) => props.onClick(label)}
+        >
             {label}
         </small>
     );
 }
 
 export default function LabelsList(props) {
-
-    const { labels } = props;
+    const { labels, data } = props;
+    const { dataSourceType } = data;
 
     const onClick = (e) => {
+        if (e === "Select Metric") {
+            props.onLabelSelected("__name__");
+        }
         props.onLabelSelected(e);
     };
 
-    const lsList = useMemo(() => labels, [labels]);
+    const lsList = useMemo(() => {
+        if (dataSourceType !== "metrics") {
+            return labels;
+        }
+
+        return labels?.filter((f) => f.name !== "__name__");
+    }, [dataSourceType, labels]);
+
+    const metricLabel = useMemo(() => {
+        if (dataSourceType !== "metrics") {
+            return null;
+        }
+        return labels?.filter((f) => f.name === "__name__");
+    }, [dataSourceType, labels]);
 
     return (
         <div className="valuelist-content">
+            {metricLabel !== null && (
+                <LabelItem
+                    type={"metric"}
+                    key={0}
+                    label={"Select Metric"}
+                    selected={metricLabel?.selected}
+                    onClick={onClick}
+                />
+            )}
+
             {lsList &&
                 lsList.map((label, key) => (
                     <LabelItem

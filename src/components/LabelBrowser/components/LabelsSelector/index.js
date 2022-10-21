@@ -9,19 +9,15 @@ import ValuesListStyled from "./ValuesListStyled";
 import labelHelpers from "./helpers";
 
 export default function LabelsSelector(props) {
-    const { data} = props;
-    const {dataSourceType} = data
-    const { 
-        JSONClone, 
-        updateLabel, 
-        updateLabelSelected 
-    } = labelHelpers;
+    const { data } = props;
+    const { dataSourceType } = data;
+    const { JSONClone, updateLabel, updateLabelSelected } = labelHelpers;
+    const [labelsResponse, setLabelsResponse] = useState([]);
+    const [labelsSelected, setLabelsSelected] = useState([]);
 
     const { theme } = useSelector((store) => store);
 
     const { response, loading } = useLabels(dataSourceType);
-
-    const [labelsResponse, setLabelsResponse] = useState([]);
 
     // get previously selected labels
 
@@ -60,14 +56,13 @@ export default function LabelsSelector(props) {
     }, [labels]);
 
     const [labelsState, setLabelsState] = useState(labels);
-    const [labelsSelected, setLabelsSelected] = useState([]);
 
     // memoize currently selected labels
-    
+
     const selected = useMemo(() => labelsSelected, [labelsSelected]);
 
     // match labels from query state with new labels from request to API
-    
+
     useEffect(() => {
         if (labels && labelsFromProps) {
             let clonedLabels = JSONClone(labels);
@@ -85,19 +80,17 @@ export default function LabelsSelector(props) {
                 }
             });
 
-            let lSElected = modLabels
+            let lSelected = modLabels
                 .filter((f) => f.selected === true)
                 .map((m) => m.name);
 
-            setLabelsSelected(lSElected);
+            setLabelsSelected(lSelected);
 
             setLabelsState(modLabels);
         }
     }, [labelsFromProps, labels, setLabelsState, JSONClone]);
 
-
     const onLabelSelected = (e) => {
-    
         setLabelsState((prev) => {
             return updateLabel(prev, e);
         });
@@ -119,9 +112,7 @@ export default function LabelsSelector(props) {
                         )}
                     </div>
 
-                    <ValuesSelector 
-                    {...props} 
-                    labelsSelected={selected} />
+                    <ValuesSelector {...props} labelsSelected={selected} />
                 </div>
             </ValuesListStyled>
         </ThemeProvider>

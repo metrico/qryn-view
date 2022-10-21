@@ -55,9 +55,6 @@ export default function getData(
             await axios
                 ?.get(endpoint, options)
                 ?.then((response) => {
-
-
-                    console.log(response)
                     processResponse(
                         type,
                         response,
