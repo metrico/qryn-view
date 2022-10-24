@@ -1,4 +1,17 @@
 import { useMemo } from "react";
+import styled from '@emotion/styled'
+
+export const EmptyLabels  = (props) => {
+
+    const EmptyCont = styled.div`
+    color:  ${({theme})=> theme.textColor};
+    padding: 10px;
+    `
+
+    return <EmptyCont>
+  No labels available, please adjust API
+    </EmptyCont>
+}
 
 function LabelItem(props) {
 
@@ -53,7 +66,7 @@ export default function LabelsList(props) {
 
     return (
         <div className="valuelist-content">
-            {metricLabel !== null && (
+            {metricLabel !== null && lsList && (
                 <LabelItem
                     type={"metric"}
                     key={0}
@@ -72,6 +85,9 @@ export default function LabelsList(props) {
                         onClick={onClick}
                     />
                 ))}
+                {
+                    !lsList &&  (<EmptyLabels {...props}/>)
+                }
         </div>
     );
 }

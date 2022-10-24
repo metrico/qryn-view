@@ -27,7 +27,7 @@ export default function ValuesSelector(props) {
     return (
         <div className="values-container">
             <div className="values-container-column">
-                {metricsSelection !== null && (
+                {metricsSelection !== null && labels.length > 0 && (
                     <ValuesList {...props} label={"__name__"} type={'metrics'} />
                 )}
                 {labels &&
