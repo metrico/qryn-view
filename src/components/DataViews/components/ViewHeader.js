@@ -94,87 +94,91 @@ export function ViewHeader(props) {
         }
     }, [dataView.labels, props.theme]);
 
-    const { idRef, expr, limit, queryType } = actualQuery;
-
-    return (
-        <ThemeProvider theme={themes[theme]}>
-            <ViewHeaderStyled>
-                <div className="view-header-info">
-                    <span>
-                        <span className="exp">{headerType}</span>
-                    </span>
-                    <Tooltip title={actualQuery?.expr || ""}>
+    if(actualQuery) {
+        const { idRef, expr, limit, queryType } = actualQuery;
+        return (
+            <ThemeProvider theme={themes[theme]}>
+                <ViewHeaderStyled>
+                    <div className="view-header-info">
                         <span>
-                            {" "}
-                            <span className="exp">{actualQuery?.idRef}</span>
+                            <span className="exp">{headerType}</span>
                         </span>
-                    </Tooltip>
-                    {!isTabletOrMobile && (
-                        <>
+                        <Tooltip title={actualQuery?.expr || ""}>
                             <span>
-                                limit:{" "}
-                                <span className="exp">
-                                    {actualQuery?.limit}
+                                {" "}
+                                <span className="exp">{actualQuery?.idRef}</span>
+                            </span>
+                        </Tooltip>
+                        {!isTabletOrMobile && (
+                            <>
+                                <span>
+                                    limit:{" "}
+                                    <span className="exp">
+                                        {actualQuery?.limit}
+                                    </span>
                                 </span>
-                            </span>
+                                <span>
+                                    count: <span className="exp">{total}</span>
+                                </span>
+                            </>
+                        )}
+    
+                        {dataView?.labels?.length > 0 && !isTabletOrMobile && (
                             <span>
-                                count: <span className="exp">{total}</span>
+                                <HeadLabelsCont title={labelsLegend}>
+                                    labels:
+                                    {labelsList}
+                                </HeadLabelsCont>
                             </span>
-                        </>
+                        )}
+                    </div>
+    
+                    <div className="header-actions">
+                        {!fixedSize && (
+                            <>
+                                <InfoIcon
+                                    className="header-icon"
+                                    style={{ fontSize: "12px" }}
+                                    onClick={(e) => setOpen(true)}
+                                />
+                                <CropSquareIcon
+                                    className="header-icon"
+                                    onClick={onMaximize}
+                                    style={{ fontSize: "12px" }}
+                                />
+                                <MinimizeIcon
+                                    className="header-icon"
+                                    onClick={onMinimize}
+                                    style={{ fontSize: "12px" }}
+                                />
+                            </>
+                        )}
+                        {/* {!isEmbed && 
+                               <CloseIcon
+                               className="header-icon"
+                               onClick={onClose}
+                               style={{ fontSize: "12px" }}
+                           />
+                        } */}
+                 
+                    </div>
+                    {open && (
+                        <InfoDialog
+                            labels={dataView.labels || []}
+                            limit={limit}
+                            expr={expr}
+                            queryType={queryType}
+                            idRef={idRef}
+                            open={open}
+                            total={total}
+                            onClose={(e) => setOpen(false)}
+                        />
                     )}
-
-                    {dataView?.labels?.length > 0 && !isTabletOrMobile && (
-                        <span>
-                            <HeadLabelsCont title={labelsLegend}>
-                                labels:
-                                {labelsList}
-                            </HeadLabelsCont>
-                        </span>
-                    )}
-                </div>
-
-                <div className="header-actions">
-                    {!fixedSize && (
-                        <>
-                            <InfoIcon
-                                className="header-icon"
-                                style={{ fontSize: "12px" }}
-                                onClick={(e) => setOpen(true)}
-                            />
-                            <CropSquareIcon
-                                className="header-icon"
-                                onClick={onMaximize}
-                                style={{ fontSize: "12px" }}
-                            />
-                            <MinimizeIcon
-                                className="header-icon"
-                                onClick={onMinimize}
-                                style={{ fontSize: "12px" }}
-                            />
-                        </>
-                    )}
-                    {/* {!isEmbed && 
-                           <CloseIcon
-                           className="header-icon"
-                           onClick={onClose}
-                           style={{ fontSize: "12px" }}
-                       />
-                    } */}
-             
-                </div>
-                {open && (
-                    <InfoDialog
-                        labels={dataView.labels || []}
-                        limit={limit}
-                        expr={expr}
-                        queryType={queryType}
-                        idRef={idRef}
-                        open={open}
-                        total={total}
-                        onClose={(e) => setOpen(false)}
-                    />
-                )}
-            </ViewHeaderStyled>
-        </ThemeProvider>
-    );
+                </ViewHeaderStyled>
+            </ThemeProvider>
+        );
+    }
+   
+return null
+   
 }

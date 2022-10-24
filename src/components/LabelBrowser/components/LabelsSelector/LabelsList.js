@@ -1,22 +1,19 @@
 import { useMemo } from "react";
-import styled from '@emotion/styled'
+import styled from "@emotion/styled";
 
-export const EmptyLabels  = (props) => {
-
+export const EmptyLabels = (props) => {
+    
     const EmptyCont = styled.div`
-    color:  ${({theme})=> theme.textColor};
-    padding: 10px;
-    `
+        color: ${({ theme }) => theme.textColor};
+        padding: 10px;
+    `;
 
-    return <EmptyCont>
-  No labels available, please adjust API
-    </EmptyCont>
-}
+    return <EmptyCont>No labels available, please adjust API</EmptyCont>;
+};
 
 function LabelItem(props) {
-
     const { selected, label, type } = props;
-   
+
     const isSelected = useMemo(() => selected, [selected]);
 
     const selectedStyle = useMemo(() => {
@@ -85,9 +82,7 @@ export default function LabelsList(props) {
                         onClick={onClick}
                     />
                 ))}
-                {
-                    !lsList &&  (<EmptyLabels {...props}/>)
-                }
+            {!lsList && <EmptyLabels {...props} />}
         </div>
     );
 }

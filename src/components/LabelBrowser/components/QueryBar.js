@@ -1,5 +1,5 @@
 /**React */
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useLayoutEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 /**npm */
@@ -61,24 +61,18 @@ export const SWITCH_OPTIONS = [
 ];
 
 export const DIRECTION_SWITCH_OPTIONS = [
-    {value: "forward", label : "Forward"},
-    {value: "backwards", label: "Backwards"}
-]
+    { value: "forward", label: "Forward" },
+    { value: "backwards", label: "Backwards" },
+];
 export const QueryBar = (props) => {
     const { data, name } = props;
     const { queryType, limit, id, dataSourceType, direction } = data;
     const { hash } = useLocation();
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
-    const {
-        apiUrl,
-        historyOpen,
-        isEmbed,
-        theme,
-        queryHistory,
-        start,
-        stop,
-    } = useSelector((store) => store);
+    const { apiUrl, historyOpen, isEmbed, theme, queryHistory, start, stop } =
+        useSelector((store) => store);
+    const isSplit = useSelector((store) => store.isSplit);
     const panelQuery = useSelector((store) => store[name]);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
     const [queryInput, setQueryInput] = useState(data.expr);
@@ -93,12 +87,24 @@ export const QueryBar = (props) => {
 
     useEffect(() => {
         const labels = sendLabels(dataSourceType, apiUrl, start, stop);
-        if (isEmbed) dispatch(getData(dataSourceType,queryInput, queryType, limit, name, id, direction));
+        if (isEmbed)
+            dispatch(
+                getData(
+                    dataSourceType,
+                    queryInput,
+                    queryType,
+                    limit,
+                    name,
+                    id,
+                    direction
+                )
+            );
         if (onQueryValid(expr)) {
             return labels.then((data) => {
                 const prevLabels = [...props.data.labels];
                 const prevMap = prevLabels.map((m) => m.name) || [];
                 const newLabels = [...data];
+
                 if (newLabels.length > 0) {
                     if (prevMap.length > 0) {
                         newLabels.forEach((l) => {
@@ -133,6 +139,7 @@ export const QueryBar = (props) => {
         const queryParams = new URLSearchParams(hash.replace("#", ""));
         const multiline = e.map((text) => text.children[0].text).join("\n");
         const panel = [...panelQuery];
+
         panel.forEach((query) => {
             if (query.id === id) {
                 query.expr = multiline;
@@ -154,9 +161,11 @@ export const QueryBar = (props) => {
 
         if (onQueryValid(queryInput)) {
             try {
+                // set new query into panel data history
+
                 const historyUpdated = historyService.add({
                     data: JSON.stringify({
-                        type:'logs',
+                        type: "logs",
                         queryInput,
                         queryType,
                         limit,
@@ -168,8 +177,12 @@ export const QueryBar = (props) => {
 
                 dispatch(setQueryHistory(historyUpdated));
 
+                // Decode query to translate into labels selection
+
                 decodeQuery(queryInput, apiUrl, props.data.labels);
                 const labelsDecoded = decodeExpr(data.expr);
+
+                // Update panels into store
 
                 const panel = [...panelQuery];
                 panel.forEach((query) => {
@@ -180,7 +193,19 @@ export const QueryBar = (props) => {
                 });
 
                 dispatch(panelAction(name, panel));
-                dispatch(getData(dataSourceType,queryInput, queryType, limit, name, id, direction));
+                dispatch(
+                    getData(
+                        dataSourceType,
+                        queryInput,
+                        queryType,
+                        limit,
+                        name,
+                        id,
+                        direction
+                    )
+                );
+
+                // store into history
 
                 const storedUrl = saveUrl.add({
                     data: window.location.href,
@@ -193,7 +218,6 @@ export const QueryBar = (props) => {
             }
         } else {
             dispatch(setIsEmptyView(true));
-
             console.log("Please make a log query", expr);
         }
     };
@@ -213,9 +237,10 @@ export const QueryBar = (props) => {
                 className={css`
                     max-width: 100%;
                 `}
+                id={id}
             >
                 <ThemeProvider theme={themes[theme]}>
-                    <MobileTopQueryMenu>
+                    <MobileTopQueryMenu isSplit={isSplit}>
                         <div
                             className={css`
                                 display: flex;
@@ -225,9 +250,11 @@ export const QueryBar = (props) => {
 
                             <ShowQuerySettingsButton
                                 {...props}
+                                isSplit={isSplit}
                                 isMobile={true}
                                 onClick={showQuerySettings}
                             />
+
                             <HistoryButton
                                 queryLength={queryHistory.length}
                                 handleHistoryClick={handleHistoryClick}
@@ -242,7 +269,7 @@ export const QueryBar = (props) => {
                         />
                     </MobileTopQueryMenu>
                     <QueryBarContainer>
-                        <ShowLabelsButton {...props} />
+                        {!isSplit && <ShowLabelsButton {...props} />}
 
                         <QueryEditor
                             onQueryChange={handleQueryChange}
@@ -251,20 +278,27 @@ export const QueryBar = (props) => {
                             onKeyDown={handleInputKeyDown}
                         />
 
-                        <HistoryButton
-                            queryLength={queryHistory.length}
-                            handleHistoryClick={handleHistoryClick}
-                        />
+                        {!isSplit && (
+                            <>
+                                <HistoryButton
+                                    queryLength={queryHistory.length}
+                                    handleHistoryClick={handleHistoryClick}
+                                />
 
-                        <ShowLogsButton
-                            disabled={!queryValid}
-                            onClick={onSubmit}
-                            isMobile={false}
-                        />
+                                <ShowLogsButton
+                                    disabled={!queryValid}
+                                    onClick={onSubmit}
+                                    isMobile={false}
+                                />
+                            </>
+                        )}
                     </QueryBarContainer>
 
-                    {!isTabletOrMobile && <QueryTypeBar {...props} />}
-                    {isTabletOrMobile && (
+                    {!isTabletOrMobile && !isSplit && (
+                        <QueryTypeBar {...props} />
+                    )}
+
+                    {(isTabletOrMobile || isSplit) && (
                         <QuerySetting
                             {...props}
                             open={open}
@@ -288,7 +322,7 @@ export const QuerySetting = (props) => {
     const { id, idRef } = props.data;
     const { open, handleClose, actPanel, name } = props;
     const [isTableViewSet, setIsTableViewSet] = useState(props.data.tableView);
-    const [isShowTsSet, setIsShowTsSet] = useState(props.data.isShowTs)
+    const [isShowTsSet, setIsShowTsSet] = useState(props.data.isShowTs);
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(
         props.data.queryType
     );
@@ -319,9 +353,9 @@ export const QuerySetting = (props) => {
         setIsTableViewSet(props.data.tableView);
     }, [setIsTableViewSet, props.data.tableView]);
 
-    useEffect(()=>{
-        setIsShowTsSet(props.data.isShowTs)
-    }, [setIsShowTsSet, props.data.isShowTs])
+    useEffect(() => {
+        setIsShowTsSet(props.data.isShowTs);
+    }, [setIsShowTsSet, props.data.isShowTs]);
 
     function onSwitchChange(e) {
         // modify query type switch value
@@ -360,15 +394,14 @@ export const QuerySetting = (props) => {
     }
 
     function handleTsSwitch() {
-
         const panel = [...actPanel];
-        panel.forEach((query)=>{
-            if(query.id === id) {
+        panel.forEach((query) => {
+            if (query.id === id) {
                 query.isShowTs = isShowTsSet ? false : true;
             }
-        })
+        });
 
-        dispatch(panelAction(name,panel))
+        dispatch(panelAction(name, panel));
     }
 
     return (
@@ -415,19 +448,18 @@ export const QuerySetting = (props) => {
                                 />
                             </InputGroup>
                             <InputGroup>
-                                     <SettingLabel>Timestamp</SettingLabel>
-                                     <Switch
-                                         checked={isShowTsSet}
-                                         size={"small"}
-                                         onChange={handleTsSwitch}
-                                         inputProps={{ "aria-label": "controlled-ts" }}
-                                     />
-                                 </InputGroup>
+                                <SettingLabel>Timestamp</SettingLabel>
+                                <Switch
+                                    checked={isShowTsSet}
+                                    size={"small"}
+                                    onChange={handleTsSwitch}
+                                    inputProps={{
+                                        "aria-label": "controlled-ts",
+                                    }}
+                                />
+                            </InputGroup>
                         </div>
                     )}
-                
-                       
-                   
                 </SettingsInputContainer>
             </SettingCont>
         </Dialog>

@@ -16,6 +16,22 @@ import { QueryItemToolbar } from "./QueryItemToolbar";
 
 const QueryContainer = styled.div``;
 
+const panelAction = (panel, data) => {
+    if (panel === "left") {
+        return setLeftPanel(data);
+    } else {
+        return setRightPanel(data);
+    }
+};
+
+const dataViewAction = (panel, data) => {
+    if (panel === "left") {
+        return setLeftDataView(data);
+    } else {
+        return setRightDataView(data);
+    }
+};
+
 export default function QueryItem(props) {
     // first data load
     useEffect(() => {
@@ -46,34 +62,34 @@ export default function QueryItem(props) {
 
     const dispatch = useDispatch();
     const theme = useSelector((store) => store.theme);
-    const leftPanel = useSelector((store) => store.left);
-    const rightPanel = useSelector((store) => store.right);
-    const leftDV = useSelector((store) => store.leftDataView);
-    const rightDV = useSelector((store) => store.rightDataView);
+    const dataView = useSelector((store) => store[`${name}DataView`]);
+    const panelSelected = useSelector((store) => store[name]);
 
     const isQueryOpen = useState(true);
 
+    function filterPanel(panel) {
+        if (panel?.length > 1) {
+            return panel?.filter((query) => query?.id !== props?.data?.id);
+        } else {
+            return panel;
+        }
+    }
+
     const onDeleteQuery = () => {
-        const filterPanel = (panel) => {
-            if (panel.length > 1) {
-                return panel.filter((query) => query.id !== props.data.id);
-            } else {
-                return panel;
-            }
-        };
-        if (name === "left") {
-            const lfiltered = filterPanel(leftPanel);
-            const lviewFiltered = filterPanel(leftDV);
-            dispatch(setLeftPanel(lfiltered));
-            dispatch(setLeftDataView(lviewFiltered));
+        const filtered = filterPanel(panelSelected);
+
+        const viewFiltered = filterPanel(dataView);
+
+        if (filtered) {
+            dispatch(panelAction(name, filtered));
+        }
+
+        if (viewFiltered) {
+            dispatch(dataViewAction(name, viewFiltered));
         }
 
         if (name === "right") {
-            const rfiltered = filterPanel(rightPanel);
-            const rviewFiltered = filterPanel(rightDV);
-            dispatch(setRightPanel(rfiltered));
-            dispatch(setRightDataView(rviewFiltered));
-            if (rfiltered.length === 0) {
+            if (filtered.length === 0) {
                 dispatch(setSplitView(false));
             }
         }
@@ -109,15 +125,9 @@ export default function QueryItem(props) {
             return setNewPanel(lastIdx, panel, idRef);
         };
 
-        if (name === "left") {
-            const lPanel = setNewPanelData(leftPanel);
-            dispatch(setLeftPanel(lPanel));
-        }
+        const panelData = setNewPanelData(panelSelected);
 
-        if (name === "right") {
-            const rPanel = setNewPanelData(rightPanel);
-            dispatch(setRightPanel(rPanel));
-        }
+        dispatch(panelAction(name, panelData));
     };
 
     return (
