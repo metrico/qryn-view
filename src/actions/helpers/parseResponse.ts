@@ -114,6 +114,7 @@ export const responseActions = {
     vector: (props: QueryResult) => parseVectorResponse(props),
     matrix: (props: QueryResult) => parseMatrixResponse(props),
     scalar: (props: QueryResult) => parseMatrixResponse(props),
+    flux: (props: QueryResult) => parseVectorResponse(props)
 };
 
 /**
@@ -122,6 +123,7 @@ export const responseActions = {
  */
 
 export async function parseResponse(responseProps: QueryResult) {
+    console.log(responseProps)
     const { type }: { type: QueryResultType } = responseProps;
     responseActions[type](responseProps);
 }

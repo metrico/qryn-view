@@ -58,6 +58,7 @@ export function DataViewItem(props) {
 
     const viewHeight = useViewHeight({ type, actualQuery, total, dataView});
 
+    console.log(type)
 
     if (actualQuery && type === "matrix" && streamData.length > 0) {
         // return matrix type component

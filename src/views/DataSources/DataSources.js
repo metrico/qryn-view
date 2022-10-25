@@ -552,6 +552,8 @@ export function DataSourceItem({
 
 export function DataSourcesList() {
     const ds = useSelector(({ dataSources }) => dataSources);
+
+    console.log(ds)
     const lf = useSelector(({ linkedFields }) => linkedFields);
 
     const linked_fields = useLinkedFields(lf);

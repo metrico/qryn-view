@@ -207,7 +207,7 @@ export default function initialState() {
             : defaultDataSources,
         linkedFieldTypes:defaultLinkedFieldTypes,
         dataSourcesFieldTypes:defaultDatasourcesFieldTypes,
-        linkTypes: ["logs", "traces", "metrics"],
+        linkTypes: ["logs", "traces", "metrics", "flux"],
         visTypes: ["chart", "logs", "table", "trace", "graph"],
         chartType: "line",
         resposeType: "",

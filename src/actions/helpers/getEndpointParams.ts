@@ -18,9 +18,11 @@ export function getEndpointParams(
 
     let stepCalc = 0;
     stepCalc = wWidth / Math.round(((wWidth / tSpan) * 10) / splitVal);
+    
     if (stepCalc === 0) {
         stepCalc = 1;
     }
+
     const queryStep = `&step=${stepCalc}`;
     const encodedQuery = `${encodeURIComponent(query)}`;
 
@@ -31,6 +33,9 @@ export function getEndpointParams(
             break;
         case "metrics":
             queryUrl = `${url}/api/v1`;
+            break;
+        case "flux":
+            queryUrl = `${url}/api/v2/query`;
             break;
         default:
             queryUrl = `${url}/loki/api/v1`;

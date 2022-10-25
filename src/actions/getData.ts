@@ -10,6 +10,7 @@ import { resetNoData } from "./helpers/resetNoData";
 import { processResponse } from "./helpers/processResponse";
 import { QueryType, QueryDirection } from "./types";
 import { getTimeSpan } from "./helpers/getTimeSpan";
+import {convertFlux, csvJSON} from "./helpers/convertFlux";
 
 /**
  *
@@ -34,10 +35,10 @@ export default function getData(
     direction: QueryDirection = "forward"
 ) {
     const { debugMode } = store.getState();
-    const options = getQueryOptions();
+    const options = getQueryOptions(type);
     const tSpan = getTimeSpan(queryInput);
     const params = getEndpointParams(type, queryInput, limit, tSpan, direction);
-    const endpoint = getEndpoint(queryType)(params);
+    const endpoint = getEndpoint(type, queryType)(params);
 
     return async function (dispatch: Function) {
         await resetParams(dispatch, panel);
@@ -52,6 +53,55 @@ export default function getData(
         options.cancelToken = cancelToken.token;
 
         try {
+            if (type === "flux") {
+                const res = async (res:any) => await convertFlux(res);
+                await axios
+                    ?.post(endpoint, queryInput, options)
+                    ?.then((response) => {
+                        processResponse(type, response, dispatch, panel, id, direction)
+              
+                    })
+                    .catch((error) => {
+                        resetNoData(dispatch);
+                        console.log(error);
+                        dispatch(setIsEmptyView(true));
+                        dispatch(setLoading(false));
+                        if (debugMode) {
+                            console.log("Error loading flux data", error);
+                        }
+                    })
+                    .finally(() => {
+       
+                        dispatch(setLoading(false));
+                    });
+            } else {
+                await axios
+                    ?.get(endpoint, options)
+                    ?.then((response) => {
+                        processResponse(
+                            type,
+                            response,
+                            dispatch,
+                            panel,
+                            id,
+                            direction
+                        );
+                    })
+                    .catch((error) => {
+                        resetNoData(dispatch);
+                        dispatch(setIsEmptyView(true));
+                        dispatch(setLoading(false));
+                        if (debugMode)
+                            console.log(
+                                "getting an error from response: ",
+                                error
+                            );
+                    })
+                    .finally(() => {
+                        dispatch(setLoading(false));
+                    });
+            }
+
             await axios
                 ?.get(endpoint, options)
                 ?.then((response) => {

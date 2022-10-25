@@ -113,6 +113,17 @@ export const defaultMetricsDataSource = {
     visType: "chart",
 };
 
+
+export const defaultFluxDataSource = {
+    id: nanoid(),
+    type: "flux",
+    value: "flux",
+    name: "Flux",
+    url: "http://flux:3000",
+    icon: "flux_icon",
+    visType: "chart",
+};
+
 export const defaultLogsDatasourceFieldTypes = {
     type: "readonly",
     name: "input",
@@ -144,4 +155,5 @@ export const defaultDataSources = [
     defaultLogsDataSource,
     defaultTracesDataSource,
     defaultMetricsDataSource,
+    defaultFluxDataSource,
 ];

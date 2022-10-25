@@ -1,6 +1,21 @@
 import { QueryOptions } from "../types";
 
-export function getQueryOptions():QueryOptions {
+export function getQueryOptions(type:string):QueryOptions {
+
+    if(type === 'flux') {
+        return {
+            method:"POST",
+           
+            headers: {
+                'Accept':'application/csv',
+                'Content-type':'application/vnd.flux',
+                "Access-Control-Allow-Origin": window.location.origin,
+              
+
+            }
+        }
+    }
+
     return {
         method: "GET",
         headers: {

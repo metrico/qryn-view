@@ -1,3 +1,4 @@
+import moment from "moment";
 import { setColumnsData } from ".";
 import store from "../../store/store";
 import setIsEmptyView from "../setIsEmptyView";
@@ -6,7 +7,7 @@ import { setRightDataView } from "../setRightDataView";
 import { setVectorData } from "../setVectorData";
 import { QueryResult } from "../types";
 import { getAsyncResponse } from "./parseResponse";
-import { prepareCols } from "./prepareCols";
+import { prepareCols, prepareFluxCols } from "./prepareCols";
 import { prepareVectorRows } from "./prepareVectorRows";
 
 /**
@@ -31,61 +32,164 @@ function setDataView(panel: string) {
 }
 
 export function parseVectorResponse(responseProps: QueryResult) {
-    const { result, debugMode, dispatch, panel, id } = responseProps;
+    const { result, debugMode, dispatch, panel, id, type } = responseProps;
 
-    try {
-        const colsData = prepareCols(result);
-        if (colsData.length > 0) {
-            const columnsData = setColumnsData(colsData);
-            const dataRows: any = prepareVectorRows(result);
-            const vectorTableData = {
-                columnsData,
-                dataRows,
-                panel,
-                id,
-            };
-            if (columnsData.length > 0 && dataRows.length > 0) {
-                getAsyncResponse(
-                    dispatch(setVectorData(vectorTableData || {}))
-                ).then(() => {
-                    if (result.length === 0) {
-                        if (debugMode)
-                            console.log(
-                                "🚧 getData / getting no data from matrix"
-                            );
-                        dispatch(setIsEmptyView(true));
-                        dispatch(setVectorData({}));
-                    }
-                    dispatch(setIsEmptyView(false));
-                });
-                const panelResult = {
+    console.log(type)
+
+    if (type === "flux") {
+        try {
+
+            const colsData = prepareFluxCols(result);
+            console.log(colsData);
+
+
+            const timeAccessor = (result:any) => {
+
+                const firstRow = result[0]
+
+                const rowEntries = Object.entries(firstRow)
+
+                if(rowEntries) {
+
+                    const timeRow = rowEntries.find(([_,val]) => {
+                        return moment.isDate(val)
+                    })
+
+                    return timeRow?.[0] || null
+
+                }
+
+            }
+
+
+            if (colsData.length > 0) {
+
+                console.log(result)
+                const tA = timeAccessor(result)
+                const columnsData = setColumnsData(colsData,type, tA );
+
+               
+
+              console.log(tA)
+
+                const dataRows: any = prepareVectorRows(result,type);
+
+                const vectorTableData = {
+                    columnsData,
+                    dataRows,
+                    panel,
                     id,
-                    type: "vector",
-                    data: vectorTableData || {},
-                    total: vectorTableData?.dataRows?.length || 0,
                 };
-                const dataView = setDataView(panel)
-                const { action, state } = dataView;
-                const prevDV = store.getState()?.[state];
-                if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
-                    let newPanel = [];
-                    dispatch(action([]));
-                    const filtered = prevDV.filter(
-                        (dv: any) => dv.id !== panelResult.id
-                    );
-                    newPanel = [...filtered, { ...panelResult }];
-                    dispatch(action(newPanel));
-                } else {
-                    let newPanel = [...prevDV, panelResult];
-                    dispatch(action(newPanel));
+
+                    console.log(vectorTableData)
+
+
+                if (columnsData?.length > 0 && dataRows?.length > 0) {
+                //    getAsyncResponse(
+                        dispatch(setVectorData(vectorTableData || {}))
+                        
+                    //     .then(
+                    //         () => {
+                    //             if (result.length > 0) {
+                    //                 if (debugMode) {
+                    //                     console.log(
+                    //                         "🚧 getData / getting no data from flux vector"
+                    //                     );
+                    //                     dispatch(setIsEmptyView(true));
+                    //                     dispatch(setVectorData({}));
+                    //                 }
+                    //             }
+                    //             dispatch(setIsEmptyView(false));
+                    //         }
+                    //     )
+                    // );
+                    const panelResult = {
+                        id,
+                        type: "vector",
+                        data: vectorTableData,
+                    };
+                    const dataView = setDataView(panel);
+                    const { action, state } = dataView;
+                    const prevDV = store.getState()?.[state];
+
+                    if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
+                        let newPanel = [];
+                        dispatch(action([]));
+                        const filtered = prevDV.filter(
+                            (dv: any) => dv.id !== panelResult.id
+                        );
+                        newPanel = [...filtered, { ...panelResult }];
+
+                        dispatch(action(newPanel));
+
+                    } else {
+
+                        let newPanel = [...prevDV, panelResult];
+                        dispatch(action(newPanel));
+                    }
                 }
             }
+        } catch (e) {
+            console.log(e);
         }
-    } catch (e) {
-        if (debugMode)
-            console.log(
-                "🚧 getData / getting an error from rendering vector type streams"
-            );
-        console.log(e);
+    } else {
+        try {
+            const colsData = prepareCols(result);
+
+            if (colsData.length > 0) {
+                const columnsData = setColumnsData(colsData,type,null);
+                const dataRows: any = prepareVectorRows(result);
+                const vectorTableData = {
+                    columnsData,
+                    dataRows,
+                    panel,
+                    id,
+                };
+                console.log(columnsData)
+                console.log(dataRows)
+                if (columnsData.length > 0 && dataRows.length > 0) {
+                    getAsyncResponse(
+                        dispatch(setVectorData(vectorTableData || {}))
+                    ).then(() => {
+                        if (result.length === 0) {
+                            if (debugMode)
+                                console.log(
+                                    "🚧 getData / getting no data from matrix"
+                                );
+                            dispatch(setIsEmptyView(true));
+                            dispatch(setVectorData({}));
+                        }
+                        dispatch(setIsEmptyView(false));
+                    });
+                    const panelResult = {
+                        id,
+                        type: "vector",
+                        data: vectorTableData || {},
+                        total: vectorTableData?.dataRows?.length || 0,
+                    };
+                    const dataView = setDataView(panel);
+                    const { action, state } = dataView;
+                    const prevDV = store.getState()?.[state];
+                    if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
+                        let newPanel = [];
+                        dispatch(action([]));
+                        const filtered = prevDV.filter(
+                            (dv: any) => dv.id !== panelResult.id
+                        );
+                        newPanel = [...filtered, { ...panelResult }];
+                        dispatch(action(newPanel));
+                    } else {
+                        let newPanel = [...prevDV, panelResult];
+                        dispatch(action(newPanel));
+                    }
+                }
+            }
+        } catch (e) {
+            if (debugMode)
+                console.log(
+                    "🚧 getData / getting an error from rendering vector type streams"
+                );
+            console.log(e);
+        }
     }
 }
