@@ -28,3 +28,4 @@ export function getEndpoint(type: string, queryType: QueryType) {
             instant: getInstantEP(type, params),
         }[queryType]);
 }
+

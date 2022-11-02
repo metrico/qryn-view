@@ -8,14 +8,18 @@ export function getEndpointParams(
     limit: number,
     tSpan: number,
     direction:QueryDirection,
+    settingUrl = ''
 ): QueryParams {
+
+    // in here should add the apiUrl from settings 
+
+
     const localStore = store.getState();
     const { apiUrl, isSplit } = localStore;
     const splitVal = isSplit ? 2 : 1;
     const wWidth = window.innerWidth;
     const { parsedTime, time } = getTimeParams(type);
-    const url = apiUrl;
-
+    const url = settingUrl !== '' ? settingUrl : apiUrl;
     let stepCalc = 0;
     stepCalc = wWidth / Math.round(((wWidth / tSpan) * 10) / splitVal);
     

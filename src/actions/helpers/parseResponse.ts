@@ -123,7 +123,6 @@ export const responseActions = {
  */
 
 export async function parseResponse(responseProps: QueryResult) {
-    console.log(responseProps)
     const { type }: { type: QueryResultType } = responseProps;
     responseActions[type](responseProps);
 }

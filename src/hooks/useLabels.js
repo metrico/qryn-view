@@ -14,7 +14,7 @@ const getUrlFromType = (apiUrl, type, startNs, stopNs) => {
     
   }
 
-export const sendLabels = async (type, apiUrl, start, stop) => {
+export const sendLabels = async (id,type, apiUrl, start, stop) => {
     const startNs = type === 'metrics' ? start : getTimeParsed(start)
     const stopNs = type === 'metrics' ? stop: getTimeParsed(stop)
     const origin = window.location.origin;

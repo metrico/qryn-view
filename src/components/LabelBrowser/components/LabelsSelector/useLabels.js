@@ -23,8 +23,22 @@ const getTimestamp = (time, type) =>
         logs: getTimeParsed(time),
     }[type]);
     
-export default function useLabels(type) {
-    const { start, stop, apiUrl } = useSelector((store) => store);
+export default function useLabels(id) {
+    const { start, stop } = useSelector((store) => store);
+    const dataSources = useSelector(store => store.dataSources)
+
+    const currentDataSource = useMemo(()=>{
+        return dataSources.find(f => f.id === id)
+        
+    },[id,dataSources])
+
+
+    const [type, setType] = useState(currentDataSource.type || '')
+
+    useEffect(()=>{
+        setType(currentDataSource.type)
+    },[currentDataSource, setType])
+    
 
     let timeStart, timeEnd;
 
@@ -34,12 +48,12 @@ export default function useLabels(type) {
     const controller = new AbortController();
 
     const [url, setUrl] = useState(
-        getUrlFromType(apiUrl, type, timeStart, timeEnd)
+        getUrlFromType(currentDataSource.url, type, timeStart, timeEnd)
     );
 
     useEffect(() => {
-        setUrl(getUrlFromType(apiUrl, type, timeStart, timeEnd));
-    }, [setUrl, type]);
+        setUrl(getUrlFromType(currentDataSource.url, type, timeStart, timeEnd));
+    }, [setUrl, type, currentDataSource]);
 
     const origin = useState(window.location.origin);
 
@@ -77,7 +91,7 @@ export default function useLabels(type) {
         };
 
         apiRequest();
-    }, [options, url, apiUrl]);
+    }, [options, url]);
 
     return {
         response,

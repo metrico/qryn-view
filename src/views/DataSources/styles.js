@@ -69,6 +69,7 @@ export const PageContainer = styled.div`
             font-size: 18px;
             padding: 10px;
             padding-left: 0px;
+            color: ${({theme})=> theme.textColor}
         }
         small {
             font-size: 12px;
@@ -186,7 +187,7 @@ export const DsButtonStyled = styled(BtnSmall)`
     background: ${(props) =>
         props.primary ? props.theme.primaryDark : props.theme.buttonDefault};
     border: 1px solid ${(props) => props.theme.buttonBorder};
-    color: ${(props) => props.theme.buttonText};
+    color: ${(props) => props.theme.textColor};
     margin-left: 5px;
     transition: 0.25s all;
     justify-content: center;

@@ -66,7 +66,7 @@ export const DIRECTION_SWITCH_OPTIONS = [
 ];
 export const QueryBar = (props) => {
     const { data, name } = props;
-    const { queryType, limit, id, dataSourceType, direction } = data;
+    const { queryType, limit, id, dataSourceType, direction, dataSourceId } = data;
 
     const { hash } = useLocation();
     const dispatch = useDispatch();
@@ -80,7 +80,7 @@ export const QueryBar = (props) => {
     const [queryValid, setQueryValid] = useState(false);
     const [queryValue, setQueryValue] = useState(queryInit(data.expr));
     const [open, setOpen] = useState(false);
-    
+    const dataSources = useSelector(store => store.dataSources)
     useEffect(() => {});
     const saveUrl = localUrl();
     const expr = useMemo(() => {
@@ -88,7 +88,8 @@ export const QueryBar = (props) => {
     }, [data.expr]);
 
     useEffect(() => {
-        const labels = sendLabels(dataSourceType, apiUrl, start, stop);
+        const currentDataSource = dataSources.find(f => f.id === dataSourceId)
+        const labels = sendLabels(dataSourceId,dataSourceType, currentDataSource.url, start, stop);
         if (isEmbed)
             dispatch(
                 getData(
@@ -98,7 +99,8 @@ export const QueryBar = (props) => {
                     limit,
                     name,
                     id,
-                    direction
+                    direction,
+                    dataSourceId
                 )
             );
         if (onQueryValid(expr)) {
@@ -120,7 +122,7 @@ export const QueryBar = (props) => {
                         });
                     }
 
-                    decodeQuery(expr, apiUrl, newLabels);
+                    decodeQuery(expr, currentDataSource.url, newLabels);
                 }
             });
         } else {
@@ -180,8 +182,8 @@ export const QueryBar = (props) => {
                 dispatch(setQueryHistory(historyUpdated));
 
                 // Decode query to translate into labels selection
-
-                decodeQuery(queryInput, apiUrl, props.data.labels);
+                const currentDataSource = dataSources.find(f => f.id === dataSourceId)
+                decodeQuery(queryInput, currentDataSource.url, props.data.labels);
                 const labelsDecoded = decodeExpr(data.expr);
 
                 // Update panels into store
@@ -203,7 +205,8 @@ export const QueryBar = (props) => {
                         limit,
                         name,
                         id,
-                        direction
+                        direction,
+                        dataSourceId,
                     )
                 );
 

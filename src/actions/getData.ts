@@ -31,12 +31,46 @@ export default function getData(
     limit: number,
     panel: string,
     id: string,
-    direction: QueryDirection = "forward"
+    direction: QueryDirection = "forward",
+    dataSourceId = ''
+
 ) {
+
+
+
+    let dsSettings = {url:'', requestHeaders: {}, method: {value:''}, headers:[],auth:{method:{value:'GET'}},hasSettings:false}
+
+    if(dataSourceId !== '') {
+
+        const dataSourceSettings = store.getState()['dataSources']
+        const dataSourceSetting = dataSourceSettings.find((f:any) => f.id === dataSourceId)
+        if(dataSourceSetting && Object.keys(dataSourceSetting)?.length > 0) {
+            
+            dsSettings = {...dataSourceSettings.find((f:any) => f.id === dataSourceId), hasSettings:true }
+        }
+    // get ApiURL
+      if(dsSettings?.headers?.length > 0 ) {
+        let headerObj = {}
+        for (let header of dsSettings.headers) {
+            const Obj = {[String(header['header'])]:header['value']}
+            headerObj = {...headerObj, ...Obj}
+            
+
+        }
+       dsSettings['requestHeaders'] = headerObj || {}
+      }
+
+        
+    }
+
+   
+
+   
+
     const { debugMode } = store.getState();
-    const options = getQueryOptions(type);
+    const options = getQueryOptions(type, dsSettings.requestHeaders);
     const tSpan = getTimeSpan(queryInput);
-    const params = getEndpointParams(type, queryInput, limit, tSpan, direction);
+    const params = getEndpointParams(type, queryInput, limit, tSpan, direction, (dsSettings.url || ''));
     const endpoint = getEndpoint(type, queryType)(params);
 
     return async function (dispatch: Function) {

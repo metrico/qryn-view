@@ -72,6 +72,7 @@ export const Container = styled.div`
             font-size: 18px;
             padding: 10px;
             padding-left: 0px;
+            color: ${({theme})=> theme.textColor}
         }
         small {
             font-size: 12px;
