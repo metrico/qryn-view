@@ -67,21 +67,21 @@ export const Settings = (props) => {
             <InputCont>
                 <InputCol>
                     <Field
-                        locked={!isEditing}
+                       
                         value={name}
                         label={"Name"}
                         onChange={(e) => onChange(e, "name")}
                     />
 
                     <Field
-                        locked={!isEditing}
+                       
                         value={url}
                         label={"URL"}
                         onChange={(e) => onChange(e, "url")}
                     />
 
                     <Select
-                        locked={!isEditing}
+                       
                         label={"Preferred Visualization Type"}
                         opts={visTypes}
                         value={visType}
@@ -92,11 +92,11 @@ export const Settings = (props) => {
 
             <AuthFields {...props} />
 
-            <DataSourceHeaders headers={headers} id={id} locked={!isEditing} />
+            <DataSourceHeaders headers={headers} id={id} />
 
             <LinkedFields
                 {...props}
-                locked={!isEditing}
+               
                 linkedFields={linkedFields}
             />
         </DataSourceSettingsCont>
