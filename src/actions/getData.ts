@@ -10,7 +10,6 @@ import { resetNoData } from "./helpers/resetNoData";
 import { processResponse } from "./helpers/processResponse";
 import { QueryType, QueryDirection } from "./types";
 import { getTimeSpan } from "./helpers/getTimeSpan";
-import {convertFlux, csvJSON} from "./helpers/convertFlux";
 
 /**
  *
@@ -54,7 +53,6 @@ export default function getData(
 
         try {
             if (type === "flux") {
-                const res = async (res:any) => await convertFlux(res);
                 await axios
                     ?.post(endpoint, queryInput, options)
                     ?.then((response) => {

@@ -67,6 +67,7 @@ export const DIRECTION_SWITCH_OPTIONS = [
 export const QueryBar = (props) => {
     const { data, name } = props;
     const { queryType, limit, id, dataSourceType, direction } = data;
+
     const { hash } = useLocation();
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
@@ -79,6 +80,7 @@ export const QueryBar = (props) => {
     const [queryValid, setQueryValid] = useState(false);
     const [queryValue, setQueryValue] = useState(queryInit(data.expr));
     const [open, setOpen] = useState(false);
+    
     useEffect(() => {});
     const saveUrl = localUrl();
     const expr = useMemo(() => {
@@ -165,7 +167,7 @@ export const QueryBar = (props) => {
 
                 const historyUpdated = historyService.add({
                     data: JSON.stringify({
-                        type: "logs",
+                        type: dataSourceType,
                         queryInput,
                         queryType,
                         limit,
@@ -240,20 +242,30 @@ export const QueryBar = (props) => {
                 id={id}
             >
                 <ThemeProvider theme={themes[theme]}>
-                    <MobileTopQueryMenu isSplit={isSplit}>
+                    <MobileTopQueryMenu
+                        isSplit={isSplit}
+                        dataSourceType={dataSourceType}
+                    >
                         <div
                             className={css`
                                 display: flex;
                             `}
                         >
-                            <ShowLabelsButton {...props} isMobile={true} />
+                            {dataSourceType !== "flux" && (
+                                <>
+                                    <ShowLabelsButton
+                                        {...props}
+                                        isMobile={true}
+                                    />
 
-                            <ShowQuerySettingsButton
-                                {...props}
-                                isSplit={isSplit}
-                                isMobile={true}
-                                onClick={showQuerySettings}
-                            />
+                                    <ShowQuerySettingsButton
+                                        {...props}
+                                        isSplit={isSplit}
+                                        isMobile={true}
+                                        onClick={showQuerySettings}
+                                    />
+                                </>
+                            )}
 
                             <HistoryButton
                                 queryLength={queryHistory.length}
@@ -269,7 +281,9 @@ export const QueryBar = (props) => {
                         />
                     </MobileTopQueryMenu>
                     <QueryBarContainer>
-                        {!isSplit && <ShowLabelsButton {...props} />}
+                        {!isSplit && dataSourceType !== "flux" && (
+                            <ShowLabelsButton {...props} />
+                        )}
 
                         <QueryEditor
                             onQueryChange={handleQueryChange}
@@ -278,7 +292,7 @@ export const QueryBar = (props) => {
                             onKeyDown={handleInputKeyDown}
                         />
 
-                        {!isSplit && (
+                        {!isSplit && dataSourceType !== "flux" && (
                             <>
                                 <HistoryButton
                                     queryLength={queryHistory.length}
@@ -294,11 +308,15 @@ export const QueryBar = (props) => {
                         )}
                     </QueryBarContainer>
 
-                    {!isTabletOrMobile && !isSplit && (
-                        <QueryTypeBar {...props} />
-                    )}
+                    {!isTabletOrMobile &&
+                        !isSplit &&
+                        dataSourceType !== "flux" && (
+                            <QueryTypeBar {...props} />
+                        )}
 
-                    {(isTabletOrMobile || isSplit) && (
+                    {(isTabletOrMobile ||
+                        isSplit ||
+                        dataSourceType !== "flux") && (
                         <QuerySetting
                             {...props}
                             open={open}
