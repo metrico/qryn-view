@@ -38,6 +38,7 @@ export type Stream = {
 
 export type QueryOptions = {
     method: Method;
+    mode?:string;
     headers: AxiosRequestHeaders;
     cancelToken?: any;
 };

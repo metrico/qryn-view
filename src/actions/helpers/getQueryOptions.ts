@@ -4,8 +4,6 @@ export function getQueryOptions(type:string, headers:any):QueryOptions {
 
     // const queryMethod = method !== '' ? method : undefined
     const queryHeaders = Object.keys(headers)?.length > 0 ? headers : undefined
-    
-
 
     if(type === 'flux') {
         return {
@@ -15,8 +13,6 @@ export function getQueryOptions(type:string, headers:any):QueryOptions {
                 'Accept':'application/csv',
                 'Content-type':'application/vnd.flux',
                 "Access-Control-Allow-Origin": window.location.origin,
-              
-
             }
         }
     }

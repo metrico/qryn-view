@@ -24,6 +24,7 @@ const getTimestamp = (time, type) =>
     }[type]);
     
 export default function useLabels(id) {
+
     const { start, stop } = useSelector((store) => store);
     const dataSources = useSelector(store => store.dataSources)
 
@@ -79,19 +80,22 @@ export default function useLabels(id) {
     const [response, setResponse] = useState([]);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-        const apiRequest = async () => {
-            setLoading(true);
-            try {
-                const req = await axios({ url }, options);
-                setResponse(req || []);
-            } catch (e) {
-                console.log(e);
-            }
-            setLoading(false);
-        };
-
-        apiRequest();
-    }, [options, url]);
+        if(currentDataSource.type !== 'flux') {
+            const apiRequest = async () => {
+                setLoading(true);
+                try {
+                    const req = await axios({ url }, options);
+                    setResponse(req || []);
+                } catch (e) {
+                    console.log(e);
+                }
+                setLoading(false);
+            };
+    
+            apiRequest();
+        }
+  
+    }, [options, url,currentDataSource]);
 
     return {
         response,

@@ -16,7 +16,6 @@ import { themes } from "../../theme/themes";
 
 const DataSourceSelect = (props) => {
     const { value, onChange, opts, label } = props;
-
     const formattedSelect = useMemo(() => {
         if (typeof opts[0] === "string") {
             return opts.map((k) => ({ value: k, name: k }));
@@ -26,7 +25,7 @@ const DataSourceSelect = (props) => {
     return (
         <InputGroup>
             {label?.length > 0 && <Label>{label}</Label>}
-            <select defaultValue={value} onChange={onChange}>
+            <select defaultValue={value.value} onChange={onChange}>
                 {formattedSelect?.map((field, key) => (
                     <option key={key} value={field.value}>
                         {field.name}
@@ -112,7 +111,7 @@ export function QueryItemToolbar(props) {
     }, [dataSources]);
 
     const [dataSourceValue, setDataSourceValue] = useState(
-        dataSourceOptions?.find((f) => f.id === props.dataSourceId)
+        dataSourceOptions?.find((f) => f.value === props.data.dataSourceId)
     );
 
     const panelAction = (panel, data) => {

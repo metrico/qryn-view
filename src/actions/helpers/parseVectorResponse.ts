@@ -34,45 +34,28 @@ function setDataView(panel: string) {
 export function parseVectorResponse(responseProps: QueryResult) {
     const { result, debugMode, dispatch, panel, id, type } = responseProps;
 
-    console.log(type)
-
     if (type === "flux") {
         try {
-
             const colsData = prepareFluxCols(result);
-            console.log(colsData);
 
+            const timeAccessor = (result: any) => {
+                const firstRow = result[0];
 
-            const timeAccessor = (result:any) => {
+                const rowEntries = Object.entries(firstRow);
 
-                const firstRow = result[0]
+                if (rowEntries) {
+                    const timeRow = rowEntries.find(([_, val]) => {
+                        return moment.isDate(val);
+                    });
 
-                const rowEntries = Object.entries(firstRow)
-
-                if(rowEntries) {
-
-                    const timeRow = rowEntries.find(([_,val]) => {
-                        return moment.isDate(val)
-                    })
-
-                    return timeRow?.[0] || null
-
+                    return timeRow?.[0] || null;
                 }
-
-            }
-
+            };
 
             if (colsData.length > 0) {
-
-                console.log(result)
-                const tA = timeAccessor(result)
-                const columnsData = setColumnsData(colsData,type, tA );
-
-               
-
-              console.log(tA)
-
-                const dataRows: any = prepareVectorRows(result,type);
+                const tA = timeAccessor(result);
+                const columnsData = setColumnsData(colsData, type, tA);
+                const dataRows: any = prepareVectorRows(result, type);
 
                 const vectorTableData = {
                     columnsData,
@@ -81,28 +64,9 @@ export function parseVectorResponse(responseProps: QueryResult) {
                     id,
                 };
 
-                    console.log(vectorTableData)
-
-
                 if (columnsData?.length > 0 && dataRows?.length > 0) {
-                //    getAsyncResponse(
-                        dispatch(setVectorData(vectorTableData || {}))
-                        
-                    //     .then(
-                    //         () => {
-                    //             if (result.length > 0) {
-                    //                 if (debugMode) {
-                    //                     console.log(
-                    //                         "🚧 getData / getting no data from flux vector"
-                    //                     );
-                    //                     dispatch(setIsEmptyView(true));
-                    //                     dispatch(setVectorData({}));
-                    //                 }
-                    //             }
-                    //             dispatch(setIsEmptyView(false));
-                    //         }
-                    //     )
-                    // );
+                    dispatch(setVectorData(vectorTableData || {}));
+
                     const panelResult = {
                         id,
                         type: "vector",
@@ -121,9 +85,7 @@ export function parseVectorResponse(responseProps: QueryResult) {
                         newPanel = [...filtered, { ...panelResult }];
 
                         dispatch(action(newPanel));
-
                     } else {
-
                         let newPanel = [...prevDV, panelResult];
                         dispatch(action(newPanel));
                     }
@@ -137,7 +99,7 @@ export function parseVectorResponse(responseProps: QueryResult) {
             const colsData = prepareCols(result);
 
             if (colsData.length > 0) {
-                const columnsData = setColumnsData(colsData,type,null);
+                const columnsData = setColumnsData(colsData, type, null);
                 const dataRows: any = prepareVectorRows(result);
                 const vectorTableData = {
                     columnsData,
@@ -145,8 +107,7 @@ export function parseVectorResponse(responseProps: QueryResult) {
                     panel,
                     id,
                 };
-                console.log(columnsData)
-                console.log(dataRows)
+
                 if (columnsData.length > 0 && dataRows.length > 0) {
                     getAsyncResponse(
                         dispatch(setVectorData(vectorTableData || {}))

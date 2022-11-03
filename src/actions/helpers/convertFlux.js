@@ -14,8 +14,6 @@ export async function convertFlux(csv) {
             dynamicTyping: true,
         });
 
-        console.log(json, "JSON DATA")
-
         response.data = await json.data.map(function (item) {
             delete item[""];
             delete item.table;

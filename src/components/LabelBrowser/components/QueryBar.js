@@ -88,45 +88,48 @@ export const QueryBar = (props) => {
     }, [data.expr]);
 
     useEffect(() => {
-        const currentDataSource = dataSources.find(f => f.id === dataSourceId)
-        const labels = sendLabels(dataSourceId,dataSourceType, currentDataSource.url, start, stop);
-        if (isEmbed)
-            dispatch(
-                getData(
-                    dataSourceType,
-                    queryInput,
-                    queryType,
-                    limit,
-                    name,
-                    id,
-                    direction,
-                    dataSourceId
-                )
-            );
-        if (onQueryValid(expr)) {
-            return labels.then((data) => {
-                const prevLabels = [...props.data.labels];
-                const prevMap = prevLabels.map((m) => m.name) || [];
-                const newLabels = [...data];
 
-                if (newLabels.length > 0) {
-                    if (prevMap.length > 0) {
-                        newLabels.forEach((l) => {
-                            const labelFound = prevMap.includes(l.name);
-                            if (labelFound) {
-                                const pl = prevLabels.find(
-                                    (f) => f.name === l.name
-                                );
-                                l = { ...pl };
-                            }
-                        });
+        if(dataSources) {
+            const currentDataSource = dataSources.find(f => f.id === dataSourceId)
+            const labels = sendLabels(dataSourceId,dataSourceType, currentDataSource.url, start, stop);
+            if (isEmbed)
+                dispatch(
+                    getData(
+                        dataSourceType,
+                        queryInput,
+                        queryType,
+                        limit,
+                        name,
+                        id,
+                        direction,
+                        dataSourceId
+                    )
+                );
+            if (onQueryValid(expr) && currentDataSource?.type !== 'flux') {
+                return labels.then((data) => {
+                    const prevLabels = [...props.data.labels];
+                    const prevMap = prevLabels.map((m) => m.name) || [];
+                    const newLabels = [...data];
+    
+                    if (newLabels.length > 0) {
+                        if (prevMap.length > 0) {
+                            newLabels.forEach((l) => {
+                                const labelFound = prevMap.includes(l.name);
+                                if (labelFound) {
+                                    const pl = prevLabels.find(
+                                        (f) => f.name === l.name
+                                    );
+                                    l = { ...pl };
+                                }
+                            });
+                        }
+    
+                        decodeQuery(expr, currentDataSource.url, newLabels);
                     }
-
-                    decodeQuery(expr, currentDataSource.url, newLabels);
-                }
-            });
-        } else {
-            dispatch(setIsEmptyView(true));
+                });
+            } else {
+                dispatch(setIsEmptyView(true));
+            }
         }
     }, []);
 
@@ -183,7 +186,9 @@ export const QueryBar = (props) => {
 
                 // Decode query to translate into labels selection
                 const currentDataSource = dataSources.find(f => f.id === dataSourceId)
-                decodeQuery(queryInput, currentDataSource.url, props.data.labels);
+                if(currentDataSource?.type !== 'flux') {
+                    decodeQuery(queryInput, currentDataSource.url, props.data.labels);
+                }
                 const labelsDecoded = decodeExpr(data.expr);
 
                 // Update panels into store
