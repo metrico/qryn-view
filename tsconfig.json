@@ -19,5 +19,5 @@
         "jsx": "react-jsx"
     },
     "include": ["src"],
-    "exclude": ["node_modules", "dev_server.js"]
+    "exclude": ["node_modules", "dev_server.js", "build"]
 }

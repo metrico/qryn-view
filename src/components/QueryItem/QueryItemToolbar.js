@@ -132,7 +132,7 @@ export function QueryItemToolbar(props) {
                 panelCP.dataSourceType = value;
             }
         });
-
+        console.log(props.name, panelCP)
         dispatch(panelAction(props.name, panelCP));
     };
     return (
