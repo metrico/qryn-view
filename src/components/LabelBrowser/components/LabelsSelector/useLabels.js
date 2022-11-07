@@ -22,24 +22,25 @@ const getTimestamp = (time, type) =>
         metrics: getTimeSec(time),
         logs: getTimeParsed(time),
     }[type]);
-    
-export default function useLabels(id) {
 
+export default function useLabels(id, dataSourceURL = "") {
     const { start, stop } = useSelector((store) => store);
-    const dataSources = useSelector(store => store.dataSources)
+    const dataSources = useSelector((store) => store.dataSources);
 
-    const currentDataSource = useMemo(()=>{
-        return dataSources.find(f => f.id === id)
-        
-    },[id,dataSources])
+    const currentDataSource = useMemo(() => {
+        const current = dataSources.find((f) => f.id === id);
+        if (dataSourceURL !== "") {
+            current.url = dataSourceURL;
+        }
 
+        return current;
+    }, [id, dataSources]);
 
-    const [type, setType] = useState(currentDataSource.type || '')
+    const [type, setType] = useState(currentDataSource.type || "");
 
-    useEffect(()=>{
-        setType(currentDataSource.type)
-    },[currentDataSource, setType])
-    
+    useEffect(() => {
+        setType(currentDataSource.type);
+    }, [currentDataSource, setType]);
 
     let timeStart, timeEnd;
 
@@ -80,7 +81,7 @@ export default function useLabels(id) {
     const [response, setResponse] = useState([]);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-        if(currentDataSource.type !== 'flux') {
+        if (currentDataSource.type !== "flux") {
             const apiRequest = async () => {
                 setLoading(true);
                 try {
@@ -91,11 +92,9 @@ export default function useLabels(id) {
                 }
                 setLoading(false);
             };
-    
             apiRequest();
         }
-  
-    }, [options, url,currentDataSource]);
+    }, [options, url, currentDataSource]);
 
     return {
         response,

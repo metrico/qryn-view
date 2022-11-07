@@ -32,7 +32,8 @@ export default function getData(
     panel: string,
     id: string,
     direction: QueryDirection = "forward",
-    dataSourceId = ""
+    dataSourceId = "",
+    url = ""
 ) {
     let dsSettings = {
         url: "",
@@ -58,12 +59,17 @@ export default function getData(
             (f: any) => f.id === dataSourceId
         );
         if (dataSourceSetting && Object.keys(dataSourceSetting)?.length > 0) {
+            const actDatasource = dataSourceSettings.find(
+                (f: any) => f.id === dataSourceId
+            );
+            const url =
+                dsSettings.url !== "" ? dsSettings.url : actDatasource.url;
             dsSettings = {
-                ...dataSourceSettings.find((f: any) => f.id === dataSourceId),
+                ...actDatasource,
+                url,
                 hasSettings: true,
             };
         }
-
 
         if (dsSettings?.headers?.length > 0) {
             let headerObj = {};
@@ -96,7 +102,6 @@ export default function getData(
                 ...dsSettings["requestHeaders"],
                 ...authHeader,
             };
-
         }
     }
 

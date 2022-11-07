@@ -107,6 +107,7 @@ export function QueryItemToolbar(props) {
             value: m.id,
             name: m.name,
             type: m.type,
+            icon: m.icon,
         }));
     }, [dataSources]);
 
@@ -133,10 +134,6 @@ export function QueryItemToolbar(props) {
         dispatch(panelAction(props.name, cPanel));
     }
     const onDataSourceChange = (e) => {
-        // load labels
-        // load values
-        // load logs ?
-        // update panel with datasource name and ID
         const value = e.target.value;
         const dataSource = dataSources.find((f) => f.id === value);
         const panelCP = JSON.parse(JSON.stringify(panel));
@@ -147,6 +144,7 @@ export function QueryItemToolbar(props) {
             if (panelCP.id === props.data.id) {
                 panelCP.dataSourceId = dataSource.id;
                 panelCP.dataSourceType = dataSource.type;
+                panelCP.dataSourceURL = dataSource.url;
             }
         });
 

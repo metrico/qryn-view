@@ -265,7 +265,6 @@ export const defaultTracesDataSource = {
     visType: "trace",
     headers: defaultTracesDataSourceHeaders,
     linkedFields: defaultTracesLinkedFields,
-
     auth: defaultAuth,
 };
 

@@ -36,7 +36,7 @@ const dataViewAction = (panel, data) => {
 export default function QueryItem(props) {
 
     useEffect(() => {
-        const { expr, queryType, limit, panel, id, dataSourceType, dataSourceId, direction } =
+        const { expr, queryType, limit, panel, id, dataSourceType, dataSourceId, direction, dataSourceURL } =
             props.data;
 
         dispatch(
@@ -48,7 +48,8 @@ export default function QueryItem(props) {
                 panel,
                 id,
                 direction,
-                dataSourceId
+                dataSourceId,
+                dataSourceURL
             )
         );
     }, []);
