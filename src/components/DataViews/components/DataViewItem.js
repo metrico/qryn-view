@@ -141,19 +141,26 @@ export function DataViewItem(props) {
             ...props,
         };
         return <VectorView {...vectorProps} />;
-    } else {
-        // Empty view for the case when no view available
-        const emptyViewProps = {
-            viewRef,
-            panelSize,
-            onStreamClose,
-            onMinimize,
-            onMaximize,
-            actualQuery,
-            total,
-            ...props,
-        };
+    } 
+    
+    if(actualQuery && !streamData?.dataRows?.length && !streamData?.length ) {
+       // Empty view for the case when no view available
+       const emptyViewProps = {
+        viewRef,
+        panelSize,
+        onStreamClose,
+        onMinimize,
+        onMaximize,
+        actualQuery,
+        total,
+        ...props,
+    };
 
-        return <EmptyView {...emptyViewProps} />;
+    return <EmptyView {...emptyViewProps} />;
+    }
+    
+    
+    else {
+        return null
     }
 }

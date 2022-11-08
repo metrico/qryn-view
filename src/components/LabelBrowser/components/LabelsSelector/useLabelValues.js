@@ -12,21 +12,32 @@ const getUrlType = (api, type, label, start, end) =>
         logs: `${api}/loki/api/v1/label/${label}/values?start=${start}&end=${end}`,
     }[type]);
 
-export default function useLabelValues(type, label, start, end) {
+export default function useLabelValues(id, label, start, end) {
+    const dataSources = useSelector((store) => store.dataSources);
+
+    const currentDataSource = useMemo(() => {
+        return dataSources.find((f) => f.id === id);
+    }, [dataSources, id]);
+
     const nanoStart = getTimeParsed(start);
     const nanoEnd = getTimeParsed(end);
 
     const controller = new AbortController();
 
-    const apiUrl = useSelector((store) => store.apiUrl);
 
-    const [url, setUrl] = useState(
-        getUrlType(apiUrl, type, label, nanoStart, nanoEnd)
-    );
+    const [url, setUrl] = useState();
 
     useEffect(() => {
-        setUrl(getUrlType(apiUrl, type, label, nanoStart, nanoEnd));
-    }, [label, setUrl]);
+        setUrl(
+            getUrlType(
+                currentDataSource.url,
+                currentDataSource.type,
+                label,
+                nanoStart,
+                nanoEnd
+            )
+        );
+    }, [label, setUrl, currentDataSource]);
 
     const origin = useState(window.location.origin);
 
@@ -52,19 +63,24 @@ export default function useLabelValues(type, label, start, end) {
     const [response, setResponse] = useState([]);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-        const apiRequest = async () => {
-            setLoading(true);
-            try {
-                const req = await axios({ url }, options);
-                setResponse(req || []);
-            } catch (e) {
-                console.log(e);
-            }
-            setLoading(false);
-        };
+        if (currentDataSource.type !== "flux") {
+            const apiRequest = async () => {
+                setLoading(true);
+                if (url !== "") {
+                    try {
+                        const req = await axios({ url }, options);
+                        setResponse(req || []);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
 
-        apiRequest();
-    }, [options, url]);
+                setLoading(false);
+            };
+
+            apiRequest();
+        }
+    }, [options, url, currentDataSource]);
 
     return {
         response,

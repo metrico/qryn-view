@@ -31,13 +31,92 @@ export default function getData(
     limit: number,
     panel: string,
     id: string,
-    direction: QueryDirection = "forward"
+    direction: QueryDirection = "forward",
+    dataSourceId = "",
+    url = ""
 ) {
+    let dsSettings = {
+        url: "",
+        requestHeaders: {},
+        method: { value: "" },
+        headers: [],
+        auth: {
+            method: { value: "GET" },
+            basicAuth: { value: true },
+            fields: {
+                basicAuth: [
+                    { name: "user", value: "" },
+                    { name: "password", value: "" },
+                ],
+            },
+        },
+        hasSettings: false,
+    };
+
+    if (dataSourceId !== "") {
+        const dataSourceSettings = store.getState()["dataSources"];
+        const dataSourceSetting = dataSourceSettings.find(
+            (f: any) => f.id === dataSourceId
+        );
+        if (dataSourceSetting && Object.keys(dataSourceSetting)?.length > 0) {
+            const actDatasource = dataSourceSettings.find(
+                (f: any) => f.id === dataSourceId
+            );
+            const url =
+                dsSettings.url !== "" ? dsSettings.url : actDatasource.url;
+            dsSettings = {
+                ...actDatasource,
+                url,
+                hasSettings: true,
+            };
+        }
+
+        if (dsSettings?.headers?.length > 0) {
+            let headerObj = {};
+            for (let header of dsSettings.headers) {
+                const Obj = { [String(header["header"])]: header["value"] };
+                headerObj = { ...headerObj, ...Obj };
+            }
+            dsSettings["requestHeaders"] = headerObj || {};
+        }
+
+        if (!!dsSettings?.auth?.basicAuth?.value) {
+            const reqHeaders = dsSettings?.auth?.fields?.basicAuth;
+
+            let authHeader = {};
+
+            let str = "";
+            for (let header of reqHeaders) {
+                if (header?.name === "user") {
+                    str += `${header?.value}:`;
+                }
+
+                if (header?.name === "password") {
+                    str += header?.value;
+                }
+            }
+
+            authHeader = { Authorization: `Basic ${btoa(str)}` };
+
+            dsSettings["requestHeaders"] = {
+                ...dsSettings["requestHeaders"],
+                ...authHeader,
+            };
+        }
+    }
+
     const { debugMode } = store.getState();
-    const options = getQueryOptions();
+    const options = getQueryOptions(type, dsSettings.requestHeaders);
     const tSpan = getTimeSpan(queryInput);
-    const params = getEndpointParams(type, queryInput, limit, tSpan, direction);
-    const endpoint = getEndpoint(queryType)(params);
+    const params = getEndpointParams(
+        type,
+        queryInput,
+        limit,
+        tSpan,
+        direction,
+        dsSettings.url || ""
+    );
+    const endpoint = getEndpoint(type, queryType)(params);
 
     return async function (dispatch: Function) {
         await resetParams(dispatch, panel);
@@ -52,28 +131,57 @@ export default function getData(
         options.cancelToken = cancelToken.token;
 
         try {
-            await axios
-                ?.get(endpoint, options)
-                ?.then((response) => {
-                    processResponse(
-                        type,
-                        response,
-                        dispatch,
-                        panel,
-                        id,
-                        direction
-                    );
-                })
-                .catch((error) => {
-                    resetNoData(dispatch);
-                    dispatch(setIsEmptyView(true));
-                    dispatch(setLoading(false));
-                    if (debugMode)
-                        console.log("getting an error from response: ", error);
-                })
-                .finally(() => {
-                    dispatch(setLoading(false));
-                });
+            if (options?.method === "POST") {
+                await axios
+                    ?.post(endpoint, queryInput, options)
+                    ?.then((response) => {
+                        processResponse(
+                            type,
+                            response,
+                            dispatch,
+                            panel,
+                            id,
+                            direction
+                        );
+                    })
+                    .catch((error) => {
+                        resetNoData(dispatch);
+                        dispatch(setIsEmptyView(true));
+                        dispatch(setLoading(false));
+                        if (debugMode) {
+                            console.log("Error loading flux data", error);
+                        }
+                    })
+                    .finally(() => {
+                        dispatch(setLoading(false));
+                    });
+            } else if (options?.method === "GET") {
+                await axios
+                    ?.get(endpoint, options)
+                    ?.then((response) => {
+                        processResponse(
+                            type,
+                            response,
+                            dispatch,
+                            panel,
+                            id,
+                            direction
+                        );
+                    })
+                    .catch((error) => {
+                        resetNoData(dispatch);
+                        dispatch(setIsEmptyView(true));
+                        dispatch(setLoading(false));
+                        if (debugMode)
+                            console.log(
+                                "getting an error from response: ",
+                                error
+                            );
+                    })
+                    .finally(() => {
+                        dispatch(setLoading(false));
+                    });
+            }
         } catch (e) {
             console.log(e);
         }

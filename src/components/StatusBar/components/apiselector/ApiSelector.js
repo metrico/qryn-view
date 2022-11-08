@@ -9,7 +9,7 @@ import {
     ApiSelectorInput,
     ApiSelectorStyled,
 } from "../../styled";
-// import loadLabels from "../../../../actions/loadLabels";
+
 import onQueryValid from "../../../LabelBrowser/helpers/onQueryValid";
 
 export function ApiSelector() {
@@ -29,7 +29,7 @@ export function ApiSelector() {
 
     useEffect(() => {
         setEditedUrl(apiUrl);
-       // dispatch(loadLabels(apiUrl, start, stop));
+     
     }, [apiUrl]);
 
     useEffect(() => {
@@ -59,7 +59,6 @@ export function ApiSelector() {
         dispatch(setApiUrl(editedUrl));
 
         setEditedUrl(editedUrl);
-        // dispatch(loadLabels(editedUrl, start, stop));
     };
 
     return (

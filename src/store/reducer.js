@@ -1,4 +1,3 @@
-
 const reducer = (state, action) => {
     switch (action.type) {
         case "SET_LABELS":
@@ -95,13 +94,13 @@ const reducer = (state, action) => {
             return { ...state, right: action.right };
         case "SET_LEFT_PANEL":
             return { ...state, left: action.left };
-        case "SET_LINKED_FIELDS":
-            return { ...state, linkedFields: action.linkedFields };
-            case "SET_DATA_SOURCES":
-                return { ...state, dataSources: action.dataSources };
+        case "SET_DATA_SOURCES":
+            return { ...state, dataSources: action.dataSources };
+
         default:
             return { ...state };
     }
 };
 
-export default reducer
+export default reducer;
+

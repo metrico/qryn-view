@@ -10,14 +10,14 @@ import labelHelpers from "./helpers";
 
 export default function LabelsSelector(props) {
     const { data } = props;
-    const { dataSourceType } = data;
+    const { dataSourceId, dataSourceURL } = data;
     const { JSONClone, updateLabel, updateLabelSelected } = labelHelpers;
     const [labelsResponse, setLabelsResponse] = useState([]);
     const [labelsSelected, setLabelsSelected] = useState([]);
 
     const { theme } = useSelector((store) => store);
 
-    const { response, loading } = useLabels(dataSourceType);
+    const { response, loading } = useLabels(dataSourceId, dataSourceURL); //  set URL from props
 
     // get previously selected labels
 

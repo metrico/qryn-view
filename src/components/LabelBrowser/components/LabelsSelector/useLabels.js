@@ -22,9 +22,25 @@ const getTimestamp = (time, type) =>
         metrics: getTimeSec(time),
         logs: getTimeParsed(time),
     }[type]);
-    
-export default function useLabels(type) {
-    const { start, stop, apiUrl } = useSelector((store) => store);
+
+export default function useLabels(id, dataSourceURL = "") {
+    const { start, stop } = useSelector((store) => store);
+    const dataSources = useSelector((store) => store.dataSources);
+
+    const currentDataSource = useMemo(() => {
+        const current = dataSources.find((f) => f.id === id);
+        if (dataSourceURL !== "") {
+            current.url = dataSourceURL;
+        }
+
+        return current;
+    }, [id, dataSources]);
+
+    const [type, setType] = useState(currentDataSource.type || "");
+
+    useEffect(() => {
+        setType(currentDataSource.type);
+    }, [currentDataSource, setType]);
 
     let timeStart, timeEnd;
 
@@ -34,12 +50,12 @@ export default function useLabels(type) {
     const controller = new AbortController();
 
     const [url, setUrl] = useState(
-        getUrlFromType(apiUrl, type, timeStart, timeEnd)
+        getUrlFromType(currentDataSource.url, type, timeStart, timeEnd)
     );
 
     useEffect(() => {
-        setUrl(getUrlFromType(apiUrl, type, timeStart, timeEnd));
-    }, [setUrl, type]);
+        setUrl(getUrlFromType(currentDataSource.url, type, timeStart, timeEnd));
+    }, [setUrl, type, currentDataSource]);
 
     const origin = useState(window.location.origin);
 
@@ -65,19 +81,20 @@ export default function useLabels(type) {
     const [response, setResponse] = useState([]);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-        const apiRequest = async () => {
-            setLoading(true);
-            try {
-                const req = await axios({ url }, options);
-                setResponse(req || []);
-            } catch (e) {
-                console.log(e);
-            }
-            setLoading(false);
-        };
-
-        apiRequest();
-    }, [options, url, apiUrl]);
+        if (currentDataSource.type !== "flux") {
+            const apiRequest = async () => {
+                setLoading(true);
+                try {
+                    const req = await axios({ url }, options);
+                    setResponse(req || []);
+                } catch (e) {
+                    console.log(e);
+                }
+                setLoading(false);
+            };
+            apiRequest();
+        }
+    }, [options, url, currentDataSource]);
 
     return {
         response,

@@ -12,14 +12,18 @@ export const PageContainer = styled.div`
     position: absolute;
     width: 100%;
     height: 100%;
-    overflow-y:auto;
+    overflow-y: auto;
     display: flex;
     flex: 1;
     flex-direction: column;
     height: 100%;
+    align-items: center;
+
     .cont {
+        max-width: 1440px;
         padding: 10px;
         margin: 10px;
+        width: 100%;
         background: ${({ theme }) => theme.widgetContainer};
         display: flex;
         flex-direction: column;
@@ -30,8 +34,8 @@ export const PageContainer = styled.div`
         padding-bottom: 20px;
         font-size: 24px;
         display: flex;
-        width:100%;
-        justify-content:space-between;
+        width: 100%;
+        justify-content: space-between;
         align-items: center;
         padding-left: 0px;
         .logo {
@@ -43,6 +47,7 @@ export const PageContainer = styled.div`
         border: 1px solid ${({ theme }) => theme.buttonBorder};
         border-radius: 3px;
     }
+
     .ds-item {
         padding: 10px;
         background: ${({ theme }) => theme.viewBg};
@@ -64,6 +69,7 @@ export const PageContainer = styled.div`
             font-size: 18px;
             padding: 10px;
             padding-left: 0px;
+            color: ${({theme})=> theme.textColor}
         }
         small {
             font-size: 12px;
@@ -102,6 +108,18 @@ export const Input = styled.input`
     padding-left: 8px;
 `;
 
+export const TextArea = styled.textarea`
+    display: flex;
+    flex: 1;
+    background: ${(props) => props.theme.inputBg};
+    color: ${(props) => props.theme.textColor};
+    border: 1px solid ${(props) => props.theme.buttonBorder};
+    border-radius: 3px;
+    justify-self: flex-end;
+    padding-left: 8px;
+`;
+
+
 export const InputGroup = styled.div`
     display: flex;
     margin-right: 10px;
@@ -110,11 +128,11 @@ export const InputGroup = styled.div`
     align-items: center;
     select {
         background: ${(props) => props.theme.inputBg};
-        color:  ${(props) => props.theme.textColor};
+        color: ${(props) => props.theme.textColor};
         border: 1px solid ${(props) => props.theme.buttonBorder};
-        border-radius:3px;
-        font-size:12px;
-        height:26px;
+        border-radius: 3px;
+        font-size: 12px;
+        height: 26px;
     }
 `;
 
@@ -123,7 +141,14 @@ export const InputCol = styled.div`
     margin: 15px 0px;
     margin-left: 14px;
     flex-wrap: wrap;
-    align-items:center;
+    align-items: center;
+`;
+
+export const InputHeaderCol = styled.div`
+    display: flex;
+    margin: 15px 0px;
+    margin-left: 14px;
+    align-items: center;
 `;
 export const InputCont = styled.div`
     padding: 10px;
@@ -151,7 +176,7 @@ export const SettingsTitle = styled.div`
     }
 `;
 
-export const DatsourceSettingsCont = styled.div`
+export const DataSourceSettingsCont = styled.div`
     background: ${(props) => props.theme.inputBg};
     padding: 10px;
     border-radius: 0px 0px 3px 3px;
@@ -162,7 +187,7 @@ export const DsButtonStyled = styled(BtnSmall)`
     background: ${(props) =>
         props.primary ? props.theme.primaryDark : props.theme.buttonDefault};
     border: 1px solid ${(props) => props.theme.buttonBorder};
-    color: ${(props) => props.theme.buttonText};
+    color: ${(props) => props.theme.textColor};
     margin-left: 5px;
     transition: 0.25s all;
     justify-content: center;

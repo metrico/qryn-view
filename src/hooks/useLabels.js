@@ -14,7 +14,7 @@ const getUrlFromType = (apiUrl, type, startNs, stopNs) => {
     
   }
 
-export const sendLabels = async (type, apiUrl, start, stop) => {
+export const sendLabels = async (id,type, apiUrl, start, stop) => {
     const startNs = type === 'metrics' ? start : getTimeParsed(start)
     const stopNs = type === 'metrics' ? stop: getTimeParsed(stop)
     const origin = window.location.origin;
@@ -32,8 +32,8 @@ export const sendLabels = async (type, apiUrl, start, stop) => {
         headers: headers,
         mode: "cors",
     };
-
-    const res = await axios
+    if(type !== 'flux') {
+        const res = await axios
         .get(getUrlFromType(apiUrl,type, startNs, stopNs), options)
         .then((response) => {
             if (response) {
@@ -54,4 +54,6 @@ export const sendLabels = async (type, apiUrl, start, stop) => {
         .catch((e) => console.log(e));
 
     return res;
+    }
+
 };

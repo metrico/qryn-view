@@ -22,7 +22,8 @@ ReactDOM.render(
       <Routes>
         <Route exact path="/" element={<App />} />
         <Route exact path="/search" element={<App />} />
-        <Route exact path="/datasources" element={<DataSources/>}/>
+        <Route path="/datasources/*" element={<DataSources/>}/>
+       
       </Routes>
     </BrowserRouter>
     </Provider>
