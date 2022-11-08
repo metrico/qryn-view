@@ -10,6 +10,8 @@ import { resetNoData } from "./helpers/resetNoData";
 import { processResponse } from "./helpers/processResponse";
 import { QueryType, QueryDirection } from "./types";
 import { getTimeSpan } from "./helpers/getTimeSpan";
+import  { boscoSend } from "./helpers/boscoRequest";
+
 
 /**
  *
@@ -116,7 +118,7 @@ export default function getData(
         direction,
         dsSettings.url || ""
     );
-    const endpoint = getEndpoint(type, queryType)(params);
+    const endpoint = getEndpoint(type, queryType, params);
 
     return async function (dispatch: Function) {
         await resetParams(dispatch, panel);
@@ -167,16 +169,26 @@ export default function getData(
                             id,
                             direction
                         );
+
+                        if(debugMode) {
+                          boscoSend({level:'info', id, type, direction}, id)
+                           
+                        }
                     })
                     .catch((error) => {
                         resetNoData(dispatch);
                         dispatch(setIsEmptyView(true));
                         dispatch(setLoading(false));
-                        if (debugMode)
+                        if (debugMode) {
+
+                            boscoSend({level:'error', id, type, direction}, id)
+
                             console.log(
                                 "getting an error from response: ",
                                 error
                             );
+                        }
+
                     })
                     .finally(() => {
                         dispatch(setLoading(false));

@@ -1,31 +1,41 @@
 import { QueryParams, QueryType } from "../types";
 
-function getRangeEP(type: string, params: QueryParams): string {
-    return (({
+function getEndpointWithParams(
+    type: string,
+    params: QueryParams,
+    queryType: QueryType
+): string {
+    const {
         queryUrl,
         encodedQuery,
         limit,
         parsedTime,
         queryStep,
         direction,
-    }) =>
-        type !== "flux"
-            ? `${queryUrl}/query_range?query=${encodedQuery}&limit=${limit}${parsedTime}${queryStep}&direction=${direction}`
-            : `${queryUrl}`)(params);
+        time,
+    } = params;
+
+    if (type === "metrics" || type === "logs") {
+        if (queryType === "instant") {
+            return `${queryUrl}/query?query=${encodedQuery}&limit=${limit}&time=${time}&direction=${direction}`;
+        }
+
+        return `${queryUrl}/query_range?query=${encodedQuery}&limit=${limit}${parsedTime}${queryStep}&direction=${direction}`;
+    }
+    if (type === "flux") {
+        return `${queryUrl}`;
+    }
+    if (type === "traces") {
+        return `${queryUrl}`;
+    }
+
+    return ``;
 }
 
-function getInstantEP(type: string, params: QueryParams): string {
-    return (({ queryUrl, encodedQuery, limit, time, direction }) =>
-        type !== "flux"
-            ? `${queryUrl}/query?query=${encodedQuery}&limit=${limit}&time=${time}&direction=${direction}`
-            : `${queryUrl}`)(params);
+export function getEndpoint(
+    type: string,
+    queryType: QueryType,
+    params: QueryParams
+) {
+    return getEndpointWithParams(type, params, queryType);
 }
-
-export function getEndpoint(type: string, queryType: QueryType) {
-    return (params: QueryParams) =>
-        ({
-            range: getRangeEP(type, params),
-            instant: getInstantEP(type, params),
-        }[queryType]);
-}
-
