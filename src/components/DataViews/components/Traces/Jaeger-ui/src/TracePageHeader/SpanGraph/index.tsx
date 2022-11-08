@@ -33,6 +33,7 @@ type SpanGraphProps = {
   viewRange: ViewRange;
   updateViewRangeTime: TUpdateViewRangeTimeFunction;
   updateNextViewRangeTime: (nextUpdate: ViewRangeTimeUpdate) => void;
+  theme: any;
 };
 
 type SpanItem = {
@@ -71,7 +72,7 @@ export default class SpanGraph extends React.PureComponent<SpanGraphProps> {
       <div className={cx(ubPb2, ubPx2)}>
         <TickLabels numTicks={TIMELINE_TICK_INTERVAL} duration={trace.duration} />
         <div className={ubRelative}>
-          <CanvasSpanGraph valueWidth={trace.duration} items={items} />
+          <CanvasSpanGraph {...this.props} valueWidth={trace.duration} items={items} />
           <ViewingLayer
             viewRange={viewRange}
             numTicks={TIMELINE_TICK_INTERVAL}

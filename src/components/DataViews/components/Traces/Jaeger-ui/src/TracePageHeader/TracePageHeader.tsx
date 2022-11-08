@@ -35,12 +35,13 @@ import { formatDuration } from "../utils/date";
 
 import SpanGraph from "./SpanGraph";
 import styled from "@emotion/styled";
+import { useTheme } from "@emotion/react";
 
 const TracePageHeaderStyled = styled.header`
     & > :first-child {
         border-bottom: 1px solid #e8e8e8;
     }
-    & > :nth-child(2) {
+    & > :nth-of-type(2) {
         background-color: #eee;
         border-bottom: 1px solid #e4e4e4;
     }
@@ -136,6 +137,7 @@ type TracePageHeaderEmbedProps = {
     updateNextViewRangeTime: (update: ViewRangeTimeUpdate) => void;
     updateViewRangeTime: TUpdateViewRangeTimeFunction;
     viewRange: ViewRange;
+    theme: any;
 };
 
 export const HEADER_ITEMS = [
@@ -197,6 +199,7 @@ export default function TracePageHeader(props: TracePageHeaderEmbedProps) {
         viewRange,
     } = props;
 
+    const theme = useTheme();
     //   const styles = useStyles2(getStyles);
     const links = React.useMemo(() => {
         if (!trace) {
@@ -268,6 +271,8 @@ export default function TracePageHeader(props: TracePageHeaderEmbedProps) {
             )}
             {!hideMap && !slimView && (
                 <SpanGraph
+                    {...props}
+                    theme={theme}
                     trace={trace}
                     viewRange={viewRange}
                     updateNextViewRangeTime={updateNextViewRangeTime}

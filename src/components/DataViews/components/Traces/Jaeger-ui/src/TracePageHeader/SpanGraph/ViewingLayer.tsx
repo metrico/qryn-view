@@ -39,6 +39,13 @@ const ViewingLayerResetZoom = css`
     right: 1%;
     top: 10%;
     z-index: 1;
+    background-color: hsla(210, 12%, 16%, 16%);
+    color: hsl(210, 12%, 16%);
+    &:hover {
+        background-color: hsla(210, 12%, 16%, 20%);
+        color: hsl(210, 12%, 16%);
+        
+    }
 `;
 const ViewingLayer = styled.div`
     cursor: vertical-text;
@@ -350,7 +357,7 @@ export class UnthemedViewingLayer extends React.PureComponent<
                         css={ViewingLayerResetZoom}
                         className={ViewingLayerResetZoomHoverClassName}
                         type="button"
-                        // variant="secondary"
+                        variant="contained"
                     >
                         Reset Selection
                     </Button>

@@ -16,7 +16,7 @@ import * as React from "react";
 
 import { autoColor } from "../../Theme";
 import { TNil } from "../../types";
-// import { getRgbColorByKey } from '../../utils/color-generator';
+import { getRgbColorByKey } from '../../utils/color-generator';
 
 import renderIntoCanvas from "./render-into-canvas";
 import styled from "@emotion/styled";
@@ -34,24 +34,25 @@ type CanvasSpanGraphProps = {
         serviceName: string;
     }>;
     valueWidth: number;
+    theme: any;
 };
 
 export class UnthemedCanvasSpanGraph extends React.PureComponent<CanvasSpanGraphProps> {
     _canvasElm: HTMLCanvasElement | TNil;
-
+    theme: any;
     constructor(props: CanvasSpanGraphProps) {
         super(props);
+        console.log(props)
         this._canvasElm = undefined;
+        
     }
-
-    getColor = (key: string): [number, number, number] => [
-        255, 0, 0,
-    ]; /* getRgbColorByKey(key, this.props.theme); */
+    getColor = (key: string) => getRgbColorByKey(key, this.props.theme); 
 
     componentDidMount() {
         this._draw();
     }
 
+    
     componentDidUpdate() {
         this._draw();
     }

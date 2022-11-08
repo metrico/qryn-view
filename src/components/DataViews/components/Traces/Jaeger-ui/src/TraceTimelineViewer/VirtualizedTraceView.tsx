@@ -23,7 +23,7 @@ import { PEER_SERVICE } from '../constants/tag-keys';
 import { SpanBarOptions, SpanLinkFunc, TNil } from '../types';
 import TTraceTimeline from '../types/TTraceTimeline';
 import { TraceLog, TraceSpan, Trace, TraceKeyValuePair, TraceLink, TraceSpanReference } from '../types/trace';
-// import { getColorByKey } from '../utils/color-generator';
+import { getColorByKey } from '../utils/color-generator';
 
 import ListView from './ListView';
 import SpanBarRow from './SpanBarRow';
@@ -104,6 +104,7 @@ type TVirtualizedTraceViewOwnProps = {
 //   createFocusSpanLink: (traceId: string, spanId: string) => LinkModel;
   topOfViewRef?: RefObject<HTMLDivElement>;
   topOfViewRefType?: TopOfViewRefType;
+  theme: any;
 };
 
 type VirtualizedTraceViewProps = TVirtualizedTraceViewOwnProps & TExtractUiFindFromStateReturn & TTraceTimeline;
@@ -384,13 +385,13 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
       createSpanLink,
       focusedSpanId,
       focusedSpanIdForSearch,
-    //   theme,
+      theme,
     } = this.props;
     // to avert flow error
     if (!trace) {
       return null;
     }
-    const color = '#ff0000'/*  getColorByKey(serviceName, theme) */;
+    const color =  getColorByKey(serviceName, theme);
     const isCollapsed = childrenHiddenIDs.has(spanID);
     const isDetailExpanded = detailStates.has(spanID);
     const isMatchingFilter = findMatchesIDs ? findMatchesIDs.has(spanID) : false;
@@ -404,7 +405,7 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
       if (rpcSpan) {
         const rpcViewBounds = this.getViewedBounds()(rpcSpan.startTime, rpcSpan.startTime + rpcSpan.duration);
         rpc = {
-          color: '#ff0000'/* getColorByKey(rpcSpan.process.serviceName, theme) */,
+          color: getColorByKey(rpcSpan.process.serviceName, theme),
           operationName: rpcSpan.operationName,
           serviceName: rpcSpan.process.serviceName,
           viewEnd: rpcViewBounds.end,
@@ -414,17 +415,14 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
     }
 
     const peerServiceKV = span.tags.find((kv) => kv.key === PEER_SERVICE);
-    // Leaf, kind == client and has peer.service.tag, is likely a client span that does a request
-    // to an uninstrumented/external service
     let noInstrumentedServer = null;
     if (!span.hasChildren && peerServiceKV && isKindClient(span)) {
       noInstrumentedServer = {
         serviceName: peerServiceKV.value,
-        color: '#ff0000' /* getColorByKey(peerServiceKV.value, theme) */,
+        color: getColorByKey(peerServiceKV.value, theme),
       };
     }
 
-    // const styles = getStyles(this.props);
     return (
       <Row  key={key} style={style} {...attrs}>
         <SpanBarRow
@@ -486,7 +484,7 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
     if (!trace || !detailState) {
       return null;
     }
-    const color = '#ff0000' /* getColorByKey(serviceName, theme) */;
+    const color = getColorByKey(serviceName, this.props.theme);
     return (
       <Row key={key} style={{ ...style, zIndex: 1 }} {...attrs}>
         <SpanDetailRow

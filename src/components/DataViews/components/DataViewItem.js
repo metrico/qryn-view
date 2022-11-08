@@ -57,10 +57,10 @@ export function DataViewItem(props) {
     const theight = useTableHeight({ total, panelSize, dataView });
 
     const viewHeight = useViewHeight({ type, actualQuery, total, dataView});
-    if (true || (actualQuery && type === "matrix" && streamData.length > 0)) {
+    if (actualQuery && type === "trace" && streamData.length > 0) {
         // return matrix type component
         const { limit } = actualQuery;
-        const matrixProps = {
+        const traceProps = {
             viewRef,
             panelSize,
             viewHeight,
@@ -75,9 +75,10 @@ export function DataViewItem(props) {
             viewWidth,
             limit,
             streamData,
+            theme: props.theme,
             ...props,
         };
-        return <TraceView {...matrixProps}/>;
+        return <TraceView {...traceProps}/>;
     }
 
     if (actualQuery && type === "matrix" && streamData.length > 0) {

@@ -44,7 +44,7 @@ const Row = styled.tr`
         box-sizing: border-box;
         font-size: 12px;
     }
-    &:nth-child(2n) > td {
+    &:nth-of-type(2n) > td {
         background: #f5f5f5;
     }
     &:not(:hover) .${copyIconClassName} {

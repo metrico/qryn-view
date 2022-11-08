@@ -1992,6 +1992,7 @@ export function TraceView(props/* : any */) {
                 updateNextViewRangeTime={updateNextViewRangeTime}
                 updateViewRangeTime={updateViewRangeTime}
                 viewRange={viewRange}
+                {...props}
                 // timeZone={timeZone}
             />
             <TraceTimelineViewer
@@ -2034,6 +2035,7 @@ export function TraceView(props/* : any */) {
                 // createFocusSpanLink={createFocusSpanLink}
                 // topOfViewRef={topOfViewRef}
                 // topOfViewRefType={topOfViewRefType}
+                {...props}
             />
         </>
     );

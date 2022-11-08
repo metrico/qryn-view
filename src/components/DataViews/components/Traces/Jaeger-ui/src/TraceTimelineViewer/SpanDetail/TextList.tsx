@@ -13,51 +13,49 @@
 // limitations under the License.
 
 import { css } from '@emotion/css';
+import styled from '@emotion/styled';
 import cx from 'classnames';
 import * as React from 'react';
 
 
-/* const getStyles = () => {
-  return {
-    TextList: css`
+
+    const TextListStyled = styled.div`
       max-height: 450px;
       overflow: auto;
-    `,
-    List: css`
+    `
+    const List = styled.ul`
       width: 100%;
       list-style: none;
       padding: 0;
       margin: 0;
-    `,
-    item: css`
+    `
+    const Item = styled.li`
       padding: 0.25rem 0.5rem;
       vertical-align: top;
-      &:nth-child(2n) {
+      &:nth-of-type(2n) {
         background: #f5f5f5;
       }
-    `,
-  };
-};
- */
+    `
+
+
 type TextListProps = {
   data: string[];
 };
 
 export default function TextList(props: TextListProps) {
   const { data } = props;
-//   const styles = useStyles2(getStyles);
   return (
-    <div /* className={cx(styles.TextList)} */ data-testid="TextList">
-      <ul /* className={styles.List} */>
+    <TextListStyled  data-testid="TextList">
+      <List>
         {data.map((row, i) => {
           return (
             // `i` is necessary in the key because row.key can repeat
-            <li /* className={styles.item} */ key={`${i}`}>
+            <Item  key={`${i}`}>
               {row}
-            </li>
+            </Item>
           );
         })}
-      </ul>
-    </div>
+      </List>
+    </TextListStyled>
   );
 }
