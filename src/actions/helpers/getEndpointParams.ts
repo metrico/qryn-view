@@ -28,8 +28,13 @@ export function getEndpointParams(
     }
 
     const queryStep = `&step=${stepCalc}`;
-    const encodedQuery = `${encodeURIComponent(query)}`;
 
+    if(type === 'traces') {
+
+    }
+
+    const encodedQuery = `${encodeURIComponent(query)}`;
+    // traces api takes only an ID
     let queryUrl = "";
     switch (type) {
         case "logs":
@@ -41,9 +46,13 @@ export function getEndpointParams(
         case "flux":
             queryUrl = `${url}/api/v2/query`;
             break;
+        case "traces":
+            queryUrl =  `${url}/api/traces/${query}/json`;
+            break;
         default:
             queryUrl = `${url}/loki/api/v1`;
     }
+
     return {
         queryUrl,
         encodedQuery,

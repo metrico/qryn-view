@@ -114,7 +114,8 @@ export const responseActions = {
     vector: (props: QueryResult) => parseVectorResponse(props),
     matrix: (props: QueryResult) => parseMatrixResponse(props),
     scalar: (props: QueryResult) => parseMatrixResponse(props),
-    flux: (props: QueryResult) => parseVectorResponse(props)
+    flux: (props: QueryResult) => parseVectorResponse(props),
+    traces: (props:QueryResult) => parseStreamResponse(props)
 };
 
 /**
