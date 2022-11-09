@@ -16,7 +16,8 @@ function noop()/* : {} */ {
     return {};
 }
 
-export function TraceView(props/* : any */) {
+export function TraceView(props: any) {
+    console.log(props)
     const {
         traceProp,
     } = {
