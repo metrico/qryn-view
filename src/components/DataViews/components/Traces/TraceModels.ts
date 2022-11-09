@@ -87,7 +87,7 @@ export interface Reference {
     span:    Span;
 }
 
-export interface Span {
+export interface SpanProp {
     traceID:           TraceID;
     spanID:            string;
     parentSpanID:      SpanID;
