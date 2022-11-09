@@ -97,15 +97,12 @@ export default function ClokiMenu() {
                     />{" "}
                     Query Settings
                 </MenuItem>
-                <MenuItem>
-                    <TuneIcon style={{ color: qrynTheme.textColor }} />
-                    <Link
-                        to="datasources"
-                        style={{ color: qrynTheme.textColor }}
-                    >
+                <Link to="datasources" style={{ color: qrynTheme.textColor }}>
+                    <MenuItem>
+                        <TuneIcon style={{ color: qrynTheme.textColor }} />
                         Datasources
-                    </Link>
-                </MenuItem>
+                    </MenuItem>
+                </Link>
             </StyledMenu>
         </div>
     );
