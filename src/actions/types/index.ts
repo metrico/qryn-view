@@ -1,6 +1,6 @@
 import { AxiosRequestHeaders, Method } from "axios";
 
-export type QueryResultType = "streams" | "vector" | "matrix" | "scalar" | "flux";
+export type QueryResultType = "streams" | "vector" | "matrix" | "scalar" | "flux" | "traces";
 
 export type Endpoint = {
     instant: string;
@@ -19,6 +19,21 @@ export type QueryResult = {
     ts: number;
     direction: QueryDirection
 
+};
+
+export type TracesResultType = {
+    resourceSpans: Array<any>
+}
+
+export type TracesResult = {
+    result: TracesResultType;
+    time?: number;
+    debugMode?: boolean;
+    dispatch: Function;
+    type: QueryResultType;
+    panel: string;
+    id: string;
+    ts: number;
 };
 
 export type Message = {

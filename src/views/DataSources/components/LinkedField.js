@@ -88,16 +88,19 @@ export const LinkedField = (props) => {
                     label={"Name"}
                     onChange={(e) => onChange(e, "name")}
                 />
+
                 <Field
                     value={regex}
                     label={"Regex"}
                     onChange={(e) => onChange(e, "regex")}
                 />
+
                 <Field
                     value={urlLabel}
                     label={"URL Label"}
                     onChange={(e) => onChange(e, "urlLabel")}
                 />
+
                 <DeleteForeverIcon
                     onClick={onLinkedFieldRemove}
                     style={{
@@ -105,8 +108,11 @@ export const LinkedField = (props) => {
                         display: locked ? "none" : "inline-block",
                     }}
                 />
+
             </InputCol>
+            
             <InputCol>
+
                 <Field
                     value={query}
                     label={"Query"}
@@ -118,6 +124,7 @@ export const LinkedField = (props) => {
                     label={"URL"}
                     onChange={(e) => onChange(e, "url")}
                 />
+
             </InputCol>
             <InputCol>
                 <QrynSwitch
@@ -130,8 +137,10 @@ export const LinkedField = (props) => {
                     label={""}
                     value={linkType}
                     opts={dataSources}
+                    selectType={'linkedField'}
                     onChange={(e) => onChange(e, "linkType")}
                 />
+
             </InputCol>
         </LinkFieldsGroup>
     );

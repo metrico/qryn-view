@@ -18,7 +18,6 @@ import { get as _get, maxBy as _maxBy, values as _values } from "lodash";
 import * as React from "react";
 import MdKeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 
-
 import {
     TUpdateViewRangeTimeFunction,
     ViewRange,
@@ -36,9 +35,9 @@ import { formatDuration } from "../utils/date";
 import SpanGraph from "./SpanGraph";
 import styled from "@emotion/styled";
 import { useTheme } from "@emotion/react";
-
+import moment from "moment";
 const TracePageHeaderStyled = styled.header`
-    & > :first-child {
+    & > :first-of-type {
         border-bottom: 1px solid #e8e8e8;
     }
     & > :nth-of-type(2) {
@@ -140,26 +139,34 @@ type TracePageHeaderEmbedProps = {
     theme: any;
 };
 
+// const toTz = (dateInUtctimeZone:any) => {
+//     const date = dateInUtc as MomentInput;
+//     const zone = moment.tz.zone(timeZone);
+
+//     if (zone && zone.name) {
+//       return moment.utc(date).tz(zone.name);
+//     }
+
+//     switch (timeZone) {
+//       case 'utc':
+//         return moment.utc(date);
+//       default:
+//         return moment.utc(date).local();
+//     }
+//   };
+
+// export const dateTimeFormat = (dateInUtc, options?) =>
+//   toTz(dateInUtc, getTimeZone(options)).format(getFormat(options));
+
 export const HEADER_ITEMS = [
     {
         key: "timestamp",
         label: "Trace Start:",
         renderer(trace: Trace) {
-            console.log(trace);
-            // Convert date from micro to milli seconds
-            const match = trace?.startTime
-                ?.toString()
-                .match(/^(.+)(:\d\d\.\d+)$/);
-            return match ? (
-                <TracePageHeaderOverviewItemValue>
-                    {match[1]}
-                    <TracePageHeaderOverviewItemValueDetail>
-                        {match?.[2]}
-                    </TracePageHeaderOverviewItemValueDetail>
-                </TracePageHeaderOverviewItemValue>
-            ) : (
-                trace?.startTime
+            const formattedTS = moment(trace?.startTime / 1000).format(
+                "YYYY-MM-DDTHH:mm:ss.SSSZ"
             );
+            return formattedTS;
         },
     },
     {
@@ -170,8 +177,11 @@ export const HEADER_ITEMS = [
     {
         key: "service-count",
         label: "Services:",
-        renderer: (trace: Trace) =>
-            new Set(_values(trace.processes).map((p) => p.serviceName)).size,
+        renderer (trace: Trace) {
+            console.log(trace.services)
+            return  new Set(_values(trace.services).map((p) => p.name)).size
+        },
+           
     },
     {
         key: "depth",

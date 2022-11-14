@@ -4,6 +4,7 @@ import {
     QueryResult,
     QueryResultType,
     QueryDirection,
+    TracesResult,
 } from "../types";
 import store from "../../store/store";
 
@@ -12,7 +13,7 @@ import { parseVectorResponse } from "./parseVectorResponse";
 import { parseMatrixResponse } from "./parseMatrixResponse";
 import { parseStreamResponse } from "./parseStreamResponse";
 import { fromNanoSec } from "./timeParser";
-
+import { parseTracesResponse } from "./parseTracesResponse";
 const { debugMode } = store.getState();
 
 /**
@@ -106,24 +107,37 @@ export function mapStreams(
     return sortMessagesByTimestamp(messages, direction);
 }
 
-/**
- * returs response parsed by response type
- */
-export const responseActions = {
-    streams: (props: QueryResult) => parseStreamResponse(props),
-    vector: (props: QueryResult) => parseVectorResponse(props),
-    matrix: (props: QueryResult) => parseMatrixResponse(props),
-    scalar: (props: QueryResult) => parseMatrixResponse(props),
-    flux: (props: QueryResult) => parseVectorResponse(props),
-    traces: (props:QueryResult) => parseStreamResponse(props)
-};
 
 /**
  *
  * @param responseProps : QueryResult props to be parsed
  */
 
-export async function parseResponse(responseProps: QueryResult) {
+export async function parseResponse(responseProps: any) {
+    console.log(responseProps);
     const { type }: { type: QueryResultType } = responseProps;
-    responseActions[type](responseProps);
+
+    switch (type) {
+        case "streams":
+           await parseStreamResponse(responseProps);
+            break;
+        case "vector":
+           await parseVectorResponse(responseProps);
+            break;
+        case "matrix":
+          await  parseMatrixResponse(responseProps);
+            break;
+        case "scalar":
+          await  parseMatrixResponse(responseProps);
+            break;
+        case "flux":
+          await  parseVectorResponse(responseProps);
+            break;
+        case "traces":
+          await  parseTracesResponse(responseProps);
+            break;
+        default:
+          await  parseStreamResponse(responseProps);
+    }
+
 }

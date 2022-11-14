@@ -118,9 +118,11 @@ export default function getData(
         direction,
         dsSettings.url || ""
     );
+
     const endpoint = getEndpoint(type, queryType, params);
 
     return async function (dispatch: Function) {
+        
         await resetParams(dispatch, panel);
 
         let cancelToken: any;

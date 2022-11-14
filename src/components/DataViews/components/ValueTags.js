@@ -74,13 +74,25 @@ export async function addLabel(e, key, value, isExcluded = false, queryObj) {
 
 
 export default function ValueTags(props) {
+    console.log(props)
     const { tags, actQuery } = props;
 
     const theme = useSelector((store) => store.theme);
     const isEmbed = useSelector((store) => store.isEmbed);
     const dispatch = useDispatch();
 
+
+    // get the datasource used by this 'logs' dataSource 
+    const dataSources = useSelector(store => store.dataSources)
+
+
+    console.log(dataSources)
+
+
+    // match here the datasource with the one selected inside datasources
+
     // add labels should add the labels to expresion and update labels on selectors
+
     const openTraces = (e, key, value) => {
         e.stopPropagation();
         if (props.actQuery.panel === 'left') {
@@ -88,6 +100,8 @@ export default function ValueTags(props) {
         }
         const panelCP = JSON.parse(JSON.stringify(props.actQuery));
         panelCP.dataSourceType = 'traces';
+        panelCP.expr = value
+
         console.log(props.name, panelCP)
         dispatch(setRightPanel([panelCP]));
         console.log(props)

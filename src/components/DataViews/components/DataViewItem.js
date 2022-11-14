@@ -56,7 +56,8 @@ export function DataViewItem(props) {
     const theight = useTableHeight({ total, panelSize, dataView });
 
     const viewHeight = useViewHeight({ type, actualQuery, total, dataView});
-    if (actualQuery && type === "trace" && streamData.length > 0) {
+    console.log(type)
+    if ( type === 'traces') {
         // return trace type component
         const { limit } = actualQuery;
         const traceProps = {
@@ -79,7 +80,6 @@ export function DataViewItem(props) {
         };
         return <TraceView {...traceProps}/>;
     }
-
     if (actualQuery && type === "matrix" && streamData.length > 0) {
         // return matrix type component
         const { limit } = actualQuery;
@@ -142,6 +142,9 @@ export function DataViewItem(props) {
         return <VectorView {...vectorProps} />;
     } 
     
+
+
+
     if(actualQuery && !streamData?.dataRows?.length && !streamData?.length ) {
        // Empty view for the case when no view available
        const emptyViewProps = {
@@ -158,7 +161,7 @@ export function DataViewItem(props) {
     return <EmptyView {...emptyViewProps} />;
     }
     
-    
+
     else {
         return null
     }

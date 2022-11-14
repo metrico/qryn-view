@@ -56,11 +56,13 @@ export function MobileView({ theme, isEmbed, settingsDialogOpen }) {
         </ThemeProvider>
     );
 }
+
 /**
  *
  * @param {theme, isEmbed, isSplit, settingsDialogOpen}
  * @returns Desktop View
  */
+
 export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
     return (
         <ThemeProvider theme={theme}>
