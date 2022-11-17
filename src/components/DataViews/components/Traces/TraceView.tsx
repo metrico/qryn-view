@@ -15,59 +15,48 @@ import { mapSpanFields, mapTracesResponse } from "./mapTracesResponse";
 import { ViewHeader } from "../ViewHeader";
 import { ViewStyled } from "./styled";
 
-
 function noop() /* : {} */ {
     return {};
 }
 
 export function TraceView(props: any) {
-    
     const {
         viewRef,
         panelSize,
         viewHeight,
-        onStreamClose,
-        onMaximize,
-        onMinimize,
+        setStreamClose,
+        setMaxHeight,
+        setMinimize,
         actualQuery,
         total,
         type,
-        theight,
-        tableData,
-        viewWidth,
-        limit,
-        streamData,
     } = props;
-    
-    
+
     const { dataView } = props;
-    const { id,  data } = dataView;
+    const { id, data } = dataView;
 
     const tracePropMapped = useMemo(() => {
-       return mapTracesResponse(data)[0];
+        return mapTracesResponse(data)[0];
     }, [data]);
 
-    const spanFieldsMapped = useMemo(()=>{
-        if(tracePropMapped?.spans?.length > 0) {
-     
-            const fields =  mapSpanFields(tracePropMapped.spans) 
+    const spanFieldsMapped = useMemo(() => {
+        if (tracePropMapped?.spans?.length > 0) {
+            const fields = mapSpanFields(tracePropMapped.spans);
 
             const fieldsMapped = {
-                name:"Trace",
-                refId:actualQuery?.idRef || "Traces",
+                name: "Trace",
+                refId: actualQuery?.idRef || "Traces",
                 fields,
-                length:fields?.length
-            }
+                length: fields?.length,
+            };
 
-            return fieldsMapped
+            return fieldsMapped;
         }
-        return null
-    },[tracePropMapped, actualQuery])
+        return null;
+    }, [tracePropMapped, actualQuery]);
 
-
-    const { traceProp } ={ traceProp : {...tracePropMapped} };
+    const { traceProp } = { traceProp: { ...tracePropMapped } };
     /* { */
-      
 
     const {
         removeHoverIndentGuideId,
@@ -84,6 +73,7 @@ export function TraceView(props: any) {
         childrenHiddenIDs,
         expandAll,
     } = useChildrenState();
+
     const {
         detailStates,
         toggleDetail,
@@ -95,9 +85,8 @@ export function TraceView(props: any) {
         detailTagsToggle,
         detailWarningsToggle,
         detailStackTracesToggle,
-    } = useDetailState( spanFieldsMapped
+    } = useDetailState(spanFieldsMapped);
 
-    );
     const [slim, setSlim] = useState(false);
     const [spanNameColumnWidth, setSpanNameColumnWidth] = useState(0.25);
     const traceTimeline /* : TTraceTimeline  */ = useMemo(
@@ -107,7 +96,7 @@ export function TraceView(props: any) {
             hoverIndentGuideIds,
             shouldScrollToFirstUiFindMatch: false,
             spanNameColumnWidth,
-            traceID: /*props.*/traceProp?.traceID,
+            traceID: /*props.*/ traceProp?.traceID,
         }),
         [
             childrenHiddenIDs,
@@ -119,89 +108,79 @@ export function TraceView(props: any) {
     );
     const onSlimViewClicked = useCallback(() => setSlim(!slim), [slim]);
 
-    if( spanFieldsMapped  && tracePropMapped ) {
-
-
-            const styledProps = {
-                ref:viewRef,
-                size:panelSize,
-                vheight:viewHeight,
-                ...props
-            }
+    if (spanFieldsMapped && tracePropMapped) {
+        const styledProps = {
+            ref: viewRef,
+            size: panelSize,
+            vheight: viewHeight,
+            ...props,
+        };
 
         return (
-           <ViewStyled {...styledProps}>
-              
-              <ViewHeader
-                    onClose={onStreamClose}
-                    onMinimize={onMinimize}
-                    onMaximize={onMaximize}
+            <ViewStyled {...styledProps}>
+                <ViewHeader
+                    onClose={setStreamClose}
+                    setMinimize={setMinimize}
+                    setMaxHeight={setMaxHeight}
                     actualQuery={actualQuery}
                     total={total}
                     type={type}
                     {...props}
                 />
                 <div className="view-content">
-                <TracePageHeader
-                    canCollapse={false}
-                    hideMap={false}
-                    hideSummary={false}
-                    onSlimViewClicked={onSlimViewClicked}
-                    onTraceGraphViewClicked={noop}
-                    slimView={slim}
-                    trace={traceProp}
-                    updateNextViewRangeTime={updateNextViewRangeTime}
-                    updateViewRangeTime={updateViewRangeTime}
-                    viewRange={viewRange}
-                    {...props}
-                    // timeZone={timeZone}
-                />
-                <TraceTimelineViewer
-                    registerAccessors={noop}
-                    scrollToFirstVisibleSpan={noop}
-                    // findMatchesIDs={spanFindMatches}
-                    trace={traceProp}
-                    // datasourceType={datasourceType}
-                    // spanBarOptions={spanBarOptions?.spanBar}
-                    traceTimeline={traceTimeline}
-                    updateNextViewRangeTime={updateNextViewRangeTime}
-                    updateViewRangeTime={updateViewRangeTime}
-                    viewRange={viewRange}
-                    // timeZone={timeZone}
-                    setSpanNameColumnWidth={setSpanNameColumnWidth}
-                    collapseAll={collapseAll}
-                    collapseOne={collapseOne}
-                    expandAll={expandAll}
-                    expandOne={expandOne}
-                    childrenToggle={childrenToggle}
-                    clearShouldScrollToFirstUiFindMatch={noop}
-                    detailLogItemToggle={detailLogItemToggle}
-                    detailLogsToggle={detailLogsToggle}
-                    detailWarningsToggle={detailWarningsToggle}
-                    detailStackTracesToggle={detailStackTracesToggle}
-                    detailReferencesToggle={detailReferencesToggle}
-                    detailReferenceItemToggle={detailReferenceItemToggle}
-                    detailProcessToggle={detailProcessToggle}
-                    detailTagsToggle={detailTagsToggle}
-                    detailToggle={toggleDetail}
-                    setTrace={noop}
-                    addHoverIndentGuideId={addHoverIndentGuideId}
-                    removeHoverIndentGuideId={removeHoverIndentGuideId}
-                    linksGetter={noop}
-                    uiFind={props.search}
-                    // createSpanLink={createSpanLink}
-                    scrollElement={props.scrollElement}
-                    // focusedSpanId={focusedSpanId}
-                    // focusedSpanIdForSearch={props.focusedSpanIdForSearch!}
-                    // createFocusSpanLink={createFocusSpanLink}
-                    // topOfViewRef={topOfViewRef}
-                    // topOfViewRefType={topOfViewRefType}
-                    {...props}
-                />
+                    <TracePageHeader
+                        canCollapse={false}
+                        hideMap={false}
+                        hideSummary={false}
+                        onSlimViewClicked={onSlimViewClicked}
+                        onTraceGraphViewClicked={noop}
+                        slimView={slim}
+                        trace={traceProp}
+                        updateNextViewRangeTime={updateNextViewRangeTime}
+                        updateViewRangeTime={updateViewRangeTime}
+                        viewRange={viewRange}
+                        {...props}
+                        // timeZone={timeZone}
+                    />
+                    <TraceTimelineViewer
+                        registerAccessors={noop}
+                        scrollToFirstVisibleSpan={noop}
+                        // findMatchesIDs={spanFindMatches}
+                        trace={traceProp}
+                        // datasourceType={datasourceType}
+                        // spanBarOptions={spanBarOptions?.spanBar}
+                        traceTimeline={traceTimeline}
+                        updateNextViewRangeTime={updateNextViewRangeTime}
+                        updateViewRangeTime={updateViewRangeTime}
+                        viewRange={viewRange}
+                        // timeZone={timeZone}
+                        setSpanNameColumnWidth={setSpanNameColumnWidth}
+                        collapseAll={collapseAll}
+                        collapseOne={collapseOne}
+                        expandAll={expandAll}
+                        expandOne={expandOne}
+                        childrenToggle={childrenToggle}
+                        clearShouldScrollToFirstUiFindMatch={noop}
+                        detailLogItemToggle={detailLogItemToggle}
+                        detailLogsToggle={detailLogsToggle}
+                        detailWarningsToggle={detailWarningsToggle}
+                        detailStackTracesToggle={detailStackTracesToggle}
+                        detailReferencesToggle={detailReferencesToggle}
+                        detailReferenceItemToggle={detailReferenceItemToggle}
+                        detailProcessToggle={detailProcessToggle}
+                        detailTagsToggle={detailTagsToggle}
+                        detailToggle={toggleDetail}
+                        setTrace={noop}
+                        addHoverIndentGuideId={addHoverIndentGuideId}
+                        removeHoverIndentGuideId={removeHoverIndentGuideId}
+                        linksGetter={noop}
+                        uiFind={props.search}
+                        scrollElement={props.scrollElement}
+                        {...props}
+                    />
                 </div>
             </ViewStyled>
         );
     }
-return null
- 
+    return null;
 }

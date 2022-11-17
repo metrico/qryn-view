@@ -38,7 +38,7 @@ export default function QueryItem(props) {
     useEffect(() => {
         const { expr, queryType, limit, panel, id, dataSourceType, dataSourceId, direction, dataSourceURL } =
             props.data;
-
+    
         dispatch(
             getData(
                 dataSourceType,
@@ -68,11 +68,7 @@ export default function QueryItem(props) {
     const theme = useSelector((store) => store.theme);
     const dataView = useSelector((store) => store[`${name}DataView`]);
     const panelSelected = useSelector((store) => store[name]);
-
     const isQueryOpen = useState(true);
-    
-
-
     function filterPanel(panel) {
         if (panel?.length > 1) {
             return panel?.filter((query) => query?.id !== props?.data?.id);
@@ -80,7 +76,7 @@ export default function QueryItem(props) {
             return panel;
         }
     }
-
+    
     const onDeleteQuery = () => {
         const filtered = filterPanel(panelSelected);
 

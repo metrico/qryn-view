@@ -55,11 +55,11 @@ export function ViewHeader(props) {
         dispatch(action(name)(filtered));
         props.onClose();
     }
-    function onMinimize() {
-        props.onMinimize();
+    function setMinimize() {
+        props.setMinimize();
     }
-    function onMaximize() {
-        props.onMaximize();
+    function setMaxHeight() {
+        props.setMaxHeight();
     }
 
     const labelsLegend = useMemo(
@@ -143,12 +143,12 @@ export function ViewHeader(props) {
                                 />
                                 <CropSquareIcon
                                     className="header-icon"
-                                    onClick={onMaximize}
+                                    onClick={setMaxHeight}
                                     style={{ fontSize: "12px" }}
                                 />
                                 <MinimizeIcon
                                     className="header-icon"
-                                    onClick={onMinimize}
+                                    onClick={setMinimize}
                                     style={{ fontSize: "12px" }}
                                 />
                             </>

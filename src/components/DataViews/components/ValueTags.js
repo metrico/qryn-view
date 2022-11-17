@@ -96,7 +96,7 @@ export default function ValueTags(props) {
 
     const openTraces = (e, key, value, linkID, currentUrl, linkType) => {
         e.stopPropagation();
-        if (props.actQuery.panel === "left") {
+        if (props?.actQuery?.panel === "left") {
             dispatch(setSplitView(true));
         }
 
@@ -104,41 +104,43 @@ export default function ValueTags(props) {
 
         const panelCP = JSON.parse(JSON.stringify(props.actQuery));
 
-        const newRight = {
-            ...previousRight[0],
-            id: previousRight[0].id,
-            idRef: linkType + "=" + value,
-            panel: "right",
-            queryType: "range",
-            dataSourceType: linkType.toLowerCase(),
-            dataSourceId: linkID,
-            currentUrl,
-            expr: value,
-            limit: 100,
-            step: 100,
-            tableView: false,
-            isShowTs: false,
-            browserOpen: false,
-            labels: [],
-            values: [],
-            direction: "forward",
-        };
+        if (value && linkID && currentUrl && linkType) {
+            const newRight = {
+                ...previousRight[0],
+                id: previousRight[0].id,
+                idRef: linkType + "=" + value,
+                panel: "right",
+                queryType: "range",
+                dataSourceType: linkType.toLowerCase(),
+                dataSourceId: linkID,
+                dataSourceURL: currentUrl,
+                expr: value,
+                limit: 100,
+                step: 100,
+                tableView: false,
+                isShowTs: false,
+                browserOpen: false,
+                labels: [],
+                values: [],
+                direction: "forward",
+            };
 
-        dispatch(setRightPanel([newRight]));
+            dispatch(setRightPanel([newRight]));
 
-        dispatch(
-            getData(
-                linkType.toLowerCase(),
-                value,
-                "range",
-                panelCP.limit || 100,
-                "right",
-                newRight.id,
-                "forward",
-                linkID, // datasourceid
-                currentUrl
-            )
-        ); // url
+            dispatch(
+                getData(
+                    linkType.toLowerCase(),
+                    value,
+                    "range",
+                    panelCP.limit || 100,
+                    "right",
+                    newRight.id,
+                    "forward",
+                    linkID, // datasourceid
+                    currentUrl
+                )
+            ); // url
+        }
     };
 
     function linkButton(key, value) {

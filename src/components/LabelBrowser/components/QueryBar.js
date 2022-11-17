@@ -89,6 +89,7 @@ export const QueryBar = (props) => {
     const [queryValue, setQueryValue] = useState(queryInit(data.expr));
     const [open, setOpen] = useState(false);
     const dataSources = useSelector((store) => store.dataSources);
+
     useEffect(() => {});
     const saveUrl = localUrl();
     const expr = useMemo(() => {
@@ -96,18 +97,38 @@ export const QueryBar = (props) => {
     }, [data.expr]);
 
     useEffect(() => {
+        // check for url params and for datasources
+        const urlParams = new URLSearchParams(hash);
+        let currentDataSource = {};
+        const panel = JSON.parse(decodeURIComponent(urlParams.get(name)));
+        const currentPanel = panel?.find((f) => f.id === id);
+
         if (dataSources) {
-            const currentDataSource = dataSources.find(
-                (f) => f.id === dataSourceId
-            );
+            currentDataSource = dataSources?.find((f) => f.id === dataSourceId);
+
+            if (currentDataSource && currentPanel && currentPanel?.dataSourceURL !== "") {
+                currentDataSource.url = currentPanel?.dataSourceURL;
+            }
+
+            const dsCopy = JSON.parse(JSON.stringify(dataSources));
+
+            dsCopy?.forEach((ds) => {
+                if (ds.id === currentPanel?.dataSourceId) {
+                    ds.url = currentDataSource.url;
+                }
+            });
+            // if there is a datasource url at url params, update datadources
+            dispatch(setDataSources([...dsCopy]));
+
             const labels = sendLabels(
                 dataSourceId,
                 dataSourceType,
-                currentDataSource.url,
+                currentDataSource?.url,
                 start,
                 stop
             );
-  
+
+            // if is view only mode (embedded) do an auto request on init
             if (isEmbed)
                 dispatch(
                     getData(
@@ -119,9 +140,11 @@ export const QueryBar = (props) => {
                         id,
                         direction,
                         dataSourceId,
-                        dataSourceURL
+                        currentDataSource?.url || dataSourceURL
                     )
                 );
+
+            
             if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
                 return labels.then((data) => {
                     const prevLabels = [...props.data.labels];
@@ -143,6 +166,7 @@ export const QueryBar = (props) => {
                     }
                 });
             } else {
+                // if there is nothing to request, show empty view
                 dispatch(setIsEmptyView(true));
             }
         }
@@ -206,23 +230,27 @@ export const QueryBar = (props) => {
                 if (currentDataSource?.type !== "flux") {
                     decodeQuery(
                         queryInput,
-                        currentDataSource.url,
+                        currentDataSource?.url,
                         props.data.labels
                     );
                 }
                 const labelsDecoded = decodeExpr(data.expr);
+                const actDataSource = dataSources.find(f => f.id === dataSourceId)
 
-                // Update panels into store
 
                 const panel = [...panelQuery];
                 panel.forEach((query) => {
                     if (query.id === id) {
                         query.labels = [...labelsDecoded];
                         query.browserOpen = false;
+                        query.dataSourceId = actDataSource.id 
+                        query.dataSourceType = actDataSource.type 
+                        query.dataSourceURL = actDataSource.url
                     }
                 });
-                
+
                 dispatch(panelAction(name, panel));
+
                 dispatch(
                     getData(
                         dataSourceType,

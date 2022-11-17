@@ -8,9 +8,19 @@ import { DataSource } from "./DataSource";
 import { List } from "./views/List";
 import { Header } from "./components";
 
-// DataSources Entry component
-// Returns the Datasources Header and  List
-// Routes (Links) into a DataSource settings
+export function getURlParams(params) {
+
+    const url = params.replace('#','')
+    const decoded = decodeURIComponent(url)
+    const urlParams = new URLSearchParams(decoded)
+    let panels = {left:'', right:''}
+    for(let [key,val] of urlParams) {
+        if(key === 'left' ||  key === 'right') {
+            panels[key] = JSON.parse(val)
+        }
+    }
+
+}
 
 export default function DataSources() {
 
@@ -18,7 +28,6 @@ export default function DataSources() {
     const theme = useMemo(() => {
         return themes[themeState];
     }, [themeState]);
-    
     return (
         <ThemeProvider theme={theme}>
             <PageContainer>

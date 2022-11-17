@@ -39,16 +39,16 @@ export function DataViewItem(props) {
         setTableData(dataView.tableData || {});
     }, [dataView.tableData, setTableData]);
 
-    const onStreamClose = () => {
+    const setStreamClose = () => {
         setStreamData([]);
         setTableData([]);
     };
 
-    const onMinimize = () => {
+    const setMinimize = () => {
         setPanelSize((prev) => (prev !== "min" ? "min" : "regular"));
     };
 
-    const onMaximize = () => {
+    const setMaxHeight = () => {
         setPanelSize((prev) => (prev !== "max" ? "max" : "regular"));
     };
 
@@ -63,9 +63,9 @@ export function DataViewItem(props) {
             viewRef,
             panelSize,
             viewHeight,
-            onStreamClose,
-            onMaximize,
-            onMinimize,
+            setStreamClose,
+            setMaxHeight,
+            setMinimize,
             actualQuery,
             total,
             type,
@@ -85,9 +85,9 @@ export function DataViewItem(props) {
             viewRef,
             panelSize,
             viewHeight,
-            onStreamClose,
-            onMaximize,
-            onMinimize,
+            setStreamClose,
+            setMaxHeight,
+            setMinimize,
             actualQuery,
             total,
             type,
@@ -106,9 +106,9 @@ export function DataViewItem(props) {
             viewRef,
             panelSize,
             viewHeight,
-            onStreamClose,
-            onMaximize,
-            onMinimize,
+            setStreamClose,
+            setMaxHeight,
+            setMinimize,
             actualQuery,
             total,
             type,
@@ -127,9 +127,9 @@ export function DataViewItem(props) {
             viewRef,
             panelSize,
             viewHeight,
-            onStreamClose,
-            onMinimize,
-            onMaximize,
+            setStreamClose,
+            setMinimize,
+            setMaxHeight,
             actualQuery,
             total,
             type,
@@ -148,9 +148,9 @@ export function DataViewItem(props) {
        const emptyViewProps = {
         viewRef,
         panelSize,
-        onStreamClose,
-        onMinimize,
-        onMaximize,
+        setStreamClose,
+        setMinimize,
+        setMaxHeight,
         actualQuery,
         total,
         ...props,

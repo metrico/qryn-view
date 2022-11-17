@@ -13,7 +13,6 @@ import {
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useMemo, useState } from "react";
 import { themes } from "../../theme/themes";
-import { constSelector } from "recoil";
 
 const DataSourceSelect = (props) => {
     const { value, onChange, opts, label } = props;
@@ -22,19 +21,21 @@ const DataSourceSelect = (props) => {
             return opts.map((k) => ({ value: k, name: k }));
         } else return opts;
     }, [opts]);
+    if(opts && value) {
+        return (
+            <InputGroup>
+                {label?.length > 0 && <Label>{label}</Label>}
+                <select defaultValue={value?.value} onChange={onChange}>
+                    {formattedSelect?.map((field, key) => (
+                        <option key={key} value={field?.value}>
+                            {field?.name}
+                        </option>
+                    ))}
+                </select>
+            </InputGroup>
+        );
+    } return null
 
-    return (
-        <InputGroup>
-            {label?.length > 0 && <Label>{label}</Label>}
-            <select defaultValue={value.value} onChange={onChange}>
-                {formattedSelect?.map((field, key) => (
-                    <option key={key} value={field.value}>
-                        {field.name}
-                    </option>
-                ))}
-            </select>
-        </InputGroup>
-    );
 };
 
 function QueryId(props) {
@@ -111,11 +112,12 @@ export function QueryItemToolbar(props) {
             icon: m.icon,
         }));
     }, [dataSources]);
-
+    const valueMemo = useMemo(()=>{
+        return dataSourceOptions?.find((f) => f.value === props.data.dataSourceId) || ''
+    },[props.data.dataSourceId,dataSourceOptions])
     const [dataSourceValue, setDataSourceValue] = useState(
-        dataSourceOptions?.find((f) => f.value === props.data.dataSourceId)
+        valueMemo || ''
     );
-
 
     const panelAction = (panel, data) => {
         if (panel === "left") {
