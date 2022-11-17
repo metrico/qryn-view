@@ -1,4 +1,4 @@
-import styled from "@emotion/styled"
+import styled from "@emotion/styled";
 
 import HistoryIcon from "@mui/icons-material/History";
 import { BtnSmall } from "../../../../theme/styles/Button";
@@ -12,10 +12,10 @@ export const HistoryIconStyled = styled(HistoryIcon)`
 export const HistoryButtonStyled = styled(BtnSmall)`
     background: none;
     margin-left: 5px;
-    color: ${(props)=> props.theme.textColor};
+    color: ${(props) => props.theme.textColor};
     background: ${(props) => props.theme.buttonDefault};
-    border:1px solid ${(props)=>props.theme.buttonBorder};
-    height:28px;
+    border: 1px solid ${(props) => props.theme.buttonBorder};
+    height: 28px;
     span {
         margin-left: 5px;
     }
@@ -26,10 +26,10 @@ export const HistoryButtonStyled = styled(BtnSmall)`
 
 export const ShowLabelsBtn = styled(BtnSmall)`
     background: ${({ theme }) => theme.buttonDefault};
-        border:1px solid ${(props)=>props.theme.buttonBorder};
+    border: 1px solid ${(props) => props.theme.buttonBorder};
     text-overflow: ellipsis;
     transition: 0.25s all;
-    padding-left:6px;
+    padding-left: 6px;
     justify-content: flex-start;
     color: ${({ theme }) => theme.textColor};
     height: 28px;
@@ -46,7 +46,7 @@ export const ShowLabelsBtn = styled(BtnSmall)`
 export const QueryBarContainer = styled.div`
     display: flex;
     padding: 6px;
-    margin-top:5px;
+    margin-top: 5px;
     margin-left: 0px;
     background: ${({ theme }) => theme.widgetContainer};
     flex-wrap: wrap;
@@ -54,21 +54,21 @@ export const QueryBarContainer = styled.div`
 `;
 export const ShowLogsBtn = styled(BtnSmall)`
     background: ${(props) => props.theme.primaryDark};
-    border:1px solid ${(props)=>props.theme.buttonBorder};
+    border: 1px solid ${(props) => props.theme.buttonBorder};
     color: ${(props) => props.theme.buttonText};
     margin-left: 5px;
     transition: 0.25s all;
     justify-content: center;
     padding: 3px 12px;
-    height:28px;
+    height: 28px;
     &:hover {
         background: ${(props) => props.theme.primaryLight};
     }
     &:disabled {
         background: ${(props) => props.theme.buttonDefault};
-        border:1px solid ${(props)=>props.theme.buttonBorder};
+        border: 1px solid ${(props) => props.theme.buttonBorder};
         cursor: not-allowed;
-        color: ${props => props.theme.textColor};
+        color: ${(props) => props.theme.textColor};
     }
     @media screen and (max-width: 864px) {
         display: ${(props) => (props.isMobile ? "flex" : "none")};
@@ -80,35 +80,33 @@ export const ShowLogsBtn = styled(BtnSmall)`
 export const ShowSettingsBtn = styled(BtnSmall)`
     background: none;
     margin-left: 5px;
-    color: ${(props)=> props.theme.textColor};
+    color: ${(props) => props.theme.textColor};
     background: ${(props) => props.theme.buttonDefault};
-    border:1px solid ${(props)=>props.theme.buttonBorder};
-    height:28px;
+    border: 1px solid ${(props) => props.theme.buttonBorder};
+    height: 28px;
     span {
         margin-left: 5px;
     }
-    @media screen and (max-width: 864px) {
-        display: ${(props) => (props.isMobile ? "flex" : "none")};
-    }
+    display: ${(props) => (props.isMobile || props.isSplit ? "flex" : "none")};
 `;
 
 export const MobileTopQueryMenu = styled.div`
-    display: none;
+    display: ${(props) =>
+        props.isSplit || props.dataSourceType === "flux" ? "flex" : "none"};
+
     @media screen and (max-width: 864px) {
         display: flex;
-        justify-content: space-between
+        justify-content: space-between;
     }
 `;
 
-
-
 export const InputGroup = styled.div`
     display: flex;
-    flex:1;
-    align-items:center;
-    justify-content:space-between;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 20px;
-    margin-right:10px;
+    margin-right: 10px;
 `;
 export const InlineGroup = styled.div`
     display: flex;
@@ -120,7 +118,6 @@ export const SettingCont = styled.div`
     flex: 1;
     flex-direction: column;
 
-  
     background: ${({ theme }) => theme.widgetContainer};
 `;
 
@@ -129,9 +126,9 @@ export const SettingsInputContainer = styled.div`
     display: flex;
     flex-direction: column;
     flex: 1;
-    .options-input{
-        margin:10px;
-        display:flex;
+    .options-input {
+        margin: 10px;
+        display: flex;
     }
 `;
 
