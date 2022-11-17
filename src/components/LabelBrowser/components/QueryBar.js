@@ -1,5 +1,5 @@
 /**React */
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 /**npm */
@@ -88,15 +88,29 @@ export const QueryBar = (props) => {
     const { hash } = useLocation();
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
+<<<<<<< HEAD
     const { historyOpen, isEmbed, theme, queryHistory, start, stop } =
         useSelector((store) => store);
     const isSplit = useSelector((store) => store.isSplit);
+=======
+    const {
+        apiUrl,
+        historyOpen,
+        isEmbed,
+        theme,
+        queryHistory,
+        start,
+        stop,
+        isSplit
+    } = useSelector((store) => store);
+>>>>>>> 67352e9 (Added resizable Split and Query editors #109 #110)
     const panelQuery = useSelector((store) => store[name]);
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 864px)" });
     const [queryInput, setQueryInput] = useState(data.expr);
     const [queryValid, setQueryValid] = useState(false);
     const [queryValue, setQueryValue] = useState(queryInit(data.expr));
     const [open, setOpen] = useState(false);
+<<<<<<< HEAD
     // const [currentDataSource,setCurrentDatasource] = useState({})
     const dataSources = useSelector((store) => store.dataSources);
     const panelData = useSelector((store) => store[name]);
@@ -120,6 +134,12 @@ export const QueryBar = (props) => {
         
 
     },[isTabletOrMobile])
+=======
+    const wrapperRef = useRef(null)
+    const labelsButtonRef = useRef(null)
+    const buttonsContainerRef = useRef(null)
+    useEffect(() => {});
+>>>>>>> 67352e9 (Added resizable Split and Query editors #109 #110)
     const saveUrl = localUrl();
     const expr = useMemo(() => {
         return data.expr;
@@ -390,6 +410,7 @@ export const QueryBar = (props) => {
     function onClose() {
         showQuerySettings();
     }
+<<<<<<< HEAD
 
     const showFullQueryBar = (type, isSplit, isMobile) => {
         if (!isMobile && !isSplit && type !== "flux" && type !== "traces")
@@ -415,6 +436,32 @@ export const QueryBar = (props) => {
                     onSubmit={onSubmit}
                     onSubmitRate={onSubmitRate}
                 />
+=======
+    const getMaxWidth = () => {
+        const labelButtonWidth = !isNaN(labelsButtonRef?.current?.clientWidth) ? labelsButtonRef?.current?.clientWidth : 0;
+        const buttonsContainerWidth = !isNaN(buttonsContainerRef?.current?.clientWidth) ? buttonsContainerRef?.current?.clientWidth : 0;
+        if (isSplit || isTabletOrMobile) {
+            return 0;
+        } else {
+            return ( labelButtonWidth + buttonsContainerWidth + 5)
+        }
+    }
+    return (
+        !isEmbed && (
+            <div
+                className={css`
+                    max-width: 100%;
+                `}
+            >
+                <ThemeProvider theme={themes[theme]}>
+                    <MobileTopQueryMenu isSplit={isSplit}>
+                        <div
+                            className={css`
+                                display: flex;
+                            `}
+                        >
+                            <ShowLabelsButton {...props} isMobile={true} />
+>>>>>>> 67352e9 (Added resizable Split and Query editors #109 #110)
 
                 {dataSourceType === "traces" && <TracesSearch {...props} />}
 
@@ -486,8 +533,56 @@ export const QueryBarCont = (props) => {
                     {dataSourceType === "logs" && (
                         <ShowLogsRateButton
                             disabled={!queryValid}
+<<<<<<< HEAD
                             onClick={onSubmitRate}
                             isMobile={false}
+=======
+                            onClick={onSubmit}
+                            isMobile={true}
+                        />
+                    </MobileTopQueryMenu>
+                    <QueryBarContainer>
+                        {!isSplit && <span ref={labelsButtonRef}><ShowLabelsButton {...props} /></span>}
+                        <div
+                            style={{ flex: 1, maxWidth: `calc(100% - ${getMaxWidth()}px)` }}
+                            ref={wrapperRef}
+                        >
+                            <QueryEditor
+                                onQueryChange={handleQueryChange}
+                                defaultValue={expr || ""}
+                                value={queryValue}
+                                isSplit={isSplit}
+                                wrapperRef={wrapperRef?.current?.clientWidth}
+                                onKeyDown={handleInputKeyDown}
+                            />
+                        </div>
+                        {!isSplit && (
+                            <div style={{ display: "flex", flex: "0" }} ref={buttonsContainerRef}>
+                                <HistoryButton
+                                    queryLength={queryHistory.length}
+                                    handleHistoryClick={handleHistoryClick}
+                                />
+
+                                <ShowLogsButton
+                                    disabled={!queryValid}
+                                    onClick={onSubmit}
+                                    isMobile={false}
+                                />
+                            </div>
+                        )}
+                    </QueryBarContainer>
+
+                    {!isTabletOrMobile && !isSplit && (
+                        <QueryTypeBar {...props} />
+                    )}
+                    {(isTabletOrMobile || isSplit) && (
+                        <QuerySetting
+                            {...props}
+                            open={open}
+                            handleClose={onClose}
+                            actPanel={panelQuery}
+                            name={name}
+>>>>>>> 67352e9 (Added resizable Split and Query editors #109 #110)
                         />
                     )}
                     <ShowLogsButton

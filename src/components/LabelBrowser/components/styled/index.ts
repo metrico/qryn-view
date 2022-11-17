@@ -25,7 +25,11 @@ export const HistoryButtonStyled = styled(BtnSmall)`
 `;
 
 export const ShowLabelsBtn = styled(BtnSmall)`
+<<<<<<< HEAD:src/components/LabelBrowser/components/styled/index.ts
     background: ${({ theme }: any) => theme.buttonDefault};
+=======
+    background: ${({ theme }) => theme.buttonDefault};
+>>>>>>> 67352e9 (Added resizable Split and Query editors #109 #110):src/components/LabelBrowser/components/styled/index.js
     border: 1px solid ${(props) => props.theme.buttonBorder};
     text-overflow: ellipsis;
     transition: 0.25s all;
@@ -61,7 +65,10 @@ export const ShowLogsBtn = styled(BtnSmall)`
     justify-content: center;
     padding: 3px 12px;
     height: 28px;
+<<<<<<< HEAD:src/components/LabelBrowser/components/styled/index.ts
     
+=======
+>>>>>>> 67352e9 (Added resizable Split and Query editors #109 #110):src/components/LabelBrowser/components/styled/index.js
     &:hover {
         background: ${(props) => props.theme.primaryLight};
     }
@@ -89,6 +96,7 @@ export const ShowSettingsBtn = styled(BtnSmall)`
     span {
         margin-left: 5px;
     }
+<<<<<<< HEAD:src/components/LabelBrowser/components/styled/index.ts
 
     display: ${(props) => ((props.isMobile || props.isSplit) ? "flex" : "none")};
 `;
@@ -99,6 +107,18 @@ export const MobileTopQueryMenu = styled.div`
     @media screen and (max-width: 864px) {
         display: flex;
       
+=======
+    display: ${(props) => (props.isMobile || props.isSplit ? "flex" : "none")};
+`;
+
+export const MobileTopQueryMenu = styled.div`
+    display: ${(props) =>
+        props.isSplit || props.dataSourceType === "flux" ? "flex" : "none"};
+
+    @media screen and (max-width: 864px) {
+        display: flex;
+        justify-content: space-between;
+>>>>>>> 67352e9 (Added resizable Split and Query editors #109 #110):src/components/LabelBrowser/components/styled/index.js
     }
 `;
 
@@ -120,8 +140,12 @@ export const SettingCont = styled.div`
     flex: 1;
     flex-direction: column;
 
+<<<<<<< HEAD:src/components/LabelBrowser/components/styled/index.ts
   
     background: ${({ theme }: any) => theme.widgetContainer};
+=======
+    background: ${({ theme }) => theme.widgetContainer};
+>>>>>>> 67352e9 (Added resizable Split and Query editors #109 #110):src/components/LabelBrowser/components/styled/index.js
 `;
 
 export const SettingsInputContainer = styled.div`

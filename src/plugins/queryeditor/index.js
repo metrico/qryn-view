@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/css";
-import React, { useCallback, useState, useMemo, useEffect } from "react";
+import React, { useCallback, useState, useMemo, useEffect, useRef } from "react";
 
 import { createEditor, Text } from "slate";
 import { Slate, Editable, withReact } from "slate-react";
@@ -11,9 +11,11 @@ import "prismjs/components/prism-sql";
 import { themes } from "../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import { useSelector } from "react-redux";
-
+import { ResizableBox } from "../ResizableBox/ResiableBox";
+import { useMediaQuery } from "react-responsive";
 const CustomEditor = styled(Editable)`
     flex: 1;
+    height: 100%;
     background: ${(props) => props.theme.inputBg};
     border: 1px solid ${(props) => props.theme.buttonBorder};
     color: ${(props) => props.theme.textColor};
@@ -21,11 +23,16 @@ const CustomEditor = styled(Editable)`
     font-size: 1em;
     font-family: monospace;
     margin: 0px 5px;
+    margin-bottom: 20px;
     border-radius: 3px;
     line-height: 1.5;
     line-break: anywhere;
+    overflow-y: scroll;
 `;
-
+const Resizable = css`
+    margin-bottom: 10px;
+    width: 100%;
+`;
 const QueryBar = styled.div`
     display: flex;
     align-items: center;
@@ -106,12 +113,28 @@ export function getTokenLength(token) {
     return token.content.reduce((l, t) => l + getTokenLength(t), 0);
 }
 
-export default function QueryEditor({ onQueryChange, value, onKeyDown, defaultValue }) {
+export default function QueryEditor({
+    onQueryChange,
+    value,
+    onKeyDown,
+    defaultValue,
+    isSplit,
+    wrapperRef
+}) {
     const theme = useSelector((store) => store.theme);
 
     const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
-
+    const [height, setHeight] = useState(0);
+    const [width, setWidth] = useState(0);
     const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+    const ref = useRef(null);    
+
+    useEffect(()=> {
+        setHeight(30)
+    },[setHeight])
+    useEffect(()=> {
+        setWidth(wrapperRef)
+    },[width, setWidth, isSplit, wrapperRef])
     // Keep track of state for the value of the editor.
 
     const [language] = useState("sql");
@@ -152,26 +175,46 @@ export default function QueryEditor({ onQueryChange, value, onKeyDown, defaultVa
         setEditorValue(value);
         editor.children = value;
     }, [value, setEditorValue]);
-
+    const onResize = (e, {size}) => {
+        console.log(size)
+        setHeight(size.height)
+    };
     return (
         <ThemeProvider theme={themes[theme]}>
-            <QueryBar>
+            <QueryBar ref={ref}>
                 {/* <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-        <option value={"sql"}>{"SQL"}</option>
-        <option value={"promql"}>{"promQL"}</option>
-      </select> */}
+            <option value={"sql"}>{"SQL"}</option>
+            <option value={"promql"}>{"promQL"}</option>
+        </select> */}
                 <Slate
                     editor={editor}
                     value={editorValue}
                     onChange={onQueryChange}
+                    className="test"
                 >
-                    <CustomEditor
-                        decorate={decorate}
-                        renderLeaf={renderLeaf}
-                        placeholder={defaultValue}
-                        onKeyDown={onKeyDown}
-                        spellCheck="false"
-                    />
+                    {" "}
+                    <ResizableBox
+                        height={height}
+                        width={width || 500}
+                        axis={"y"}
+                        onResize={onResize}
+                        lockAspectRatio={false}
+                        handleSize={[10, 10]}
+                        minWidth={width || 500}
+                        maxWidth={width || 500}
+                        minHeight={30}
+                        maxHeight={500}
+                        resizeHandles={["s"]}
+                        className={Resizable}
+                    >
+                        <CustomEditor
+                            decorate={decorate}
+                            renderLeaf={renderLeaf}
+                            placeholder={defaultValue}
+                            onKeyDown={onKeyDown}
+                            spellCheck="false"
+                        />
+                    </ResizableBox>
                 </Slate>
             </QueryBar>
         </ThemeProvider>
