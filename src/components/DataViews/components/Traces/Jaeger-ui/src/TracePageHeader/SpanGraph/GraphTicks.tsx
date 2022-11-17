@@ -12,25 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { css } from "@emotion/css";
+
 import styled from "@emotion/styled";
 import React from "react";
-
-
 const GraphTick = styled.line`
     stroke: #aaa;
     stroke-width: 1px;
 `;
-
 type GraphTicksProps = {
     numTicks: number;
 };
-
 export default function GraphTicks(props: GraphTicksProps) {
     const { numTicks } = props;
-    //   const styles = useStyles2(getStyles);
+
     const ticks = [];
-    // i starts at 1, limit is `i < numTicks` so the first and last ticks aren't drawn
     for (let i = 1; i < numTicks; i++) {
         const x = `${(i / numTicks) * 100}%`;
         ticks.push(

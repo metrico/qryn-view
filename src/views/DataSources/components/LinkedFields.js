@@ -44,7 +44,6 @@ export const LinkedFields = (props) => {
             return m;
         });
 
-        console.log(newDataSources);
 
         localStorage.setItem("dataSources", JSON.stringify(newDataSources));
         dispatch(setDataSources(newDataSources));

@@ -45,8 +45,6 @@ interface LabelState {
     value: string;
 }
 
-const LABEL_ITEM = { id: nanoid(), label: "", op: "equals", value: "" };
-
 export default function LabelSelectors(props: any) {
     const [labelGroups, setLabelGroups] = useState<LabelState[]>([
         { id: nanoid(), label: "", op: "equals", value: "" },
@@ -55,24 +53,12 @@ export default function LabelSelectors(props: any) {
     const [labelsString, setLabelsString] = useState("");
 
     useEffect(() => {
-        console.log(labelGroups);
+    
     }, [labelGroups]);
 
     const theme = useSelector((store: RootState) => store.theme);
 
-    const labelsToString = (labels: LabelState[]) => {
-        let strOpen = "{";
-        let strClose = "{";
-        let or = "|";
-
-        for (let label of labels) {
-            let lb = "";
-            let vl = "";
-        }
-    };
-
     const onSelectorChange = (label: LabelState) => {
-        console.log(label, "LABEL");
 
         const prevLabelsCp = [...labelGroups];
 

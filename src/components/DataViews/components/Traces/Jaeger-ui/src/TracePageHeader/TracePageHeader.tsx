@@ -55,7 +55,8 @@ const TracePageHeaderTitleRow = styled.div`
 const TracePageHeaderBack = css`
     align-items: center;
     align-self: stretch;
-    background-color: #fafafa;
+    background:inherit;
+    // background-color: #fafafa;
     border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
     color: inherit;
@@ -95,10 +96,11 @@ const TracePageHeaderDetailToggleExpanded = css`
 const TracePageHeaderTitle = css`
     color: inherit;
     flex: 1;
-    font-size: 18px;
+    font-size: 14px;
+    font-weight:bold;
     line-height: 1em;
     margin: 0 0 0 0.5em;
-    padding-bottom: 0.5em;
+    padding: 0.75em;
 `;
 const TracePageHeaderTitleCollapsible = css`
     margin-left: 0;
@@ -107,19 +109,7 @@ const TracePageHeaderOverviewItems = css`
     border-bottom: 1px solid #e4e4e4;
     padding: 0.25rem 0.5rem !important;
 `;
-const TracePageHeaderOverviewItemValueDetail = styled.span`
-    ${cx(
-        css`
-            color: #aaa;
-        `,
-        "trace-item-value-detail"
-    )}
-`;
-const TracePageHeaderOverviewItemValue = styled.span`
-    &:hover > .trace-item-value-detail {
-        color: unset;
-    }
-`;
+
 const TracePageHeaderTraceId = styled.small`
     white-space: nowrap;
     font-size: 80%;
@@ -138,25 +128,6 @@ type TracePageHeaderEmbedProps = {
     viewRange: ViewRange;
     theme: any;
 };
-
-// const toTz = (dateInUtctimeZone:any) => {
-//     const date = dateInUtc as MomentInput;
-//     const zone = moment.tz.zone(timeZone);
-
-//     if (zone && zone.name) {
-//       return moment.utc(date).tz(zone.name);
-//     }
-
-//     switch (timeZone) {
-//       case 'utc':
-//         return moment.utc(date);
-//       default:
-//         return moment.utc(date).local();
-//     }
-//   };
-
-// export const dateTimeFormat = (dateInUtc, options?) =>
-//   toTz(dateInUtc, getTimeZone(options)).format(getFormat(options));
 
 export const HEADER_ITEMS = [
     {
@@ -178,7 +149,6 @@ export const HEADER_ITEMS = [
         key: "service-count",
         label: "Services:",
         renderer (trace: Trace) {
-            console.log(trace.services)
             return  new Set(_values(trace.services).map((p) => p.name)).size
         },
            

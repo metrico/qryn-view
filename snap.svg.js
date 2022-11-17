@@ -261,22 +261,7 @@
             }
         };
     };
-    /*\
-     * eve.f
-     [ method ]
-     **
-     * Returns function that will fire given event with optional arguments.
-     * Arguments that will be passed to the result function will be also
-     * concated to the list of final arguments.
-     | el.onclick = eve.f("click", 1, 2);
-     | eve.on("click", function (a, b, c) {
-     |     console.log(a, b, c); // 1, 2, [event object]
-     | });
-     > Arguments
-     - event (string) event name
-     - varargs (…) and any other arguments
-     = (function) possible event handler function
-    \*/
+
     eve.f = function (event) {
         var attrs = [].slice.call(arguments, 1);
         return function () {
@@ -2230,31 +2215,7 @@ function Element(el) {
         }
     }
 }
-   /*\
-     * Element.attr
-     [ method ]
-     **
-     * Gets or sets given attributes of the element.
-     **
-     - params (object) contains key-value pairs of attributes you want to set
-     * or
-     - param (string) name of the attribute
-     = (Element) the current element
-     * or
-     = (string) value of attribute
-     > Usage
-     | el.attr({
-     |     fill: "#fc0",
-     |     stroke: "#000",
-     |     strokeWidth: 2, // CamelCase...
-     |     "fill-opacity": 0.5, // or dash-separated names
-     |     width: "*=2" // prefixed values
-     | });
-     | console.log(el.attr("fill")); // #fc0
-     * Prefixed values in format `"+=10"` supported. All four operations
-     * (`+`, `-`, `*` and `/`) could be used. Optionally you can use units for `+`
-     * and `-`: `"+=2em"`.
-    \*/
+
     Element.prototype.attr = function (params, value) {
         var el = this,
             node = el.node;

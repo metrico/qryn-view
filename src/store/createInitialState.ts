@@ -106,6 +106,10 @@ export default function initialState() {
             linkedFieldsSettings,
         };
     };
+    const getDatasourceURL = (id:string) => {
+        const localDatasources = JSON.parse(localStorage.getItem('dataSources')||'')
+        return(localDatasources?.find((f:any) => f.id === 'id'))
+    }
 
     const urlState: URLState = stateFromQueryParams() || initialUrlState;
     const historyService = localService().historyStore();
@@ -164,6 +168,7 @@ export default function initialState() {
                 queryType: "range",
                 dataSourceType: "logs",
                 dataSourceId:'cHI2SqPzH_kxYRXj',
+                dataSourceURL:getDatasourceURL('cHI2SqPzH_kxYRXj'),
                 limit: 100,
                 step: 100,
                 tableView: false,
@@ -185,6 +190,7 @@ export default function initialState() {
                 queryType: "range",
                 dataSourceType: "logs",
                 dataSourceId:'cHI2SqPzH_kxYRXj',
+                dataSourceURL:getDatasourceURL('cHI2SqPzH_kxYRXj'),
                 limit: 100,
                 step: 100,
                 tableView: false,
@@ -211,7 +217,7 @@ export default function initialState() {
         notifications: [],
         tableData: {},
         isTableView: false,
-        theme: urlState.theme || "dark",
+        theme: urlState.theme || "light",
         isEmptyView: false,
         isSplit: false,
     };

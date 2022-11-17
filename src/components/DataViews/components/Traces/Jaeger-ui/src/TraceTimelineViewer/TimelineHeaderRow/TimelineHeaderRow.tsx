@@ -36,6 +36,7 @@ const TimelineHeaderRowStyled = css`
     width: 100%;
     z-index: 4;
     position: relative;
+    font-size:12px;
 `;
 const TimelineHeaderWrapper = css`
        align-items: center;

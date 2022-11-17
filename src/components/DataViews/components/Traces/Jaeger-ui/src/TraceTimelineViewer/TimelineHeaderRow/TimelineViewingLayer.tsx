@@ -35,6 +35,7 @@ const TimelineViewingLayerStyled = styled.div`
     position: absolute;
     right: 0;
     top: 0;
+    font-size:12px;
 `;
 const TimelineViewingLayerCursorGuideStyled = styled.div`
     position: absolute;

@@ -114,7 +114,6 @@ export function mapStreams(
  */
 
 export async function parseResponse(responseProps: any) {
-    console.log(responseProps);
     const { type }: { type: QueryResultType } = responseProps;
 
     switch (type) {

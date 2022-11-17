@@ -140,10 +140,11 @@ export default function QueryItem(props) {
         <ThemeProvider theme={themes[theme]}>
             <QueryContainer>
                 <QueryItemToolbar
+                {...props}
                     isQueryOpen={isQueryOpen}
                     onDeleteQuery={onDeleteQuery}
                     onAddQuery={onAddQuery}
-                    {...props}
+                    
                 />
                 {isQueryOpen[0] && <LabelBrowser {...props} />}
             </QueryContainer>

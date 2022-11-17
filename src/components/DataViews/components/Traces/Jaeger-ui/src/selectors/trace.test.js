@@ -141,8 +141,6 @@ it('getSpanDepthForTrace() should determine the depth of a given span in the par
       currentId = getSpanParentId(generatedTrace.spans.find(findCurrentSpanById));
     }
 
-    // console.log('hypothetical depth', depth);
-
     expect(
       traceSelectors.getSpanDepthForTrace({
         trace: generatedTrace,

@@ -44,17 +44,17 @@ export function TimelineCollapser(props: CollapserProps) {
             data-testid="TimelineCollapser"
         >
             <Tooltip title="Expand +1">
-                <KeyboardArrowDownIcon onClick={onExpandOne} />
+                <KeyboardArrowDownIcon fontSize={'small'} style={{cursor:'pointer'}} onClick={onExpandOne} />
             </Tooltip>
             <Tooltip title="Collapse +1">
-                <KeyboardArrowRightIcon onClick={onCollapseOne} />
+                <KeyboardArrowRightIcon fontSize={'small'} style={{cursor:'pointer'}} onClick={onCollapseOne} />
             </Tooltip>
 
             <Tooltip title="Expand All">
-                <KeyboardDoubleArrowDownIcon onClick={onExpandAll} />
+                <KeyboardDoubleArrowDownIcon fontSize={'small'} style={{cursor:'pointer'}} onClick={onExpandAll} />
             </Tooltip>
             <Tooltip title="Collapse All">
-                <KeyboardDoubleArrowRightIcon onClick={onCollapseAll} />
+                <KeyboardDoubleArrowRightIcon fontSize={'small'} style={{cursor:'pointer'}} onClick={onCollapseAll} />
             </Tooltip>
         </div>
     );

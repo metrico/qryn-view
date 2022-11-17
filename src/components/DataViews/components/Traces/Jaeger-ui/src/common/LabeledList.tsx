@@ -38,9 +38,11 @@ const LabeledListItemDivider = css`
 const LabeledListLabel = styled.span`
     color: #999;
     margin-right: 0.25rem;
+    font-size:12px;
 `;
 const LabeledListValue = styled.strong`
     margin-right: 0.55rem;
+    font-size:12px;
 `;
 
 type LabeledListProps = {

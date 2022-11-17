@@ -16,10 +16,8 @@ export async function processResponse(
 ) {
     const { time } = getTimeParams(type);
     const { queryType, debugMode } = store.getState();
-    console.log(response);
 
     if (type === "traces") {
-        console.log(response);
         if (response?.data?.resourceSpans?.length > 0) {
             const resultQuery:TracesResult= {
                 result: response?.data,
@@ -31,7 +29,6 @@ export async function processResponse(
                 id,
                 ts: Date.now(),
             };
-            console.log(resultQuery)
             parseResponse(resultQuery);
         }
     }

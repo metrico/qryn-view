@@ -19,16 +19,16 @@ function setDataView(panel:string) {
 
 export function parseTracesResponse(props:TracesResult) {
     const {result, debugMode, dispatch, panel, id, type} = props
-
-    console.log(props)
     try {
         const panelResult = {
             id,
-            type: 'traces',
+            type,
+            tableData:{},
             data:result,
+            labels:[],
             total: result?.resourceSpans?.length
         }
-    
+      
         const dataView = setDataView(panel);
         const {action,state} = dataView;
         const prevDV = store.getState()?.[state];

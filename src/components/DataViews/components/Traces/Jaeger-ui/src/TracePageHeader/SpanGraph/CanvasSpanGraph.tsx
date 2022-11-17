@@ -42,7 +42,6 @@ export class UnthemedCanvasSpanGraph extends React.PureComponent<CanvasSpanGraph
     theme: any;
     constructor(props: CanvasSpanGraphProps) {
         super(props);
-        console.log(props)
         this._canvasElm = undefined;
         
     }

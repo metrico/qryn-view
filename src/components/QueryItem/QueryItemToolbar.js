@@ -13,6 +13,7 @@ import {
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useMemo, useState } from "react";
 import { themes } from "../../theme/themes";
+import { constSelector } from "recoil";
 
 const DataSourceSelect = (props) => {
     const { value, onChange, opts, label } = props;
@@ -115,6 +116,7 @@ export function QueryItemToolbar(props) {
         dataSourceOptions?.find((f) => f.value === props.data.dataSourceId)
     );
 
+
     const panelAction = (panel, data) => {
         if (panel === "left") {
             return setLeftPanel(data);
@@ -147,7 +149,7 @@ export function QueryItemToolbar(props) {
                 panelCP.dataSourceURL = dataSource.url;
             }
         });
-        console.log(props.name, panelCP)
+       
         dispatch(panelAction(props.name, panelCP));
     };
     return (

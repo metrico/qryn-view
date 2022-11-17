@@ -140,9 +140,15 @@ export function UpdateStateFromQueryParams() {
                         }
                     } else if (ARRAY_VALUES.includes(param)) {
                         try {
+
+                        
+
                             const parsed = JSON.parse(
                                 decodeURIComponent(startParams[param])
                             );
+
+                         
+
                             dispatch(STORE_ACTIONS[param](parsed));
                         } catch (e) {
                             console.log(e);
@@ -170,11 +176,12 @@ export function UpdateStateFromQueryParams() {
                         console.log(e);
                     }
                 } else if (ARRAY_VALUES.includes(param)) {
+
                     try {
                         const encodedArray = encodeURIComponent(
                             JSON.stringify(STORE_KEYS[param])
                         );
-
+                      
                         urlFromHash.set(param, encodedArray);
                     } catch (e) {
                         console.log(e);
@@ -221,10 +228,12 @@ export function UpdateStateFromQueryParams() {
                         console.log(e);
                     }
                 } else if (store_key === "left") {
+                 
                     const parsed = encodeURIComponent(JSON.stringify(left));
 
                     paramsFromHash.set("left", parsed);
                 } else if (store_key === "right") {
+                 
                     const parsed = encodeURIComponent(JSON.stringify(right));
                     paramsFromHash.set("right", parsed);
                 }

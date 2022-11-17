@@ -3,6 +3,7 @@ import { LinkFieldsGroup, InputCol } from "../styles";
 import { Field, QrynSwitch, Select } from "../ui";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import setDataSources from "../store/setDataSources";
+import { useMemo } from "react";
 
 export const LinkedField = (props) => {
     const {
@@ -21,6 +22,14 @@ export const LinkedField = (props) => {
     const dispatch = useDispatch();
 
     const dataSources = useSelector((store) => store.dataSources);
+
+    const dataSourcesOpts = useMemo(()=>{
+        return dataSources.map(m => ({
+            name:m.name,
+            value:m.id
+        }))
+
+    },[dataSources])
 
     const onLinkedFieldChange = (prop, value) => {
         const prevDataSources = JSON.parse(JSON.stringify(dataSources));
@@ -75,7 +84,6 @@ export const LinkedField = (props) => {
         const value = e.target.checked;
 
         const newVal = onLinkedFieldChange(name, value);
-
         localStorage.setItem("dataSources", JSON.stringify(newVal));
         dispatch(setDataSources(newVal));
     };
@@ -136,9 +144,9 @@ export const LinkedField = (props) => {
                 <Select
                     label={""}
                     value={linkType}
-                    opts={dataSources}
+                    opts={dataSourcesOpts}
                     selectType={'linkedField'}
-                    onChange={(e) => onChange(e, "linkType")}
+                    onChange={(e) => onChange(e, "linkID")}
                 />
 
             </InputCol>

@@ -107,16 +107,7 @@ export const QueryBar = (props) => {
                 start,
                 stop
             );
-            if (dataSourceURL !== "") {
-                const newDataSources = [...dataSources].map((m) => {
-                    if (m.id === dataSourceId) {
-                        m.url = dataSourceURL;
-                    }
-                    return m;
-                });
-
-                dispatch(setDataSources(newDataSources));
-            }
+  
             if (isEmbed)
                 dispatch(
                     getData(
@@ -230,7 +221,7 @@ export const QueryBar = (props) => {
                         query.browserOpen = false;
                     }
                 });
-
+                
                 dispatch(panelAction(name, panel));
                 dispatch(
                     getData(

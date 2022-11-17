@@ -471,7 +471,7 @@ export default class ListView extends React.Component<TListViewProps> {
       items.push(itemRenderer(itemKey, style, i, attrs));
     }
     const wrapperProps: TWrapperProps = {
-      style: { position: 'relative' },
+     style: { position: 'inherit' },
       ref: this._initWrapper,
     };
     if (!this.props.windowScroller) {

@@ -36,11 +36,13 @@ import AccordianReferences from "./AccordianReferences";
 import AccordianText from "./AccordianText";
 import DetailState from "./DetailState";
 import styled from "@emotion/styled";
+import moment from 'moment';
 
 const Header = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    align-items:center;
     gap: 0 1rem;
     margin-bottom: 0.25rem;
 `;
@@ -287,10 +289,6 @@ export default function SpanDetail(props: SpanDetailProps) {
 export const getAbsoluteTime = (
     startTime: number /* , timeZone: TimeZone */
 ) => {
-    const dateStr = (
-        startTime / 1000
-    ).toString(); /* dateTimeFormat(startTime / 1000, { timeZone, defaultWithMS: true }); */
-    const match = dateStr.split(" ");
-    const absoluteTime = match[1] ? match[1] : dateStr;
-    return ` (${absoluteTime})`;
+
+    return ` (${moment(startTime/1000)?.format('HH:mm:ss.SSS')})`;    
 };

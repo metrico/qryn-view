@@ -13,10 +13,12 @@
 // limitations under the License.
 
 import { css } from "@emotion/css";
+import { ThemeProvider } from "@emotion/react";
 import cx from "classnames";
 import { groupBy as _groupBy } from "lodash";
-import React, { useState } from "react";
-
+import React, { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import {themes} from '../theme/themes'
 
 // import { Popover } from '../common/Popover';
 import { TNil } from "../types";
@@ -33,6 +35,7 @@ const Wrapper = css`
     top: 0;
     overflow: hidden;
     z-index: 0;
+
 `;
 const Bar = css`
        border-radius: 3px;
@@ -104,7 +107,9 @@ type Props = {
 function toPercent(value: number) {
     return `${(value * 100).toFixed(1)}%`;
 }
-
+type themeProps = {
+    theme: 'light' | 'dark'
+}
 function SpanBar({
     viewEnd,
     viewStart,
@@ -122,15 +127,18 @@ function SpanBar({
     const [label, setLabel] = useState(shortLabel);
     const setShortLabel = () => setLabel(shortLabel);
     const setLongLabel = () => setLabel(longLabel);
-
+    const storeTheme = useSelector((store:themeProps)=> store.theme)
     // group logs based on timestamps
     const logGroups = _groupBy(span.logs, (log) => {
         const posPercent = getViewedBounds(log.timestamp, log.timestamp).start;
         // round to the nearest 0.2%
         return toPercent(Math.round(posPercent * 500) / 500);
     });
-
+    const theme = useMemo(()=>{
+        return themes[storeTheme]
+    },[storeTheme])
     return (
+        <ThemeProvider theme={theme}>
         <div
               className={cx(Wrapper, className)}
             onClick={onClick}
@@ -142,7 +150,7 @@ function SpanBar({
                 aria-label={label}
                 className={Bar}
                 style={{
-                    background: color,
+                    background: theme.primaryDark,
                     left: toPercent(viewStart),
                     width: toPercent(viewEnd - viewStart),
                 }}
@@ -176,6 +184,7 @@ function SpanBar({
                 />
             )}
         </div>
+        </ThemeProvider>
     );
 }
 

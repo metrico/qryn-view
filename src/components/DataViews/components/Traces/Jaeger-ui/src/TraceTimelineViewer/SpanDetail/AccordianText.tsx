@@ -28,6 +28,7 @@ const header = css`
     overflow: hidden;
     padding: 0.25em 0.1em;
     text-overflow: ellipsis;
+    font-size:12px;
     white-space: nowrap;
     &:hover {
         background: #e8e8e8;
@@ -68,9 +69,9 @@ export default function AccordianText(props: AccordianTextProps) {
     let headerProps: {} | null = null;
     if (interactive) {
         arrow = isOpen ? (
-            <KeyboardArrowDown className={iconCls} />
+            <KeyboardArrowDown className={iconCls} fontSize={'small'} />
         ) : (
-            <KeyboardArrowRight className={iconCls} />
+            <KeyboardArrowRight className={iconCls} fontSize={'small'} />
         );
         headerProps = {
             "aria-checked": isOpen,

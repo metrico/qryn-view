@@ -17,7 +17,8 @@ export function DataViewItem(props) {
         // panelSize: min , regular, max
     const [panelSize, setPanelSize] = useState("max");
     // get actual query from panel
-    const actualQuery = useActualQuery({ panel, dataView });
+    const actualQuery = useActualQuery({ panel, dataView }); 
+    // get  actual query from panel  
 
     const [viewWidth, setViewWidth] = useState(0);
 
@@ -56,10 +57,8 @@ export function DataViewItem(props) {
     const theight = useTableHeight({ total, panelSize, dataView });
 
     const viewHeight = useViewHeight({ type, actualQuery, total, dataView});
-    console.log(type)
+
     if ( type === 'traces') {
-        // return trace type component
-        const { limit } = actualQuery;
         const traceProps = {
             viewRef,
             panelSize,
@@ -73,7 +72,6 @@ export function DataViewItem(props) {
             theight,
             tableData,
             viewWidth,
-            limit,
             streamData,
             theme: props.theme,
             ...props,

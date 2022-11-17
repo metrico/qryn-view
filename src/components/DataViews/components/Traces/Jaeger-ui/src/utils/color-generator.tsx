@@ -162,7 +162,7 @@ export function getRgbColorByKey(
 }
 
 export function getFilteredColors(colorsHex: string[], theme: any) {
-   // console.log(theme)
+
     if (!theme) {
         return colors;
     }
@@ -171,7 +171,7 @@ export function getFilteredColors(colorsHex: string[], theme: any) {
     if (redIndex > -1) {
         colorsHex.splice(redIndex, 1);
     }
-    //console.log(theme);
+  
     // Only add colors that have a contrast ratio >= 3 for the current theme
     let filteredColors = [];
     for (const color of colorsHex) {
