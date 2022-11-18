@@ -25,3 +25,4 @@ export * from "./setVectorData";
 export * from "./setTableData";
 export * from "./setResponseType"; 
 export * from "./setIsTableView";
+export * from "./setOrg"

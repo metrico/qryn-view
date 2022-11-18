@@ -11,6 +11,7 @@ import {
     setStartTime,
     setStopTime,
     setTheme,
+    setOrg
 } from "../actions";
 
 import setFromTime from "../actions/setFromTime";
@@ -43,6 +44,7 @@ export function UpdateStateFromQueryParams() {
     const right = useSelector((store) => store.right);
     const theme = useSelector((store) => store.theme);
     const isSplit = useSelector((store) => store.isSplit);
+    const org = useSelector((store) => store.org);
     const [themeSet, setThemeSet] = useState(isLightTheme ? "light" : theme);
 
     useEffect(() => {
@@ -62,6 +64,7 @@ export function UpdateStateFromQueryParams() {
         left,
         right,
         isSplit,
+        org
     };
 
     const STORE_ACTIONS = {
@@ -78,9 +81,10 @@ export function UpdateStateFromQueryParams() {
         left: setLeftPanel,
         right: setRightPanel,
         isSplit: setSplitView,
+        org: setOrg,
     };
 
-    const STRING_VALUES = ["step", "apiUrl", "theme", "time"];
+    const STRING_VALUES = ["step", "apiUrl", "theme", "time", "org"];
     const ARRAY_VALUES = ["left", "right"];
 
     const TIME_VALUES = ["start", "stop"];
@@ -111,6 +115,7 @@ export function UpdateStateFromQueryParams() {
                 dispatch(setUrlLocation(hash));
 
                 Object.keys(startParams).forEach((param) => {
+                    console.log(param)
                     if (
                         STRING_VALUES.includes(param) &&
                         startParams[param] !== ""
@@ -157,7 +162,7 @@ export function UpdateStateFromQueryParams() {
                 .concat(ARRAY_VALUES);
             allParams.forEach((param) => {
                 if (STRING_VALUES.includes(param)) {
-                    urlFromHash.set(param, STORE_KEYS[param].toString());
+                    urlFromHash.set(param, STORE_KEYS[param]?.toString());
                 } else if (param === "theme") {
                     urlFromHash.set(param, themeSet.toString());
                 } else if (TIME_VALUES.includes(param)) {
@@ -198,7 +203,7 @@ export function UpdateStateFromQueryParams() {
                     STRING_VALUES.includes(store_key) &&
                     previousParams[store_key] !== STORE_KEYS[store_key]
                 ) {
-                    const updated = STORE_KEYS[store_key].toString().trim();
+                    const updated = STORE_KEYS[store_key]?.toString().trim();
 
                     paramsFromHash.set(store_key, updated);
                 } else if (

@@ -94,8 +94,10 @@ const reducer = (state, action) => {
             return { ...state, leftDataView: action.leftDataView };
         case "SET_RIGHT_PANEL":
             return { ...state, right: action.right };
-            case "SET_LEFT_PANEL":
+        case "SET_LEFT_PANEL":
             return { ...state, left: action.left };
+        case "SET_ORG_ID": 
+            return { ...state, org: action.org };
         default:
             return { ...state };
     }

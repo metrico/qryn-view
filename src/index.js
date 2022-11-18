@@ -11,7 +11,8 @@ import axios from 'axios';
 import errorInterceptor from './helpers/error.interceptor';
 import { Provider } from 'react-redux';
 import store from './store/store';
-
+import orgInterceptor from './helpers/org.interceptor';
+orgInterceptor(axios)
 errorInterceptor(axios)
 ReactDOM.render(
   <React.StrictMode>
