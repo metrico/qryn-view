@@ -28,9 +28,10 @@ import {
 import { TimelineCollapser } from "./TimelineCollapser";
 import TimelineColumnResizer from "./TimelineColumnResizer";
 import TimelineViewingLayer from "./TimelineViewingLayer";
-const TimelineHeaderRowStyled = css`
-       background: #ececec;
-    border-bottom: 1px solid #ccc;
+const TimelineHeaderRowStyled = (theme: any) => css`
+    background:${theme.mainBgColor};
+    border-bottom: 1px solid ${theme.buttonBorder};
+    color:${theme.textColor}
     height: 38px;
     line-height: 38px;
     width: 100%;
@@ -39,10 +40,10 @@ const TimelineHeaderRowStyled = css`
     font-size:12px;
 `;
 const TimelineHeaderWrapper = css`
-       align-items: center;
+    align-items: center;
 `;
 const TimelineHeaderRowTitle = css`
-       flex: 1;
+    flex: 1;
     overflow: hidden;
     margin: 0;
     text-overflow: ellipsis;
@@ -50,6 +51,7 @@ const TimelineHeaderRowTitle = css`
 `;
 
 type TimelineHeaderRowProps = {
+    theme: any;
     duration: number;
     nameColumnWidth: number;
     numTicks: number;
@@ -83,13 +85,15 @@ export default function TimelineHeaderRow(props: TimelineHeaderRowProps) {
     //   const styles = useStyles2(getStyles);
     return (
         <TimelineRow
-            className={TimelineHeaderRowStyled}
+            theme={props.theme}
+            className={TimelineHeaderRowStyled(props.theme)}
             data-testid="TimelineHeaderRow"
         >
             <TimelineRow.Cell
+            theme={props.theme}
                 className={cx(ubFlex, ubPx2, TimelineHeaderWrapper)}
                 width={nameColumnWidth}
-                id='collapser'
+                id="collapser"
             >
                 <h4 className={TimelineHeaderRowTitle}>
                     Service &amp; Operation
@@ -101,7 +105,7 @@ export default function TimelineHeaderRow(props: TimelineHeaderRowProps) {
                     onExpandOne={onExpandOne}
                 />
             </TimelineRow.Cell>
-            <TimelineRow.Cell id='ticker' width={1 - nameColumnWidth}>
+            <TimelineRow.Cell theme={props.theme} id="ticker" width={1 - nameColumnWidth}>
                 <TimelineViewingLayer
                     boundsInvalidator={nameColumnWidth}
                     updateNextViewRangeTime={updateNextViewRangeTime}

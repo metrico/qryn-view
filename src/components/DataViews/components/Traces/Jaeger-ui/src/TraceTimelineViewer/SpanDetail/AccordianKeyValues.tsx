@@ -158,7 +158,7 @@ export default function AccordianKeyValues(props:any) {
                 </strong>
                 {!isOpen && <KeyValuesSummary data={data} />}
             </div>
-            {isOpen && <KeyValuesTable data={data} linksGetter={linksGetter} />}
+            {isOpen && <KeyValuesTable theme={props.theme} data={data} linksGetter={linksGetter} />}
         </div>
     );
 }

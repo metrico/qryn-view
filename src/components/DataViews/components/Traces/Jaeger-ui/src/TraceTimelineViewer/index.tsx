@@ -45,8 +45,8 @@ type TExtractUiFindFromStateReturn = {
     uiFind: string | undefined;
 };
 
-const TraceTimelineViewer = styled.div`
-    border-bottom: 1px solid #bbb;
+const TraceTimelineViewer = styled.div<{theme:any}>`
+    border-bottom: 1px solid {({theme})=>theme.buttonBorder};
 
     & .json-markup {
         line-height: 17px;
@@ -60,19 +60,19 @@ const TraceTimelineViewer = styled.div`
     }
 
     & .json-markup-bool {
-        color: firebrick;
+        color: {({theme})=>theme.textColor};
     }
 
     & .json-markup-string {
-        color: teal;
+        color: {({theme})=>theme.textColor};
     }
 
     & .json-markup-null {
-        color: teal;
+        color: {({theme})=>theme.textColor};
     }
 
     & .json-markup-number {
-        color: "blue";
+        color: {({theme})=>theme.textColor};
     }
 `;
 
@@ -189,6 +189,7 @@ export class UnthemedTraceTimelineViewer extends React.PureComponent<
 
         return (
             <TraceTimelineViewer
+            theme={this.props.theme}
                 ref={(ref: HTMLDivElement | null) =>
                     ref &&
                     this.setState({
@@ -197,6 +198,7 @@ export class UnthemedTraceTimelineViewer extends React.PureComponent<
                 }
             >
                 <TimelineHeaderRow
+                theme={this.props.theme}
                     duration={trace.duration}
                     nameColumnWidth={traceTimeline.spanNameColumnWidth}
                     numTicks={NUM_TICKS}

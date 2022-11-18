@@ -70,10 +70,11 @@ export default class SpanGraph extends React.PureComponent<SpanGraphProps> {
     const items = memoizedGetitems(trace);
     return (
       <div className={cx(ubPb2, ubPx2)}>
-        <TickLabels numTicks={TIMELINE_TICK_INTERVAL} duration={trace.duration} />
+        <TickLabels theme={this.props.theme} numTicks={TIMELINE_TICK_INTERVAL} duration={trace.duration} />
         <div className={ubRelative}>
           <CanvasSpanGraph {...this.props} valueWidth={trace.duration} items={items} />
           <ViewingLayer
+            theme={this.props.theme}
             viewRange={viewRange}
             numTicks={TIMELINE_TICK_INTERVAL}
             height={height || DEFAULT_HEIGHT}

@@ -22,9 +22,9 @@ const TickLabelsStyled = styled.div`
     height: 1rem;
     position: relative;
 `;
-const TickLabelsLabel = styled.div`
-    color: #717171;
-    font-size: 0.7rem;
+const TickLabelsLabel = styled.div<{theme:any}>`
+    color: ${({theme})=>theme.textColor};
+    font-size: 0.75rem;
     position: absolute;
     user-select: none;
 `;
@@ -36,6 +36,7 @@ const TickLabelsLabel = styled.div`
 }; */
 
 type TickLabelsProps = {
+    theme:any;
     numTicks: number;
     duration: number;
 };
@@ -49,7 +50,7 @@ export default function TickLabels(props: TickLabelsProps) {
         const style =
             portion === 1 ? { right: "0%" } : { left: `${portion * 100}%` };
         ticks.push(
-            <TickLabelsLabel key={portion} style={style} data-testid="tick">
+            <TickLabelsLabel theme={props.theme} key={portion} style={style} data-testid="tick">
                 {formatDuration(duration * portion)}
             </TickLabelsLabel>
         );

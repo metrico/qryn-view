@@ -36,16 +36,17 @@ import SpanGraph from "./SpanGraph";
 import styled from "@emotion/styled";
 import { useTheme } from "@emotion/react";
 import moment from "moment";
-const TracePageHeaderStyled = styled.header`
+
+const TracePageHeaderStyled = styled.header<{ theme: any }>`
     & > :first-of-type {
-        border-bottom: 1px solid #e8e8e8;
+        border-bottom: 1px solid ${(props) => props.theme?.buttonBorder};
     }
     & > :nth-of-type(2) {
-        background-color: #eee;
-        border-bottom: 1px solid #e4e4e4;
+        background-color: ${(props) => props?.theme?.widgetContainer};
+        border-bottom: 1px solid ${(props) => props?.theme?.buttonBorder};
     }
     & > :last-child {
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid ${(props) => props?.theme?.widgetContainer};
     }
 `;
 const TracePageHeaderTitleRow = styled.div`
@@ -55,8 +56,8 @@ const TracePageHeaderTitleRow = styled.div`
 const TracePageHeaderBack = css`
     align-items: center;
     align-self: stretch;
-    background:inherit;
-    // background-color: #fafafa;
+    background: inherit;
+    background-color: #fafafa;
     border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
     color: inherit;
@@ -93,11 +94,11 @@ const TracePageHeaderDetailToggle = css`
 const TracePageHeaderDetailToggleExpanded = css`
     transform: rotate(90deg);
 `;
-const TracePageHeaderTitle = css`
-    color: inherit;
+const TracePageHeaderTitle = (color: string) => css`
+    color: ${color};
     flex: 1;
     font-size: 14px;
-    font-weight:bold;
+    font-weight: bold;
     line-height: 1em;
     margin: 0 0 0 0.5em;
     padding: 0.75em;
@@ -148,10 +149,9 @@ export const HEADER_ITEMS = [
     {
         key: "service-count",
         label: "Services:",
-        renderer (trace: Trace) {
-            return  new Set(_values(trace.services).map((p) => p.name)).size
+        renderer(trace: Trace) {
+            return new Set(_values(trace.services).map((p) => p.name)).size;
         },
-           
     },
     {
         key: "depth",
@@ -179,6 +179,8 @@ export default function TracePageHeader(props: TracePageHeaderEmbedProps) {
         viewRange,
     } = props;
 
+    console.log(props);
+
     const theme = useTheme();
     //   const styles = useStyles2(getStyles);
     const links = React.useMemo(() => {
@@ -199,11 +201,14 @@ export default function TracePageHeader(props: TracePageHeaderEmbedProps) {
             const { renderer, ...rest } = item;
             return { ...rest, value: renderer(trace /* , styles */) };
         });
-
+    console.log(props.theme);
     const title = (
         <h1
+            style={{
+                color: props?.theme?.textColor,
+            }}
             className={cx(
-                TracePageHeaderTitle,
+                TracePageHeaderTitle(props?.theme?.textColor),
                 canCollapse && TracePageHeaderTitleCollapsible
             )}
         >
@@ -213,9 +218,9 @@ export default function TracePageHeader(props: TracePageHeaderEmbedProps) {
             </TracePageHeaderTraceId>
         </h1>
     );
-
+    console.log(props.theme);
     return (
-        <TracePageHeaderStyled>
+        <TracePageHeaderStyled theme={props.theme}>
             <TracePageHeaderTitleRow>
                 {links && links.length > 0 && (
                     <ExternalLinks
@@ -245,6 +250,7 @@ export default function TracePageHeader(props: TracePageHeaderEmbedProps) {
             </TracePageHeaderTitleRow>
             {summaryItems && (
                 <LabeledList
+                    theme={props.theme}
                     className={TracePageHeaderOverviewItems}
                     items={summaryItems}
                 />

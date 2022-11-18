@@ -83,6 +83,7 @@ const Textarea = styled.textarea`
 `;
 
 type SpanDetailProps = {
+    theme:any;
     detailState: DetailState;
     linksGetter:
         | ((links: TraceKeyValuePair[], index: number) => TraceLink[])
@@ -107,6 +108,7 @@ type SpanDetailProps = {
 };
 
 export default function SpanDetail(props: SpanDetailProps) {
+    console.log(props)
     const {
         detailState,
         linksGetter,
@@ -178,6 +180,7 @@ export default function SpanDetail(props: SpanDetailProps) {
                 <h2 className={cx(ubM0)}>{operationName}</h2>
                 <ListWrapper>
                     <LabeledList
+                        theme={props.theme}
                         className={ubTxRightAlign}
                         divider={true}
                         items={overviewItems}
@@ -188,6 +191,7 @@ export default function SpanDetail(props: SpanDetailProps) {
             <div>
                 <div>
                     <AccordianKeyValues
+                        theme={props.theme}
                         data={tags}
                         label="Attributes"
                         linksGetter={linksGetter}
@@ -196,6 +200,7 @@ export default function SpanDetail(props: SpanDetailProps) {
                     />
                     {process.tags && (
                         <AccordianKeyValues
+                            theme={props.theme}
                             className={ubMb1}
                             data={process.tags}
                             label="Resource"

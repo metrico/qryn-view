@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { css } from "@emotion/css";
-import cx from "classnames";
 import jsonMarkup from "json-markup";
 import * as React from "react";
 
@@ -26,9 +24,9 @@ import { ubInlineBlock, uWidth100 } from "../../uberUtilityStyles";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import styled from "@emotion/styled";
 const copyIconClassName = "copyIcon";
-const KeyValueTable = styled.div`
-       background: #fff;
-    border: 1px solid #ddd;
+const KeyValueTable = styled.div<{theme:any}>`
+    background:${({theme})=>theme.viewBg};
+    border: 1px solid ${({theme})=>theme.buttonBorder};
     margin-bottom: 0.5rem;
     max-height: 450px;
     overflow: auto;
@@ -36,23 +34,25 @@ const KeyValueTable = styled.div`
 const Body = styled.tbody`
        vertical-align: baseline;
 `;
-const Row = styled.tr`
+const Row = styled.tr<{theme:any}>`
+color:${({theme})=>theme.textColor};
        & > td {
         padding: 0rem 0.5rem;
         height: 30px;
         line-height: 30px;
         box-sizing: border-box;
         font-size: 12px;
+        color:${({theme})=>theme.textColor};
     }
     &:nth-of-type(2n) > td {
-        background: #f5f5f5;
+        background:${({theme})=>theme.widgetContainer};
     }
     &:not(:hover) .${copyIconClassName} {
         visibility: hidden;
     }
 `;
-const KeyColumn = styled.td`
-       color: #888;
+const KeyColumn = styled.td<{theme:any}>`
+    color: ${({theme})=>theme.textColor} !important;
     white-space: pre;
     width: 125px;
 `;
@@ -97,16 +97,17 @@ LinkValue.defaultProps = {
 
 type KeyValuesTableProps = {
     data: TraceKeyValuePair[];
+    theme:any;
     linksGetter:
         | ((pairs: TraceKeyValuePair[], index: number) => TraceLink[])
         | TNil;
 };
 
 export default function KeyValuesTable(props: KeyValuesTableProps) {
-    const { data, linksGetter } = props;
+    const { data, linksGetter, theme } = props;
     //   const styles = useStyles2(getStyles);
     return (
-        <KeyValueTable data-testid="KeyValueTable">
+        <KeyValueTable theme={theme} data-testid="KeyValueTable">
             <table className={uWidth100}>
                 <Body>
                     {data.map((row, i) => {
@@ -137,8 +138,8 @@ export default function KeyValuesTable(props: KeyValuesTableProps) {
                         }
                         return (
                             // `i` is necessary in the key because row.key can repeat
-                            <Row key={`${row.key}-${i}`}>
-                                <KeyColumn data-testid="KeyValueTable--keyColumn">
+                            <Row theme={theme} key={`${row.key}-${i}`}>
+                                <KeyColumn theme={theme} data-testid="KeyValueTable--keyColumn">
                                     {row.key}
                                 </KeyColumn>
                                 <td>{valueMarkup}</td>

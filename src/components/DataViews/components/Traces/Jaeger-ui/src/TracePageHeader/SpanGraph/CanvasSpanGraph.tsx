@@ -21,8 +21,9 @@ import { getRgbColorByKey } from '../../utils/color-generator';
 import renderIntoCanvas from "./render-into-canvas";
 import styled from "@emotion/styled";
 
-const StyledCanvas = styled.canvas`
-    background: "#fafafa";
+const StyledCanvas = styled.canvas<{theme:any}>`
+    // background: ${(props) => props.theme.logBgColor};
+    //background:red !important;
     height: 60px;
     position: absolute;
     width: 100%;
@@ -68,15 +69,18 @@ export class UnthemedCanvasSpanGraph extends React.PureComponent<CanvasSpanGraph
                 items,
                 totalValueWidth,
                 this.getColor,
-                autoColor(/* this.props.theme, */ "#fff")
+                this.props.theme.logBgColor//autoColor(this.props.theme)
             );
         }
     }
 
     render() {
+        console.log(this.props.theme)
         return (
-            <StyledCanvas
-                /* className={getStyles(this.props.theme).CanvasSpanGraph} */ ref={
+            <StyledCanvas 
+
+                theme={this.props.theme}
+               ref={
                     this._setCanvasRef
                 }
             />

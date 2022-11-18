@@ -68,6 +68,7 @@ const InfoWrapper = styled.div`
     padding: 0.75rem;
 `;
 type SpanDetailRowProps = {
+    theme:any;
     color: string;
     columnDivision: number;
     detailState: DetailState;
@@ -135,9 +136,11 @@ export class UnthemedSpanDetailRow extends React.PureComponent<SpanDetailRowProp
             topOfViewRefType,
         } = this.props;
         // const styles = getStyles(theme);
+        console.log(this.props)
         return (
-            <TimelineRow>
+            <TimelineRow theme={this.props.theme}>
                 <TimelineRow.Cell
+                theme={this.props.theme}
                     width={columnDivision}
                     style={{ overflow: "hidden" }}
                 >
@@ -156,9 +159,10 @@ export class UnthemedSpanDetailRow extends React.PureComponent<SpanDetailRowProp
                         />
                     </span>
                 </TimelineRow.Cell>
-                <TimelineRow.Cell width={1 - columnDivision}>
+                <TimelineRow.Cell theme={this.props.theme} width={1 - columnDivision}>
                     <InfoWrapper style={{ borderTopColor: color }}>
                         <SpanDetail
+                            theme={this.props.theme}
                             detailState={detailState}
                             linksGetter={this._linksGetter}
                             logItemToggle={logItemToggle}

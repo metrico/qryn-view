@@ -49,7 +49,7 @@ export function prepareVectorRows(data, type = 'logs') {
     
             const sorted = sortBy(rows, (row) => row.time);
 
-            console.log(sorted)
+            
     
             return sorted;
 

@@ -4,6 +4,10 @@ export const ubRelative = css`
   position: relative;
 `;
 
+export const textColor = (theme:any) => css`
+color: ${theme.textColor};
+`
+
 export const ubMb1 = css`
   margin-bottom: 0.25rem;
 `;

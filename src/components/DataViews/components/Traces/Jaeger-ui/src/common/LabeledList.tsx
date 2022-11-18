@@ -31,23 +31,25 @@ const LabeledListStylesDivider = css`
 const LabeledListItem = css`
     display: inline-block;
 `;
-const LabeledListItemDivider = css`
-    border-right: 1px solid #ddd;
+const LabeledListItemDivider = (color:string) => css`
+    border-right: 1px solid ${color};
     padding: 0 8px;
 `;
-const LabeledListLabel = styled.span`
-    color: #999;
+const LabeledListLabel = styled.span<{ theme: any }>`
+    color: ${(props) => props.theme.textColor};
     margin-right: 0.25rem;
-    font-size:12px;
+    font-size: 12px;
 `;
-const LabeledListValue = styled.strong`
+const LabeledListValue = styled.strong<{ theme: any }>`
+    color: ${(props) => props.theme.textColor};
     margin-right: 0.55rem;
-    font-size:12px;
+    font-size: 12px;
 `;
 
 type LabeledListProps = {
     className?: string;
     divider?: boolean;
+    theme: any;
     items: Array<{
         key: string;
         label: React.ReactNode;
@@ -56,6 +58,8 @@ type LabeledListProps = {
 };
 
 export default function LabeledList(props: LabeledListProps) {
+    console.log(props);
+
     const { className, divider = false, items } = props;
 
     return (
@@ -71,12 +75,16 @@ export default function LabeledList(props: LabeledListProps) {
                     <li
                         className={cx(
                             LabeledListItem,
-                            divider ? LabeledListItemDivider : ""
+                            divider ? LabeledListItemDivider(props.theme.buttonBorder) : ""
                         )}
                         key={`${key}`}
                     >
-                        <LabeledListLabel>{label}</LabeledListLabel>
-                        <LabeledListValue>{value}</LabeledListValue>
+                        <LabeledListLabel theme={props.theme}>
+                            {label}
+                        </LabeledListLabel>
+                        <LabeledListValue theme={props.theme}>
+                            {value}
+                        </LabeledListValue>
                     </li>
                 );
             })}

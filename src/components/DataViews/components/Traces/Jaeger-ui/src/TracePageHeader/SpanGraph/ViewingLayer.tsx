@@ -55,8 +55,8 @@ const ViewingLayer = styled.div`
         display: unset;
     }
 `;
-const ViewingLayerGraph = styled.svg`
-    border: 1px solid #999;
+const ViewingLayerGraph = styled.svg<{theme:any}>`
+    border: 1px solid ${({theme})=> theme.buttonBorder};
     /* need !important here to overcome something from semantic UI */
     overflow: visible !important;
     position: relative;
@@ -88,6 +88,7 @@ const ViewingLayerDraggedShift2 = styled.rect`
 `;
 
 type ViewingLayerProps = {
+    theme:any;
     height: number;
     numTicks: number;
     updateViewRangeTime: TUpdateViewRangeTimeFunction;
@@ -362,7 +363,8 @@ export class UnthemedViewingLayer extends React.PureComponent<
                         Reset Selection
                     </Button>
                 )}
-                <ViewingLayerGraph
+                <ViewingLayerGraph 
+                    theme={this.props.theme}
                     height={height}
                     ref={this._setRoot}
                     onMouseDown={this._draggerReframe.handleMouseDown}

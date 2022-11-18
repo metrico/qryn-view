@@ -68,28 +68,33 @@ const EndpointName = styled.small`
 const view = css`
     position: relative;
 `;
-const viewExpanded = css`
-    background: #f8f8f8;
-    outline: 1px solid #ddd;
+const viewExpanded = (theme: any) => css`
+    background: ${theme.viewBg};
+    outline: 1px solid ${theme.viewBg};
 `;
-const viewExpandedAndMatchingFilter = css`
+const viewExpandedAndMatchingFilter = (theme: any) => css`
     background: #fff3d7;
-    outline: 1px solid #ddd;
+    outline: 1px solid ${theme.viewBg};
 `;
-const row = css`
+const row = (theme: any) => css`
     &:hover .${spanBarClassName} {
         opacity: 1;
     }
     &:hover .${spanBarLabelClassName} {
-        color: #000;
+        color: ${theme.textColor};
     }
     &:hover .${nameWrapperClassName} {
-        background: #f8f8f8;
-        background: linear-gradient(90deg, #fafafa, #f8f8f8 75%, #eee);
+        background: ${theme.viewBg};
+        background: linear-gradient(
+            90deg,
+            ${theme.widgetContainer},
+            ${theme.viewBg} 75%,
+            #eee
+        );
     }
     &:hover .${viewClassName} {
         background-color: #f5f5f5;
-        outline: 1px solid #ddd;
+        outline: 1px solid ${theme.viewBg};
     }
 `;
 const rowClippingLeft = css`
@@ -122,64 +127,65 @@ const rowClippingRight = css`
         z-index: 1;
     }
 `;
-const rowExpanded = css`
+const rowExpanded = (theme: any) => css`
+    color: ${theme.textColor};
     & .${spanBarClassName} {
         opacity: 1;
     }
     & .${spanBarLabelClassName} {
-        color: #000;
+        color: ${theme.textColor};
     }
     & .${nameWrapperClassName}, &:hover .${nameWrapperClassName} {
-        background: #f0f0f0;
-        box-shadow: 0 1px 0 #ddd;
+        background: ${theme.viewBg};
+        box-shadow: 0 1px 0 ${theme.inputBg};
     }
     & .${nameWrapperMatchingFilterClassName} {
-        background: #fff3d7;
+        background: ${theme.widgetContainer};
     }
     &:hover .${viewClassName} {
-        background: #eee;
+        background: ${theme.widgetContainer};
     }
 `;
-const rowMatchingFilter = css`
-    background-color: #fffbde;
+const rowMatchingFilter = (theme: any) => css`
+    background-color: ${theme.widgetContainer};
     &:hover .${nameWrapperClassName} {
-        background: linear-gradient(90deg, #fffbde, #fffbde 75%, #f7f1c6);
+        background: ${theme.widgetContainer};
     }
     &:hover .${viewClassName} {
         background-color: #f7f1c6;
-        outline: 1px solid #ddd;
+        outline: 1px solid ${theme.viewBg};
     }
 `;
-const rowFocused = css`
-    background-color: #cbe7ff;
+const rowFocused = (theme: any) => css`
+    background-color: ${theme.widgetContainer};
     animation: ${flash} 1s cubic-bezier(0.12, 0, 0.39, 0);
     &
         .${nameWrapperClassName},
         .${viewClassName},
         .${nameWrapperMatchingFilterClassName} {
-        background-color: #cbe7ff;
+        background-color: ${theme.widgetContainer};
         animation: ${flash} 1s cubic-bezier(0.12, 0, 0.39, 0);
     }
     & .${spanBarClassName} {
         opacity: 1;
     }
     & .${spanBarLabelClassName} {
-        color: #000;
+        color: ${theme.textColor};
     }
     &:hover .${nameWrapperClassName}, :hover .${viewClassName} {
         background: #d5ebff;
-        box-shadow: 0 1px 0 #ddd;
+        box-shadow: 0 1px 0 ${theme.viewBg};
     }
 `;
 
-const rowExpandedAndMatchingFilter = css`
+const rowExpandedAndMatchingFilter = (theme: any) => css`
     &:hover .${viewClassName} {
         background: #ffeccf;
     }
 `;
 
-const name = css`
-    color: #000;
+const name = (theme: any) => css`
+    color: ${theme.textColor};
     cursor: pointer;
     flex: 1 1 auto;
     outline: none;
@@ -207,7 +213,7 @@ const name = css`
         text-decoration: none;
     }
     &:hover > small {
-        color: #000;
+        color: ${theme.textColor};
     }
     text-align: left;
     background: transparent;
@@ -255,6 +261,7 @@ export type TraceKeyValuePair<T = any> = {
 };
 
 type SpanBarRowProps = {
+    theme: any;
     className?: string;
     color: string;
     spanBarOptions: SpanBarOptions | undefined;
@@ -377,17 +384,18 @@ export class UnthemedSpanBarRow extends React.PureComponent<SpanBarRowProps> {
                 0
             );
         };
-
+        console.log(this.props);
         return (
             <TimelineRow
+                theme={this.props.theme}
                 className={cx(
                     row,
                     {
-                        [rowExpanded]: isDetailExpanded,
-                        [rowMatchingFilter]: isMatchingFilter,
-                        [rowExpandedAndMatchingFilter]:
+                        [rowExpanded(this.props.theme)]: isDetailExpanded,
+                        [rowMatchingFilter(this.props.theme)]: isMatchingFilter,
+                        [rowExpandedAndMatchingFilter(this.props.theme)]:
                             isMatchingFilter && isDetailExpanded,
-                        [rowFocused]: isFocused,
+                        [rowFocused(this.props.theme)]: isFocused,
                         [rowClippingLeft]: clippingLeft,
                         [rowClippingRight]: clippingRight,
                     },
@@ -395,6 +403,7 @@ export class UnthemedSpanBarRow extends React.PureComponent<SpanBarRowProps> {
                 )}
             >
                 <TimelineRow.Cell
+                    theme={this.props.theme}
                     className={cx(nameColumn, nameColumnClassName)}
                     width={columnDivision}
                 >
@@ -416,7 +425,7 @@ export class UnthemedSpanBarRow extends React.PureComponent<SpanBarRowProps> {
                         />
                         <button
                             type="button"
-                            className={cx(name, {
+                            className={cx(name(this.props.theme), {
                                 [nameDetailExpanded]: isDetailExpanded,
                             })}
                             aria-checked={isDetailExpanded}
@@ -531,9 +540,10 @@ export class UnthemedSpanBarRow extends React.PureComponent<SpanBarRowProps> {
                     </div>
                 </TimelineRow.Cell>
                 <TimelineRow.Cell
+                    theme={this.props.theme}
                     className={cx(view, viewClassName, {
-                        [viewExpanded]: isDetailExpanded,
-                        [viewExpandedAndMatchingFilter]:
+                        [viewExpanded(this.props.theme)]: isDetailExpanded,
+                        [viewExpandedAndMatchingFilter(this.props.theme)]:
                             isMatchingFilter && isDetailExpanded,
                     })}
                     data-testid="span-view"

@@ -14,6 +14,9 @@ import { useHoverIndentGuide } from "./useHoverIntentGuide";
 import { mapSpanFields, mapTracesResponse } from "./mapTracesResponse";
 import { ViewHeader } from "../ViewHeader";
 import { ViewStyled } from "./styled";
+import { themes } from "../../../../theme/themes";
+import { useSelector } from "react-redux";
+import { ThemeProvider } from "@emotion/react";
 
 function noop() /* : {} */ {
     return {};
@@ -38,6 +41,14 @@ export function TraceView(props: any) {
     const tracePropMapped = useMemo(() => {
         return mapTracesResponse(data)[0];
     }, [data]);
+    const storeTheme = useSelector(
+        (store: { theme: "dark" | "light" }) => store.theme
+    );
+    const theme = useMemo(()=>{
+        return themes[storeTheme] 
+    },[storeTheme])
+
+    console.log(theme)
 
     const spanFieldsMapped = useMemo(() => {
         if (tracePropMapped?.spans?.length > 0) {
@@ -117,21 +128,26 @@ export function TraceView(props: any) {
         };
 
         return (
+            <ThemeProvider theme={theme}> 
             <ViewStyled {...styledProps}>
                 <ViewHeader
+                 {...props}
                     onClose={setStreamClose}
                     setMinimize={setMinimize}
                     setMaxHeight={setMaxHeight}
                     actualQuery={actualQuery}
                     total={total}
                     type={type}
-                    {...props}
+                   
                 />
                 <div className="view-content">
                     <TracePageHeader
+                     {...props}
+                   
                         canCollapse={false}
                         hideMap={false}
                         hideSummary={false}
+                        theme={theme}
                         onSlimViewClicked={onSlimViewClicked}
                         onTraceGraphViewClicked={noop}
                         slimView={slim}
@@ -139,10 +155,12 @@ export function TraceView(props: any) {
                         updateNextViewRangeTime={updateNextViewRangeTime}
                         updateViewRangeTime={updateViewRangeTime}
                         viewRange={viewRange}
-                        {...props}
+                       
                         // timeZone={timeZone}
                     />
                     <TraceTimelineViewer
+                      {...props}
+                      theme={theme}
                         registerAccessors={noop}
                         scrollToFirstVisibleSpan={noop}
                         // findMatchesIDs={spanFindMatches}
@@ -176,10 +194,11 @@ export function TraceView(props: any) {
                         linksGetter={noop}
                         uiFind={props.search}
                         scrollElement={props.scrollElement}
-                        {...props}
+                      
                     />
                 </div>
             </ViewStyled>
+            </ThemeProvider>
         );
     }
     return null;
