@@ -44,7 +44,7 @@ export function UpdateStateFromQueryParams() {
     const right = useSelector((store) => store.right);
     const theme = useSelector((store) => store.theme);
     const isSplit = useSelector((store) => store.isSplit);
-    const org = useSelector((store) => store.org);
+    const orgId= useSelector((store) => store.orgId);
     const [themeSet, setThemeSet] = useState(isLightTheme ? "light" : theme);
 
     useEffect(() => {
@@ -64,7 +64,7 @@ export function UpdateStateFromQueryParams() {
         left,
         right,
         isSplit,
-        org
+        orgId
     };
 
     const STORE_ACTIONS = {
@@ -81,10 +81,10 @@ export function UpdateStateFromQueryParams() {
         left: setLeftPanel,
         right: setRightPanel,
         isSplit: setSplitView,
-        org: setOrg,
+        orgId: setOrg,
     };
 
-    const STRING_VALUES = ["step", "apiUrl", "theme", "time", "org"];
+    const STRING_VALUES = ["step", "apiUrl", "theme", "time", "orgId"];
     const ARRAY_VALUES = ["left", "right"];
 
     const TIME_VALUES = ["start", "stop"];
@@ -189,6 +189,8 @@ export function UpdateStateFromQueryParams() {
         }
     }, []);
 
+
+    // update from store
     useEffect(() => {
         if (hash.length > 0) {
             const paramsFromHash = new URLSearchParams(hash.replace("#", ""));
@@ -199,7 +201,7 @@ export function UpdateStateFromQueryParams() {
 
             Object.keys(STORE_KEYS).forEach((store_key) => {
                 if (
-                    STRING_VALUES.includes(store_key) &&
+                    STRING_VALUES.includes(store_key) && store_key !=='orgId' &&
                     previousParams[store_key] !== STORE_KEYS[store_key]
                 ) {
                     const updated = STORE_KEYS[store_key]?.toString().trim();
@@ -236,4 +238,13 @@ export function UpdateStateFromQueryParams() {
             window.location.hash = paramsFromHash;
         }
     }, [STORE_KEYS]);
+
+// update store from url (hash)
+    useEffect(()=>{
+        const urlQueryParams = new URLSearchParams(hash.replace("#", ""))
+        const orgId = urlQueryParams.get('orgId')
+        dispatch(setOrg(orgId))
+    },[hash])
+
 }
+

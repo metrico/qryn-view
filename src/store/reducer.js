@@ -97,7 +97,7 @@ const reducer = (state, action) => {
         case "SET_LEFT_PANEL":
             return { ...state, left: action.left };
         case "SET_ORG_ID": 
-            return { ...state, org: action.org };
+            return { ...state, orgId: action.orgId };
         default:
             return { ...state };
     }

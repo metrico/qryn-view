@@ -41,6 +41,7 @@ export interface URLState {
     isEmbed: boolean;
     theme: string;
     isSplit: boolean;
+    orgId:string;
 }
 
 export const initialUrlState = {
@@ -58,6 +59,7 @@ export const initialUrlState = {
     apiUrl: "",
     isSubmit: false,
     isEmbed: false,
+    orgId:'',
     theme: "",
     isSplit: false,
 };
@@ -149,7 +151,6 @@ export default function initialState() {
 
         leftDataView: [],
         rightDataView: [],
-
         chartType: "line",
         resposeType: "",
         notifications: [],
@@ -158,7 +159,7 @@ export default function initialState() {
         theme: urlState.theme || "dark",
         isEmptyView: false,
         isSplit: false,
-        org: ''
+        orgId: urlState.orgId||''
     };
 
     const debug = state.debugMode;

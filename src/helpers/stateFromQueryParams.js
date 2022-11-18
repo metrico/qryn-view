@@ -56,6 +56,7 @@ export const initialUrlState = {
     isEmbed: false,
     theme: "",
     isSplit: false,
+    orgId:''
 };
 
 export default function stateFromQueryParams() {

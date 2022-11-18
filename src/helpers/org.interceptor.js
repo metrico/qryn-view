@@ -4,9 +4,9 @@ const orgInterceptor = (axiosInstance) => {
     axiosInstance.interceptors.request.use(
         (config) => {
             // Do something before request is sent
-            const { org } = store.getState();
-            if (org) {
-                config.headers["X-Scope-OrgID"] = org;
+            const { orgId } = store.getState();
+            if (orgId) {
+                config.headers["X-Scope-OrgId"] = orgId;
             }
             return config;
         },
