@@ -1,5 +1,5 @@
 /**React */
-import { useState, useEffect, useMemo} from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 /**npm */
@@ -65,6 +65,12 @@ export const DIRECTION_SWITCH_OPTIONS = [
     { value: "forward", label: "Forward" },
     { value: "backwards", label: "Backwards" },
 ];
+
+export const TRACE_OPTIONS = [
+    { value: "traceId", label: "TraceId" },
+    { value: "search", label: "Search" },
+];
+
 export const QueryBar = (props) => {
     const { data, name } = props;
     const {
@@ -106,7 +112,11 @@ export const QueryBar = (props) => {
         if (dataSources) {
             currentDataSource = dataSources?.find((f) => f.id === dataSourceId);
 
-            if (currentDataSource && currentPanel && currentPanel?.dataSourceURL !== "") {
+            if (
+                currentDataSource &&
+                currentPanel &&
+                currentPanel?.dataSourceURL !== ""
+            ) {
                 currentDataSource.url = currentPanel?.dataSourceURL;
             }
 
@@ -144,7 +154,6 @@ export const QueryBar = (props) => {
                     )
                 );
 
-            
             if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
                 return labels.then((data) => {
                     const prevLabels = [...props.data.labels];
@@ -235,17 +244,18 @@ export const QueryBar = (props) => {
                     );
                 }
                 const labelsDecoded = decodeExpr(data.expr);
-                const actDataSource = dataSources.find(f => f.id === dataSourceId)
-
+                const actDataSource = dataSources.find(
+                    (f) => f.id === dataSourceId
+                );
 
                 const panel = [...panelQuery];
                 panel.forEach((query) => {
                     if (query.id === id) {
                         query.labels = [...labelsDecoded];
                         query.browserOpen = false;
-                        query.dataSourceId = actDataSource.id 
-                        query.dataSourceType = actDataSource.type 
-                        query.dataSourceURL = actDataSource.url
+                        query.dataSourceId = actDataSource.id;
+                        query.dataSourceType = actDataSource.type;
+                        query.dataSourceURL = actDataSource.url;
                     }
                 });
 
@@ -390,6 +400,14 @@ export const QueryBar = (props) => {
 };
 
 export const QuerySetting = (props) => {
+    console.log(props);
+
+    const { data } = props;
+
+    const { dataSourceType } = data;
+
+    console.log(dataSourceType);
+
     const dispatch = useDispatch();
 
     const responseType = useSelector((store) => store.responseType);
@@ -402,6 +420,7 @@ export const QuerySetting = (props) => {
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(
         props.data.queryType
     );
+    const [queryTraceSwitch, setQueryTraceSwitch] = useState(props.data.traceQueryType || 'traceId')
     const [directionSwitch, setDirectionSwitch] = useState(
         props.data.direction
     );
@@ -445,6 +464,19 @@ export const QuerySetting = (props) => {
         dispatch(panelAction(name, panel));
         setQueryTypeSwitch(e);
     }
+
+
+    function onTraceQueryChange(e) {
+        const panel = [...actPanel];
+        panel.forEach(query => {
+            if(query.id === id) {
+                query.traceQueyType = e;
+            }
+        })
+        dispatch(panelAction(name, panel));
+        setQueryTraceSwitch(prev => e);
+
+    }
     function onDirectionSwitchChange(e) {
         // modify query type switch value
         const panel = [...actPanel];
@@ -468,6 +500,17 @@ export const QuerySetting = (props) => {
         });
         dispatch(panelAction(name, panel));
     }
+
+    const traceOptions = () => (
+        <div className="options-input">
+            <QueryTypeSwitch
+                label={"Trace Type"}
+                options={TRACE_OPTIONS}
+                onChange={onTraceQueryChange}
+                defaultActive={queryTraceSwitch}
+            />
+        </div>
+    );
 
     function handleTsSwitch() {
         const panel = [...actPanel];
@@ -493,6 +536,10 @@ export const QuerySetting = (props) => {
 
                 <SettingsInputContainer>
                     <div className="options-input">
+                    { traceOptions()}
+                    </div>
+                    <div className="options-input">
+                        
                         <QueryTypeSwitch
                             label={"Query Type"}
                             options={SWITCH_OPTIONS}
