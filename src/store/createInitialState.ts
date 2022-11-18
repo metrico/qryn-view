@@ -158,6 +158,7 @@ export default function initialState() {
         theme: urlState.theme || "dark",
         isEmptyView: false,
         isSplit: false,
+        org: ''
     };
 
     const debug = state.debugMode;
