@@ -29,6 +29,7 @@ const TimelineCollapserStyles = css`
 `;
 
 type CollapserProps = {
+    theme: any;
     onCollapseAll: () => void;
     onCollapseOne: () => void;
     onExpandOne: () => void;
@@ -44,17 +45,33 @@ export function TimelineCollapser(props: CollapserProps) {
             data-testid="TimelineCollapser"
         >
             <Tooltip title="Expand +1">
-                <KeyboardArrowDownIcon fontSize={'small'} style={{cursor:'pointer'}} onClick={onExpandOne} />
+                <KeyboardArrowDownIcon
+                    fontSize={"small"}
+                    style={{ cursor: "pointer", color: props.theme.textColor }}
+                    onClick={onExpandOne}
+                />
             </Tooltip>
             <Tooltip title="Collapse +1">
-                <KeyboardArrowRightIcon fontSize={'small'} style={{cursor:'pointer'}} onClick={onCollapseOne} />
+                <KeyboardArrowRightIcon
+                    fontSize={"small"}
+                    style={{ cursor: "pointer", color: props.theme.textColor }}
+                    onClick={onCollapseOne}
+                />
             </Tooltip>
 
             <Tooltip title="Expand All">
-                <KeyboardDoubleArrowDownIcon fontSize={'small'} style={{cursor:'pointer'}} onClick={onExpandAll} />
+                <KeyboardDoubleArrowDownIcon
+                    fontSize={"small"}
+                    style={{ cursor: "pointer", color: props.theme.textColor }}
+                    onClick={onExpandAll}
+                />
             </Tooltip>
             <Tooltip title="Collapse All">
-                <KeyboardDoubleArrowRightIcon fontSize={'small'} style={{cursor:'pointer'}} onClick={onCollapseAll} />
+                <KeyboardDoubleArrowRightIcon
+                    fontSize={"small"}
+                    style={{ cursor: "pointer", color: props.theme.textColor }}
+                    onClick={onCollapseAll}
+                />
             </Tooltip>
         </div>
     );

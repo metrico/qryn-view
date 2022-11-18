@@ -17,15 +17,15 @@ import cx from "classnames";
 import * as React from "react";
 
 import { ubRelative, textColor } from "../uberUtilityStyles";
-const FlexRow =(theme:any)=> css`
-color: ${theme?.textColor};
+const FlexRow = (theme: any) => css`
+    color: ${theme?.textColor};
     display: flex;
     flex: 0 1 auto;
     flex-direction: row;
 `;
 
 type TTimelineRowProps = {
-    theme:any;
+    theme: any;
     children: React.ReactNode;
     className?: string;
 };
@@ -34,7 +34,7 @@ interface TimelineRowCellProps extends React.HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode;
     className?: string;
     width: number;
-    theme:any;
+    theme: any;
     style?: {};
 }
 
@@ -52,8 +52,6 @@ TimelineRow.defaultProps = {
 };
 
 export function TimelineRowCell(props: TimelineRowCellProps) {
-    console.log(props)
-
     const { children, className = "", width, style, theme, ...rest } = props;
     const widthPercent = `${width * 100}%`;
     const mergedStyle = {

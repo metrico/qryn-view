@@ -31,7 +31,7 @@ const LabeledListStylesDivider = css`
 const LabeledListItem = css`
     display: inline-block;
 `;
-const LabeledListItemDivider = (color:string) => css`
+const LabeledListItemDivider = (color: string) => css`
     border-right: 1px solid ${color};
     padding: 0 8px;
 `;
@@ -58,8 +58,6 @@ type LabeledListProps = {
 };
 
 export default function LabeledList(props: LabeledListProps) {
-    console.log(props);
-
     const { className, divider = false, items } = props;
 
     return (
@@ -75,7 +73,11 @@ export default function LabeledList(props: LabeledListProps) {
                     <li
                         className={cx(
                             LabeledListItem,
-                            divider ? LabeledListItemDivider(props.theme.buttonBorder) : ""
+                            divider
+                                ? LabeledListItemDivider(
+                                      props.theme.buttonBorder
+                                  )
+                                : ""
                         )}
                         key={`${key}`}
                     >

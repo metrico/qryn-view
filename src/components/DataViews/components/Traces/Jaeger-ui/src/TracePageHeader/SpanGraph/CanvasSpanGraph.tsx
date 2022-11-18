@@ -16,12 +16,12 @@ import * as React from "react";
 
 import { autoColor } from "../../Theme";
 import { TNil } from "../../types";
-import { getRgbColorByKey } from '../../utils/color-generator';
+import { getRgbColorByKey } from "../../utils/color-generator";
 
 import renderIntoCanvas from "./render-into-canvas";
 import styled from "@emotion/styled";
 
-const StyledCanvas = styled.canvas<{theme:any}>`
+const StyledCanvas = styled.canvas<{ theme: any }>`
     // background: ${(props) => props.theme.logBgColor};
     //background:red !important;
     height: 60px;
@@ -44,15 +44,13 @@ export class UnthemedCanvasSpanGraph extends React.PureComponent<CanvasSpanGraph
     constructor(props: CanvasSpanGraphProps) {
         super(props);
         this._canvasElm = undefined;
-        
     }
-    getColor = (key: string) => getRgbColorByKey(key, this.props.theme); 
+    getColor = (key: string) => getRgbColorByKey(key, this.props.theme);
 
     componentDidMount() {
         this._draw();
     }
 
-    
     componentDidUpdate() {
         this._draw();
     }
@@ -69,21 +67,14 @@ export class UnthemedCanvasSpanGraph extends React.PureComponent<CanvasSpanGraph
                 items,
                 totalValueWidth,
                 this.getColor,
-                this.props.theme.logBgColor//autoColor(this.props.theme)
+                this.props.theme.logBgColor //autoColor(this.props.theme)
             );
         }
     }
 
     render() {
-        console.log(this.props.theme)
         return (
-            <StyledCanvas 
-
-                theme={this.props.theme}
-               ref={
-                    this._setCanvasRef
-                }
-            />
+            <StyledCanvas theme={this.props.theme} ref={this._setCanvasRef} />
         );
     }
 }

@@ -384,7 +384,6 @@ export class UnthemedSpanBarRow extends React.PureComponent<SpanBarRowProps> {
                 0
             );
         };
-        console.log(this.props);
         return (
             <TimelineRow
                 theme={this.props.theme}
@@ -414,6 +413,7 @@ export class UnthemedSpanBarRow extends React.PureComponent<SpanBarRowProps> {
                         })}
                     >
                         <SpanTreeOffset
+                            theme={this.props.theme}
                             onClick={
                                 isParent ? this._childrenToggle : undefined
                             }
@@ -551,7 +551,7 @@ export class UnthemedSpanBarRow extends React.PureComponent<SpanBarRowProps> {
                     width={1 - columnDivision}
                     onClick={this._detailToggle}
                 >
-                    <Ticks numTicks={numTicks} />
+                    <Ticks theme={this.props.theme} numTicks={numTicks} />
                     <SpanBar
                         rpc={rpc}
                         viewStart={viewStart}

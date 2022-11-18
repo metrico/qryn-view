@@ -544,7 +544,6 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
             return null;
         }
         const color = getColorByKey(serviceName, this.props.theme);
-        console.log(this.props);
         return (
             <Row
                 theme={this.props.theme}
@@ -589,7 +588,6 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
 
     render() {
         // const styles = getStyles(this.props);
-        console.log(this.props);
         const { scrollElement } = this.props;
         return (
             <>

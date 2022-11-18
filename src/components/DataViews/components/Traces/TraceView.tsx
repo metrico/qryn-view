@@ -44,12 +44,9 @@ export function TraceView(props: any) {
     const storeTheme = useSelector(
         (store: { theme: "dark" | "light" }) => store.theme
     );
-    const theme = useMemo(()=>{
-        return themes[storeTheme] 
-    },[storeTheme])
-
-    console.log(theme)
-
+    const theme = useMemo(() => {
+        return themes[storeTheme];
+    }, [storeTheme]);
     const spanFieldsMapped = useMemo(() => {
         if (tracePropMapped?.spans?.length > 0) {
             const fields = mapSpanFields(tracePropMapped.spans);
@@ -128,76 +125,75 @@ export function TraceView(props: any) {
         };
 
         return (
-            <ThemeProvider theme={theme}> 
-            <ViewStyled {...styledProps}>
-                <ViewHeader
-                 {...props}
-                    onClose={setStreamClose}
-                    setMinimize={setMinimize}
-                    setMaxHeight={setMaxHeight}
-                    actualQuery={actualQuery}
-                    total={total}
-                    type={type}
-                   
-                />
-                <div className="view-content">
-                    <TracePageHeader
-                     {...props}
-                   
-                        canCollapse={false}
-                        hideMap={false}
-                        hideSummary={false}
-                        theme={theme}
-                        onSlimViewClicked={onSlimViewClicked}
-                        onTraceGraphViewClicked={noop}
-                        slimView={slim}
-                        trace={traceProp}
-                        updateNextViewRangeTime={updateNextViewRangeTime}
-                        updateViewRangeTime={updateViewRangeTime}
-                        viewRange={viewRange}
-                       
-                        // timeZone={timeZone}
+            <ThemeProvider theme={theme}>
+                <ViewStyled {...styledProps}>
+                    <ViewHeader
+                        {...props}
+                        onClose={setStreamClose}
+                        setMinimize={setMinimize}
+                        setMaxHeight={setMaxHeight}
+                        actualQuery={actualQuery}
+                        total={total}
+                        type={type}
                     />
-                    <TraceTimelineViewer
-                      {...props}
-                      theme={theme}
-                        registerAccessors={noop}
-                        scrollToFirstVisibleSpan={noop}
-                        // findMatchesIDs={spanFindMatches}
-                        trace={traceProp}
-                        // datasourceType={datasourceType}
-                        // spanBarOptions={spanBarOptions?.spanBar}
-                        traceTimeline={traceTimeline}
-                        updateNextViewRangeTime={updateNextViewRangeTime}
-                        updateViewRangeTime={updateViewRangeTime}
-                        viewRange={viewRange}
-                        // timeZone={timeZone}
-                        setSpanNameColumnWidth={setSpanNameColumnWidth}
-                        collapseAll={collapseAll}
-                        collapseOne={collapseOne}
-                        expandAll={expandAll}
-                        expandOne={expandOne}
-                        childrenToggle={childrenToggle}
-                        clearShouldScrollToFirstUiFindMatch={noop}
-                        detailLogItemToggle={detailLogItemToggle}
-                        detailLogsToggle={detailLogsToggle}
-                        detailWarningsToggle={detailWarningsToggle}
-                        detailStackTracesToggle={detailStackTracesToggle}
-                        detailReferencesToggle={detailReferencesToggle}
-                        detailReferenceItemToggle={detailReferenceItemToggle}
-                        detailProcessToggle={detailProcessToggle}
-                        detailTagsToggle={detailTagsToggle}
-                        detailToggle={toggleDetail}
-                        setTrace={noop}
-                        addHoverIndentGuideId={addHoverIndentGuideId}
-                        removeHoverIndentGuideId={removeHoverIndentGuideId}
-                        linksGetter={noop}
-                        uiFind={props.search}
-                        scrollElement={props.scrollElement}
-                      
-                    />
-                </div>
-            </ViewStyled>
+                    <div className="view-content">
+                        <TracePageHeader
+                            {...props}
+                            canCollapse={false}
+                            hideMap={false}
+                            hideSummary={false}
+                            theme={theme}
+                            onSlimViewClicked={onSlimViewClicked}
+                            onTraceGraphViewClicked={noop}
+                            slimView={slim}
+                            trace={traceProp}
+                            updateNextViewRangeTime={updateNextViewRangeTime}
+                            updateViewRangeTime={updateViewRangeTime}
+                            viewRange={viewRange}
+
+                            // timeZone={timeZone}
+                        />
+                        <TraceTimelineViewer
+                            {...props}
+                            theme={theme}
+                            registerAccessors={noop}
+                            scrollToFirstVisibleSpan={noop}
+                            // findMatchesIDs={spanFindMatches}
+                            trace={traceProp}
+                            // datasourceType={datasourceType}
+                            // spanBarOptions={spanBarOptions?.spanBar}
+                            traceTimeline={traceTimeline}
+                            updateNextViewRangeTime={updateNextViewRangeTime}
+                            updateViewRangeTime={updateViewRangeTime}
+                            viewRange={viewRange}
+                            // timeZone={timeZone}
+                            setSpanNameColumnWidth={setSpanNameColumnWidth}
+                            collapseAll={collapseAll}
+                            collapseOne={collapseOne}
+                            expandAll={expandAll}
+                            expandOne={expandOne}
+                            childrenToggle={childrenToggle}
+                            clearShouldScrollToFirstUiFindMatch={noop}
+                            detailLogItemToggle={detailLogItemToggle}
+                            detailLogsToggle={detailLogsToggle}
+                            detailWarningsToggle={detailWarningsToggle}
+                            detailStackTracesToggle={detailStackTracesToggle}
+                            detailReferencesToggle={detailReferencesToggle}
+                            detailReferenceItemToggle={
+                                detailReferenceItemToggle
+                            }
+                            detailProcessToggle={detailProcessToggle}
+                            detailTagsToggle={detailTagsToggle}
+                            detailToggle={toggleDetail}
+                            setTrace={noop}
+                            addHoverIndentGuideId={addHoverIndentGuideId}
+                            removeHoverIndentGuideId={removeHoverIndentGuideId}
+                            linksGetter={noop}
+                            uiFind={props.search}
+                            scrollElement={props.scrollElement}
+                        />
+                    </div>
+                </ViewStyled>
             </ThemeProvider>
         );
     }

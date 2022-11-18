@@ -23,8 +23,8 @@ import { TraceSpan } from "../types/trace";
 import spanAncestorIds from "../utils/span-ancestor-ids";
 import styled from "@emotion/styled";
 
-const SpanTreeOffset = css`
-    color: #000;
+const SpanTreeOffset = (theme: any) => css`
+    color: ${theme.viewBg};
     position: relative;
 `;
 const SpanTreeOffsetParent = css`
@@ -32,20 +32,20 @@ const SpanTreeOffsetParent = css`
         cursor: pointer;
     }
 `;
-const indentGuide = css`
+const indentGuide = (theme: any) => css`
     /* The size of the indentGuide is based off of the iconWrapper */
     padding-right: calc(0.5rem + 12px);
     height: 100%;
-    border-left: 3px solid transparent;
+    border-left: 1px solid transparent;
     display: inline-flex;
     &::before {
         content: "";
         padding-left: 1px;
-        background-color: lightgrey;
+        background-color: ${theme.buttonBorder};
     }
 `;
-const indentGuideActive = css`
-    border-color: darkgrey;
+const indentGuideActive = (theme: any) => css`
+    border-color: ${theme.widgetContainer};
     &::before {
         background-color: transparent;
     }
@@ -56,6 +56,7 @@ const IconWrapper = styled.span`
 `;
 
 type TProps = {
+    theme: any;
     childrenVisible?: boolean;
     onClick?: () => void;
     span: TraceSpan;
@@ -141,10 +142,18 @@ export class UnthemedSpanTreeOffset extends React.PureComponent<TProps> {
         const icon =
             showChildrenIcon &&
             hasChildren &&
-            (childrenVisible ? <KeyboardArrowDown /> : <KeyboardArrowRight />);
+            (childrenVisible ? (
+                <KeyboardArrowDown
+                    style={{ color: this.props.theme.textColor }}
+                />
+            ) : (
+                <KeyboardArrowRight
+                    style={{ color: this.props.theme.textColor }}
+                />
+            ));
         return (
             <span
-                className={cx(SpanTreeOffset, {
+                className={cx(SpanTreeOffset(this.props.theme), {
                     [SpanTreeOffsetParent]: hasChildren,
                 })}
                 {...wrapperProps}
@@ -152,8 +161,8 @@ export class UnthemedSpanTreeOffset extends React.PureComponent<TProps> {
                 {this.ancestorIds.map((ancestorId) => (
                     <span
                         key={ancestorId}
-                        className={cx(indentGuide, {
-                            [indentGuideActive]:
+                        className={cx(indentGuide(this.props.theme), {
+                            [indentGuideActive(this.props.theme)]:
                                 this.props.hoverIndentGuideIds.has(ancestorId),
                         })}
                         data-ancestor-id={ancestorId}

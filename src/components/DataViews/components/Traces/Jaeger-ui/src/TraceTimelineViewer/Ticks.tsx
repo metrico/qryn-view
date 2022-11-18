@@ -24,11 +24,11 @@ import { formatDuration } from "./utils";
 const TicksStyled = styled.div`
     pointer-events: none;
 `;
-const TicksTick = styled.div`
+const TicksTick = styled.div<{ theme: any }>`
     position: absolute;
     height: 100%;
     width: 1px;
-    background: #d8d8d8;
+    background: ${({ theme }) => theme.buttonBorder};
     &:last-child {
         width: 0;
     }
@@ -43,6 +43,7 @@ const TicksTickLabelEndAnchor = css`
 `;
 
 type TicksProps = {
+    theme: any;
     endTime?: number | TNil;
     numTicks: number;
     showLabels?: boolean | TNil;
@@ -67,6 +68,7 @@ export default function Ticks(props: TicksProps) {
         const portion = i / (numTicks - 1);
         ticks.push(
             <TicksTick
+                theme={props.theme}
                 data-testid="TicksID"
                 key={portion}
                 style={{

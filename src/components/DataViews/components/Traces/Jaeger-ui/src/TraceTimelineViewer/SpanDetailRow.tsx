@@ -62,13 +62,13 @@ const ExpandedAccent = styled.span`
     }
 `;
 
-const InfoWrapper = styled.div`
-    border: 1px solid #d3d3d3;
+const InfoWrapper = styled.div<{ theme: any }>`
+    border: 1px solid ${({ theme }) => theme.buttonBorder};
     border-top: 3px solid;
     padding: 0.75rem;
 `;
 type SpanDetailRowProps = {
-    theme:any;
+    theme: any;
     color: string;
     columnDivision: number;
     detailState: DetailState;
@@ -136,15 +136,15 @@ export class UnthemedSpanDetailRow extends React.PureComponent<SpanDetailRowProp
             topOfViewRefType,
         } = this.props;
         // const styles = getStyles(theme);
-        console.log(this.props)
         return (
             <TimelineRow theme={this.props.theme}>
                 <TimelineRow.Cell
-                theme={this.props.theme}
+                    theme={this.props.theme}
                     width={columnDivision}
                     style={{ overflow: "hidden" }}
                 >
                     <SpanTreeOffset
+                        theme={this.props.theme}
                         span={span}
                         showChildrenIcon={false}
                         hoverIndentGuideIds={hoverIndentGuideIds}
@@ -159,8 +159,14 @@ export class UnthemedSpanDetailRow extends React.PureComponent<SpanDetailRowProp
                         />
                     </span>
                 </TimelineRow.Cell>
-                <TimelineRow.Cell theme={this.props.theme} width={1 - columnDivision}>
-                    <InfoWrapper style={{ borderTopColor: color }}>
+                <TimelineRow.Cell
+                    theme={this.props.theme}
+                    width={1 - columnDivision}
+                >
+                    <InfoWrapper
+                        theme={this.props.theme}
+                        style={{ borderTopColor: color }}
+                    >
                         <SpanDetail
                             theme={this.props.theme}
                             detailState={detailState}

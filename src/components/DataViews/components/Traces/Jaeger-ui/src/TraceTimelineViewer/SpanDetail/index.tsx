@@ -36,13 +36,13 @@ import AccordianReferences from "./AccordianReferences";
 import AccordianText from "./AccordianText";
 import DetailState from "./DetailState";
 import styled from "@emotion/styled";
-import moment from 'moment';
+import moment from "moment";
 
 const Header = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    align-items:center;
+    align-items: center;
     gap: 0 1rem;
     margin-bottom: 0.25rem;
 `;
@@ -83,7 +83,7 @@ const Textarea = styled.textarea`
 `;
 
 type SpanDetailProps = {
-    theme:any;
+    theme: any;
     detailState: DetailState;
     linksGetter:
         | ((links: TraceKeyValuePair[], index: number) => TraceLink[])
@@ -108,7 +108,6 @@ type SpanDetailProps = {
 };
 
 export default function SpanDetail(props: SpanDetailProps) {
-    console.log(props)
     const {
         detailState,
         linksGetter,
@@ -294,6 +293,5 @@ export default function SpanDetail(props: SpanDetailProps) {
 export const getAbsoluteTime = (
     startTime: number /* , timeZone: TimeZone */
 ) => {
-
-    return ` (${moment(startTime/1000)?.format('HH:mm:ss.SSS')})`;    
+    return ` (${moment(startTime / 1000)?.format("HH:mm:ss.SSS")})`;
 };

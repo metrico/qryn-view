@@ -97,7 +97,7 @@ const TracePageHeaderDetailToggleExpanded = css`
 const TracePageHeaderTitle = (color: string) => css`
     color: ${color};
     flex: 1;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     line-height: 1em;
     margin: 0 0 0 0.5em;
@@ -179,10 +179,7 @@ export default function TracePageHeader(props: TracePageHeaderEmbedProps) {
         viewRange,
     } = props;
 
-    console.log(props);
-
     const theme = useTheme();
-    //   const styles = useStyles2(getStyles);
     const links = React.useMemo(() => {
         if (!trace) {
             return [];
@@ -201,7 +198,7 @@ export default function TracePageHeader(props: TracePageHeaderEmbedProps) {
             const { renderer, ...rest } = item;
             return { ...rest, value: renderer(trace /* , styles */) };
         });
-    console.log(props.theme);
+
     const title = (
         <h1
             style={{
@@ -218,7 +215,6 @@ export default function TracePageHeader(props: TracePageHeaderEmbedProps) {
             </TracePageHeaderTraceId>
         </h1>
     );
-    console.log(props.theme);
     return (
         <TracePageHeaderStyled theme={props.theme}>
             <TracePageHeaderTitleRow>

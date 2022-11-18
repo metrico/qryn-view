@@ -90,7 +90,7 @@ export default function TimelineHeaderRow(props: TimelineHeaderRowProps) {
             data-testid="TimelineHeaderRow"
         >
             <TimelineRow.Cell
-            theme={props.theme}
+                theme={props.theme}
                 className={cx(ubFlex, ubPx2, TimelineHeaderWrapper)}
                 width={nameColumnWidth}
                 id="collapser"
@@ -99,13 +99,18 @@ export default function TimelineHeaderRow(props: TimelineHeaderRowProps) {
                     Service &amp; Operation
                 </h4>
                 <TimelineCollapser
+                    theme={props.theme}
                     onCollapseAll={onCollapseAll}
                     onExpandAll={onExpandAll}
                     onCollapseOne={onCollapseOne}
                     onExpandOne={onExpandOne}
                 />
             </TimelineRow.Cell>
-            <TimelineRow.Cell theme={props.theme} id="ticker" width={1 - nameColumnWidth}>
+            <TimelineRow.Cell
+                theme={props.theme}
+                id="ticker"
+                width={1 - nameColumnWidth}
+            >
                 <TimelineViewingLayer
                     boundsInvalidator={nameColumnWidth}
                     updateNextViewRangeTime={updateNextViewRangeTime}
@@ -113,6 +118,7 @@ export default function TimelineHeaderRow(props: TimelineHeaderRowProps) {
                     viewRangeTime={viewRangeTime}
                 />
                 <Ticks
+                    theme={props.theme}
                     numTicks={numTicks}
                     startTime={viewStart * duration}
                     endTime={viewEnd * duration}
