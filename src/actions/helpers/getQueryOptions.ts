@@ -5,7 +5,6 @@ export function getQueryOptions():QueryOptions {
         method: "GET",
         headers: {
             "Content-Type": "application/javascript",
-            "Access-Control-Allow-Origin": window.location.origin,
         },
     };
 }

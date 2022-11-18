@@ -27,11 +27,6 @@ export default function useLabelValues(label, start, end) {
     const origin = useState(window.location.origin);
 
     const headers = useState({
-        "Access-Control-Allow-Origin": origin,
-        "Access-Control-Allow-Headers": [
-            "Access-Control-Request-Headers",
-            "Content-Type",
-        ],
         "Content-Type": "application/json",
     });
 

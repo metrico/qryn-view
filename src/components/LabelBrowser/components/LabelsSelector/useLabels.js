@@ -22,11 +22,6 @@ export default function useLabels() {
     const origin = useState(window.location.origin);
 
     const headers = useState({
-        "Access-Control-Allow-Origin": origin,
-        "Access-Control-Allow-Headers": [
-            "Access-Control-Request-Headers",
-            "Content-Type",
-        ],
         "Content-Type": "application/json",
     });
 
