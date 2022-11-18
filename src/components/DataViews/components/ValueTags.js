@@ -104,7 +104,7 @@ export default function ValueTags(props) {
 
         const panelCP = JSON.parse(JSON.stringify(props.actQuery));
 
-        if (value && linkID && currentUrl && linkType) {
+        try {
             const newRight = {
                 ...previousRight[0],
                 id: previousRight[0].id,
@@ -139,11 +139,13 @@ export default function ValueTags(props) {
                     linkID, // datasourceid
                     currentUrl
                 )
-            ); // url
+            );
+        } catch (e) {
+            console.log(e);
         }
     };
 
-    function linkButton(key, value) {
+    const linkButton = (key, value) => {
         const { linkedFields } = dataSourceData;
         const fieldsFromParent = linkedFieldTags?.fields
             .map((m) => {
@@ -162,16 +164,24 @@ export default function ValueTags(props) {
             ?.flat();
 
         const fieldNames = fieldsFromParent?.map((m) => m.name);
-
-        const { linkID, linkType, internalLink } = linkedFields[0];
-        const currentDataSource = dataSources?.find((f) => f.id === linkID);
+        const { dataSourceId, linkType, internalLink } = linkedFields[0];
+        const currentDataSource = dataSources?.find(
+            (f) => f.id === dataSourceId
+        );
         const currentURL = currentDataSource?.url;
 
         if (fieldNames.includes(key) && value && internalLink === true) {
             return (
                 <TracesButton
                     onClick={(e) => {
-                        openTraces(e, key, value, linkID, currentURL, linkType);
+                        openTraces(
+                            e,
+                            key,
+                            value,
+                            dataSourceId,
+                            currentURL,
+                            linkType
+                        );
                     }}
                 >
                     <OpenInNewIcon
@@ -186,7 +196,7 @@ export default function ValueTags(props) {
         }
 
         return null;
-    }
+    };
     return (
         <ThemeProvider theme={themes[theme]}>
             {Object.entries(tags).map(([key, value], k) => (

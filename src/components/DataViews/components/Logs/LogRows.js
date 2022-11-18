@@ -47,7 +47,7 @@ function Row(props) {
     const linkedFieldTags = useMemo(() => {
         if (dataSourceData?.linkedFields?.length > 0) {
             const mapped = dataSourceData.linkedFields.map((linked) => {
-                const { id, regex, name, url, urlLabel, internalLink } = linked;
+                const { id, regex, name, internalLink } = linked;
                 const newGex = new RegExp(regex, "i");
                 const matched = text.match(newGex);
                 if (matched?.length > 0) {
