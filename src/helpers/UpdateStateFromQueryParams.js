@@ -115,7 +115,6 @@ export function UpdateStateFromQueryParams() {
                 dispatch(setUrlLocation(hash));
 
                 Object.keys(startParams).forEach((param) => {
-                    console.log(param)
                     if (
                         STRING_VALUES.includes(param) &&
                         startParams[param] !== ""
