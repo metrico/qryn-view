@@ -13,11 +13,39 @@ const getUrlType = (api, type, label, start, end) =>
     }[type]);
 
 export default function useLabelValues(id, label, start, end) {
+
+
+
+
     const dataSources = useSelector((store) => store.dataSources);
 
     const currentDataSource = useMemo(() => {
         return dataSources.find((f) => f.id === id);
     }, [dataSources, id]);
+
+
+    const basicAuth = currentDataSource?.auth?.basicAuth.value;
+
+    let auth = {};
+
+    let labelHeaders = {}
+
+    if (basicAuth) {
+
+        const authfields = currentDataSource?.auth?.fields?.basicAuth;
+
+        for (let field of authfields) {
+            if (field.name === "user") {
+                auth.username = field.value;
+            }
+            if (field.name === "password") {
+                auth.password = field.value;
+            }
+        }
+
+        labelHeaders.auth = auth
+    }
+
 
     const nanoStart = getTimeParsed(start);
     const nanoEnd = getTimeParsed(end);
@@ -41,9 +69,13 @@ export default function useLabelValues(id, label, start, end) {
     }, [label, setUrl, currentDataSource]);
 
 
+
+
+
     const headers = useState({
         "Content-Type": "application/json",
     });
+
 
     const options = useMemo(
         () => ({
@@ -54,15 +86,18 @@ export default function useLabelValues(id, label, start, end) {
         []
     );
 
+    labelHeaders.options = options
+
     const [response, setResponse] = useState([]);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         if (currentDataSource.type !== "flux") {
             const apiRequest = async () => {
                 setLoading(true);
-                if (url !== "") {
+                if (url && url !== "") {
+               
                     try {
-                        const req = await axios({ url }, options);
+                        const req = await axios.get( url , labelHeaders);
                         setResponse(req || []);
                     } catch (e) {
                         console.log(e);

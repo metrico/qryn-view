@@ -135,7 +135,8 @@ export const QueryBar = (props) => {
                 decodeQuery(
                     queryInput,
                     currentDataSource?.url,
-                    props.data.labels
+                    props.data.labels,
+                    currentDataSource.id
                 );
             }
             const labelsDecoded = decodeExpr(data.expr);
@@ -169,7 +170,7 @@ export const QueryBar = (props) => {
         
 
 
-
+        // search for auth params  and send inside
         const labels = sendLabels(
             dataSourceId,
             dataSourceType,
@@ -196,23 +197,27 @@ export const QueryBar = (props) => {
 
         if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
             return labels.then((data) => {
-                const prevLabels = [...props.data.labels];
-                const prevMap = prevLabels.map((m) => m.name) || [];
-                const newLabels = [...data];
-                if (newLabels.length > 0) {
-                    if (prevMap.length > 0) {
-                        newLabels.forEach((l) => {
-                            const labelFound = prevMap.includes(l.name);
-                            if (labelFound) {
-                                const pl = prevLabels.find(
-                                    (f) => f.name === l.name
-                                );
-                                l = { ...pl };
-                            }
-                        });
+                if(data) {
+                    console.log(data)
+                    const prevLabels = [...props.data.labels];
+                    const prevMap = prevLabels.map((m) => m.name) || [];
+                    const newLabels = [...data] ;
+                    if (newLabels.length > 0) {
+                        if (prevMap.length > 0) {
+                            newLabels.forEach((l) => {
+                                const labelFound = prevMap.includes(l.name);
+                                if (labelFound) {
+                                    const pl = prevLabels.find(
+                                        (f) => f.name === l.name
+                                    );
+                                    l = { ...pl };
+                                }
+                            });
+                        }
+                        decodeQuery(expr, currentDataSource.url, newLabels,currentDataSource.id);
                     }
-                    decodeQuery(expr, currentDataSource.url, newLabels);
                 }
+            
             });
         } else {
             // if there is nothing to request, show empty view
@@ -275,10 +280,12 @@ export const QueryBar = (props) => {
                     (f) => f.id === dataSourceId
                 );
                 if (currentDataSource?.type !== "flux") {
+                
                     decodeQuery(
                         queryInput,
                         currentDataSource?.url,
-                        props.data.labels
+                        props.data.labels,
+                        currentDataSource?.id
                     );
                 }
                 const labelsDecoded = decodeExpr(data.expr);

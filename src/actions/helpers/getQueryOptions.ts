@@ -4,7 +4,7 @@ export function getQueryOptions(type:string, headers:any):QueryOptions {
 
     // const queryMethod = method !== '' ? method : undefined
     const queryHeaders = Object.keys(headers)?.length > 0 ? headers : undefined
-
+    
     if(type === 'flux') {
         return {
             method: "POST",
@@ -18,7 +18,7 @@ export function getQueryOptions(type:string, headers:any):QueryOptions {
     return {
         method:  "GET",
         headers: queryHeaders || {
-            "Content-Type": "application/javascript",
+            "Content-Type": "application/json",
         },
     };
 }

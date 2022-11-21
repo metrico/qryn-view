@@ -10,8 +10,7 @@ import { resetNoData } from "./helpers/resetNoData";
 import { processResponse } from "./helpers/processResponse";
 import { QueryType, QueryDirection } from "./types";
 import { getTimeSpan } from "./helpers/getTimeSpan";
-import  { boscoSend } from "./helpers/boscoRequest";
-
+import { boscoSend } from "./helpers/boscoRequest";
 
 /**
  *
@@ -54,7 +53,8 @@ export default function getData(
         },
         hasSettings: false,
     };
-
+    let user = "";
+    let pass = "";
     if (dataSourceId !== "") {
         const dataSourceSettings = store.getState()["dataSources"];
         const dataSourceSetting = dataSourceSettings.find(
@@ -86,23 +86,25 @@ export default function getData(
             const reqHeaders = dsSettings?.auth?.fields?.basicAuth;
 
             let authHeader = {};
+            let auth = { username: "", password: "" };
 
             let str = "";
             for (let header of reqHeaders) {
                 if (header?.name === "user") {
-                    str += `${header?.value}:`;
+                    // str += `${header?.value}:`;
+                    auth.username = header.value;
+                    user = header.value;
                 }
 
                 if (header?.name === "password") {
-                    str += header?.value;
+                    // str += header?.value;
+                    auth.password = header.value;
+                    pass = header.value;
                 }
             }
 
-            authHeader = { Authorization: `Basic ${btoa(str)}` };
-
             dsSettings["requestHeaders"] = {
                 ...dsSettings["requestHeaders"],
-                ...authHeader,
             };
         }
     }
@@ -122,7 +124,6 @@ export default function getData(
     const endpoint = getEndpoint(type, queryType, params);
 
     return async function (dispatch: Function) {
-        
         await resetParams(dispatch, panel);
 
         let cancelToken: any;
@@ -161,7 +162,10 @@ export default function getData(
                     });
             } else if (options?.method === "GET") {
                 await axios
-                    ?.get(endpoint, options)
+                    ?.get(endpoint, {
+                        auth: { username: user, password: pass },
+                        ...options,
+                    })
                     ?.then((response) => {
                         processResponse(
                             type,
@@ -172,9 +176,11 @@ export default function getData(
                             direction
                         );
 
-                        if(debugMode) {
-                          boscoSend({level:'info', id, type, direction}, id)
-                           
+                        if (debugMode) {
+                            boscoSend(
+                                { level: "info", id, type, direction },
+                                id
+                            );
                         }
                     })
                     .catch((error) => {
@@ -182,15 +188,16 @@ export default function getData(
                         dispatch(setIsEmptyView(true));
                         dispatch(setLoading(false));
                         if (debugMode) {
-
-                            boscoSend({level:'error', id, type, direction}, id)
+                            boscoSend(
+                                { level: "error", id, type, direction },
+                                id
+                            );
 
                             console.log(
                                 "getting an error from response: ",
                                 error
                             );
                         }
-
                     })
                     .finally(() => {
                         dispatch(setLoading(false));
