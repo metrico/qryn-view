@@ -22,7 +22,6 @@ export const sendLabels = async (id, type, apiUrl, start, stop) => {
     const options = {
         method: "GET",
         headers: headers,
-        mode: "cors",
     };
     if (type !== "flux") {
         const res = await axios

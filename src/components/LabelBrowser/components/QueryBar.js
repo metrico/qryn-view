@@ -105,10 +105,10 @@ export const QueryBar = (props) => {
         return defaultDataSources.find((f) => f.id === dataSourceId);
     }, [dataSourceId]);
 
-    const urlParams = useMemo(() => {
-        const urlHash = new URLSearchParams(hash);
-        return JSON.parse(decodeURIComponent(urlHash.get(name)));
-    }, [hash, name]);
+    // const urlParams = useMemo(() => {
+    //     const urlHash = new URLSearchParams(hash);
+    //     return JSON.parse(decodeURIComponent(urlHash.get(name)));
+    // }, [hash, name]);
 
     const saveUrl = localUrl();
     const expr = useMemo(() => {

@@ -68,7 +68,6 @@ export default function useLabels(id, dataSourceURL = "") {
             signal: controller.signal,
             method: "GET",
             headers: headers,
-            mode: "cors",
         }),
         []
     );

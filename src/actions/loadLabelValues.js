@@ -15,7 +15,6 @@ export default function loadLabelValues(label, labelList='', url) {
     const options = {
         method: "GET",
         headers: headers,
-        mode: "cors",
     };
 
 

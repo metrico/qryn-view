@@ -42,7 +42,6 @@ export const useQueryResponse = ({ queryType, step, limit, exp }) => {
             signal: controller.signal,
             method: "GET",
             headers: headers,
-            mode: "cors",
         }),
         []
     );

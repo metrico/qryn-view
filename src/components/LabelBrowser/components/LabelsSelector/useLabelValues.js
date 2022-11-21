@@ -50,7 +50,6 @@ export default function useLabelValues(id, label, start, end) {
             signal: controller.signal,
             method: "GET",
             headers: headers,
-            mode: "cors",
         }),
         []
     );
