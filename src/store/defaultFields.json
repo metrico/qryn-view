@@ -12,12 +12,8 @@
                 "header": "Content-type",
                 "value": "application/javascript",
                 "id": "SALm2YFnZKJQD8pXeAywE"
-            },
-            {
-                "header": "Access-Control-Allow-Origin",
-                "value": "http://localhost:8080",
-                "id": "SR9W1rhVrYENUki1nTSIw"
             }
+
         ],
         "linkedFields": [
             {
@@ -158,12 +154,8 @@
                 "header": "Content-type",
                 "value": "application/javascript",
                 "id": "Kfrl4PKCHrXoQT-XE5QiM"
-            },
-            {
-                "header": "Access-Control-Allow-Origin",
-                "value": "http://localhost:8080",
-                "id": "Y-bMf2OU7XEBXkIbVUT45"
             }
+ 
         ],
         "linkedFields": [
             {
@@ -304,12 +296,8 @@
                 "header": "Content-type",
                 "value": "application/javascript",
                 "id": "l7NqFAZNeK8n70QFRy4pu"
-            },
-            {
-                "header": "Access-Control-Allow-Origin",
-                "value": "http://localhost:8080",
-                "id": "LyvU-N3RfLfhkT4n5J9Av"
             }
+
         ],
         "linkedFields": [
             {
@@ -453,12 +441,8 @@
                 "header": "Content-type",
                 "value": "application/vnd.flux",
                 "id": "OoGmT6Z9bm6LNArNV7Lfp"
-            },
-            {
-                "header": "Access-Control-Allow-Origin",
-                "value": "http://localhost:8080",
-                "id": "3JBIedg7CkmV0y8CyCX26"
             }
+
         ],
         "linkedFields": [],
         "auth": {

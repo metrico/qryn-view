@@ -3,11 +3,11 @@ import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 /**npm */
-import { css } from "@emotion/css";
+import { css, cx } from "@emotion/css";
 import { ThemeProvider } from "@emotion/react";
-import { Dialog, Switch } from "@mui/material";
+
 import { useMediaQuery } from "react-responsive";
-import CloseIcon from "@mui/icons-material/Close";
+
 /**Actions */
 import getData from "../../../actions/getData";
 import setQueryHistory from "../../../actions/setQueryHistory";
@@ -35,21 +35,13 @@ import { decodeQuery, decodeExpr } from "../../../helpers/decodeQuery";
 import { sendLabels } from "../../../hooks/useLabels";
 /**Components */
 import QueryTypeBar from "../../QueryTypeBar";
-import QueryTypeSwitch from "../../QueryTypeBar/components/QueryTypeSwitch";
-import QueryLimit from "../../QueryTypeBar/components/QueryLimit";
+import { QuerySetting } from "./QuerySetting";
 /**Theme */
 import { themes } from "../../../theme/themes";
 
-/**Styled*/
-import {
-    InputGroup,
-    SettingCont,
-    SettingHeader,
-    SettingCloseBtn,
-    SettingsInputContainer,
-    SettingLabel,
-} from "./styled";
 import setDataSources from "../../../views/DataSources/store/setDataSources";
+import { defaultDataSources } from "../../../views/DataSources/store/defaults";
+
 export function panelAction(name, value) {
     if (name === "left") {
         return setLeftPanel(value);
@@ -70,6 +62,9 @@ export const TRACE_OPTIONS = [
     { value: "traceId", label: "TraceId" },
     { value: "search", label: "Search" },
 ];
+const maxWidth = css`
+    max-width: 100%;
+`;
 
 export const QueryBar = (props) => {
     const { data, name } = props;
@@ -80,7 +75,7 @@ export const QueryBar = (props) => {
         dataSourceType,
         direction,
         dataSourceId,
-        dataSourceURL,
+        //  dataSourceURL,
     } = data;
     const { hash } = useLocation();
     const dispatch = useDispatch();
@@ -94,98 +89,141 @@ export const QueryBar = (props) => {
     const [queryValid, setQueryValid] = useState(false);
     const [queryValue, setQueryValue] = useState(queryInit(data.expr));
     const [open, setOpen] = useState(false);
+    // const [currentDataSource,setCurrentDatasource] = useState({})
     const dataSources = useSelector((store) => store.dataSources);
+    const panelData = useSelector((store) => store[name]);
+    const actLocalDs = useMemo(() => {
+        try {
+            const localData = JSON.parse(localStorage.getItem("dataSources"));
+            return localData?.find((f) => f.id === dataSourceId);
+        } catch (e) {
+            return {};
+        }
+    }, [dataSourceId]);
 
-    useEffect(() => {});
+    const initialDefault = useMemo(() => {
+        return defaultDataSources.find((f) => f.id === dataSourceId);
+    }, [dataSourceId]);
+
+    const urlParams = useMemo(() => {
+        const urlHash = new URLSearchParams(hash);
+        return JSON.parse(decodeURIComponent(urlHash.get(name)));
+    }, [hash, name]);
+
     const saveUrl = localUrl();
     const expr = useMemo(() => {
         return data.expr;
     }, [data.expr]);
 
     useEffect(() => {
-        // check for url params and for datasources
-        const urlParams = new URLSearchParams(hash);
+        const dataSource = dataSources?.find((f) => f.id === dataSourceId);
+
+
+
         let currentDataSource = {};
-        const panel = JSON.parse(decodeURIComponent(urlParams.get(name)));
-        const currentPanel = panel?.find((f) => f.id === id);
 
-        if (dataSources) {
-            currentDataSource = dataSources?.find((f) => f.id === dataSourceId);
+        if (
+            actLocalDs &&
+            actLocalDs?.url !== initialDefault &&
+            actLocalDs?.url !== ""
+        ) {
+            currentDataSource = { ...actLocalDs };
 
-            if (
-                currentDataSource &&
-                currentPanel &&
-                currentPanel?.dataSourceURL !== ""
-            ) {
-                currentDataSource.url = currentPanel?.dataSourceURL;
+            const panelCP = [...panelData];
+
+            if (currentDataSource?.type !== "flux") {
+                decodeQuery(
+                    queryInput,
+                    currentDataSource?.url,
+                    props.data.labels
+                );
             }
+            const labelsDecoded = decodeExpr(data.expr);
 
-            const dsCopy = JSON.parse(JSON.stringify(dataSources));
 
-            dsCopy?.forEach((ds) => {
-                if (ds.id === currentPanel?.dataSourceId) {
-                    ds.url = currentDataSource.url;
+            panelCP.forEach((query) => {
+                if (query.id === id) {
+                    query.labels = [...labelsDecoded]
+                    query.dataSourceId = currentDataSource.id;
+                    query.dataSourceType = currentDataSource.type;
+                    query.dataSourceURL = currentDataSource.url;
                 }
             });
-            // if there is a datasource url at url params, update datadources
-            dispatch(setDataSources([...dsCopy]));
 
-            const labels = sendLabels(
-                dataSourceId,
-                dataSourceType,
-                currentDataSource?.url,
-                start,
-                stop
+            dispatch(panelAction(name, panelCP));
+
+            const dsCopy = [...dataSources];
+            dsCopy.forEach((ds) => {
+                if (ds.id === dataSourceId) {
+                    ds = currentDataSource;
+                }
+            });
+
+            dispatch(setDataSources(dsCopy));
+
+        } else if (dataSource && dataSource.url !== "") {
+            currentDataSource = { ...dataSource };
+        }
+
+
+        
+
+
+
+        const labels = sendLabels(
+            dataSourceId,
+            dataSourceType,
+            currentDataSource?.url, // which one should be?
+            start,
+            stop
+        );
+
+        // if is view only mode (embedded) do an auto request on init
+        if (isEmbed)
+            dispatch(
+                getData(
+                    dataSourceType,
+                    queryInput,
+                    queryType,
+                    limit,
+                    name,
+                    id,
+                    direction,
+                    dataSourceId,
+                    currentDataSource?.url
+                )
             );
 
-            // if is view only mode (embedded) do an auto request on init
-            if (isEmbed)
-                dispatch(
-                    getData(
-                        dataSourceType,
-                        queryInput,
-                        queryType,
-                        limit,
-                        name,
-                        id,
-                        direction,
-                        dataSourceId,
-                        currentDataSource?.url || dataSourceURL
-                    )
-                );
-
-            if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
-                return labels.then((data) => {
-                    const prevLabels = [...props.data.labels];
-                    const prevMap = prevLabels.map((m) => m.name) || [];
-                    const newLabels = [...data];
-                    if (newLabels.length > 0) {
-                        if (prevMap.length > 0) {
-                            newLabels.forEach((l) => {
-                                const labelFound = prevMap.includes(l.name);
-                                if (labelFound) {
-                                    const pl = prevLabels.find(
-                                        (f) => f.name === l.name
-                                    );
-                                    l = { ...pl };
-                                }
-                            });
-                        }
-                        decodeQuery(expr, currentDataSource.url, newLabels);
+        if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
+            return labels.then((data) => {
+                const prevLabels = [...props.data.labels];
+                const prevMap = prevLabels.map((m) => m.name) || [];
+                const newLabels = [...data];
+                if (newLabels.length > 0) {
+                    if (prevMap.length > 0) {
+                        newLabels.forEach((l) => {
+                            const labelFound = prevMap.includes(l.name);
+                            if (labelFound) {
+                                const pl = prevLabels.find(
+                                    (f) => f.name === l.name
+                                );
+                                l = { ...pl };
+                            }
+                        });
                     }
-                });
-            } else {
-                // if there is nothing to request, show empty view
-                dispatch(setIsEmptyView(true));
-            }
+                    decodeQuery(expr, currentDataSource.url, newLabels);
+                }
+            });
+        } else {
+            // if there is nothing to request, show empty view
+            dispatch(setIsEmptyView(true));
         }
     }, []);
 
     useEffect(() => {
+
         setQueryInput(expr);
-
         setQueryValue([{ children: [{ text: expr }] }]);
-
         setQueryValid(onQueryValid(expr));
     }, [expr]);
 
@@ -247,8 +285,8 @@ export const QueryBar = (props) => {
                 const actDataSource = dataSources.find(
                     (f) => f.id === dataSourceId
                 );
-
                 const panel = [...panelQuery];
+
                 panel.forEach((query) => {
                     if (query.id === id) {
                         query.labels = [...labelsDecoded];
@@ -271,7 +309,7 @@ export const QueryBar = (props) => {
                         id,
                         direction,
                         dataSourceId,
-                        dataSourceURL
+                        actDataSource.url
                     )
                 );
 
@@ -301,290 +339,145 @@ export const QueryBar = (props) => {
     function onClose() {
         showQuerySettings();
     }
+
+    const showFullQueryBar = (type, isSplit, isMobile) => {
+        if (!isMobile && !isSplit && type !== "flux" && type !=='traces')
+            return <QueryTypeBar {...props} />;
+        return null;
+    };
+
+    if (isEmbed) {
+        return null;
+    }
+
     return (
-        !isEmbed && (
-            <div
-                className={css`
-                    max-width: 100%;
-                `}
-                id={id}
-            >
-                <ThemeProvider theme={themes[theme]}>
-                    <MobileTopQueryMenu
-                        isSplit={isSplit}
-                        dataSourceType={dataSourceType}
-                    >
-                        <div
-                            className={css`
-                                display: flex;
-                            `}
-                        >
-                            {dataSourceType !== "flux" && (
-                                <>
-                                    <ShowLabelsButton
-                                        {...props}
-                                        isMobile={true}
-                                    />
+        <div className={cx(maxWidth)} id={id}>
+            <ThemeProvider theme={themes[theme]}>
+                <MobileTopQueryMenuCont
+                    {...props}
+                    isSplit={isSplit}
+                    dataSourceType={dataSourceType}
+                    showQuerySettings={showQuerySettings}
+                    queryHistory={queryHistory}
+                    handleHistoryClick={handleHistoryClick}
+                    queryValid={queryValid}
+                    onSubmit={onSubmit}
+                />
+                <QueryBarCont
+                    {...props}
+                    isSplit={isSplit}
+                    dataSourceType={dataSourceType}
+                    handleQueryChange={handleQueryChange}
+                    expr={expr}
+                    queryValue={queryValue}
+                    handleInputKeyDown={handleInputKeyDown}
+                    queryHistory={queryHistory}
+                    handleHistoryClick={handleHistoryClick}
+                    queryValid={queryValid}
+                    onSubmit={onSubmit}
+                />
 
-                                    <ShowQuerySettingsButton
-                                        {...props}
-                                        isSplit={isSplit}
-                                        isMobile={true}
-                                        onClick={showQuerySettings}
-                                    />
-                                </>
-                            )}
-
-                            <HistoryButton
-                                queryLength={queryHistory.length}
-                                handleHistoryClick={handleHistoryClick}
-                                isMobile={true}
-                            />
-                        </div>
-
-                        <ShowLogsButton
-                            disabled={!queryValid}
-                            onClick={onSubmit}
-                            isMobile={true}
-                        />
-                    </MobileTopQueryMenu>
-                    <QueryBarContainer>
-                        {!isSplit && dataSourceType !== "flux" && (
-                            <ShowLabelsButton {...props} />
-                        )}
-
-                        <QueryEditor
-                            onQueryChange={handleQueryChange}
-                            defaultValue={expr || ""}
-                            value={queryValue}
-                            onKeyDown={handleInputKeyDown}
-                        />
-
-                        {!isSplit && dataSourceType !== "flux" && (
-                            <>
-                                <HistoryButton
-                                    queryLength={queryHistory.length}
-                                    handleHistoryClick={handleHistoryClick}
-                                />
-
-                                <ShowLogsButton
-                                    disabled={!queryValid}
-                                    onClick={onSubmit}
-                                    isMobile={false}
-                                />
-                            </>
-                        )}
-                    </QueryBarContainer>
-
-                    {!isTabletOrMobile &&
-                        !isSplit &&
-                        dataSourceType !== "flux" && (
-                            <QueryTypeBar {...props} />
-                        )}
-
-                    {(isTabletOrMobile ||
-                        isSplit ||
-                        dataSourceType !== "flux") && (
-                        <QuerySetting
-                            {...props}
-                            open={open}
-                            handleClose={onClose}
-                            actPanel={panelQuery}
-                            name={name}
-                        />
-                    )}
-                </ThemeProvider>
-            </div>
-        )
-    );
-};
-
-export const QuerySetting = (props) => {
-    console.log(props);
-
-    const { data } = props;
-
-    const { dataSourceType } = data;
-
-    console.log(dataSourceType);
-
-    const dispatch = useDispatch();
-
-    const responseType = useSelector((store) => store.responseType);
-
-    const { hash } = useLocation();
-    const { id, idRef } = props.data;
-    const { open, handleClose, actPanel, name } = props;
-    const [isTableViewSet, setIsTableViewSet] = useState(props.data.tableView);
-    const [isShowTsSet, setIsShowTsSet] = useState(props.data.isShowTs);
-    const [queryTypeSwitch, setQueryTypeSwitch] = useState(
-        props.data.queryType
-    );
-    const [queryTraceSwitch, setQueryTraceSwitch] = useState(props.data.traceQueryType || 'traceId')
-    const [directionSwitch, setDirectionSwitch] = useState(
-        props.data.direction
-    );
-    useEffect(() => {
-        const urlParams = new URLSearchParams(hash.replace("#", ""));
-        const urlPanel = urlParams.get(name);
-        const parsedPanel = JSON.parse(decodeURIComponent(urlPanel));
-        if (parsedPanel?.length > 0) {
-            const queryMD = parsedPanel.find((f) => f.idRef === idRef);
-
-            if (queryMD) {
-                const panel = [...actPanel];
-                panel.forEach((query) => {
-                    if (query.idRef === idRef) {
-                        query.queryType = queryMD.queryType;
-                        query.direction = queryMD.direction;
-                    }
-                });
-                dispatch(panelAction(name, panel));
-            }
-        }
-    }, []);
-
-    useEffect(() => {
-        setIsTableViewSet(props.data.tableView);
-    }, [setIsTableViewSet, props.data.tableView]);
-
-    useEffect(() => {
-        setIsShowTsSet(props.data.isShowTs);
-    }, [setIsShowTsSet, props.data.isShowTs]);
-
-    function onSwitchChange(e) {
-        // modify query type switch value
-        const panel = [...actPanel];
-        panel.forEach((query) => {
-            if (query.id === id) {
-                query.queryType = e;
-            }
-        });
-
-        dispatch(panelAction(name, panel));
-        setQueryTypeSwitch(e);
-    }
-
-
-    function onTraceQueryChange(e) {
-        const panel = [...actPanel];
-        panel.forEach(query => {
-            if(query.id === id) {
-                query.traceQueyType = e;
-            }
-        })
-        dispatch(panelAction(name, panel));
-        setQueryTraceSwitch(prev => e);
-
-    }
-    function onDirectionSwitchChange(e) {
-        // modify query type switch value
-        const panel = [...actPanel];
-        panel.forEach((query) => {
-            if (query.id === id) {
-                query.direction = e;
-            }
-        });
-
-        dispatch(panelAction(name, panel));
-        setDirectionSwitch(e);
-    }
-
-    function handleTableViewSwitch() {
-        // modify table view switch value
-        const panel = [...actPanel];
-        panel.forEach((query) => {
-            if (query.id === id) {
-                query.tableView = isTableViewSet ? false : true;
-            }
-        });
-        dispatch(panelAction(name, panel));
-    }
-
-    const traceOptions = () => (
-        <div className="options-input">
-            <QueryTypeSwitch
-                label={"Trace Type"}
-                options={TRACE_OPTIONS}
-                onChange={onTraceQueryChange}
-                defaultActive={queryTraceSwitch}
-            />
+                {showFullQueryBar(dataSourceType, isSplit, isTabletOrMobile)}
+                {(isTabletOrMobile || isSplit || dataSourceType !== "flux" || dataSourceType !== 'traces') && (
+                    <QuerySetting
+                        {...props}
+                        open={open}
+                        handleClose={onClose}
+                        actPanel={panelQuery}
+                        name={name}
+                    />
+                )}
+            </ThemeProvider>
         </div>
     );
+};
+export const QueryBarCont = (props) => {
+    const {
+        isSplit,
+        dataSourceType,
+        handleQueryChange,
+        expr,
+        queryValue,
+        handleInputKeyDown,
+        queryHistory,
+        handleHistoryClick,
+        queryValid,
+        onSubmit,
+    } = props;
 
-    function handleTsSwitch() {
-        const panel = [...actPanel];
-        panel.forEach((query) => {
-            if (query.id === id) {
-                query.isShowTs = isShowTsSet ? false : true;
-            }
-        });
-
-        dispatch(panelAction(name, panel));
-    }
+    const buttonsHidden = () => !isSplit && dataSourceType !== "flux" && dataSourceType !== 'traces';
 
     return (
-        <Dialog open={open} onClose={handleClose}>
-            <SettingCont>
-                <SettingHeader>
-                    <h3>Query Options</h3>
-                    <SettingCloseBtn onClick={handleClose}>
-                        {" "}
-                        <CloseIcon />{" "}
-                    </SettingCloseBtn>
-                </SettingHeader>
+        <QueryBarContainer>
+            {buttonsHidden() && <ShowLabelsButton {...props} />}
 
-                <SettingsInputContainer>
-                    <div className="options-input">
-                    { traceOptions()}
-                    </div>
-                    <div className="options-input">
-                        
-                        <QueryTypeSwitch
-                            label={"Query Type"}
-                            options={SWITCH_OPTIONS}
-                            onChange={onSwitchChange}
-                            defaultActive={queryTypeSwitch}
-                        />
-                    </div>
-                    <div className="options-input">
-                        <QueryTypeSwitch
-                            label={"Direction"}
-                            options={DIRECTION_SWITCH_OPTIONS}
-                            onChange={onDirectionSwitchChange}
-                            defaultActive={directionSwitch}
-                        />
-                    </div>
-                    <div className="options-input">
-                        <QueryLimit {...props} />
-                    </div>
+            <QueryEditor
+                onQueryChange={handleQueryChange}
+                defaultValue={expr || ""}
+                value={queryValue}
+                onKeyDown={handleInputKeyDown}
+            />
 
-                    {responseType !== "vector" && (
-                        <div className="options-input">
-                            <InputGroup>
-                                <SettingLabel>Table View</SettingLabel>
-                                <Switch
-                                    checked={isTableViewSet}
-                                    size={"small"}
-                                    onChange={handleTableViewSwitch}
-                                    inputProps={{ "aria-label": "controlled" }}
-                                />
-                            </InputGroup>
-                            <InputGroup>
-                                <SettingLabel>Timestamp</SettingLabel>
-                                <Switch
-                                    checked={isShowTsSet}
-                                    size={"small"}
-                                    onChange={handleTsSwitch}
-                                    inputProps={{
-                                        "aria-label": "controlled-ts",
-                                    }}
-                                />
-                            </InputGroup>
-                        </div>
-                    )}
-                </SettingsInputContainer>
-            </SettingCont>
-        </Dialog>
+            {buttonsHidden() && (
+                <>
+                    <HistoryButton
+                        queryLength={queryHistory.length}
+                        handleHistoryClick={handleHistoryClick}
+                    />
+
+                    <ShowLogsButton
+                        disabled={!queryValid}
+                        onClick={onSubmit}
+                        isMobile={false}
+                    />
+                </>
+            )}
+        </QueryBarContainer>
+    );
+};
+export const MobileTopQueryMenuCont = (props) => {
+    const {
+        isSplit,
+        dataSourceType,
+        showQuerySettings,
+        queryHistory,
+        handleHistoryClick,
+        queryValid,
+        onSubmit,
+    } = props;
+    // conditionally show labels
+    const withLabels = (type) => {
+        if (type !== "flux" && type !== 'traces') {
+            return (
+                <>
+                    <ShowLabelsButton {...props} isMobile={true} />
+                    <ShowQuerySettingsButton
+                        {...props}
+                        isSplit={isSplit}
+                        isMobile={true}
+                        onClick={showQuerySettings}
+                    />
+                </>
+            );
+        }
+        return null;
+    };
+
+    return (
+        <MobileTopQueryMenu isSplit={isSplit} dataSourceType={dataSourceType}>
+            {withLabels(dataSourceType)}
+
+            <HistoryButton
+                queryLength={queryHistory?.length}
+                handleHistoryClick={handleHistoryClick}
+                isMobile={true}
+            />
+
+            <ShowLogsButton
+                disabled={!queryValid}
+                onClick={onSubmit}
+                isMobile={true}
+            />
+        </MobileTopQueryMenu>
     );
 };

@@ -28,8 +28,8 @@ export const Container = styled.div`
         border-radius: 3px;
         flex: 1;
         background: ${({ theme }) => theme.widgetContainer};
-        overflow-y:auto;
-        overflow-x:hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
     .ds-header {
         padding: 10px;
@@ -49,7 +49,7 @@ export const Container = styled.div`
         margin-bottom: 10px;
         border: 1px solid ${({ theme }) => theme.buttonBorder};
         border-radius: 3px;
-        overflow-y:auto;
+        overflow-y: auto;
     }
     .ds-item {
         padding: 10px;
@@ -72,7 +72,7 @@ export const Container = styled.div`
             font-size: 18px;
             padding: 10px;
             padding-left: 0px;
-            color: ${({theme})=> theme.textColor}
+            color: ${({ theme }) => theme.textColor};
         }
         small {
             font-size: 12px;
@@ -114,7 +114,6 @@ export function DataSource() {
     let { id } = useParams();
     const { theme } = useSelector((store) => store);
     const dataSources = useSelector((store) => store.dataSources);
-
     const datasource = useMemo(() => {
         if (dataSources?.length > 0) {
             return dataSources?.find((f) => f.id === id);
@@ -122,7 +121,7 @@ export function DataSource() {
             return {};
         }
     }, [id, dataSources]);
-
+ 
     return (
         <ThemeProvider theme={themes[theme]}>
             <Container>

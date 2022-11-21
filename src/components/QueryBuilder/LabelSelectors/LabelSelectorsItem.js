@@ -123,8 +123,8 @@ export function LabelSelect(props) {
 
     useEffect(() => {
         if (response?.data?.data) {
-            setLabels((_) => response.data.data);
-            setLabel((_) => response.data.data[0]);
+         //   setLabels((_) => response.data.data);
+            setLabel((_) => response?.data?.data[0]);
         }
     }, [response]);
 

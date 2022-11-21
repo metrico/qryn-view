@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { setLeftPanel } from "../../../../actions/setLeftPanel";
 import { setRightPanel } from "../../../../actions/setRightPanel";
+import { css, cx } from "@emotion/css";
 
 export function panelAction(name, value) {
     if (name === "left") {
@@ -14,6 +15,11 @@ export function panelAction(name, value) {
     }
     return setRightPanel(value);
 }
+
+export const ArrowIcon = css`
+    height: 18px !important;
+    width: 18px !important;
+`;
 
 export default function ShowLabelsButton(props) {
     const dispatch = useDispatch();
@@ -23,7 +29,6 @@ export default function ShowLabelsButton(props) {
     const theme = useSelector((store) => store.theme);
     const labels = useSelector((store) => store.labels);
     const panelQuery = useSelector((store) => store[name]);
-    
 
     const [isBrowserOpen, setIsBrowserOpen] = useState(open);
 
@@ -41,28 +46,30 @@ export default function ShowLabelsButton(props) {
         dispatch(panelAction(name, panel));
         setIsBrowserOpen(open);
     }
+
+    const labelsTitle = (labels) => {
+        if (labels?.length > 0) {
+            return "Show / Hide Labels";
+        }
+        return "Labels Not Available";
+    };
+    const renderArrow = (open) => {
+        if (open) {
+            return <KeyboardArrowDownIcon className={cx(ArrowIcon)} />;
+        }
+        return <KeyboardArrowRightIcon className={cx(ArrowIcon)} />;
+    };
+
     return (
         <ThemeProvider theme={themes[theme]}>
             <ShowLabelsBtn
-                title={
-                    labels?.length > 0
-                        ? "Show / Hide Labels"
-                        : "Labels Not Available"
-                }
+                title={labelsTitle(labels)}
                 onClick={handleBrowserOpen}
                 browserActive={isBrowserOpen}
                 isMobile={props.isMobile}
             >
-                {isBrowserOpen ? (
-                    <KeyboardArrowDownIcon
-                        style={{ height: "18px", width: "18px" }}
-                    />
-                ) : (
-                    <KeyboardArrowRightIcon
-                        style={{ height: "18px", width: "18px" }}
-                    />
-                )}
-                {'Labels'}
+                {renderArrow(isBrowserOpen)}
+                {"Labels"}
             </ShowLabelsBtn>
         </ThemeProvider>
     );

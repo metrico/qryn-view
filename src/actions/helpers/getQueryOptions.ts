@@ -12,7 +12,6 @@ export function getQueryOptions(type:string, headers:any):QueryOptions {
             headers: queryHeaders || {
                 'Accept':'application/csv',
                 'Content-type':'application/vnd.flux',
-                "Access-Control-Allow-Origin": window.location.origin,
             }
         }
     }
@@ -20,7 +19,6 @@ export function getQueryOptions(type:string, headers:any):QueryOptions {
         method:  "GET",
         headers: queryHeaders || {
             "Content-Type": "application/javascript",
-            "Access-Control-Allow-Origin": window.location.origin,
         },
     };
 }

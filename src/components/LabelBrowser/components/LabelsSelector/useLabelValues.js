@@ -24,6 +24,7 @@ export default function useLabelValues(id, label, start, end) {
 
     const controller = new AbortController();
 
+    
 
     const [url, setUrl] = useState();
 
@@ -39,14 +40,8 @@ export default function useLabelValues(id, label, start, end) {
         );
     }, [label, setUrl, currentDataSource]);
 
-    const origin = useState(window.location.origin);
 
     const headers = useState({
-        "Access-Control-Allow-Origin": origin,
-        "Access-Control-Allow-Headers": [
-            "Access-Control-Request-Headers",
-            "Content-Type",
-        ],
         "Content-Type": "application/json",
     });
 

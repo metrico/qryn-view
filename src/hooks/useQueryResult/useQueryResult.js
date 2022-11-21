@@ -34,11 +34,6 @@ export const useQueryResponse = ({ queryType, step, limit, exp }) => {
     const controller = new AbortController();
 
     const [headers] = useState({
-        "Access-Control-Allow-Origin": origin,
-        "Access-Control-Allow-Headers": [
-            "Access-Control-Request-Headers",
-            "Content-Type",
-        ],
         "Content-Type": "application/json",
     });
 

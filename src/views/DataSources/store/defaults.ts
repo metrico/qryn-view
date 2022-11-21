@@ -6,11 +6,6 @@ export const defaultLogsDataSourceHeaders = [
         value: "application/javascript",
         id: nanoid(),
     },
-    {
-        header: "Access-Control-Allow-Origin",
-        value: window.location.origin,
-        id: nanoid(),
-    },
 ];
 
 export const defaultMetricsDataSourceHeaders = [
@@ -18,12 +13,7 @@ export const defaultMetricsDataSourceHeaders = [
         header: "Content-type",
         value: "application/javascript",
         id: nanoid(),
-    },
-    {
-        header: "Access-Control-Allow-Origin",
-        value: window.location.origin,
-        id: nanoid(),
-    },
+    }
 ];
 
 export const defaultTracesDataSourceHeaders = [
@@ -31,12 +21,7 @@ export const defaultTracesDataSourceHeaders = [
         header: "Content-type",
         value: "application/javascript",
         id: nanoid(),
-    },
-    {
-        header: "Access-Control-Allow-Origin",
-        value: window.location.origin,
-        id: nanoid(),
-    },
+    }
 ];
 
 export const defaultFluxDataSourceHeaders = [
@@ -45,12 +30,7 @@ export const defaultFluxDataSourceHeaders = [
         header: "Content-type",
         value: "application/vnd.flux",
         id: nanoid(),
-    },
-    {
-        header: "Access-Control-Allow-Origin",
-        value: window.location.origin,
-        id: nanoid(),
-    },
+    }
 ];
 
 // 'Authorization' : 'Basic ZGVmYXVsdDo='

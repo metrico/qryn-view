@@ -25,6 +25,7 @@ export function getURlParams(params) {
 export default function DataSources() {
 
     const themeState = useSelector((store) => store.theme) || "light";
+
     const theme = useMemo(() => {
         return themes[themeState];
     }, [themeState]);

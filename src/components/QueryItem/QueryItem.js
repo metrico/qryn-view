@@ -34,11 +34,12 @@ const dataViewAction = (panel, data) => {
 };
 
 export default function QueryItem(props) {
-
-    useEffect(() => {
-        const { expr, queryType, limit, panel, id, dataSourceType, dataSourceId, direction, dataSourceURL } =
+    const { name } = props;
+    const { expr, queryType, limit, panel, id, dataSourceType, dataSourceId, direction, dataSourceURL } =
             props.data;
-    
+
+            //!modify in here
+    useEffect(() => {
         dispatch(
             getData(
                 dataSourceType,
@@ -54,7 +55,7 @@ export default function QueryItem(props) {
         );
     }, []);
 
-    const { name } = props;
+   
     const idRefs = useMemo(() => {
         const alpha = Array.from(Array(26)).map((e, i) => i + 65);
         const alphabet = alpha.map(

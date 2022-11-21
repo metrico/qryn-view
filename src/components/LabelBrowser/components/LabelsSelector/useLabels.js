@@ -1,3 +1,4 @@
+import { VolunteerActivismOutlined } from "@mui/icons-material";
 import axios from "axios";
 import { useEffect, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
@@ -24,6 +25,7 @@ const getTimestamp = (time, type) =>
     }[type]);
 
 export default function useLabels(id, dataSourceURL = "") {
+
     const { start, stop } = useSelector((store) => store);
     const dataSources = useSelector((store) => store.dataSources);
 
@@ -57,14 +59,7 @@ export default function useLabels(id, dataSourceURL = "") {
         setUrl(getUrlFromType(currentDataSource.url, type, timeStart, timeEnd));
     }, [setUrl, type, currentDataSource]);
 
-    const origin = useState(window.location.origin);
-
     const headers = useState({
-        "Access-Control-Allow-Origin": origin,
-        "Access-Control-Allow-Headers": [
-            "Access-Control-Request-Headers",
-            "Content-Type",
-        ],
         "Content-Type": "application/json",
     });
 

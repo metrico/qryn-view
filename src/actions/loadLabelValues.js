@@ -8,15 +8,7 @@ export default function loadLabelValues(label, labelList='', url) {
     }
 
    // const url = store.getState().apiUrl;
-
-    const origin = window.location.origin;
-
     const headers = {
-        "Access-Control-Allow-Origin": origin,
-        "Access-Control-Allow-Headers": [
-            "Access-Control-Request-Headers",
-            "Content-Type",
-        ],
         "Content-Type": "application/json",
     };
 

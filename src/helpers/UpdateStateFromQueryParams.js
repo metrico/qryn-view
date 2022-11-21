@@ -144,7 +144,7 @@ export function UpdateStateFromQueryParams() {
                                 decodeURIComponent(startParams[param])
                             );
 
-                            dispatch(STORE_ACTIONS[param](parsed));
+                     dispatch(STORE_ACTIONS[param](parsed));
                         } catch (e) {
                             console.log(e);
                         }
