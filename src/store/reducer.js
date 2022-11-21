@@ -66,6 +66,8 @@ const reducer = (state, action) => {
             return { ...state, debugMode: action.debugMode };
         case "SET_THEME":
             return { ...state, theme: action.theme };
+        case "SET_AUTO_THEME":
+            return { ...state, autoTheme: action.autoTheme };
         case "SET_TABLE_DATA":
             return { ...state, tableData: action.tableData };
         case "SET_QUERY_TIME":

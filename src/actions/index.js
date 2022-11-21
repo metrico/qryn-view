@@ -19,6 +19,7 @@ export * from "./removeAlert";
 export * from "./setFromTime";
 export * from "./setToTime";
 export * from "./setTheme";
+export * from "./setAutoTheme";
 export * from "./setIsEmptyView";
 export * from "./setTableData";
 export * from "./setVectorData";
