@@ -41,6 +41,7 @@ import { themes } from "../../../theme/themes";
 
 import setDataSources from "../../../views/DataSources/store/setDataSources";
 import { defaultDataSources } from "../../../views/DataSources/store/defaults";
+import TracesSearch from "../../TraceSearch/TraceSearch";
 
 export function panelAction(name, value) {
     if (name === "left") {
@@ -279,6 +280,8 @@ export const QueryBar = (props) => {
                 const currentDataSource = dataSources.find(
                     (f) => f.id === dataSourceId
                 );
+
+
                 if (currentDataSource?.type !== "flux") {
                 
                     decodeQuery(
@@ -289,6 +292,7 @@ export const QueryBar = (props) => {
                     );
                 }
                 const labelsDecoded = decodeExpr(data.expr);
+                
                 const actDataSource = dataSources.find(
                     (f) => f.id === dataSourceId
                 );
@@ -370,6 +374,11 @@ export const QueryBar = (props) => {
                     queryValid={queryValid}
                     onSubmit={onSubmit}
                 />
+
+
+{/* <TracesSearch {...props}/> */}
+
+
                 <QueryBarCont
                     {...props}
                     isSplit={isSplit}
@@ -417,6 +426,8 @@ export const QueryBarCont = (props) => {
     return (
         <QueryBarContainer>
             {buttonsHidden() && <ShowLabelsButton {...props} />}
+            
+
 
             <QueryEditor
                 onQueryChange={handleQueryChange}
@@ -442,6 +453,7 @@ export const QueryBarCont = (props) => {
         </QueryBarContainer>
     );
 };
+
 export const MobileTopQueryMenuCont = (props) => {
     const {
         isSplit,

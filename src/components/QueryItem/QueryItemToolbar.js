@@ -4,93 +4,14 @@ import { setRightPanel } from "../../actions/setRightPanel";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
     CloseQuery,
-    InputGroup,
-    Label,
     OpenQuery,
     QueryItemToolbarStyled,
     ShowQueryButton,
 } from "./style";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useMemo, useState } from "react";
-import { themes } from "../../theme/themes";
-
-const DataSourceSelect = (props) => {
-    const { value, onChange, opts, label } = props;
-    const formattedSelect = useMemo(() => {
-        if (typeof opts[0] === "string") {
-            return opts.map((k) => ({ value: k, name: k }));
-        } else return opts;
-    }, [opts]);
-    if(opts && value) {
-        return (
-            <InputGroup>
-                {label?.length > 0 && <Label>{label}</Label>}
-                <select defaultValue={value?.value} onChange={onChange}>
-                    {formattedSelect?.map((field, key) => (
-                        <option key={key} value={field?.value}>
-                            {field?.name}
-                        </option>
-                    ))}
-                </select>
-            </InputGroup>
-        );
-    } return null
-
-};
-
-function QueryId(props) {
-    const [isEditing, setIsEditing] = useState(false);
-    const [idText, setIdText] = useState(props.data.idRef);
-    const storeTheme = useSelector(({ theme }) => theme);
-    const theme = useMemo(() => {
-        return themes[storeTheme];
-    }, [storeTheme]);
-    function onIdTextChange(e) {
-        e.preventDefault();
-        const txt = e.target.value;
-        setIdText(txt);
-    }
-
-    function closeInput(e) {
-        props.onIdRefUpdate(idText);
-        setIsEditing(false);
-    }
-
-    function handleKeydown(e) {
-        if (e.key === "Enter") {
-            props.onIdRefUpdate(idText);
-            setIsEditing(false);
-        }
-    }
-
-    if (isEditing === true) {
-        return (
-            <>
-                <input
-                    style={{
-                        background: "transparent",
-                        border: "none",
-                        outline: "none",
-                        color: theme.textColor,
-                    }}
-                    value={idText}
-                    placeholder={idText}
-                    onChange={onIdTextChange}
-                    onKeyDown={handleKeydown}
-                    onBlur={closeInput}
-                />
-            </>
-        );
-    } else {
-        return (
-            <>
-                <p className="query-id" onClick={(e) => setIsEditing(true)}>
-                    {idText}
-                </p>
-            </>
-        );
-    }
-}
+import { QueryId } from "./QueryId";
+import { DataSourceSelect } from "./DataSourceSelect";
 
 export function QueryItemToolbar(props) {
     const dispatch = useDispatch();
@@ -112,12 +33,14 @@ export function QueryItemToolbar(props) {
             icon: m.icon,
         }));
     }, [dataSources]);
-    const valueMemo = useMemo(()=>{
-        return dataSourceOptions?.find((f) => f.value === props.data.dataSourceId) || ''
-    },[props.data.dataSourceId,dataSourceOptions])
-    const [dataSourceValue, setDataSourceValue] = useState(
-        valueMemo || ''
-    );
+    const valueMemo = useMemo(() => {
+        return (
+            dataSourceOptions?.find(
+                (f) => f.value === props.data.dataSourceId
+            ) || ""
+        );
+    }, [props.data.dataSourceId, dataSourceOptions]);
+    const [dataSourceValue, setDataSourceValue] = useState(valueMemo || "");
 
     const panelAction = (panel, data) => {
         if (panel === "left") {
@@ -151,7 +74,7 @@ export function QueryItemToolbar(props) {
                 panelCP.dataSourceURL = dataSource.url;
             }
         });
-       
+
         dispatch(panelAction(props.name, panelCP));
     };
     return (
