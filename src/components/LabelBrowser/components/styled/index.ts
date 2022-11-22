@@ -92,7 +92,7 @@ export const ShowSettingsBtn = styled(BtnSmall)`
 `;
 
 export const MobileTopQueryMenu = styled.div`
-    display: ${props =>( props.isSplit || props.dataSourceType === 'flux') ? 'flex' : 'none'};
+    display: ${(props: any) =>( props.isSplit || props.dataSourceType === 'flux') ? 'flex' : 'none'};
 
     @media screen and (max-width: 864px) {
         display: flex;
