@@ -1,64 +1,47 @@
 import { SettingsTitle } from "../styles";
-import { Button } from "../ui";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import CachedOutlinedIcon from "@mui/icons-material/CachedOutlined";
+
+import { cx, css } from "@emotion/css";
+
+const SavingLoader = css`
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    &.loading-icon {
+        height: 14px;
+        width: 14px;
+    }
+`;
 
 export function SectionHeader(props) {
-    const {
-        onClickSubmit,
-        onClickCancel,
-        isEditing,
-        onClickEdit,
-        onClickAdd,
-        isEdit,
-        isAdd,
-        title,
-    } = props;
+    const { onClickAdd, isAdd, title, isEditing } = props;
+
     return (
         <SettingsTitle>
             {title}
             <div className="edit-buttons">
-            {isAdd &&
-                (
+                {isEditing && (
+                    <div className={SavingLoader}>
+                        <CachedOutlinedIcon
+                            style={{ height: "13px", width: "13px" }}
+                        />{" "}
+                        Saving ...
+                    </div>
+                )}
+
+                {isAdd && (
                     <>
                         <AddOutlinedIcon
                             fontSize={"small"}
                             style={{
                                 cursor: "pointer",
-                                display: isEditing ? "none" : "flex",
+                                display: "flex",
                             }}
                             onClick={onClickAdd}
                         />
                     </>
                 )}
-                {isEdit && (
-                    <>
-                        <Button
-                            value={"Save"}
-                            onClick={onClickSubmit}
-                            editing={isEditing}
-                            primary={true}
-                        />
-
-                        <Button
-                            value={"Cancel"}
-                            onClick={onClickCancel}
-                            editing={isEditing}
-                            primary={false}
-                        />
-
-                        <EditOutlinedIcon
-                            fontSize={"small"}
-                            style={{
-                                cursor: "pointer",
-                                display: isEditing ? "none" : "flex",
-                                marginLeft: "30px",
-                            }}
-                            onClick={onClickEdit}
-                        />
-                    </>
-                )}
-            
             </div>
         </SettingsTitle>
     );

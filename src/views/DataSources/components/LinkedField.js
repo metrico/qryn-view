@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { LinkFieldsGroup, InputCol } from "../styles";
 import { Field, QrynSwitch, Select } from "../ui";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import setDataSources from "../store/setDataSources";
 import { useMemo } from "react";
 
@@ -17,21 +17,23 @@ export const LinkedField = (props) => {
         linkType,
         locked,
         dataSourceId,
+        fieldEditing
     } = props;
 
     const dispatch = useDispatch();
 
     const dataSources = useSelector((store) => store.dataSources);
 
-    const dataSourcesOpts = useMemo(()=>{
-        return dataSources.map(m => ({
-            name:m.name,
-            value:m.id
-        }))
-
-    },[dataSources])
+    const dataSourcesOpts = useMemo(() => {
+        return dataSources.map((m) => ({
+            name: m.name,
+            value: m.id,
+        }));
+    }, [dataSources]);
 
     const onLinkedFieldChange = (prop, value) => {
+        fieldEditing()
+
         const prevDataSources = JSON.parse(JSON.stringify(dataSources));
         const prevDs = prevDataSources.find((f) => f.id === dataSourceId);
 
@@ -53,6 +55,7 @@ export const LinkedField = (props) => {
     };
 
     const onLinkedFieldRemove = (e) => {
+        fieldEditing()
         const prevDataSources = JSON.parse(JSON.stringify(dataSources));
         const prevDs = prevDataSources.find((f) => f.id === dataSourceId);
         const prevLinked = prevDs["linkedFields"];
@@ -70,6 +73,7 @@ export const LinkedField = (props) => {
     };
 
     const onChange = (e, name) => {
+        fieldEditing()
         const value = e.target.value;
         // setNewDataSources
 
@@ -81,6 +85,7 @@ export const LinkedField = (props) => {
     };
 
     const onSwitchChange = (e, name) => {
+        fieldEditing()
         const value = e.target.checked;
 
         const newVal = onLinkedFieldChange(name, value);
@@ -109,18 +114,17 @@ export const LinkedField = (props) => {
                     onChange={(e) => onChange(e, "urlLabel")}
                 />
 
-                <DeleteForeverIcon
+                <DeleteOutlineOutlinedIcon
                     onClick={onLinkedFieldRemove}
+                    fontSize={"small"}
                     style={{
                         cursor: "pointer",
                         display: locked ? "none" : "inline-block",
                     }}
                 />
-
             </InputCol>
-            
-            <InputCol>
 
+            {/* <InputCol>
                 <Field
                     value={query}
                     label={"Query"}
@@ -132,9 +136,8 @@ export const LinkedField = (props) => {
                     label={"URL"}
                     onChange={(e) => onChange(e, "url")}
                 />
-
-            </InputCol>
-            <InputCol>
+            </InputCol> */}
+            <InputCol className="internal">
                 <QrynSwitch
                     value={internalLink}
                     label={"Internal Link"}
@@ -145,10 +148,9 @@ export const LinkedField = (props) => {
                     label={""}
                     value={linkType}
                     opts={dataSourcesOpts}
-                    selectType={'linkedField'}
+                    selectType={"linkedField"}
                     onChange={(e) => onChange(e, "linkID")}
                 />
-
             </InputCol>
         </LinkFieldsGroup>
     );
