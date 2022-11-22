@@ -114,6 +114,7 @@ export default function QueryTypeBar(props) {
         });
         dispatch(panelAction(name, panel));
     }
+    
     function onTraceQueryChange(e) {
 
         const panel = [...panelQuery];

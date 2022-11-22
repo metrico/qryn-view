@@ -20,18 +20,16 @@ const LabelsCont = styled.div`
         padding: 5px;
     }
     .label-groups {
-        display:flex;
-        flex-wrap:wrap;
-        align-ittems:center;
+        display: flex;
+        flex-wrap: wrap;
+        align-ittems: center;
         .label-group {
             margin: 3px;
             .opt-icon {
-               margin-left:8px;
+                margin-left: 8px;
             }
-            
         }
     }
-
 `;
 
 interface RootState {
@@ -50,16 +48,11 @@ export default function LabelSelectors(props: any) {
         { id: nanoid(), label: "", op: "equals", value: "" },
     ]);
 
-    const [labelsString, setLabelsString] = useState("");
-
-    useEffect(() => {
-    
-    }, [labelGroups]);
+    useEffect(() => {}, [labelGroups]);
 
     const theme = useSelector((store: RootState) => store.theme);
 
     const onSelectorChange = (label: LabelState) => {
-
         const prevLabelsCp = [...labelGroups];
 
         const hasPrev = prevLabelsCp.some((s) => s.id === label.id);

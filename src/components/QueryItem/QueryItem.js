@@ -25,7 +25,6 @@ const panelAction = (panel, data) => {
 };
 
 const dataViewAction = (panel, data) => {
-
     if (panel === "left") {
         return setLeftDataView(data);
     } else {
@@ -35,10 +34,18 @@ const dataViewAction = (panel, data) => {
 
 export default function QueryItem(props) {
     const { name } = props;
-    const { expr, queryType, limit, panel, id, dataSourceType, dataSourceId, direction, dataSourceURL } =
-            props.data;
+    const {
+        expr,
+        queryType,
+        limit,
+        panel,
+        id,
+        dataSourceType,
+        dataSourceId,
+        direction,
+        dataSourceURL,
+    } = props.data;
 
-            //!modify in here
     useEffect(() => {
         dispatch(
             getData(
@@ -55,7 +62,6 @@ export default function QueryItem(props) {
         );
     }, []);
 
-   
     const idRefs = useMemo(() => {
         const alpha = Array.from(Array(26)).map((e, i) => i + 65);
         const alphabet = alpha.map(
@@ -70,6 +76,7 @@ export default function QueryItem(props) {
     const dataView = useSelector((store) => store[`${name}DataView`]);
     const panelSelected = useSelector((store) => store[name]);
     const isQueryOpen = useState(true);
+    
     function filterPanel(panel) {
         if (panel?.length > 1) {
             return panel?.filter((query) => query?.id !== props?.data?.id);
@@ -77,7 +84,7 @@ export default function QueryItem(props) {
             return panel;
         }
     }
-    
+
     const onDeleteQuery = () => {
         const filtered = filterPanel(panelSelected);
 
@@ -137,11 +144,10 @@ export default function QueryItem(props) {
         <ThemeProvider theme={themes[theme]}>
             <QueryContainer>
                 <QueryItemToolbar
-                {...props}
+                    {...props}
                     isQueryOpen={isQueryOpen}
                     onDeleteQuery={onDeleteQuery}
                     onAddQuery={onAddQuery}
-                    
                 />
                 {isQueryOpen[0] && <LabelBrowser {...props} />}
             </QueryContainer>
