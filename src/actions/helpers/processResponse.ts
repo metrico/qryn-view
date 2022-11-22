@@ -1,20 +1,58 @@
 import getTimeParams from "./getTimeParams";
-import { QueryResult } from "../types";
+import { QueryDirection, QueryResult, TracesResult } from "../types";
 import store from "../../store/store";
 import setIsEmptyView from "../setIsEmptyView";
 import { parseResponse } from "./parseResponse";
 import { resetNoData } from "./resetNoData";
 import setResponseType from "../setResponseType";
-
+import { convertFlux } from "./convertFlux";
 export async function processResponse(
+    type: string,
     response: any,
     dispatch: Function,
     panel: string,
-    id: string
+    id: string,
+    direction: QueryDirection
 ) {
-  
-    const { time } = getTimeParams();
+    const { time } = getTimeParams(type);
     const { queryType, debugMode } = store.getState();
+
+    if (type === "traces") {
+        if (response?.data?.resourceSpans?.length > 0) {
+            const resultQuery:TracesResult= {
+                result: response?.data,
+                time,
+                debugMode,
+                dispatch,
+                type,
+                panel,
+                id,
+                ts: Date.now(),
+            };
+            parseResponse(resultQuery);
+        }
+    }
+    if (type === "flux") {
+        await convertFlux(response?.data).then((data) => {
+            if (data?.data?.length > 0) {
+                const resultQuery: QueryResult = {
+                    result: data.data,
+                    time,
+                    debugMode,
+                    queryType,
+                    dispatch,
+                    type,
+                    panel,
+                    id,
+                    ts: Date.now(),
+                    direction,
+                };
+
+                parseResponse(resultQuery);
+            }
+        });
+    }
+
     if (response?.data?.streams?.length === 0) {
         const resultQuery: QueryResult = {
             result: [],
@@ -25,7 +63,8 @@ export async function processResponse(
             type: "streams",
             panel,
             id,
-            ts: Date.now()
+            ts: Date.now(),
+            direction,
         };
 
         parseResponse(resultQuery);
@@ -48,7 +87,8 @@ export async function processResponse(
             type,
             panel,
             id,
-            ts: Date.now()
+            ts: Date.now(),
+            direction,
         };
 
         parseResponse(resultQuery);

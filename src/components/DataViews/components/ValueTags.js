@@ -1,11 +1,14 @@
 import { queryBuilderWithLabels } from "../../LabelBrowser/helpers/querybuilder";
 
 import { ZoomIn, ZoomOut } from "@mui/icons-material/";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setSplitView } from "../../StatusBar/components/SplitViewButton/setSplitView";
 import { themes } from "../../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
-
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { setRightPanel } from "../../../actions/setRightPanel";
+import getData from "../../../actions/getData";
 const ValueTagsStyled = styled.div`
     color: ${(props) => props.theme.textPrimary};
     flex: 1;
@@ -14,7 +17,18 @@ const ValueTagsStyled = styled.div`
         background: ${(props) => props.theme.widgetContainer};
     }
 `;
-
+const TracesButton = styled.div`
+    color: ${(props) => props.theme.buttonText};
+    flex: 0;
+    background-color: hsl(220, 67%, 55%);
+    display: flex;
+    margin-left: 5px;
+    padding: 0 4px;
+    border-radius: 2px;
+    font-size: 12px;
+    align-items: center;
+    white-space: nowrap;
+`;
 function alreadyExists(exp, op, k, v) {
     return exp.includes(`${k}${op}"${v}"`);
 }
@@ -29,11 +43,12 @@ function alreadyExists(exp, op, k, v) {
  * @returns
  */
 
- export function ValueTagsCont({ actQuery, tags, showLabels }) {
+export function ValueTagsCont(props) {
+    const { showLabels, tags, actQuery } = props;
     if (showLabels) {
         return (
             <div className="value-tags-container">
-                <ValueTags tags={tags} actQuery={actQuery} />
+                <ValueTags {...props} tags={tags} actQuery={actQuery} />
             </div>
         );
     }
@@ -60,15 +75,128 @@ export async function addLabel(e, key, value, isExcluded = false, queryObj) {
     queryBuilderWithLabels(expr, panel, id, [key, value], isExcluded);
 }
 
+export class Panel {
+    set(keys, values) {
+        keys.forEach((key, i) => {
+            this[key] = values[i];
+        });
+    }
+    get() {
+        return this;
+    }
+}
 
 export default function ValueTags(props) {
-    const { tags, actQuery } = props;
-
+    const { tags, actQuery, dataSourceData, linkedFieldTags } = props;
+    const dataSources = useSelector((store) => store.dataSources);
     const theme = useSelector((store) => store.theme);
     const isEmbed = useSelector((store) => store.isEmbed);
+    const dispatch = useDispatch();
+    const rightPanel = useSelector((store) => store.right);
 
-    // add labels should add the labels to expresion and update labels on selectors
+    const openTraces = (e, key, value, linkID, currentUrl, linkType) => {
+        e.stopPropagation();
+        if (props?.actQuery?.panel === "left") {
+            dispatch(setSplitView(true));
+        }
 
+        let previousRight = JSON.parse(JSON.stringify(rightPanel));
+
+        const panelCP = JSON.parse(JSON.stringify(props.actQuery));
+
+        try {
+            const newRight = {
+                ...previousRight[0],
+                id: previousRight[0].id,
+                idRef: linkType + "=" + value,
+                panel: "right",
+                queryType: "range",
+                dataSourceType: linkType.toLowerCase(),
+                dataSourceId: linkID,
+                dataSourceURL: currentUrl,
+                expr: value,
+                limit: 100,
+                step: 100,
+                tableView: false,
+                isShowTs: false,
+                browserOpen: false,
+                labels: [],
+                values: [],
+                direction: "forward",
+            };
+
+            dispatch(setRightPanel([newRight]));
+
+            dispatch(
+                getData(
+                    linkType.toLowerCase(),
+                    value,
+                    "range",
+                    panelCP.limit || 100,
+                    "right",
+                    newRight.id,
+                    "forward",
+                    linkID, // datasourceid
+                    currentUrl
+                )
+            );
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const linkButton = (key, value) => {
+        const { linkedFields } = dataSourceData;
+        const fieldsFromParent = linkedFieldTags?.fields
+            .map((m) => {
+                if (m?.tagGroups) {
+                    const tagEntries = Object.entries(m?.tagGroups);
+                    const entriesMapped = tagEntries?.map(([key, val]) => ({
+                        name: key,
+                        value: val,
+                    }));
+
+                    return entriesMapped;
+                }
+
+                return [];
+            })
+            ?.flat();
+
+        const fieldNames = fieldsFromParent?.map((m) => m.name);
+        const { dataSourceId, linkType, internalLink } = linkedFields[0];
+        const currentDataSource = dataSources?.find(
+            (f) => f.id === dataSourceId
+        );
+        const currentURL = currentDataSource?.url;
+
+        if (fieldNames.includes(key) && value && internalLink === true) {
+            return (
+                <TracesButton
+                    onClick={(e) => {
+                        openTraces(
+                            e,
+                            key,
+                            value,
+                            dataSourceId,
+                            currentURL,
+                            linkType
+                        );
+                    }}
+                >
+                    <OpenInNewIcon
+                        style={{
+                            width: "14px",
+                            height: "14px",
+                        }}
+                    />
+                    <span>{linkType}</span>
+                </TracesButton>
+            );
+        }
+
+        return null;
+    };
     return (
         <ThemeProvider theme={themes[theme]}>
             {Object.entries(tags).map(([key, value], k) => (
@@ -111,8 +239,11 @@ export default function ValueTags(props) {
                             </>
                         )}
 
-                        <span style={{ flex: 1 }}>{key}</span>
-                        <span style={{ flex: 4 }}>{value}</span>
+                        <span>{key}</span>
+                        <span style={{ flex: 1 }}>
+                            {value}
+                            {linkButton(key, value)}
+                        </span>
                     </div>
                 </ValueTagsStyled>
             ))}

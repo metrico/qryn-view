@@ -143,7 +143,8 @@ export function UpdateStateFromQueryParams() {
                             const parsed = JSON.parse(
                                 decodeURIComponent(startParams[param])
                             );
-                            dispatch(STORE_ACTIONS[param](parsed));
+
+                     dispatch(STORE_ACTIONS[param](parsed));
                         } catch (e) {
                             console.log(e);
                         }
@@ -174,7 +175,6 @@ export function UpdateStateFromQueryParams() {
                         const encodedArray = encodeURIComponent(
                             JSON.stringify(STORE_KEYS[param])
                         );
-
                         urlFromHash.set(param, encodedArray);
                     } catch (e) {
                         console.log(e);
@@ -222,7 +222,6 @@ export function UpdateStateFromQueryParams() {
                     }
                 } else if (store_key === "left") {
                     const parsed = encodeURIComponent(JSON.stringify(left));
-
                     paramsFromHash.set("left", parsed);
                 } else if (store_key === "right") {
                     const parsed = encodeURIComponent(JSON.stringify(right));

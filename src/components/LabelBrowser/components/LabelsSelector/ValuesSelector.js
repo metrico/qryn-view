@@ -1,7 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ValuesList from "./ValuesList";
+
 export default function ValuesSelector(props) {
+    const { data } = props;
+    const { dataSourceType } = data;
+
     const [labels, setLabels] = useState(props.labelsSelected);
+
+    const labelsFiltered = useMemo(() => {
+        if (dataSourceType === "metrics") {
+            return labels.filter((f) => f.name !== "__name__");
+        }
+        return labels;
+    }, [labels, dataSourceType]);
+    const metricsSelection = useMemo(() => {
+        if (dataSourceType === "metrics") {
+            return labels.filter((f) => f.name === "__name__");
+        }
+        return null;
+    }, [labels, dataSourceType]);
 
     useEffect(() => {
         setLabels(props.labelsSelected);
@@ -10,8 +27,11 @@ export default function ValuesSelector(props) {
     return (
         <div className="values-container">
             <div className="values-container-column">
+                {metricsSelection !== null && labels.length > 0 && (
+                    <ValuesList {...props} label={"__name__"} type={'metrics'} />
+                )}
                 {labels &&
-                    labels?.map((label, key) => (
+                    labelsFiltered?.map((label, key) => (
                         <ValuesList {...props} label={label} key={key} />
                     ))}
             </div>

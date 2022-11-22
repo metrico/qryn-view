@@ -41,7 +41,7 @@ const parseLog = {
         query
             ?.match(/[^{}]+(?=})/g)
             ?.map((m) => m.split(","))
-            ?.flat() || [], 
+            ?.flat() || [],
     addLabel: (op, keySubtValue, keyValue) => {
         if (op === "!=") {
             return keySubtValue;
@@ -73,7 +73,7 @@ const parseLog = {
         return query === `{${key}="${value}"}`;
     },
     editQuery: (query, keyValue, op, tags) => {
-        if (parseLog.isEqualsQuery(query, keyValue)) {
+        if (parseLog.isEqualsQuery(query, keyValue) && keyValue !== null) {
             return parseLog.equalLabels(keyValue, op, tags);
         }
 
@@ -165,22 +165,29 @@ function parseQueryLabels(keyVal, query, op) {
     return "";
 }
 
-export function decodeQuery(query, key, value, op) {
+export function decodeQuery(query, key, value, op, type) {
     const { newQuery, editQuery } = parseLog;
-    const isQuery = query?.match(STREAM_SELECTOR_REGEX) && query?.length > 7;
-    const keyValue = [key, value];
-    const tags = query?.split(/[{}]/);
 
-    if (!isQuery) {
+    let keyValue = [key, value];
+    let tags = query?.split(/[{}]/);
+    const isQuery = query?.match(STREAM_SELECTOR_REGEX) && tags[1].length > 7;
+
+    if (tags[1]?.length < 1 && type === "metrics") {
+        return `${value}{}`;
+    }
+
+    if (tags[1]?.length > 1 && type === "metrics") {
+        return `${value}{${tags[1]}}`;
+    }
+
+    if (!isQuery && key !== "__name__") {
         return newQuery(keyValue, op, tags);
     }
+
     return editQuery(query, keyValue, op, tags);
 }
 
-// can we get labels from store?
-
 export function queryBuilder(labels, expr, hasPipe = false, pipeLabels = []) {
-
     const actualQuery = expr;
     const preTags = actualQuery.split("{")[0];
     let postTags = "";
