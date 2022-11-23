@@ -17,20 +17,12 @@ export function useTraceServiceName({ id }) {
         if (dataSource.type === "traces") {
             const traceHeaders = getHeaders(dataSource);
 
-            // const encodedURI = encodeURIComponent(
-            //     ' service.name="dummy-server"'
-            // );
-            // const url =
-            //     `${dataSource.url}/api/search?tags=` +
-            //     encodedURI +
-            //     "&limit=20&start=1668965383&end=1669138183";
             
             const url = `${dataSource.url}/api/search/tag/service.name/values`;
             const apiRequest = async () => {
                 try {
                     const req = await axios.get(url, traceHeaders);
                     setserviceNames(req || []);
-                    console.log(req);
                 } catch (e) {
                     console.log("Error at loading Service Names", e);
                 }
@@ -42,18 +34,12 @@ export function useTraceServiceName({ id }) {
 
     return useMemo(() => {
         if (serviceNames?.["data"]?.["tagValues"]) {
-            return serviceNames["data"]["tagValues"].map((m) => ({
+            return [{name:'Select Service Name',value:''}].concat(serviceNames["data"]["tagValues"].map((m) => ({
                 name: m,
                 value: m,
-            }));
+            })));
         }
         return [{ name: "", value: "" }];
     }, [serviceNames]);
 }
 
-// service.name  => first row
-// name => second row
-//
-// search?tags=%20service.name%3D%22handle%22%20name%3D%22connected%22&limit=20&start=1668965383&end=1669138183
-
-//

@@ -23,7 +23,7 @@ function timeFormatter(props: any) {
 }
 
 export function getStreamTableRows(data: any[]) {
-    return data.map(({ stream, values }: { stream: object; values: [] }) => ({
+    return data?.map(({ stream, values }: { stream: object; values: [] }) => ({
         stream: `${JSON.stringify(stream)}`,
         rows: values?.map(([time, log]: [string, string]) => ({
             time,
@@ -31,7 +31,7 @@ export function getStreamTableRows(data: any[]) {
             log,
         })),
         get rowsLength(): number {
-            return this.rows?.length;
+            return this?.rows?.length || 0;
         },
     }));
 }
@@ -90,8 +90,16 @@ function setDataView(panel: string) {
 }
 
 export function parseStreamResponse(responseProps: QueryResult) {
-    const { result, time, debugMode, queryType, panel, id, dispatch, direction } =
-        responseProps;
+    const {
+        result,
+        time,
+        debugMode,
+        queryType,
+        panel,
+        id,
+        dispatch,
+        direction,
+    } = responseProps;
     // get sorted messages
     const messages = mapStreams(result, direction);
     // get current dataView and update action
@@ -100,7 +108,7 @@ export function parseStreamResponse(responseProps: QueryResult) {
     dispatch(setMatrixData([]));
 
     const tableResult = getStreamTableResult(result);
-    dispatch(setTableData(tableResult)); 
+    dispatch(setTableData(tableResult));
 
     const messSorted = sortMessagesByTimestamp(messages, direction);
     function unite(args: any) {

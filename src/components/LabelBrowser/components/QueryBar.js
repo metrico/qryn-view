@@ -120,8 +120,6 @@ export const QueryBar = (props) => {
     useEffect(() => {
         const dataSource = dataSources?.find((f) => f.id === dataSourceId);
 
-
-
         let currentDataSource = {};
 
         if (
@@ -143,10 +141,9 @@ export const QueryBar = (props) => {
             }
             const labelsDecoded = decodeExpr(data.expr);
 
-
             panelCP.forEach((query) => {
                 if (query.id === id) {
-                    query.labels = [...labelsDecoded]
+                    query.labels = [...labelsDecoded];
                     query.dataSourceId = currentDataSource.id;
                     query.dataSourceType = currentDataSource.type;
                     query.dataSourceURL = currentDataSource.url;
@@ -163,14 +160,9 @@ export const QueryBar = (props) => {
             });
 
             dispatch(setDataSources(dsCopy));
-
         } else if (dataSource && dataSource.url !== "") {
             currentDataSource = { ...dataSource };
         }
-
-
-        
-
 
         // search for auth params  and send inside
         const labels = sendLabels(
@@ -199,11 +191,10 @@ export const QueryBar = (props) => {
 
         if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
             return labels.then((data) => {
-                if(data) {
-                    console.log(data)
+                if (data) {
                     const prevLabels = [...props.data.labels];
                     const prevMap = prevLabels.map((m) => m.name) || [];
-                    const newLabels = [...data] ;
+                    const newLabels = [...data];
                     if (newLabels.length > 0) {
                         if (prevMap.length > 0) {
                             newLabels.forEach((l) => {
@@ -216,10 +207,14 @@ export const QueryBar = (props) => {
                                 }
                             });
                         }
-                        decodeQuery(expr, currentDataSource.url, newLabels,currentDataSource.id);
+                        decodeQuery(
+                            expr,
+                            currentDataSource.url,
+                            newLabels,
+                            currentDataSource.id
+                        );
                     }
                 }
-            
             });
         } else {
             // if there is nothing to request, show empty view
@@ -228,7 +223,6 @@ export const QueryBar = (props) => {
     }, []);
 
     useEffect(() => {
-
         setQueryInput(expr);
         setQueryValue([{ children: [{ text: expr }] }]);
         setQueryValid(onQueryValid(expr));
@@ -392,7 +386,7 @@ export const QueryBar = (props) => {
     }
 
     const showFullQueryBar = (type, isSplit, isMobile) => {
-        if (!isMobile && !isSplit && type !== "flux" && type !=='traces')
+        if (!isMobile && !isSplit && type !== "flux" && type !== "traces")
             return <QueryTypeBar {...props} />;
         return null;
     };
@@ -416,9 +410,7 @@ export const QueryBar = (props) => {
                     onSubmitRate={onSubmitRate}
                 />
 
-
-{/* <TracesSearch {...props}/> */}
-
+                {dataSourceType === "traces" && <TracesSearch {...props} />}
 
                 <QueryBarCont
                     {...props}
@@ -436,7 +428,10 @@ export const QueryBar = (props) => {
                 />
 
                 {showFullQueryBar(dataSourceType, isSplit, isTabletOrMobile)}
-                {(isTabletOrMobile || isSplit || dataSourceType !== "flux" || dataSourceType !== 'traces') && (
+                {(isTabletOrMobile ||
+                    isSplit ||
+                    dataSourceType !== "flux" ||
+                    dataSourceType !== "traces") && (
                     <QuerySetting
                         {...props}
                         open={open}
@@ -514,7 +509,7 @@ export const MobileTopQueryMenuCont = (props) => {
     } = props;
     // conditionally show labels
     const withLabels = (type) => {
-        if (type !== "flux" && type !== 'traces') {
+        if (type !== "flux" && type !== "traces") {
             return (
                 <>
                     <ShowLabelsButton {...props} isMobile={true} />

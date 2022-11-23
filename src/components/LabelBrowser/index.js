@@ -1,11 +1,8 @@
 import { useSelector } from "react-redux";
-import LabelSelectors from "../QueryBuilder/LabelSelectors";
 import { QueryBar } from "./components/QueryBar";
 import { ValuesList } from "./components/ValuesList";
 
 export default function LabelBrowser(props) {
-
- console.log(props)
 
     const isEmbed = useSelector((store) => store.isEmbed);
     return (

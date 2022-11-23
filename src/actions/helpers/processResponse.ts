@@ -1,5 +1,5 @@
 import getTimeParams from "./getTimeParams";
-import { QueryDirection, QueryResult, TracesResult } from "../types";
+import { QueryDirection, QueryResult, QueryType, TracesResult } from "../types";
 import store from "../../store/store";
 import setIsEmptyView from "../setIsEmptyView";
 import { parseResponse } from "./parseResponse";
@@ -12,14 +12,33 @@ export async function processResponse(
     dispatch: Function,
     panel: string,
     id: string,
-    direction: QueryDirection
+    direction: QueryDirection,
+    queryType: QueryType
 ) {
     const { time } = getTimeParams(type);
-    const { queryType, debugMode } = store.getState();
+    const { debugMode } = store.getState();
 
     if (type === "traces") {
+        if (
+            queryType === "trace-search" &&
+            response?.data?.traces?.length > 0
+        ) {
+            const resultQuery: TracesResult = {
+                result: response.data.traces,
+                time,
+                debugMode,
+                dispatch,
+                type,
+                panel,
+                id,
+                ts: Date.now(),
+                queryType,
+            };
+            parseResponse(resultQuery);
+        }
+
         if (response?.data?.resourceSpans?.length > 0) {
-            const resultQuery:TracesResult= {
+            const resultQuery: TracesResult = {
                 result: response?.data,
                 time,
                 debugMode,
@@ -28,6 +47,7 @@ export async function processResponse(
                 panel,
                 id,
                 ts: Date.now(),
+                queryType,
             };
             parseResponse(resultQuery);
         }

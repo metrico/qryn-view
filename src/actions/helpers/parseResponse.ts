@@ -1,11 +1,4 @@
-import {
-    Stream,
-    Message,
-    QueryResult,
-    QueryResultType,
-    QueryDirection,
-    TracesResult,
-} from "../types";
+import { Stream, Message, QueryResultType, QueryDirection } from "../types";
 import store from "../../store/store";
 
 import { nanoid } from "nanoid";
@@ -33,17 +26,6 @@ export async function getAsyncResponse(
  * @param messages
  * @returns messages sorted by timestamp
  */
-
-// export function sortMessagesByTimestamp(
-//     messages: Message[], //:array sort by timestamp,
-//     direction = "forward"
-// ) {
-//     if (direction === "forward") {
-//         return sortMessagesByTimestampAsc(messages);
-//     } else {
-//         return sortMessagesByTimestampDesc(messages);
-//     }
-// }
 
 export function sortMessagesByTimestamp(
     messages: Message[],
@@ -86,7 +68,7 @@ export function mapStreams(
     const startTime = performance.now();
     let messages: Message[] = [];
 
-    streams.forEach((stream: Stream) => {
+    streams?.forEach((stream: Stream) => {
         stream.values.forEach(([ts, text], i) => {
             messages.push({
                 type: "stream",
@@ -107,7 +89,6 @@ export function mapStreams(
     return sortMessagesByTimestamp(messages, direction);
 }
 
-
 /**
  *
  * @param responseProps : QueryResult props to be parsed
@@ -118,25 +99,24 @@ export async function parseResponse(responseProps: any) {
 
     switch (type) {
         case "streams":
-           await parseStreamResponse(responseProps);
+            await parseStreamResponse(responseProps);
             break;
         case "vector":
-           await parseVectorResponse(responseProps);
+            await parseVectorResponse(responseProps);
             break;
         case "matrix":
-          await  parseMatrixResponse(responseProps);
+            await parseMatrixResponse(responseProps);
             break;
         case "scalar":
-          await  parseMatrixResponse(responseProps);
+            await parseMatrixResponse(responseProps);
             break;
         case "flux":
-          await  parseVectorResponse(responseProps);
+            await parseVectorResponse(responseProps);
             break;
         case "traces":
-          await  parseTracesResponse(responseProps);
+            await parseTracesResponse(responseProps);
             break;
         default:
-          await  parseStreamResponse(responseProps);
+            await parseStreamResponse(responseProps);
     }
-
 }
