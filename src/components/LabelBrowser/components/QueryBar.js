@@ -26,6 +26,7 @@ import { MobileTopQueryMenu, QueryBarContainer } from "./styled";
 import HistoryButton from "./Buttons/HistoryButton";
 import ShowLabelsButton from "./Buttons/ShowLabelsButton";
 import ShowLogsButton from "./Buttons/ShowLogsButton";
+import ShowLogsRateButton from "./Buttons/ShowLogsRateButton";
 import ShowQuerySettingsButton from "./Buttons/ShowQuerySettingsButton";
 /**Helpers */
 import queryInit from "../helpers/queryInit";
@@ -41,7 +42,7 @@ import { themes } from "../../../theme/themes";
 
 import setDataSources from "../../../views/DataSources/store/setDataSources";
 import { defaultDataSources } from "../../../views/DataSources/store/defaults";
-import ShowLogsRateButton from "./Buttons/ShowLogsRateButton";
+import TracesSearch from "../../TraceSearch/TraceSearch";
 
 export function panelAction(name, value) {
     if (name === "left") {
@@ -414,6 +415,11 @@ export const QueryBar = (props) => {
                     onSubmit={onSubmit}
                     onSubmitRate={onSubmitRate}
                 />
+
+
+{/* <TracesSearch {...props}/> */}
+
+
                 <QueryBarCont
                     {...props}
                     isSplit={isSplit}
@@ -462,6 +468,8 @@ export const QueryBarCont = (props) => {
     return (
         <QueryBarContainer>
             {buttonsHidden() && <ShowLabelsButton {...props} />}
+            
+
 
             <QueryEditor
                 onQueryChange={handleQueryChange}
@@ -491,6 +499,7 @@ export const QueryBarCont = (props) => {
         </QueryBarContainer>
     );
 };
+
 export const MobileTopQueryMenuCont = (props) => {
     const {
         isSplit,

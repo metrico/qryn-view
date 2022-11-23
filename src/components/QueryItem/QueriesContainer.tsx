@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import QueryItem from "../QueryItem/QueryItem";
+import QueryItem from "./QueryItem";
 
 const QueriesContainerStyled = styled.div`
     background: ${({ theme }: { theme: any }) => `${theme.mainBgColor}`};

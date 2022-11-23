@@ -13,15 +13,6 @@ export const LinkedFields = (props) => {
 
     const dispatch = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
-    const onClickSubmit = (e) => {
-        setIsEditing((isEditing) => (isEditing ? false : true));
-    };
-    const onClickEdit = (e) => {
-        setIsEditing((editing) => (editing ? false : true));
-    };
-    const onClickCancel = (e) => {
-        setIsEditing((editing) => (editing ? false : true));
-    };
 
     const onAddLinkedField = () => {
         // modify to add linked filed into datasources => linkedFields
@@ -44,9 +35,15 @@ export const LinkedFields = (props) => {
             return m;
         });
 
-
         localStorage.setItem("dataSources", JSON.stringify(newDataSources));
         dispatch(setDataSources(newDataSources));
+    };
+
+    const fieldEditing = () => {
+        setIsEditing((_) => true);
+        setTimeout(() => {
+            setIsEditing((_) => false);
+        }, 600);
     };
 
     if (linkedFields?.length > 0) {
@@ -57,9 +54,6 @@ export const LinkedFields = (props) => {
                     isEdit={true}
                     isAdd={true}
                     onClickAdd={onAddLinkedField}
-                    onCkickEdit={onClickEdit}
-                    onClickCancel={onClickCancel}
-                    onClickSubmit={onClickSubmit}
                     isEditing={isEditing}
                 />
 
@@ -70,6 +64,7 @@ export const LinkedFields = (props) => {
                             {...val}
                             dataSourceId={id}
                             locked={false}
+                            fieldEditing={fieldEditing}
                         />
                     ))}
                 </InputCont>

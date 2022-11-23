@@ -1,4 +1,4 @@
-import QueriesContainer from "../QueriesContainer/QueriesContainer";
+import QueriesContainer from "../QueryItem/QueriesContainer";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "@emotion/styled";

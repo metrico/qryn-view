@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 export const defaultLogsDataSourceHeaders = [
     {
         header: "Content-type",
-        value: "application/javascript",
+        value: "application/json",
         id: nanoid(),
     },
 ];
@@ -11,7 +11,7 @@ export const defaultLogsDataSourceHeaders = [
 export const defaultMetricsDataSourceHeaders = [
     {
         header: "Content-type",
-        value: "application/javascript",
+        value: "application/json",
         id: nanoid(),
     }
 ];
@@ -19,7 +19,7 @@ export const defaultMetricsDataSourceHeaders = [
 export const defaultTracesDataSourceHeaders = [
     {
         header: "Content-type",
-        value: "application/javascript",
+        value: "application/json",
         id: nanoid(),
     }
 ];
@@ -45,7 +45,7 @@ export const defaultLogsLinkedFields = [
         regex: "traceI[d|D]=(?<traceId>\\w+)",
         query: "${__value.raw}",
         urlLabel: "",
-        url: "",
+      //  url: "",
         internalLink: true,
         linkType: "Traces",
     },
@@ -58,105 +58,105 @@ export const defaultLogsLinkedFields = [
         regex: 'traceI[d|D]=(?<traceId>\\w+)',
         query: "${__value.raw}",
         urlLabel: "",
-        url: "",
+       // url: "",
         internalLink: true,
         linkType: "Traces",
     },
 ];
 
 export const defaultTracesLinkedFields = [
-    {
-        id: "1xiaRf2padIcGDEr",
-        dataSourceId: "32D16h5uYBqUUzhD",
-        dataSource: "Logs",
-        ds_id: "logs",
-        name: "traceId",
-        regex: "^.*?traceI[d|D]=(w+).*$",
-        query: "${__value.raw}",
-        urlLabel: "",
-        url: "",
-        internalLink: true,
-        linkType: "Traces",
-    },
-    {
-        id: "rw8bW4wN7HIz7rpQ",
-        dataSourceId: "32D16h5uYBqUUzhD",
-        dataSource: "Logs",
-        ds_id: "logs",
-        name: "traceID",
-        regex: '^.*?"traceID":"(w+)".*$/',
-        query: "${__value.raw}",
-        urlLabel: "",
-        url: "",
-        internalLink: true,
-        linkType: "Traces",
-    },
+    // {
+    //     id: "1xiaRf2padIcGDEr",
+    //     dataSourceId: "32D16h5uYBqUUzhD",
+    //     dataSource: "Logs",
+    //     ds_id: "logs",
+    //     name: "traceId",
+    //     regex: "^.*?traceI[d|D]=(w+).*$",
+    //     query: "${__value.raw}",
+    //     urlLabel: "",
+    //     url: "",
+    //     internalLink: true,
+    //     linkType: "Traces",
+    // },
+    // {
+    //     id: "rw8bW4wN7HIz7rpQ",
+    //     dataSourceId: "32D16h5uYBqUUzhD",
+    //     dataSource: "Logs",
+    //     ds_id: "logs",
+    //     name: "traceID",
+    //     regex: '^.*?"traceID":"(w+)".*$/',
+    //     query: "${__value.raw}",
+    //     urlLabel: "",
+    //     url: "",
+    //     internalLink: true,
+    //     linkType: "Traces",
+    // },
 ];
 
 export const defaultMetricsLinkedFields = [
-    {
-        id: "nqhCxOBA5TJ8BINh",
-        dataSource: "Logs",
-        ds_id: "logs",
-        name: "traceId",
-        regex: "^.*?traceI[d|D]=(w+).*$",
-        query: "${__value.raw}",
-        urlLabel: "",
-        url: "",
-        internalLink: true,
-        linkType: "Traces",
-    },
-    {
-        id: "-UDcksuS9iunXqUo",
-        dataSource: "Logs",
-        ds_id: "logs",
-        name: "traceID",
-        regex: '^.*?"traceID":"(w+)".*$/',
-        query: "${__value.raw}",
-        urlLabel: "",
-        url: "",
-        internalLink: true,
-        linkType: "Traces",
-    },
+    // {
+    //     id: "nqhCxOBA5TJ8BINh",
+    //     dataSource: "Logs",
+    //     ds_id: "logs",
+    //     name: "traceId",
+    //     regex: "^.*?traceI[d|D]=(w+).*$",
+    //     query: "${__value.raw}",
+    //     urlLabel: "",
+    //     url: "",
+    //     internalLink: true,
+    //     linkType: "Traces",
+    // },
+    // {
+    //     id: "-UDcksuS9iunXqUo",
+    //     dataSource: "Logs",
+    //     ds_id: "logs",
+    //     name: "traceID",
+    //     regex: '^.*?"traceID":"(w+)".*$/',
+    //     query: "${__value.raw}",
+    //     urlLabel: "",
+    //     url: "",
+    //     internalLink: true,
+    //     linkType: "Traces",
+    // },
 ];
 
 export const defaultCertFields = {
-    WithCACert: [
-        {
-            name: "CACert",
-            form_type: "textarea",
-            label: "CA Cert",
-            value: "",
-            placeholder: "Begins with -----BEGIN CERTIFICATE-----",
-        },
-    ],
-    TLSClientAuth: [
-        {
-            name: "ServerName",
-            cert: "TLSClientAuth",
-            form_type: "input",
-            label: "Server Name",
-            value: "",
-            placeholder: "domain.example.com",
-        },
+    // WithCACert: [
+    //     {
+    //         name: "CACert",
+    //         form_type: "textarea",
+    //         label: "CA Cert",
+    //         value: "",
+    //         placeholder: "Begins with -----BEGIN CERTIFICATE-----",
+    //     },
+    // ],
+    // TLSClientAuth: [
+    //     {
+    //         name: "ServerName",
+    //         cert: "TLSClientAuth",
+    //         form_type: "input",
+    //         label: "Server Name",
+    //         value: "",
+    //         placeholder: "domain.example.com",
+    //     },
 
-        {
-            name: "ClientCert",
-            cert: "TLSClientAuth",
-            form_type: "textarea",
-            label: "Client Cert",
-            value: "",
-            placeholder: "Begins with -----BEGIN CERTIFICATE-----",
-        },
-        {
-            name: "ClientKey",
-            cert: "TLSClientAuth",
-            form_type: "textarea",
-            label: "Client Key",
-            value: "",
-            placeholder: "Begins with -----BEGIN RSA PRIVATE KEY-----",
-        },
-    ],
+    //     {
+    //         name: "ClientCert",
+    //         cert: "TLSClientAuth",
+    //         form_type: "textarea",
+    //         label: "Client Cert",
+    //         value: "",
+    //         placeholder: "Begins with -----BEGIN CERTIFICATE-----",
+    //     },
+    //     {
+    //         name: "ClientKey",
+    //         cert: "TLSClientAuth",
+    //         form_type: "textarea",
+    //         label: "Client Key",
+    //         value: "",
+    //         placeholder: "Begins with -----BEGIN RSA PRIVATE KEY-----",
+    //     },
+    // ],
     basicAuth: [
         {
             name: "user",
@@ -193,33 +193,33 @@ export const defaultAuth = {
         fields: "basicAuthUserFields",
     },
 
-    TLSClientAuth: {
-        form_type: "switch",
-        label: "TLS Client Auth",
-        value: false,
-        withFields: true,
-        fields: "TLSClientAuthFields",
-    },
+    // TLSClientAuth: {
+    //     form_type: "switch",
+    //     label: "TLS Client Auth",
+    //     value: false,
+    //     withFields: true,
+    //     fields: "TLSClientAuthFields",
+    // },
 
-    SkipTLSVerify: {
-        form_type: "switch",
-        label: "Skip TLS Verify",
-        value: false,
-    },
+    // SkipTLSVerify: {
+    //     form_type: "switch",
+    //     label: "Skip TLS Verify",
+    //     value: false,
+    // },
 
-    ForwardOAuthIdentity: {
-        form_type: "switch",
-        label: "Forward OAuth Identity",
-        value: false,
-    },
+    // ForwardOAuthIdentity: {
+    //     form_type: "switch",
+    //     label: "Forward OAuth Identity",
+    //     value: false,
+    // },
 
-    WithCACert: {
-        form_type: "switch",
-        label: "With CA Cert",
-        value: false,
-        withFields: true,
-        fields: "WithCACertFields",
-    },
+    // WithCACert: {
+    //     form_type: "switch",
+    //     label: "With CA Cert",
+    //     value: false,
+    //     withFields: true,
+    //     fields: "WithCACertFields",
+    // },
 };
 
 export const defaultLogsDataSource = {

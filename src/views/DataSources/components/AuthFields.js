@@ -13,7 +13,7 @@ export function AuthFields(props) {
     const dataSources = useSelector((store) => store.dataSources);
 
     const [activeFields, setActiveFields] = useState([]);
-
+    const [isEditing, setIsEditing] = useState(false);
     const fields = useMemo(() => {
         return Object.entries(auth)
             ?.map(([name, field]) => ({
@@ -60,52 +60,65 @@ export function AuthFields(props) {
     }, [fields, setActiveFields]);
 
     const onSelectChange = (e, name) => {
+        setIsEditing((_) => true);
         const value = e.target.value;
         onValueChange(value, name);
+        setTimeout(() => {
+            setIsEditing((_) => false);
+        }, 600);
     };
 
     const onSwitchChange = (e, name) => {
+        setIsEditing((_) => true);
         const value = e.target.checked;
 
         onValueChange(value, name);
+        setTimeout(() => {
+            setIsEditing((_) => false);
+        }, 600);
     };
 
     const onCertValueChange = (e, name, cert) => {
-
+        setIsEditing((_) => true);
         const value = e.target.value;
-        const prevAuth = JSON.parse(JSON.stringify(auth))
+        const prevAuth = JSON.parse(JSON.stringify(auth));
 
-        const newAuth = {...prevAuth, 
-            fields: { ...prevAuth.fields, 
-                [cert]: prevAuth?.fields[cert]?.map( field => {
-                    if(field.name === name) {
-                        field.value = value
-                        return {...field}
+        const newAuth = {
+            ...prevAuth,
+            fields: {
+                ...prevAuth.fields,
+                [cert]: prevAuth?.fields[cert]?.map((field) => {
+                    if (field.name === name) {
+                        field.value = value;
+                        return { ...field };
                     }
-                    return field
-                }) }}
+                    return field;
+                }),
+            },
+        };
 
-
-       
-        const prevDataSources = JSON.parse(JSON.stringify([...dataSources]))
-        const newDataSources = prevDataSources?.map( ds => {
-            if(ds.id === id) {
-                ds.auth = newAuth 
-                return ds
+        const prevDataSources = JSON.parse(JSON.stringify([...dataSources]));
+        const newDataSources = prevDataSources?.map((ds) => {
+            if (ds.id === id) {
+                ds.auth = newAuth;
+                return ds;
             }
-            return ds
-        })
+            return ds;
+        });
 
-        localStorage.setItem("dataSources", JSON.stringify(newDataSources))
-        dispatch(setDataSources(newDataSources))
+        localStorage.setItem("dataSources", JSON.stringify(newDataSources));
+        dispatch(setDataSources(newDataSources));
 
-
+        setTimeout(() => {
+            setIsEditing((_) => false);
+        }, 600);
     };
 
     return (
         <>
             <SectionHeader
                 title={"HTTP Auth Fields"}
+                isEditing={isEditing}
                 isEdit={false}
                 isAdd={false}
             />
@@ -167,7 +180,9 @@ export function AuthFields(props) {
                                                         type={cert.form_type}
                                                         value={cert.value}
                                                         label={cert.label}
-                                                        placeholder={cert.placeholder}
+                                                        placeholder={
+                                                            cert.placeholder
+                                                        }
                                                     />
                                                 );
                                             }
@@ -185,7 +200,9 @@ export function AuthFields(props) {
                                                         }
                                                         value={cert.value}
                                                         label={cert.label}
-                                                        placeholder={cert.placeholder}
+                                                        placeholder={
+                                                            cert.placeholder
+                                                        }
                                                     />
                                                 );
                                             }
@@ -195,7 +212,6 @@ export function AuthFields(props) {
                             );
                         })}
                 </InputCol>
-
             </InputCont>
         </>
     );
