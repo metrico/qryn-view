@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 
 import HistoryIcon from "@mui/icons-material/History";
-import { BtnSmall } from "../../../../theme/styles/Button";
+import { BtnSmall as btnSmall } from "../../../../theme/styles/Button";
 import { InputSmall } from "../../../../theme/styles/Input";
-
+const BtnSmall = btnSmall as any;
 export const HistoryIconStyled = styled(HistoryIcon)`
     height: 18px;
     color: ${({ color }) => color};
@@ -25,16 +25,16 @@ export const HistoryButtonStyled = styled(BtnSmall)`
 `;
 
 export const ShowLabelsBtn = styled(BtnSmall)`
-    background: ${({ theme }) => theme.buttonDefault};
+    background: ${({ theme }: any) => theme.buttonDefault};
     border: 1px solid ${(props) => props.theme.buttonBorder};
     text-overflow: ellipsis;
     transition: 0.25s all;
     padding-left: 6px;
     justify-content: flex-start;
-    color: ${({ theme }) => theme.textColor};
+    color: ${({ theme }: any) => theme.textColor};
     height: 28px;
     &:hover {
-        background: ${({ theme }) => theme.buttonHover};
+        background: ${({ theme }: any) => theme.buttonHover};
     }
     @media screen and (max-width: 864px) {
         display: ${({ isMobile }) => (isMobile ? "flex" : "none")};
@@ -48,7 +48,7 @@ export const QueryBarContainer = styled.div`
     padding: 6px;
     margin-top: 5px;
     margin-left: 0px;
-    background: ${({ theme }) => theme.widgetContainer};
+    background: ${({ theme }: any) => theme.widgetContainer};
     flex-wrap: wrap;
     border-radius: 3px;
 `;
@@ -92,7 +92,7 @@ export const ShowSettingsBtn = styled(BtnSmall)`
 `;
 
 export const MobileTopQueryMenu = styled.div`
-    display: ${props =>( props.isSplit || props.dataSourceType === 'flux') ? 'flex' : 'none'};
+    display: ${(props: any) =>( props.isSplit || props.dataSourceType === 'flux') ? 'flex' : 'none'};
 
     @media screen and (max-width: 864px) {
         display: flex;
@@ -118,7 +118,8 @@ export const SettingCont = styled.div`
     flex: 1;
     flex-direction: column;
 
-    background: ${({ theme }) => theme.widgetContainer};
+  
+    background: ${({ theme }: any) => theme.widgetContainer};
 `;
 
 export const SettingsInputContainer = styled.div`
@@ -133,28 +134,28 @@ export const SettingsInputContainer = styled.div`
 `;
 
 export const SettingInput = styled(InputSmall)`
-    background: ${({ theme }) => theme.inputBg};
+    background: ${({ theme }: any) => theme.inputBg};
     margin: 5px;
     flex: 1;
     padding: 5px 12px;
-    border: 1px solid ${({ theme }) => theme.buttonBorder};
-    color: ${({ theme }) => theme.textColor};
+    border: 1px solid ${({ theme }: any) => theme.buttonBorder};
+    color: ${({ theme }: any) => theme.textColor};
     &:focus {
-        border: 1px solid ${({ theme }) => theme.buttonHover};
+        border: 1px solid ${({ theme }: any) => theme.buttonHover};
     }
 `;
 export const SettingButton = styled(BtnSmall)`
-    background: ${({ theme }) => theme.primaryDark};
-    color: ${({ theme }) => theme.buttonText};
+    background: ${({ theme }: any) => theme.primaryDark};
+    color: ${({ theme }: any) => theme.buttonText};
     height: 30px;
     &:hover {
-        background: ${({ theme }) => theme.primaryLight};
+        background: ${({ theme }: any) => theme.primaryLight};
     }
 `;
 
 export const SettingLabel = styled.label`
     font-size: 12px;
-    color: ${({ theme }) => theme.inputLabelColor};
+    color: ${({ theme }: any) => theme.inputLabelColor};
     margin-left: 10px;
 `;
 
@@ -166,11 +167,11 @@ export const SettingHeader = styled.div`
     h3 {
         margin-left: 10px;
         font-size: 1em;
-        color: ${({ theme }) => theme.textColor};
+        color: ${({ theme }: any) => theme.textColor};
     }
 `;
 export const SettingCloseBtn = styled(BtnSmall)`
     background: none;
     padding: 0;
-    color: ${({ theme }) => theme.textColor};
+    color: ${({ theme }: any) => theme.textColor};
 `;

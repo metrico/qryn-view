@@ -26,6 +26,7 @@ import { MobileTopQueryMenu, QueryBarContainer } from "./styled";
 import HistoryButton from "./Buttons/HistoryButton";
 import ShowLabelsButton from "./Buttons/ShowLabelsButton";
 import ShowLogsButton from "./Buttons/ShowLogsButton";
+import ShowLogsRateButton from "./Buttons/ShowLogsRateButton";
 import ShowQuerySettingsButton from "./Buttons/ShowQuerySettingsButton";
 /**Helpers */
 import queryInit from "../helpers/queryInit";
@@ -68,7 +69,7 @@ const maxWidth = css`
 `;
 
 export const QueryBar = (props) => {
-    const { data, name } = props;
+    const { data, name, width } = props;
     const {
         queryType,
         limit,
@@ -257,81 +258,55 @@ export const QueryBar = (props) => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-
         if (onQueryValid(queryInput)) {
             try {
-                // set new query into panel data history
-
-                const historyUpdated = historyService.add({
-                    data: JSON.stringify({
-                        type: dataSourceType,
-                        queryInput,
-                        queryType,
-                        limit,
-                        panel: name,
-                        id,
-                    }),
-                    url: window.location.hash,
-                });
-
-                dispatch(setQueryHistory(historyUpdated));
+                updateHistory(queryInput,queryType,limit,id)
 
                 // Decode query to translate into labels selection
-                const currentDataSource = dataSources.find(
-                    (f) => f.id === dataSourceId
-                );
-
-
-                if (currentDataSource?.type !== "flux") {
-                
-                    decodeQuery(
-                        queryInput,
-                        currentDataSource?.url,
-                        props.data.labels,
-                        currentDataSource?.id
-                    );
-                }
-                const labelsDecoded = decodeExpr(data.expr);
-                
-                const actDataSource = dataSources.find(
-                    (f) => f.id === dataSourceId
-                );
-                const panel = [...panelQuery];
-
-                panel.forEach((query) => {
-                    if (query.id === id) {
-                        query.labels = [...labelsDecoded];
-                        query.browserOpen = false;
-                        query.dataSourceId = actDataSource.id;
-                        query.dataSourceType = actDataSource.type;
-                        query.dataSourceURL = actDataSource.url;
-                    }
-                });
-
-                dispatch(panelAction(name, panel));
-
-                dispatch(
-                    getData(
-                        dataSourceType,
-                        queryInput,
-                        queryType,
-                        limit,
-                        name,
-                        id,
-                        direction,
-                        dataSourceId,
-                        actDataSource.url
-                    )
-                );
+                decodeQueryAndUpdatePanel(queryInput);
 
                 // store into history
 
-                const storedUrl = saveUrl.add({
-                    data: window.location.href,
-                    description: "From Query Submit",
-                });
+                updateLinksHistory();
+            } catch (e) {
+                console.log(e);
+            }
+        } else {
+            dispatch(setIsEmptyView(true));
 
-                dispatch(setLinksHistory(storedUrl));
+            console.log("Please make a log query", expr);
+        }
+    };
+
+    const onSubmitRate = (e) => {
+        e.preventDefault();
+        const isEmptyQuery = queryInput.length === 0
+        let query = '';
+        if (!isEmptyQuery) {
+            const isRate = queryInput.startsWith(`rate(`)
+            const timeDiff = stop.getTime() - start.getTime()
+            const interval = Math.round(timeDiff / width);
+            if (!isRate) {
+                query = `rate(${queryInput}[${interval}ms])`
+                
+            } else {
+                query = queryInput.replace(/\[\d+ms\]/, `[${interval}ms]`)
+                console.log(queryInput.replace(/\[\d+ms\]/, `[${interval}ms]`))
+            }
+            setQueryInput(query)
+            
+            setQueryValue([{ children: [{ text: query }] }]);
+
+            setQueryValid(onQueryValid(query));
+        }
+        if (onQueryValid(query)) {
+            console.log(query)
+            try {
+                updateHistory(query,queryType,limit,id)
+                // Decode query to translate into labels selection
+                decodeQueryAndUpdatePanel(query);
+
+                updateLinksHistory();
             } catch (e) {
                 console.log(e);
             }
@@ -340,7 +315,72 @@ export const QueryBar = (props) => {
             console.log("Please make a log query", expr);
         }
     };
+    const updateHistory = (queryInput, queryType, limit, id) => {
+        const historyUpdated = historyService.add({
+            data: JSON.stringify({
+                type: dataSourceType,
+                queryInput,
+                queryType,
+                limit,
+                panel: name,
+                id,
+            }),
+            url: window.location.hash,
+        });
 
+        dispatch(setQueryHistory(historyUpdated));
+
+    }
+    const decodeQueryAndUpdatePanel = (query) => {
+        const currentDataSource = dataSources.find(
+            (f) => f.id === dataSourceId
+        );
+        if (currentDataSource?.type !== "flux") {
+        
+            decodeQuery(
+                query,
+                currentDataSource?.url,
+                props.data.labels,
+                currentDataSource?.id
+            );
+        }
+        const labelsDecoded = decodeExpr(data.expr);
+        const panel = [...panelQuery];
+
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.labels = [...labelsDecoded];
+                query.browserOpen = false;
+                query.dataSourceId = currentDataSource.id;
+                query.dataSourceType = currentDataSource.type;
+                query.dataSourceURL = currentDataSource.url;
+            }
+        });
+
+        dispatch(panelAction(name, panel));
+
+        dispatch(
+            getData(
+                dataSourceType,
+                query,
+                queryType,
+                limit,
+                name,
+                id,
+                direction,
+                dataSourceId,
+                currentDataSource.url
+            )
+        );
+    }
+    const updateLinksHistory = () => {
+        const storedUrl = saveUrl.add({
+            data: window.location.href,
+            description: "From Query Submit",
+        });
+
+        dispatch(setLinksHistory(storedUrl));
+    }
     function handleHistoryClick(e) {
         dispatch(setHistoryOpen(!historyOpen));
     }
@@ -373,6 +413,7 @@ export const QueryBar = (props) => {
                     handleHistoryClick={handleHistoryClick}
                     queryValid={queryValid}
                     onSubmit={onSubmit}
+                    onSubmitRate={onSubmitRate}
                 />
 
 
@@ -391,6 +432,7 @@ export const QueryBar = (props) => {
                     handleHistoryClick={handleHistoryClick}
                     queryValid={queryValid}
                     onSubmit={onSubmit}
+                    onSubmitRate={onSubmitRate}
                 />
 
                 {showFullQueryBar(dataSourceType, isSplit, isTabletOrMobile)}
@@ -419,8 +461,8 @@ export const QueryBarCont = (props) => {
         handleHistoryClick,
         queryValid,
         onSubmit,
+        onSubmitRate,
     } = props;
-
     const buttonsHidden = () => !isSplit && dataSourceType !== "flux" && dataSourceType !== 'traces';
 
     return (
@@ -442,7 +484,11 @@ export const QueryBarCont = (props) => {
                         queryLength={queryHistory.length}
                         handleHistoryClick={handleHistoryClick}
                     />
-
+                    <ShowLogsRateButton
+                        disabled={!queryValid}
+                        onClick={onSubmitRate}
+                        isMobile={false}
+                    />
                     <ShowLogsButton
                         disabled={!queryValid}
                         onClick={onSubmit}
@@ -463,6 +509,7 @@ export const MobileTopQueryMenuCont = (props) => {
         handleHistoryClick,
         queryValid,
         onSubmit,
+        onSubmitRate
     } = props;
     // conditionally show labels
     const withLabels = (type) => {
@@ -491,7 +538,11 @@ export const MobileTopQueryMenuCont = (props) => {
                 handleHistoryClick={handleHistoryClick}
                 isMobile={true}
             />
-
+            <ShowLogsRateButton
+                disabled={!queryValid}
+                onClick={onSubmitRate}
+                isMobile={false}
+            />
             <ShowLogsButton
                 disabled={!queryValid}
                 onClick={onSubmit}
