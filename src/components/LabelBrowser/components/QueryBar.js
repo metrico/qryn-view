@@ -484,11 +484,12 @@ export const QueryBarCont = (props) => {
                         queryLength={queryHistory.length}
                         handleHistoryClick={handleHistoryClick}
                     />
+                    { dataSourceType === 'logs' && 
                     <ShowLogsRateButton
                         disabled={!queryValid}
                         onClick={onSubmitRate}
                         isMobile={false}
-                    />
+                    /> }
                     <ShowLogsButton
                         disabled={!queryValid}
                         onClick={onSubmit}
@@ -538,11 +539,12 @@ export const MobileTopQueryMenuCont = (props) => {
                 handleHistoryClick={handleHistoryClick}
                 isMobile={true}
             />
+            { dataSourceType === 'logs' &&
             <ShowLogsRateButton
                 disabled={!queryValid}
                 onClick={onSubmitRate}
                 isMobile={false}
-            />
+            />}
             <ShowLogsButton
                 disabled={!queryValid}
                 onClick={onSubmit}
