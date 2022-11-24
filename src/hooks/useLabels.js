@@ -52,7 +52,7 @@ export const sendLabels = async (id, type, apiUrl, start, stop) => {
 
     labelHeaders.options = options;
  
-    if (type !== "flux" && labelHeaders) {
+    if (type !== "flux" && labelHeaders && apiUrl) {
         const res = await axios
             .get(getUrlFromType(apiUrl, type, startNs, stopNs), labelHeaders)
             .then((response) => {

@@ -45,34 +45,38 @@ export default function loadLabelValues(id,label, labelList='', url ) {
     };
 
     labelHeaders.options = options
+    if(url) {
 
-    return async (dispatch) => {
-        await axios
-            .get(`${url}/loki/api/v1/label/${label.name}/values`, labelHeaders)
-            ?.then((response) => {
-                if (response?.data?.data) {
-                    const values = response?.data?.data?.map?.((value) => ({
-                        label: label.name,
-                        name: value,
-                        selected: false,
-                        inverted: false,
-                    }));
-
-                    return values;
-                } else if (!response) {
-                    dispatch(setApiError("URL NOT FOUND"));
-
+        return async (dispatch) => {
+            await axios
+                .get(`${url}/loki/api/v1/label/${label.name}/values`, labelHeaders)
+                ?.then((response) => {
+                    if (response?.data?.data) {
+                        const values = response?.data?.data?.map?.((value) => ({
+                            label: label.name,
+                            name: value,
+                            selected: false,
+                            inverted: false,
+                        }));
+    
+                        return values;
+                    } else if (!response) {
+                        dispatch(setApiError("URL NOT FOUND"));
+    
+                        return [];
+                    }
+                    dispatch(setApiError(""));
+                    return response?.data?.data;
+                })
+                .catch((error) => {
+                    const { message } = errorHandler(url, error, "lavelValues");
+                    dispatch(setApiError(message || "API NOT FOUND"));
+    
+                    console.log(error);
                     return [];
-                }
-                dispatch(setApiError(""));
-                return response?.data?.data;
-            })
-            .catch((error) => {
-                const { message } = errorHandler(url, error, "lavelValues");
-                dispatch(setApiError(message || "API NOT FOUND"));
+                });
+        };
+    }
+    return []
 
-                console.log(error);
-                return [];
-            });
-    };
 }
