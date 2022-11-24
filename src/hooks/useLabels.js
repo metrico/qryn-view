@@ -51,13 +51,13 @@ export const sendLabels = async (id, type, apiUrl, start, stop) => {
     };
 
     labelHeaders.options = options;
- 
-    if (type !== "flux" && labelHeaders && apiUrl) {
+
+    if (type !=='flux' && type !== 'traces' && labelHeaders && apiUrl) {
         const res = await axios
             .get(getUrlFromType(apiUrl, type, startNs, stopNs), labelHeaders)
             .then((response) => {
                 if (response) {
-     
+            
                     if (response?.data?.data === [])
                 
                     if (response?.data?.data?.length > 0) {

@@ -47,7 +47,6 @@ export default function useLabels(id, dataSourceURL = "") {
     timeStart = getTimestamp(start, type);
     timeEnd = getTimestamp(stop, type);
 
-
     const [url, setUrl] = useState(
         getUrlFromType(currentDataSource.url, type, timeStart, timeEnd)
     );
@@ -60,7 +59,11 @@ export default function useLabels(id, dataSourceURL = "") {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (currentDataSource.type !== "flux" && dataSourceURL && dataSourceURL !== '') {
+        if (
+            currentDataSource.type !== "flux" &&
+            currentDataSource.url &&
+            currentDataSource.url !== ""
+        ) {
             const options = {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
