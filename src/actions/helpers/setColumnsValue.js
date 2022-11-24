@@ -129,7 +129,7 @@ export function setColumnsTsValue(
     timeAccessor,
     data = {}
 ) {
-    const query = store.getState()?.[data.panel].find((f) => f.id === data.id);
+    const query = store.getState()?.[data.panel]?.find((f) => f.id === data.id);
 
     if (query) {
         data.dataSourceId = query.dataSourceId;

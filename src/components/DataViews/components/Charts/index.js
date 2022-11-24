@@ -313,11 +313,13 @@ export default function ClokiChart(props) {
         };
         const pointSet = new Set();
         matrixData.forEach((dataPoint)=>{
-            dataPoint.values.forEach(dataPointValue => pointSet.add(dataPointValue?.[0]))
+            dataPoint?.values?.forEach(dataPointValue => pointSet.add(dataPointValue?.[0]))
         })
         if (pointSet.size === 1 && chartType !== 'bar') {
             onSetChartType('bar')
         }
+        // console.log({flotChartProps})
+        // console.log(<FlotChart {...flotChartProps} />)
         return <FlotChart {...flotChartProps} />;
     }
 

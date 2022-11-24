@@ -113,9 +113,9 @@ export async function parseResponse(responseProps: any) {
             await parseMatrixResponse(responseProps);
             break;
         case "flux":
-            // await parseFluxResponse(responseProps);
-            await parseVectorResponse(responseProps);
-
+            await parseFluxResponse(responseProps);
+            // await parseVectorResponse(responseProps);
+            // await parseStreamResponse(responseProps);
             break;
         case "traces":
             await parseTracesResponse(responseProps);

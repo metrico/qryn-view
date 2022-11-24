@@ -28,18 +28,26 @@ function timeFormatter(props: any) {
 function fluxDataToMetricData(data: any[]) {
     console.log(data);
     const out: any[] = [{
-        metric: {},
+        metric: {__name__: 'Flux'},
         values: data.map(
             (item: any) =>
-                Object.values(item).map((i: any) => isNaN(+i) ? null : +i)
+                Object.values(item)
+                    .map((i: any, k: number) => (
+                        isNaN(+i) ?
+                            null :
+                            (i instanceof Date ? (i.getTime() / 1000) : i)
+                            + (k === 0 ? 0 : "")
+                    ) 
+                    )
+                    .filter(item => !!item)
         ),
     }]
     return out;
 }
 export function getFluxTableRows(data: any[]) {
 
-    data = fluxDataToMetricData(data);
     console.log('getFluxTableRows', { data });
+    
     return data.map(({ metric, values }: { metric: object; values: [] }) => ({
         metric: JSON.stringify(metric),
         rows: values.map(([time, value]: [string, string]) => ({
@@ -107,8 +115,9 @@ function setDataView(panel: string) {
 }
 
 export function parseFluxResponse(responseProps: QueryResult) {
-    const { result, debugMode, dispatch, panel, id } = responseProps;
-
+    let { result, debugMode, dispatch, panel, id } = responseProps;
+    result = fluxDataToMetricData(result);
+    console.log({ responseProps });
     // here should set the table response
     const tableResult = getFluxTableResult(result);
     // get current dataview and update action
@@ -129,7 +138,7 @@ export function parseFluxResponse(responseProps: QueryResult) {
         // get table total as chart total is less that table total rows
         const panelResult = {
             id,
-            type: "matrix",
+            type: "flux",
             tableData: tableResult,
             data: idResult,
             total: idResult?.length || 0,
