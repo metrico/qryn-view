@@ -1,5 +1,5 @@
 /**React */
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 /**npm */
@@ -73,14 +73,17 @@ export const QueryBar = (props) => {
         queryHistory,
         start,
         stop,
+        isSplit
     } = useSelector((store) => store);
     const panelQuery = useSelector((store) => store[name]);
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 864px)" });
     const [queryInput, setQueryInput] = useState(data.expr);
     const [queryValid, setQueryValid] = useState(false);
     const [queryValue, setQueryValue] = useState(queryInit(data.expr));
     const [open, setOpen] = useState(false);
-
+    const wrapperRef = useRef(null)
+    const labelsButtonRef = useRef(null)
+    const buttonsContainerRef = useRef(null)
     useEffect(() => {});
     const saveUrl = localUrl();
     const expr = useMemo(() => {
@@ -203,6 +206,15 @@ export const QueryBar = (props) => {
     function onClose() {
         showQuerySettings();
     }
+    const getMaxWidth = () => {
+        const labelButtonWidth = !isNaN(labelsButtonRef?.current?.clientWidth) ? labelsButtonRef?.current?.clientWidth : 0;
+        const buttonsContainerWidth = !isNaN(buttonsContainerRef?.current?.clientWidth) ? buttonsContainerRef?.current?.clientWidth : 0;
+        if (isSplit || isTabletOrMobile) {
+            return 0;
+        } else {
+            return ( labelButtonWidth + buttonsContainerWidth + 5)
+        }
+    }
     return (
         !isEmbed && (
             <div
@@ -211,7 +223,7 @@ export const QueryBar = (props) => {
                 `}
             >
                 <ThemeProvider theme={themes[theme]}>
-                    <MobileTopQueryMenu>
+                    <MobileTopQueryMenu isSplit={isSplit}>
                         <div
                             className={css`
                                 display: flex;
@@ -238,29 +250,40 @@ export const QueryBar = (props) => {
                         />
                     </MobileTopQueryMenu>
                     <QueryBarContainer>
-                        <ShowLabelsButton {...props} />
+                        {!isSplit && <span ref={labelsButtonRef}><ShowLabelsButton {...props} /></span>}
+                        <div
+                            style={{ flex: 1, maxWidth: `calc(100% - ${getMaxWidth()}px)` }}
+                            ref={wrapperRef}
+                        >
+                            <QueryEditor
+                                onQueryChange={handleQueryChange}
+                                defaultValue={expr || ""}
+                                value={queryValue}
+                                isSplit={isSplit}
+                                wrapperRef={wrapperRef?.current?.clientWidth}
+                                onKeyDown={handleInputKeyDown}
+                            />
+                        </div>
+                        {!isSplit && (
+                            <div style={{ display: "flex", flex: "0" }} ref={buttonsContainerRef}>
+                                <HistoryButton
+                                    queryLength={queryHistory.length}
+                                    handleHistoryClick={handleHistoryClick}
+                                />
 
-                        <QueryEditor
-                            onQueryChange={handleQueryChange}
-                            defaultValue={expr || ""}
-                            value={queryValue}
-                            onKeyDown={handleInputKeyDown}
-                        />
-
-                        <HistoryButton
-                            queryLength={queryHistory.length}
-                            handleHistoryClick={handleHistoryClick}
-                        />
-
-                        <ShowLogsButton
-                            disabled={!queryValid}
-                            onClick={onSubmit}
-                            isMobile={false}
-                        />
+                                <ShowLogsButton
+                                    disabled={!queryValid}
+                                    onClick={onSubmit}
+                                    isMobile={false}
+                                />
+                            </div>
+                        )}
                     </QueryBarContainer>
 
-                    {!isTabletOrMobile && <QueryTypeBar {...props} />}
-                    {isTabletOrMobile && (
+                    {!isTabletOrMobile && !isSplit && (
+                        <QueryTypeBar {...props} />
+                    )}
+                    {(isTabletOrMobile || isSplit) && (
                         <QuerySetting
                             {...props}
                             open={open}
