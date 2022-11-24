@@ -19,8 +19,10 @@ import React from "react";
 
 import { formatDuration } from "../../utils/date";
 const TickLabelsStyled = styled.div`
-    height: 1rem;
+    height: 1.25rem;
     position: relative;
+    display:flex;
+    align-items:center;
 `;
 const TickLabelsLabel = styled.div<{theme:any}>`
     color: ${({theme})=>theme.textColor};

@@ -69,7 +69,7 @@ export const PageContainer = styled.div`
             font-size: 18px;
             padding: 10px;
             padding-left: 0px;
-            color: ${({theme})=> theme.textColor}
+            color: ${({ theme }) => theme.textColor};
         }
         small {
             font-size: 12px;
@@ -90,10 +90,14 @@ export const Label = styled.div`
     align-items: center;
     font-size: 12px;
     padding: 0px 10px;
-    flex: 0;
+    //flex: 0;
     white-space: nowrap;
-
+    ${props => props.width !== null ? `width:${props.width};` : ''}
     border-radius: 3px 0px 0px 3px;
+    display:flex;
+    align-items:center;
+    height:28px;
+  
 `;
 
 export const Input = styled.input`
@@ -119,20 +123,22 @@ export const TextArea = styled.textarea`
     padding-left: 8px;
 `;
 
-
 export const InputGroup = styled.div`
     display: flex;
-    margin-right: 10px;
     flex-direction: row;
     margin-top: 5px;
     align-items: center;
+    flex: 1;
     select {
         background: ${(props) => props.theme.inputBg};
         color: ${(props) => props.theme.textColor};
         border: 1px solid ${(props) => props.theme.buttonBorder};
         border-radius: 3px;
         font-size: 12px;
-        height: 26px;
+        height: 30px;
+        display:flex;
+        align-items:center;
+        padding:1px 2px 1px 8px;
     }
 `;
 
@@ -142,6 +148,10 @@ export const InputCol = styled.div`
     margin-left: 14px;
     flex-wrap: wrap;
     align-items: center;
+    flex: 1;
+    &.internal {
+        max-width:400px;
+    }
 `;
 
 export const InputHeaderCol = styled.div`
@@ -161,7 +171,7 @@ export const LinkFieldsGroup = styled.div`
 
 export const SettingsTitle = styled.div`
     padding: 10px;
-    background: ${({ theme }) => theme.mainBgColor};
+    border-bottom: 1px solid  ${({ theme }) => theme.widgetContainer};
     border-radius: 3px;
     display: flex;
     flex: 1;
@@ -187,15 +197,17 @@ export const DsButtonStyled = styled(BtnSmall)`
     background: ${(props) =>
         props.primary ? props.theme.primaryDark : props.theme.buttonDefault};
     border: 1px solid ${(props) => props.theme.buttonBorder};
-    color: ${(props) => props.theme.textColor};
+    color: ${(props) => props.primary ? props.theme.buttonText: props.theme.textColor};
     margin-left: 5px;
     transition: 0.25s all;
     justify-content: center;
     padding: 3px 12px;
     height: 28px;
-    display: ${({ editing }) => (editing ? "flex" : "none")};
+    display:flex;
     &:hover {
         background: ${(props) => props.theme.primaryLight};
+        color: ${(props) => props.primary ? props.theme.textColor: props.theme.buttonText};
+        
     }
     &:disabled {
         background: ${(props) => props.theme.buttonDefault};
@@ -204,7 +216,7 @@ export const DsButtonStyled = styled(BtnSmall)`
         color: ${(props) => props.theme.textColor};
     }
     @media screen and (max-width: 864px) {
-        display: ${(props) => (props.isMobile ? "flex" : "none")};
+        display: flex;
 
         margin: 0;
     }

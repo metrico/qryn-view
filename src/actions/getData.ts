@@ -53,6 +53,7 @@ export default function getData(
         },
         hasSettings: false,
     };
+
     let user = "";
     let pass = "";
     if (dataSourceId !== "") {
@@ -118,7 +119,9 @@ export default function getData(
         limit,
         tSpan,
         direction,
-        dsSettings.url || ""
+        dsSettings.url || "",
+        queryType,
+        url, 
     );
 
     const endpoint = getEndpoint(type, queryType, params);
@@ -146,7 +149,8 @@ export default function getData(
                             dispatch,
                             panel,
                             id,
-                            direction
+                            direction,
+                            queryType
                         );
                     })
                     .catch((error) => {
@@ -173,7 +177,8 @@ export default function getData(
                             dispatch,
                             panel,
                             id,
-                            direction
+                            direction,
+                            queryType
                         );
 
                         if (debugMode) {

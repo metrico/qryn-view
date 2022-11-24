@@ -45,8 +45,6 @@ export const sendLabels = async (id, type, apiUrl, start, stop) => {
         "Content-Type": "application/json",
     };
 
-    // add auth fields
-
     const options = {
         method: "GET",
         headers: headers,
@@ -85,19 +83,5 @@ export const sendLabels = async (id, type, apiUrl, start, stop) => {
         return res;
     }
 
-    // const url = 'https://gigapipe.qryn.cloud/loki/api/v1/label';
-    // const options = {
-    //   headers: {
-    //     method:'GET',
-    //     'Content-Type': 'application/json';
-    //   },
-    // };
-    // const req = await axios
-    //   .get(url, { auth: { username: 'gigapipe', password: '' },options})
-    //   .then((data) => {
-    //     console.log(data);
-    //    // return data
-    //   });
-    //   req.then(data=> {console.log(data)})
-    //  // return req
+
 };

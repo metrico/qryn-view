@@ -4,7 +4,7 @@ import { TableStyles } from "./styles";
 import { Table } from "./Table";
 
 export const VectorTable = memo(
-    ({ data: { columnsData, dataRows }, actualQuery, height }) => {
+    ({ data: { columnsData, dataRows }, actualQuery, height, size }) => {
         const cols = useMemo(() => columnsData, [columnsData]);
         const data = useMemo(() => dataRows, [dataRows]);
         return (
@@ -15,6 +15,7 @@ export const VectorTable = memo(
                         columns={cols}
                         data={data}
                         height={height}
+                        size={size}
                     />
                 )}
             </TableStyles>

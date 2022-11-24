@@ -126,7 +126,7 @@ export function DataSource() {
         <ThemeProvider theme={themes[theme]}>
             <Container>
                 <div className="body-cont">
-                    <Header title={"DataSource Settings"} />
+                    <Header title={"DataSource Settings"}  />
                     <div className="datasource-body">
                         <DataSourceSetting {...datasource} />
                     </div>

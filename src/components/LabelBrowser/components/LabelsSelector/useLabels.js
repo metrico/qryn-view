@@ -25,7 +25,6 @@ const getTimestamp = (time, type) =>
     }[type]);
 
 export default function useLabels(id, dataSourceURL = "") {
-
     const { start, stop } = useSelector((store) => store);
     const dataSources = useSelector((store) => store.dataSources);
 
@@ -36,7 +35,6 @@ export default function useLabels(id, dataSourceURL = "") {
         }
 
         return current;
-
     }, [id, dataSources]);
 
     const [type, setType] = useState(currentDataSource.type || "");
@@ -60,67 +58,57 @@ export default function useLabels(id, dataSourceURL = "") {
         setUrl(getUrlFromType(currentDataSource.url, type, timeStart, timeEnd));
     }, [setUrl, type, currentDataSource]);
 
-
-
-
     const [response, setResponse] = useState([]);
     const [loading, setLoading] = useState(false);
 
-
     useEffect(() => {
-        if (currentDataSource.type !== "flux" ) {
-
+        if (currentDataSource.type !== "flux") {
             const options = {
                 method: "GET",
-                headers:{ "Content-Type": "application/json"},
-            }
-            
-    
-                const basicAuth = currentDataSource?.auth?.basicAuth.value;
-    
-                let labelHeaders = {};
+                headers: { "Content-Type": "application/json" },
+            };
 
-                
-                let auth = {};
-                    
-        
-                if (basicAuth) {
-                    const authfields = currentDataSource?.auth?.fields?.basicAuth;
-        
-                    for (let field of authfields) {
-                        if (field.name === "user") {
-                            auth.username = field.value;
-                        }
-                        if (field.name === "password") {
-                            auth.password = field.value;
-                        }
+            const basicAuth = currentDataSource?.auth?.basicAuth.value;
+
+            let labelHeaders = {};
+
+            let auth = {};
+
+            if (basicAuth) {
+                const authfields = currentDataSource?.auth?.fields?.basicAuth;
+
+                for (let field of authfields) {
+                    if (field.name === "user") {
+                        auth.username = field.value;
                     }
-        
-                    labelHeaders.auth = auth;
+                    if (field.name === "password") {
+                        auth.password = field.value;
+                    }
                 }
-        
-                labelHeaders.options = options;
 
+                labelHeaders.auth = auth;
+            }
+
+            labelHeaders.options = options;
 
             const apiRequest = async () => {
                 setLoading(true);
                 try {
-                    const req = await axios.get( url ,labelHeaders );
+                    const req = await axios.get(url, labelHeaders);
                     setResponse(req || []);
                 } catch (e) {
-                    console.log("ERROR AT USELABELS")
+                    console.log("ERROR AT USELABELS");
                     console.log(e);
                 }
                 setLoading(false);
             };
             apiRequest();
-        
-    }
+        }
     }, [url, currentDataSource]);
 
     return {
         response,
-      //  controller: options.controller,
+        //  controller: options.controller,
         loading,
     };
 }

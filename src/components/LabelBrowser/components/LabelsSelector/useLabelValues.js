@@ -13,25 +13,19 @@ const getUrlType = (api, type, label, start, end) =>
     }[type]);
 
 export default function useLabelValues(id, label, start, end) {
-
-
-
-
     const dataSources = useSelector((store) => store.dataSources);
 
     const currentDataSource = useMemo(() => {
         return dataSources.find((f) => f.id === id);
     }, [dataSources, id]);
 
-
     const basicAuth = currentDataSource?.auth?.basicAuth.value;
 
     let auth = {};
 
-    let labelHeaders = {}
+    let labelHeaders = {};
 
     if (basicAuth) {
-
         const authfields = currentDataSource?.auth?.fields?.basicAuth;
 
         for (let field of authfields) {
@@ -43,16 +37,13 @@ export default function useLabelValues(id, label, start, end) {
             }
         }
 
-        labelHeaders.auth = auth
+        labelHeaders.auth = auth;
     }
-
 
     const nanoStart = getTimeParsed(start);
     const nanoEnd = getTimeParsed(end);
 
     const controller = new AbortController();
-
-    
 
     const [url, setUrl] = useState();
 
@@ -68,14 +59,9 @@ export default function useLabelValues(id, label, start, end) {
         );
     }, [label, setUrl, currentDataSource]);
 
-
-
-
-
     const headers = useState({
         "Content-Type": "application/json",
     });
-
 
     const options = useMemo(
         () => ({
@@ -86,18 +72,17 @@ export default function useLabelValues(id, label, start, end) {
         []
     );
 
-    labelHeaders.options = options
-
+    labelHeaders.options = options;
     const [response, setResponse] = useState([]);
     const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         if (currentDataSource.type !== "flux") {
             const apiRequest = async () => {
                 setLoading(true);
                 if (url && url !== "") {
-               
                     try {
-                        const req = await axios.get( url , labelHeaders);
+                        const req = await axios.get(url, labelHeaders);
                         setResponse(req || []);
                     } catch (e) {
                         console.log(e);

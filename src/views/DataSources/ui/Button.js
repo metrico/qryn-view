@@ -3,9 +3,9 @@ import { DsButtonStyled } from "../styles";
 
 
 export const Button = (props) => {
-    const { value, onClick, editing, primary } = props;
+    const { value, onClick, primary } = props;
     return (
-        <DsButtonStyled onClick={onClick} editing={editing} primary={primary}>
+        <DsButtonStyled onClick={onClick} primary={primary}>
             {value}
         </DsButtonStyled>
     );

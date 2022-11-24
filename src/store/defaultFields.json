@@ -10,7 +10,7 @@
         "headers": [
             {
                 "header": "Content-type",
-                "value": "application/javascript",
+                "value": "application/json",
                 "id": "SALm2YFnZKJQD8pXeAywE"
             }
 
@@ -152,7 +152,7 @@
         "headers": [
             {
                 "header": "Content-type",
-                "value": "application/javascript",
+                "value": "application/json",
                 "id": "Kfrl4PKCHrXoQT-XE5QiM"
             }
  
@@ -294,7 +294,7 @@
         "headers": [
             {
                 "header": "Content-type",
-                "value": "application/javascript",
+                "value": "application/json",
                 "id": "l7NqFAZNeK8n70QFRy4pu"
             }
 

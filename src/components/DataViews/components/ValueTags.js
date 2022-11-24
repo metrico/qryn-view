@@ -164,35 +164,37 @@ export default function ValueTags(props) {
             ?.flat();
 
         const fieldNames = fieldsFromParent?.map((m) => m.name);
-        const { dataSourceId, linkType, internalLink } = linkedFields[0];
-        const currentDataSource = dataSources?.find(
-            (f) => f.id === dataSourceId
-        );
-        const currentURL = currentDataSource?.url;
-
-        if (fieldNames.includes(key) && value && internalLink === true) {
-            return (
-                <TracesButton
-                    onClick={(e) => {
-                        openTraces(
-                            e,
-                            key,
-                            value,
-                            dataSourceId,
-                            currentURL,
-                            linkType
-                        );
-                    }}
-                >
-                    <OpenInNewIcon
-                        style={{
-                            width: "14px",
-                            height: "14px",
-                        }}
-                    />
-                    <span>{linkType}</span>
-                </TracesButton>
+        if (linkedFields?.length > 0) {
+            const { dataSourceId, linkType, internalLink } = linkedFields[0];
+            const currentDataSource = dataSources?.find(
+                (f) => f.id === dataSourceId
             );
+            const currentURL = currentDataSource?.url;
+
+            if (fieldNames.includes(key) && value && internalLink === true) {
+                return (
+                    <TracesButton
+                        onClick={(e) => {
+                            openTraces(
+                                e,
+                                key,
+                                value,
+                                dataSourceId,
+                                currentURL,
+                                linkType
+                            );
+                        }}
+                    >
+                        <OpenInNewIcon
+                            style={{
+                                width: "14px",
+                                height: "14px",
+                            }}
+                        />
+                        <span>{linkType}</span>
+                    </TracesButton>
+                );
+            }
         }
 
         return null;

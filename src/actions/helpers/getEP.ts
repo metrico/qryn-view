@@ -26,6 +26,9 @@ function getEndpointWithParams(
         return `${queryUrl}`;
     }
     if (type === "traces") {
+        if (queryType === "trace-search") {
+            return `${queryUrl}${parsedTime}`;
+        }
         return `${queryUrl}`;
     }
 

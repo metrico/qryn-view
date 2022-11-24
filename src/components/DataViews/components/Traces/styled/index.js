@@ -18,6 +18,7 @@ export const ViewStyled = styled.div`
             ? props?.vheight?.maxCont
             : "20px"};
     .view-content {
+        margin:3px;
         height: ${(props) =>
             props.size === "regular"
                 ? props?.vheight?.regularView

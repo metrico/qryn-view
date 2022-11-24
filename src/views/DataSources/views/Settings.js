@@ -6,7 +6,6 @@ import {
     SectionHeader,
     AuthFields,
 } from "../components";
-
 import setDataSources from "../store/setDataSources";
 
 import { DataSourceSettingsCont, InputCont, InputCol } from "../styles";
@@ -34,30 +33,21 @@ export const Settings = (props) => {
     const [isEditing, setIsEditing] = useState(false);
 
     const onChange = (e, name) => {
+        setIsEditing( prev => true)
         const value = e.target.value;
+        
         const newVal = onFieldChange(name, value);
         localStorage.setItem("dataSources", JSON.stringify(newVal));
         dispatch(setDataSources(newVal));
+        setTimeout(()=>{
+            setIsEditing(prev => false)
+        },600)
     };
 
-    const onClickEdit = (e) => {
-        setIsEditing((editing) => (editing ? false : true));
-    };
-
-    const onClickSubmit = (e) => {
-        setIsEditing((editing) => (editing ? false : true));
-    };
-
-    const onClickCancel = (e) => {
-        setIsEditing((editing) => (editing ? false : true));
-    };
 
     return (
         <DataSourceSettingsCont>
             <SectionHeader
-                onClickSubmit={onClickSubmit}
-                onClickCancel={onClickCancel}
-                onClickEdit={onClickEdit}
                 isEditing={isEditing}
                 isEdit={true}
                 isAdd={false}
@@ -67,26 +57,23 @@ export const Settings = (props) => {
             <InputCont>
                 <InputCol>
                     <Field
-                       
                         value={name}
                         label={"Name"}
                         onChange={(e) => onChange(e, "name")}
                     />
 
                     <Field
-                       
                         value={url}
                         label={"URL"}
                         onChange={(e) => onChange(e, "url")}
                     />
 
-                    <Select
-                       
+                    {/* <Select
                         label={"Preferred Visualization Type"}
                         opts={visTypes}
                         value={visType}
                         onChange={(e) => onChange(e, "visType")}
-                    />
+                    /> */}
                 </InputCol>
             </InputCont>
 
@@ -94,11 +81,7 @@ export const Settings = (props) => {
 
             <DataSourceHeaders headers={headers} id={id} />
 
-            <LinkedFields
-                {...props}
-               
-                linkedFields={linkedFields}
-            />
+            <LinkedFields {...props} linkedFields={linkedFields} />
         </DataSourceSettingsCont>
     );
 };

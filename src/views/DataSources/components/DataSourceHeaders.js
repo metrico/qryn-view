@@ -1,4 +1,4 @@
-import DeleteForeverOutlined from "@mui/icons-material/DeleteForeverOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { nanoid } from "nanoid";
 import { useDispatch, useSelector } from "react-redux";
 import setDataSources from "../store/setDataSources";
@@ -111,7 +111,7 @@ export const DataSourceHeaders = (props) => {
                                         onChange(e, val.id, "value")
                                     }
                                 />
-                                <DeleteForeverOutlined
+                                <DeleteOutlineOutlinedIcon
                                     onClick={(e) => onRemove(e, val.id)}
                                     style={{ cursor: "pointer" }}
                                     fontSize={"small"}

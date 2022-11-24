@@ -56,20 +56,27 @@ export default function getTimeParams(type: string) {
     if (findRangeByLabel(rl)) {
         const { pStart, pStop, dateStart, dateEnd } = getRangeByLabel(rl, type);
 
-        parsedStart = pStart;
-        parsedStop = pStop;
+        if (type === "traces") {
+            parsedStart = Math.round(pStart / 1000000000);
+            parsedStop = Math.round(pStop / 1000000000);
+        } else {
+            parsedStart = pStart;
+            parsedStop = pStop;
+        }
 
         store.dispatch(setStartTime(dateStart));
         store.dispatch(setStopTime(dateEnd));
     } else {
         // get time sec if its metrics type
-
         if (type === "metrics") {
             parsedStart = getTimeSec(_start);
             parsedStop = getTimeSec(_stop);
         } else if (type === "logs") {
             parsedStart = parseInt(getTimeParsed(_start));
             parsedStop = parseInt(getTimeParsed(_stop));
+        } else if (type === "traces") {
+            parsedStart = getTimeSec(_start);
+            parsedStop = getTimeSec(_stop);
         } else {
             parsedStart = parseInt(getTimeParsed(_start));
             parsedStop = parseInt(getTimeParsed(_stop));
@@ -78,7 +85,6 @@ export default function getTimeParams(type: string) {
 
     const parsedTime =
         "&start=" + (from || parsedStart) + "&end=" + (to || parsedStop);
-
     const diffSt = parseInt(from || parsedStart);
     const diffEnd = parseInt(to || parsedStop);
     const tDiff = (diffEnd - diffSt) / (type === "metrics" ? 1 : 1000000);
