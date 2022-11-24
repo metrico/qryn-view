@@ -17,6 +17,9 @@ const TraceLink = (theme) => css`
     background: none;
     color: ${theme.primaryLight};
     cursor: pointer;
+    &:hover{
+        text-decoration:underline;
+    }
 `;
 
 TimeAgo.addDefaultLocale(en);

@@ -1,10 +1,16 @@
+import { cx,css } from "@emotion/css";
+
 import { useMemo } from "react";
 import { InputGroup, Label } from "../styles";
 
+const FlexOne = (fullWidth) => css`
+display:flex;
+flex: ${fullWidth ? 1 : 0};
+`
 
 
 export const Select = (props) => {
-    const { value, locked, onChange, opts, label, name } = props;
+    const { value, locked, onChange, opts, label, name, fullWidth, width } = props;
 
     const formattedSelect = useMemo(() => {
         if (typeof opts[0] === "string") {
@@ -14,8 +20,9 @@ export const Select = (props) => {
 
     return (
         <InputGroup>
-            {label?.length > 0 && <Label>{label}</Label>}
-            <select
+            {label?.length > 0 && <Label width={width || null}>{label}</Label>}
+            <select 
+                className={cx(FlexOne(fullWidth))}
                 disabled={locked}
                 defaultValue={value}
                 onChange={e => onChange(e,name)}

@@ -90,10 +90,14 @@ export const Label = styled.div`
     align-items: center;
     font-size: 12px;
     padding: 0px 10px;
-    flex: 0;
+    //flex: 0;
     white-space: nowrap;
-
+    ${props => props.width !== null ? `width:${props.width};` : ''}
     border-radius: 3px 0px 0px 3px;
+    display:flex;
+    align-items:center;
+    height:28px;
+  
 `;
 
 export const Input = styled.input`
@@ -121,7 +125,6 @@ export const TextArea = styled.textarea`
 
 export const InputGroup = styled.div`
     display: flex;
-    margin-right: 10px;
     flex-direction: row;
     margin-top: 5px;
     align-items: center;
@@ -132,7 +135,10 @@ export const InputGroup = styled.div`
         border: 1px solid ${(props) => props.theme.buttonBorder};
         border-radius: 3px;
         font-size: 12px;
-        height: 26px;
+        height: 30px;
+        display:flex;
+        align-items:center;
+        padding:1px 2px 1px 8px;
     }
 `;
 

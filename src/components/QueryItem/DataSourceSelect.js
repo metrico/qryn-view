@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { InputGroup } from "../styles";
+import { InputGroup } from "../../views/DataSources/styles";
+
 import { Label } from "./style";
 
 

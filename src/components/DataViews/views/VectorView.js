@@ -1,8 +1,9 @@
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
 import { ViewStyled } from "./styled";
 
-export function VectorView(props) {
+export const VectorView = (props) => {
     const {
         viewRef,
         panelSize,
@@ -15,8 +16,13 @@ export function VectorView(props) {
         type,
         theight,
         streamData,
-        
     } = props;
+    const [size, setSize] = useState(0);
+
+    const parentRef = useRef(null);
+    useEffect(() => {
+        setSize(parentRef.current.offsetHeight);
+    }, [parentRef]);
     return (
         <ViewStyled ref={viewRef} size={panelSize} vheight={viewHeight}>
             <ViewHeader
@@ -28,9 +34,14 @@ export function VectorView(props) {
                 type={type}
                 {...props}
             />
-            <div className="view-content" id={actualQuery?.id + "-view"}>
+            <div
+                className="view-content"
+                ref={parentRef}
+                id={actualQuery?.id + "-view"}
+            >
                 <VectorTable
                     {...props}
+                    size={size}
                     height={theight}
                     data={streamData}
                     actualQuery={actualQuery}
@@ -38,4 +49,4 @@ export function VectorView(props) {
             </div>
         </ViewStyled>
     );
-}
+};

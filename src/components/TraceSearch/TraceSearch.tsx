@@ -16,33 +16,29 @@ const SearchColumn = css`
 `;
 
 const SearchRow = css`
+    //align-items:center;
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
+    max-width: 500px;
 `;
 
-const RowPadding = css`
-    padding: 10px;
-`;
-const FlexEnd = css`
-    justify-content: flex-end;
-`;
-
-const TraceButton = (theme: any, buttonActive: boolean) => css`
-    background: ${buttonActive ? theme.primaryDark : ""};
+const TraceButton = (theme: any) => css`
+    background: ${theme.primaryDark};
     border: 1px solid ${theme.buttonBorder};
     border-radius: 3px;
-    color: ${buttonActive ? theme.buttonText : theme.textColor};
+    color: ${theme.buttonText};
     margin-left: 5px;
     transition: 0.25s all;
     justify-content: center;
     padding: 3px 12px;
-    height: 28px;
-    display: "flex";
-    disabled: ${buttonActive};
-    cursor: ${buttonActive ? "pointer" : "not-allowed"};
-
+    margin-top: 5px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
     &:hover {
-        background: ${buttonActive ? theme.primaryLight : ""};
+        background: ${theme.primaryLight};
     }
 `;
 
@@ -52,6 +48,7 @@ export default function TracesSearch(props: any) {
     const {
         name,
         data: { id, dataSourceId, dataSourceType, dataSourceURL, expr },
+        onSearchChange
     } = props;
 
     const dispatch = useDispatch();
@@ -94,24 +91,62 @@ export default function TracesSearch(props: any) {
         }
     }, [urlState]);
 
+
+    const emit = () => {
+
+        return {
+            dataSourceType,
+            expr,
+            queryType: "trace-search",
+            limit: urlState.limit,
+            name,
+            id,
+            direction: "forward",
+            dataSourceId,
+            url: dataSourceURL + "/api/" + urlString
+        }
+    }
+
     const onServiceChange = (e: any) => {
         const value = e?.target?.value || "";
         setSearchValue({ name: value, value: value });
         setUrlState((prev) => ({ ...prev, searchName: value }));
+        onSearchChange( emit())
+
     };
 
     const onSpanChange = (e: any) => {
         const value = e?.target?.value || "";
         setSpanValue({ name: value, value: value });
         setUrlState((prev) => ({ ...prev, name: value }));
+        onSearchChange( emit())
+
     };
 
     const onChange = (e: any, key: any) => {
         const value = e?.target?.value || "";
         setUrlState((prev) => ({ ...prev, [key]: value }));
+        onSearchChange( emit())
+
     };
 
+
+
+
     const onSubmit = () => {
+
+        const submitData = {
+            dataSourceType,
+            expr,
+            queryType: "trace-search",
+            limit: urlState.limit,
+            name,
+            id,
+            dir: "forward",
+            dataSourceId,
+            url: dataSourceURL + "/api/" + urlString,
+        };
+
         dispatch(
             getData(
                 dataSourceType,
@@ -129,57 +164,58 @@ export default function TracesSearch(props: any) {
 
     return (
         <div className={cx(SearchColumn)}>
-            {/* <p>url: {urlString}</p> */}
             <div className={cx(SearchRow)}>
                 <Select
+                    fullWidth={true}
                     label={"Service Name"}
                     placeHolder={"Select a Service"}
                     onChange={onServiceChange}
                     value={searchValue}
                     opts={serviceNameOpts}
+                    labelWidth={80}
                 />
 
                 <Select
+                    fullWidth={true}
                     label={"Span Name"}
                     placeHolder={"select a span"}
                     onChange={onSpanChange}
                     value={spanValue}
                     opts={traceNameOpts}
+                    labelWidth={80}
                 />
-            </div>
-            <div className={cx(SearchRow)}>
+
                 <Field
-                    label={"tags"}
+                    label={"Tags"}
                     placeholder={"http.status_code=200 error=true"}
                     onChange={(e: any) => onChange(e, "tags")}
                     value={urlState.tags}
+                    labelWidth={80}
                 />
                 <Field
-                    label={"limit"}
+                    label={"Limit"}
                     placeholder={"Set limit, default 20"}
                     onChange={(e: any) => onChange(e, "limit")}
                     value={urlState.limit}
+                    labelWidth={80}
                 />
-            </div>
-            <div className={cx(SearchRow)}>
+
                 <Field
-                    label={"minDuration"}
+                    label={"Min Duration"}
                     placeholder={"e.g. 1.2s, 100ms"}
                     onChange={(e: any) => onChange(e, "minDuration")}
                     value={urlState.minDuration}
+                    labelWidth={80}
                 />
                 <Field
-                    label={"maxDuration"}
+                    label={"Max Duration"}
                     placeholder={"e.g. 1.2s, 100ms"}
                     onChange={(e: any) => onChange(e, "maxDuration")}
                     value={urlState.maxDuration}
+                    labelWidth={80}
                 />
-            </div>
-            <div className={cx(SearchRow, RowPadding, FlexEnd)}>
-                <button
-                    className={cx(TraceButton(theme, buttonActive))}
-                    onClick={onSubmit}
-                >
+
+                <button className={cx(TraceButton(theme))} onClick={onSubmit}>
                     Search Traces
                 </button>
             </div>
