@@ -58,11 +58,14 @@ export function getStreamTableResult(data: any[]) {
 
     const rows = getStreamTableRows(data);
 
-    const length = rows.length;
+    const length = rows?.length || 0;
     let dataRows = [];
 
-    for (let row of rows) {
-        dataRows.push(row.rows);
+    if(length > 0) {
+        for (let row of rows) {
+            dataRows.push(row.rows);
+        }
+    
     }
 
     return {

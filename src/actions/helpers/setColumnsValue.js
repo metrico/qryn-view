@@ -11,6 +11,8 @@ import { themes } from "../../theme/themes";
 import store from "../../store/store";
 import getData from "../getData";
 import { cx, css } from "@emotion/css";
+import { setSplitView } from "../../components/StatusBar/components/SplitViewButton/setSplitView";
+import { setRightPanel } from "../setRightPanel";
 
 const TraceLink = (theme) => css`
     border: none;
@@ -42,22 +44,79 @@ function traceStartTimeFormatter(props) {
 
 function traceRequest(data, value) {
     const dispatch = store.dispatch;
+    console.log(data)
+    const actPanel = store.getState()[data.panel]
+    const rightPanel = store.getState()['right']
 
-    const { panel, id, dataSourceId, url } = data;
+    const actQuery = actPanel.find(f => f.id === data.id)
 
-    dispatch(
-        getData(
-            "traces",
-            value,
-            "range",
-            100,
-            panel,
-            id,
-            "forward",
-            dataSourceId,
-            url
-        )
-    );
+
+    if (data.panel === "left") {
+        dispatch(setSplitView(true));
+    }
+
+    let previousRight = JSON.parse(JSON.stringify(rightPanel));
+
+    const panelCP = JSON.parse(JSON.stringify(actQuery));
+
+    try {
+        const newRight = {
+            ...previousRight[0],
+            id: previousRight[0].id,
+            idRef:  "Trace " + value,
+            panel: "right",
+            queryType: "range",
+            dataSourceType: 'traces',
+            dataSourceId: data.dataSourceId,
+            dataSourceURL: data.url,
+            expr: value,
+            limit: 100,
+            step: 100,
+            tableView: false,
+            isShowTs: false,
+            browserOpen: false,
+            labels: [],
+            values: [],
+            direction: "forward",
+        };
+
+        dispatch(setRightPanel([newRight]));
+
+        dispatch(
+            getData(
+                'traces',
+                value,
+                "range",
+                panelCP.limit || 100,
+                "right",
+                newRight.id,
+                "forward",
+                data.dataSourceId, // datasourceid
+            data.url,
+            )
+        );
+    } catch (e) {
+        console.log(e);
+    }
+
+
+
+
+    // const { panel, id, dataSourceId, url } = data;
+
+    // dispatch(
+    //     getData(
+    //         "traces",
+    //         value,
+    //         "range",
+    //         100,
+    //         panel,
+    //         id,
+    //         "forward",
+    //         dataSourceId,
+    //         url
+    //     )
+    // );
 }
 
 function fluxTimeFormatter(props) {

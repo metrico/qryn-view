@@ -9,6 +9,7 @@ import { Field, Select } from "../../views/DataSources/ui";
 import { formatUrl } from "./tracesSearchUrl";
 import { useTraceNames } from "./useTraceNames";
 import { useTraceServiceName } from "./useTraceServiceName";
+
 const SearchColumn = css`
     display: flex;
     flex-direction: column;
@@ -134,19 +135,6 @@ export default function TracesSearch(props: any) {
 
 
     const onSubmit = () => {
-
-        const submitData = {
-            dataSourceType,
-            expr,
-            queryType: "trace-search",
-            limit: urlState.limit,
-            name,
-            id,
-            dir: "forward",
-            dataSourceId,
-            url: dataSourceURL + "/api/" + urlString,
-        };
-
         dispatch(
             getData(
                 dataSourceType,
