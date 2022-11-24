@@ -14,7 +14,9 @@ import { parseMatrixResponse } from "./parseMatrixResponse";
 import { parseStreamResponse } from "./parseStreamResponse";
 import { fromNanoSec } from "./timeParser";
 import { parseTracesResponse } from "./parseTracesResponse";
+import { parseFluxResponse } from "./parseFluxResponse";
 const { debugMode } = store.getState();
+
 
 /**
  *
@@ -118,25 +120,25 @@ export async function parseResponse(responseProps: any) {
 
     switch (type) {
         case "streams":
-           await parseStreamResponse(responseProps);
+            await parseStreamResponse(responseProps);
             break;
         case "vector":
-           await parseVectorResponse(responseProps);
+            await parseVectorResponse(responseProps);
             break;
         case "matrix":
-          await  parseMatrixResponse(responseProps);
+            await parseMatrixResponse(responseProps);
             break;
         case "scalar":
-          await  parseMatrixResponse(responseProps);
+            await parseMatrixResponse(responseProps);
             break;
         case "flux":
-          await  parseVectorResponse(responseProps);
+            await parseFluxResponse(responseProps);
             break;
         case "traces":
-          await  parseTracesResponse(responseProps);
+            await parseTracesResponse(responseProps);
             break;
         default:
-          await  parseStreamResponse(responseProps);
+            await parseStreamResponse(responseProps);
     }
 
 }
