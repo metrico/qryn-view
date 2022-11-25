@@ -138,7 +138,7 @@ export function parseFluxResponse(responseProps: QueryResult) {
         // get table total as chart total is less that table total rows
         const panelResult = {
             id,
-            type: "flux",
+            type: "vector",
             tableData: tableResult,
             data: idResult,
             total: idResult?.length || 0,

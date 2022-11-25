@@ -7,156 +7,156 @@ import { MatrixView } from "../views/MatrixView";
 import { VectorView } from "../views/VectorView";
 import { TraceView } from "./Traces/TraceView.tsx";
 export function DataViewItem(props) {
-  // add a header for table view / json view
-  const { dataView, name, vHeight } = props;
-  const { type, total } = dataView;
+    // add a header for table view / json view
+    const { dataView, name, vHeight } = props;
+    const { type, total } = dataView;
 
-  const viewRef = useRef(null);
-  const isSplit = useSelector((store) => store.isSplit);
-  const panel = useSelector((store) => store[name]);
-  // panelSize: min , regular, max
-  const [panelSize, setPanelSize] = useState("max");
-  // get actual query from panel
-  const actualQuery = useActualQuery({ panel, dataView });
-  // get  actual query from panel
+    const viewRef = useRef(null);
+    const isSplit = useSelector((store) => store.isSplit);
+    const panel = useSelector((store) => store[name]);
+    // panelSize: min , regular, max
+    const [panelSize, setPanelSize] = useState("max");
+    // get actual query from panel
+    const actualQuery = useActualQuery({ panel, dataView });
+    // get  actual query from panel
 
-  const [viewWidth, setViewWidth] = useState(0);
+    const [viewWidth, setViewWidth] = useState(0);
 
-  useEffect(() => {
-    if (viewRef?.current?.clientWidth) {
-      setViewWidth(viewRef.current.clientWidth);
+    useEffect(() => {
+        if (viewRef?.current?.clientWidth) {
+            setViewWidth(viewRef.current.clientWidth);
+        }
+    }, [viewRef?.current?.clientWidth]);
+
+    const [streamData, setStreamData] = useState(dataView.data); //
+    const [tableData, setTableData] = useState(dataView.tableData || {});
+
+    useEffect(() => {
+        setStreamData(dataView.data);
+    }, [dataView.data, setStreamData, isSplit]);
+
+    useEffect(() => {
+        setTableData(dataView.tableData || {});
+    }, [dataView.tableData, setTableData]);
+
+    const setStreamClose = () => {
+        setStreamData([]);
+        setTableData([]);
+    };
+
+    const setMinimize = () => {
+        setPanelSize((prev) => (prev !== "min" ? "min" : "regular"));
+    };
+
+    const setMaxHeight = () => {
+        setPanelSize((prev) => (prev !== "max" ? "max" : "regular"));
+    };
+
+    const theight = useTableHeight({ total, panelSize, dataView });
+
+    const viewHeight = useViewHeight({ type, actualQuery, total, dataView });
+
+    if (type === "traces") {
+        const traceProps = {
+            viewRef,
+            panelSize,
+            viewHeight,
+            setStreamClose,
+            setMaxHeight,
+            setMinimize,
+            actualQuery,
+            total,
+            type,
+            theight,
+            tableData,
+            viewWidth,
+            streamData,
+            theme: props.theme,
+            ...props,
+        };
+        return <TraceView {...traceProps} />;
     }
-  }, [viewRef?.current?.clientWidth]);
+    if (actualQuery && type === "matrix" && streamData.length > 0) {
+        // return matrix type component
+        const { limit } = actualQuery;
+        const matrixProps = {
+            viewRef,
+            panelSize,
+            viewHeight,
+            setStreamClose,
+            setMaxHeight,
+            setMinimize,
+            actualQuery,
+            total,
+            type,
+            theight,
+            tableData,
+            viewWidth,
+            limit,
+            streamData,
+            ...props,
+        };
+        return <MatrixView {...matrixProps} />;
+    }
 
-  const [streamData, setStreamData] = useState(dataView.data); //
-  const [tableData, setTableData] = useState(dataView.tableData || {});
+    if (actualQuery && type === "stream" && streamData.length > 0) {
+        const logsProps = {
+            viewRef,
+            panelSize,
+            viewHeight,
+            setStreamClose,
+            setMaxHeight,
+            setMinimize,
+            actualQuery,
+            total,
+            type,
+            theight,
+            tableData,
+            streamData,
+            ...props,
+        };
 
-  useEffect(() => {
-    setStreamData(dataView.data);
-  }, [dataView.data, setStreamData, isSplit]);
+        return <LogsView {...logsProps} />;
+    }
 
-  useEffect(() => {
-    setTableData(dataView.tableData || {});
-  }, [dataView.tableData, setTableData]);
+    if (actualQuery && type === "vector" && streamData?.length > 0) {
+        // return vector type (table) component
+        const { limit } = actualQuery;
+        const vectorProps = {
+            viewRef,
+            panelSize,
+            viewHeight,
+            setStreamClose,
+            setMinimize,
+            setMaxHeight,
+            actualQuery,
+            total,
+            type,
+            theight,
+            streamData,
+            viewWidth,
+            limit,
+            ...props,
+        };
+        console.log('test')
+        return <VectorView {...vectorProps} />;
+    }
 
-  const setStreamClose = () => {
-    setStreamData([]);
-    setTableData([]);
-  };
+    if (actualQuery && !streamData?.dataRows?.length && !streamData?.length) {
+        // Empty view for the case when no view available
+        const emptyViewProps = {
+            viewRef,
+            panelSize,
+            setStreamClose,
+            setMinimize,
+            setMaxHeight,
+            actualQuery,
+            total,
+            ...props,
+        };
 
-  const setMinimize = () => {
-    setPanelSize((prev) => (prev !== "min" ? "min" : "regular"));
-  };
-
-  const setMaxHeight = () => {
-    setPanelSize((prev) => (prev !== "max" ? "max" : "regular"));
-  };
-
-  const theight = useTableHeight({ total, panelSize, dataView });
-
-  const viewHeight = useViewHeight({ type, actualQuery, total, dataView });
-
-  if (type === "traces") {
-    const traceProps = {
-      viewRef,
-      panelSize,
-      viewHeight,
-      setStreamClose,
-      setMaxHeight,
-      setMinimize,
-      actualQuery,
-      total,
-      type,
-      theight,
-      tableData,
-      viewWidth,
-      streamData,
-      theme: props.theme,
-      ...props,
-    };
-    return <TraceView {...traceProps} />;
-  }
-  if (
-    actualQuery &&
-    (type === "matrix" || type === "flux") &&
-    streamData.length > 0
-  ) {
-    // return matrix type component
-    const { limit } = actualQuery;
-    const matrixProps = {
-      viewRef,
-      panelSize,
-      viewHeight,
-      setStreamClose,
-      setMaxHeight,
-      setMinimize,
-      actualQuery,
-      total,
-      type,
-      theight,
-      tableData,
-      viewWidth,
-      limit,
-      streamData,
-      ...props,
-    };
-    return <MatrixView {...matrixProps} />;
-  }
-
-  if (actualQuery && type === "stream" && streamData.length > 0) {
-    const logsProps = {
-      viewRef,
-      panelSize,
-      viewHeight,
-      setStreamClose,
-      setMaxHeight,
-      setMinimize,
-      actualQuery,
-      total,
-      type,
-      theight,
-      tableData,
-      streamData,
-      ...props,
-    };
-
-    return <LogsView {...logsProps} />;
-  }
-
-  if (actualQuery && type === "vector" && streamData?.dataRows?.length > 0) {
-    // return vector type (table) component
-    const vectorProps = {
-      viewRef,
-      panelSize,
-      viewHeight,
-      setStreamClose,
-      setMinimize,
-      setMaxHeight,
-      actualQuery,
-      total,
-      type,
-      theight,
-      streamData,
-      ...props,
-    };
-    return <VectorView {...vectorProps} />;
-  }
-
-  if (actualQuery && !streamData?.dataRows?.length && !streamData?.length) {
-    // Empty view for the case when no view available
-    const emptyViewProps = {
-      viewRef,
-      panelSize,
-      setStreamClose,
-      setMinimize,
-      setMaxHeight,
-      actualQuery,
-      total,
-      ...props,
-    };
-
-    return <EmptyView {...emptyViewProps} />;
-  } else {
-    return null;
-  }
+        return <EmptyView {...emptyViewProps} />;
+    } else {
+        return null;
+    }
 }

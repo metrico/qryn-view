@@ -44,7 +44,7 @@ export default function QueryTypeBar(props) {
     const responseType = useSelector((store) => store.responseType);
 
     const { hash } = useLocation();
-    const { id, queryType, tableView, idRef, isShowTs, direction } = data;
+    const { id, queryType, tableView, idRef, isShowTs, direction, dataSourceType } = data;
 
     const [isTableViewSet, setIsTableViewSet] = useState(tableView);
     const [isShowTsSet, setIsShowTsSet] = useState(isShowTs || false);
@@ -155,7 +155,18 @@ export default function QueryTypeBar(props) {
                     defaultActive={directionSwitch}
                 />
                 <QueryLimit {...props} />
+                {dataSourceType === 'flux' && (
+                        <div className="options-input">
+                            <SettingLabel>Chart View</SettingLabel>
+                            <Switch
+                                checked={isTableViewSet}
+                                size={"small"}
+                                onChange={handleTableViewSwitch}
+                                inputProps={{ "aria-label": "controlled" }}
+                            />
+                        </div>
 
+                    )}
                 {responseType !== "vector" && (
                     <>
                         <InputGroup>

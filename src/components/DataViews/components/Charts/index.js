@@ -31,7 +31,7 @@ import UseTooltip from "./UseTooltip";
 import { useChartOptions, useMatrixData, useTheme } from "./hooks";
 import { FlotChart } from "./FlotChart";
 
-export default function ClokiChart(props) {
+export default function QrynChart(props) {
     const { matrixData, actualQuery } = props;
     const { tWidth } = props;
 
