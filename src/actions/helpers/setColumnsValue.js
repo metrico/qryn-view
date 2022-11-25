@@ -44,7 +44,6 @@ function traceStartTimeFormatter(props) {
 
 function traceRequest(data, value) {
     const dispatch = store.dispatch;
-    console.log(data);
     const actPanel = store.getState()[data.panel];
     const rightPanel = store.getState()["right"];
 
@@ -80,7 +79,6 @@ function traceRequest(data, value) {
         };
 
         dispatch(setRightPanel([newRight]));
-        console.log(data.url)
         dispatch(
             getData(
                 "traces",
