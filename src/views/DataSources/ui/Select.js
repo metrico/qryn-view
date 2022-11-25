@@ -21,7 +21,7 @@ export const Select = (props) => {
     }, [opts]);
 
     useEffect(() => {
-        const selected = formattedSelect.find((f) => f.name === value)["value"];
+        const selected = formattedSelect?.find((f) => f.name === value)?.["value"];
         if (selected && selectRef?.current?.value !== selected) {
             setInitialValue(selected);
             selectRef.current.value = selected;

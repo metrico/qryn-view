@@ -61,6 +61,7 @@ export const ShowLogsBtn = styled(BtnSmall)`
     justify-content: center;
     padding: 3px 12px;
     height: 28px;
+    
     &:hover {
         background: ${(props) => props.theme.primaryLight};
     }
@@ -74,6 +75,7 @@ export const ShowLogsBtn = styled(BtnSmall)`
         display: ${(props) => (props.isMobile ? "flex" : "none")};
 
         margin: 0;
+        margin-left: 5px;
     }
 `;
 
@@ -96,7 +98,7 @@ export const MobileTopQueryMenu = styled.div`
 
     @media screen and (max-width: 864px) {
         display: flex;
-        justify-content: space-between;
+      
     }
 `;
 

@@ -13,6 +13,7 @@ import getData from "../getData";
 import { cx, css } from "@emotion/css";
 import { setSplitView } from "../../components/StatusBar/components/SplitViewButton/setSplitView";
 import { setRightPanel } from "../setRightPanel";
+import { useMediaQuery } from "react-responsive";
 
 const TraceLink = (theme) => css`
     border: none;
@@ -47,9 +48,11 @@ function traceRequest(data, value) {
     const actPanel = store.getState()[data.panel];
     const rightPanel = store.getState()["right"];
 
+    const isTabletOrMobile = window.innerWidth <= 914
     const actQuery = actPanel.find((f) => f.id === data.id);
 
-    if (data.panel === "left") {
+    if (data.panel === "left" && !isTabletOrMobile) {
+
         dispatch(setSplitView(true));
     }
 
