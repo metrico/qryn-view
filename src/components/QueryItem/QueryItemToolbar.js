@@ -127,6 +127,7 @@ export function QueryItemToolbar(props) {
                             fontSize: "15px",
                             cursor: "pointer",
                             padding: "3px",
+                            marginLeft:'10px'
                         }}
                         onClick={props.onAddQuery}
                     />

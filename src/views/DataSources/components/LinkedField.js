@@ -9,9 +9,7 @@ export const LinkedField = (props) => {
     const {
         id,
         name,
-        query,
         regex,
-        url,
         urlLabel,
         internalLink,
         linkType,

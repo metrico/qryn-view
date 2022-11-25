@@ -22,7 +22,7 @@ export const DataSourceSelect = (props) => {
 
     if (opts && value) {
         return (
-            <InputGroup>
+            <InputGroup title={'Select Data Source Type'}>
                 {label?.length > 0 && <Label>{label}</Label>}
                 <select
                     ref={selectRef}
