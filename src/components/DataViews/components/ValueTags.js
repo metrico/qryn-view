@@ -118,6 +118,7 @@ export default function ValueTags(props) {
                 limit: 100,
                 step: 100,
                 tableView: false,
+                chartView: false,
                 isShowTs: false,
                 browserOpen: false,
                 labels: [],

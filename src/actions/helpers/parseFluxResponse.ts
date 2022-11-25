@@ -5,10 +5,16 @@ import { addNanoId } from "./addNanoId";
 import { getAsyncResponse } from "./parseResponse";
 import { setTableData } from "../setTableData";
 import moment from "moment";
-import { sortBy } from "lodash";
+import { result, sortBy } from "lodash";
 import { setLeftDataView } from "../setLeftDataView";
 import { setRightDataView } from "../setRightDataView";
 import store from "../../store/store";
+import { type } from "@testing-library/user-event/dist/type";
+import { id } from "date-fns/locale";
+import { setVectorData } from "../setVectorData";
+import { prepareVectorRows } from "./prepareVectorRows";
+import { setColumnsData } from "./setColumnsData";
+import { prepareFluxCols } from "./prepareCols";
 /**
  *
  * @param responseProps : QueryResult
@@ -26,7 +32,6 @@ function timeFormatter(props: any) {
     return moment(props.value).format("YYYY-MM-DDTHH:mm:ss.SSZ");
 }
 function fluxDataToMetricData(data: any[]) {
-    console.log(data);
     const out: any[] = [{
         metric: {__name__: 'Flux'},
         values: data.map(
@@ -45,8 +50,6 @@ function fluxDataToMetricData(data: any[]) {
     return out;
 }
 export function getFluxTableRows(data: any[]) {
-
-    console.log('getFluxTableRows', { data });
     
     return data.map(({ metric, values }: { metric: object; values: [] }) => ({
         metric: JSON.stringify(metric),
@@ -113,11 +116,48 @@ function setDataView(panel: string) {
         };
     }
 }
+function getTableData(responseProps: QueryResult) {
+    const { result, debugMode, dispatch, panel, id, type } = responseProps;
+    const data = {
+        panel,
+        id,
+        type,
+    };
+    const colsData = prepareFluxCols(responseProps.result);
+    const timeAccessor = (result: any) => {
+        const firstRow = result[0];
 
+        const rowEntries = Object.entries(firstRow);
+
+        if (rowEntries) {
+            const timeRow = rowEntries.find(([_, val]) => {
+                return moment.isDate(val);
+            });
+
+            return timeRow?.[0] || null;
+        }
+    };
+    const tA = timeAccessor(result);
+
+    const columnsData = setColumnsData(colsData, type, tA, data);
+    const dataRows: any = prepareVectorRows(result, type);
+
+    const vectorTableData = {
+        columnsData,
+        dataRows,
+        panel,
+        id,
+    };
+
+    if (columnsData?.length > 0 && dataRows?.length > 0) {
+        dispatch(setVectorData(vectorTableData || {}));
+        return vectorTableData;
+    }
+}
 export function parseFluxResponse(responseProps: QueryResult) {
+
     let { result, debugMode, dispatch, panel, id } = responseProps;
     result = fluxDataToMetricData(result);
-    console.log({ responseProps });
     // here should set the table response
     const tableResult = getFluxTableResult(result);
     // get current dataview and update action
@@ -135,14 +175,21 @@ export function parseFluxResponse(responseProps: QueryResult) {
             }
             dispatch(setIsEmptyView(false));
         });
+        const tableData = getTableData(responseProps)
         // get table total as chart total is less that table total rows
+
+        const data = {
+            chartData: idResult,
+            tableData
+        }
         const panelResult = {
             id,
             type: "vector",
             tableData: tableResult,
-            data: idResult,
+            data: data,
             total: idResult?.length || 0,
         };
+
 
         // add this data to previous
         const { action, state } = dataView;
@@ -166,6 +213,6 @@ export function parseFluxResponse(responseProps: QueryResult) {
             console.log(
                 "🚧 getData / getting an error from rendering Flux type streams"
             );
-        console.log(e);
+        console.error(e);
     }
 }

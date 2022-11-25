@@ -119,7 +119,7 @@ export function DataViewItem(props) {
         return <LogsView {...logsProps} />;
     }
 
-    if (actualQuery && type === "vector" && streamData?.length > 0) {
+    if (actualQuery && type === "vector" && streamData?.chartData?.length > 0) {
         // return vector type (table) component
         const { limit } = actualQuery;
         const vectorProps = {
@@ -138,7 +138,6 @@ export function DataViewItem(props) {
             limit,
             ...props,
         };
-        console.log('test')
         return <VectorView {...vectorProps} />;
     }
 

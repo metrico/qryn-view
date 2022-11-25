@@ -26,16 +26,6 @@ export const VectorView = (props) => {
     useEffect(() => {
         setSize(parentRef.current.offsetHeight);
     }, [parentRef]);
-    const streamDataChart = []; //streamData.dataRows.map((row, index)=>
-    //     ({
-    //         id: index,
-    //         metric: row,
-    //         values: [[row._time?.getTime() / 1000, row._value?.toString()]
-
-    //         ]
-    //     })
-    // )
-    console.log(streamData)
     return (
         <ViewStyled ref={viewRef} size={panelSize} vheight={viewHeight}>
             <ViewHeader
@@ -48,12 +38,12 @@ export const VectorView = (props) => {
                 {...props}
             />
             <div className="view-content" ref={parentRef} id={actualQuery?.id + "-view"}>
-                {false ? 
+                {!actualQuery.chartView ? 
                 <VectorTable
                     {...props}
                     size={size}
                     height={theight}
-                    data={streamData}
+                    data={streamData.tableData}
                     actualQuery={actualQuery}
                 /> :
                 (
@@ -61,7 +51,7 @@ export const VectorView = (props) => {
                         {...props}
                         tWidth={viewWidth}
                         chartLimit={limit}
-                        matrixData={streamData}
+                        matrixData={streamData.chartData}
                         actualQuery={actualQuery}
                     />
                 )}

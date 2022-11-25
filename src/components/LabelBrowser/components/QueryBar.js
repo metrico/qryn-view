@@ -498,18 +498,25 @@ export const QueryBarCont = (props) => {
 };
 
 export const MobileTopQueryMenuCont = (props) => {
+    const dispatch = useDispatch();
     const {
         isSplit,
-        isChartViewSet,
-        dataSourceType,
         showQuerySettings,
         queryHistory,
         handleHistoryClick,
-        handleChartViewSwitch,
         queryValid,
         onSubmit,
-        onSubmitRate
-    } = props;
+        onSubmitRate,
+        data,
+        name
+    } = props;    
+    const { id, dataSourceType } = data;
+    const [isChartViewSet, setIsChartViewSet] = useState(props.data.chartView);
+
+    useEffect(() => {
+        setIsChartViewSet(props.data.chartView);
+    }, [setIsChartViewSet, props.data.chartView]);
+    const panelQuery = useSelector((store) => store[name]);
     // conditionally show labels
     const withLabels = (type) => {
         if (type !== "flux" && type !== "traces") {
@@ -527,7 +534,22 @@ export const MobileTopQueryMenuCont = (props) => {
         }
         return null;
     };
+    const getPanelQueryByID = (panel, queryId) => {
+        return panel.find((query) => {
+            return query.id === queryId;
+        })
+    }
+    const handleChartViewSwitch = () => {
+        // modify table view switch value
+        const panel = [...panelQuery];
+        
+        const query = getPanelQueryByID(panel, id);
+        if (typeof query !== 'undefined') {
+            query.chartView = !isChartViewSet;
 
+            dispatch(panelAction(name, panel));
+        }
+    }
     return (
         <MobileTopQueryMenu isSplit={isSplit} dataSourceType={dataSourceType}>
             {withLabels(dataSourceType)}

@@ -60,7 +60,6 @@ export default function Panel(props) {
     // CHECK ALSO THAT DATAVIEWS IS AN ARRAY
 
     const panelData = useMemo(() => panel, [panel]);
-
     return (
         <>
             <PanelCont isSplit={isSplit} ref={ref}>
