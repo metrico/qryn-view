@@ -16,6 +16,7 @@ import setLinksHistory from "../../../actions/setLinksHistory";
 import setIsEmptyView from "../../../actions/setIsEmptyView";
 import { setLeftPanel } from "../../../actions/setLeftPanel";
 import { setRightPanel } from "../../../actions/setRightPanel";
+
 /**Services */
 import localService from "../../../services/localService";
 import localUrl from "../../../services/localUrl";
@@ -43,6 +44,10 @@ import { themes } from "../../../theme/themes";
 import setDataSources from "../../../views/DataSources/store/setDataSources";
 import { defaultDataSources } from "../../../views/DataSources/store/defaults";
 import TracesSearch from "../../TraceSearch/TraceSearch";
+import { QrynSwitch } from "../../../views/DataSources/ui";
+import TracesSwitch from "../../TraceSearch/TracesSwitch";
+import { setSplitView } from "../../StatusBar/components/SplitViewButton/setSplitView";
+
 import { Switch } from "@mui/material";
 import { SettingLabel } from "./styled";
 export function panelAction(name, value) {
@@ -108,11 +113,13 @@ export const QueryBar = (props) => {
         return defaultDataSources.find((f) => f.id === dataSourceId);
     }, [dataSourceId]);
 
-    // const urlParams = useMemo(() => {
-    //     const urlHash = new URLSearchParams(hash);
-    //     return JSON.parse(decodeURIComponent(urlHash.get(name)));
-    // }, [hash, name]);
+    useEffect(()=>{
+        if(isTabletOrMobile && isSplit ){
+          dispatch(setSplitView(false)) 
+        } 
+        
 
+    },[isTabletOrMobile])
     const saveUrl = localUrl();
     const expr = useMemo(() => {
         return data.expr;

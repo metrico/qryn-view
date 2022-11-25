@@ -63,7 +63,7 @@ export default function LabelsList(props) {
 
     return (
         <div className="valuelist-content">
-            {metricLabel !== null && lsList && (
+            {metricLabel !== null && lsList && dataSourceType === 'metrics' && (
                 <LabelItem
                     type={"metric"}
                     key={0}
