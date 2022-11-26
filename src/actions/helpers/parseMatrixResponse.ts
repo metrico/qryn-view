@@ -27,6 +27,7 @@ function timeFormatter(props: any) {
 }
 
 export function getMatrixTableRows(data: any[]) {
+    console.log('getMatrixTableRows', { data });
     return data.map(({ metric, values }: { metric: object; values: [] }) => ({
         metric: JSON.stringify(metric),
         rows: values.map(([time, value]: [string, string]) => ({
@@ -95,7 +96,7 @@ function setDataView(panel: string) {
 
 export function parseMatrixResponse(responseProps: QueryResult) {
     const { result, debugMode, dispatch, panel, id } = responseProps;
-
+    console.log({ responseProps });
     // here should set the table response
     const tableResult = getMatrixTableResult(result);
     // get current dataview and update action

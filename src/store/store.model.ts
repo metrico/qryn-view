@@ -56,6 +56,7 @@ export interface Panel {
     limit:       number;
     step:        number;
     tableView:   boolean;
+    chartView:   boolean;
     browserOpen: boolean;
     expr:        string;
     labels:      any[];

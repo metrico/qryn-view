@@ -35,7 +35,7 @@ export function ViewHeader(props) {
     const headerType = useMemo(() => {
         const isMatrixTable = type === "matrix" && actualQuery?.tableView;
         const isStreamTable = type === "stream" && actualQuery?.tableView;
-        if (type === "matrix" && !actualQuery?.tableView) {
+        if ((type === "matrix" || type === "flux") && !actualQuery?.tableView) {
             return "Chart";
         }
         if (type === "stream" && !actualQuery?.tableView) {

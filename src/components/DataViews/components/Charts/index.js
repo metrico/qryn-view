@@ -31,7 +31,7 @@ import UseTooltip from "./UseTooltip";
 import { useChartOptions, useMatrixData, useTheme } from "./hooks";
 import { FlotChart } from "./FlotChart";
 
-export default function ClokiChart(props) {
+export default function QrynChart(props) {
     const { matrixData, actualQuery } = props;
     const { tWidth } = props;
 
@@ -313,11 +313,13 @@ export default function ClokiChart(props) {
         };
         const pointSet = new Set();
         matrixData.forEach((dataPoint)=>{
-            dataPoint.values.forEach(dataPointValue => pointSet.add(dataPointValue?.[0]))
+            dataPoint?.values?.forEach(dataPointValue => pointSet.add(dataPointValue?.[0]))
         })
         if (pointSet.size === 1 && chartType !== 'bar') {
             onSetChartType('bar')
         }
+        // console.log({flotChartProps})
+        // console.log(<FlotChart {...flotChartProps} />)
         return <FlotChart {...flotChartProps} />;
     }
 

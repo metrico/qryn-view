@@ -1,5 +1,5 @@
 
-import ClokiChart from "../components/Charts";
+import QrynChart from "../components/Charts";
 import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
 import { ViewStyled } from "./styled";
@@ -41,7 +41,7 @@ export const MatrixView = (props) => {
                         actualQuery={actualQuery}
                     />
                 ) : (
-                    <ClokiChart
+                    <QrynChart
                         {...props}
                         tWidth={viewWidth}
                         chartLimit={limit}

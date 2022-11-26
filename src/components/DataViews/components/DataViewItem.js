@@ -5,7 +5,7 @@ import { EmptyView } from "../views/EmptyView";
 import LogsView from "../views/LogsView";
 import { MatrixView } from "../views/MatrixView";
 import { VectorView } from "../views/VectorView";
-import {TraceView} from "./Traces/TraceView.tsx"
+import { TraceView } from "./Traces/TraceView.tsx";
 export function DataViewItem(props) {
     // add a header for table view / json view
     const { dataView, name, vHeight } = props;
@@ -14,11 +14,11 @@ export function DataViewItem(props) {
     const viewRef = useRef(null);
     const isSplit = useSelector((store) => store.isSplit);
     const panel = useSelector((store) => store[name]);
-        // panelSize: min , regular, max
+    // panelSize: min , regular, max
     const [panelSize, setPanelSize] = useState("max");
     // get actual query from panel
-    const actualQuery = useActualQuery({ panel, dataView }); 
-    // get  actual query from panel  
+    const actualQuery = useActualQuery({ panel, dataView });
+    // get  actual query from panel
 
     const [viewWidth, setViewWidth] = useState(0);
 
@@ -52,13 +52,11 @@ export function DataViewItem(props) {
         setPanelSize((prev) => (prev !== "max" ? "max" : "regular"));
     };
 
-
-
     const theight = useTableHeight({ total, panelSize, dataView });
 
-    const viewHeight = useViewHeight({ type, actualQuery, total, dataView});
+    const viewHeight = useViewHeight({ type, actualQuery, total, dataView });
 
-    if ( type === 'traces') {
+    if (type === "traces") {
         const traceProps = {
             viewRef,
             panelSize,
@@ -76,7 +74,7 @@ export function DataViewItem(props) {
             theme: props.theme,
             ...props,
         };
-        return <TraceView {...traceProps}/>;
+        return <TraceView {...traceProps} />;
     }
     if (actualQuery && type === "matrix" && streamData.length > 0) {
         // return matrix type component
@@ -98,7 +96,7 @@ export function DataViewItem(props) {
             streamData,
             ...props,
         };
-        return <MatrixView {...matrixProps}/>;
+        return <MatrixView {...matrixProps} />;
     }
 
     if (actualQuery && type === "stream" && streamData.length > 0) {
@@ -121,8 +119,9 @@ export function DataViewItem(props) {
         return <LogsView {...logsProps} />;
     }
 
-    if (actualQuery && type === "vector" && streamData?.dataRows?.length > 0) {
+    if (actualQuery && type === "vector" && streamData?.chartData?.length > 0) {
         // return vector type (table) component
+        const { limit } = actualQuery;
         const vectorProps = {
             viewRef,
             panelSize,
@@ -135,32 +134,28 @@ export function DataViewItem(props) {
             type,
             theight,
             streamData,
+            viewWidth,
+            limit,
             ...props,
         };
         return <VectorView {...vectorProps} />;
-    } 
-    
-
-
-
-    if(actualQuery && !streamData?.dataRows?.length && !streamData?.length ) {
-       // Empty view for the case when no view available
-       const emptyViewProps = {
-        viewRef,
-        panelSize,
-        setStreamClose,
-        setMinimize,
-        setMaxHeight,
-        actualQuery,
-        total,
-        ...props,
-    };
-
-    return <EmptyView {...emptyViewProps} />;
     }
-    
 
-    else {
-        return null
+    if (actualQuery && !streamData?.dataRows?.length && !streamData?.length) {
+        // Empty view for the case when no view available
+        const emptyViewProps = {
+            viewRef,
+            panelSize,
+            setStreamClose,
+            setMinimize,
+            setMaxHeight,
+            actualQuery,
+            total,
+            ...props,
+        };
+
+        return <EmptyView {...emptyViewProps} />;
+    } else {
+        return null;
     }
 }

@@ -33,7 +33,11 @@ function setDataView(panel: string) {
 
 export function parseVectorResponse(responseProps: QueryResult | TracesResult) {
     const { result, debugMode, dispatch, panel, id, type } = responseProps;
-
+    const data = {
+        panel,
+        id,
+        type,
+    };
     if (type === "traces") {
         try {
             const colsData = prepareFluxCols(result);
@@ -55,17 +59,11 @@ export function parseVectorResponse(responseProps: QueryResult | TracesResult) {
             if (colsData.length > 0) {
                 const tA = timeAccessor(result);
 
-                const tracesData = {
-                    panel,
-                    id,
-                    type,
-                };
-
                 const columnsData = setColumnsData(
                     colsData,
                     type,
                     tA,
-                    tracesData
+                    data
                 );
 
                 const dataRows: any = prepareVectorRows(result, type);
@@ -127,7 +125,8 @@ export function parseVectorResponse(responseProps: QueryResult | TracesResult) {
 
             if (colsData.length > 0) {
                 const tA = timeAccessor(result);
-                const columnsData = setColumnsData(colsData, type, tA);
+
+                const columnsData = setColumnsData(colsData, type, tA, data);
                 const dataRows: any = prepareVectorRows(result, type);
 
                 const vectorTableData = {
@@ -147,6 +146,7 @@ export function parseVectorResponse(responseProps: QueryResult | TracesResult) {
                     };
                     const dataView = setDataView(panel);
                     const { action, state } = dataView;
+                    console.log(action)
                     const prevDV = store.getState()?.[state];
 
                     if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
@@ -172,7 +172,7 @@ export function parseVectorResponse(responseProps: QueryResult | TracesResult) {
             const colsData = prepareCols(result);
 
             if (colsData.length > 0) {
-                const columnsData = setColumnsData(colsData, type, null);
+                const columnsData = setColumnsData(colsData, type, null, data);
                 const dataRows: any = prepareVectorRows(result);
                 const vectorTableData = {
                     columnsData,
