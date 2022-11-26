@@ -318,8 +318,6 @@ export default function QrynChart(props) {
         if (pointSet.size === 1 && chartType !== 'bar') {
             onSetChartType('bar')
         }
-        // console.log({flotChartProps})
-        // console.log(<FlotChart {...flotChartProps} />)
         return <FlotChart {...flotChartProps} />;
     }
 

@@ -293,7 +293,6 @@ export const QueryBar = (props) => {
                 
             } else {
                 query = queryInput.replace(/\[\d+ms\]/, `[${interval}ms]`)
-                console.log(queryInput.replace(/\[\d+ms\]/, `[${interval}ms]`))
             }
             setQueryInput(query)
             
@@ -302,7 +301,6 @@ export const QueryBar = (props) => {
             setQueryValid(onQueryValid(query));
         }
         if (onQueryValid(query)) {
-            console.log(query)
             try {
                 updateHistory(query,queryType,limit,id)
                 // Decode query to translate into labels selection

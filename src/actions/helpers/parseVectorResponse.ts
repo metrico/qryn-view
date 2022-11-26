@@ -146,7 +146,6 @@ export function parseVectorResponse(responseProps: QueryResult | TracesResult) {
                     };
                     const dataView = setDataView(panel);
                     const { action, state } = dataView;
-                    console.log(action)
                     const prevDV = store.getState()?.[state];
 
                     if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
