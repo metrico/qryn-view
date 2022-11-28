@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 export const useViewHeight = ({ type, actualQuery, total, dataView }) => {
     const viewHeight = useMemo(() => {
-        const isMatrixTable = type === "matrix" && actualQuery?.tableView;
+        const isMatrixTable = (type === "matrix" || type === "flux") && actualQuery?.tableView;
         const isStreamTable = type === "stream" && actualQuery?.tableView;
         let regularCont = "",
             maxCont = "",
@@ -37,7 +37,7 @@ export const useViewHeight = ({ type, actualQuery, total, dataView }) => {
             maxView = "fit-content";
         }
 
-        if (type === "matrix" && !actualQuery?.tableView) {
+        if ((type === "matrix" || type === "flux") && !actualQuery?.tableView) {
             regularCont = "fit-content";
             regularView = "400px";
             maxCont = "fit-content";

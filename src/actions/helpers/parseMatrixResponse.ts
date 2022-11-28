@@ -27,6 +27,7 @@ function timeFormatter(props: any) {
 }
 
 export function getMatrixTableRows(data: any[]) {
+    console.log('getMatrixTableRows', { data });
     return data.map(({ metric, values }: { metric: object; values: [] }) => ({
         metric: JSON.stringify(metric),
         rows: values.map(([time, value]: [string, string]) => ({
@@ -95,7 +96,6 @@ function setDataView(panel: string) {
 
 export function parseMatrixResponse(responseProps: QueryResult) {
     const { result, debugMode, dispatch, panel, id } = responseProps;
-
     // here should set the table response
     const tableResult = getMatrixTableResult(result);
     // get current dataview and update action
@@ -108,7 +108,7 @@ export function parseMatrixResponse(responseProps: QueryResult) {
         getAsyncResponse(dispatch(setMatrixData(idResult || []))).then(() => {
             if (idResult.length === 0) {
                 if (debugMode)
-                    console.log("🚧 loadLogs / getting no data from matrix");
+                    console.log("🚧 getData / getting no data from matrix");
                 dispatch(setIsEmptyView(true));
             }
             dispatch(setIsEmptyView(false));
@@ -142,7 +142,7 @@ export function parseMatrixResponse(responseProps: QueryResult) {
     } catch (e) {
         if (debugMode)
             console.log(
-                "🚧 loadLogs / getting an error from rendering matrix type streams"
+                "🚧 getData / getting an error from rendering matrix type streams"
             );
         console.log(e);
     }

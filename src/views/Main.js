@@ -10,8 +10,8 @@ import StatusBar from "../components/StatusBar";
 import QueryHistory from "../plugins/queryhistory";
 import { useMediaQuery } from "react-responsive";
 import MainTabs from "./MainTabs.js";
-import { useMemo } from "react";
-
+import { useMemo, useState, useEffect, useRef } from "react";
+import { ResizableBox } from "../plugins/ResizableBox/ResiableBox";
 export const MainContainer = styled.div`
     position: absolute;
     display: flex;
@@ -23,7 +23,7 @@ export const MainContainer = styled.div`
     background-color: ${(props) => props.theme.mainBgColor} !important;
     &::-webkit-scrollbar-corner {
         background: transparent;
-      }
+    }
     &::-webkit-scrollbar-thumb {
         border-radius: 5px;
         background: ${(props) => props.theme.scrollbarThumb} !important;
@@ -56,19 +56,126 @@ export function MobileView({ theme, isEmbed, settingsDialogOpen }) {
         </ThemeProvider>
     );
 }
+
 /**
  *
  * @param {theme, isEmbed, isSplit, settingsDialogOpen}
  * @returns Desktop View
  */
+
 export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
+    const [height, setHeight] = useState(0);
+    const [widthTotal, setWidthTotal] = useState(0);
+    const [widthLeft, setWidthLeft] = useState(0);
+    const [widthRight, setWidthRight] = useState(0);
+    const [widthLeftPercent, setWidthLeftPercent] = useState(0);
+    const [widthRightPercent, setWidthRightercent] = useState(0);
+    const [minWidth, setMinWidth] = useState(0);
+    const [maxWidth, setMaxWidth] = useState(0);
+    const refTotal = useRef(null);
+    useEffect(() => {
+        const widthTotal = refTotal.current.clientWidth
+        setHeight(refTotal.current.clientHeight);
+        setWidthTotal(refTotal.current.clientWidth);
+        setWidthLeft(widthTotal / (isSplit ? 2 : 1));
+        if (isSplit) {
+            setWidthRight(widthTotal / 2);
+        }
+        const realMinWidth = !isSplit ? widthTotal : widthTotal / 4 > 370 ? widthTotal / 4 : 370;
+        setMinWidth(realMinWidth);
+        const realMaxWidth = !isSplit ? widthTotal : widthTotal - realMinWidth
+        setMaxWidth(realMaxWidth);
+    }, [
+        setWidthLeft,
+        setWidthRight,
+        setWidthTotal,
+        setHeight,
+        setMinWidth,
+        setMaxWidth,
+        minWidth,
+        isSplit,
+    ]);
+    useEffect(() => {
+        const widthTotal = refTotal.current.clientWidth
+        setWidthLeftPercent(widthLeft / widthTotal);
+        if (isSplit) {
+            setWidthRightercent(widthRight / widthTotal);
+        }
+    }, [widthLeft, widthRight]);
+    useEffect(() => {
+        const onWindowResize = () => {
+            const widthTotal = refTotal.current.clientWidth
+            setWidthTotal(widthTotal);
+            setWidthLeft(widthTotal * widthLeftPercent);
+            if (isSplit) {
+                setWidthRight(widthTotal * widthRightPercent);
+            }
+        };
+        window.addEventListener("resize", onWindowResize);
+        return () => {
+            window.removeEventListener("resize", onWindowResize);
+        };
+    }, [
+        widthTotal,
+        widthLeft,
+        widthRight,
+        widthLeftPercent,
+        widthRightPercent,
+        isSplit,
+    ]);
+    const onSplitResize = (event, { element, size, handle }) => {
+        if (handle === "e") {
+            setWidthRight(widthTotal - size.width);
+            setWidthLeft(size.width);
+        } else {
+            setWidthLeft(widthTotal - size.width);
+            setWidthRight(size.width);
+        }
+        setWidthLeftPercent(widthLeft / widthTotal);
+        setWidthRightercent(widthRight / widthTotal);
+    };
+
     return (
         <ThemeProvider theme={theme}>
             <MainContainer>
                 {!isEmbed && <StatusBar />}
-                <div className="panels-container">
-                    <Panel name="left" />
-                    {isSplit && <Panel name="right" />}
+                <div className="panels-container" ref={refTotal}>
+                    {/* <ResizableBox
+                        width={widthLeft}
+                        minConstraints={[minWidth, height]}
+                        maxConstraints={[maxWidth, height]}
+                        minWidth={minWidth}
+                        maxWidth={maxWidth}
+                        minHeight={height}
+                        maxHeight={height}
+                        height={height}
+                        axis={"x"}
+                        resizeHandles={isSplit ? ["e"] : []}
+                        lockAspectRatio={false}
+                        handleSize={[10, 10]}
+                        onResize={onSplitResize}
+                    > */}
+                        <Panel name="left" />
+                    {/* </ResizableBox> */}
+                    {isSplit && (
+                        // <ResizableBox
+                        //     width={widthRight}
+                        //     minConstraints={[minWidth, height]}
+                        //     maxConstraints={[maxWidth, height]}
+                        //     minWidth={minWidth}
+                        //     maxWidth={maxWidth}
+                        //     minHeight={height}
+                        //     maxHeight={height}
+                        //     height={height}
+                        //     axis={"x"}
+                        //     resizeHandles={["w"]}
+                        //     lockAspectRatio={false}
+                        //     handleSize={[10, 10]}
+                        //     onResize={onSplitResize}
+                        // >
+                            <Panel name="right" />
+                        // </ResizableBox>
+                    )}
                 </div>
             </MainContainer>
             <SettingsDialog open={settingsDialogOpen} />
