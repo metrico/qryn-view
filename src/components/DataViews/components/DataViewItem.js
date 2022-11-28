@@ -119,9 +119,11 @@ export function DataViewItem(props) {
         return <LogsView {...logsProps} />;
     }
 
-    if (actualQuery && type === "vector" && streamData?.chartData?.length > 0) {
+    if ((actualQuery && type === "vector" && streamData?.chartData?.length > 0) ||  (actualQuery && type === "vector"&& streamData?.tableData?.dataRows?.length > 0)) {
+        
+        
         // return vector type (table) component
-        const { limit } = actualQuery;
+       const { limit } = actualQuery;
         const vectorProps = {
             viewRef,
             panelSize,
@@ -134,7 +136,7 @@ export function DataViewItem(props) {
             type,
             theight,
             streamData,
-            viewWidth,
+           viewWidth,
             limit,
             ...props,
         };

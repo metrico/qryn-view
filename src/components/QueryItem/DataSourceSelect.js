@@ -12,6 +12,12 @@ export const DataSourceSelect = (props) => {
         if (value.value !== extValue) {
             selectRef.current.value = extValue;
         }
+    }, []);
+
+    useEffect(() => {
+        if (value.value !== extValue) {
+            selectRef.current.value = extValue;
+        }
     }, [extValue]);
 
     const formattedSelect = useMemo(() => {
@@ -22,11 +28,11 @@ export const DataSourceSelect = (props) => {
 
     if (opts && value) {
         return (
-            <InputGroup title={'Select Data Source Type'}>
+            <InputGroup title={"Select Data Source Type"}>
                 {label?.length > 0 && <Label>{label}</Label>}
                 <select
                     ref={selectRef}
-                    defaultValue={value}
+                    defaultValue={extValue}
                     onChange={onChange}
                 >
                     {formattedSelect?.map((field, key) => (

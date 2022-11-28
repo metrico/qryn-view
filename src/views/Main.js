@@ -140,7 +140,7 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
             <MainContainer>
                 {!isEmbed && <StatusBar />}
                 <div className="panels-container" ref={refTotal}>
-                    <ResizableBox
+                    {/* <ResizableBox
                         width={widthLeft}
                         minConstraints={[minWidth, height]}
                         maxConstraints={[maxWidth, height]}
@@ -154,27 +154,27 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
                         lockAspectRatio={false}
                         handleSize={[10, 10]}
                         onResize={onSplitResize}
-                    >
+                    > */}
                         <Panel name="left" />
-                    </ResizableBox>
+                    {/* </ResizableBox> */}
                     {isSplit && (
-                        <ResizableBox
-                            width={widthRight}
-                            minConstraints={[minWidth, height]}
-                            maxConstraints={[maxWidth, height]}
-                            minWidth={minWidth}
-                            maxWidth={maxWidth}
-                            minHeight={height}
-                            maxHeight={height}
-                            height={height}
-                            axis={"x"}
-                            resizeHandles={["w"]}
-                            lockAspectRatio={false}
-                            handleSize={[10, 10]}
-                            onResize={onSplitResize}
-                        >
+                        // <ResizableBox
+                        //     width={widthRight}
+                        //     minConstraints={[minWidth, height]}
+                        //     maxConstraints={[maxWidth, height]}
+                        //     minWidth={minWidth}
+                        //     maxWidth={maxWidth}
+                        //     minHeight={height}
+                        //     maxHeight={height}
+                        //     height={height}
+                        //     axis={"x"}
+                        //     resizeHandles={["w"]}
+                        //     lockAspectRatio={false}
+                        //     handleSize={[10, 10]}
+                        //     onResize={onSplitResize}
+                        // >
                             <Panel name="right" />
-                        </ResizableBox>
+                        // </ResizableBox>
                     )}
                 </div>
             </MainContainer>

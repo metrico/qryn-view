@@ -33,7 +33,7 @@ function setDataView(panel: string) {
 
 export function parseVectorResponse(responseProps: QueryResult | TracesResult) {
     const { result, debugMode, dispatch, panel, id, type } = responseProps;
-    const data = {
+    let data = {
         panel,
         id,
         type,
@@ -58,12 +58,17 @@ export function parseVectorResponse(responseProps: QueryResult | TracesResult) {
 
             if (colsData.length > 0) {
                 const tA = timeAccessor(result);
+                const tracesData = {
+                    panel,
+                    id,
+                    type
+                }
 
                 const columnsData = setColumnsData(
                     colsData,
                     type,
                     tA,
-                    data
+                    tracesData
                 );
 
                 const dataRows: any = prepareVectorRows(result, type);
@@ -81,7 +86,9 @@ export function parseVectorResponse(responseProps: QueryResult | TracesResult) {
                     const panelResult = {
                         id,
                         type: "vector",
-                        data: vectorTableData,
+                        data: { tableData: vectorTableData},
+                        tableData: vectorTableData,
+                        total: vectorTableData?.dataRows?.length || 0
                     };
                     const dataView = setDataView(panel);
                     const { action, state } = dataView;
@@ -142,7 +149,9 @@ export function parseVectorResponse(responseProps: QueryResult | TracesResult) {
                     const panelResult = {
                         id,
                         type: "vector",
-                        data: vectorTableData,
+                        data: { tableData: vectorTableData},
+                        tableData: vectorTableData,
+                        total: vectorTableData?.dataRows?.length || 0
                     };
                     const dataView = setDataView(panel);
                     const { action, state } = dataView;
@@ -197,7 +206,8 @@ export function parseVectorResponse(responseProps: QueryResult | TracesResult) {
                     const panelResult = {
                         id,
                         type: "vector",
-                        data: vectorTableData || {},
+                        data: { tableData: vectorTableData} || {},
+                        tableData: vectorTableData||{},
                         total: vectorTableData?.dataRows?.length || 0,
                     };
                     const dataView = setDataView(panel);

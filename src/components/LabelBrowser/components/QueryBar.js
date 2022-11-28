@@ -44,7 +44,6 @@ import { themes } from "../../../theme/themes";
 import setDataSources from "../../../views/DataSources/store/setDataSources";
 import { defaultDataSources } from "../../../views/DataSources/store/defaults";
 import TracesSearch from "../../TraceSearch/TraceSearch";
-import { QrynSwitch } from "../../../views/DataSources/ui";
 import TracesSwitch from "../../TraceSearch/TracesSwitch";
 import { setSplitView } from "../../StatusBar/components/SplitViewButton/setSplitView";
 
@@ -88,32 +87,68 @@ export const QueryBar = (props) => {
     const { hash } = useLocation();
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
-<<<<<<< HEAD
     const { historyOpen, isEmbed, theme, queryHistory, start, stop } =
         useSelector((store) => store);
     const isSplit = useSelector((store) => store.isSplit);
-=======
-    const {
-        apiUrl,
-        historyOpen,
-        isEmbed,
-        theme,
-        queryHistory,
-        start,
-        stop,
-        isSplit
-    } = useSelector((store) => store);
->>>>>>> 67352e9 (Added resizable Split and Query editors #109 #110)
     const panelQuery = useSelector((store) => store[name]);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 864px)" });
     const [queryInput, setQueryInput] = useState(data.expr);
     const [queryValid, setQueryValid] = useState(false);
     const [queryValue, setQueryValue] = useState(queryInit(data.expr));
+    const [traceQueryType, setTraceQueryType] = useState("traceId");
+    const [traceSearch, setTraceSearch] = useState({});
     const [open, setOpen] = useState(false);
-<<<<<<< HEAD
     // const [currentDataSource,setCurrentDatasource] = useState({})
     const dataSources = useSelector((store) => store.dataSources);
     const panelData = useSelector((store) => store[name]);
+
+    const actLocalQuery = useMemo(() => {
+        let exprQuery = { expr: "", dataSourceId, queryId: id };
+        try {
+            const localData =
+                JSON.parse(localStorage.getItem("queryData")) || [];
+            if (localData && localData?.length > 0) {
+                const fromLocal = localData?.find(
+                    (f) => f.dataSourceId === dataSourceId && f.queryId === id
+                );
+                if (fromLocal) {
+                    exprQuery = { ...fromLocal };
+                }
+                return exprQuery;
+            } else {
+                return exprQuery;
+            }
+        } catch (e) {
+            console.log(e);
+            return exprQuery;
+        }
+    }, [id, dataSourceId]);
+
+    // const actLocalDsSelected = useMemo(() => {
+    //     try {
+    //         const localData = JSON.parse(localStorage.getItem("dsSelected"));
+
+    //         if(localData?.length > 0) {
+    //             const localStored = localData?.find((f) => f.queryId === id) ;
+    //             if(localStored) {
+    //                 return localStored
+    //             } else {
+    //                 return {queryId:id,dataSourceId};
+    //             }
+
+    //         } else {
+    //             return {queryId:id,dataSourceId};
+    //         }
+          
+
+
+
+    //     } catch (e) {
+    //         console.log(e);
+    //         return {queryId:id,dataSourceId};
+    //     }
+    // }, [id]);
+
     const actLocalDs = useMemo(() => {
         try {
             const localData = JSON.parse(localStorage.getItem("dataSources"));
@@ -127,25 +162,25 @@ export const QueryBar = (props) => {
         return defaultDataSources.find((f) => f.id === dataSourceId);
     }, [dataSourceId]);
 
-    useEffect(()=>{
-        if(isTabletOrMobile && isSplit ){
-          dispatch(setSplitView(false)) 
-        } 
-        
+    useEffect(() => {
+        if (isTabletOrMobile && isSplit) {
+            dispatch(setSplitView(false));
+        }
+    }, [isTabletOrMobile]);
 
-    },[isTabletOrMobile])
-=======
-    const wrapperRef = useRef(null)
-    const labelsButtonRef = useRef(null)
-    const buttonsContainerRef = useRef(null)
-    useEffect(() => {});
->>>>>>> 67352e9 (Added resizable Split and Query editors #109 #110)
+
     const saveUrl = localUrl();
     const expr = useMemo(() => {
         return data.expr;
     }, [data.expr]);
 
+//    console.log(actLocalDs);
+
+    // console.log(queryInput)
     useEffect(() => {
+        setQueryInput(actLocalQuery.expr);
+        setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
+
         const dataSource = dataSources?.find((f) => f.id === dataSourceId);
 
         let currentDataSource = {};
@@ -256,6 +291,113 @@ export const QueryBar = (props) => {
         setQueryValid(onQueryValid(expr));
     }, [expr]);
 
+    useEffect(() => {
+        setQueryInput(actLocalQuery.expr);
+        setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
+
+        const dataSource = dataSources?.find((f) => f.id === dataSourceId);
+
+        let currentDataSource = {};
+
+        if (
+            actLocalDs &&
+            actLocalDs?.url !== initialDefault &&
+            actLocalDs?.url !== ""
+        ) {
+            currentDataSource = { ...actLocalDs };
+
+            const panelCP = [...panelData];
+
+            if (currentDataSource?.type !== "flux") {
+                decodeQuery(
+                    queryInput,
+                    currentDataSource?.url,
+                    props.data.labels,
+                    currentDataSource.id
+                );
+            }
+            const labelsDecoded = decodeExpr(data.expr);
+
+            panelCP.forEach((query) => {
+                if (query.id === id) {
+                    query.labels = [...labelsDecoded];
+                    query.dataSourceId = currentDataSource.id;
+                    query.dataSourceType = currentDataSource.type;
+                    query.dataSourceURL = currentDataSource.url;
+                }
+            });
+
+            dispatch(panelAction(name, panelCP));
+
+            const dsCopy = [...dataSources];
+            dsCopy.forEach((ds) => {
+                if (ds.id === dataSourceId) {
+                    ds = currentDataSource;
+                }
+            });
+
+            dispatch(setDataSources(dsCopy));
+        } else if (dataSource && dataSource.url !== "") {
+            currentDataSource = { ...dataSource };
+        }
+
+        // search for auth params  and send inside
+        const labels = sendLabels(
+            dataSourceId,
+            dataSourceType,
+            currentDataSource?.url, // which one should be?
+            start,
+            stop
+        );
+
+        dispatch(
+            getData(
+                dataSourceType,
+                actLocalQuery?.expr,
+                queryType,
+                limit,
+                name,
+                id,
+                direction,
+                dataSourceId,
+                currentDataSource?.url
+            )
+        );
+        // if is view only mode (embedded) do an auto request on init
+
+        if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
+            return labels.then((data) => {
+                if (data) {
+                    const prevLabels = [...props.data.labels];
+                    const prevMap = prevLabels.map((m) => m.name) || [];
+                    const newLabels = [...data];
+                    if (newLabels.length > 0) {
+                        if (prevMap.length > 0) {
+                            newLabels.forEach((l) => {
+                                const labelFound = prevMap.includes(l.name);
+                                if (labelFound) {
+                                    const pl = prevLabels.find(
+                                        (f) => f.name === l.name
+                                    );
+                                    l = { ...pl };
+                                }
+                            });
+                        }
+                        decodeQuery(
+                            expr,
+                            currentDataSource.url,
+                            newLabels,
+                            currentDataSource.id
+                        );
+                    }
+                }
+            });
+        } else {
+            // if there is nothing to request, show empty view
+            dispatch(setIsEmptyView(true));
+        }
+    }, [dataSourceId, id]);
+
     function handleQueryChange(e) {
         setQueryValue(e);
         const queryParams = new URLSearchParams(hash.replace("#", ""));
@@ -290,6 +432,58 @@ export const QueryBar = (props) => {
                 // store into history
 
                 updateLinksHistory();
+
+                //1- if has previous id with data => modify data
+                // 2- if no previous data => create entry
+
+                const prevQueryData = () => {
+                    try {
+                        const prevQuery =
+                            JSON.parse(localStorage.getItem("queryData")) || [];
+
+                        if (prevQuery) {
+                            return prevQuery;
+                        } else {
+                            return [];
+                        }
+                    } catch (e) {
+                        return [];
+                    }
+                };
+
+                const queryData = {
+                    expr,
+                    queryId: id,
+                    dataSourceId: dataSourceId,
+                };
+
+                const prevData = prevQueryData();
+                let newData = [];
+
+                if (
+                    prevData &&
+                    prevData.length > 0 &&
+                    Array.isArray(prevData) &&
+                    prevData.some(
+                        (s) =>
+                            s.dataSourceId === dataSourceId && s.queryId === id
+                    )
+                ) {
+                    newData = prevData.map((m) => {
+                        if (
+                            m.queryId === id &&
+                            m.dataSourceId === dataSourceId
+                        ) {
+                            return { ...queryData };
+                        } else {
+                            return m;
+                        }
+                    });
+                } else {
+                    newData = [...prevData, queryData];
+                }
+
+                localStorage.setItem("queryData", JSON.stringify(newData));
             } catch (e) {
                 console.log(e);
             }
@@ -335,6 +529,7 @@ export const QueryBar = (props) => {
             console.log("Please make a log query", expr);
         }
     };
+
     const updateHistory = (queryInput, queryType, limit, id) => {
         const historyUpdated = historyService.add({
             data: JSON.stringify({
@@ -410,7 +605,66 @@ export const QueryBar = (props) => {
     function onClose() {
         showQuerySettings();
     }
-<<<<<<< HEAD
+
+
+    function onTraceSearchChange(e) {
+        setTraceSearch((_) => e);
+    }
+
+    const inlineQueryOptionsRenderer = (type, isSplit, isMobile, typeBar) => {
+        const isFullView = !isMobile && !isSplit;
+        const isMetrics = type === "metrics" || type === "logs";
+
+        if (isFullView && isMetrics) {
+            return typeBar;
+        }
+        return null;
+    };
+
+    const querySettingRenderer = (
+        isMobile,
+        isSplit,
+        dataSourceType,
+        settingComp
+    ) => {
+        if (
+            isMobile ||
+            isSplit ||
+            dataSourceType !== "flux" ||
+            dataSourceType !== "traces"
+        ) {
+            return settingComp;
+        }
+        return null;
+    };
+
+    if (isEmbed) {
+        return null;
+    }
+
+    const switchTraceQueryType = (e) => {
+        setTraceQueryType((_) => e);
+    };
+
+    const queryTypeRenderer = (type, traceSearch, querySearch) => {
+        if (type === "traces") {
+            return (
+                <>
+                    <TracesSwitch
+                        value="traceId"
+                        onChange={switchTraceQueryType}
+                    />
+                    {traceQueryType === "traceId" && querySearch}
+                    {traceQueryType === "search" && traceSearch}
+                </>
+            );
+        }
+
+        return querySearch;
+    };
+
+
+
 
     const showFullQueryBar = (type, isSplit, isMobile) => {
         if (!isMobile && !isSplit && type !== "flux" && type !== "traces")
@@ -425,66 +679,53 @@ export const QueryBar = (props) => {
     return (
         <div className={cx(maxWidth)} id={id}>
             <ThemeProvider theme={themes[theme]}>
-                <MobileTopQueryMenuCont
-                    {...props}
-                    isSplit={isSplit}
-                    dataSourceType={dataSourceType}
-                    showQuerySettings={showQuerySettings}
-                    queryHistory={queryHistory}
-                    handleHistoryClick={handleHistoryClick}
-                    queryValid={queryValid}
-                    onSubmit={onSubmit}
-                    onSubmitRate={onSubmitRate}
-                />
-=======
-    const getMaxWidth = () => {
-        const labelButtonWidth = !isNaN(labelsButtonRef?.current?.clientWidth) ? labelsButtonRef?.current?.clientWidth : 0;
-        const buttonsContainerWidth = !isNaN(buttonsContainerRef?.current?.clientWidth) ? buttonsContainerRef?.current?.clientWidth : 0;
-        if (isSplit || isTabletOrMobile) {
-            return 0;
-        } else {
-            return ( labelButtonWidth + buttonsContainerWidth + 5)
-        }
-    }
-    return (
-        !isEmbed && (
-            <div
-                className={css`
-                    max-width: 100%;
-                `}
-            >
-                <ThemeProvider theme={themes[theme]}>
-                    <MobileTopQueryMenu isSplit={isSplit}>
-                        <div
-                            className={css`
-                                display: flex;
-                            `}
-                        >
-                            <ShowLabelsButton {...props} isMobile={true} />
->>>>>>> 67352e9 (Added resizable Split and Query editors #109 #110)
+                {dataSourceType !== "traces" && (
+                    <MobileTopQueryMenuCont
+                        {...props}
+                        isSplit={isSplit}
+                        dataSourceType={dataSourceType}
+                        showQuerySettings={showQuerySettings}
+                        queryHistory={queryHistory}
+                        handleHistoryClick={handleHistoryClick}
+                        queryValid={queryValid}
+                        onSubmit={onSubmit}
+                        onSubmitRate={onSubmitRate}
+                    />
+                )}
 
-                {dataSourceType === "traces" && <TracesSearch {...props} />}
+                {queryTypeRenderer(
+                    dataSourceType,
+                    <TracesSearch
+                        {...props}
+                        onSearchChange={onTraceSearchChange}
+                    />,
+                    <QueryBarCont
+                        {...props}
+                        isSplit={isSplit}
+                        dataSourceType={dataSourceType}
+                        handleQueryChange={handleQueryChange}
+                        expr={expr}
+                        queryValue={queryValue}
+                        handleInputKeyDown={handleInputKeyDown}
+                        queryHistory={queryHistory}
+                        handleHistoryClick={handleHistoryClick}
+                        queryValid={queryValid}
+                        onSubmit={onSubmit}
+                        onSubmitRate={onSubmitRate}
+                    />
+                )}
 
-                <QueryBarCont
-                    {...props}
-                    isSplit={isSplit}
-                    dataSourceType={dataSourceType}
-                    handleQueryChange={handleQueryChange}
-                    expr={expr}
-                    queryValue={queryValue}
-                    handleInputKeyDown={handleInputKeyDown}
-                    queryHistory={queryHistory}
-                    handleHistoryClick={handleHistoryClick}
-                    queryValid={queryValid}
-                    onSubmit={onSubmit}
-                    onSubmitRate={onSubmitRate}
-                />
+                {inlineQueryOptionsRenderer(
+                    dataSourceType,
+                    isSplit,
+                    isTabletOrMobile,
+                    <QueryTypeBar {...props} />
+                )}
 
-                {showFullQueryBar(dataSourceType, isSplit, isTabletOrMobile)}
-                {(isTabletOrMobile ||
-                    isSplit ||
-                    dataSourceType !== "flux" ||
-                    dataSourceType !== "traces") && (
+                {querySettingRenderer(
+                    isTabletOrMobile,
+                    isSplit,
+                    dataSourceType,
                     <QuerySetting
                         {...props}
                         open={open}
@@ -496,7 +737,9 @@ export const QueryBar = (props) => {
             </ThemeProvider>
         </div>
     );
-};
+
+}
+
 export const QueryBarCont = (props) => {
     const {
         isSplit,
@@ -511,11 +754,11 @@ export const QueryBarCont = (props) => {
         onSubmit,
         onSubmitRate,
     } = props;
-    const buttonsHidden = () => !isSplit && dataSourceType !== "flux" && dataSourceType !== 'traces';
+    const buttonsHidden = () => !isSplit && dataSourceType !== "flux";
 
     return (
         <QueryBarContainer>
-            {buttonsHidden() && <ShowLabelsButton {...props} />}
+            {buttonsHidden() && dataSourceType !== "traces" && <ShowLabelsButton {...props} />}
 
             <QueryEditor
                 onQueryChange={handleQueryChange}
@@ -533,58 +776,19 @@ export const QueryBarCont = (props) => {
                     {dataSourceType === "logs" && (
                         <ShowLogsRateButton
                             disabled={!queryValid}
-<<<<<<< HEAD
                             onClick={onSubmitRate}
                             isMobile={false}
-=======
-                            onClick={onSubmit}
-                            isMobile={true}
-                        />
-                    </MobileTopQueryMenu>
-                    <QueryBarContainer>
-                        {!isSplit && <span ref={labelsButtonRef}><ShowLabelsButton {...props} /></span>}
-                        <div
-                            style={{ flex: 1, maxWidth: `calc(100% - ${getMaxWidth()}px)` }}
-                            ref={wrapperRef}
-                        >
-                            <QueryEditor
-                                onQueryChange={handleQueryChange}
-                                defaultValue={expr || ""}
-                                value={queryValue}
-                                isSplit={isSplit}
-                                wrapperRef={wrapperRef?.current?.clientWidth}
-                                onKeyDown={handleInputKeyDown}
-                            />
-                        </div>
-                        {!isSplit && (
-                            <div style={{ display: "flex", flex: "0" }} ref={buttonsContainerRef}>
-                                <HistoryButton
-                                    queryLength={queryHistory.length}
-                                    handleHistoryClick={handleHistoryClick}
-                                />
-
-                                <ShowLogsButton
-                                    disabled={!queryValid}
-                                    onClick={onSubmit}
-                                    isMobile={false}
-                                />
-                            </div>
-                        )}
-                    </QueryBarContainer>
-
-                    {!isTabletOrMobile && !isSplit && (
-                        <QueryTypeBar {...props} />
-                    )}
-                    {(isTabletOrMobile || isSplit) && (
-                        <QuerySetting
-                            {...props}
-                            open={open}
-                            handleClose={onClose}
-                            actPanel={panelQuery}
-                            name={name}
->>>>>>> 67352e9 (Added resizable Split and Query editors #109 #110)
                         />
                     )}
+                    <ShowLogsButton
+                        disabled={!queryValid}
+                        onClick={onSubmit}
+                        isMobile={false}
+                    />
+                </>
+            )}
+                 {dataSourceType === "traces" && isSplit && (
+                <>
                     <ShowLogsButton
                         disabled={!queryValid}
                         onClick={onSubmit}

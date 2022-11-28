@@ -9,7 +9,7 @@ import {
     ShowQueryButton,
 } from "./style";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { useEffect, useMemo,useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { QueryId } from "./QueryId";
 import { DataSourceSelect } from "./DataSourceSelect";
 export function QueryItemToolbar(props) {
@@ -25,6 +25,10 @@ export function QueryItemToolbar(props) {
     const dataSources = useSelector((store) => store.dataSources);
 
     const [extValue, setExtValue] = useState(props.data.dataSourceId);
+
+    useEffect(() => {
+        setExtValue(props.data.dataSourceId);
+    }, []);
 
     useEffect(() => {
         setExtValue(props.data.dataSourceId);
@@ -73,11 +77,57 @@ export function QueryItemToolbar(props) {
 
         dispatch(panelAction(props.name, cPanel));
     }
+
+    const getPrevDsLocal = () => {
+        let localDataSources = [];
+        try {
+            localDataSources = localStorage.getItem("dsSelected");
+            if (localDataSources) {
+                return JSON.parse(localDataSources);
+            } else {
+                return [];
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     const onDataSourceChange = (e) => {
         const value = e.target.value;
         const dataSource = dataSources.find((f) => f.id === value);
         const panelCP = JSON.parse(JSON.stringify(panel));
         const optSelected = dataSourceOptions.find((f) => f.value === value);
+
+        const currentLocal = getPrevDsLocal();
+        let newDsLocal = [];
+        if (currentLocal?.length > 0) {
+            const hasPrevQuery =
+                currentLocal?.find((s) => s.queryId === props.data.id) || false;
+            console.log(currentLocal);
+            if (hasPrevQuery) {
+                console.log(hasPrevQuery);
+                newDsLocal = currentLocal.map((m) => {
+                    if (m.queryId === props.data.id) {
+                        return {
+                            queryId: m.queryId,
+                            dataSourceId: dataSource.id,
+                        };
+                    }
+                    return m;
+                });
+            } else {
+                newDsLocal = [
+                    ...currentLocal,
+                    { queryId: props.data.id, dataSourceId: dataSource.id },
+                ];
+            }
+        } else {
+            newDsLocal = [
+                ...currentLocal,
+                { queryId: props.data.id, dataSourceId: dataSource.id },
+            ];
+        }
+        localStorage.setItem("dsSelected", JSON.stringify(newDsLocal));
 
         setDataSourceValue((_) => optSelected);
 
@@ -127,7 +177,7 @@ export function QueryItemToolbar(props) {
                             fontSize: "15px",
                             cursor: "pointer",
                             padding: "3px",
-                            marginLeft:'10px'
+                            marginLeft: "10px",
                         }}
                         onClick={props.onAddQuery}
                     />
