@@ -122,11 +122,8 @@
     "@types/moment": "^2.13.0",
     "@types/papaparse": "^5.3.5",
     "@types/react-redux": "^7.1.24",
-<<<<<<< HEAD
     "@types/tinycolor2": "^1.4.3",
-=======
     "@types/react-resizable": "^3.0.3",
->>>>>>> 67352e9 (Added resizable Split and Query editors #109 #110)
     "babel-loader": "^8.2.3",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
