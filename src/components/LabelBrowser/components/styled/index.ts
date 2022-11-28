@@ -25,7 +25,7 @@ export const HistoryButtonStyled = styled(BtnSmall)`
 `;
 
 export const ShowLabelsBtn = styled(BtnSmall)`
-    background: ${({ theme }: any) => theme.buttonDefault};
+    background: ${({ theme }) => theme.buttonDefault};
     border: 1px solid ${(props) => props.theme.buttonBorder};
     text-overflow: ellipsis;
     transition: 0.25s all;
@@ -61,7 +61,6 @@ export const ShowLogsBtn = styled(BtnSmall)`
     justify-content: center;
     padding: 3px 12px;
     height: 28px;
-    
     &:hover {
         background: ${(props) => props.theme.primaryLight};
     }
@@ -89,16 +88,16 @@ export const ShowSettingsBtn = styled(BtnSmall)`
     span {
         margin-left: 5px;
     }
-
-    display: ${(props) => ((props.isMobile || props.isSplit) ? "flex" : "none")};
+    display: ${(props) => (props.isMobile || props.isSplit ? "flex" : "none")};
 `;
 
 export const MobileTopQueryMenu = styled.div`
-    display: ${(props: any) =>( props.isSplit || props.dataSourceType === 'flux') ? 'flex' : 'none'};
+    display: ${(props:any) =>
+        props.isSplit || props.dataSourceType === "flux" ? "flex" : "none"};
 
     @media screen and (max-width: 864px) {
         display: flex;
-      
+        justify-content: space-between;
     }
 `;
 
@@ -115,13 +114,12 @@ export const InlineGroup = styled.div`
     align-items: center;
 `;
 
-export const SettingCont = styled.div`
+export const SettingCont = styled.div<{theme:any}>`
     display: flex;
     flex: 1;
     flex-direction: column;
 
-  
-    background: ${({ theme }: any) => theme.widgetContainer};
+    background: ${({ theme }) => theme.widgetContainer};
 `;
 
 export const SettingsInputContainer = styled.div`
