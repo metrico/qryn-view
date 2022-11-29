@@ -11,6 +11,9 @@ export const EmptyLabels = (props) => {
     return <EmptyCont>No labels available, please adjust API</EmptyCont>;
 };
 
+// split labels for metrics and labels for logs
+
+
 function LabelItem(props) {
     const { selected, label, type } = props;
 
@@ -46,6 +49,11 @@ export default function LabelsList(props) {
         props.onLabelSelected(e);
     };
 
+    const onMetricOptionsClick = (e) => {
+
+        console.log(e)
+    }
+
     const lsList = useMemo(() => {
         if (dataSourceType !== "metrics") {
             return labels;
@@ -63,15 +71,16 @@ export default function LabelsList(props) {
 
     return (
         <div className="valuelist-content">
-            {metricLabel !== null && lsList && dataSourceType === 'metrics' && (
+            {/* {metricLabel !== null && lsList && dataSourceType === 'metrics' && (
                 <LabelItem
                     type={"metric"}
-                    key={0}
+                 
                     label={"Select Metric"}
                     selected={metricLabel?.selected}
-                    onClick={onClick}
+                    onClick={onMetricOptionsClick}
+                 //   onClick={onClick}
                 />
-            )}
+            )} */}
 
             {lsList &&
                 lsList.map((label, key) => (

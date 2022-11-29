@@ -49,6 +49,7 @@ import { setSplitView } from "../../StatusBar/components/SplitViewButton/setSpli
 
 import { Switch } from "@mui/material";
 import { SettingLabel } from "./styled";
+import MetricsSearch from "../../DataViews/components/Metrics/MetricsSearch";
 export function panelAction(name, value) {
     if (name === "left") {
         return setLeftPanel(value);
@@ -796,6 +797,7 @@ export const QueryBarCont = (props) => {
                     />
                 </>
             )}
+            <MetricsSearch {...props}/>
 
         </QueryBarContainer>
     );

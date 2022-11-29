@@ -340,6 +340,9 @@ export function LabelHeader({
     filterState,
     onFilterChange,
 }) {
+
+// Add here a replace for label with a custom name 
+
     return (
         <>
             <span>
