@@ -150,7 +150,7 @@ function SpanBar({
                 aria-label={label}
                 className={Bar}
                 style={{
-                    background: theme.primaryDark,
+                    background: color,
                     left: toPercent(viewStart),
                     width: toPercent(viewEnd - viewStart),
                 }}
