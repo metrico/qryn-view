@@ -21,8 +21,8 @@ export interface Span {
     spanID:            string;
     spanId:            string;
     name:              string;
-    startTimeUnixNano: string;
-    endTimeUnixNano:   string;
+    startTimeUnixNano: string | number;
+    endTimeUnixNano:   string | number;
     serviceName:       string;
     attributes:        Attribute[];
     events:            any[];

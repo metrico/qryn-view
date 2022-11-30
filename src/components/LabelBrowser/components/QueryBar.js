@@ -797,7 +797,7 @@ export const QueryBarCont = (props) => {
                     />
                 </>
             )}
-            <MetricsSearch {...props}/>
+            {/* { <MetricsSearch {...props}/> } */}
 
         </QueryBarContainer>
     );

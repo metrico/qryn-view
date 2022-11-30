@@ -165,6 +165,13 @@ export function mapTracesResponse(data) {
                     value: attr?.value?.stringValue,
                 }));
 
+                let events = []
+                if(m?.events?.length > 0) {
+                    events  = m.events.map(m => ({
+                        name: JSON.parse(JSON.stringify(m.name)),
+                        time: m.timeUnixNano
+                    }))
+                }
                 const serviceTags = resource?.attributes?.map((attr) => ({
                     key: attr?.key,
                     value: attr?.value?.stringValue,
@@ -191,6 +198,7 @@ export function mapTracesResponse(data) {
                     logs: [],
                     references: [],
                     tags,
+                    events,
                     processID: m?.spanID,
                     flags: 0,
                     dataFrameRowIndex: idx,
