@@ -95,7 +95,6 @@ export default function useLabelValues(id, label, start, end) {
             apiRequest();
         }
     }, [options, url, currentDataSource]);
-
     return {
         response,
         controller: options.signal,
