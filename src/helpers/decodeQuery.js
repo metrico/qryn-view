@@ -4,9 +4,9 @@ import store from "../store/store";
 
 export function decodeQuery(query, apiUrl, labels = [], datasourceId = '') {
 
-   if(typeof query !== 'string'){
-    return
-   }
+    if(typeof query !== 'string'){
+        return
+    }
     const queryArr = query
         ?.match(/[^{\}]+(?=})/g, "$1")
         ?.map((m) => m.split(","))

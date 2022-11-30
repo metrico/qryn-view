@@ -43,15 +43,9 @@ export const LabelValue = (props) => {
         let isSelected = false;
 
         setIsValueSelected((prev) => {
-            if (prev === true) {
-                isSelected = false;
-                return false;
-            } else {
-                isSelected = true;
-                return true;
-            }
+            isSelected = !prev;
+            return !prev
         });
-
         const newQuery = decodeQuery(
             data.expr || "",
             value.label || props.label,

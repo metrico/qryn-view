@@ -97,6 +97,7 @@ export const QueryBar = (props) => {
     const [queryValid, setQueryValid] = useState(false);
     const [queryValue, setQueryValue] = useState(queryInit(data.expr));
     const [traceQueryType, setTraceQueryType] = useState("traceId");
+    const [labels, setLabels] = useState([])
     const [traceSearch, setTraceSearch] = useState({});
     const [open, setOpen] = useState(false);
     // const [currentDataSource,setCurrentDatasource] = useState({})
@@ -120,7 +121,7 @@ export const QueryBar = (props) => {
                 return exprQuery;
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
             return exprQuery;
         }
     }, [id, dataSourceId]);
@@ -229,7 +230,6 @@ export const QueryBar = (props) => {
             start,
             stop
         );
-
         // if is view only mode (embedded) do an auto request on init
         if (isEmbed)
             dispatch(
@@ -252,6 +252,7 @@ export const QueryBar = (props) => {
                     const prevLabels = [...props.data.labels];
                     const prevMap = prevLabels.map((m) => m.name) || [];
                     const newLabels = [...data];
+                    setLabels(newLabels);
                     if (newLabels.length > 0) {
                         if (prevMap.length > 0) {
                             newLabels.forEach((l) => {
@@ -283,7 +284,11 @@ export const QueryBar = (props) => {
         setQueryInput(expr);
         setQueryValue([{ children: [{ text: expr }] }]);
         setQueryValid(onQueryValid(expr));
+        decodeQueryAndUpdatePanel(queryInput, false);
+        saveQuery()
+        setLocalStorage();
     }, [expr]);
+
 
     useEffect(() => {
         setQueryInput(actLocalQuery.expr);
@@ -343,7 +348,6 @@ export const QueryBar = (props) => {
             start,
             stop
         );
-
         dispatch(
             getData(
                 dataSourceType,
@@ -365,6 +369,7 @@ export const QueryBar = (props) => {
                     const prevLabels = [...props.data.labels];
                     const prevMap = prevLabels.map((m) => m.name) || [];
                     const newLabels = [...data];
+                    setLabels(newLabels);
                     if (newLabels.length > 0) {
                         if (prevMap.length > 0) {
                             newLabels.forEach((l) => {
@@ -394,18 +399,7 @@ export const QueryBar = (props) => {
 
     function handleQueryChange(e) {
         setQueryValue(e);
-        const queryParams = new URLSearchParams(hash.replace("#", ""));
-        const multiline = e.map((text) => text.children[0].text).join("\n");
-        const panel = [...panelQuery];
-
-        panel.forEach((query) => {
-            if (query.id === id) {
-                query.expr = multiline;
-            }
-        });
-        dispatch(panelAction(name, panel));
-        queryParams.set("left", encodeURIComponent(JSON.stringify(panel)));
-        window.location.hash = queryParams;
+        saveQuery(e);
     }
 
     const handleInputKeyDown = (e) => {
@@ -426,58 +420,12 @@ export const QueryBar = (props) => {
                 updateHistory(queryInput, queryType, limit, id);
 
                 // Decode query to translate into labels selection
-                decodeQueryAndUpdatePanel(queryInput);
+                decodeQueryAndUpdatePanel(queryInput, true);
 
                 updateLinksHistory();
 
-                const prevQueryData = () => {
-                    try {
-                        const prevQuery =
-                            JSON.parse(localStorage.getItem("queryData")) || [];
-
-                        if (prevQuery) {
-                            return prevQuery;
-                        } else {
-                            return [];
-                        }
-                    } catch (e) {
-                        return [];
-                    }
-                };
-
-                const queryData = {
-                    expr,
-                    queryId: id,
-                    dataSourceId: dataSourceId,
-                };
-
-                const prevData = prevQueryData();
-                let newData = [];
-
-                if (
-                    prevData &&
-                    prevData.length > 0 &&
-                    Array.isArray(prevData) &&
-                    prevData.some(
-                        (s) =>
-                            s.dataSourceId === dataSourceId && s.queryId === id
-                    )
-                ) {
-                    newData = prevData.map((m) => {
-                        if (
-                            m.queryId === id &&
-                            m.dataSourceId === dataSourceId
-                        ) {
-                            return { ...queryData };
-                        } else {
-                            return m;
-                        }
-                    });
-                } else {
-                    newData = [...prevData, queryData];
-                }
-
-                localStorage.setItem("queryData", JSON.stringify(newData));
+                setLocalStorage()
+                
             } catch (e) {
                 console.log(e);
             }
@@ -487,17 +435,78 @@ export const QueryBar = (props) => {
             console.log("Please make a log query", expr);
         }
     };
+    const getLocalStorage = () => {                
+        // 1- if has previous id with data => modify data
+        // 2- if no previous data => create entry
+        try {
+            const prevQuery =
+                JSON.parse(localStorage.getItem("queryData")) || [];
 
-    const onSubmitRate = (e, type = "logs") => {
+            if (prevQuery) {
+                return prevQuery;
+            } else {
+                return [];
+            }
+        } catch (e) {
+            return [];
+        }
+    };
+    const setLocalStorage = () => {
+        const queryData = {
+            expr,
+            queryId: id,
+            dataSourceId: dataSourceId,
+        };
+
+        const prevData = getLocalStorage();
+        let newData = [];
+
+        if (
+            prevData &&
+            prevData.length > 0 &&
+            Array.isArray(prevData) &&
+            prevData.some(
+                (s) =>
+                    s.dataSourceId === dataSourceId && s.queryId === id
+            )
+        ) {
+            newData = prevData.map((m) => {
+                if (
+                    m.queryId === id &&
+                    m.dataSourceId === dataSourceId
+                ) {
+                    return { ...queryData };
+                } else {
+                    return m;
+                }
+            });
+        } else {
+            newData = [...prevData, queryData];
+        }
+        localStorage.setItem("queryData", JSON.stringify(newData));
+    }
+    const saveQuery = (e = []) => {
+        const queryParams = new URLSearchParams(hash.replace("#", ""));
+        const multiline = e?.map((text) => text.children[0].text).join("\n");
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                if (multiline) {
+                    query.expr = multiline;
+                };
+            }
+        });
+        dispatch(panelAction(name, panel));
+        queryParams.set(name, encodeURIComponent(JSON.stringify(panel)));
+        setLocalStorage();
+    }
+    const onSubmitRate = (e, type="logs") => {
         e.preventDefault();
         const isEmptyQuery = queryInput.length === 0;
         let query = "";
         if (!isEmptyQuery) {
 
             const isRate = queryInput.startsWith(`rate(`);
-
-           
-
 
             if (type === "metrics") {
                 if (isRate) {
@@ -527,7 +536,7 @@ export const QueryBar = (props) => {
             try {
                 updateHistory(query, queryType, limit, id);
                 // Decode query to translate into labels selection
-                decodeQueryAndUpdatePanel(query);
+                decodeQueryAndUpdatePanel(query, true);
 
                 updateLinksHistory();
             } catch (e) {
@@ -553,8 +562,9 @@ export const QueryBar = (props) => {
         });
 
         dispatch(setQueryHistory(historyUpdated));
-    };
-    const decodeQueryAndUpdatePanel = (query) => {
+
+    }
+    const decodeQueryAndUpdatePanel = (query, isSearch) => {
         const currentDataSource = dataSources.find(
             (f) => f.id === dataSourceId
         );
@@ -572,7 +582,7 @@ export const QueryBar = (props) => {
         panel.forEach((query) => {
             if (query.id === id) {
                 query.labels = [...labelsDecoded];
-                query.browserOpen = false;
+                query.browserOpen = !isSearch;
                 query.dataSourceId = currentDataSource.id;
                 query.dataSourceType = currentDataSource.type;
                 query.dataSourceURL = currentDataSource.url;
@@ -603,21 +613,23 @@ export const QueryBar = (props) => {
         }
         console.log(querySubmit)
 
+        if(isSearch) {
+            dispatch(
+                getData(
+                    dataSourceType,
+                    querySubmit,
+                    queryType,
+                    limit,
+                    name,
+                    id,
+                    direction,
+                    dataSourceId,
+                    currentDataSource.url,
+                    customStep
+                )
+            );
+        }
 
-        dispatch(
-            getData(
-                dataSourceType,
-                querySubmit,
-                queryType,
-                limit,
-                name,
-                id,
-                direction,
-                dataSourceId,
-                currentDataSource.url,
-                customStep
-            )
-        );
     };
     const updateLinksHistory = () => {
         const storedUrl = saveUrl.add({
@@ -732,6 +744,7 @@ export const QueryBar = (props) => {
                             queryValid={queryValid}
                             onSubmit={onSubmit}
                             onSubmitRate={onSubmitRate}
+                            labels={labels}
                         />
                     )}
 
@@ -754,6 +767,7 @@ export const QueryBar = (props) => {
                         queryValid={queryValid}
                         onSubmit={onSubmit}
                         onSubmitRate={onSubmitRate}
+                        labels={labels}
                     />,
                     <MetricsSearch
                         {...props}
@@ -813,10 +827,9 @@ export const QueryBarCont = (props) => {
         handleHistoryClick,
         queryValid,
         onSubmit,
-        onSubmitRate,
+        onSubmitRate
     } = props;
     const buttonsHidden = () => !isSplit && dataSourceType !== "flux";
-
     return (
         <QueryBarContainer>
             {buttonsHidden() && dataSourceType === "logs" && (
