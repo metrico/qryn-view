@@ -93,9 +93,15 @@ export const ApiSelectorButton = styled(BtnSmall)`
     color: ${(props) => props.theme.textColor};
     text-overflow: ellipsis;
     transition: 0.2s all;
+    display:flex;
+    align-items:center;
     height: 26px;
     &:hover {
         background: ${(props) => props.theme.buttonHover};
+    }
+    span {
+        margin:0;
+        padding:0;
     }
 `;
 export const ApiSelectorInput = styled(InputSmall)`

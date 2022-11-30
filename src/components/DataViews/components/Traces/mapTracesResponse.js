@@ -135,17 +135,30 @@ export function countSpanDepth(spans, count = 0) {
     });
 }
 
-export function mapTracesResponse(data) {
-    return data?.resourceSpans?.map((trace) => {
-        const { instrumentationLibrarySpans, resource } = trace;
+function getSpans(data) {
+    const mappedSpans = data.resourceSpans?.map((rs) => {
+        const resource = rs.resource;
+        return rs.instrumentationLibrarySpans.map((m) =>
+            m.spans.map((sp) => ({ ...sp, resource }))
+        );
+    });
 
-        const parent = instrumentationLibrarySpans.map((ils) => {
-            return ils?.spans?.find(
-                (m) => Object.keys(m).indexOf("parentSpanId") === -1
-            );
-        })[0];
-        const instSpans = [...Array.from(new Set(instrumentationLibrarySpans))];
-        const orderedSpans = instSpans?.[0]?.spans.sort(
+    return mappedSpans.flat(2);
+}
+
+export function mapTracesResponse(data) {
+    const allSpans = getSpans(data);
+
+    return data?.resourceSpans?.map((trace) => {
+        const { instrumentationLibrarySpans } = trace;
+
+        const parent = allSpans.find(
+            (m) => Object.keys(m).indexOf("parentSpanId") === -1
+        );
+
+        const instSpans = [...allSpans];
+
+        const orderedSpans = instSpans?.sort(
             (a, b) =>
                 parseInt(a.startTimeUnixNano) - parseInt(b.startTimeUnixNano)
         );
@@ -158,84 +171,93 @@ export function mapTracesResponse(data) {
 
         const lastTs = lastTimestamps[0] / 1000;
 
-        let spans = instrumentationLibrarySpans?.map((ils) => {
-            return ils.spans?.map((m, idx) => {
-                const tags = m.attributes?.map((attr) => ({
-                    key: attr?.key,
-                    value: attr?.value?.stringValue,
-                }));
+        let spans = allSpans?.map((m, idx) => {
+            const tags = m.attributes?.map((attr) => ({
+                key: attr?.key,
+                value: attr?.value?.stringValue,
+            }));
 
-                const serviceTags = resource?.attributes?.map((attr) => ({
-                    key: attr?.key,
-                    value: attr?.value?.stringValue,
-                }));
-                const duration =
-                    Math.round(m?.endTimeUnixNano / 1000) -
-                    Math.round(m?.startTimeUnixNano / 1000);
-                const startTime = m?.startTimeUnixNano / 1000;
+            const serviceTags = m?.resource?.attributes?.map((attr) => ({
+                key: attr?.key,
+                value: attr?.value?.stringValue,
+            }));
 
-                const process = {
-                    serviceName: m?.serviceName,
-                    tags: serviceTags,
-                };
+            const duration =
+                Math.round(m?.endTimeUnixNano / 1000) -
+                Math.round(m?.startTimeUnixNano / 1000);
+            const startTime = m?.startTimeUnixNano / 1000;
 
-                return {
-                    traceID: m?.traceID || m?.traceId,
-                    spanID: m?.spanID || m.spanId,
-                    parentSpanID: m?.parentSpanID || m?.parentSpanId || "",
-                    operationName: m?.name,
-                    serviceName: m?.serviceName,
-                    serviceTags,
-                    startTime,
-                    duration,
-                    logs: [],
-                    references: [],
-                    tags,
-                    processID: m?.spanID,
-                    flags: 0,
-                    dataFrameRowIndex: idx,
-                    process,
-                    children: [],
-                };
-            });
-        })[0];
+            const process = {
+                serviceName: m?.serviceName,
+                tags: serviceTags,
+            };
+
+            return {
+                traceID: m?.traceID || m?.traceId,
+                spanID: m?.spanID || m.spanId,
+                parentSpanID: m?.parentSpanID || m?.parentSpanId || "",
+                operationName: m?.name,
+                serviceName: m?.serviceName,
+                serviceTags,
+                startTime,
+                duration,
+                relativeStartTime: 0,
+                logs: [],
+                references: [],
+                tags,
+                processID: m?.spanID,
+                flags: 0,
+                dataFrameRowIndex: idx,
+                process,
+                children: [],
+            };
+        });
 
         if (spans?.length > 0) {
             try {
                 spans.forEach((span) => {
-                    if (span?.parentSpanID !== "") {
-                        const parent = spans.find(
+                    const hasParent = spans?.some(
+                        (s) => s?.spanID === span?.parentSpanID
+                    );
+
+                    if (span?.parentSpanID !== "" && hasParent) {
+                        const parent = spans?.find(
                             (f) => f.spanID === span.parentSpanID
                         );
 
-                        spans = spans
-                            ?.map((m) => {
-                                if (m.spanID === parent.spanID) {
-                                    return {
-                                        ...m,
-                                        children: [...m.children, span.spanID],
-                                    };
-                                }
+                        if (parent)
+                            spans = spans
+                                ?.map((m) => {
+                                    if (m.spanID === parent.spanID) {
+                                        return {
+                                            ...m,
+                                            children: [
+                                                ...m.children,
+                                                span.spanID,
+                                            ],
+                                        };
+                                    }
 
-                                return m;
-                            })
-                            .map((n) => {
-                                if (n.children?.length > 0) {
+                                    return m;
+                                })
+                                ?.map((n) => {
+                                    if (n?.children?.length > 0) {
+                                        return {
+                                            ...n,
+                                            hasChildren: true,
+                                            childSpanCount: n.children.length,
+                                            relativeStartTime:
+                                                n.startTime -
+                                                spans[0].startTime,
+                                        };
+                                    }
+
                                     return {
                                         ...n,
-                                        hasChildren: true,
-                                        childSpanCount: n.children.length,
                                         relativeStartTime:
                                             n.startTime - spans[0].startTime,
                                     };
-                                }
-
-                                return {
-                                    ...n,
-                                    relativeStartTime:
-                                        n.startTime - spans[0].startTime,
-                                };
-                            });
+                                });
 
                         span?.references?.push({
                             refType: "CHILD_OF",
@@ -249,25 +271,47 @@ export function mapTracesResponse(data) {
                 console.log(e);
             }
         }
+
         countSpanDepth(spans);
 
         let traceObj = {
-            services: instrumentationLibrarySpans.map((ils) => {
-                const { spans } = ils;
-                return {
-                    name: spans[0].serviceName,
-                    numberOfSpans: spans.length,
-                };
-            }),
-            spans,
-            traceID: parent?.traceID,
-            traceName: `${parent?.serviceName}: ${parent.name}`,
+            services: [],
+            spans: [],
+            traceID: "",
+            traceName: "",
             processes: {}, // use processing fn
-            duration: lastTs - firstTs,
-            startTime: firstTs,
-            endTime: lastTs,
+            duration: 0,
+            startTime: 0,
+            endTime: 0,
         };
 
+        const firstSpan = spans?.[0];
+
+        if (instrumentationLibrarySpans && lastTs && firstTs) {
+            const {
+                serviceName: firstServiceName,
+                name: firstName,
+                traceID: firstTraceID,
+            } = firstSpan;
+
+            traceObj = {
+                services: spans.map((span) => {
+                    return {
+                        name: span.serviceName,
+                        numberOfSpans: spans.length,
+                    };
+                }),
+                spans,
+                traceID: parent ? parent?.traceID : firstTraceID,
+                traceName: parent
+                    ? `${parent?.serviceName}: ${parent?.name}`
+                    : `${firstServiceName}: ${firstName}`,
+                processes: {}, // use processing fn
+                duration: lastTs - firstTs,
+                startTime: firstTs,
+                endTime: lastTs,
+            };
+        }
         return traceObj;
     });
 }

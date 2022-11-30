@@ -38,6 +38,9 @@ function traceTimeFormatter(props) {
 }
 
 function traceStartTimeFormatter(props) {
+
+    console.log(props.value)
+
     const timeAgo = new TimeAgo("en-US");
 
     return timeAgo.format(props.value / 1_000_000);
@@ -133,6 +136,7 @@ export function setColumnsTsValue(
                 };
             }
             if (m.accessor === "startTimeUnixNano") {
+
                 return {
                     Header: "Start Time",
                     accessor: m.accessor,
