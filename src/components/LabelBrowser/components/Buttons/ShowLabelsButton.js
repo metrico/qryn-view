@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import { setLeftPanel } from "../../../../actions/setLeftPanel";
 import { setRightPanel } from "../../../../actions/setRightPanel";
 import { css, cx } from "@emotion/css";
+import { Tooltip } from "@mui/material";
 
 export function panelAction(name, value) {
     if (name === "left") {
@@ -48,7 +49,8 @@ export default function ShowLabelsButton(props) {
     }
 
     const labelsTitle = (labels) => {
-        if (labels?.length > 0) {
+        console.log(props)
+        if (props.labels?.length > 0) {
             return "Show / Hide Labels";
         }
         return "Labels Not Available";
@@ -62,15 +64,17 @@ export default function ShowLabelsButton(props) {
 
     return (
         <ThemeProvider theme={themes[theme]}>
-            <ShowLabelsBtn
-                title={labelsTitle(labels)}
-                onClick={handleBrowserOpen}
-                browserActive={isBrowserOpen}
-                isMobile={props.isMobile}
-            >
-                {renderArrow(isBrowserOpen)}
-                {"Labels"}
-            </ShowLabelsBtn>
+            <Tooltip 
+                title={labelsTitle(labels)}>
+                <ShowLabelsBtn
+                    onClick={handleBrowserOpen}
+                    browserActive={isBrowserOpen}
+                    isMobile={props.isMobile}
+                >
+                    {renderArrow(isBrowserOpen)}
+                    {"Labels"}
+                </ShowLabelsBtn>
+            </Tooltip>
         </ThemeProvider>
     );
 }
