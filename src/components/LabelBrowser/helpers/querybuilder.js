@@ -103,7 +103,7 @@ function parseQueryLabels(keyVal, query, op) {
             return "";
         }
 
-        if (
+        if ( value !== null &&
             !label.includes(key?.trim()) &&
             !label.includes(value?.trim()) &&
             !querySplitted?.some((s) => s.includes(key)) &&
@@ -116,7 +116,7 @@ function parseQueryLabels(keyVal, query, op) {
             return regs.join(",");
         }
 
-        if (
+        if ( value !== null &&
             label?.includes("=") &&
             label?.split("=")?.[0]?.trim() === key?.trim() &&
             !label?.includes(value)
@@ -129,7 +129,7 @@ function parseQueryLabels(keyVal, query, op) {
                 ?.replace(`${label}`, labelMod);
         }
 
-        if (
+        if ( value !== null &&
             label?.includes("=~") &&
             label?.split("=~")?.[0]?.trim() === key?.trim() &&
             label?.includes(value)
@@ -142,7 +142,7 @@ function parseQueryLabels(keyVal, query, op) {
                 .replace(`${label}`, labelMod);
         }
 
-        if (
+        if ( value !== null &&
             label?.includes("=~") &&
             label?.split("=~")?.[0]?.trim() === key?.trim() &&
             !label?.includes(value?.trim())
@@ -151,10 +151,11 @@ function parseQueryLabels(keyVal, query, op) {
             return parseLog.addValueToLabel(label, value, false);
         }
 
+        // value === null is used for clear
         if (
             label?.includes("=") &&
             label?.split("=")?.[0]?.trim() === key?.trim() &&
-            label?.split('"')?.[1]?.trim() === value?.trim() &&
+            (label?.split('"')?.[1]?.trim() === value?.trim() || value === null) &&
             querySplitted?.some((s) => s === label)
         ) {
             // remove label from query

@@ -178,9 +178,24 @@ export default function ValuesList(props) {
         }
     }, [valuesFromProps, resp, setValuesState]);
 
-    const onLabelOpen = (e) => {
+    const onClear = (label) => {
+        const newQuery = decodeQuery(
+            data.expr || "",
+            label || props.label,
+            null,
+            "=",
+            'value'
+        );
+
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === props.data.id) {
+                query.expr = newQuery;
+            }
+        });
+
+        dispatch(panelAction(name, panel));
         controller?.abort();
-        props.onLabelOpen(e);
     };
 
     const onValueFilter = (val, selection) => {
@@ -194,9 +209,11 @@ export default function ValuesList(props) {
         }
     };
 
-    const onValueClick = (val) => {
+    const onValueClick = (val, isAll = false) => {
         let initialValues = [];
-
+        if(isAll) {
+            setValsSelection([]);
+        }
         if (valsSelection.length > 0) {
             initialValues = onValueFilter(val, valsSelection);
 
@@ -216,7 +233,7 @@ export default function ValuesList(props) {
 
             }
 
-        } else {
+        } else if (!isAll) {
             initialValues = [...initialValues, { ...val }];
         }
 
@@ -301,7 +318,7 @@ export default function ValuesList(props) {
                 <LabelHeader
                     resp={resp}
                     label={props.label}
-                    onLabelOpen={onLabelOpen}
+                    onClear={onClear}
                     filterState={filterState}
                     onFilterChange={onFilterChange}
                 />
@@ -330,7 +347,7 @@ export default function ValuesList(props) {
 export function LabelHeader({
     resp,
     label,
-    onLabelOpen,
+    onClear,
     filterState,
     onFilterChange,
 }) {
@@ -348,7 +365,7 @@ export function LabelHeader({
             </span>
             <span
                 className={"close-column"}
-                onClick={(e) => onLabelOpen(label)}
+                onClick={(e) => onClear(label)}
             >
                 clear
             </span>
