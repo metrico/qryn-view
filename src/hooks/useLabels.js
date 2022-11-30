@@ -57,9 +57,10 @@ export const sendLabels = async (id, type, apiUrl, start, stop) => {
             .get(getUrlFromType(apiUrl, type, startNs, stopNs), labelHeaders)
             .then((response) => {
                 if (response) {
-            
-                    if (response?.data?.data === [])
-                
+                    if (response?.data?.data === []) {
+                        console.log("no labels found");
+                    }
+                        
                     if (response?.data?.data?.length > 0) {
                         const labels = response?.data?.data
                             .sort()
@@ -68,7 +69,6 @@ export const sendLabels = async (id, type, apiUrl, start, stop) => {
                                 selected: false,
                                 values: [],
                             }));
-                    
                         return labels || [];
                     }
                 } else {
