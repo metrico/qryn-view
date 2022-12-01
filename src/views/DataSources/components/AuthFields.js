@@ -128,6 +128,7 @@ export function AuthFields(props) {
                         if (field.form_type === "select") {
                             return (
                                 <Select
+                                    
                                     key={key}
                                     value={field.value}
                                     name={field.name}

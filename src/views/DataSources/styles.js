@@ -128,7 +128,8 @@ export const InputGroup = styled.div`
     flex-direction: row;
     margin-top: 5px;
     align-items: center;
-    flex: 1;
+    ${props => props?.width && props?.width === 'normal' ? '' : 'flex:1;'}
+    //flex: 1;
     select {
         background: ${(props) => props.theme.inputBg};
         color: ${(props) => props.theme.textColor};

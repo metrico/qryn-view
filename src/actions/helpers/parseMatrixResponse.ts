@@ -27,7 +27,6 @@ function timeFormatter(props: any) {
 }
 
 export function getMatrixTableRows(data: any[]) {
-    console.log('getMatrixTableRows', { data });
     return data.map(({ metric, values }: { metric: object; values: [] }) => ({
         metric: JSON.stringify(metric),
         rows: values.map(([time, value]: [string, string]) => ({

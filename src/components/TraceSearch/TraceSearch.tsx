@@ -49,7 +49,7 @@ export default function TracesSearch(props: any) {
     const {
         name,
         data: { id, dataSourceId, dataSourceType, dataSourceURL, expr },
-        onSearchChange
+        onSearchChange,
     } = props;
 
     const dispatch = useDispatch();
@@ -92,9 +92,7 @@ export default function TracesSearch(props: any) {
         }
     }, [urlState]);
 
-
     const emit = () => {
-
         return {
             dataSourceType,
             expr,
@@ -104,39 +102,32 @@ export default function TracesSearch(props: any) {
             id,
             direction: "forward",
             dataSourceId,
-            url: dataSourceURL + "/api/" + urlString
-        }
-    }
+            url: dataSourceURL + "/api/" + urlString,
+        };
+    };
 
     const onServiceChange = (e: any) => {
         const value = e?.target?.value || "";
         setSearchValue({ name: value, value: value });
         setUrlState((prev) => ({ ...prev, searchName: value }));
-        onSearchChange( emit())
-
+        onSearchChange(emit());
     };
 
     const onSpanChange = (e: any) => {
         const value = e?.target?.value || "";
         setSpanValue({ name: value, value: value });
         setUrlState((prev) => ({ ...prev, name: value }));
-        onSearchChange( emit())
-
+        onSearchChange(emit());
     };
 
     const onChange = (e: any, key: any) => {
         const value = e?.target?.value || "";
         setUrlState((prev) => ({ ...prev, [key]: value }));
-        onSearchChange( emit())
-
+        onSearchChange(emit());
     };
 
-
-
-
     const onSubmit = () => {
-     
-        if(dataSourceURL && dataSourceURL !=='') {
+        if (dataSourceURL && dataSourceURL !== "") {
             dispatch(
                 getData(
                     dataSourceType,
@@ -151,7 +142,6 @@ export default function TracesSearch(props: any) {
                 )
             );
         }
-    
     };
 
     return (
