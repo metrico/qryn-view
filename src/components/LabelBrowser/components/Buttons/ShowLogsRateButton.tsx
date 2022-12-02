@@ -6,7 +6,7 @@ import { Button } from "./Button.model";
 import { Store } from "../../../../store/store.model";
 
 const _themes = themes as any;
-export default function ShowLogsRateButton({ isDisabled, onClick, isMobile }: Button) {
+export default function ShowLogsRateButton({ isDisabled, onClick, isMobile, alterText }: Button) {
     const SHOW_LOGS_RATE = "Show Logs Rate";
     const theme = useSelector((store: Store) => store.theme);
     return (
@@ -17,7 +17,7 @@ export default function ShowLogsRateButton({ isDisabled, onClick, isMobile }: Bu
                 onClick={onClick}
                 isMobile={isMobile}
             >
-                {SHOW_LOGS_RATE}
+                {alterText || SHOW_LOGS_RATE}
             </HistoryButtonStyled>
         </ThemeProvider>
     );

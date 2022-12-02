@@ -29,7 +29,7 @@ export const Select = (props) => {
     }, [value]);
 
     return (
-        <InputGroup>
+        <InputGroup width={width}>
             {label?.length > 0 && <Label width={width || null}>{label}</Label>}
             <select
                 ref={selectRef}

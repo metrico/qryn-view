@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -24,6 +23,15 @@ export function useMetricsList(id, value) {
 
     // get the auth headers in here \
 
+    const valueFormatter = useMemo(() => {
+        const val = encodeURIComponent(`{__name__="${value}"}`);
+        const paren = "[]";
+        const param = `match${encodeURIComponent(paren)}`;
+
+        if (value) {
+            return `${param}=${val}`;
+        }
+    }, [value]);
 
     useEffect(() => {
         if (
@@ -33,14 +41,10 @@ export function useMetricsList(id, value) {
         ) {
             const metricsHeaders = getHeaders(dataSource);
 
-            const url = `${dataSource.url}/api/v1/label/__name__/values?start=${timeParams.start}&end=${timeParams.end}`;
-            console.log(url);
+            const url = `${dataSource.url}/api/v1/series?start=${timeParams.start}&end=${timeParams.end}&${valueFormatter}`;
             const apiRequest = async () => {
-                // setLoading(true);
-
                 try {
                     const req = await axios.get(url, metricsHeaders);
-                    console.log(req);
                     if (req?.status === 200) {
                         setMetricNames(req?.data?.data || []);
                     }
@@ -51,16 +55,31 @@ export function useMetricsList(id, value) {
 
             apiRequest();
         }
-    }, []);
+    }, [dataSource, timeParams.end, timeParams.start, valueFormatter]);
 
     return useMemo(() => {
         if (metricNames?.length > 0) {
-            return metricNames.map((val) => ({
-                name: val,
-                value: val,
-            }));
+            const metricsCP = [...metricNames];
+            let metricSelect = {};
+            metricsCP.forEach((metric) => {
+                const metricKeys = Object.keys(metric);
+                metricKeys.forEach((metricKey) => {
+                    if (
+                        !metricSelect[metricKey]?.some(
+                            (s) => s === metric[metricKey]
+                        )
+                    ) {
+                        metricSelect[metricKey] = [
+                            ...(metricSelect[metricKey] || []),
+                            metric[metricKey],
+                        ];
+                    }
+                });
+            });
+
+            return metricSelect;
         }
-        return [{ name: "", value: "" }];
+        return {};
     }, [metricNames]);
 }
 
@@ -68,7 +87,7 @@ export function useMetricsList(id, value) {
 
 // api/v1/label/__name__/values?start=1669710347&end=1669713947
 
-// api/v1/series?start=1669710361&end=1669713961&match%5B%5D=%7B__name__%3D%22go_gc_duration_seconds_sum%22%7D
+// https://view-oss-demo.qryn.dev/api/v1/series?start=1669710361&end=1669713961&match%5B%5D=%7B__name__%3D%22go_gc_duration_seconds_sum%22%7D
 
 //}
 

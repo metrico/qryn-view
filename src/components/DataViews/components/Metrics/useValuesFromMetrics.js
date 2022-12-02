@@ -54,11 +54,11 @@ export function useValuesFromMetrics(id) {
     return useMemo(() => {
         if (metricNames?.length > 0) {
             return metricNames.map((val) => ({
-                name: val,
+                label: val,
                 value: val,
             }));
         }
-        return [{ name: "", value: "" }];
+        return [{ label: "", value: "" }];
     }, [metricNames]);
 }
 
