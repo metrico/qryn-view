@@ -49,7 +49,6 @@ export default function ShowLabelsButton(props) {
     }
 
     const labelsTitle = (labels) => {
-        console.log(props)
         if (props.labels?.length > 0) {
             return "Show / Hide Labels";
         }
