@@ -582,7 +582,7 @@ export const QueryBar = (props) => {
         panel.forEach((query) => {
             if (query.id === id) {
                 query.labels = [...labelsDecoded];
-                query.browserOpen = !isSearch;
+                query.browserOpen = !isSearch && dataSourceType === 'logs';
                 query.dataSourceId = currentDataSource.id;
                 query.dataSourceType = currentDataSource.type;
                 query.dataSourceURL = currentDataSource.url;
@@ -832,7 +832,7 @@ export const QueryBarCont = (props) => {
     const buttonsHidden = () => !isSplit && dataSourceType !== "flux";
     return (
         <QueryBarContainer>
-            {buttonsHidden() && dataSourceType === "logs" && (
+            {buttonsHidden() && dataSourceType === "logs" && dataSourceType !== 'metrics' && (
                 <ShowLabelsButton {...props} />
             )}
 
