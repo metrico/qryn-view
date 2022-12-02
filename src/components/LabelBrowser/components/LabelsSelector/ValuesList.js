@@ -113,6 +113,15 @@ export default function ValuesList(props) {
 
     const [valsSelection, setValsSelection] = useState([]);
 
+    useEffect(() => {
+        const panel = panelQuery.find(panel => panel.id === data.id);
+        const label = panel?.labels?.find((label)=>label.name === props.label)
+        const values = label?.values
+        if (typeof values !== 'undefined') {
+            setValsSelection(values)
+        }
+    },[panelQuery])
+
     const valuesFromProps = useMemo(() => {
         if (props?.data?.labels?.length < 1) {
             return [];
@@ -129,16 +138,20 @@ export default function ValuesList(props) {
 
     const resp = useMemo(() => {
         if (response?.data?.data?.length > 0) {
+            const panel = panelQuery.find(panel => panel.id === data.id);
+            const label = panel?.labels?.find((label)=>label.name === props.label)
+            const values = label?.values;
+            const valuesMap = new Map();
+            values?.forEach((value)=>{
+                valuesMap.set(value.name, value);
+            })
             return response?.data?.data?.map((val) => ({
                 label: props.label,
                 name: val,
-                selected: false,
+                selected: valuesMap.get(val)?.selected || false,
                 inverted: false,
-                type:
-                    props.label === "__name__" && dataSourceType === "metrics"
-                        ? "metrics"
-                        : "value",
-                id: nanoid(),
+                type: "value",
+                id: valuesMap.get(val)?.id || nanoid(),
             }));
         } else {
             return [];
