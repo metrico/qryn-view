@@ -105,9 +105,7 @@ function parseQueryLabels(keyVal, query, op) {
 
         if ( value !== null &&
             !label.includes(key?.trim()) &&
-            !label.includes(value?.trim()) &&
-            !querySplitted?.some((s) => s.includes(key)) &&
-            !querySplitted?.some((s) => s.includes(key) && s.includes(value))
+            !querySplitted?.some((s) => s.includes(key))
         ) {
             // add new label
             let labelMod = op === "!=" ? keySubtValue : label;
