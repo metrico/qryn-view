@@ -10,17 +10,22 @@ export function getEndpointParams(
     direction: QueryDirection,
     settingUrl = "",
     queryType: QueryType,
-    customUrl: string
+    customUrl: string,
+    customStep: number
 ): QueryParams {
-
     const localStore = store.getState();
-    const {isSplit } = localStore;
+    const { isSplit } = localStore;
     const splitVal = isSplit ? 2 : 1;
     const wWidth = window.innerWidth;
     const { parsedTime, time } = getTimeParams(type);
     const url = settingUrl;
     let stepCalc = 0;
-    stepCalc = wWidth / Math.round(((wWidth / tSpan) * 10) / splitVal);
+
+    if (customStep > 0) {
+        stepCalc = customStep;
+    } else {
+        stepCalc = wWidth / Math.round(((wWidth / tSpan) * 10) / splitVal);
+    }
 
     if (stepCalc === 0) {
         stepCalc = 1;

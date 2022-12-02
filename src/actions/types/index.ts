@@ -72,4 +72,5 @@ export type QueryParams = {
     queryStep: number | string;
     direction: QueryDirection;
     queryType: QueryType;
+    customStep?:number;
 };

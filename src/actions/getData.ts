@@ -34,7 +34,8 @@ export default function getData(
     id: string,
     direction: QueryDirection = "forward",
     dataSourceId = "",
-    url = ""
+    url = "",
+    customStep = 0
 ) {
 
     let dsSettings = {
@@ -122,6 +123,7 @@ export default function getData(
         dsSettings.url || "",
         queryType,
         url, 
+        customStep
     );
 
     const endpoint = getEndpoint(type, queryType, params);

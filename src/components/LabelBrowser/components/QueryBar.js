@@ -493,23 +493,27 @@ export const QueryBar = (props) => {
         const isEmptyQuery = queryInput.length === 0;
         let query = "";
         if (!isEmptyQuery) {
+
             const isRate = queryInput.startsWith(`rate(`);
-            const timeDiff = stop.getTime() - start.getTime();
-            const interval = Math.round(timeDiff / width);
+
+           
+
+
             if (type === "metrics") {
                 if (isRate) {
                     query = queryInput.replace(/{([^}]+)}/g, "{}");
+                    query = query.replace(/\[\d+ms\]/, "[$__interval]")
                 } else {
                     query = `rate(${queryInput.replace(
                         /{([^}]+)}/g,
                         "{}"
-                    )}[${interval}ms])`;
+                    )}[$__interval])`;
                 }
             } else {
                 if (!isRate) {
-                    query = `rate(${queryInput}[${interval}ms])`;
+                    query = `rate(${queryInput}[$__interval])`;
                 } else {
-                    query = queryInput.replace(/\[\d+ms\]/, `[${interval}ms]`);
+                    query = queryInput.replace(/\[\d+ms\]/, `[$__interval]`);
                 }
             }
 
@@ -576,18 +580,42 @@ export const QueryBar = (props) => {
         });
 
         dispatch(panelAction(name, panel));
+        let querySubmit = ''
+        
+        let customStep = 0
+
+        if(query.includes(`$__interval`)) {
+
+
+            const timeDiff = (stop.getTime() - start.getTime())/1000;
+         
+            const timeProportion = (timeDiff / 30)
+
+            const screenProportion =  (width / window.innerWidth).toFixed(1)
+
+            const intval = (timeProportion / screenProportion) 
+
+            const ratiointval = (Math.round(intval * (window.devicePixelRatio).toFixed(2)))
+            querySubmit = query.replace('[$__interval]', `[${ratiointval}s]`)
+            customStep = ratiointval
+        } else {
+            querySubmit = query
+        }
+        console.log(querySubmit)
+
 
         dispatch(
             getData(
                 dataSourceType,
-                query,
+                querySubmit,
                 queryType,
                 limit,
                 name,
                 id,
                 direction,
                 dataSourceId,
-                currentDataSource.url
+                currentDataSource.url,
+                customStep
             )
         );
     };
