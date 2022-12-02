@@ -32,13 +32,11 @@ export function useValuesFromMetrics(id) {
             const metricsHeaders = getHeaders(dataSource);
 
             const url = `${dataSource.url}/api/v1/label/__name__/values?start=${timeParams.start}&end=${timeParams.end}`;
-            console.log(url);
             const apiRequest = async () => {
                 // setLoading(true);
 
                 try {
                     const req = await axios.get(url, metricsHeaders);
-                    console.log(req);
                     if (req?.status === 200) {
                         setMetricNames(req?.data?.data || []);
                     }

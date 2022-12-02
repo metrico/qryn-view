@@ -611,7 +611,6 @@ export const QueryBar = (props) => {
         } else {
             querySubmit = query
         }
-        console.log(querySubmit)
 
         if(isSearch) {
             dispatch(

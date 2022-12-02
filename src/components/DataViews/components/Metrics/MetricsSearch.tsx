@@ -2,10 +2,9 @@
 // search for metrics values
 // searc for label- values of metrics
 import { ThemeProvider } from "@emotion/react";
-import { useEffect, useMemo, useState } from "react";
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { themes } from "../../../../theme/themes";
-import { Select as RSelect } from "../../../../views/DataSources/ui";
 import { useMetricsList } from "./useMetricsList";
 import { useValuesFromMetrics } from "./useValuesFromMetrics";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -69,7 +68,14 @@ export const OPERATOR_OPTIONS = [
     { label: "!~", value: "regexexclude" },
 ];
 
-export const OPERATORS = {
+interface operatorsTypes {
+    equals: string | any;
+    regexequals: string | any;
+    excludeequals: string | any;
+    regexexclude: string | any;
+}
+
+export const OPERATORS: operatorsTypes | any = {
     equals: "=",
     regexequals: "~=",
     excludeequals: "!=",
@@ -174,6 +180,7 @@ export default function MetricsSearch(props: any) {
                 <div style={{ marginTop: "3px" }}>
                     <InputSelect
                         isMulti={false}
+                        defaultValue={"Select Metric..."}
                         selectOpts={metricsOpts}
                         mainTheme={mainTheme}
                         onChange={onMetricChange}
@@ -200,12 +207,24 @@ export function MetricsLabelValueSelectors(props: any) {
     const valuesOpts = useMetricsList(dataSourceId, value);
 
     const [labelValuesState, setLabelValuesState] = useState<Label[]>([
-        { label: "", operator: "equals", values: [], id: nanoid() },
+        {
+            label: "",
+            operator: "equals",
+            values: [""],
+            id: nanoid(),
+        },
     ]);
-    const [labelsCount, setLabelsCount] = useState(0);
+
+    const theme = useSelector(
+        (store: { theme: "light" | "dark" }) => store.theme
+    );
+    const mainTheme = useMemo(() => {
+        return themes[theme];
+    }, [theme]);
 
     useEffect(() => {
         const metricString = metricsToString(value, labelValuesState);
+
         metricValueChange(metricString);
     }, [labelValuesState, value]);
 
@@ -218,16 +237,19 @@ export function MetricsLabelValueSelectors(props: any) {
         return [];
     }, [valuesOpts]);
 
-    const onRemove = (e: any, val: any) => {
+    const onRemove = (e: any, id: any) => {
         e.preventDefault();
 
         setLabelValuesState((prev: Label[]) => {
-            if (prev?.length > 1) {
-                return prev?.filter((f: Label) => {
-                    return f.id !== val.id;
-                });
-            }
-            return prev;
+            const prevCopy = [...prev];
+
+            const filtered = prevCopy?.filter((f: Label) => {
+                return f.id !== id;
+            });
+
+            return filtered;
+
+            // return prev;
         });
     };
 
@@ -257,33 +279,74 @@ export function MetricsLabelValueSelectors(props: any) {
         props.onChange(e);
     };
 
+    const resetLabelsState = (e: any) => {
+        setLabelValuesState((prev) => [
+            { label: "", operator: "equals", values: [], id: nanoid() },
+        ]);
+    };
+
     return (
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
-            {labelValuesState &&
-                labelValuesState.map((keyval, key) => (
-                    <>
-                        <MetricsLabelValue
-                            key={key}
-                            keyVal={keyval}
-                            labelOpts={labelOpts}
-                            valuesOpts={valuesOpts}
-                            labelAdd={onAdd}
-                            labelRemove={onRemove}
-                            onChange={onLabelChange}
-                        />
-                    </>
-                ))}
-        </div>
+        <ThemeProvider theme={mainTheme}>
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+                {labelValuesState?.length > 0 &&
+                    labelValuesState?.map((keyval, key) => (
+                       
+                            <MetricsLabelValue
+                                id={keyval.id}
+                                key={key}
+                                keyVal={keyval}
+                                labelOpts={labelOpts}
+                                valuesOpts={valuesOpts}
+                                labelAdd={onAdd}
+                                labelRemove={onRemove}
+                                onChange={onLabelChange}
+                            />
+                        
+                    ))}
+                {labelValuesState?.length < 1 && (
+                    <div
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            marginTop: "5px",
+                            cursor: "pointer",
+                            color: mainTheme.textColor,
+                        }}
+                        onClick={resetLabelsState}
+                    >
+                        <AddOutlinedIcon
+                            style={{
+                                margin: "0px 5px",
+                                color: mainTheme.textColor,
+                            }}
+                            fontSize="small"
+                        />{" "}
+                        <small>Add Labels</small>
+                    </div>
+                )}
+            </div>
+        </ThemeProvider>
     );
 }
 
 export const MetricsLabelValue = (props: any) => {
-    const { keyVal, labelOpts, valuesOpts, labelAdd, labelRemove, onChange, key } =
-        props;
+    const {
+        keyVal,
+        labelOpts,
+        valuesOpts,
+        labelAdd,
+        labelRemove,
+        onChange,
+        id,
+    } = props;
 
     const theme = useSelector(
         (store: { theme: "light" | "dark" }) => store.theme
     );
+
+    const optRef = useRef<any>(null);
+    const operatorRef = useRef<any>(null);
+    const valueRef = useRef<any>(null);
 
     const mainTheme = useMemo(() => {
         return themes[theme];
@@ -327,10 +390,11 @@ export const MetricsLabelValue = (props: any) => {
 
     const onValueChange = (e: any) => {
         let values: any = [];
+        let next = e !== null ? e : { label: "", value: "" };
         if (isMulti) {
-            values = [...e].map((e) => e.value);
+            values = [...next].map((e) => e.value);
         } else {
-            values = [e.value];
+            values = [next.value];
         }
 
         setValValue((_: any) => ({ label: values, values }));
@@ -345,6 +409,15 @@ export const MetricsLabelValue = (props: any) => {
         // onChange(localKeyVal);
     };
 
+    const cleanAndRemove = (e: any) => {
+        if (optRef?.current && operatorRef?.current && valueRef?.current) {
+            optRef.current?.clearValue();
+            operatorRef.current?.clearValue();
+            valueRef.current?.clearValue();
+            labelRemove(e, id);
+        }
+    };
+
     const isMulti = useMemo(() => {
         if (
             operatorValue.value === "regexequals" ||
@@ -356,7 +429,8 @@ export const MetricsLabelValue = (props: any) => {
     }, [operatorValue.value]);
 
     return (
-        <div key={key}
+        <div
+          id={id}
             style={{
                 display: "flex",
                 alignItems: "center",
@@ -365,7 +439,9 @@ export const MetricsLabelValue = (props: any) => {
             }}
         >
             <InputSelect
+                ref={optRef}
                 isMulti={false}
+                defaultValue={keyVal.label}
                 selectOpts={labelOpts}
                 mainTheme={mainTheme}
                 onChange={onLabelChange}
@@ -373,7 +449,9 @@ export const MetricsLabelValue = (props: any) => {
             />
 
             <InputSelect
+                ref={operatorRef}
                 isMulti={false}
+                defaultValue={OPERATORS[keyVal.operator]}
                 selectOpts={OPERATOR_OPTIONS}
                 mainTheme={mainTheme}
                 onChange={onOperatorChange}
@@ -381,7 +459,9 @@ export const MetricsLabelValue = (props: any) => {
             />
 
             <InputSelect
+                ref={valueRef}
                 isMulti={isMulti}
+                defaultValue={keyVal.values}
                 selectOpts={valueSelectOpts}
                 mainTheme={mainTheme}
                 onChange={onValueChange}
@@ -394,7 +474,7 @@ export const MetricsLabelValue = (props: any) => {
                     cursor: "pointer",
                 }}
                 fontSize="small"
-                onClick={(e) => labelRemove(e, localKeyVal)}
+                onClick={cleanAndRemove}
             />
             <AddOutlinedIcon
                 style={{
@@ -411,8 +491,9 @@ export const MetricsLabelValue = (props: any) => {
 
 // should do a map of label / values
 
-export const InputSelect = (props: any) => {
-    const { isMulti, selectOpts, mainTheme, minWidth, onChange } = props;
+export const InputSelect = forwardRef((props: any, ref: any) => {
+    const { isMulti, selectOpts, mainTheme, minWidth, onChange, defaultValue } =
+        props;
 
     const localTheme = useMemo(() => {
         return mainTheme;
@@ -424,6 +505,8 @@ export const InputSelect = (props: any) => {
                 isMulti={isMulti}
                 options={selectOpts}
                 styles={cStyles(localTheme, minWidth)}
+                ref={ref}
+                defaultValue={{ value: defaultValue, label: defaultValue }}
                 theme={(theme) => ({
                     ...theme,
                     borderRadius: 2,
@@ -443,4 +526,4 @@ export const InputSelect = (props: any) => {
             />
         </>
     );
-};
+});
