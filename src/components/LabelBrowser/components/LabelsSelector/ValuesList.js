@@ -9,6 +9,7 @@ import { nanoid } from "nanoid";
 import { setLeftPanel } from "../../../../actions/setLeftPanel";
 import { setRightPanel } from "../../../../actions/setRightPanel";
 import { Loader, LoaderCont, SmallInput } from "./styled";
+import store from "../../../../store/store";
 
 export function panelAction(name, value) {
     if (name === "left") {
@@ -22,15 +23,14 @@ export const selectedStyle = {
 };
 
 export const LabelValue = (props) => {
-    const dispatch = useDispatch();
-    let { value, data, onValueClick, actPanel, name } = props;
+    let { value, data, onValueClick } = props;
 
     const valueSelected = useMemo(() => value.selected, [value.selected]);
 
     const [isValueSelected, setIsValueSelected] = useState(valueSelected);
 
     const valueStyle = useMemo(() => {
-        if (isValueSelected || value.selected || data?.metric === value.name) {
+        if (isValueSelected || data?.metric === value.name) {
             return selectedStyle;
         } else return {};
     }, [isValueSelected, value.selected, data.metric, value.name]);
@@ -46,28 +46,8 @@ export const LabelValue = (props) => {
             isSelected = !prev;
             return !prev
         });
-        const newQuery = decodeQuery(
-            data.expr || "",
-            value.label || props.label,
-            value.name,
-            "=",
-            value.type
-        );
-
-        const panel = [...actPanel];
-        panel.forEach((query) => {
-            if (query.id === props.data.id) {
-                query.expr = newQuery;
-                if (value.type === "metrics") {
-                    query.metric = value.name;
-                }
-            }
-        });
-
-        dispatch(panelAction(name, panel));
 
         const valueUpdated = { ...value, selected: isSelected };
-
         onValueClick(valueUpdated);
     };
 
@@ -212,12 +192,12 @@ export default function ValuesList(props) {
     };
 
     const onValueFilter = (val, selection) => {
-        if (selection.some((s) => s.id === val.id)) {
-            const filtered = selection.filter((f) => f.id !== val.id);
+        if (selection.some((s) => s.name === val.name)) {
+            const filtered = selection.filter((f) => f.name !== val.name);
             return filtered;
         }
 
-        if (!selection.some((s) => s.id === val.id)) {
+        if (!selection.some((s) => s.name === val.name)) {
             return [...selection, { ...val }];
         }
     };
@@ -229,7 +209,6 @@ export default function ValuesList(props) {
         }
         if (valsSelection.length > 0) {
             initialValues = onValueFilter(val, valsSelection);
-
             if (val.type === "metrics") {
                 setValuesState((prev) => {
                     const found = prev.some((s) => s.id === val.id);

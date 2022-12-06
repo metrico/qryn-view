@@ -1,5 +1,6 @@
 import { setLeftPanel } from "../../../actions/setLeftPanel";
 import { setRightPanel } from "../../../actions/setRightPanel";
+import { useQueryParams } from "../../../helpers/useQueryParams";
 import store from "../../../store/store";
 
 export const PIPE_PARSE = [
@@ -21,7 +22,6 @@ export const PIPE_PARSE = [
 const pipeParseOpts = ["json", "regexp", "logfmt", "pattern", "~", "="];
 
 const STREAM_SELECTOR_REGEX = /{[^}]*}/;
-
 const parseLog = {
     newQuery: (keyValue, op, tags) => {
         const [key, value] = keyValue;
@@ -185,12 +185,12 @@ export function decodeQuery(query, key, value, op, type) {
 
     return editQuery(query, keyValue, op, tags);
 }
-
 export function queryBuilder(labels, expr, hasPipe = false, pipeLabels = []) {
     const actualQuery = expr;
     const preTags = actualQuery.split("{")[0];
     let postTags = "";
 
+    const isRate = expr.startsWith('rate(') && expr.endsWith('[$__interval])')
     if (hasPipe) {
         postTags = actualQuery.split("}")[1];
         const json = /[|json]/;
@@ -227,7 +227,6 @@ export function queryBuilder(labels, expr, hasPipe = false, pipeLabels = []) {
             });
         }
     }
-
     return [preTags, "{", selectedLabels.join(","), "}", postTags].join("");
 }
 
