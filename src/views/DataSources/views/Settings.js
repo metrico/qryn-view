@@ -41,7 +41,7 @@ export const Settings = (props) => {
         dispatch(setDataSources(newVal));
         setTimeout(()=>{
             setIsEditing(prev => false)
-        },600)
+        },800)
     };
 
 

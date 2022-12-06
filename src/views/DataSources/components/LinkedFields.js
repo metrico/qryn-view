@@ -43,7 +43,7 @@ export const LinkedFields = (props) => {
         setIsEditing((_) => true);
         setTimeout(() => {
             setIsEditing((_) => false);
-        }, 600);
+        }, 800);
     };
 
     if (linkedFields?.length > 0) {

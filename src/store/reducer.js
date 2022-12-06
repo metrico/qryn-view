@@ -96,7 +96,8 @@ const reducer = (state, action) => {
             return { ...state, left: action.left };
         case "SET_DATA_SOURCES":
             return { ...state, dataSources: action.dataSources };
-
+        case "SET_IS_DATASOURCE_SAVED":
+            return {...state, isDsSaved: action.isDsSaved};
         default:
             return { ...state };
     }

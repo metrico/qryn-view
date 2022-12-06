@@ -45,6 +45,7 @@ export interface Store {
     theme:              string;
     isEmptyView:        boolean;
     isSplit:            boolean;
+    isDsSaved: boolean;
 }
 
 export interface Panel {

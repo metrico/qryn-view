@@ -14,6 +14,7 @@ export function AuthFields(props) {
 
     const [activeFields, setActiveFields] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
+    const [saved, setSaved] = useState(false)
     const fields = useMemo(() => {
         return Object.entries(auth)
             ?.map(([name, field]) => ({
@@ -65,7 +66,7 @@ export function AuthFields(props) {
         onValueChange(value, name);
         setTimeout(() => {
             setIsEditing((_) => false);
-        }, 600);
+        }, 800);
     };
 
     const onSwitchChange = (e, name) => {
@@ -75,8 +76,12 @@ export function AuthFields(props) {
         onValueChange(value, name);
         setTimeout(() => {
             setIsEditing((_) => false);
-        }, 600);
+        }, 800);
     };
+
+    const onSave = () => {
+        setSaved(true)
+    }
 
     const onCertValueChange = (e, name, cert) => {
         setIsEditing((_) => true);
@@ -121,6 +126,7 @@ export function AuthFields(props) {
                 isEditing={isEditing}
                 isEdit={false}
                 isAdd={false}
+               
             />
             <InputCont>
                 {fields &&

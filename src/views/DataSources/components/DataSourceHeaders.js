@@ -1,5 +1,6 @@
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { nanoid } from "nanoid";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import setDataSources from "../store/setDataSources";
 import { InputCol, InputGroup } from "../styles";
@@ -10,9 +11,10 @@ export const DataSourceHeaders = (props) => {
     const dispatch = useDispatch();
 
     const dataSources = useSelector((store) => store.dataSources);
-
+    const [editing, setEditing] = useState(false)
     const { headers, id } = props;
     const onChange = (e, headerId, name) => {
+        setEditing((_)=> true)
         const value = e.target.value; // identify value changed
         const prevDs = dataSources.find((f) => f.id === id);
         const prevHeaders = prevDs["headers"] || [];
@@ -34,6 +36,9 @@ export const DataSourceHeaders = (props) => {
 
         localStorage.setItem("dataSources", JSON.stringify(newDataSources));
         dispatch(setDataSources(newDataSources));
+        setTimeout(() => {
+            setEditing((_) => false);
+        }, 800);
     };
 
     const onAdd = (e) => {
@@ -80,6 +85,7 @@ export const DataSourceHeaders = (props) => {
 
         localStorage.setItem("dataSources", JSON.stringify(newDataSources));
         dispatch(setDataSources(newDataSources));
+
     };
 
     return (
@@ -90,7 +96,7 @@ export const DataSourceHeaders = (props) => {
                         title={"Custom HTTP Headers"}
                         isEdit={false}
                         isAdd={true}
-                        isEditing={false}
+                        isEditing={editing}
                         onClickAdd={onAdd}
                     />
 

@@ -1,4 +1,7 @@
+import { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import setIsDatasourceSaved from "../store/setIsDataSourceSaved";
 import { Button, QrynLogo } from "../ui";
 
 export interface HeaderProps {
@@ -7,7 +10,20 @@ export interface HeaderProps {
 
 export function Header(props: HeaderProps) {
     const navigate = useNavigate();
+    const dispatch = useDispatch()
     const { title } = props;
+    const isDsSaved = useSelector((store:any)=> store.isDsSaved)
+    const buttonMessage = useMemo(()=>{
+        if(isDsSaved) {
+            return 'Save'
+        }
+        return 'Back'
+    },[isDsSaved])
+
+    const backOne = () =>{
+        dispatch(setIsDatasourceSaved(false))
+        navigate(-1)
+    }
 
     return (
         <div className="ds-header">
@@ -17,10 +33,10 @@ export function Header(props: HeaderProps) {
             </div>
 
             <Button
-                value={"Back"}
-                onClick={() => navigate(-1)}
+                value={buttonMessage}
+                onClick={backOne}
                 editing={true}
-                primary={false}
+                primary={isDsSaved}
             />
         </div>
     );
