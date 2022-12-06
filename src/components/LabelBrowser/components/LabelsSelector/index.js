@@ -39,6 +39,9 @@ export default function LabelsSelector(props) {
         if (response?.data?.data) {
             setLabelsResponse(response?.data?.data);
         }
+        if(!data) {
+            return ()=> null
+        }
     }, [response, setLabelsResponse]);
 
     // memoize and format labels response
@@ -56,6 +59,9 @@ export default function LabelsSelector(props) {
 
     useEffect(() => {
         setLabelsState(labels);
+        if(!data) {
+            return ()=> null
+        }
     }, [labels]);
 
     const [labelsState, setLabelsState] = useState(labels);
@@ -100,24 +106,27 @@ export default function LabelsSelector(props) {
 
         setLabelsSelected((prev) => updateLabelSelected(prev, e));
     };
-
-    return (
-        <ThemeProvider theme={themes[theme]}>
-            <ValuesListStyled>
-                <div className="valuesList">
-                    <div className={"valuelist-title"}>
-                        {!loading && (
-                            <LabelsList
-                                {...props}
-                                labels={labelsState}
-                                onLabelSelected={onLabelSelected}
-                            />
-                        )}
+    if(data) {
+        return (
+            <ThemeProvider theme={themes[theme]}>
+                <ValuesListStyled>
+                    <div className="valuesList">
+                        <div className={"valuelist-title"}>
+                            {!loading && (
+                                <LabelsList
+                                    {...props}
+                                    labels={labelsState}
+                                    onLabelSelected={onLabelSelected}
+                                />
+                            )}
+                        </div>
+    
+                        <ValuesSelector {...props} labelsSelected={selected} />
                     </div>
+                </ValuesListStyled>
+            </ThemeProvider>
+        );
+    }
+    return null
 
-                    <ValuesSelector {...props} labelsSelected={selected} />
-                </div>
-            </ValuesListStyled>
-        </ThemeProvider>
-    );
 }
