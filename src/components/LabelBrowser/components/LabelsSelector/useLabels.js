@@ -105,6 +105,10 @@ export default function useLabels(id, dataSourceURL = "") {
             };
             apiRequest();
         }
+
+        if(!id) {
+            return ()=> null
+        }
     }, [url, currentDataSource]);
 
     return {

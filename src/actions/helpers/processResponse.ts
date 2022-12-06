@@ -17,14 +17,13 @@ export async function processResponse(
 ) {
     const { time } = getTimeParams(type);
     const { debugMode } = store.getState();
-
     if (type === "traces") {
         if (
             queryType === "trace-search" &&
             response?.data?.traces?.length > 0
         ) {
             const resultQuery: TracesResult = {
-                result: response.data.traces,
+                result: response.data.traces||[],
                 time,
                 debugMode,
                 dispatch,
@@ -39,7 +38,7 @@ export async function processResponse(
 
         if (response?.data?.resourceSpans?.length > 0) {
             const resultQuery: TracesResult = {
-                result: response?.data,
+                result: response?.data || [],
                 time,
                 debugMode,
                 dispatch,
@@ -56,7 +55,7 @@ export async function processResponse(
         await convertFlux(response?.data).then((data) => {
             if (data?.data?.length > 0) {
                 const resultQuery: QueryResult = {
-                    result: data.data,
+                    result: data.data || [],
                     time,
                     debugMode,
                     queryType,

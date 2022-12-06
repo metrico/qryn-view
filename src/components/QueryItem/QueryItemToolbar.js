@@ -103,9 +103,7 @@ export function QueryItemToolbar(props) {
         if (currentLocal?.length > 0) {
             const hasPrevQuery =
                 currentLocal?.find((s) => s.queryId === props.data.id) || false;
-            console.log(currentLocal);
             if (hasPrevQuery) {
-                console.log(hasPrevQuery);
                 newDsLocal = currentLocal.map((m) => {
                     if (m.queryId === props.data.id) {
                         return {

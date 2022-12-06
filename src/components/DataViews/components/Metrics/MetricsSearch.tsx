@@ -1,6 +1,3 @@
-// here we should :
-// search for metrics values
-// searc for label- values of metrics
 import { ThemeProvider } from "@emotion/react";
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -153,7 +150,10 @@ export default function MetricsSearch(props: any) {
     }, [storeTheme]);
 
     const onMetricChange = (e: any) => {
-        setMetricValue((prev) => ({ ...e }));
+        const { value, id } = e;
+        setMetricValue((prev: any) => {
+            return { value: value?.value, label: value?.value };
+        });
     };
     const handleMetricChange = (e: any) => {
         handleMetricValueChange(e);
@@ -161,7 +161,7 @@ export default function MetricsSearch(props: any) {
     const onLabelValueChange = (e: any) => {
         setLabelFilters((prev: any) => {
             if (prev?.length > 0) {
-                if (prev?.some((s: any) => s.label === e.label)) {
+                if (prev?.some((s: any) => s.id === e.id)) {
                     return prev.map((labelFilter: any) => {
                         if (labelFilter.label === e.label) {
                             return { ...e };
@@ -180,11 +180,13 @@ export default function MetricsSearch(props: any) {
                 <div style={{ marginTop: "3px" }}>
                     <InputSelect
                         isMulti={false}
+                        type={"metric"}
                         defaultValue={"Select Metric..."}
                         selectOpts={metricsOpts}
                         mainTheme={mainTheme}
                         onChange={onMetricChange}
                         minWidth={250}
+                        labelValuesLength={0}
                     />
                 </div>
                 <MetricsLabelValueSelectors
@@ -215,18 +217,14 @@ export function MetricsLabelValueSelectors(props: any) {
         },
     ]);
 
+    const [labelValueString, setLabelValueString] = useState("");
+
     const theme = useSelector(
         (store: { theme: "light" | "dark" }) => store.theme
     );
     const mainTheme = useMemo(() => {
         return themes[theme];
     }, [theme]);
-
-    useEffect(() => {
-        const metricString = metricsToString(value, labelValuesState);
-
-        metricValueChange(metricString);
-    }, [labelValuesState, value]);
 
     const labelOpts = useMemo(() => {
         if (valuesOpts && Object.keys(valuesOpts)?.length > 0) {
@@ -237,19 +235,18 @@ export function MetricsLabelValueSelectors(props: any) {
         return [];
     }, [valuesOpts]);
 
-    const onRemove = (e: any, id: any) => {
-        e.preventDefault();
-
+    const onRemove = (id: any) => {
         setLabelValuesState((prev: Label[]) => {
-            const prevCopy = [...prev];
+            const prevValue = JSON.parse(JSON.stringify(prev));
 
-            const filtered = prevCopy?.filter((f: Label) => {
-                return f.id !== id;
-            });
+            const newState = prevValue?.filter((f: any) => f.id !== id);
+            return newState;
+        });
 
-            return filtered;
-
-            // return prev;
+        setLabelValueString((prev: any) => {
+            const prevValue = JSON.parse(prev || JSON.stringify("[]"));
+            const newState = prevValue?.filter((f: any) => f.id !== id);
+            return JSON.stringify(newState);
         });
     };
 
@@ -264,20 +261,33 @@ export function MetricsLabelValueSelectors(props: any) {
 
     const onLabelChange = (e: any) => {
         const labelFound = labelValuesState?.some((f) => f.id === e.id);
+        if (labelValuesState?.length === 1 && !labelFound) {
+            setLabelValuesState((prev) => [e]);
+            setLabelValueString((prev) => JSON.stringify([e]));
+        }
+
+        const prevState = [...labelValuesState];
+
+        const nextState = prevState?.map((m) => {
+            if (m.id === e.id) {
+                return { ...e };
+            }
+            return m;
+        });
 
         if (labelFound) {
-            setLabelValuesState((prev) => {
-                return prev?.map((m) => {
-                    if (m.id === e.id) {
-                        return { ...e };
-                    }
-                    return m;
-                });
-            });
+            setLabelValuesState((_) => [...nextState]);
+            setLabelValueString((_) => JSON.stringify(nextState));
         }
 
         props.onChange(e);
     };
+
+    useEffect(() => {
+        const labValue = labelValueString || JSON.stringify("");
+        const metricString = metricsToString(value, JSON.parse(labValue));
+        metricValueChange(metricString);
+    }, [labelValueString, value]);
 
     const resetLabelsState = (e: any) => {
         setLabelValuesState((prev) => [
@@ -290,19 +300,21 @@ export function MetricsLabelValueSelectors(props: any) {
             <div style={{ display: "flex", flexWrap: "wrap" }}>
                 {labelValuesState?.length > 0 &&
                     labelValuesState?.map((keyval, key) => (
-                       
-                            <MetricsLabelValue
-                                id={keyval.id}
-                                key={key}
-                                keyVal={keyval}
-                                labelOpts={labelOpts}
-                                valuesOpts={valuesOpts}
-                                labelAdd={onAdd}
-                                labelRemove={onRemove}
-                                onChange={onLabelChange}
-                            />
-                        
+                        <MetricsLabelValue
+                            id={keyval.id}
+                            idx={key}
+                            key={key}
+                            keyVal={keyval}
+                            labelOpts={labelOpts}
+                            valuesOpts={valuesOpts}
+                            labelAdd={onAdd}
+                            labelRemove={onRemove}
+                            onChange={onLabelChange}
+                            currentState={labelValuesState}
+                            labelValuesLength={labelValuesState.length || 0}
+                        />
                     ))}
+
                 {labelValuesState?.length < 1 && (
                     <div
                         style={{
@@ -337,6 +349,9 @@ export const MetricsLabelValue = (props: any) => {
         labelAdd,
         labelRemove,
         onChange,
+        labelValuesLength,
+        idx,
+        currentState,
         id,
     } = props;
 
@@ -369,52 +384,67 @@ export const MetricsLabelValue = (props: any) => {
         }
     }, [labelValue.value, valuesOpts]);
 
-    const [valValue, setValValue] = useState(
-        valuesOpts[0] || { label: "Select Value", value: "" }
-    );
-
     const [operatorValue, setOperatorValue] = useState({
         label: "=",
         value: "equals",
     });
 
-    useEffect(() => {
-        onChange(localKeyVal);
-    }, [localKeyVal]);
-
     const onLabelChange = (e: any) => {
-        setLabelValue((_: any) => ({ ...e }));
-        setLocalKeyVal((prev: any) => ({ ...prev, label: e?.value }));
-        // onChange(localKeyVal);
+        const { value, id } = e;
+
+        setLabelValue((_: any) => ({
+            value: value?.value,
+            label: value?.value,
+        }));
+        const prevKeyVal = JSON.parse(JSON.stringify(localKeyVal));
+        const newKeyVal = {
+            ...prevKeyVal,
+            label: value?.label,
+            value: value.value,
+            id,
+        };
+        onChange(newKeyVal);
+        setLocalKeyVal((prev: any) => {
+            return { ...prev, label: value?.value };
+        });
     };
 
     const onValueChange = (e: any) => {
+        const { value, id } = e;
         let values: any = [];
-        let next = e !== null ? e : { label: "", value: "" };
-        if (isMulti) {
-            values = [...next].map((e) => e.value);
+        let next = value !== null ? value : { label: "", value: "" };
+        if (isMulti && Array.isArray(next)) {
+            values = next?.map((e: any) => e.value);
         } else {
             values = [next.value];
         }
 
-        setValValue((_: any) => ({ label: values, values }));
+        const prevKeyVal = JSON.parse(JSON.stringify(localKeyVal));
+
+        const newKeyVal = { ...prevKeyVal, values, id };
+
+        onChange(newKeyVal);
         setLocalKeyVal((prev: any) => ({ ...prev, values }));
-        // onChange(localKeyVal);
     };
 
     const onOperatorChange = (e: any) => {
-        ///const value = e.target.value;
-        setOperatorValue((_: any) => ({ ...e }));
-        setLocalKeyVal((prev: any) => ({ ...prev, operator: e?.value }));
-        // onChange(localKeyVal);
+        const { value, id } = e;
+
+        const prevKeyVal = JSON.parse(JSON.stringify(localKeyVal));
+
+        const newKeyVal = { ...prevKeyVal, operator: value?.value, id };
+
+        onChange(newKeyVal);
+
+        setOperatorValue((_: any) => {
+            return { ...value };
+        });
+        setLocalKeyVal((prev: any) => ({ ...prev, operator: value?.value }));
     };
 
     const cleanAndRemove = (e: any) => {
         if (optRef?.current && operatorRef?.current && valueRef?.current) {
-            optRef.current?.clearValue();
-            operatorRef.current?.clearValue();
-            valueRef.current?.clearValue();
-            labelRemove(e, id);
+            labelRemove(keyVal.id);
         }
     };
 
@@ -428,72 +458,152 @@ export const MetricsLabelValue = (props: any) => {
         return false;
     }, [operatorValue.value]);
 
-    return (
-        <div
-          id={id}
-            style={{
-                display: "flex",
-                alignItems: "center",
-                marginLeft: "3px",
-                marginTop: "3px",
-            }}
-        >
-            <InputSelect
-                ref={optRef}
-                isMulti={false}
-                defaultValue={keyVal.label}
-                selectOpts={labelOpts}
-                mainTheme={mainTheme}
-                onChange={onLabelChange}
-                minWidth={100}
-            />
+    const labelValueRender = () => {
+        if (labelValuesLength > 0) {
+            return (
+                <div
+                    id={id}
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginLeft: "3px",
+                        marginTop: "3px",
+                    }}
+                >
+                    <InputSelect
+                        ref={optRef}
+                        type={"label"}
+                        isMulti={false}
+                        defaultValue={keyVal.label}
+                        selectOpts={labelOpts}
+                        mainTheme={mainTheme}
+                        onChange={onLabelChange}
+                        keyVal={keyVal}
+                        objId={id}
+                        minWidth={100}
+                        labelsLength={labelValuesLength}
+                    />
 
-            <InputSelect
-                ref={operatorRef}
-                isMulti={false}
-                defaultValue={OPERATORS[keyVal.operator]}
-                selectOpts={OPERATOR_OPTIONS}
-                mainTheme={mainTheme}
-                onChange={onOperatorChange}
-                minWidth={60}
-            />
+                    <InputSelect
+                        ref={operatorRef}
+                        type={"operator"}
+                        isMulti={false}
+                        defaultValue={keyVal.operator}
+                        selectOpts={OPERATOR_OPTIONS}
+                        keyVal={keyVal}
+                        mainTheme={mainTheme}
+                        onChange={onOperatorChange}
+                        objId={id}
+                        minWidth={60}
+                        labelsLength={labelValuesLength}
+                    />
 
-            <InputSelect
-                ref={valueRef}
-                isMulti={isMulti}
-                defaultValue={keyVal.values}
-                selectOpts={valueSelectOpts}
-                mainTheme={mainTheme}
-                onChange={onValueChange}
-                minWidth={250}
-            />
-            <DeleteOutlineOutlinedIcon
-                style={{
-                    color: mainTheme.textColor,
-                    margin: "0px 5px",
-                    cursor: "pointer",
-                }}
-                fontSize="small"
-                onClick={cleanAndRemove}
-            />
-            <AddOutlinedIcon
-                style={{
-                    color: mainTheme.textColor,
-                    margin: "0px 5px",
-                    cursor: "pointer",
-                }}
-                fontSize="small"
-                onClick={labelAdd}
-            />
-        </div>
-    );
+                    <InputSelect
+                        ref={valueRef}
+                        type={"value"}
+                        isMulti={isMulti}
+                        defaultValue={keyVal.values}
+                        selectOpts={valueSelectOpts}
+                        keyVal={keyVal}
+                        mainTheme={mainTheme}
+                        onChange={onValueChange}
+                        objId={id}
+                        minWidth={250}
+                        labelsLength={labelValuesLength}
+                    />
+                    <DeleteOutlineOutlinedIcon
+                        style={{
+                            color: mainTheme.textColor,
+                            margin: "0px 5px",
+                            cursor: "pointer",
+                        }}
+                        fontSize="small"
+                        onClick={cleanAndRemove}
+                    />
+                    <AddOutlinedIcon
+                        style={{
+                            color: mainTheme.textColor,
+                            margin: "0px 5px",
+                            cursor: "pointer",
+                        }}
+                        fontSize="small"
+                        onClick={labelAdd}
+                    />
+                </div>
+            );
+        }
+    };
+
+    return <>{labelValueRender()}</>;
 };
 
-// should do a map of label / values
-
 export const InputSelect = forwardRef((props: any, ref: any) => {
-    const { isMulti, selectOpts, mainTheme, minWidth, onChange, defaultValue } =
-        props;
+    const {
+        selectOpts,
+        mainTheme,
+        minWidth,
+        onChange,
+        defaultValue,
+        type,
+        keyVal,
+        objId,
+        labelsLength,
+    } = props;
+
+    const defaultValueMemo = useMemo(() => {
+        if (type === "operator") {
+            return { value: defaultValue, label: OPERATORS[defaultValue] };
+        }
+        if (type === "value") {
+            return keyVal.values;
+        }
+
+        return { key: defaultValue, label: defaultValue };
+    }, [defaultValue]);
+
+    const [selectedOption, setSelectedOption] = useState(
+        defaultValueMemo || { label: "", value: "" }
+    );
+
+    const multiType = (op: any) => {
+        return (
+            op?.operator === "regexequals" || op?.operator === "regexexclude"
+        );
+    };
+
+    const isMulti = useMemo(() => {
+        if (type === "metrics") {
+            return false;
+        }
+
+        if (multiType(keyVal) && type === "value") {
+            return true;
+        }
+        return false;
+    }, [type, keyVal]);
+
+    useEffect(() => {
+        if (type === "metric") {
+            setSelectedOption((prev: any) => prev);
+        } else if (type === "operator") {
+            setSelectedOption({
+                value: keyVal[type],
+                label: OPERATORS[keyVal[type]],
+            });
+        } else if (type === "value") {
+            const mapped = [
+                ...keyVal.values.map((m: any) => ({ label: m, value: m })),
+            ];
+            setSelectedOption(mapped);
+        } else {
+            setSelectedOption({ key: keyVal[type], label: keyVal[type] });
+        }
+    }, [labelsLength]);
+
+    const onsSelectValueChange = (e: any) => {
+        setSelectedOption((prev: any) => e);
+        onChange({ value: e, id: objId });
+    };
 
     const localTheme = useMemo(() => {
         return mainTheme;
@@ -502,11 +612,13 @@ export const InputSelect = forwardRef((props: any, ref: any) => {
     return (
         <>
             <Select
+                id={objId}
                 isMulti={isMulti}
                 options={selectOpts}
                 styles={cStyles(localTheme, minWidth)}
+                value={selectedOption}
                 ref={ref}
-                defaultValue={{ value: defaultValue, label: defaultValue }}
+                defaultValue={defaultValueMemo}
                 theme={(theme) => ({
                     ...theme,
                     borderRadius: 2,
@@ -522,7 +634,7 @@ export const InputSelect = forwardRef((props: any, ref: any) => {
                         neutral10: localTheme.widgetContainer,
                     },
                 })}
-                onChange={onChange}
+                onChange={onsSelectValueChange}
             />
         </>
     );

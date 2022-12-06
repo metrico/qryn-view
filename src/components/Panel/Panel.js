@@ -43,11 +43,13 @@ export default function Panel(props) {
             dispatch(panelDispatch(name, panelQueries));
         }
     }, []);
+
     useEffect(()=>{
         if (typeof ref.current.clientWidth === 'number'){
             setWidth(ref.current.clientWidth)
         }
     },[ref?.current?.clientWidth])
+    // 
     useEffect(() => {
         const onWindowResize = () => {
             setWidth(ref.current.clientWidth);
@@ -60,6 +62,7 @@ export default function Panel(props) {
     // CHECK ALSO THAT DATAVIEWS IS AN ARRAY
 
     const panelData = useMemo(() => panel, [panel]);
+    //console.log(panelData)
     return (
         <>
             <PanelCont isSplit={isSplit} ref={ref}>
