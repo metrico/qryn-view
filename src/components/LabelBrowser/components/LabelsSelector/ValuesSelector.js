@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import ValuesList from "./ValuesList";
 
 export default function ValuesSelector(props) {
-    const { data } = props;
-    const { dataSourceType } = data;
-
+    const { data, name } = props;
+    const { dataSourceType, id } = data;
+    const panel = useSelector(store => store[name])
     const [labels, setLabels] = useState(props.labelsSelected);
 
     const labelsFiltered = useMemo(() => {

@@ -1,6 +1,18 @@
 import { useMemo } from "react";
 import styled from "@emotion/styled";
+import ShowLogsButton from "../Buttons/ShowLogsButton";
+import { queryBuilder } from "../../helpers/querybuilder";
+import { useDispatch } from "react-redux";
+import { setLeftPanel } from "../../../../actions/setLeftPanel";
+import { setRightPanel } from "../../../../actions/setRightPanel";
+import store from "../../../../store/store";
 
+function panelAction(name, value) {
+    if (name === "left") {
+        return setLeftPanel(value);
+    }
+    return setRightPanel(value);
+}
 export const EmptyLabels = (props) => {
     
     const EmptyCont = styled.div`
@@ -39,7 +51,8 @@ function LabelItem(props) {
 }
 
 export default function LabelsList(props) {
-    const { labels, data } = props;
+    const dispatch = useDispatch();
+    const { labels, data, name } = props;
     const { dataSourceType } = data;
 
     const onClick = (e) => {
@@ -62,13 +75,17 @@ export default function LabelsList(props) {
         return labels?.filter((f) => f.name !== "__name__");
     }, [dataSourceType, labels]);
 
-    const metricLabel = useMemo(() => {
-        if (dataSourceType !== "metrics") {
-            return null;
-        }
-        return labels?.filter((f) => f.name === "__name__");
-    }, [dataSourceType, labels]);
-
+    const useQuery = () => {
+        const qu = queryBuilder(data.labels, data.expr)
+        const panel = [data];
+        panel.forEach((query) => {
+            if (query.id === props.data.id) {
+                query.expr = qu;
+                query.labels = data.labels
+            }
+        });
+        dispatch(panelAction(name, panel));
+    }
     return (
         <div className="valuelist-content">
             {/* {metricLabel !== null && lsList && dataSourceType === 'metrics' && (
@@ -83,14 +100,23 @@ export default function LabelsList(props) {
             )} */}
 
             {lsList &&
-                lsList.map((label, key) => (
-                    <LabelItem
-                        key={key}
-                        label={label.name}
-                        selected={label.selected}
-                        onClick={onClick}
+                <>
+                    {lsList.map((label, key) => (
+                        <LabelItem
+                            key={key}
+                            label={label.name}
+                            selected={label.selected}
+                            onClick={onClick}
+                        />
+                    ))}
+                    <ShowLogsButton
+                        onClick={useQuery}
+                        isMobile={false}
+                        alterText={"Use Query"}
                     />
-                ))}
+                </>
+            }
+                
             {!lsList && <EmptyLabels {...props} />}
         </div>
     );

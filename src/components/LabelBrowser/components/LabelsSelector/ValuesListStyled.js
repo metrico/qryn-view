@@ -92,15 +92,7 @@ const ValuesListStyled = styled.div`
         }
     }
 
-    button {
-        color: ${(props) => props.theme.textColor};
-        background: ${(props) => props.theme.buttonDefault} !important;
-        border: 1px solid ${(props) => props.theme.buttonBorder} !important;
-        padding: 13px 8px;
-        &:hover {
-            background: ${(props) => props.theme.buttonHover};
-        }
-    }
+
     
     .values-container {
         .values-container-column {

@@ -427,7 +427,7 @@ export const QueryBar = (props) => {
                 setLocalStorage()
                 
             } catch (e) {
-                console.log(e);
+                console.error(e);
             }
         } else {
             dispatch(setIsEmptyView(true));
@@ -540,7 +540,7 @@ export const QueryBar = (props) => {
 
                 updateLinksHistory();
             } catch (e) {
-                console.log(e);
+                console.error(e);
             }
         } else {
             dispatch(setIsEmptyView(true));
@@ -564,13 +564,13 @@ export const QueryBar = (props) => {
         dispatch(setQueryHistory(historyUpdated));
 
     }
-    const decodeQueryAndUpdatePanel = (query, isSearch) => {
+    const decodeQueryAndUpdatePanel = (queryExpr, isSearch) => {
         const currentDataSource = dataSources.find(
             (f) => f.id === dataSourceId
         );
         if (currentDataSource?.type !== "flux") {
             decodeQuery(
-                query,
+                queryExpr,
                 currentDataSource?.url,
                 props.data.labels,
                 currentDataSource?.id
@@ -581,6 +581,9 @@ export const QueryBar = (props) => {
 
         panel.forEach((query) => {
             if (query.id === id) {
+                if (isSearch) {
+                    query.expr = queryExpr;
+                }
                 query.labels = [...labelsDecoded];
                 query.browserOpen = !isSearch && dataSourceType === 'logs';
                 query.dataSourceId = currentDataSource.id;
@@ -594,7 +597,7 @@ export const QueryBar = (props) => {
         
         let customStep = 0
 
-        if(query.includes(`$__interval`)) {
+        if(queryExpr.includes(`$__interval`)) {
 
 
             const timeDiff = (stop.getTime() - start.getTime())/1000;
@@ -606,10 +609,10 @@ export const QueryBar = (props) => {
             const intval = (timeProportion / screenProportion) 
 
             const ratiointval = (Math.round(intval * (window.devicePixelRatio).toFixed(2)))
-            querySubmit = query.replace('[$__interval]', `[${ratiointval}s]`)
+            querySubmit = queryExpr.replace('[$__interval]', `[${ratiointval}s]`)
             customStep = ratiointval
         } else {
-            querySubmit = query
+            querySubmit = queryExpr
         }
 
         if(isSearch) {
