@@ -178,22 +178,23 @@ export default function getData(
                         ...options,
                     })
                     ?.then((response) => {
-                        processResponse(
-                            type,
-                            response,
-                            dispatch,
-                            panel,
-                            id,
-                            direction,
-                            queryType
-                        );
-
-                        if (debugMode) {
-                            boscoSend(
-                                { level: "info", id, type, direction },
-                                id
+                            processResponse(
+                                type,
+                                response || {data:{data:[]}},
+                                dispatch,
+                                panel,
+                                id,
+                                direction,
+                                queryType
                             );
-                        }
+    
+                            if (debugMode) {
+                                boscoSend(
+                                    { level: "info", id, type, direction },
+                                    id
+                                );
+                        } 
+                    
                     })
                     .catch((error) => {
                         resetNoData(dispatch);
