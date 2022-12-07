@@ -3,7 +3,7 @@ import { Dialog } from "@mui/material";
 import { useSelector } from "react-redux";
 import { themes } from "../../../theme/themes";
 import { InfoContent } from "./InfoContent";
-
+import { DialogStyles } from "../../../plugins/settingsdialog/SettingsDialog";
 export function InfoDialog({
     expr,
     idRef,
@@ -17,7 +17,11 @@ export function InfoDialog({
     const theme = useSelector((store) => store.theme);
     return (
         <ThemeProvider theme={themes[theme]}>
-            <Dialog open={open} onClose={onClose}>
+            <Dialog open={open} onClose={onClose} PaperProps={{
+            classes: {
+                root: DialogStyles
+            }
+          }}>
                 <InfoContent
                     expr={expr}
                     idRef={idRef}
