@@ -2,7 +2,8 @@ import { PureComponent, useMemo } from "react";
 import { useMediaQuery } from "react-responsive";
 import { LogRowStyled, RowLogContent, RowTimestamp, RowsCont } from "./styled";
 import { createItemData, formatDate, getRowColor } from "./helpers";
-import {ValueTagsCont} from "../ValueTags";
+import { ValueTagsCont } from "../ValueTags";
+import { useSelector } from "react-redux";
 
 /**
  *
@@ -10,12 +11,14 @@ import {ValueTagsCont} from "../ValueTags";
  * @returns Formatted log text line
  */
 
-function LogRow({ text, dateFormated, isMobile }) {
+function LogRow({ text, dateFormated, isMobile, isSplit, isShowTs }) {
     return (
         <div className="log-ts-row">
-            {!isMobile && <RowTimestamp>{dateFormated}</RowTimestamp>}
+            {isShowTs && !isMobile && !isSplit && (
+                <RowTimestamp>{dateFormated}</RowTimestamp>
+            )}
             <RowLogContent>
-                {isMobile && <p>{dateFormated}</p>}
+                {(isMobile || isSplit) && isShowTs && <p>{dateFormated}</p>}
                 <p>{text}</p>
             </RowLogContent>
         </div>
@@ -28,21 +31,65 @@ function LogRow({ text, dateFormated, isMobile }) {
  * @returns Log Line With log line tags options
  */
 
-function Row({ toggleItemActive, index, log, actQuery, isMobile }) {
+function Row(props) {
+    const {
+        toggleItemActive,
+        index,
+        log,
+        actQuery,
+        isMobile,
+        isSplit,
+        dataSourceData,
+    } = props;
+
     const { tags, timestamp, text, showLabels } = log;
+
+    const linkedFieldTags = useMemo(() => {
+        if (dataSourceData?.linkedFields?.length > 0) {
+            const mapped = dataSourceData.linkedFields.map((linked) => {
+                const { id, regex, name, internalLink } = linked;
+                const newGex = new RegExp(regex, "i");
+                const matched = text.match(newGex);
+                if (matched?.length > 0) {
+                    return {
+                        name,
+                        internalLink,
+                        id,
+                        tagGroups: matched.groups,
+                    };
+                }
+                return {};
+            });
+
+            let linked = { tags: {}, fields: [] };
+            for (let tag of mapped) {
+                linked.tags = { ...linked.tags, ...tag.tagGroups };
+                linked.fields.push(tag);
+            }
+            return linked;
+        } else {
+            return {};
+        }
+    }, [text]);
+
     const rowColor = useMemo(() => getRowColor(tags), [tags]);
     const dateFormated = useMemo(() => formatDate(timestamp), [timestamp]);
+    //  inside here should be the special fields
 
     const valueTagsProps = {
         actQuery,
-        tags,
+        tags: { ...tags, ...linkedFieldTags.tags },
+        linkedFieldTags,
         showLabels,
+        dataSourceData,
     };
 
     const logRowProps = {
         dateFormated,
         text,
         isMobile,
+        isSplit,
+        dataSourceData,
     };
 
     const rowProps = {
@@ -54,12 +101,11 @@ function Row({ toggleItemActive, index, log, actQuery, isMobile }) {
 
     return (
         <LogRowStyled {...rowProps}>
-            <LogRow {...logRowProps} />
+            <LogRow {...logRowProps} isShowTs={actQuery.isShowTs} />
             <ValueTagsCont {...valueTagsProps} />
         </LogRowStyled>
     );
 }
-
 
 /**
  *
@@ -67,18 +113,41 @@ function Row({ toggleItemActive, index, log, actQuery, isMobile }) {
  * @returns  iterable of rows (items)
  */
 
-function Logs({ items, toggleItemActive, actQuery }) {
+function Logs(props) {
+    const { items, toggleItemActive, actQuery, dataSourceId } = props;
+
     const itemData = createItemData(items, toggleItemActive);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+    const isSplit = useSelector((store) => store.isSplit);
+
+    const dataSourceData = useSelector(({ dataSources }) =>
+        dataSources?.find((f) => f.id === dataSourceId)
+    );
+
+    const dsData = useMemo(() => {
+        if (dataSourceData) {
+            const { linkedFields, id, name, url } = dataSourceData;
+
+            return {
+                linkedFields,
+                id,
+                name,
+                url,
+            };
+        }
+    }, [dataSourceData]);
 
     return (
         itemData &&
         itemData.items.map((log, key) => (
             <Row
+                dataSourceId={dataSourceId}
+                dataSourceData={dsData}
                 actQuery={actQuery}
                 key={key}
                 index={key}
                 log={log}
+                isSplit={isSplit}
                 isMobile={isTabletOrMobile}
                 toggleItemActive={toggleItemActive}
             />
@@ -112,9 +181,13 @@ export class LogRows extends PureComponent {
         });
 
     render() {
+        const { actualQuery } = this.props;
+        const { dataSourceId } = actualQuery;
         return (
             <RowsCont>
                 <Logs
+                    {...this.props}
+                    dataSourceId={dataSourceId}
                     actQuery={this.props.actualQuery}
                     items={this.state.messages}
                     toggleItemActive={this.toggleItemActive}

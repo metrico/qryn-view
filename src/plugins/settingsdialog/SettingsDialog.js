@@ -1,7 +1,6 @@
 import { Dialog, Switch, Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    setApiUrl,
     setTheme,
     setAutoTheme
 } from "../../actions";
@@ -18,10 +17,7 @@ import {
     SettingHeader,
     SettingCloseBtn,
     SettingsInputContainer,
-    InlineGroup,
-    SettingInput,
     SettingLabel,
-    SettingButton,
     EmbedArea,
 } from "./styled";
 
@@ -29,11 +25,11 @@ import setDebugMode from "../../actions/setDebugMode";
 
 export default function SettingsDialog({ open, onClose }) {
     const dispatch = useDispatch();
-    const apiUrl = useSelector((store) => store.apiUrl);
     const theme = useSelector((store) => store.theme);
     const autoTheme = useSelector((store) => store.autoTheme)
     const debugMode = useSelector((store) => store.debugMode);
-    const [apiEdited, setApiEdited] = useState(apiUrl);
+
+  
 
     const [embedEdited, setEmbedEdited] = useState(
         getEmbed(window.location.href)
@@ -56,14 +52,6 @@ export default function SettingsDialog({ open, onClose }) {
         setThemeSet(theme);
     }, [theme, setThemeSet]);
 
-    function handleApiChange(e) {
-        const value = e.target.value;
-        setApiEdited(value);
-    }
-
-    function handleApiClick() {
-        dispatch(setApiUrl(apiEdited));
-    }
 
     function handleThemeSwitch() {
         dispatch(setTheme(themeSet === "light" ? "dark" : "light"));
@@ -102,18 +90,6 @@ export default function SettingsDialog({ open, onClose }) {
                 </SettingHeader>
 
                 <SettingsInputContainer>
-                    <InputGroup>
-                        <SettingLabel>API URL</SettingLabel>
-                        <InlineGroup>
-                            <SettingInput
-                                value={apiEdited}
-                                onChange={handleApiChange}
-                            />
-                            <SettingButton onClick={handleApiClick}>
-                                save
-                            </SettingButton>
-                        </InlineGroup>
-                    </InputGroup>
                     <InputGroup>
                         <SettingLabel>Theme: {theme}</SettingLabel>
                         <Switch

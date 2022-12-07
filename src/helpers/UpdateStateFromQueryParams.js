@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
 import {
-    setApiUrl,
     setIsSubmit,
     setQueryTime,
     setQueryStep,
@@ -25,12 +24,13 @@ import { setSplitView } from "../components/StatusBar/components/SplitViewButton
 import { environment } from "../environment/env.dev";
 
 
-export const STRING_VALUES = ["step", "apiUrl", "theme",  "time"];
+export const STRING_VALUES = ["step", "theme",  "time"];
 export const ARRAY_VALUES = ["left", "right"];
 
 export const TIME_VALUES = ["start", "stop"];
 
 export const BOOLEAN_VALUES = ["isSubmit", "isSplit", "autoTheme", "isEmbed"];
+
 export function UpdateStateFromQueryParams() {
     const isLightTheme = useMemo(() => {
         return window.matchMedia("(prefers-color-scheme: light)").matches;
@@ -43,7 +43,6 @@ export function UpdateStateFromQueryParams() {
     const from = useSelector((store) => store.from);
     const to = useSelector((store) => store.to);
     const step = useSelector((store) => store.step);
-    const apiUrl = useSelector((store) => store.apiUrl);
     const isSubmit = useSelector((store) => store.isSubmit);
     const isEmbed = useSelector((store) => store.isEmbed);
     const time = useSelector((store) => store.time);
@@ -58,7 +57,6 @@ export function UpdateStateFromQueryParams() {
         setThemeSet(theme);
     }, [theme]);
     const STORE_KEYS = {
-        apiUrl,
         start,
         step,
         stop,
@@ -75,7 +73,6 @@ export function UpdateStateFromQueryParams() {
     };
 
     const STORE_ACTIONS = {
-        apiUrl: setApiUrl,
         start: setStartTime,
         step: setQueryStep,
         stop: setStopTime,
@@ -144,7 +141,8 @@ export function UpdateStateFromQueryParams() {
                             const parsed = JSON.parse(
                                 decodeURIComponent(startParams[param])
                             );
-                            dispatch(STORE_ACTIONS[param](parsed));
+
+                     dispatch(STORE_ACTIONS[param](parsed));
                         } catch (e) {
                             console.log(e);
                         }
@@ -152,7 +150,6 @@ export function UpdateStateFromQueryParams() {
                 });
             }
         } else {
-            dispatch(setApiUrl(environment.apiUrl));
             const allParams = STRING_VALUES.concat(TIME_VALUES)
                 .concat(BOOLEAN_VALUES)
                 .concat(ARRAY_VALUES);
@@ -175,7 +172,6 @@ export function UpdateStateFromQueryParams() {
                         const encodedArray = encodeURIComponent(
                             JSON.stringify(STORE_KEYS[param])
                         );
-
                         urlFromHash.set(param, encodedArray);
                     } catch (e) {
                         console.log(e);
@@ -223,7 +219,6 @@ export function UpdateStateFromQueryParams() {
                     }
                 } else if (store_key === "left") {
                     const parsed = encodeURIComponent(JSON.stringify(left));
-
                     paramsFromHash.set("left", parsed);
                 } else if (store_key === "right") {
                     const parsed = encodeURIComponent(JSON.stringify(right));

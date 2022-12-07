@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 
 import useLabelValues from "./useLabelValues";
 
@@ -8,7 +8,8 @@ import { decodeQuery } from "../../../../components/LabelBrowser/helpers/querybu
 import { nanoid } from "nanoid";
 import { setLeftPanel } from "../../../../actions/setLeftPanel";
 import { setRightPanel } from "../../../../actions/setRightPanel";
-import { Loader, LoaderCont } from "./styled";
+import { Loader, LoaderCont, SmallInput } from "./styled";
+import store from "../../../../store/store";
 
 export function panelAction(name, value) {
     if (name === "left") {
@@ -20,56 +21,32 @@ export const selectedStyle = {
     borderColor: "#11abab",
     color: "#11abab",
 };
+
 export const LabelValue = (props) => {
-  
-    const dispatch = useDispatch();
-    let { value, data, onValueClick, actPanel, name } = props;
+    let { value, data, onValueClick } = props;
+
     const valueSelected = useMemo(() => value.selected, [value.selected]);
 
-    const [valSelected, setValSelected] = useState(valueSelected);
+    const [isValueSelected, setIsValueSelected] = useState(valueSelected);
 
     const valueStyle = useMemo(() => {
-        if (valSelected) {
-            return {
-                ...selectedStyle,
-            };
+        if (isValueSelected || data?.metric === value.name) {
+            return selectedStyle;
         } else return {};
-    }, [valSelected]);
-
+    }, [isValueSelected, value.selected, data.metric, value.name]);
 
     useEffect(() => {
-        setValSelected(value.selected);
+        setIsValueSelected(value.selected);
     }, [value.selected]);
 
     const onValueSelected = () => {
         let isSelected = false;
 
-        setValSelected((prev) => {
-            if (prev === true) {
-                isSelected = false;
-                return false;
-            } else {
-                isSelected = true;
-                return true;
-            }
+        setIsValueSelected((prev) => {
+            isSelected = !prev;
+            return !prev
         });
 
-        const newQuery = decodeQuery(
-            data.expr || "",
-            value.label || props.label,
-            value.name,
-            "="
-        );
-      //  console.log(newQuery)
-
-        const panel = [...actPanel];
-        panel.forEach((query) => {
-            if (query.id === props.data.id) {
-                query.expr = newQuery;
-            }
-        });
-
-        dispatch(panelAction(name, panel));
         const valueUpdated = { ...value, selected: isSelected };
         onValueClick(valueUpdated);
     };
@@ -87,17 +64,23 @@ export const LabelValue = (props) => {
 
 export default function ValuesList(props) {
     const dispatch = useDispatch();
-    const { name } = props;
+    const { name, data } = props;
+
+    const { dataSourceId, dataSourceType } = data;
     const { start, stop } = useSelector((store) => store);
     const panelQuery = useSelector((store) => store[name]);
+
+    const [filterState, setFilterState] = useState("");
 
     // get values hook
 
     const { response, controller, loading } = useLabelValues(
+        dataSourceId,
         props.label,
         start,
         stop
     );
+
     // clone data helper
 
     const JSONClone = (arr) => {
@@ -109,6 +92,15 @@ export default function ValuesList(props) {
     // values selection >
 
     const [valsSelection, setValsSelection] = useState([]);
+
+    useEffect(() => {
+        const panel = panelQuery.find(panel => panel.id === data.id);
+        const label = panel?.labels?.find((label)=>label.name === props.label)
+        const values = label?.values
+        if (typeof values !== 'undefined') {
+            setValsSelection(values)
+        }
+    },[panelQuery])
 
     const valuesFromProps = useMemo(() => {
         if (props?.data?.labels?.length < 1) {
@@ -126,12 +118,20 @@ export default function ValuesList(props) {
 
     const resp = useMemo(() => {
         if (response?.data?.data?.length > 0) {
+            const panel = panelQuery.find(panel => panel.id === data.id);
+            const label = panel?.labels?.find((label)=>label.name === props.label)
+            const values = label?.values;
+            const valuesMap = new Map();
+            values?.forEach((value)=>{
+                valuesMap.set(value.name, value);
+            })
             return response?.data?.data?.map((val) => ({
                 label: props.label,
                 name: val,
-                selected: false,
+                selected: valuesMap.get(val)?.selected || false,
                 inverted: false,
-                id: nanoid(),
+                type: "value",
+                id: valuesMap.get(val)?.id || nanoid(),
             }));
         } else {
             return [];
@@ -139,10 +139,15 @@ export default function ValuesList(props) {
     }, [response]);
 
     const [valuesState, setValuesState] = useState(resp);
+    const [filterValuesState, setFilterValuesState] = useState(valuesState);
 
     useEffect(() => {
         setValuesState(resp);
     }, [resp, setValuesState]);
+
+    useEffect(() => {
+        setFilterValuesState(valuesState);
+    }, [valuesState, setFilterValuesState]);
 
     useEffect(() => {
         if (resp && valuesFromProps) {
@@ -166,48 +171,82 @@ export default function ValuesList(props) {
         }
     }, [valuesFromProps, resp, setValuesState]);
 
-    const onLabelOpen = (e) => {
+    const onClear = (label) => {
+        const newQuery = decodeQuery(
+            data.expr || "",
+            label || props.label,
+            null,
+            "=",
+            'value'
+        );
+
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === props.data.id) {
+                query.expr = newQuery;
+            }
+        });
+
+        dispatch(panelAction(name, panel));
         controller?.abort();
-        props.onLabelOpen(e);
     };
 
     const onValueFilter = (val, selection) => {
-        if (selection.some((s) => s.id === val.id)) {
-            const filtered = selection.filter((f) => f.id !== val.id);
+        if (selection.some((s) => s.name === val.name)) {
+            const filtered = selection.filter((f) => f.name !== val.name);
             return filtered;
         }
 
-        if (!selection.some((s) => s.id === val.id)) {
+        if (!selection.some((s) => s.name === val.name)) {
             return [...selection, { ...val }];
         }
     };
 
-    const onValueClick = (val) => {
+    const onValueClick = (val, isAll = false) => {
         let initialValues = [];
-
+        if(isAll) {
+            setValsSelection([]);
+        }
         if (valsSelection.length > 0) {
             initialValues = onValueFilter(val, valsSelection);
-        } else {
+            if (val.type === "metrics") {
+                setValuesState((prev) => {
+                    const found = prev.some((s) => s.id === val.id);
+
+                    if (found) {
+                        return prev.map((m) => {
+                            if (m.id === val.id) {
+                                return { ...m, selected: false };
+                            }
+                            return { ...m, selected: true };
+                        });
+                    }
+                });
+
+            }
+
+        } else if (!isAll) {
             initialValues = [...initialValues, { ...val }];
         }
 
-        let labelsCP = JSONClone(props.data.labels) || [];
+        let propsLabels = JSONClone(props.data.labels) || [];
 
         let labelsMod = [];
 
-        if (labelsCP?.length < 1) {
+        if (propsLabels?.length < 1) {
             labelsMod = [
                 {
                     name: props.label,
                     selected:
                         props.labelsSelected.includes(props.label) &&
                         initialValues.length > 0,
+
                     values: [...initialValues],
                 },
             ];
         } else {
-            if (labelsCP.some((s) => s.name === props.label)) {
-                for (let LCP of labelsCP) {
+            if (propsLabels.some((s) => s.name === props.label)) {
+                for (let LCP of propsLabels) {
                     if (LCP.name === props.label) {
                         LCP = {
                             name: props.label,
@@ -223,7 +262,7 @@ export default function ValuesList(props) {
                 }
             } else {
                 labelsMod = [
-                    ...labelsCP,
+                    ...propsLabels,
                     {
                         name: props.label,
                         selected:
@@ -237,6 +276,7 @@ export default function ValuesList(props) {
 
         const filtered = labelsMod.filter((f) => f.selected);
         const panel = [...panelQuery];
+
         panel.forEach((query) => {
             if (query.id === props.data.id) {
                 query.labels = filtered;
@@ -246,13 +286,33 @@ export default function ValuesList(props) {
         setValsSelection(initialValues);
     };
 
+    const onFilterChange = useCallback(
+        (e) => {
+            const value = e.target.value;
+            setFilterState((prev) => value);
+
+            if (e !== "") {
+                setFilterValuesState((prev) =>
+                    valuesState.filter((f) =>
+                        f.name.toLowerCase().includes(value.toLowerCase())
+                    )
+                );
+            } else {
+                setFilterValuesState((prev) => valuesState);
+            }
+        },
+        [filterState]
+    );
+
     return (
         <div className="values-column">
             <div className="values-column-title">
                 <LabelHeader
                     resp={resp}
                     label={props.label}
-                    onLabelOpen={onLabelOpen}
+                    onClear={onClear}
+                    filterState={filterState}
+                    onFilterChange={onFilterChange}
                 />
             </div>
             <div className="valuelist-content column">
@@ -262,7 +322,7 @@ export default function ValuesList(props) {
                     </LoaderCont>
                 )}
                 {valuesState?.length > 0 &&
-                    valuesState?.map((value, key) => (
+                    filterValuesState?.map((value, key) => (
                         <LabelValue
                             {...props}
                             key={key}
@@ -276,15 +336,31 @@ export default function ValuesList(props) {
     );
 }
 
-export function LabelHeader({ resp, label, onLabelOpen }) {
+export function LabelHeader({
+    resp,
+    label,
+    onClear,
+    filterState,
+    onFilterChange,
+}) {
+
+// Add here a replace for label with a custom name 
+
     return (
         <>
             <span>
                 <span className="key">{label}</span> | {resp?.length}
             </span>
+            <span>
+                <SmallInput
+                    placeholder="Search For Values..."
+                    value={filterState}
+                    onChange={onFilterChange}
+                />
+            </span>
             <span
                 className={"close-column"}
-                onClick={(e) => onLabelOpen(label)}
+                onClick={(e) => onClear(label)}
             >
                 clear
             </span>

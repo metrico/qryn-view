@@ -56,7 +56,7 @@ const getBtnPos = (key, arr) => {
 };
 
 export default function QueryTypeSwitch(props) {
-    const { options, defaultActive, onChange } = props;
+    const { options, defaultActive, label, onChange } = props;
 
     const defaultact = useMemo(() => defaultActive, [defaultActive]);
 
@@ -72,7 +72,7 @@ export default function QueryTypeSwitch(props) {
 
     return (
         <>
-            <Label>Query Type</Label>
+            <Label>{label}</Label>
             <QuerySwitchCont>
                 {options &&
                     options.map((value, key, arr) => (

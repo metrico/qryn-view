@@ -1,0 +1,546 @@
+[
+    {
+        "id": "cHI2SqPzH_kxYRXj",
+        "type": "logs",
+        "value": "logs",
+        "name": "Logs",
+        "url": "",
+        "icon": "logs_icon",
+        "visType": "logs",
+        "headers": [
+            {
+                "header": "Content-type",
+                "value": "application/json",
+                "id": "SALm2YFnZKJQD8pXeAywE"
+            }
+
+        ],
+        "linkedFields": [
+            {
+                "id": "TIs_UBXe-cSH6wxKP6C9S",
+                "dataSource": "Logs",
+                "dataSourceId": "cHI2SqPzH_kxYRXj",
+                "ds_id": "logs",
+                "name": "traceId",
+                "regex": "^.*?traceI[d|D]=(w+).*$",
+                "query": "${__value.raw}",
+                "urlLabel": "",
+                "url": "",
+                "internalLink": true,
+                "linkType": "Traces"
+            },
+            {
+                "id": "-tLwMvUX-uq49n4MDxa_g",
+                "dataSource": "Logs",
+                "dataSourceId": "cHI2SqPzH_kxYRXj",
+                "ds_id": "logs",
+                "name": "traceID",
+                "regex": "^.*?\"traceID\":\"(w+)\".*$/",
+                "query": "${__value.raw}",
+                "urlLabel": "",
+                "url": "",
+                "internalLink": true,
+                "linkType": "Traces"
+            }
+        ],
+        "auth": {
+            "method": {
+                "label": "Method",
+                "form_type": "select",
+                "options": [
+                    "GET",
+                    "POST"
+                ],
+                "value": "GET"
+            },
+            "fields": {
+                "WithCACert": [
+                    {
+                        "name": "CACert",
+                        "form_type": "textarea",
+                        "label": "CA Cert",
+                        "value": "",
+                        "placeholder": "Begins with -----BEGIN CERTIFICATE-----"
+                    }
+                ],
+                "TLSClientAuth": [
+                    {
+                        "name": "ServerName",
+                        "cert": "TLSClientAuth",
+                        "form_type": "input",
+                        "label": "Server Name",
+                        "value": "",
+                        "placeholder": "domain.example.com"
+                    },
+                    {
+                        "name": "ClientCert",
+                        "cert": "TLSClientAuth",
+                        "form_type": "textarea",
+                        "label": "Client Cert",
+                        "value": "",
+                        "placeholder": "Begins with -----BEGIN CERTIFICATE-----"
+                    },
+                    {
+                        "name": "ClientKey",
+                        "cert": "TLSClientAuth",
+                        "form_type": "textarea",
+                        "label": "Client Key",
+                        "value": "",
+                        "placeholder": "Begins with -----BEGIN RSA PRIVATE KEY-----"
+                    }
+                ],
+                "basicAuth": [
+                    {
+                        "name": "user",
+                        "cert": "basicAuth",
+                        "form_type": "input",
+                        "label": "User",
+                        "value": "",
+                        "placeholder": "default"
+                    },
+                    {
+                        "name": "password",
+                        "cert": "basicAuth",
+                        "form_type": "password",
+                        "label": "Password",
+                        "placeholder": "",
+                        "value": ""
+                    }
+                ]
+            },
+            "basicAuth": {
+                "form_type": "switch",
+                "label": "Basic Auth",
+                "value": false,
+                "withFields": true,
+                "fields": "basicAuthUserFields"
+            },
+            "TLSClientAuth": {
+                "form_type": "switch",
+                "label": "TLS Client Auth",
+                "value": false,
+                "withFields": true,
+                "fields": "TLSClientAuthFields"
+            },
+            "SkipTLSVerify": {
+                "form_type": "switch",
+                "label": "Skip TLS Verify",
+                "value": false
+            },
+            "ForwardOAuthIdentity": {
+                "form_type": "switch",
+                "label": "Forward OAuth Identity",
+                "value": false
+            },
+            "WithCACert": {
+                "form_type": "switch",
+                "label": "With CA Cert",
+                "value": false,
+                "withFields": true,
+                "fields": "WithCACertFields"
+            }
+        }
+    },
+    {
+        "id": "32D16h5uYBqUUzhD",
+        "type": "traces",
+        "value": "traces",
+        "name": "Traces",
+        "url": "http://traces:3000",
+        "icon": "traces_icon",
+        "visType": "trace",
+        "headers": [
+            {
+                "header": "Content-type",
+                "value": "application/json",
+                "id": "Kfrl4PKCHrXoQT-XE5QiM"
+            }
+ 
+        ],
+        "linkedFields": [
+            {
+                "id": "1xiaRf2padIcGDEr",
+                "dataSourceId": "32D16h5uYBqUUzhD",
+                "dataSource": "Logs",
+                "ds_id": "logs",
+                "name": "traceId",
+                "regex": "^.*?traceI[d|D]=(w+).*$",
+                "query": "${__value.raw}",
+                "urlLabel": "",
+                "url": "",
+                "internalLink": true,
+                "linkType": "Traces"
+            },
+            {
+                "id": "rw8bW4wN7HIz7rpQ",
+                "dataSourceId": "32D16h5uYBqUUzhD",
+                "dataSource": "Logs",
+                "ds_id": "logs",
+                "name": "traceID",
+                "regex": "^.*?\"traceID\":\"(w+)\".*$/",
+                "query": "${__value.raw}",
+                "urlLabel": "",
+                "url": "",
+                "internalLink": true,
+                "linkType": "Traces"
+            }
+        ],
+        "auth": {
+            "method": {
+                "label": "Method",
+                "form_type": "select",
+                "options": [
+                    "GET",
+                    "POST"
+                ],
+                "value": "GET"
+            },
+            "fields": {
+                "WithCACert": [
+                    {
+                        "name": "CACert",
+                        "form_type": "textarea",
+                        "label": "CA Cert",
+                        "value": "",
+                        "placeholder": "Begins with -----BEGIN CERTIFICATE-----"
+                    }
+                ],
+                "TLSClientAuth": [
+                    {
+                        "name": "ServerName",
+                        "cert": "TLSClientAuth",
+                        "form_type": "input",
+                        "label": "Server Name",
+                        "value": "",
+                        "placeholder": "domain.example.com"
+                    },
+                    {
+                        "name": "ClientCert",
+                        "cert": "TLSClientAuth",
+                        "form_type": "textarea",
+                        "label": "Client Cert",
+                        "value": "",
+                        "placeholder": "Begins with -----BEGIN CERTIFICATE-----"
+                    },
+                    {
+                        "name": "ClientKey",
+                        "cert": "TLSClientAuth",
+                        "form_type": "textarea",
+                        "label": "Client Key",
+                        "value": "",
+                        "placeholder": "Begins with -----BEGIN RSA PRIVATE KEY-----"
+                    }
+                ],
+                "basicAuth": [
+                    {
+                        "name": "user",
+                        "cert": "basicAuth",
+                        "form_type": "input",
+                        "label": "User",
+                        "value": "",
+                        "placeholder": "default"
+                    },
+                    {
+                        "name": "password",
+                        "cert": "basicAuth",
+                        "form_type": "password",
+                        "label": "Password",
+                        "placeholder": "",
+                        "value": ""
+                    }
+                ]
+            },
+            "basicAuth": {
+                "form_type": "switch",
+                "label": "Basic Auth",
+                "value": false,
+                "withFields": true,
+                "fields": "basicAuthUserFields"
+            },
+            "TLSClientAuth": {
+                "form_type": "switch",
+                "label": "TLS Client Auth",
+                "value": false,
+                "withFields": true,
+                "fields": "TLSClientAuthFields"
+            },
+            "SkipTLSVerify": {
+                "form_type": "switch",
+                "label": "Skip TLS Verify",
+                "value": false
+            },
+            "ForwardOAuthIdentity": {
+                "form_type": "switch",
+                "label": "Forward OAuth Identity",
+                "value": false
+            },
+            "WithCACert": {
+                "form_type": "switch",
+                "label": "With CA Cert",
+                "value": false,
+                "withFields": true,
+                "fields": "WithCACertFields"
+            }
+        }
+    },
+    {
+        "id": "XfqOurV-Tng1F0cc",
+        "type": "metrics",
+        "value": "metrics",
+        "name": "Metrics",
+        "url": "http://metrics:3000",
+        "icon": "metrics_icon",
+        "visType": "chart",
+        "headers": [
+            {
+                "header": "Content-type",
+                "value": "application/json",
+                "id": "l7NqFAZNeK8n70QFRy4pu"
+            }
+
+        ],
+        "linkedFields": [
+            {
+                "id": "nqhCxOBA5TJ8BINh",
+                "dataSource": "Logs",
+                "ds_id": "logs",
+                "name": "traceId",
+                "regex": "^.*?traceI[d|D]=(w+).*$",
+                "query": "${__value.raw}",
+                "urlLabel": "",
+                "url": "",
+                "internalLink": true,
+                "linkType": "traces"
+            },
+            {
+                "id": "-UDcksuS9iunXqUo",
+                "dataSource": "Logs",
+                "ds_id": "logs",
+                "name": "traceID",
+                "regex": "^.*?\"traceID\":\"(w+)\".*$/",
+                "query": "${__value.raw}",
+                "urlLabel": "",
+                "url": "",
+                "internalLink": true,
+                "linkType": "traces"
+            }
+        ],
+        "auth": {
+            "method": {
+                "label": "Method",
+                "form_type": "select",
+                "options": [
+                    "GET",
+                    "POST"
+                ],
+                "value": "GET"
+            },
+            "fields": {
+                "WithCACert": [
+                    {
+                        "name": "CACert",
+                        "form_type": "textarea",
+                        "label": "CA Cert",
+                        "value": "",
+                        "placeholder": "Begins with -----BEGIN CERTIFICATE-----"
+                    }
+                ],
+                "TLSClientAuth": [
+                    {
+                        "name": "ServerName",
+                        "cert": "TLSClientAuth",
+                        "form_type": "input",
+                        "label": "Server Name",
+                        "value": "",
+                        "placeholder": "domain.example.com"
+                    },
+                    {
+                        "name": "ClientCert",
+                        "cert": "TLSClientAuth",
+                        "form_type": "textarea",
+                        "label": "Client Cert",
+                        "value": "",
+                        "placeholder": "Begins with -----BEGIN CERTIFICATE-----"
+                    },
+                    {
+                        "name": "ClientKey",
+                        "cert": "TLSClientAuth",
+                        "form_type": "textarea",
+                        "label": "Client Key",
+                        "value": "",
+                        "placeholder": "Begins with -----BEGIN RSA PRIVATE KEY-----"
+                    }
+                ],
+                "basicAuth": [
+                    {
+                        "name": "user",
+                        "cert": "basicAuth",
+                        "form_type": "input",
+                        "label": "User",
+                        "value": "",
+                        "placeholder": "default"
+                    },
+                    {
+                        "name": "password",
+                        "cert": "basicAuth",
+                        "form_type": "password",
+                        "label": "Password",
+                        "placeholder": "",
+                        "value": ""
+                    }
+                ]
+            },
+            "basicAuth": {
+                "form_type": "switch",
+                "label": "Basic Auth",
+                "value": false,
+                "withFields": true,
+                "fields": "basicAuthUserFields"
+            },
+            "TLSClientAuth": {
+                "form_type": "switch",
+                "label": "TLS Client Auth",
+                "value": false,
+                "withFields": true,
+                "fields": "TLSClientAuthFields"
+            },
+            "SkipTLSVerify": {
+                "form_type": "switch",
+                "label": "Skip TLS Verify",
+                "value": false
+            },
+            "ForwardOAuthIdentity": {
+                "form_type": "switch",
+                "label": "Forward OAuth Identity",
+                "value": false
+            },
+            "WithCACert": {
+                "form_type": "switch",
+                "label": "With CA Cert",
+                "value": false,
+                "withFields": true,
+                "fields": "WithCACertFields"
+            }
+        }
+    },
+    {
+        "id": "Swjy1SzgWuDmJpUo",
+        "type": "flux",
+        "value": "flux",
+        "name": "Flux",
+        "url": "http://flux:3000",
+        "icon": "flux_icon",
+        "visType": "chart",
+        "headers": [
+            {
+                "header": "Accept",
+                "value": "application/csv",
+                "id": "EYsZnWD1ViRNChORDAB38"
+            },
+            {
+                "header": "Content-type",
+                "value": "application/vnd.flux",
+                "id": "OoGmT6Z9bm6LNArNV7Lfp"
+            }
+
+        ],
+        "linkedFields": [],
+        "auth": {
+            "method": {
+                "label": "Method",
+                "form_type": "select",
+                "options": [
+                    "GET",
+                    "POST"
+                ],
+                "value": "POST"
+            },
+            "fields": {
+                "WithCACert": [
+                    {
+                        "name": "CACert",
+                        "form_type": "textarea",
+                        "label": "CA Cert",
+                        "value": "",
+                        "placeholder": "Begins with -----BEGIN CERTIFICATE-----"
+                    }
+                ],
+                "TLSClientAuth": [
+                    {
+                        "name": "ServerName",
+                        "cert": "TLSClientAuth",
+                        "form_type": "input",
+                        "label": "Server Name",
+                        "value": "",
+                        "placeholder": "domain.example.com"
+                    },
+                    {
+                        "name": "ClientCert",
+                        "cert": "TLSClientAuth",
+                        "form_type": "textarea",
+                        "label": "Client Cert",
+                        "value": "",
+                        "placeholder": "Begins with -----BEGIN CERTIFICATE-----"
+                    },
+                    {
+                        "name": "ClientKey",
+                        "cert": "TLSClientAuth",
+                        "form_type": "textarea",
+                        "label": "Client Key",
+                        "value": "",
+                        "placeholder": "Begins with -----BEGIN RSA PRIVATE KEY-----"
+                    }
+                ],
+                "basicAuth": [
+                    {
+                        "name": "user",
+                        "cert": "basicAuth",
+                        "form_type": "input",
+                        "label": "User",
+                        "value": "",
+                        "placeholder": "default"
+                    },
+                    {
+                        "name": "password",
+                        "cert": "basicAuth",
+                        "form_type": "password",
+                        "label": "Password",
+                        "placeholder": "",
+                        "value": ""
+                    }
+                ]
+            },
+            "basicAuth": {
+                "form_type": "switch",
+                "label": "Basic Auth",
+                "value": true,
+                "withFields": true,
+                "fields": "basicAuthUserFields"
+            },
+            "TLSClientAuth": {
+                "form_type": "switch",
+                "label": "TLS Client Auth",
+                "value": false,
+                "withFields": true,
+                "fields": "TLSClientAuthFields"
+            },
+            "SkipTLSVerify": {
+                "form_type": "switch",
+                "label": "Skip TLS Verify",
+                "value": false
+            },
+            "ForwardOAuthIdentity": {
+                "form_type": "switch",
+                "label": "Forward OAuth Identity",
+                "value": false
+            },
+            "WithCACert": {
+                "form_type": "switch",
+                "label": "With CA Cert",
+                "value": false,
+                "withFields": true,
+                "fields": "WithCACertFields"
+            }
+        }
+    }
+]

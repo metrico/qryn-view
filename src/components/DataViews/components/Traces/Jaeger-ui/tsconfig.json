@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "allowJs": true,
+    "jsx": "react",
+    "esModuleInterop": true
+  },
+  "exclude": ["dist", "node_modules"],
+//   "extends": "/tsconfig.json",
+  "include": [
+    "src/**/*.ts*",
+    "typings",
+    "../../public/app/types/jquery/*.ts",
+    "../../public/app/types/*.d.ts"
+  ]
+}

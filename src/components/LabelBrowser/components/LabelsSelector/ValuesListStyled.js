@@ -1,12 +1,10 @@
-
-import styled from '@emotion/styled'
-
+import styled from "@emotion/styled";
 
 const ValuesListStyled = styled.div`
     background: ${(props) => props.theme.widgetContainer};
 
     .valuesList {
-        transition: 0.2s all;
+        transition: 0.02s all;
         display: flex;
         flex-wrap: wrap;
         flex: 1;
@@ -14,7 +12,7 @@ const ValuesListStyled = styled.div`
         font-size: 13px;
         margin: 5px 0px;
         border-radius: 4px;
-        transition: 0.2s all;
+        transition: 0.02s all;
         .valuelist-title {
             display: flex;
             flex-direction: column;
@@ -31,6 +29,9 @@ const ValuesListStyled = styled.div`
             flex-wrap: wrap;
             max-height: 500px;
             overflow: auto;
+            .metric-label {
+                background: gray;
+            }
         }
         .valuelist-filter {
             display: flex;
@@ -56,7 +57,7 @@ const ValuesListStyled = styled.div`
         }
         &::-webkit-scrollbar-corner {
             background: transparent;
-          }
+        }
         &::-webkit-scrollbar-thumb {
             border-radius: 10px;
             background: $grey-light;
@@ -66,8 +67,9 @@ const ValuesListStyled = styled.div`
     .valuelist-content {
         small {
             color: ${(props) => props.theme.textColor};
-            background: ${(props) => props.theme.buttonDefault} !important;
+            background: ${(props) => props.theme.buttonDefault};
             border: 1px solid ${(props) => props.theme.buttonBorder};
+
             margin: 2px;
             padding: 3px 6px;
             border-radius: 3px;
@@ -78,39 +80,38 @@ const ValuesListStyled = styled.div`
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
-            max-width: 23ch;
-            transition: 1s all;
+            max-width: 40ch;
+            transition: .5s all;
             &:hover {
                 background: ${({ theme }) => theme.buttonHover};
+            }
+            &.metric {
+                color: ${(props) => props.theme.buttonText};
+                background: ${(props) => props.theme.primaryDark};
             }
         }
     }
 
-    button {
-        color: ${(props) => props.theme.textColor};
-        background: ${(props) => props.theme.buttonDefault} !important;
-        border: 1px solid ${(props) => props.theme.buttonBorder} !important;
-        padding: 13px 8px;
-        &:hover {
-            background: ${(props) => props.theme.buttonHover};
-        }
-    }
+
+    
     .values-container {
         .values-container-column {
             display: flex;
-            flex-wrap:wrap;
+            flex-wrap: wrap;
             max-width: 100%;
             .values-column {
                 margin: 5px;
                 border-radius: 3px;
-                height:fit-content;
-                min-width: 35%;
+                height: fit-content;
+                min-width: 278px;
+                max-width: 278px;
                 flex: 1;
                 background: ${(props) => props.theme.buttonHover};
+
                 .column {
                     border: 1px solid ${(props) => props.theme.buttonBorder};
                     background: ${(props) => props.theme.widgetContainer};
-                    border-top:none;
+                    border-top: none;
                     max-height: 350px;
                     &::-webkit-scrollbar {
                         width: 10px;
@@ -119,7 +120,7 @@ const ValuesListStyled = styled.div`
                     }
                     &::-webkit-scrollbar-corner {
                         background: transparent;
-                      }
+                    }
                     &::-webkit-scrollbar-thumb {
                         border-radius: 10px;
                         background: $grey-light;
@@ -131,7 +132,7 @@ const ValuesListStyled = styled.div`
                     border-radius: 4px 4px 0px 0px;
                     display: flex;
                     flex: 1;
-                    transition: 0.2s all;
+                    transition: 0.02s all;
                     justify-content: space-between;
                     color: ${(props) => props.theme.textColor};
                     background: ${(props) => props.theme.widgetContainer};
@@ -140,7 +141,6 @@ const ValuesListStyled = styled.div`
                         align-self: flex-end;
                         justify-self: end;
                         cursor: pointer;
-
                         padding: 2px;
                         border-radius: 10px;
                         display: flex;

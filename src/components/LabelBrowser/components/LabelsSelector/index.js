@@ -9,18 +9,18 @@ import ValuesListStyled from "./ValuesListStyled";
 import labelHelpers from "./helpers";
 
 export default function LabelsSelector(props) {
-    const { data} = props;
-    const { 
-        JSONClone, 
-        updateLabel, 
-        updateLabelSelected 
-    } = labelHelpers;
+    const { data } = props;
+    const { dataSourceId} = data;
+
+    //const dataSourceURL = useSelector((store)=> store.dataSources.find(f => f.id === dataSourceId)) 
+
+    const { JSONClone, updateLabel, updateLabelSelected } = labelHelpers;
+    const [labelsResponse, setLabelsResponse] = useState([]);
+    const [labelsSelected, setLabelsSelected] = useState([]);
 
     const { theme } = useSelector((store) => store);
 
-    const { response, loading } = useLabels();
-
-    const [labelsResponse, setLabelsResponse] = useState([]);
+    const { response, loading } = useLabels(dataSourceId); //  set URL from props
 
     // get previously selected labels
 
@@ -39,6 +39,9 @@ export default function LabelsSelector(props) {
         if (response?.data?.data) {
             setLabelsResponse(response?.data?.data);
         }
+        if(!data) {
+            return ()=> null
+        }
     }, [response, setLabelsResponse]);
 
     // memoize and format labels response
@@ -56,17 +59,19 @@ export default function LabelsSelector(props) {
 
     useEffect(() => {
         setLabelsState(labels);
+        if(!data) {
+            return ()=> null
+        }
     }, [labels]);
 
     const [labelsState, setLabelsState] = useState(labels);
-    const [labelsSelected, setLabelsSelected] = useState([]);
 
     // memoize currently selected labels
-    
+
     const selected = useMemo(() => labelsSelected, [labelsSelected]);
 
     // match labels from query state with new labels from request to API
-    
+
     useEffect(() => {
         if (labels && labelsFromProps) {
             let clonedLabels = JSONClone(labels);
@@ -84,45 +89,44 @@ export default function LabelsSelector(props) {
                 }
             });
 
-            let lSElected = modLabels
+            let lSelected = modLabels
                 .filter((f) => f.selected === true)
                 .map((m) => m.name);
 
-            setLabelsSelected(lSElected);
+            setLabelsSelected(lSelected);
 
             setLabelsState(modLabels);
         }
     }, [labelsFromProps, labels, setLabelsState, JSONClone]);
 
-
     const onLabelSelected = (e) => {
-    
         setLabelsState((prev) => {
             return updateLabel(prev, e);
         });
 
         setLabelsSelected((prev) => updateLabelSelected(prev, e));
     };
-
-    return (
-        <ThemeProvider theme={themes[theme]}>
-            <ValuesListStyled>
-                <div className="valuesList">
-                    <div className={"valuelist-title"}>
-                        {!loading && (
-                            <LabelsList
-                                {...props}
-                                labels={labelsState}
-                                onLabelSelected={onLabelSelected}
-                            />
-                        )}
+    if(data) {
+        return (
+            <ThemeProvider theme={themes[theme]}>
+                <ValuesListStyled>
+                    <div className="valuesList">
+                        <div className={"valuelist-title"}>
+                            {!loading && (
+                                <LabelsList
+                                    {...props}
+                                    labels={labelsState}
+                                    onLabelSelected={onLabelSelected}
+                                />
+                            )}
+                        </div>
+    
+                        <ValuesSelector {...props} labelsSelected={selected} />
                     </div>
+                </ValuesListStyled>
+            </ThemeProvider>
+        );
+    }
+    return null
 
-                    <ValuesSelector 
-                    {...props} 
-                    labelsSelected={selected} />
-                </div>
-            </ValuesListStyled>
-        </ThemeProvider>
-    );
 }

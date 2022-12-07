@@ -1,26 +1,64 @@
 import store from "../../store/store";
-import { QueryParams } from "../types";
+import { QueryParams, QueryDirection, QueryType } from "../types";
 import getTimeParams from "./getTimeParams";
 
 export function getEndpointParams(
+    type: string,
     query: string,
     limit: number,
-    tSpan: number
+    tSpan: number,
+    direction: QueryDirection,
+    settingUrl = "",
+    queryType: QueryType,
+    customUrl: string,
+    customStep: number
 ): QueryParams {
     const localStore = store.getState();
-    const { apiUrl, isSplit } = localStore;
+    const { isSplit } = localStore;
     const splitVal = isSplit ? 2 : 1;
     const wWidth = window.innerWidth;
-    const { parsedTime, time } = getTimeParams();
-    const url = apiUrl;
-
+    const { parsedTime, time } = getTimeParams(type);
+    const url = settingUrl;
     let stepCalc = 0;
 
-    stepCalc = wWidth / Math.round(((wWidth / tSpan) * 10) / splitVal);
+    if (customStep > 0) {
+        stepCalc = customStep;
+    } else {
+        stepCalc = wWidth / Math.round(((wWidth / tSpan) * 10) / splitVal);
+    }
+
+    if (stepCalc === 0) {
+        stepCalc = 1;
+    }
 
     const queryStep = `&step=${stepCalc}`;
+
+    if (type === "traces") {
+    }
+
     const encodedQuery = `${encodeURIComponent(query)}`;
-    const queryUrl = `${url}/loki/api/v1`;
+    // traces api takes only an ID
+    let queryUrl = "";
+    switch (type) {
+        case "logs":
+            queryUrl = `${url}/loki/api/v1`;
+            break;
+        case "metrics":
+            queryUrl = `${url}/api/v1`;
+            break;
+        case "flux":
+            queryUrl = `${url}/api/v2/query`;
+            break;
+        case "traces":
+            queryUrl =
+                queryType === "trace-search"
+                    ? `${customUrl}`
+                    : `${url}/api/traces/${query}/json`;
+            break;
+        default:
+            queryUrl = `${url}/loki/api/v1`;
+    }
+
     return {
         queryUrl,
         encodedQuery,
@@ -28,6 +66,8 @@ export function getEndpointParams(
         time,
         queryStep,
         limit,
+        direction,
+        queryType,
     };
 }
 

@@ -20,4 +20,8 @@
     return time.getTime() + "000000";
 }
 
-export { fromNanoSec, getTimeParsed }
+function getTimeSec(time:Date) {
+    return Math.round(time.getTime() / 1000)
+}
+
+export { fromNanoSec, getTimeParsed, getTimeSec }

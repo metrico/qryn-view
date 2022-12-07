@@ -1,6 +1,6 @@
-import QueriesContainer from "../QueriesContainer/QueriesContainer";
+import QueriesContainer from "../QueryItem/QueriesContainer";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "@emotion/styled";
 import { useLocation } from "react-router-dom";
 import { setRightPanel } from "../../actions/setRightPanel";
@@ -15,6 +15,10 @@ const PanelCont = styled.div`
 `;
 // Panel should have injected data
 export default function Panel(props) {
+    
+    const ref = useRef(null);
+    const [width, setWidth] = useState(0);
+
     const dispatch = useDispatch();
     const { name } = props;
 
@@ -40,14 +44,29 @@ export default function Panel(props) {
         }
     }, []);
 
+    useEffect(()=>{
+        if (typeof ref.current.clientWidth === 'number'){
+            setWidth(ref.current.clientWidth)
+        }
+    },[ref?.current?.clientWidth])
+    // 
+    useEffect(() => {
+        const onWindowResize = () => {
+            setWidth(ref.current.clientWidth);
+        };
+        window.addEventListener("resize", onWindowResize);
+        return () => {
+            window.removeEventListener("resize", onWindowResize);
+        };
+    }, []);
     // CHECK ALSO THAT DATAVIEWS IS AN ARRAY
 
     const panelData = useMemo(() => panel, [panel]);
-
+    //console.log(panelData)
     return (
         <>
-            <PanelCont isSplit={isSplit}>
-                <QueriesContainer {...props} queries={panelData} />
+            <PanelCont isSplit={isSplit} ref={ref}>
+                <QueriesContainer {...props} width={width} queries={panelData} />
                 <DataViews {...props} />
             </PanelCont>
         </>
