@@ -13,7 +13,6 @@ import getData from "../getData";
 import { cx, css } from "@emotion/css";
 import { setSplitView } from "../../components/StatusBar/components/SplitViewButton/setSplitView";
 import { setRightPanel } from "../setRightPanel";
-import { useMediaQuery } from "react-responsive";
 
 const TraceLink = (theme) => css`
     border: none;
