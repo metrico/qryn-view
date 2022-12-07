@@ -23,7 +23,11 @@ import {
 } from "./styled";
 
 import setDebugMode from "../../actions/setDebugMode";
+import { css } from "@emotion/css";
 
+export const DialogStyles = css`
+    background-color: transparent !important;
+`
 export default function SettingsDialog({ open, onClose }) {
     const dispatch = useDispatch();
     const theme = useSelector((store) => store.theme);
@@ -80,7 +84,11 @@ export default function SettingsDialog({ open, onClose }) {
     }
 
     return (
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} PaperProps={{
+            classes: {
+                root: DialogStyles
+            }
+          }}>
             <SettingCont>
                 <SettingHeader>
                     <h3>Settings</h3>
