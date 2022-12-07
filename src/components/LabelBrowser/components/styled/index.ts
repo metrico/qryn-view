@@ -20,7 +20,7 @@ export const HistoryButtonStyled = styled(BtnSmall)`
         margin-left: 5px;
     }
     @media screen and (max-width: 864px) {
-        display: ${(props) => (props.isMobile ? "flex" : "none")};
+        display: flex;
     }
 `;
 
@@ -71,7 +71,7 @@ export const ShowLogsBtn = styled(BtnSmall)`
         color: ${(props) => props.theme.textColor};
     }
     @media screen and (max-width: 864px) {
-        display: ${(props) => (props.isMobile ? "flex" : "none")};
+        display: flex;
 
         margin: 0;
         margin-left: 5px;
@@ -94,10 +94,10 @@ export const ShowSettingsBtn = styled(BtnSmall)`
 export const MobileTopQueryMenu = styled.div`
     display: ${(props:any) =>
         props.isSplit || props.dataSourceType === "flux" ? "flex" : "none"};
+    flex-wrap: wrap;
 
     @media screen and (max-width: 864px) {
         display: flex;
-        justify-content: space-between;
     }
 `;
 

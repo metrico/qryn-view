@@ -8,6 +8,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Select from "react-select";
 import { nanoid } from "nanoid";
+import { useMediaQuery } from "react-responsive";
 
 export const cStyles = (theme: any, minWidth: number) => ({
     menu: (base: any) => ({
@@ -133,7 +134,10 @@ export default function MetricsSearch(props: any) {
         searchButton,
         logsRateButton,
     } = props;
+    // get the options for metrics selector
     const metricsOpts = useValuesFromMetrics(dataSourceId);
+
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
 
     const [metricValue, setMetricValue] = useState(
         metricsOpts[0] || { label: "", value: "" }
@@ -155,6 +159,7 @@ export default function MetricsSearch(props: any) {
             return { value: value?.value, label: value?.value };
         });
     };
+
     const handleMetricChange = (e: any) => {
         handleMetricValueChange(e);
     };
@@ -176,7 +181,7 @@ export default function MetricsSearch(props: any) {
 
     return (
         <ThemeProvider theme={mainTheme}>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
                 <div style={{ marginTop: "3px" }}>
                     <InputSelect
                         isMulti={false}
@@ -237,14 +242,16 @@ export function MetricsLabelValueSelectors(props: any) {
 
     const onRemove = (id: any) => {
         setLabelValuesState((prev: Label[]) => {
-            const prevValue = JSON.parse(JSON.stringify(prev));
-
+            const prevValue = JSON.parse(JSON.stringify(prev)) || [];
             const newState = prevValue?.filter((f: any) => f.id !== id);
             return newState;
         });
 
         setLabelValueString((prev: any) => {
-            const prevValue = JSON.parse(prev || JSON.stringify("[]"));
+            let prevValue = [];
+            if (prev?.length > 1) {
+                prevValue = JSON.parse(prev || JSON.stringify("[]"));
+            }
             const newState = prevValue?.filter((f: any) => f.id !== id);
             return JSON.stringify(newState);
         });
@@ -465,6 +472,7 @@ export const MetricsLabelValue = (props: any) => {
                     id={id}
                     style={{
                         display: "flex",
+                        flexWrap: "wrap",
                         alignItems: "center",
                         marginLeft: "3px",
                         marginTop: "3px",
@@ -497,43 +505,44 @@ export const MetricsLabelValue = (props: any) => {
                         minWidth={60}
                         labelsLength={labelValuesLength}
                     />
-
-                    <InputSelect
-                        ref={valueRef}
-                        type={"value"}
-                        isMulti={isMulti}
-                        defaultValue={keyVal.values}
-                        selectOpts={valueSelectOpts}
-                        keyVal={keyVal}
-                        mainTheme={mainTheme}
-                        onChange={onValueChange}
-                        objId={id}
-                        minWidth={250}
-                        labelsLength={labelValuesLength}
-                    />
-                    <DeleteOutlineOutlinedIcon
-                        style={{
-                            color: mainTheme.textColor,
-                            margin: "0px 5px",
-                            cursor: "pointer",
-                        }}
-                        fontSize="small"
-                        onClick={cleanAndRemove}
-                    />
-                    <AddOutlinedIcon
-                        style={{
-                            color: mainTheme.textColor,
-                            margin: "0px 5px",
-                            cursor: "pointer",
-                        }}
-                        fontSize="small"
-                        onClick={labelAdd}
-                    />
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                        <InputSelect
+                            ref={valueRef}
+                            type={"value"}
+                            isMulti={isMulti}
+                            defaultValue={keyVal.values}
+                            selectOpts={valueSelectOpts}
+                            keyVal={keyVal}
+                            mainTheme={mainTheme}
+                            onChange={onValueChange}
+                            objId={id}
+                            minWidth={250}
+                            labelsLength={labelValuesLength}
+                        />
+                        <DeleteOutlineOutlinedIcon
+                            style={{
+                                color: mainTheme.textColor,
+                                margin: "0px 5px",
+                                cursor: "pointer",
+                            }}
+                            fontSize="small"
+                            onClick={cleanAndRemove}
+                        />
+                        <AddOutlinedIcon
+                            style={{
+                                color: mainTheme.textColor,
+                                margin: "0px 5px",
+                                cursor: "pointer",
+                            }}
+                            fontSize="small"
+                            onClick={labelAdd}
+                        />
+                    </div>
                 </div>
             );
         }
     };
-
+    // this one should be rendered according if its ' mobile view '
     return <>{labelValueRender()}</>;
 };
 
