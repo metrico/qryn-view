@@ -1,135 +1,128 @@
+import { css, cx } from "@emotion/css";
 import { ThemeProvider } from "@emotion/react";
-import styled from "@emotion/styled";
 import { useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { createAlert } from "../../actions";
+import { Notification } from "../../qryn-ui/notifications";
 import { themes } from "../../theme/themes";
 import { Header } from "./components";
-import { Icon } from "./ui";
-
+import setDataSources from "./store/setDataSources";
+import { Container } from "./styles/Container";
+import { Button, Icon } from "./ui";
 import { Settings } from "./views";
-export const Container = styled.div`
-    position: absolute;
-    left: 0;
-    top: 0;
-    background: ${({ theme }) => theme.viewBg};
-    display: flex;
-    flex-direction: culumn;
-    justify-content: center;
-    color: ${({ theme }) => theme.textColor};
-    flex: 1;
-    height: 100%;
-    width: 100%;
 
-    .body-cont {
-        max-width: 1440px;
-        padding: 10px;
-        margin: 10px;
-        border-radius: 3px;
-        flex: 1;
-        background: ${({ theme }) => theme.widgetContainer};
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-    .ds-header {
-        padding: 10px;
-        padding-bottom: 20px;
-        font-size: 24px;
-        flex: 1;
-        display: flex;
-        width: 100%;
-        justify-content: space-between;
-        align-items: center;
-        padding-left: 0px;
-        .logo {
-            margin-right: 10px;
-        }
-    }
-    .ds-cont {
-        margin-bottom: 10px;
-        border: 1px solid ${({ theme }) => theme.buttonBorder};
-        border-radius: 3px;
-        overflow-y: auto;
-    }
-    .ds-item {
-        padding: 10px;
-        background: ${({ theme }) => theme.viewBg};
-        //    margin-bottom: 10px;
-        border-radius: 3px 3px 0px 0px;
-        padding-bottom: 14px;
-        display: flex;
-        .logo {
-            padding: 10px;
-            padding-right: 20px;
-            padding-left: 0px;
-        }
-        .ds-text {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-        .ds-type {
-            font-size: 18px;
-            padding: 10px;
-            padding-left: 0px;
-            color: ${({ theme }) => theme.textColor};
-        }
-        small {
-            font-size: 12px;
-        }
-        .setting-icon {
-            justify-self: flex-end;
-            cursor: pointer;
-        }
-        .ds-settings {
-            background: ${({ theme }) => theme.viewBg};
-        }
-    }
+const HeaderRow = css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 20px;
 `;
 
 export function DataSourceSetting(props) {
-    const { type, name, url, icon } = props;
+    const {
+        url,
+        auth: {
+            basicAuth,
+            fields: {
+                basicAuth: [user, password],
+            },
+        },
+    } = props;
 
+    const dispatch = useDispatch();
+    const dataSources = useSelector((store) => store.dataSources);
+    const useForAll = () => {
+        const dsCP = [...dataSources];
+        const prevDs = JSON.parse(JSON.stringify(dsCP));
+
+        const newDs = prevDs?.map((m) => ({
+            ...m,
+            url,
+            auth: {
+                ...m.auth,
+                basicAuth: { ...m.auth.basicAuth, value: basicAuth.value },
+                fields: {
+                    ...m.auth.fields,
+                    basicAuth: [...m.auth.fields.basicAuth]?.map((ba) => {
+                        if (ba.name === "user") {
+                            return { ...ba, value: user.value };
+                        }
+                        if (ba.name === "password") {
+                            return { ...ba, value: password.value };
+                        }
+                        return ba;
+                    }),
+                },
+            },
+        }));
+        localStorage.setItem("dataSources", JSON.stringify(newDs));
+        dispatch(setDataSources(newDs));
+        dispatch(createAlert({
+            type:'success',
+            message:'Set same URL and Basic Auth for All Data Sources'
+        }))
+    };
     return (
         <div className="ds-cont">
-            <div className="ds-item">
-                <Icon icon={icon} />
-                <div className="ds-text">
-                    <div className="ds-type">{name}</div>
+            <div className={cx(HeaderRow)}>
+                <DataSourceSettingHeader {...props} />
 
-                    <small>
-                        {" "}
-                        {type} | {url}
-                    </small>
-                </div>
+                <Button
+                    title={"Use same URL and Basic Auth for all Data Sources"}
+                    value={"Use For All"}
+                    onClick={useForAll}
+                    primary={true}
+                />
             </div>
+
             <div className="ds-settings">
                 <Settings {...props} />
+                <Notification/>
             </div>
         </div>
     );
 }
+
+export const DataSourceSettingHeader = (props) => {
+    const { icon, name, type, url } = props;
+    return (
+        <div className="ds-item">
+            <Icon icon={icon} />
+            <div className="ds-text">
+                <div className="ds-type">{name}</div>
+                <small>
+                    {type} | {url}
+                </small>
+            </div>
+        </div>
+    );
+};
 
 export function DataSource() {
     let { id } = useParams();
     const { theme } = useSelector((store) => store);
     const dataSources = useSelector((store) => store.dataSources);
     const datasource = useMemo(() => {
-        if (dataSources?.length > 0) {
-            return dataSources?.find((f) => f.id === id);
-        } else {
+        if (!dataSources || dataSources.length === 0) {
             return {};
         }
+
+        return dataSources.find((f) => f.id === id) || {};
     }, [id, dataSources]);
- 
+
     return (
         <ThemeProvider theme={themes[theme]}>
             <Container>
                 <div className="body-cont">
-                    <Header title={"DataSource Settings"}  />
+                    <Header
+                        title={"DataSource Settings"}
+                        datasource={datasource}
+                    />
                     <div className="datasource-body">
                         <DataSourceSetting {...datasource} />
                     </div>
+                    
                 </div>
             </Container>
         </ThemeProvider>

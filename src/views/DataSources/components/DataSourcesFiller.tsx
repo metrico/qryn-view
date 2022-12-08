@@ -10,17 +10,17 @@ const InlineFlex = css`
     flex: 1;
     flex-wrap: wrap;
     width: 400px;
-    margin-top:5px;
-    margin-left:10px;
+    margin-top: 5px;
+    margin-left: 10px;
     border: 1px solid lightgray;
-    padding:5px;
+    padding: 5px;
     border-radius: 4px;
 `;
 
 const oneForAllStyle = css`
     display: flex;
     padding: 4px 12px;
-   // border: 1px solid lightgray;
+    // border: 1px solid lightgray;
     font-size: 14px;
     border-radius: 4px;
     margin-left: 12px;
@@ -31,15 +31,25 @@ const oneForAllStyle = css`
 
 const FieldsCont = css`
     //width: 200px;
-    margin:5px;
+    margin: 5px;
+`;
+
+const BasicAuth = css`
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    span {
+        font-size: 12px;
+    }
 `;
 
 const ForAllButton = css`
-width:100%;
+    align-items: center;
+    width: 100%;
     display: flex;
-    margin-top:10px;
-    justify-content: flex-end;
-    flex:1;
+    margin-top: 10px;
+    justify-content: space-between;
+    flex: 1;
 `;
 
 export const DataSourcesFiller = (props: any) => {
@@ -47,6 +57,7 @@ export const DataSourcesFiller = (props: any) => {
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
     const [oneForAll, setOneForAll] = useState(false);
+    const [basicAuth, setBasicAuth] = useState(false);
     const dataSources = useSelector((store: any) => store.dataSources);
     const dispatch = useDispatch();
     const submitMessage = "Save";
@@ -64,6 +75,10 @@ export const DataSourcesFiller = (props: any) => {
         setOneForAll((_) => e.target.checked);
     };
 
+    const onBasicAuthChange = (e: any) => {
+        setBasicAuth((_) => e.target.checked);
+    };
+
     const onUseForAll = (e: any) => {
         const prevDs = JSON.parse(JSON.stringify(dataSources));
         const newDs = prevDs?.map((m: any) => ({
@@ -71,6 +86,7 @@ export const DataSourcesFiller = (props: any) => {
             url,
             auth: {
                 ...m.auth,
+                basicAuth: { ...m.auth.basicAuth, value: basicAuth },
                 fields: {
                     ...m.auth.fields,
                     basicAuth: [...m.auth.fields.basicAuth]?.map((ba: any) => {
@@ -107,20 +123,33 @@ export const DataSourcesFiller = (props: any) => {
                         onChange={urlChange}
                         placeholder={"http://qryn.dev"}
                     />
-                    <Field
-                        value={user}
-                        label={"user"}
-                        onChange={userChange}
-                        placeholder={"default"}
-                    />
-                    <Field
-                        value={password}
-                        label={"password"}
-                        onChange={passwordChange}
-                        type={'password'}
-                        placeholder={""}
-                    />
+                    {basicAuth && (
+                        <>
+                            <Field
+                                value={user}
+                                label={"user"}
+                                onChange={userChange}
+                                placeholder={"default"}
+                            />
+                            <Field
+                                value={password}
+                                label={"password"}
+                                onChange={passwordChange}
+                                type={"password"}
+                                placeholder={""}
+                            />
+                        </>
+                    )}
+
                     <div className={cx(ForAllButton)}>
+                        <div className={cx(BasicAuth)}>
+                            <span>Use Basic Auth</span>{" "}
+                            <Switch
+                                checked={basicAuth}
+                                size={"small"}
+                                onChange={onBasicAuthChange}
+                            />{" "}
+                        </div>
                         <Button
                             value={submitMessage}
                             onClick={onUseForAll}
