@@ -1,10 +1,12 @@
 import { Switch } from "@mui/material";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { css, cx } from "@emotion/css";
 import { useDispatch, useSelector } from "react-redux";
 import setDataSources from "../store/setDataSources";
 import { Button, Field } from "../ui";
-const InlineFlex = css`
+import { themes } from "../../../components/DataViews/components/Traces/Jaeger-ui/src/theme/themes";
+
+const InlineFlex = (theme:any) => css`
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -12,7 +14,7 @@ const InlineFlex = css`
     width: 400px;
     margin-top: 5px;
     margin-left: 10px;
-    border: 1px solid lightgray;
+    border: 1px solid ${theme.buttonBorder};
     padding: 5px;
     border-radius: 4px;
 `;
@@ -61,6 +63,14 @@ export const DataSourcesFiller = (props: any) => {
     const dataSources = useSelector((store: any) => store.dataSources);
     const dispatch = useDispatch();
     const submitMessage = "Save";
+
+    const storeTheme = useSelector((store:{theme:'light'|'dark'})=> store.theme)
+
+    const theme = useMemo (()=>{
+        return themes[storeTheme]
+
+    },[storeTheme])
+
     const urlChange = (e: any) => {
         setUrl((_) => e.target.value);
     };
@@ -106,7 +116,7 @@ export const DataSourcesFiller = (props: any) => {
     };
 
     return (
-        <div className={cx(InlineFlex)}>
+        <div className={cx(InlineFlex(theme))}>
             <div className={cx(oneForAllStyle)}>
                 Use one setting for all Data Sources
                 <Switch

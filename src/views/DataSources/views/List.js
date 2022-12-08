@@ -8,7 +8,7 @@ export function List() {
 
     if (ds?.length > 0) {
         return (
-            <div>
+            <div style={{margin:'10px'}}>
                 {ds.map((item, idx) => {
                     const { icon, id, name, type, url } = item;
                     return (

@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { BtnSmall } from "../../theme/styles/Button";
 
 export const PageContainer = styled.div`
+    overflow-x:hidden;
     margin: 0px;
     padding: 0px;
     left: 0;
@@ -28,13 +29,15 @@ export const PageContainer = styled.div`
         display: flex;
         flex-direction: column;
         flex: 1;
+        overflow-x:hidden;
     }
     .ds-header {
         padding: 10px;
         padding-bottom: 20px;
         font-size: 24px;
         display: flex;
-        width: 100%;
+       
+        margin: 10px;
         justify-content: space-between;
         align-items: center;
         padding-left: 0px;
