@@ -12,7 +12,7 @@ import { useMediaQuery } from "react-responsive";
 import MainTabs from "./MainTabs.js";
 import { setTheme } from "../actions";
 import { useMemo, useState, useEffect, useRef } from "react";
-import { ResizableBox } from "../plugins/ResizableBox/ResiableBox";
+import { setTheme } from "../actions";
 export const MainContainer = styled.div`
     position: absolute;
     display: flex;

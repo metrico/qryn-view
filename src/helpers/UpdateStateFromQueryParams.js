@@ -155,7 +155,7 @@ export function UpdateStateFromQueryParams() {
                 .concat(ARRAY_VALUES);
             allParams.forEach((param) => {
                 if (STRING_VALUES.includes(param)) {
-                    urlFromHash.set(param, STORE_KEYS[param].toString());
+                    urlFromHash.set(param, STORE_KEYS[param]?.toString());
                 } else if (param === "theme") {
                     urlFromHash.set(param, themeSet.toString());
                 } else if (TIME_VALUES.includes(param)) {
