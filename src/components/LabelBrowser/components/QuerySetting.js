@@ -19,7 +19,7 @@ import {
 } from "./styled";
 import CloseIcon from "@mui/icons-material/Close";
 import QueryLimit from "../../QueryTypeBar/components/QueryLimit";
-
+import { DialogStyles } from "../../../plugins/settingsdialog/SettingsDialog";
 export const QuerySetting = (props) => {
     const dispatch = useDispatch();
     const responseType = useSelector((store) => store.responseType);
@@ -139,7 +139,13 @@ export const QuerySetting = (props) => {
     }
 
     return (
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} PaperProps={{
+            classes: {
+                root: {
+                    DialogStyles
+                }
+            }
+          }}>
             <SettingCont>
                 <SettingHeader>
                     <h3>Query Options</h3>
