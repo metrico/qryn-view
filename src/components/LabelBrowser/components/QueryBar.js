@@ -85,6 +85,7 @@ export const QueryBar = (props) => {
         dataSourceId,
         //  dataSourceURL,
     } = data;
+    const {data:{loading}} = props
     const { hash } = useLocation();
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
@@ -557,6 +558,7 @@ export const QueryBar = (props) => {
         dispatch(setQueryHistory(historyUpdated));
     };
     const decodeQueryAndUpdatePanel = (queryExpr, isSearch) => {
+       
         const currentDataSource = dataSources.find(
             (f) => f.id === dataSourceId
         );
@@ -611,7 +613,8 @@ export const QueryBar = (props) => {
         }
 
         if (isSearch) {
-            dispatch(
+     
+         dispatch(
                 getData(
                     dataSourceType,
                     querySubmit,
@@ -625,7 +628,9 @@ export const QueryBar = (props) => {
                     customStep
                 )
             );
+           
         }
+     
     };
     const updateLinksHistory = () => {
         const storedUrl = saveUrl.add({
@@ -746,6 +751,7 @@ export const QueryBar = (props) => {
                             onSubmit={onSubmit}
                             onSubmitRate={onSubmitRate}
                             labels={labels}
+                            loading={loading}
                         />
                     )}
 
@@ -770,12 +776,14 @@ export const QueryBar = (props) => {
                         onSubmitRate={onSubmitRate}
                         isTabletOrMobile={isTabletOrMobile}
                         labels={labels}
+                        loading={loading}
                     />,
                     <MetricsSearch
                         {...props}
                         searchButton={
                             <ShowLogsButton
                                 disabled={!queryValid}
+                                loading={loading}
                                 onClick={onSubmit}
                                 isMobile={false}
                                 alterText={"Use Query"}
@@ -794,6 +802,7 @@ export const QueryBar = (props) => {
                     <ShowLogsButton
                         disabled={!queryValid}
                         onClick={onSubmit}
+                        loading={loading}
                         isMobile={false}
                         alterText={"Search Trace"}
                     />
@@ -837,6 +846,7 @@ export const QueryBarCont = (props) => {
         queryValid,
         onSubmit,
         onSubmitRate,
+        loading
     } = props;
     const buttonsHidden = () =>
         !isSplit &&
@@ -873,6 +883,7 @@ export const QueryBarCont = (props) => {
                         disabled={!queryValid}
                         onClick={onSubmit}
                         isMobile={false}
+                        loading={loading}
                     />
                 </>
             )}
@@ -884,6 +895,7 @@ export const QueryBarCont = (props) => {
                             disabled={!queryValid}
                             onClick={onSubmit}
                             isMobile={false}
+                            loading={loading}
                         />
                     </>
                 )}
@@ -903,6 +915,7 @@ export const MobileTopQueryMenuCont = (props) => {
         onSubmitRate,
         data,
         name,
+        loading
     } = props;
     const { id, dataSourceType } = data;
     const [isChartViewSet, setIsChartViewSet] = useState(props.data.chartView);
@@ -965,6 +978,7 @@ export const MobileTopQueryMenuCont = (props) => {
                 disabled={!queryValid}
                 onClick={onSubmit}
                 isMobile={true}
+                loading={loading}
             />
             {dataSourceType === "flux" && (
                 <div className="options-input">

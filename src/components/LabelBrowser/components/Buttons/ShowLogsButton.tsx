@@ -5,7 +5,13 @@ import { useSelector } from "react-redux";
 import { Button } from "./Button.model";
 import { Store } from "../../../../store/store.model";
 const _themes = themes as any;
-export default function ShowLogsButton({ isDisabled, onClick, isMobile,alterText }: Button) {
+export default function ShowLogsButton({
+    isDisabled,
+    onClick,
+    isMobile,
+    alterText,
+    loading,
+}: Button) {
     const SHOW_LOGS = "Show Results";
     const theme = useSelector((store: Store) => store.theme);
     return (
@@ -15,8 +21,9 @@ export default function ShowLogsButton({ isDisabled, onClick, isMobile,alterText
                 type="submit"
                 onClick={onClick}
                 isMobile={isMobile}
+                loading={loading}
             >
-                {alterText || SHOW_LOGS}
+                {loading ? <>Loading...</> : <>{alterText || SHOW_LOGS}</>}
             </ShowLogsBtn>
         </ThemeProvider>
     );

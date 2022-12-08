@@ -53,13 +53,14 @@ export const QueryBarContainer = styled.div`
     border-radius: 3px;
 `;
 export const ShowLogsBtn = styled(BtnSmall)`
-    background: ${(props) => props.theme.primaryDark};
+    background: ${(props) => props.loading ? '#44bcd8' : props.theme.primaryDark};
     border: 1px solid ${(props) => props.theme.buttonBorder};
     color: ${(props) => props.theme.buttonText};
     margin-left: 5px;
     transition: 0.25s all;
     justify-content: center;
     padding: 3px 12px;
+    
     height: 28px;
     &:hover {
         background: ${(props) => props.theme.primaryLight};
