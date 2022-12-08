@@ -96,7 +96,9 @@ export default function stateFromQueryParams() {
                 startParams[key] = parsedQuery;
             } else if (BOOLEAN_VALUES.includes(key)) {
                 try {
-
+                startParams[key] = queries;
+            } else if (BOOLEAN_VALUES.includes(key)) {
+                try {
                     startParams[key] = JSON.parse(value);
                 } catch(e) {
                     console.error(key);
