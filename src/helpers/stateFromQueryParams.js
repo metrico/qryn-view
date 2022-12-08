@@ -94,10 +94,7 @@ export default function stateFromQueryParams() {
             } else if (key === "left" || key === "right") {
                 const parsedQuery = JSON.parse(decodeURIComponent(value));
                 startParams[key] = parsedQuery;
-            } else if (BOOLEAN_VALUES.includes(key)) {
-                try {
-                startParams[key] = queries;
-            } else if (BOOLEAN_VALUES.includes(key)) {
+            }  else if (BOOLEAN_VALUES.includes(key)) {
                 try {
                     startParams[key] = JSON.parse(value);
                 } catch(e) {
