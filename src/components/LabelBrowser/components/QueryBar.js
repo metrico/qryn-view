@@ -738,6 +738,7 @@ export const QueryBar = (props) => {
     return (
         <div className={cx(maxWidth)} id={id}>
             <ThemeProvider theme={themes[theme]}>
+                
                 {dataSourceType !== "metrics" &&
                     dataSourceType !== "traces" && (
                         <MobileTopQueryMenuCont

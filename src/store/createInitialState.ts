@@ -177,6 +177,8 @@ export default function initialState() {
                 tableView: false,
                 chartView: false,
                 isShowTs: true,
+                hasStats:false,
+                statsData:{},
                 browserOpen: false,
                 expr: "",
                 labels: [], // name: selected:

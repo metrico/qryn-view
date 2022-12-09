@@ -17,7 +17,9 @@ export type QueryResult = {
     panel: string;
     id: string;
     ts: number;
-    direction: QueryDirection
+    direction: QueryDirection;
+    hasStats?: boolean;
+    statsData?:any;
 
 };
 

@@ -138,10 +138,11 @@ export function UpdateStateFromQueryParams() {
                         }
                     } else if (ARRAY_VALUES.includes(param)) {
                         try {
+                        
                             const parsed = JSON.parse(
                                 decodeURIComponent(startParams[param])
                             );
-
+                            
                      dispatch(STORE_ACTIONS[param](parsed));
                         } catch (e) {
                             console.log(e);
