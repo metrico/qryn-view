@@ -846,28 +846,47 @@ export const QueryBarCont = (props) => {
         queryValid,
         onSubmit,
         onSubmitRate,
-        loading
+        loading,
     } = props;
     const buttonsHidden = () =>
         !isSplit &&
         !isTabletOrMobile &&
         dataSourceType !== "flux" &&
         dataSourceType !== "traces";
+    const wrapperRef = useRef(null);
+    const buttonsContainerRef = useRef(null);
+    const labelsButtonRef = useRef(null);
+    const getMaxWidth = () => {
+        const labelButtonWidth = !isNaN(labelsButtonRef?.current?.clientWidth) ? labelsButtonRef?.current?.clientWidth : 0;
+        const buttonsContainerWidth = !isNaN(buttonsContainerRef?.current?.clientWidth) ? buttonsContainerRef?.current?.clientWidth : 0;
+        if (isSplit || isTabletOrMobile) {
+            return 0;
+        } else {
+            return ( labelButtonWidth + buttonsContainerWidth + 5)
+        }
+    }
     return (
         <QueryBarContainer>
             {buttonsHidden() && dataSourceType === "logs" && (
-                <ShowLabelsButton {...props} />
+                <span ref={labelsButtonRef}>
+                    <ShowLabelsButton {...props} />
+                </span>
+                
             )}
-
-            <QueryEditor
-                onQueryChange={handleQueryChange}
-                defaultValue={expr || ""}
-                value={queryValue}
-                onKeyDown={handleInputKeyDown}
-            />
-
+            <div
+                style={{ flex: 1, maxWidth: `calc(100% - ${getMaxWidth()}px)` }}
+                ref={wrapperRef}
+            >
+                <QueryEditor
+                    onQueryChange={handleQueryChange}
+                    defaultValue={expr || ""}
+                    value={queryValue}
+                    onKeyDown={handleInputKeyDown}
+                    wrapperWidth={wrapperRef?.current?.clientWidth}
+                />
+            </div>
             {buttonsHidden() && (
-                <>
+                <div ref={buttonsContainerRef} style={{ display: "flex", flex: "0" }}>
                     <HistoryButton
                         queryLength={queryHistory.length}
                         handleHistoryClick={handleHistoryClick}
@@ -885,7 +904,7 @@ export const QueryBarCont = (props) => {
                         isMobile={false}
                         loading={loading}
                     />
-                </>
+                </div>
             )}
             {dataSourceType === "traces" &&
                 dataSourceType === "metrics" &&

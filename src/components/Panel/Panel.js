@@ -11,7 +11,9 @@ const PanelCont = styled.div`
     display: flex;
     flex-direction: column;
     flex: 1;
-    width: 100%;
+    width: ${(props) => (props.isSplit ? "50%" : "100%")};
+    
+    /* width: 100%; */ // Replace with this when doing #110
 `;
 // Panel should have injected data
 export default function Panel(props) {
