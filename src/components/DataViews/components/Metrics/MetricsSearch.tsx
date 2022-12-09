@@ -130,9 +130,10 @@ function metricsToString(metric: string, labels: Label[]): string {
 export default function MetricsSearch(props: any) {
     const {
         handleMetricValueChange,
-        data: { dataSourceId },
+        data: { dataSourceId, hasStats },
         searchButton,
         logsRateButton,
+        statsSwitch
     } = props;
     // get the options for metrics selector
     const metricsOpts = useValuesFromMetrics(dataSourceId);
@@ -204,6 +205,8 @@ export default function MetricsSearch(props: any) {
             <div style={{ display: "flex", margin: "10px 0px" }}>
                 {searchButton}
                 {logsRateButton}
+                {hasStats && (statsSwitch)}
+                
             </div>
         </ThemeProvider>
     );
