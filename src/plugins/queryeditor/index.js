@@ -15,7 +15,7 @@ import { ResizableBox } from "../ResizableBox/ResiableBox";
 import { useMediaQuery } from "react-responsive";
 const CustomEditor = styled(Editable)`
     flex: 1;
-    height: 100%;
+ //   height: 100%;
     background: ${(props) => props.theme.inputBg};
     border: 1px solid ${(props) => props.theme.buttonBorder};
     color: ${(props) => props.theme.textColor};
@@ -23,16 +23,16 @@ const CustomEditor = styled(Editable)`
     font-size: 1em;
     font-family: monospace;
     margin: 0px 5px;
-    margin-bottom: 20px;
+   // margin-bottom: 20px;
     border-radius: 3px;
     line-height: 1.5;
     line-break: anywhere;
     overflow-y: scroll;
 `;
-const Resizable = css`
-    margin-bottom: 10px;
-    width: 100%;
-`;
+// const Resizable = css`
+//     margin-bottom: 10px;
+//     width: 100%;
+// `;
 const QueryBar = styled.div`
     display: flex;
     align-items: center;
@@ -80,7 +80,7 @@ function Leaf({ attributes, children, leaf }) {
                 `}
         ${(leaf.string || leaf.char) &&
                 css`
-                    color: #7bdb40;
+                    color: green;
                 `}
         ${(leaf.function || leaf["class-name"] || leaf["attr-name"]) &&
                 css`
@@ -119,22 +119,22 @@ export default function QueryEditor({
     onKeyDown,
     defaultValue,
     isSplit,
-    wrapperRef
+    // wrapperRef
 }) {
     const theme = useSelector((store) => store.theme);
 
     const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
-    const [height, setHeight] = useState(0);
-    const [width, setWidth] = useState(0);
+    // const [height, setHeight] = useState(0);
+    // const [width, setWidth] = useState(0);
     const editor = useMemo(() => withHistory(withReact(createEditor())), []);
     const ref = useRef(null);    
 
-    useEffect(()=> {
-        setHeight(30)
-    },[setHeight])
-    useEffect(()=> {
-        setWidth(wrapperRef)
-    },[width, setWidth, isSplit, wrapperRef])
+    // useEffect(()=> {
+    //     setHeight(30)
+    // },[setHeight])
+    // useEffect(()=> {
+    //     setWidth(wrapperRef)
+    // },[width, setWidth, isSplit, wrapperRef])
     // Keep track of state for the value of the editor.
 
     const [language] = useState("sql");
@@ -175,10 +175,10 @@ export default function QueryEditor({
         setEditorValue(value);
         editor.children = value;
     }, [value, setEditorValue]);
-    const onResize = (e, {size}) => {
-        console.log(size)
-        setHeight(size.height)
-    };
+    // const onResize = (e, {size}) => {
+    //     console.log(size)
+    //     setHeight(size.height)
+    // };
     return (
         <ThemeProvider theme={themes[theme]}>
             <QueryBar ref={ref}>
@@ -193,7 +193,7 @@ export default function QueryEditor({
                     className="test"
                 >
                     {" "}
-                    <ResizableBox
+                    {/* <ResizableBox
                         height={height}
                         width={width || 500}
                         axis={"y"}
@@ -206,7 +206,7 @@ export default function QueryEditor({
                         maxHeight={500}
                         resizeHandles={["s"]}
                         className={Resizable}
-                    >
+                    > */}
                         <CustomEditor
                             decorate={decorate}
                             renderLeaf={renderLeaf}
@@ -214,7 +214,7 @@ export default function QueryEditor({
                             onKeyDown={onKeyDown}
                             spellCheck="false"
                         />
-                    </ResizableBox>
+                    {/* </ResizableBox> */}
                 </Slate>
             </QueryBar>
         </ThemeProvider>

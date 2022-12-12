@@ -11,8 +11,10 @@ import axios from 'axios';
 import errorInterceptor from './helpers/error.interceptor';
 import { Provider } from 'react-redux';
 import store from './store/store';
+import DataSources from './views/DataSources/DataSources';
 
 errorInterceptor(axios)
+
 ReactDOM.render(
   <React.StrictMode>
      <Provider store={store}>
@@ -20,7 +22,8 @@ ReactDOM.render(
       <Routes>
         <Route exact path="/" element={<App />} />
         <Route exact path="/search" element={<App />} />
-
+        <Route path="/datasources/*" element={<DataSources/>}/>
+       
       </Routes>
     </BrowserRouter>
     </Provider>

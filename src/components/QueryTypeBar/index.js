@@ -30,6 +30,11 @@ export const SWITCH_OPTIONS = [
     { value: "instant", label: "Instant" },
 ];
 
+export const DIRECTION_SWITCH_OPTIONS = [
+    { value: "forward", label: "Forward" },
+    { value: "backwards", label: "Backwards" },
+];
+
 export default function QueryTypeBar(props) {
     const dispatch = useDispatch();
     const { name, data } = props;
@@ -39,10 +44,25 @@ export default function QueryTypeBar(props) {
     const responseType = useSelector((store) => store.responseType);
 
     const { hash } = useLocation();
-    const { id, queryType, tableView, idRef } = data;
+    const {
+        id,
+        queryType,
+        tableView,
+        idRef,
+        isShowTs,
+        direction,
+        dataSourceType,
+        isShowStats,
+        hasStats,
+    } = data;
 
     const [isTableViewSet, setIsTableViewSet] = useState(tableView);
+    const [isShowTsSet, setIsShowTsSet] = useState(isShowTs || false);
+    const [isShowStatsSet, setIsShowStatsSet] = useState(isShowStats || false);
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(queryType);
+    const [directionSwitch, setDirectionSwitch] = useState(
+        direction || "forward"
+    );
 
     useEffect(() => {
         const urlParams = new URLSearchParams(hash.replace("#", ""));
@@ -58,6 +78,7 @@ export default function QueryTypeBar(props) {
                 panel.forEach((query) => {
                     if (query.idRef === idRef) {
                         query.queryType = queryMD.queryType;
+                        query.direction = queryMD.direction;
                     }
                 });
                 dispatch(panelAction(name, panel));
@@ -68,6 +89,9 @@ export default function QueryTypeBar(props) {
     useEffect(() => {
         setIsTableViewSet(props.data.tableView);
     }, [setIsTableViewSet, props.data.tableView]);
+    useEffect(() => {
+        setIsShowTsSet(props.data.isShowTs);
+    }, [setIsShowTsSet, props.data.isShowTs]);
 
     function onSwitchChange(e) {
         // modify query type switch value
@@ -81,6 +105,18 @@ export default function QueryTypeBar(props) {
         setQueryTypeSwitch(e);
     }
 
+    function onDirectionSwitchChange(e) {
+        // modify query type switch value
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.direction = e;
+            }
+        });
+        dispatch(panelAction(name, panel));
+        setDirectionSwitch(e);
+    }
+
     function handleTableViewSwitch() {
         // modify table view switch value
         const panel = [...panelQuery];
@@ -92,26 +128,99 @@ export default function QueryTypeBar(props) {
         dispatch(panelAction(name, panel));
     }
 
+    function onTraceQueryChange(e) {
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.traceQueyType = e;
+            }
+        });
+        dispatch(panelAction(name, panel));
+        // setQueryTraceSwitch(prev => e);
+    }
+
+    function handleShowTsSwitch() {
+        // modify table view switch value
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.isShowTs = isShowTsSet ? false : true;
+            }
+        });
+
+        dispatch(panelAction(name, panel));
+    }
+
+    function handleStatsInfoSwitch(e) {
+        const value = e.target.checked;
+        setIsShowStatsSet((_) => value);
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.isShowStats = isShowStatsSet ? false : true;
+            }
+        });
+        dispatch(panelAction(name, panel));
+    }
+
     return (
         <ThemeProvider theme={themes[theme]}>
             <QueryTypeCont>
                 <QueryTypeSwitch
+                    label={"Query Type"}
                     options={SWITCH_OPTIONS}
                     onChange={onSwitchChange}
                     defaultActive={queryTypeSwitch}
                 />
+                <QueryTypeSwitch
+                    label={"Direction"}
+                    options={DIRECTION_SWITCH_OPTIONS}
+                    onChange={onDirectionSwitchChange}
+                    defaultActive={directionSwitch}
+                />
                 <QueryLimit {...props} />
-
-                {responseType !== "vector" && (
-                    <InputGroup>
-                        <SettingLabel>Table View</SettingLabel>
+                {dataSourceType === "flux" && (
+                    <div className="options-input">
+                        <SettingLabel>Chart View</SettingLabel>
                         <Switch
                             checked={isTableViewSet}
                             size={"small"}
                             onChange={handleTableViewSwitch}
                             inputProps={{ "aria-label": "controlled" }}
                         />
-                    </InputGroup>
+                    </div>
+                )}
+                {responseType !== "vector" && (
+                    <>
+                        <InputGroup>
+                            <SettingLabel>Table View</SettingLabel>
+                            <Switch
+                                checked={isTableViewSet}
+                                size={"small"}
+                                onChange={handleTableViewSwitch}
+                                inputProps={{ "aria-label": "controlled" }}
+                            />
+                        </InputGroup>
+                        <InputGroup>
+                            <SettingLabel>Timestamp</SettingLabel>
+                            <Switch
+                                checked={isShowTsSet}
+                                size={"small"}
+                                onChange={handleShowTsSwitch}
+                                inputProps={{ "aria-label": "controlled-ts" }}
+                            />
+                        </InputGroup>
+                        {hasStats && (     <InputGroup>
+                            <SettingLabel>Stats Info</SettingLabel>
+                            <Switch
+                                checked={isShowStatsSet}
+                                size={"small"}
+                                onChange={handleStatsInfoSwitch}
+                                inputProps={{ "aria-label": "controlled-ts" }}
+                            />
+                        </InputGroup>)}
+                   
+                    </>
                 )}
             </QueryTypeCont>
         </ThemeProvider>

@@ -1,5 +1,5 @@
 
-import ClokiChart from "../components/Charts";
+import QrynChart from "../components/Charts";
 import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
 import { ViewStyled } from "./styled";
@@ -9,9 +9,9 @@ export const MatrixView = (props) => {
         viewRef,
         panelSize,
         viewHeight,
-        onStreamClose,
-        onMaximize,
-        onMinimize,
+        setStreamClose,
+        setMaxHeight,
+        setMinimize,
         actualQuery,
         total,
         type,
@@ -24,9 +24,9 @@ export const MatrixView = (props) => {
     return (
         <ViewStyled ref={viewRef} size={panelSize} vheight={viewHeight}>
             <ViewHeader
-                onClose={onStreamClose}
-                onMinimize={onMinimize}
-                onMaximize={onMaximize}
+                onClose={setStreamClose}
+                setMinimize={setMinimize}
+                setMaxHeight={setMaxHeight}
                 actualQuery={actualQuery}
                 total={total}
                 type={type}
@@ -41,7 +41,7 @@ export const MatrixView = (props) => {
                         actualQuery={actualQuery}
                     />
                 ) : (
-                    <ClokiChart
+                    <QrynChart
                         {...props}
                         tWidth={viewWidth}
                         chartLimit={limit}

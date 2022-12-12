@@ -15,6 +15,7 @@ function localService(item = null) {
     const setStorageItem = (name, data) => {
         localStorage.setItem(name, data);
     };
+    
     const j_parse = (item) => JSON.parse(item)
     const j_string = (item) => JSON.stringify(item)
     const l_set = (item,value) => { localStorage.setItem(item,value) }
@@ -98,10 +99,11 @@ function localService(item = null) {
     };
 
     const labelsStore = () => {
-        function getAll(){
+        return function getAll(){
             const actualStorage = JSON.parse(localStorage.getItem(_LABELS_ITEM))||[]
             return actualStorage;
         }
+
 
     }
 

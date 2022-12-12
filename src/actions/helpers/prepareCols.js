@@ -22,3 +22,20 @@ export function prepareCols(data) {
 
     return colNames;
 }
+
+export function prepareFluxCols(data) {
+    let colNames = [];
+    try {
+        for (let header of data) {
+            let metricKeys = Object.keys(header);
+            for(let metric of metricKeys){
+                if(!colNames.includes(metric))
+                colNames.push(metric)
+            }
+        }
+    }catch(e) {
+        console.log(e)
+    }
+    
+    return colNames
+}

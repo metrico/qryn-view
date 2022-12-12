@@ -16,7 +16,7 @@ import { ThemeProvider } from "@mui/styles";
 import { useSelector } from "react-redux";
 import { themes } from "../../../../theme/themes";
 import styled from "@emotion/styled";
-
+import { DialogStyles } from "../../../settingsdialog/SettingsDialog";
 const AlertCont = styled.div`
     background: ${(props) => props.theme.widgetContainer};
     #alert-dialog-title {
@@ -56,6 +56,11 @@ export default function AlertDialog({ clearHistory, dialogType }) {
                     onClose={handleClose}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
+                    PaperProps={{
+                        classes: {
+                            root: DialogStyles
+                        }
+                      }}
                 >
                     <AlertCont>
                         <DialogTitle id="alert-dialog-title">

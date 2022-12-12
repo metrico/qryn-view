@@ -1,10 +1,9 @@
-import { Dialog, Switch } from "@mui/material";
+import { Dialog, Switch, Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
     setApiUrl,
-    setQueryLimit,
-    setQueryStep,
     setTheme,
+    setAutoTheme
 } from "../../actions";
 
 import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen.js";
@@ -12,29 +11,29 @@ import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen.js";
 import { useEffect, useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
-
+import InfoIcon from "@mui/icons-material/Info"
 import {
     InputGroup,
     SettingCont,
     SettingHeader,
     SettingCloseBtn,
     SettingsInputContainer,
-    InlineGroup,
-    SettingInput,
     SettingLabel,
-    SettingButton,
     EmbedArea,
 } from "./styled";
 
 import setDebugMode from "../../actions/setDebugMode";
+import { css } from "@emotion/css";
 
+export const DialogStyles = css`
+    background-color: transparent !important;
+`
 export default function SettingsDialog({ open, onClose }) {
     const dispatch = useDispatch();
-    const apiUrl = useSelector((store) => store.apiUrl);
     const theme = useSelector((store) => store.theme);
-
+    const autoTheme = useSelector((store) => store.autoTheme)
     const debugMode = useSelector((store) => store.debugMode);
-
+    const apiUrl = useSelector((store)=> store.apiUrl)
     const [apiEdited, setApiEdited] = useState(apiUrl);
 
     const [embedEdited, setEmbedEdited] = useState(
@@ -42,7 +41,10 @@ export default function SettingsDialog({ open, onClose }) {
     );
 
     const [themeSet, setThemeSet] = useState(theme);
-
+    const [autoThemeLocal, setLocalAutoTheme] = useState(autoTheme);
+    useEffect(() => {
+        setLocalAutoTheme(autoTheme)
+    }, [autoTheme, setLocalAutoTheme])
     function getEmbed(url) {
         return url + "&isEmbed=true";
     }
@@ -55,21 +57,16 @@ export default function SettingsDialog({ open, onClose }) {
         setThemeSet(theme);
     }, [theme, setThemeSet]);
 
-    function handleApiChange(e) {
-        const value = e.target.value;
-        setApiEdited(value);
-    }
-
-    function handleApiClick() {
-        dispatch(setApiUrl(apiEdited));
-    }
 
     function handleThemeSwitch() {
         dispatch(setTheme(themeSet === "light" ? "dark" : "light"));
         setThemeSet(theme);
         localStorage.setItem("theme", JSON.stringify({ theme }));
     }
-
+    const handleAutoTheme = (val) => {
+        dispatch(setAutoTheme(!autoThemeLocal))
+        setLocalAutoTheme(autoTheme);
+    }
     function handleClose() {
         dispatch(setSettingsDialogOpen(false));
     }
@@ -87,7 +84,11 @@ export default function SettingsDialog({ open, onClose }) {
     }
 
     return (
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} PaperProps={{
+            classes: {
+                root: DialogStyles
+            }
+          }}>
             <SettingCont>
                 <SettingHeader>
                     <h3>Settings</h3>
@@ -99,23 +100,21 @@ export default function SettingsDialog({ open, onClose }) {
 
                 <SettingsInputContainer>
                     <InputGroup>
-                        <SettingLabel>API URL</SettingLabel>
-                        <InlineGroup>
-                            <SettingInput
-                                value={apiEdited}
-                                onChange={handleApiChange}
-                            />
-                            <SettingButton onClick={handleApiClick}>
-                                save
-                            </SettingButton>
-                        </InlineGroup>
-                    </InputGroup>
-                    <InputGroup>
                         <SettingLabel>Theme: {theme}</SettingLabel>
                         <Switch
-                        size={'small'}
+                            size={'small'}
                             checked={themeSet === "dark"}
                             onChange={handleThemeSwitch}
+                            disabled={autoThemeLocal}
+                            inputProps={{ "aria-label": "controlled" }}
+                        />
+                        <Tooltip title="Theme determined by your system preferenes">
+                            <SettingLabel>Automatic theme detection <InfoIcon fontSize={'inherit'}/> </SettingLabel>
+                        </Tooltip>
+                        <Switch
+                            size={'small'}
+                            checked={autoThemeLocal}
+                            onChange={handleAutoTheme}
                             inputProps={{ "aria-label": "controlled" }}
                         />
                     </InputGroup>

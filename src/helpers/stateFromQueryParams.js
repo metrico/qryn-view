@@ -2,7 +2,7 @@ import { environment } from "../environment/env.dev";
 import setDebug from "./setDebug";
 import * as moment from "moment";
 import { nanoid } from "nanoid";
-
+import { BOOLEAN_VALUES } from "./UpdateStateFromQueryParams";
 export const initialUrlState = {
     query: "",
     queryType: "range",
@@ -18,15 +18,19 @@ export const initialUrlState = {
             lastIdx: 1,
             panel: "left",
             queryType: "range",
+            dataSourceType: "logs",
+            dataSourceURL: "",
+            dataSourceId: "cHI2SqPzH_kxYRXj",
             limit: 100,
             step: 5,
             tableView: false,
+            chartView: false,
+            isShowTs: true,
             browserOpen: false,
             expr: "",
             labels: [], // name: selected:
             values: [], // label name selected
             response: {}, // the target should be just the last one
-
         },
     ],
 
@@ -37,9 +41,14 @@ export const initialUrlState = {
             lastIdx: 1,
             panel: "right",
             queryType: "range",
+            dataSourceType: "logs",
+            dataSourceURL: "",
+            dataSourceId: "cHI2SqPzH_kxYRXj",
             limit: 100,
             step: 5,
             tableView: false,
+            chartView: false,
+            isShowTs: true,
             browserOpen: false,
             expr: "",
             labels: [], // name: selected:
@@ -54,6 +63,7 @@ export const initialUrlState = {
     apiUrl: "",
     isSubmit: false,
     isEmbed: false,
+    autoTheme: true,
     theme: "",
     isSplit: false,
 };
@@ -81,10 +91,16 @@ export default function stateFromQueryParams() {
                 startParams[key] = new Date(
                     moment(croppedTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
                 );
-
             } else if (key === "left" || key === "right") {
                 const parsedQuery = JSON.parse(decodeURIComponent(value));
                 startParams[key] = parsedQuery;
+            }  else if (BOOLEAN_VALUES.includes(key)) {
+                try {
+                    startParams[key] = JSON.parse(value);
+                } catch(e) {
+                    console.error(key);
+                    startParams[key] = false;
+                }
             } else {
                 startParams[key] = value;
             }

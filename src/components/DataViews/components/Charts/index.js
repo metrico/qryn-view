@@ -17,7 +17,7 @@ import {
     setStopTime,
     setTimeRangeLabel,
 } from "../../../../actions";
-import loadLogs from "../../../../actions/loadLogs";
+import getData from "../../../../actions/getData";
 
 import {
     getTypeFromLocal,
@@ -31,10 +31,12 @@ import UseTooltip from "./UseTooltip";
 import { useChartOptions, useMatrixData, useTheme } from "./hooks";
 import { FlotChart } from "./FlotChart";
 
-export default function ClokiChart(props) {
+export default function QrynChart(props) {
     const { matrixData, actualQuery } = props;
     const { tWidth } = props;
-    const { expr, queryType, limit, panel, id } = actualQuery;
+
+    const { expr, dataSourceType, queryType, limit, panel, id } = actualQuery;
+
     const chartRef = useRef(null);
     const storeTheme = useSelector(({ theme }) => theme);
 
@@ -161,8 +163,8 @@ export default function ClokiChart(props) {
                 dispatch(setStartTime(fromTs));
 
                 dispatch(setTimeRangeLabel(timeRangeLabel));
-
-                dispatch(loadLogs(expr, queryType, limit, panel, id));
+                
+                dispatch(getData(dataSourceType,expr, queryType, limit, panel, id));
             }, 400);
         } catch (e) {
             console.log("error on chart redraw", e);
@@ -309,7 +311,13 @@ export default function ClokiChart(props) {
             onLabelClick,
             labels,
         };
-
+        const pointSet = new Set();
+        matrixData.forEach((dataPoint)=>{
+            dataPoint?.values?.forEach(dataPointValue => pointSet.add(dataPointValue?.[0]))
+        })
+        if (pointSet.size === 1 && chartType !== 'bar') {
+            onSetChartType('bar')
+        }
         return <FlotChart {...flotChartProps} />;
     }
 

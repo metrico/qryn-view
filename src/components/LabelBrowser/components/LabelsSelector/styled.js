@@ -14,3 +14,12 @@ export const Loader = styled(CircularProgress)`
     width: 30px;
     height: 30px;
 `;
+
+export const SmallInput = styled.input`
+    background: ${({ theme }) => theme.inputBg};
+    color: ${({ theme }) => theme.textColor};
+    font-size: 10px;
+    border: 1px solid ${({ theme }) => theme.buttonBorder};
+    border-radius: 3px;
+    outline: none;
+`;

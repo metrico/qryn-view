@@ -1,5 +1,8 @@
+import { yAxisTickFormatter } from "../helpers";
+
 const APP_NAME = "qryn_view";
 export const LOCAL_CHART_TYPE = `${APP_NAME}_chart_type`;
+
 export const CHART_OPTIONS = {
     xaxis: {
         show: true,
@@ -8,6 +11,9 @@ export const CHART_OPTIONS = {
         timeformat: "%Y-%m-%d %H:%M:%S",
         reserveSpace: false,
         shadowSize: 0,
+    },
+    yaxis:{
+        tickFormatter:yAxisTickFormatter
     },
     grid: {
         show: true,
