@@ -22,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [12.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -40,7 +40,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: 'Automated Version Bump'
       if: github.event_name != 'pull_request'
-      id: version
+      id: release_version
       uses: 'phips28/gh-action-bump-version@master'
       with:
         tag-prefix: 'v'
@@ -50,7 +50,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: 'version check'
       if: github.event_name != 'pull_request'
-      run: echo ${{steps.version.outputs.newTag}}
+      run: echo ${{steps.release_version.outputs.newTag}}
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
@@ -74,8 +74,8 @@ jobs:
       with:
         release_config: |
             dist.zip
-        tag_name: ${{steps.version.outputs.newTag}}
-        release_name: qryn-view-${{steps.version.outputs.newTag}}
+        tag_name: ${{steps.release_version.outputs.newTag}}
+        release_name: qryn-view-${{steps.release_version.outputs.newTag}}
         draft: false
         prerelease: false
         overwrite: true
@@ -85,7 +85,7 @@ jobs:
       with:
         repository_owner: metrico
         repository_name: qryn
-        new_branch_name: view_${{steps.version.outputs.newTag}}
+        new_branch_name: view_${{steps.release_version.outputs.newTag}}
         new_branch_ref: master
         access_token: ${{ secrets.GH_PUSH }}
     - name: Push to Mothership
@@ -97,11 +97,11 @@ jobs:
       with:
         source-directory: 'build'
         target-directory: 'view'
-        target-branch: view_${{steps.version.outputs.newTag}}
+        target-branch: view_${{steps.release_version.outputs.newTag}}
         destination-github-username: 'metrico'
         destination-repository-name: 'qryn'
         user-email: lorenzo.mangani@gmail.com
-        commit-message: Upgrade view to ${{steps.version.outputs.newTag}}
+        commit-message: Upgrade view to ${{steps.release_version.outputs.newTag}}
     - name: Deploy to gh-pages 🚀
       if: github.event_name != 'pull_request'
       uses: JamesIves/github-pages-deploy-action@v4.2.3
