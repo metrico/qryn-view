@@ -44,8 +44,8 @@ const getStyles = (theme: string): any =>  {
         transform: rotate(90deg);
     `,
     "react-resizable-handle-se": css`
-        bottom: 0;
-        right: 0;
+        bottom: -5px;
+        right: 10px;
         cursor: se-resize;
     `,
     "react-resizable-handle-nw": css`

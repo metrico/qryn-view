@@ -100,7 +100,7 @@ function Leaf({ attributes, children, leaf }) {
         </span>
     );
 }
-const handle = ["s"];
+const handle = ["se"];
 export function getTokenLength(token) {
     if (typeof token === "string") {
         return token.length;
