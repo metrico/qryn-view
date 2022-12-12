@@ -39,9 +39,12 @@ const AccordianLogsContent = styled.div`
     padding: 0.5rem 0.5rem 0.25rem 0.5rem;
 `;
 const AccordianLogsHeader = css`
+    display: flex;
+    align-items: center;
     background: #e4e4e4;
     color: inherit;
-    display: block;
+   
+    font-size: 12px;
     padding: 0.25rem 0.5rem;
     &:hover {
         background: #dadada;
@@ -77,9 +80,15 @@ export default function AccordianLogs(props: AccordianLogsProps) {
     let headerProps: {} | null = null;
     if (interactive) {
         arrow = isOpen ? (
-            <IoIosArrowDown className={uAlignIcon} />
+            <IoIosArrowDown
+                style={{ height: "13px", width: "12px" }}
+                className={uAlignIcon}
+            />
         ) : (
-            <IoIosArrowRight className="u-align-icon" />
+            <IoIosArrowRight
+                style={{ height: "13px", width: "12px" }}
+                className={uAlignIcon}
+            />
         );
         HeaderComponent = "a";
         headerProps = {
@@ -88,20 +97,28 @@ export default function AccordianLogs(props: AccordianLogsProps) {
             role: "switch",
         };
     }
-
+    const logsMemo = React.useMemo(() => {
+        return logs.map((t: any) => {
+            const fields = Object.keys(t)?.filter((f) => f !== "timeUnixNano");
+            return {
+                timestamp: parseInt(t.timeUnixNano) / 1000,
+                fields: fields.map((m) => ({ key: m, value: t[m] })),
+            };
+        });
+    }, [logs]);
     //   const styles = useStyles2(getStyles);
     return (
         <AccordianLogsStyled>
             <HeaderComponent className={AccordianLogsHeader} {...headerProps}>
-                {arrow} <strong>Events</strong> ({logs.length})
+                {arrow} <strong>Events ({logsMemo.length})</strong> 
             </HeaderComponent>
             {isOpen && (
                 <AccordianLogsContent>
-                    {_sortBy(logs, "timestamp").map((log, i) => (
+                    {_sortBy(logsMemo, "timestamp").map((log, i) => (
                         <AccordianKeyValues
                             // `i` is necessary in the key because timestamps can repeat
                             key={`${log.timestamp}-${i}`}
-                            className={i < logs.length - 1 ? ubMb1 : null}
+                            className={i < logsMemo.length - 1 ? ubMb1 : null}
                             data={log.fields || []}
                             highContrast
                             interactive={interactive}
