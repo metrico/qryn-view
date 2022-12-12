@@ -66,7 +66,7 @@ jobs:
         release_config: |
             dist.zip
         tag_name: ${{steps.version.outputs.newTag}}
-        release_name: cloki-view-${{steps.version.outputs.newTag}}
+        release_name: qryn-view-${{steps.version.outputs.newTag}}
         draft: false
         prerelease: false
         overwrite: true

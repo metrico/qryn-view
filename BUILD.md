@@ -54,5 +54,5 @@ will serve by default the UI on ``http://localhost:3000``
 - ``API_URL`` default: ``http://localhost:3100``
 
 ```bash
-~/$ HOST=localhost PORT=8080 API_URL=http://cloki-host:3100 npm start
+~/$ HOST=localhost PORT=8080 API_URL=http://qryn-host:3100 npm start
 ```

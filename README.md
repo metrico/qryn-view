@@ -6,7 +6,7 @@
 
 # :eye: qryn view
 
-*qryn-view* is a smart and minimal LOgQL API data explorer developed in React/JS and designed for [qryn](https://cloki.org)
+*qryn-view* is a smart and minimal LogQl, Metrics, Traces and Flux API data explorer developed in React/JS and designed for [qryn](https://qryn.dev)
 
 ![qryn-view-demo](https://user-images.githubusercontent.com/1423657/200136242-f4133229-ee7c-45e0-8228-8734cf56140a.gif)
 
@@ -43,6 +43,45 @@
 ------------
 ### Usage
 
+
+
+**Local development:** 
+
+Clone Repo 
+
+```bash 
+git clone https://github.com/metrico/qryn-view
+```
+Install packages
+```bash 
+npm install 
+```
+---
+
+**Local Build:**
+
+Build local clone
+```bash
+npm run build 
+```
+Install Serve (npm serve)
+```bash
+sudo npm i -g serve
+
+serve -s build
+```
+---
+
+**Releases**
+ 
+ check our [Qryn View Releases](https://github.com/metrico/qryn-view/releases)
+
+
+---
+
+
+
+
 _Use the [public client](https://view.cloki.org) _(no data goes through the server)_ or [build](BUILD.md) and run your own instance_
 
 #### Environment Variables:
@@ -53,7 +92,7 @@ _Use the [public client](https://view.cloki.org) _(no data goes through the serv
 
 ##### Example 
 ```bash
-~/$ HOST=localhost PORT=8080 API_URL=http://cloki-host:3100 npm start
+~/$ HOST=localhost PORT=8080 API_URL=http://qryn-host:3100 npm start
 ```
 ------------
 ##### URL Parameters
@@ -61,10 +100,8 @@ _cLoki-view can be controlled through URL parameters__
 
 | param | description | default |
 |-------|-------------|---------|
-| `apiUrl` | _LogQL API URL_ | http://localhost:3100 |
 | `start`   | _timestamp Ns_  | now |
 | `stop`     | _timestamp Ns_  | |
-| `step`   | _query step_    | 5 |
 | `isEmbed` | _embed mode_   | false |
 | `theme` | _application theme_ | dark |
 | `left` | _left panel queries details_ | |
@@ -73,13 +110,16 @@ _cLoki-view can be controlled through URL parameters__
 
 ------------
 
-#### Query Data (logql) inside left or right panel
+#### Query Data (logql, metrics, traces, flux) inside left or right panel
 _JSON stringifyed and URL encoded_
 
-- *id*: query ID
-- *idRef* Title for a query
-- *expr* query expression
-- *limit* query limit
+- *id*: - query ID
+- *idRef* - Title for a query
+- *expr* - query expression (neeeds to be URL encoded)
+- *limit* - query limit
+- *dataSourceType* - 'logs', 'metrics', 'traces', 'flux'.
+- *dataSourceURL* - the datasource API URL.
+- *dataSourceId* - Data Source Id inside Data Sources Setting
 
 ------------
 
