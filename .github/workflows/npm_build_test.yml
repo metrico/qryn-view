@@ -22,11 +22,22 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v2
+    - name: 'Automated Version Bump Beta'
+      if: github.event_name != 'pull_request' && github.ref == 'ref/head/beta'
+      id: version
+      uses: 'phips28/gh-action-bump-version@master'
+      with:
+        tag-prefix: 'v'
+        skip-tag: true
+        tag-suffix: '-beta'
+      
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: 'Automated Version Bump'
       if: github.event_name != 'pull_request'
       id: version
@@ -34,8 +45,6 @@ jobs:
       with:
         tag-prefix: 'v'
         skip-tag: true
-        if: github.ref == 'ref/head/beta'
-        tag-suffix: '-beta'
       
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
