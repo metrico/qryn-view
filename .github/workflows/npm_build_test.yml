@@ -35,7 +35,7 @@ jobs:
         tag-prefix: 'v'
         skip-tag: true
         if: github.ref == 'ref/head/beta'
-        tag-suffix: 'beta'
+        tag-suffix: '-beta'
       
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
