@@ -48,12 +48,13 @@ export function makeTolltipItems(list) {
 }
 
 export function getItemsLength(list) {
-    const sList = getSortedItems(list)
-  
-    if(sList?.length > 0) {
-        return sList?.sort((a,b) => (a.label.length > b.label.length ? 0 : 1))[0].label.length
-    } 
-    
+    const sList = getSortedItems(list);
+
+    if (sList?.length > 0) {
+        return sList?.sort((a, b) =>
+            a.label.length > b.label.length ? 0 : 1
+        )[0].label.length;
+    }
 }
 
 export function getTimeSpan(data) {
@@ -64,8 +65,7 @@ export function getTimeSpan(data) {
     const first = tsArray[0];
     //const last = tsArray[tsArray.length - 1] ;
     const last = tsArray[tsArray.length - 1];
-    const timeDiff = last - first
-
+    const timeDiff = last - first;
 
     const timeSpan = timeDiff / 1000 / 86400;
 
@@ -132,7 +132,7 @@ export function setTypeToLocal(type) {
 }
 
 export function formatLabel(labels) {
-    if(labels) {
+    if (labels) {
         return (
             "{ " +
             Object.entries(labels)
@@ -140,9 +140,7 @@ export function formatLabel(labels) {
                 .join(", ") +
             " }"
         );
-    }
-    else return ''
-  
+    } else return "";
 }
 
 export function hideSeries(series) {
@@ -163,7 +161,6 @@ export function showSeries(series, type) {
         lines,
         points,
         isVisible: true,
-        
     };
 }
 
@@ -197,4 +194,32 @@ export function getNewData(data, type) {
     } else {
         return data;
     }
+}
+
+export function yAxisTickFormatter(val, axis) {
+    const floatNum = (val, suffix) => {
+        let num = 0;
+        if (suffix === "M") {
+            num = 1_000_000;
+        }
+
+        if (suffix === "K") {
+            num = 1_000;
+        }
+
+        if (val % num === 0) {
+            return 0;
+        }
+        return 1;
+    };
+
+    if (val > 999999) {
+        return (val / 1000000).toFixed(floatNum(val, "M")) + " M";
+    }
+
+    if (val > 999) {
+        return (val / 1000).toFixed(floatNum(val, "K")) + " K";
+    }
+
+    return val.toFixed(axis.tickDecimals);
 }

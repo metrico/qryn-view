@@ -7,6 +7,7 @@ import { Route, Routes } from "react-router-dom";
 import { DataSource } from "./DataSource";
 import { List } from "./views/List";
 import { Header } from "./components";
+import { DataSourcesFiller } from "./components/DataSourcesFiller";
 
 export function getURlParams(params) {
 
@@ -35,11 +36,19 @@ export default function DataSources() {
                 <div className="cont">
                     <Header title={"DataSources"} />
                     <List />
+                    <div style={{
+                        height:'40px'
+                    }}> 
+                    <DataSourcesFiller />
+
+                    </div>
+                   
                 </div>
             </PageContainer>
             <Routes>
                 <Route path=":id" element={<DataSource />} />
             </Routes>
+           
         </ThemeProvider>
     );
 }

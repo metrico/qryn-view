@@ -19,7 +19,7 @@ import {
 } from "./styled";
 import CloseIcon from "@mui/icons-material/Close";
 import QueryLimit from "../../QueryTypeBar/components/QueryLimit";
-
+import { DialogStyles } from "../../../plugins/settingsdialog/SettingsDialog";
 export const QuerySetting = (props) => {
     const dispatch = useDispatch();
     const responseType = useSelector((store) => store.responseType);
@@ -46,7 +46,7 @@ export const QuerySetting = (props) => {
             if (queryMD) {
                 const panel = [...actPanel];
                 const query = getPanelQueryByIDRef(panel, idRef);
-                if (typeof query !== 'undefined') {
+                if (typeof query !== "undefined") {
                     query.queryType = queryMD.queryType;
                     query.direction = queryMD.direction;
                     dispatch(panelAction(name, panel));
@@ -57,13 +57,13 @@ export const QuerySetting = (props) => {
     const getPanelQueryByID = (panel, queryId) => {
         return panel.find((query) => {
             return query.id === queryId;
-        })
-    }
+        });
+    };
     const getPanelQueryByIDRef = (panel, idRef) => {
         return panel.find((query) => {
             return query.id === idRef;
-        })
-    }
+        });
+    };
     useEffect(() => {
         setIsTableViewSet(props.data.tableView);
     }, [setIsTableViewSet, props.data.tableView]);
@@ -76,7 +76,7 @@ export const QuerySetting = (props) => {
         // modify query type switch value
         const panel = [...actPanel];
         const query = getPanelQueryByID(panel, id);
-        if (typeof query !== 'undefined') {
+        if (typeof query !== "undefined") {
             query.queryType = e;
             dispatch(panelAction(name, panel));
         }
@@ -87,7 +87,7 @@ export const QuerySetting = (props) => {
         const panel = [...actPanel];
 
         const query = getPanelQueryByID(panel, id);
-        if (typeof query !== 'undefined') { 
+        if (typeof query !== "undefined") {
             query.traceQueryType = e;
             dispatch(panelAction(name, panel));
         }
@@ -97,8 +97,8 @@ export const QuerySetting = (props) => {
         // modify query type switch value
         const panel = [...actPanel];
         const query = getPanelQueryByID(panel, id);
-        if (typeof query !== 'undefined') {
-            query.direction = e;    
+        if (typeof query !== "undefined") {
+            query.direction = e;
             dispatch(panelAction(name, panel));
         }
         setDirectionSwitch(e);
@@ -107,9 +107,9 @@ export const QuerySetting = (props) => {
     function handleTableViewSwitch() {
         // modify table view switch value
         const panel = [...actPanel];
-        
+
         const query = getPanelQueryByID(panel, id);
-        if (typeof query !== 'undefined') {
+        if (typeof query !== "undefined") {
             query.tableView = isTableViewSet ? false : true;
 
             dispatch(panelAction(name, panel));
@@ -139,7 +139,17 @@ export const QuerySetting = (props) => {
     }
 
     return (
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            PaperProps={{
+                classes: {
+                    root: {
+                        DialogStyles,
+                    },
+                },
+            }}
+        >
             <SettingCont>
                 <SettingHeader>
                     <h3>Query Options</h3>
@@ -170,7 +180,7 @@ export const QuerySetting = (props) => {
                     <div className="options-input">
                         <QueryLimit {...props} />
                     </div>
-                    {dataSourceType === 'flux' && (
+                    {dataSourceType === "flux" && (
                         <div className="options-input">
                             <SettingLabel>Chart View</SettingLabel>
                             <Switch
@@ -180,7 +190,6 @@ export const QuerySetting = (props) => {
                                 inputProps={{ "aria-label": "controlled" }}
                             />
                         </div>
-
                     )}
                     {responseType !== "vector" && (
                         <div className="options-input">

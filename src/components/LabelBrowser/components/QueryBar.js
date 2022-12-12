@@ -85,6 +85,9 @@ export const QueryBar = (props) => {
         dataSourceId,
         //  dataSourceURL,
     } = data;
+    const {
+        data: { loading, hasStats, isShowStats },
+    } = props;
     const { hash } = useLocation();
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
@@ -99,6 +102,7 @@ export const QueryBar = (props) => {
     const [traceQueryType, setTraceQueryType] = useState("traceId");
     const [labels, setLabels] = useState([]);
     const [traceSearch, setTraceSearch] = useState({});
+    const [showStatsOpen, setShowStatsOpen] = useState(isShowStats || false);
     const [open, setOpen] = useState(false);
     // const [currentDataSource,setCurrentDatasource] = useState({})
     const dataSources = useSelector((store) => store.dataSources);
@@ -649,6 +653,22 @@ export const QueryBar = (props) => {
         setTraceSearch((_) => e);
     }
 
+    function handleStatsOpen(e) {
+        const value = e.target.checked;
+        setShowStatsOpen((_) => value);
+
+        const prevPanel = JSON.parse(JSON.stringify(panelData));
+
+        const newPanel = prevPanel?.map((m) => {
+            if (m.id === id) {
+                return { ...m, isShowStats: value };
+            }
+            return m;
+        });
+
+        dispatch(panelAction(name, newPanel));
+    }
+
     const inlineQueryOptionsRenderer = (type, isSplit, isMobile, typeBar) => {
         const isFullView = !isMobile && !isSplit;
         const isMetrics = type === "metrics" || type === "logs";
@@ -746,6 +766,10 @@ export const QueryBar = (props) => {
                             onSubmit={onSubmit}
                             onSubmitRate={onSubmitRate}
                             labels={labels}
+                            loading={loading}
+                            hasStats={hasStats}
+                            showStatsOpen={showStatsOpen}
+                            handleStatsOpen={handleStatsOpen}
                         />
                     )}
 
@@ -770,12 +794,14 @@ export const QueryBar = (props) => {
                         onSubmitRate={onSubmitRate}
                         isTabletOrMobile={isTabletOrMobile}
                         labels={labels}
+                        loading={loading}
                     />,
                     <MetricsSearch
                         {...props}
                         searchButton={
                             <ShowLogsButton
                                 disabled={!queryValid}
+                                loading={loading}
                                 onClick={onSubmit}
                                 isMobile={false}
                                 alterText={"Use Query"}
@@ -789,11 +815,23 @@ export const QueryBar = (props) => {
                                 alterText={"Use as Rate Query"}
                             />
                         }
+                        statsSwitch={
+                            <div className="options-input">
+                                <SettingLabel>Show Stats</SettingLabel>
+                                <Switch
+                                    checked={showStatsOpen}
+                                    size={"small"}
+                                    onChange={handleStatsOpen}
+                                    inputProps={{ "aria-label": "controlled" }}
+                                />
+                            </div>
+                        }
                         handleMetricValueChange={onMetricChange}
                     />,
                     <ShowLogsButton
                         disabled={!queryValid}
                         onClick={onSubmit}
+                        loading={loading}
                         isMobile={false}
                         alterText={"Search Trace"}
                     />
@@ -837,6 +875,7 @@ export const QueryBarCont = (props) => {
         queryValid,
         onSubmit,
         onSubmitRate,
+        loading,
     } = props;
     const buttonsHidden = () =>
         !isSplit &&
@@ -873,6 +912,7 @@ export const QueryBarCont = (props) => {
                         disabled={!queryValid}
                         onClick={onSubmit}
                         isMobile={false}
+                        loading={loading}
                     />
                 </>
             )}
@@ -884,6 +924,7 @@ export const QueryBarCont = (props) => {
                             disabled={!queryValid}
                             onClick={onSubmit}
                             isMobile={false}
+                            loading={loading}
                         />
                     </>
                 )}
@@ -903,6 +944,10 @@ export const MobileTopQueryMenuCont = (props) => {
         onSubmitRate,
         data,
         name,
+        loading,
+        hasStats,
+        showStatsOpen,
+        handleStatsOpen,
     } = props;
     const { id, dataSourceType } = data;
     const [isChartViewSet, setIsChartViewSet] = useState(props.data.chartView);
@@ -961,11 +1006,26 @@ export const MobileTopQueryMenuCont = (props) => {
                     isMobile={false}
                 />
             )}
+
+            {dataSourceType === "logs" && hasStats && (
+                <div className="options-input">
+                    <SettingLabel>Show Stats</SettingLabel>
+                    <Switch
+                        checked={showStatsOpen}
+                        size={"small"}
+                        onChange={handleStatsOpen}
+                        inputProps={{ "aria-label": "controlled-switch" }}
+                    />
+                </div>
+            )}
+
             <ShowLogsButton
                 disabled={!queryValid}
                 onClick={onSubmit}
                 isMobile={true}
+                loading={loading}
             />
+
             {dataSourceType === "flux" && (
                 <div className="options-input">
                     <SettingLabel>Chart View</SettingLabel>
