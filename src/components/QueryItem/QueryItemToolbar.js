@@ -9,7 +9,7 @@ import {
     ShowQueryButton,
 } from "./style";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { QueryId } from "./QueryId";
 import { DataSourceSelect } from "./DataSourceSelect";
 export function QueryItemToolbar(props) {
@@ -139,16 +139,17 @@ export function QueryItemToolbar(props) {
 
         dispatch(panelAction(props.name, panelCP));
     };
+    const onClickShowQuery = useCallback(() => {
+        props.isQueryOpen[1](
+            props.isQueryOpen[0] ? false : true
+        );
+    },[])
     return (
         <QueryItemToolbarStyled>
             <div className="query-title">
                 {!isEmbed && (
                     <ShowQueryButton
-                        onClick={() => {
-                            props.isQueryOpen[1](
-                                props.isQueryOpen[0] ? false : true
-                            );
-                        }}
+                        onClick={onClickShowQuery}
                     >
                         {props.isQueryOpen[0] ? <OpenQuery /> : <CloseQuery />}
                     </ShowQueryButton>

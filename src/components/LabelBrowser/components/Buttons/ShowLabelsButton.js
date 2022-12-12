@@ -4,7 +4,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { themes } from "../../../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { setLeftPanel } from "../../../../actions/setLeftPanel";
 import { setRightPanel } from "../../../../actions/setRightPanel";
 import { css, cx } from "@emotion/css";
@@ -37,7 +37,7 @@ export default function ShowLabelsButton(props) {
         setIsBrowserOpen(open);
     }, [open]);
 
-    function handleBrowserOpen() {
+    const handleBrowserOpen = useCallback(() => {
         const panel = [...panelQuery];
         panel.forEach((query) => {
             if (query.id === id) {
@@ -46,7 +46,7 @@ export default function ShowLabelsButton(props) {
         });
         dispatch(panelAction(name, panel));
         setIsBrowserOpen(open);
-    }
+    },[])
 
     const labelsTitle = (labels) => {
         if (props.labels?.length > 0) {

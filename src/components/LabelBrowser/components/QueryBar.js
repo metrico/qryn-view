@@ -1,5 +1,5 @@
 /**React */
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 /**npm */
@@ -397,23 +397,23 @@ export const QueryBar = (props) => {
         }
     }, [dataSourceId, id]);
 
-    function handleQueryChange(e) {
+    const handleQueryChange = useCallback((e) => {
         setQueryValue(e);
         saveQuery(e);
-    }
+    },[])
 
-    const handleInputKeyDown = (e) => {
+    const handleInputKeyDown = useCallback((e) => {
         if (e.code === "Enter" && e.ctrlKey) {
             onSubmit(e);
         }
-    };
+    },[]);
 
-    const onMetricChange = (e) => {
+    const onMetricChange = useCallback((e) => {
         const query = [{ children: [{ text: e }] }];
         handleQueryChange(query);
-    };
+    },[]);
 
-    const onSubmit = (e) => {
+    const onSubmit = useCallback((e) => {
         e.preventDefault();
         if (onQueryValid(queryInput)) {
             try {
@@ -433,7 +433,7 @@ export const QueryBar = (props) => {
 
             console.log("Please make a log query", expr);
         }
-    };
+    },[]);
     const getLocalStorage = () => {
         // 1- if has previous id with data => modify data
         // 2- if no previous data => create entry
@@ -495,7 +495,7 @@ export const QueryBar = (props) => {
         queryParams.set(name, encodeURIComponent(JSON.stringify(panel)));
         setLocalStorage();
     };
-    const onSubmitRate = (e, type = "logs") => {
+    const onSubmitRate = useCallback((e, type = "logs") => {
         e.preventDefault();
         const isEmptyQuery = queryInput.length === 0;
         let query = "";
@@ -540,7 +540,7 @@ export const QueryBar = (props) => {
             dispatch(setIsEmptyView(true));
             console.log("Please make a log query", expr);
         }
-    };
+    },[]);
 
     const updateHistory = (queryInput, queryType, limit, id) => {
         const historyUpdated = historyService.add({
@@ -640,12 +640,12 @@ export const QueryBar = (props) => {
 
         dispatch(setLinksHistory(storedUrl));
     };
-    function handleHistoryClick(e) {
+    const handleHistoryClick = useCallback((e) => {
         dispatch(setHistoryOpen(!historyOpen));
-    }
-    function showQuerySettings() {
+    },[])
+    const showQuerySettings = useCallback(() => {
         setOpen(open ? false : true);
-    }
+    },[])
     function onClose() {
         showQuerySettings();
     }
@@ -848,33 +848,35 @@ export const QueryBarCont = (props) => {
         onSubmitRate,
         loading,
     } = props;
-    const buttonsHidden = () =>
-        !isSplit &&
+    const buttonsHidden = useMemo(() =>{
+        return !isSplit &&
         !isTabletOrMobile &&
         dataSourceType !== "flux" &&
-        dataSourceType !== "traces";
+        dataSourceType !== "traces"
+    }, [isSplit, isTabletOrMobile, dataSourceType]);
     const wrapperRef = useRef(null);
     const buttonsContainerRef = useRef(null);
     const labelsButtonRef = useRef(null);
-    const getMaxWidth = () => {
+    const getMaxWidth = useMemo(() => {
         const labelButtonWidth = !isNaN(labelsButtonRef?.current?.clientWidth) ? labelsButtonRef?.current?.clientWidth : 0;
         const buttonsContainerWidth = !isNaN(buttonsContainerRef?.current?.clientWidth) ? buttonsContainerRef?.current?.clientWidth : 0;
         if (isSplit || isTabletOrMobile) {
             return 0;
         } else {
-            return ( labelButtonWidth + buttonsContainerWidth + 5)
+            // return ( labelButtonWidth + buttonsContainerWidth + 150)
+            return 350;
         }
-    }
+    },[isSplit, isTabletOrMobile])
     return (
         <QueryBarContainer>
-            {buttonsHidden() && dataSourceType === "logs" && (
+            {buttonsHidden && dataSourceType === "logs" && (
                 <span ref={labelsButtonRef}>
                     <ShowLabelsButton {...props} />
                 </span>
                 
             )}
             <div
-                style={{ flex: 1, maxWidth: `calc(100% - ${getMaxWidth()}px)` }}
+                style={{ flex: 1, maxWidth: `calc(100% - ${getMaxWidth}px)` }}
                 ref={wrapperRef}
             >
                 <QueryEditor
@@ -885,7 +887,7 @@ export const QueryBarCont = (props) => {
                     wrapperWidth={wrapperRef?.current?.clientWidth}
                 />
             </div>
-            {buttonsHidden() && (
+            {buttonsHidden && (
                 <div ref={buttonsContainerRef} style={{ display: "flex", flex: "0" }}>
                     <HistoryButton
                         queryLength={queryHistory.length}

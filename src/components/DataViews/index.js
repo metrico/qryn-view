@@ -6,7 +6,7 @@ import { DataViewItem } from "./components/DataViewItem";
 import { DataviewsContainer } from "./styled";
 
 export default function DataViews(props) {
-    const { name} = props;
+    const { name } = props;
     const theme = useSelector((store) => store.theme);
     const [side] = useState(name);
     const dataViews = useSelector((store) => store[`${side}DataView`]);

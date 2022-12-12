@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useActualQuery, useTableHeight, useViewHeight } from "../hooks";
 import { EmptyView } from "../views/EmptyView";
@@ -39,18 +39,18 @@ export function DataViewItem(props) {
         setTableData(dataView.tableData || {});
     }, [dataView.tableData, setTableData]);
 
-    const setStreamClose = () => {
+    const setStreamClose = useCallback(() => {
         setStreamData([]);
         setTableData([]);
-    };
+    },[]);
 
-    const setMinimize = () => {
+    const setMinimize = useCallback(() => {
         setPanelSize((prev) => (prev !== "min" ? "min" : "regular"));
-    };
+    },[]);
 
-    const setMaxHeight = () => {
+    const setMaxHeight = useCallback(() => {
         setPanelSize((prev) => (prev !== "max" ? "max" : "regular"));
-    };
+    },[]);
 
     const theight = useTableHeight({ total, panelSize, dataView });
 
@@ -123,7 +123,7 @@ export function DataViewItem(props) {
         
         
         // return vector type (table) component
-       const { limit } = actualQuery;
+        const { limit } = actualQuery;
         const vectorProps = {
             viewRef,
             panelSize,
@@ -136,7 +136,7 @@ export function DataViewItem(props) {
             type,
             theight,
             streamData,
-           viewWidth,
+            viewWidth,
             limit,
             ...props,
         };

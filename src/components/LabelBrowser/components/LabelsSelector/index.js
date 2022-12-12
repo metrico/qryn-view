@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@emotion/react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { themes } from "../../../../theme/themes";
 import LabelsList from "./LabelsList";
@@ -99,13 +99,13 @@ export default function LabelsSelector(props) {
         }
     }, [labelsFromProps, labels, setLabelsState, JSONClone]);
 
-    const onLabelSelected = (e) => {
+    const onLabelSelected = useCallback((e) => {
         setLabelsState((prev) => {
             return updateLabel(prev, e);
         });
 
         setLabelsSelected((prev) => updateLabelSelected(prev, e));
-    };
+    },[]);
     if(data) {
         return (
             <ThemeProvider theme={themes[theme]}>

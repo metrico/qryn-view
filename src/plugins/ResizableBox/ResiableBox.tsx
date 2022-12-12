@@ -1,6 +1,7 @@
 import { ResizableBox as ReactResizableBox } from "react-resizable";
 import { css, cx } from "@emotion/css";
 import { useSelector } from "react-redux";
+import { useCallback, useMemo } from "react";
 
 interface ResizableBoxProps {
     height: number;
@@ -93,14 +94,15 @@ export function ResizableBox(props: ResizableBoxProps) {
     const storeTheme = useSelector(({ theme }: any) => theme);
     const { height, width, children, minWidth, maxWidth, minHeight, maxHeight, resizeHandles, onResize, axis, className } = props;
     const styles = getStyles(storeTheme);
-    const handleFn = (axis: ResizeHandleAxis, ref: any) => {
+    const handleFn = useCallback((axis: ResizeHandleAxis, ref: any) => {
         return <span className={cx(styles[`react-resizable-handle`],styles[`react-resizable-handle-${axis}`])} ref={ref} />;
-    };  
-
+    },[]);  
+    const minConstraints = useMemo(():[number, number] => [minWidth, minHeight], [minWidth, minHeight])
+    const maxConstraints = useMemo(():[number, number] => [maxWidth, maxHeight], [maxWidth, maxHeight])
     return (
         <ReactResizableBox height={height} width={width} className={cx(styles['react-resizable'], className)}
-        minConstraints={[minWidth, minHeight]}
-        maxConstraints={[maxWidth, maxHeight]}
+        minConstraints={minConstraints}
+        maxConstraints={maxConstraints}
         axis={axis}
         resizeHandles={resizeHandles}
         onResize={onResize}

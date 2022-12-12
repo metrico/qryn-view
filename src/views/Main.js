@@ -12,7 +12,8 @@ import { useMediaQuery } from "react-responsive";
 import MainTabs from "./MainTabs.js";
 import { setTheme } from "../actions";
 import { useMemo, useState, useEffect, useRef } from "react";
-
+import { ResizableBox } from "../plugins/ResizableBox/ResiableBox";
+const rightHandle = ['w']
 export const MainContainer = styled.div`
     position: absolute;
     display: flex;
@@ -135,47 +136,41 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
         setWidthLeftPercent(widthLeft / widthTotal);
         setWidthRightercent(widthRight / widthTotal);
     };
-
+    const leftHandle = useMemo(()=> isSplit ? ['e'] : [], [isSplit])
     return (
         <ThemeProvider theme={theme}>
             <MainContainer>
                 {!isEmbed && <StatusBar />}
                 <div className="panels-container" ref={refTotal}>
-                    {/* <ResizableBox
+                    <ResizableBox
                         width={widthLeft}
-                        minConstraints={[minWidth, height]}
-                        maxConstraints={[maxWidth, height]}
                         minWidth={minWidth}
                         maxWidth={maxWidth}
                         minHeight={height}
                         maxHeight={height}
                         height={height}
                         axis={"x"}
-                        resizeHandles={isSplit ? ["e"] : []}
+                        resizeHandles={leftHandle}
                         lockAspectRatio={false}
-                        handleSize={[10, 10]}
                         onResize={onSplitResize}
-                    > */}
+                    >
                         <Panel name="left" />
-                    {/* </ResizableBox> */}
+                    </ResizableBox>
                     {isSplit && (
-                        // <ResizableBox
-                        //     width={widthRight}
-                        //     minConstraints={[minWidth, height]}
-                        //     maxConstraints={[maxWidth, height]}
-                        //     minWidth={minWidth}
-                        //     maxWidth={maxWidth}
-                        //     minHeight={height}
-                        //     maxHeight={height}
-                        //     height={height}
-                        //     axis={"x"}
-                        //     resizeHandles={["w"]}
-                        //     lockAspectRatio={false}
-                        //     handleSize={[10, 10]}
-                        //     onResize={onSplitResize}
-                        // >
+                        <ResizableBox
+                            width={widthRight}
+                            minWidth={minWidth}
+                            maxWidth={maxWidth}
+                            minHeight={height}
+                            maxHeight={height}
+                            height={height}
+                            axis={"x"}
+                            resizeHandles={rightHandle}
+                            lockAspectRatio={false}
+                            onResize={onSplitResize}
+                        >
                             <Panel name="right" />
-                        // </ResizableBox>
+                        </ResizableBox>
                     )}
                 </div>
             </MainContainer>

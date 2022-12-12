@@ -11,9 +11,8 @@ const PanelCont = styled.div`
     display: flex;
     flex-direction: column;
     flex: 1;
-    width: ${(props) => (props.isSplit ? "50%" : "100%")};
     
-    /* width: 100%; */ // Replace with this when doing #110
+    width: 100%;
 `;
 // Panel should have injected data
 export default function Panel(props) {
@@ -25,6 +24,7 @@ export default function Panel(props) {
     const { name } = props;
 
     const panelDispatch = (name, data) => {
+        console.log('test')
         if (name === "left") return setLeftPanel(data);
         return setRightPanel(data);
     };
@@ -64,11 +64,10 @@ export default function Panel(props) {
     // CHECK ALSO THAT DATAVIEWS IS AN ARRAY
 
     const panelData = useMemo(() => panel, [panel]);
-    //console.log(panelData)
     return (
         <>
             <PanelCont isSplit={isSplit} ref={ref}>
-                <QueriesContainer {...props} width={width} queries={panelData} />
+                <QueriesContainer {...props} queries={panelData} />
                 <DataViews {...props} />
             </PanelCont>
         </>

@@ -100,7 +100,7 @@ function Leaf({ attributes, children, leaf }) {
         </span>
     );
 }
-
+const handle = ["s"];
 export function getTokenLength(token) {
     if (typeof token === "string") {
         return token.length;
@@ -135,7 +135,6 @@ export default function QueryEditor({
         setHeight(30);
     },[setHeight])
     useEffect(()=> {
-        console.log(wrapperWidth)
         setWidth(wrapperWidth);
     },[setWidth, isSplit, wrapperWidth])
     // Keep track of state for the value of the editor.
@@ -196,9 +195,9 @@ export default function QueryEditor({
         adjustHeight(editorSize);
         console.log(editorSize)
     },[editorSize])
-    const onResize = (e, {size}) => {
+    const onResize = useCallback((e, {size}) => {
         setHeight(size.height);
-    };
+    },[]);
     return (
         <ThemeProvider theme={themes[theme]}>
             <QueryBar ref={ref}>
@@ -219,12 +218,11 @@ export default function QueryEditor({
                         axis={"y"}
                         onResize={onResize}
                         lockAspectRatio={false}
-                        handleSize={[10, 10]}
                         minWidth={width || 500}
                         maxWidth={width || 500}
                         minHeight={30}
                         maxHeight={window.innerHeight * 0.5}
-                        resizeHandles={["s"]}
+                        resizeHandles={handle}
                         className={Resizable}
                     >
                         <span ref={editorRef}>
