@@ -15,15 +15,29 @@
 -->
 
 ### Features
-- Label Browser
-- Display Logs & Charts
-- Timerange Selector
+
+**Data Sources Settings**
+- URL, Headers
+- Basic Auth
+- Quick Setting (clone one setting for all datasources)
+- Use for all (use current setting for all datasources)
+  
+**Browsers:** 
+- Logs
+- Metrics
+- Traces
+- Flux (experimental)
+
+**Display:**  
+- Logs & Charts
+- Traces View
+- Table view
+- Link Logs with Traces
 - Split data views
 - Multi query execution
+- Timerange Selector
 - Query History
 - Mobile View
-- Copy Link
-- Embeddable Results
 - 100% Client-Side
 
 ------------
