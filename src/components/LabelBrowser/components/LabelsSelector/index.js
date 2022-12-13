@@ -105,7 +105,7 @@ export default function LabelsSelector(props) {
         });
 
         setLabelsSelected((prev) => updateLabelSelected(prev, e));
-    },[]);
+    },[labels, setLabelsState, setLabelsSelected]);
     if(data) {
         return (
             <ThemeProvider theme={themes[theme]}>

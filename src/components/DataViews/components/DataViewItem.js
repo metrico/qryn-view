@@ -46,11 +46,11 @@ export function DataViewItem(props) {
 
     const setMinimize = useCallback(() => {
         setPanelSize((prev) => (prev !== "min" ? "min" : "regular"));
-    },[]);
+    },[panelSize]);
 
     const setMaxHeight = useCallback(() => {
         setPanelSize((prev) => (prev !== "max" ? "max" : "regular"));
-    },[]);
+    },[panelSize]);
 
     const theight = useTableHeight({ total, panelSize, dataView });
 

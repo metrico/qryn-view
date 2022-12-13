@@ -400,13 +400,13 @@ export const QueryBar = (props) => {
     const handleQueryChange = useCallback((e) => {
         setQueryValue(e);
         saveQuery(e);
-    },[])
+    },[setQueryValue, saveQuery])
 
     const handleInputKeyDown = useCallback((e) => {
         if (e.code === "Enter" && e.ctrlKey) {
             onSubmit(e);
         }
-    },[]);
+    },[onSubmit]);
 
     const onMetricChange = useCallback((e) => {
         const query = [{ children: [{ text: e }] }];
@@ -433,7 +433,7 @@ export const QueryBar = (props) => {
 
             console.log("Please make a log query", expr);
         }
-    },[]);
+    },[queryInput, queryType, limit, id, expr]);
     const getLocalStorage = () => {
         // 1- if has previous id with data => modify data
         // 2- if no previous data => create entry
@@ -480,7 +480,7 @@ export const QueryBar = (props) => {
         }
         localStorage.setItem("queryData", JSON.stringify(newData));
     };
-    const saveQuery = (e = []) => {
+    const saveQuery = useCallback((e = []) => {
         const queryParams = new URLSearchParams(hash.replace("#", ""));
         const multiline = e?.map((text) => text.children[0].text).join("\n");
         const panel = [...panelQuery];
@@ -494,7 +494,7 @@ export const QueryBar = (props) => {
         dispatch(panelAction(name, panel));
         queryParams.set(name, encodeURIComponent(JSON.stringify(panel)));
         setLocalStorage();
-    };
+    },[panelQuery,name,hash,id]);
     const onSubmitRate = useCallback((e, type = "logs") => {
         e.preventDefault();
         const isEmptyQuery = queryInput.length === 0;
@@ -642,10 +642,10 @@ export const QueryBar = (props) => {
     };
     const handleHistoryClick = useCallback((e) => {
         dispatch(setHistoryOpen(!historyOpen));
-    },[])
+    },[historyOpen])
     const showQuerySettings = useCallback(() => {
         setOpen(open ? false : true);
-    },[])
+    },[open])
     function onClose() {
         showQuerySettings();
     }

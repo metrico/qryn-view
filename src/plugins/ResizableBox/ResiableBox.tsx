@@ -96,7 +96,7 @@ export function ResizableBox(props: ResizableBoxProps) {
     const styles = getStyles(storeTheme);
     const handleFn = useCallback((axis: ResizeHandleAxis, ref: any) => {
         return <span className={cx(styles[`react-resizable-handle`],styles[`react-resizable-handle-${axis}`])} ref={ref} />;
-    },[]);  
+    },[axis]);  
     const minConstraints = useMemo(():[number, number] => [minWidth, minHeight], [minWidth, minHeight])
     const maxConstraints = useMemo(():[number, number] => [maxWidth, maxHeight], [maxWidth, maxHeight])
     return (

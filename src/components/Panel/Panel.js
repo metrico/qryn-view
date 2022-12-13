@@ -24,7 +24,6 @@ export default function Panel(props) {
     const { name } = props;
 
     const panelDispatch = (name, data) => {
-        console.log('test')
         if (name === "left") return setLeftPanel(data);
         return setRightPanel(data);
     };

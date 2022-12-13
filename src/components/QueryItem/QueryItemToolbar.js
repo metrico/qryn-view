@@ -143,7 +143,7 @@ export function QueryItemToolbar(props) {
         props.isQueryOpen[1](
             props.isQueryOpen[0] ? false : true
         );
-    },[])
+    },[props.isQueryOpen])
     return (
         <QueryItemToolbarStyled>
             <div className="query-title">

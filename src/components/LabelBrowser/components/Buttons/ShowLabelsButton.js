@@ -46,7 +46,7 @@ export default function ShowLabelsButton(props) {
         });
         dispatch(panelAction(name, panel));
         setIsBrowserOpen(open);
-    },[])
+    },[panelQuery, isBrowserOpen])
 
     const labelsTitle = (labels) => {
         if (props.labels?.length > 0) {
