@@ -25,29 +25,29 @@ import { formatDuration } from "../utils";
 import AccordianKeyValues from "./AccordianKeyValues";
 import styled from "@emotion/styled";
 const AccordianLogsStyled = styled.div`
-    border: 1px solid #d8d8d8;
+   // border: 1px solid #d8d8d8;
     position: relative;
     margin-bottom: 0.25rem;
 `;
 const AccordianLogsFooter = styled.small`
-    color: #999;
+//    color: #999;
     font-size: 80%;
 `;
 const AccordianLogsContent = styled.div`
-    background: #f0f0f0;
-    border-top: 1px solid #d8d8d8;
-    padding: 0.5rem 0.5rem 0.25rem 0.5rem;
+  //  background: #f0f0f0;
+ //   border-top: 1px solid #d8d8d8;
+  //  padding: 0.5rem 0.5rem 0.25rem 0.5rem;
 `;
 const AccordianLogsHeader = css`
     display: flex;
     align-items: center;
-    background: #e4e4e4;
+  //  background: #e4e4e4;
     color: inherit;
    
     font-size: 12px;
     padding: 0.25rem 0.5rem;
     &:hover {
-        background: #dadada;
+   //     background: #dadada;
     }
 `;
 
