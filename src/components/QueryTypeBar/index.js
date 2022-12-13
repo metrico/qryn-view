@@ -192,7 +192,7 @@ export default function QueryTypeBar(props) {
                 )}
                 {responseType !== "vector" && (
                     <>
-                        <InputGroup>
+                        {/* <InputGroup>
                             <SettingLabel>Table View</SettingLabel>
                             <Switch
                                 checked={isTableViewSet}
@@ -200,7 +200,7 @@ export default function QueryTypeBar(props) {
                                 onChange={handleTableViewSwitch}
                                 inputProps={{ "aria-label": "controlled" }}
                             />
-                        </InputGroup>
+                        </InputGroup> */}
                         <InputGroup>
                             <SettingLabel>Timestamp</SettingLabel>
                             <Switch
