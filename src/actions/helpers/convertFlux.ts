@@ -1,20 +1,20 @@
 import Papa from "papaparse";
 
-export async function convertFlux(csv) {
+export async function convertFlux(csv: any) {
     try {
-        var response = {
+        var response: any = {
             meta: [],
             data: [],
             statistics: { elapsed: 0.360986682, rows_read: 0, bytes_read: 0 },
         };
 
-        var json = Papa.parse(csv, {
+        var json: any = Papa.parse(csv, {
             header: true,
             comments: true,
             dynamicTyping: true,
-        });
+        } as any);
 
-        response.data = await json.data.map(function (item) {
+        response.data = await json.data.map(function (item: any) {
             delete item[""];
             delete item.table;
             delete item.result;
@@ -34,11 +34,11 @@ export async function convertFlux(csv) {
     }
 }
 
-export function csvJSON(csvText) {
-    let lines = [];
+export function csvJSON(csvText: any) {
+    let lines: any[] = [];
     const linesArray = csvText.split('\n');
     // for trimming and deleting extra space 
-    linesArray.forEach((e) => {
+    linesArray.forEach((e: any) => {
         const row = e.replace(/[\s]+[,]+|[,]+[\s]+/g, ',').trim();
         lines.push(row);
     });
@@ -49,7 +49,7 @@ export function csvJSON(csvText) {
     
     for (let i = 1; i < lines.length; i++) {
     
-        const obj = {};
+        const obj: any = {};
         const currentline = lines[i].split(",");
     
         for (let j = 0; j < headers.length; j++) {
