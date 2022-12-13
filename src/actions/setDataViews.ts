@@ -1,4 +1,4 @@
-const setDataViews = (dataViews) => (dispatch) => {
+const setDataViews = (dataViews: any) => (dispatch: Function) => {
     dispatch({
         type: 'SET_DATA_VIEWS',
         dataViews

@@ -1,4 +1,4 @@
-const setLabelValues = (labelValues) => (dispatch) => {
+const setLabelValues = (labelValues: any) => (dispatch: Function) => {
     dispatch({
         type: 'SET_LABEL_VALUES',
        labelValues

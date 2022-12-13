@@ -1,4 +1,4 @@
-export const setRightDataView = (rightDataView) => (dispatch) => {
+export const setRightDataView = (rightDataView: any) => (dispatch: Function) => {
     dispatch({
         type: 'SET_RIGHT_DATAVIEW',
         rightDataView

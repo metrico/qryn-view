@@ -1,6 +1,6 @@
 import store from '../store/store';
 
-export const removeAlert = ( index) => (dispatch) => {
+export const removeAlert = ( index: any) => (dispatch: Function) => {
     let notifications = store.getState().notifications
     notifications[index].visible = false;
     dispatch({

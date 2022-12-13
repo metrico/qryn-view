@@ -1,4 +1,4 @@
-export const errorHandler = (error) => {
+export const errorHandler = (error: any) => {
 
     const LABELS_URL = "/loki/api/v1/label";
     const QUERY_URL = "/loki/api/v1/query_range";
@@ -58,7 +58,7 @@ export const errorHandler = (error) => {
             type: type()
         };
     } else {
-        if (type === 'labels') return;
+        // if (type === 'labels') return;
 
         return {
             message: "something went wrong with request",

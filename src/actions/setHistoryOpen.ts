@@ -1,4 +1,4 @@
- const setHistoryOpen = (historyOpen) => (dispatch)=>{
+ const setHistoryOpen = (historyOpen: any) => (dispatch: Function)=>{
     dispatch({
         type: 'SET_HISTORY_OPEN',
         historyOpen

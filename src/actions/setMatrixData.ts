@@ -1,4 +1,4 @@
-const  setMatrixData = (matrixData) => (dispatch) => {
+const  setMatrixData = (matrixData: any) => (dispatch: Function) => {
      dispatch({
          type: 'SET_MATRIX_DATA',
          matrixData

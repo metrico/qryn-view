@@ -1,7 +1,7 @@
-export default function setApiWarning(apiWarning){
-    return function(dispatch){
+export default function setApiWarning(apiWarning: any) {
+    return function (dispatch: Function) {
         dispatch({
-            type:'SET_API_WARNING',
+            type: 'SET_API_WARNING',
             apiWarning
         })
     }

@@ -1,7 +1,7 @@
-export default function setResponseType( responseType) {
-    return function (dispatch){
+export default function setResponseType(responseType: any) {
+    return function (dispatch: Function) {
         dispatch({
-            type:"SET_RESPONSE_TYPE",
+            type: "SET_RESPONSE_TYPE",
             responseType
         })
     }

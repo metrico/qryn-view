@@ -1,7 +1,7 @@
-export default function setDebugMode( debugMode) {
-    return function (dispatch){
+export default function setDebugMode(debugMode: any) {
+    return function (dispatch: Function) {
         dispatch({
-            type:"SET_DEBUG_MODE",
+            type: "SET_DEBUG_MODE",
             debugMode
         })
     }

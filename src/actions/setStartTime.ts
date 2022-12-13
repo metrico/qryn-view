@@ -1,4 +1,4 @@
-export const setStartTime = (start) => (dispatch) => {
+export const setStartTime = (start: any) => (dispatch: Function) => {
     dispatch({
         type: 'SET_START_TIME',
         start

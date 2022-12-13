@@ -1,7 +1,7 @@
-export default function setToTime(toTime){
-    return function (dispatch){
+export default function setToTime(toTime: any) {
+    return function (dispatch: Function) {
         dispatch({
-            type:"SET_TO_TIME"
+            type: "SET_TO_TIME"
         })
     }
 }

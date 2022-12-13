@@ -1,4 +1,4 @@
-const setLinkedFields = (linkedFields) => (dispatch) => {
+const setLinkedFields = (linkedFields: any) => (dispatch: Function) => {
     dispatch({
         type: 'SET_LINKED_FIELDS',
         linkedFields

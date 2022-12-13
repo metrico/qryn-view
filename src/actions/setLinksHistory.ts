@@ -1,4 +1,4 @@
-const setLinksHistory = (linksHistory) => (dispatch) => {
+const setLinksHistory = (linksHistory: any) => (dispatch: Function) => {
     dispatch({
         type: 'SET_LINKS_HISTORY',
         linksHistory

@@ -1,5 +1,5 @@
-export default function setDirection(direction) {
-return function (dispatch) {
+export default function setDirection(direction: any) {
+return function (dispatch: Function) {
     dispatch({
         type:"SET_DIRECTION",
         direction
