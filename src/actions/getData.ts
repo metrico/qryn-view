@@ -41,8 +41,8 @@ function changeLoadingState(panel: any[], id: string, state: boolean) {
     return [...panel].map((m) => {
         if (m.id === id) {
             return { ...m, loading: state };
-        } 
-        return m
+        }
+        return m;
     });
 }
 
@@ -75,7 +75,7 @@ export default function getData(
         },
         hasSettings: false,
     };
-    const panelData = store.getState()[panel]
+
     let user = "";
     let pass = "";
     if (dataSourceId !== "") {
@@ -129,10 +129,10 @@ export default function getData(
             };
         }
     }
-
-    const loadingState = (dispatch:any, state:boolean) => {
-        panelDispatch(panel,dispatch, changeLoadingState(panelData,id,state))
-    } 
+    const loadingState = (dispatch: any, state: boolean) => {
+        const pData = store.getState()[panel];
+        panelDispatch(panel, dispatch, changeLoadingState(pData, id, state));
+    };
 
     const { debugMode } = store.getState();
     const options = getQueryOptions(type, dsSettings.requestHeaders);
@@ -154,13 +154,12 @@ export default function getData(
     return async function (dispatch: Function) {
         await resetParams(dispatch, panel);
         dispatch(setLoading(true));
-        loadingState(dispatch, true)
+        loadingState(dispatch, true);
         let cancelToken: any;
 
         if (url === "") {
-            loadingState(dispatch, false)
+            loadingState(dispatch, false);
             return;
-
         }
 
         if (typeof cancelToken != typeof undefined) {
@@ -195,7 +194,7 @@ export default function getData(
                     })
                     .finally(() => {
                         dispatch(setLoading(false));
-                        loadingState(dispatch, false)
+                        loadingState(dispatch, false);
                     });
             } else if (options?.method === "GET") {
                 await axios
@@ -220,13 +219,13 @@ export default function getData(
                                 id
                             );
                         }
-                        loadingState(dispatch, false)
+                        loadingState(dispatch, false);
                     })
                     .catch((error) => {
                         resetNoData(dispatch);
                         dispatch(setIsEmptyView(true));
                         dispatch(setLoading(false));
-                        loadingState(dispatch, false)
+                        loadingState(dispatch, false);
                         if (debugMode) {
                             boscoSend(
                                 { level: "error", id, type, direction },
@@ -240,12 +239,12 @@ export default function getData(
                         }
                     })
                     .finally(() => {
-                        loadingState(dispatch, false)
+                        loadingState(dispatch, false);
                         dispatch(setLoading(false));
                     });
             }
         } catch (e) {
-            loadingState(dispatch, false)
+            loadingState(dispatch, false);
             console.log(e);
         }
     };

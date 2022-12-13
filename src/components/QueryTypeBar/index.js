@@ -44,12 +44,25 @@ export default function QueryTypeBar(props) {
     const responseType = useSelector((store) => store.responseType);
 
     const { hash } = useLocation();
-    const { id, queryType, tableView, idRef, isShowTs, direction, dataSourceType } = data;
+    const {
+        id,
+        queryType,
+        tableView,
+        idRef,
+        isShowTs,
+        direction,
+        dataSourceType,
+        isShowStats,
+        hasStats,
+    } = data;
 
     const [isTableViewSet, setIsTableViewSet] = useState(tableView);
     const [isShowTsSet, setIsShowTsSet] = useState(isShowTs || false);
+    const [isShowStatsSet, setIsShowStatsSet] = useState(isShowStats || false);
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(queryType);
-    const [directionSwitch, setDirectionSwitch] = useState(direction || 'forward');
+    const [directionSwitch, setDirectionSwitch] = useState(
+        direction || "forward"
+    );
 
     useEffect(() => {
         const urlParams = new URLSearchParams(hash.replace("#", ""));
@@ -114,18 +127,16 @@ export default function QueryTypeBar(props) {
         });
         dispatch(panelAction(name, panel));
     }
-    
-    function onTraceQueryChange(e) {
 
+    function onTraceQueryChange(e) {
         const panel = [...panelQuery];
-        panel.forEach(query => {
-            if(query.id === id) {
+        panel.forEach((query) => {
+            if (query.id === id) {
                 query.traceQueyType = e;
             }
-        })
+        });
         dispatch(panelAction(name, panel));
         // setQueryTraceSwitch(prev => e);
-
     }
 
     function handleShowTsSwitch() {
@@ -134,6 +145,19 @@ export default function QueryTypeBar(props) {
         panel.forEach((query) => {
             if (query.id === id) {
                 query.isShowTs = isShowTsSet ? false : true;
+            }
+        });
+
+        dispatch(panelAction(name, panel));
+    }
+
+    function handleStatsInfoSwitch(e) {
+        const value = e.target.checked;
+        setIsShowStatsSet((_) => value);
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.isShowStats = isShowStatsSet ? false : true;
             }
         });
         dispatch(panelAction(name, panel));
@@ -155,18 +179,17 @@ export default function QueryTypeBar(props) {
                     defaultActive={directionSwitch}
                 />
                 <QueryLimit {...props} />
-                {dataSourceType === 'flux' && (
-                        <div className="options-input">
-                            <SettingLabel>Chart View</SettingLabel>
-                            <Switch
-                                checked={isTableViewSet}
-                                size={"small"}
-                                onChange={handleTableViewSwitch}
-                                inputProps={{ "aria-label": "controlled" }}
-                            />
-                        </div>
-
-                    )}
+                {dataSourceType === "flux" && (
+                    <div className="options-input">
+                        <SettingLabel>Chart View</SettingLabel>
+                        <Switch
+                            checked={isTableViewSet}
+                            size={"small"}
+                            onChange={handleTableViewSwitch}
+                            inputProps={{ "aria-label": "controlled" }}
+                        />
+                    </div>
+                )}
                 {responseType !== "vector" && (
                     <>
                         <InputGroup>
@@ -187,6 +210,16 @@ export default function QueryTypeBar(props) {
                                 inputProps={{ "aria-label": "controlled-ts" }}
                             />
                         </InputGroup>
+                        {hasStats && (     <InputGroup>
+                            <SettingLabel>Stats Info</SettingLabel>
+                            <Switch
+                                checked={isShowStatsSet}
+                                size={"small"}
+                                onChange={handleStatsInfoSwitch}
+                                inputProps={{ "aria-label": "controlled-ts" }}
+                            />
+                        </InputGroup>)}
+                   
                     </>
                 )}
             </QueryTypeCont>

@@ -6,6 +6,17 @@ import { parseResponse } from "./parseResponse";
 import { resetNoData } from "./resetNoData";
 import setResponseType from "../setResponseType";
 import { convertFlux } from "./convertFlux";
+import { setLeftPanel } from "../setLeftPanel";
+import { setRightPanel } from "../setRightPanel";
+
+export function setPanelData(panel: string, data: any) {
+    if (panel === "left") {
+        return setLeftPanel(data);
+    } else {
+        return setRightPanel(data);
+    }
+}
+
 export async function processResponse(
     type: string,
     response: any,
@@ -23,7 +34,7 @@ export async function processResponse(
             response?.data?.traces?.length > 0
         ) {
             const resultQuery: TracesResult = {
-                result: response.data.traces||[],
+                result: response.data.traces || [],
                 time,
                 debugMode,
                 dispatch,
@@ -94,6 +105,30 @@ export async function processResponse(
     if (response?.data?.data) {
         const result = response?.data?.data?.result;
         const type = response?.data?.data?.resultType;
+        let statsInfo = { hasStats: false, statsData: {} };
+        if (
+            response?.data?.data?.stats &&
+            Object.keys(response?.data?.data?.stats)?.length > 0
+        ) {
+            statsInfo = {
+                hasStats: true,
+                statsData: { ...response?.data?.data?.stats },
+            };
+        }
+
+        const actPanel = store.getState()[panel];
+
+        const newPanel = actPanel?.map((m: any) => {
+            if (m.id === id) {
+                return {
+                    ...m,
+                    hasStats: statsInfo?.hasStats || false,
+                    statsData: statsInfo?.statsData || {},
+                };
+            }
+            return m;
+        });
+        dispatch(setPanelData(panel, newPanel));
 
         dispatch(setResponseType(type));
 
@@ -109,7 +144,6 @@ export async function processResponse(
             ts: Date.now(),
             direction,
         };
-
         parseResponse(resultQuery);
     } else {
         resetNoData(dispatch);

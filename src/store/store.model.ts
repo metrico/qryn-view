@@ -59,6 +59,8 @@ export interface Panel {
     tableView:   boolean;
     chartView:   boolean;
     browserOpen: boolean;
+    hasStats: boolean;
+    statsData: any;
     expr:        string;
     labels:      any[];
     values:      any[];

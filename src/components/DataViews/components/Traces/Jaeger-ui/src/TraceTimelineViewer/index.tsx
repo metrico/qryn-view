@@ -46,7 +46,7 @@ type TExtractUiFindFromStateReturn = {
 };
 
 const TraceTimelineViewer = styled.div<{theme:any}>`
-    border-bottom: 1px solid {({theme})=>theme.buttonBorder};
+    border-bottom: 1px solid ${({theme})=>theme.buttonBorder};
 
     & .json-markup {
         line-height: 17px;
@@ -60,19 +60,19 @@ const TraceTimelineViewer = styled.div<{theme:any}>`
     }
 
     & .json-markup-bool {
-        color: {({theme})=>theme.textColor};
+        color: ${({theme})=>theme.textColor};
     }
 
     & .json-markup-string {
-        color: {({theme})=>theme.textColor};
+        color: ${({theme})=>theme.textColor};
     }
 
     & .json-markup-null {
-        color: {({theme})=>theme.textColor};
+        color: ${({theme})=>theme.textColor};
     }
 
     & .json-markup-number {
-        color: {({theme})=>theme.textColor};
+        color: ${({theme})=>theme.textColor};
     }
 `;
 
@@ -97,6 +97,7 @@ type TProps = TExtractUiFindFromStateReturn & {
 
     childrenToggle: (spanID: string) => void;
     clearShouldScrollToFirstUiFindMatch: () => void;
+    detailEventsToggle: (spanID: string) => void;
     detailLogItemToggle: (spanID: string, log: TraceLog) => void;
     detailLogsToggle: (spanID: string) => void;
     detailWarningsToggle: (spanID: string) => void;
