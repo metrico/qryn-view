@@ -19,8 +19,10 @@ import { TraceLog, TraceSpanReference } from '../../types/trace';
  */
 export default class DetailState {
   isTagsOpen: boolean;
+  isEventsOpen:boolean;
   isProcessOpen: boolean;
   logs: { isOpen: boolean; openedItems: Set<TraceLog> };
+  events: {isOpen: boolean; openedItems: Set<any>}
   references: { isOpen: boolean; openedItems: Set<TraceSpanReference> };
   isWarningsOpen: boolean;
   isStackTracesOpen: boolean;
@@ -29,14 +31,17 @@ export default class DetailState {
   constructor(oldState?: DetailState) {
     const {
       isTagsOpen,
+      isEventsOpen,
       isProcessOpen,
       isReferencesOpen,
       isWarningsOpen,
       isStackTracesOpen,
       logs,
       references,
+      events,
     }: DetailState | Record<string, undefined> = oldState || {};
     this.isTagsOpen = Boolean(isTagsOpen);
+    this.isEventsOpen = Boolean(isEventsOpen)
     this.isProcessOpen = Boolean(isProcessOpen);
     this.isReferencesOpen = Boolean(isReferencesOpen);
     this.isWarningsOpen = Boolean(isWarningsOpen);
@@ -45,6 +50,10 @@ export default class DetailState {
       isOpen: Boolean(logs && logs.isOpen),
       openedItems: logs && logs.openedItems ? new Set(logs.openedItems) : new Set(),
     };
+    this.events = {
+      isOpen: Boolean(events && events.isOpen),
+      openedItems: events && events.openedItems ? new Set(events.openedItems) : new Set(),
+    }
     this.references = {
       isOpen: Boolean(references && references.isOpen),
       openedItems: references && references.openedItems ? new Set(references.openedItems) : new Set(),
@@ -57,6 +66,20 @@ export default class DetailState {
     return next;
   }
 
+  toggleEvents() {
+    const next = new DetailState(this);
+    next.isEventsOpen = !this.isEventsOpen;
+    return next;
+  }
+  toggleEventItem(eventItem:any){
+    const next = new DetailState(this);
+    if(next.events.openedItems.has(eventItem)) {
+      next.events.openedItems.delete(eventItem)
+    } else {
+      next.events.openedItems.add(eventItem)
+    }
+    return next
+  }
   toggleProcess() {
     const next = new DetailState(this);
     next.isProcessOpen = !this.isProcessOpen;
