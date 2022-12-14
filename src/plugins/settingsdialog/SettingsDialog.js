@@ -6,7 +6,7 @@ import {
     setAutoTheme
 } from "../../actions";
 
-import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen.js";
+import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen";
 
 import { useEffect, useState } from "react";
 
