@@ -178,7 +178,6 @@ export default function QueryEditor({
             if (maxHeight < editorHeight) {
                 setHeight(maxHeight)
             } else {
-                console.log(editorHeight)
                 setHeight(editorHeight)
             }
         }
@@ -190,10 +189,8 @@ export default function QueryEditor({
     }, [value, setEditorValue]);
     useEffect(()=>{
         adjustHeight(editorSize);
-        console.log(editorSize)
     },[editorSize])
     const onResize = useCallback((e, {size}) => {
-        console.log(size)
         setHeight(size.height);
     },[]);
     return (
