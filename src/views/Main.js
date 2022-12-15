@@ -97,33 +97,30 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
         minWidth,
         isSplit,
     ]);
+    const windowWidth = window.innerWidth;
     useEffect(() => {
-        const widthTotal = refTotal.current.clientWidth
+        const widthTotal = windowWidth;
         setWidthLeftPercent(widthLeft / widthTotal);
         if (isSplit) {
             setWidthRightercent(widthRight / widthTotal);
         }
     }, [widthLeft, widthRight]);
     useEffect(() => {
-        const onWindowResize = () => {
-            const widthTotal = refTotal.current.clientWidth
-            setWidthTotal(widthTotal);
-            setWidthLeft(widthTotal * widthLeftPercent);
-            if (isSplit) {
-                setWidthRight(widthTotal * widthRightPercent);
-            }
-        };
-        window.addEventListener("resize", onWindowResize);
-        return () => {
-            window.removeEventListener("resize", onWindowResize);
-        };
+        const widthTotal = windowWidth
+        setWidthTotal(widthTotal);
+        const widthLeftLocal = widthTotal * widthLeftPercent;
+        if (widthLeftLocal && (!isSplit || widthLeftPercent < 1)) {
+            setWidthLeft(widthLeftLocal);
+        }
+        const widthRightLocal = widthTotal * widthRightPercent;
+        if (isSplit && widthRightLocal) {
+            setWidthRight(widthRightLocal);
+        }
     }, [
-        widthTotal,
-        widthLeft,
-        widthRight,
         widthLeftPercent,
         widthRightPercent,
         isSplit,
+        windowWidth
     ]);
     const onSplitResize = (event, { element, size, handle }) => {
         if (handle === "e") {
