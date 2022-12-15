@@ -135,10 +135,20 @@ export const DatePickerButton = styled(BtnSmall)`
     background: ${(props) => props.theme.buttonDefault};
     border: 1px solid ${(props) => props.theme.buttonBorder};
     color: ${(props) => props.theme.textColor};
+    border-top-left-radius: ${(props) => props.attachedSide === 'l' ? '0' : ''};
+    border-top-right-radius: ${(props) => props.attachedSide === 'r' ? '0' : ''};
+    border-bottom-left-radius: ${(props) => props.attachedSide === 'l' ? '0' : ''};
+    border-bottom-right-radius: ${(props) => props.attachedSide === 'r' ? '0' : ''};
+    border-right: ${(props) => props.attachedSide === 'r' ? 'unset' : ''};
     height: 26px;
-    margin-left: 10px;
+    margin-left: ${(props) => props.attachedSide && !props.emptySide ? '' : '10px'};
+    padding: ${(props) => props.size === 'small' ? '3px 5px' : ''};
     span {
         margin-left: 5px;
+    }
+    svg {
+        margin: 0;
+        padding: 0;
     }
     &:hover {
         color: orange;
