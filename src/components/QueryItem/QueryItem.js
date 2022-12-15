@@ -123,6 +123,8 @@ export default function QueryItem(props) {
                 ...props.data,
                 id: nanoid(),
                 idRef,
+                labels: [],
+                expr: "",
                 lastIdx: lastIdx + 1,
                 cp: 0,
             };
