@@ -125,7 +125,6 @@ export default function QueryEditor({
 
     const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
     const [height, setHeight] = useState(0);
-    const [width, setWidth] = useState(0);
     const editor = useMemo(() => withHistory(withReact(createEditor())), []);
     const ref = useRef(null);
     const editorRef = useRef(null);
@@ -134,9 +133,7 @@ export default function QueryEditor({
     useEffect(()=> {
         setHeight(30);
     },[setHeight])
-    useEffect(()=> {
-        setWidth(wrapperWidth);
-    },[setWidth, isSplit, wrapperWidth])
+    
     // Keep track of state for the value of the editor.
 
     const [language] = useState("sql");
@@ -214,12 +211,12 @@ export default function QueryEditor({
                     {" "}
                     <ResizableBox
                         height={height}
-                        width={width || 500}
+                        width={10000}
                         axis={"y"}
                         onResize={onResize}
                         lockAspectRatio={false}
-                        minWidth={width || 500}
-                        maxWidth={width || 500}
+                        minWidth={1000}
+                        maxWidth={1000}
                         minHeight={30}
                         maxHeight={window.innerHeight * 0.5}
                         resizeHandles={handle}

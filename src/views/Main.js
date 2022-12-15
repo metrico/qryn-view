@@ -154,7 +154,8 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
                         lockAspectRatio={false}
                         onResize={onSplitResize}
                     >
-                        <Panel name="left" />
+                        <Panel 
+                        width={widthLeft} name="left" />
                     </ResizableBox>
                     {isSplit && (
                         <ResizableBox
@@ -169,7 +170,8 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
                             lockAspectRatio={false}
                             onResize={onSplitResize}
                         >
-                            <Panel name="right" />
+                            <Panel 
+                            width={widthRight} name="right" />
                         </ResizableBox>
                     )}
                 </div>

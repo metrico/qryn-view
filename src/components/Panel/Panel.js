@@ -45,21 +45,6 @@ export default function Panel(props) {
         }
     }, []);
 
-    useEffect(()=>{
-        if (typeof ref.current.clientWidth === 'number'){
-            setWidth(ref.current.clientWidth)
-        }
-    },[ref?.current?.clientWidth])
-    // 
-    useEffect(() => {
-        const onWindowResize = () => {
-            setWidth(ref.current.clientWidth);
-        };
-        window.addEventListener("resize", onWindowResize);
-        return () => {
-            window.removeEventListener("resize", onWindowResize);
-        };
-    }, []);
     // CHECK ALSO THAT DATAVIEWS IS AN ARRAY
 
     const panelData = useMemo(() => panel, [panel]);
