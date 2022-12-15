@@ -101,6 +101,8 @@ function Leaf({ attributes, children, leaf }) {
     );
 }
 const handle = ["se"];
+const QUERY_BAR_WIDTH = 10000 // Set width above screen size, that way it doesn't go past "max-width: 100%" and fill container nicely.
+const DEFAULT_QUERY_BAR_INNER_HEIGHT = 19;
 export function getTokenLength(token) {
     if (typeof token === "string") {
         return token.length;
@@ -131,9 +133,8 @@ export default function QueryEditor({
     const isInit = useState(true);
     const editorSize = editorRef?.current?.firstChild?.firstChild?.clientHeight;
     useEffect(()=> {
-        setHeight(30);
+        setHeight(DEFAULT_QUERY_BAR_INNER_HEIGHT);
     },[setHeight])
-    
     // Keep track of state for the value of the editor.
 
     const [language] = useState("sql");
@@ -172,14 +173,13 @@ export default function QueryEditor({
     }, []);
 
     const adjustHeight = useCallback((editorHeight) => {
-        const spaceForResizeHandle = 10;
-        if (isInit || height < (editorHeight + spaceForResizeHandle)) {
+        if (isInit || height < editorHeight) {
             const maxHeight = window.innerHeight * 0.5;
             if (maxHeight < editorHeight) {
-                setHeight(maxHeight + spaceForResizeHandle)
+                setHeight(maxHeight)
             } else {
                 console.log(editorHeight)
-                setHeight(editorHeight + spaceForResizeHandle)
+                setHeight(editorHeight)
             }
         }
     }, [editorSize, height])
@@ -187,12 +187,13 @@ export default function QueryEditor({
     useEffect(() => {
         setEditorValue(value);
         editor.children = value;
-    }, [value, setEditorValue, adjustHeight]);
+    }, [value, setEditorValue]);
     useEffect(()=>{
         adjustHeight(editorSize);
         console.log(editorSize)
     },[editorSize])
     const onResize = useCallback((e, {size}) => {
+        console.log(size)
         setHeight(size.height);
     },[]);
     return (
@@ -211,13 +212,13 @@ export default function QueryEditor({
                     {" "}
                     <ResizableBox
                         height={height}
-                        width={10000}
+                        width={QUERY_BAR_WIDTH}
                         axis={"y"}
                         onResize={onResize}
                         lockAspectRatio={false}
-                        minWidth={1000}
-                        maxWidth={1000}
-                        minHeight={30}
+                        minWidth={QUERY_BAR_WIDTH}
+                        maxWidth={QUERY_BAR_WIDTH}
+                        minHeight={DEFAULT_QUERY_BAR_INNER_HEIGHT}
                         maxHeight={window.innerHeight * 0.5}
                         resizeHandles={handle}
                         className={Resizable}
