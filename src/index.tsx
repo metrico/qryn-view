@@ -12,6 +12,7 @@ import errorInterceptor from './helpers/error.interceptor';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import DataSources from './views/DataSources/DataSources';
+
 import {CookiesProvider} from 'react-cookie'
 errorInterceptor(axios)
 
@@ -24,7 +25,6 @@ ReactDOM.render(
         <Route path="/" element={<App />} />
         <Route path="/search" element={<App />} />
         <Route path="/datasources/*" element={<DataSources/>}/>
-       
       </Routes>
     </BrowserRouter>
     </Provider>
