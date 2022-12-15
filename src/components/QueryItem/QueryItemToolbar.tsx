@@ -12,17 +12,17 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useEffect, useMemo, useState } from "react";
 import { QueryId } from "./QueryId";
 import { DataSourceSelect } from "./DataSourceSelect";
-export function QueryItemToolbar(props) {
+export function QueryItemToolbar(props: any) {
     const dispatch = useDispatch();
     // update panel on id change
     const {
         data: { expr },
     } = props;
 
-    const panel = useSelector((store) => store[props.name]);
-    const isEmbed = useSelector((store) => store.isEmbed);
+    const panel = useSelector((store: any) => store[props.name]);
+    const isEmbed = useSelector((store: any) => store.isEmbed);
 
-    const dataSources = useSelector((store) => store.dataSources);
+    const dataSources = useSelector((store: any) => store.dataSources);
 
     const [extValue, setExtValue] = useState(props.data.dataSourceId);
 
@@ -36,7 +36,7 @@ export function QueryItemToolbar(props) {
 
     const dataSourceOptions = useMemo(() => {
         if (dataSources.length > 0) {
-            return dataSources.map((m) => ({
+            return dataSources.map((m: any) => ({
                 value: m.id,
                 name: m.name,
                 type: m.type,
@@ -49,17 +49,17 @@ export function QueryItemToolbar(props) {
     const [dataSourceValue, setDataSourceValue] = useState({
         value: props.data.dataSourceId,
         name:
-            dataSources.find((f) => f.id === props?.data?.dataSourceId)?.[
+            dataSources.find((f: any) => f.id === props?.data?.dataSourceId)?.[
                 "name"
             ] || props.data.dataSourceId,
         type: props.data.dataSourceType,
         icon:
-            dataSources.find((f) => f.id === props?.data?.dataSourceId)?.[
+            dataSources.find((f: any) => f.id === props?.data?.dataSourceId)?.[
                 "icon"
             ] || props.data.dataSourceId,
     });
 
-    const panelAction = (panel, data) => {
+    const panelAction = (panel: string, data: any) => {
         if (panel === "left") {
             return setLeftPanel(data);
         } else {
@@ -67,7 +67,7 @@ export function QueryItemToolbar(props) {
         }
     };
 
-    function onIdRefUpdate(e) {
+    function onIdRefUpdate(e: any) {
         const cPanel = [...panel];
         cPanel.forEach((panel) => {
             if (panel.id === props.data.id) {
@@ -79,9 +79,8 @@ export function QueryItemToolbar(props) {
     }
 
     const getPrevDsLocal = () => {
-        let localDataSources = [];
         try {
-            localDataSources = localStorage.getItem("dsSelected");
+            const localDataSources: any = localStorage.getItem("dsSelected");
             if (localDataSources) {
                 return JSON.parse(localDataSources);
             } else {
@@ -92,19 +91,19 @@ export function QueryItemToolbar(props) {
         }
     };
 
-    const onDataSourceChange = (e) => {
+    const onDataSourceChange = (e: any) => {
         const value = e.target.value;
-        const dataSource = dataSources.find((f) => f.id === value);
+        const dataSource = dataSources.find((f: any) => f.id === value);
         const panelCP = JSON.parse(JSON.stringify(panel));
-        const optSelected = dataSourceOptions.find((f) => f.value === value);
+        const optSelected = dataSourceOptions.find((f: any) => f.value === value);
 
         const currentLocal = getPrevDsLocal();
         let newDsLocal = [];
         if (currentLocal?.length > 0) {
             const hasPrevQuery =
-                currentLocal?.find((s) => s.queryId === props.data.id) || false;
+                currentLocal?.find((s: any) => s.queryId === props.data.id) || false;
             if (hasPrevQuery) {
-                newDsLocal = currentLocal.map((m) => {
+                newDsLocal = currentLocal.map((m: any) => {
                     if (m.queryId === props.data.id) {
                         return {
                             queryId: m.queryId,
@@ -129,7 +128,7 @@ export function QueryItemToolbar(props) {
 
         setDataSourceValue((_) => optSelected);
 
-        panelCP.forEach((panelCP) => {
+        panelCP.forEach((panelCP: any) => {
             if (panelCP.id === props.data.id) {
                 panelCP.dataSourceId = dataSource.id;
                 panelCP.dataSourceType = dataSource.type;
