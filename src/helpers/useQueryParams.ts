@@ -9,7 +9,7 @@ export function useQueryParams() {
     const paramsFromUrl = useMemo(() => {
         if (hash) {
             const searchParams = new URLSearchParams(hash.replace("#", ""));
-            let memoParams = {};
+            let memoParams: any = {};
 
             for (let [key, value] of searchParams.entries()) {
                 memoParams[key] = value;
