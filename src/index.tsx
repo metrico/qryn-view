@@ -17,15 +17,15 @@ errorInterceptor(axios)
 
 ReactDOM.render(
   <React.StrictMode>
-     <Provider store={store}>
-    <BrowserRouter>
-      <Routes>
-        <Route exact path="/" element={<App />} />
-        <Route exact path="/search" element={<App />} />
-        <Route path="/datasources/*" element={<DataSources/>}/>
-       
-      </Routes>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          {/* // react router v6 doesn't support [exact] anymore. */}
+          <Route path="/" element={<App />} /> 
+          <Route path="/search" element={<App />} />
+          <Route path="/datasources/*" element={<DataSources />} />
+        </Routes>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
