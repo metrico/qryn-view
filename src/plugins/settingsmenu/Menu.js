@@ -51,6 +51,7 @@ const StyledMenu = styled((props) => (
 
 export default function ClokiMenu() {
     const dispatch = useDispatch();
+    const showDs = useSelector((store) => store.showDataSourceSetting);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const storeTheme = useSelector((store) => store.theme);
@@ -97,12 +98,17 @@ export default function ClokiMenu() {
                     />{" "}
                     Query Settings
                 </MenuItem>
-                <Link to="datasources" style={{ color: qrynTheme.textColor }}>
-                    <MenuItem>
-                        <TuneIcon style={{ color: qrynTheme.textColor }} />
-                        Datasources
-                    </MenuItem>
-                </Link>
+                {showDs && (
+                    <Link
+                        to="datasources"
+                        style={{ color: qrynTheme.textColor }}
+                    >
+                        <MenuItem>
+                            <TuneIcon style={{ color: qrynTheme.textColor }} />
+                            Datasources
+                        </MenuItem>
+                    </Link>
+                )}
             </StyledMenu>
         </div>
     );
