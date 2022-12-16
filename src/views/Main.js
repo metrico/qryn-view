@@ -11,7 +11,7 @@ import QueryHistory from "../plugins/queryhistory";
 import { useMediaQuery } from "react-responsive";
 import MainTabs from "./MainTabs.js";
 import { setTheme } from "../actions";
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import { useCookies } from "react-cookie";
 import { useLocation } from "react-router-dom";
 import setDataSources from "./DataSources/store/setDataSources";
@@ -104,7 +104,6 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
         setHeight,
         setMinWidth,
         setMaxWidth,
-        minWidth,
         isSplit,
     ]);
     const windowWidth = window.innerWidth;
@@ -116,23 +115,38 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
         }
     }, [widthLeft, widthRight]);
     useEffect(() => {
-        const widthTotal = windowWidth
-        setWidthTotal(widthTotal);
-        const widthLeftLocal = widthTotal * widthLeftPercent;
-        if (widthLeftLocal && (!isSplit || widthLeftPercent < 1)) {
+        const onWindowResize = () => {
+            const widthTotal = window.innerWidth;
+            setWidthTotal(widthTotal);
+            const widthLeftLocal = widthTotal * widthLeftPercent;
             setWidthLeft(widthLeftLocal);
-        }
-        const widthRightLocal = widthTotal * widthRightPercent;
-        if (isSplit && widthRightLocal) {
-            setWidthRight(widthRightLocal);
-        }
+            const widthRightLocal = widthTotal * widthRightPercent;
+            if (isSplit && widthRightLocal) {
+                setWidthRight(widthRightLocal);
+            }
+            const realMinWidth = !isSplit
+            ? widthTotal
+            : widthTotal / 4 > 370
+            ? widthTotal / 4
+            : 370;
+            setMinWidth(realMinWidth);
+            const realMaxWidth = !isSplit ? widthTotal : widthTotal - realMinWidth;
+            setMaxWidth(realMaxWidth);
+            };
+        window.addEventListener("resize", onWindowResize);
+        return () => {
+            window.removeEventListener("resize", onWindowResize);
+        };
     }, [
+        widthTotal,
+        widthLeft,
+        widthRight,
         widthLeftPercent,
         widthRightPercent,
         isSplit,
         windowWidth
     ]);
-    const onSplitResize = (event, { element, size, handle }) => {
+    const onSplitResize = useCallback((event, { element, size, handle }) => {
         if (handle === "e") {
             setWidthRight(widthTotal - size.width);
             setWidthLeft(size.width);
@@ -142,7 +156,7 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
         }
         setWidthLeftPercent(widthLeft / widthTotal);
         setWidthRightercent(widthRight / widthTotal);
-    };
+    }, [widthTotal, widthLeft, widthRight]);
     const leftHandle = useMemo(()=> isSplit ? ['e'] : [], [isSplit])
     return (
         <ThemeProvider theme={theme}>
