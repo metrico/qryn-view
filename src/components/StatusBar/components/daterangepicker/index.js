@@ -379,9 +379,9 @@ export function DateRangePickerMain(props) {
             </Tooltip>
             <DatePickerButton
                 onClick={handleClickRight}
-                size={'small'}
                 emptySide={'l'}
                 attachedSide={'r'}
+                size={'small'}
                 className={"date-time-selector"}
                 aria-controls={openRight ? 'forward-menu' : undefined}
                 aria-haspopup="true"
@@ -389,9 +389,10 @@ export function DateRangePickerMain(props) {
             >
                 <KeyboardArrowDownOutlinedIcon />
             </DatePickerButton>
+            
             <StyledMenu
                 id='forward-menu'
-                anchorEl={anchorEl}
+                anchorEl={anchorElRight}
                 open={openRight}
                 onClose={handleClose}
                 qryntheme={qrynTheme}
