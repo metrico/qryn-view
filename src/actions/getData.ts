@@ -40,7 +40,7 @@ function panelDispatch(panel: string, dispatch: Function, data: any) {
 function changeLoadingState(panel: any[], id: string, state: boolean) {
     return [...panel].map((m) => {
         if (m.id === id) {
-            return { ...m, loading: state };
+            return { ...m, loading: state || false };
         }
         return m;
     });

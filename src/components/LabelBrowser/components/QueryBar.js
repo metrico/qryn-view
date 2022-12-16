@@ -766,7 +766,7 @@ export const QueryBar = (props) => {
                             onSubmit={onSubmit}
                             onSubmitRate={onSubmitRate}
                             labels={labels}
-                            loading={loading}
+                            loading={loading||false}
                             hasStats={hasStats}
                             showStatsOpen={showStatsOpen}
                             handleStatsOpen={handleStatsOpen}
@@ -794,14 +794,14 @@ export const QueryBar = (props) => {
                         onSubmitRate={onSubmitRate}
                         isTabletOrMobile={isTabletOrMobile}
                         labels={labels}
-                        loading={loading}
+                        loading={loading||false}
                     />,
                     <MetricsSearch
                         {...props}
                         searchButton={
                             <ShowLogsButton
                                 disabled={!queryValid}
-                                loading={loading}
+                                loading={loading || false}
                                 onClick={onSubmit}
                                 isMobile={false}
                                 alterText={"Use Query"}
@@ -831,7 +831,7 @@ export const QueryBar = (props) => {
                     <ShowLogsButton
                         disabled={!queryValid}
                         onClick={onSubmit}
-                        loading={loading}
+                        loading={loading||false}
                         isMobile={false}
                         alterText={"Search Trace"}
                     />
@@ -933,7 +933,7 @@ export const QueryBarCont = (props) => {
                         disabled={!queryValid}
                         onClick={onSubmit}
                         isMobile={false}
-                        loading={loading}
+                        loading={loading||false}
                     />
                 </div>
             )}
@@ -945,7 +945,7 @@ export const QueryBarCont = (props) => {
                             disabled={!queryValid}
                             onClick={onSubmit}
                             isMobile={false}
-                            loading={loading}
+                            loading={loading||false}
                         />
                     </>
                 )}
@@ -1044,7 +1044,7 @@ export const MobileTopQueryMenuCont = (props) => {
                 disabled={!queryValid}
                 onClick={onSubmit}
                 isMobile={true}
-                loading={loading}
+                loading={loading||false}
             />
 
             {dataSourceType === "flux" && (

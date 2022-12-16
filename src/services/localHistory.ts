@@ -1,13 +1,15 @@
 import { nanoid } from "nanoid";
 import { _HISTORY_ITEM } from "./consts";
-import { l_set, l_get, j_parse, j_string, cleanup } from "./localService";
+import localService from "./localService";
+
+const { l_set, l_get, j_parse, j_string, cleanup } = localService();
 
 const localHistory = () => {
     const get = () => {
-        return j_parse(l_get(_HISTORY_ITEM));
+        return j_parse(l_get(_HISTORY_ITEM) || 'null');
     };
 
-    const set = (data) => {
+    const set = (data: any) => {
         l_set(_HISTORY_ITEM, j_string(data));
     };
 
@@ -18,10 +20,10 @@ const localHistory = () => {
 
     const historyStorage = get();
 
-    const findById = (item) =>
-        historyStorage.find(({ id }) => item.id === id) || {};
+    const findById = (item: any) =>
+        historyStorage.find(({ id }: any) => item.id === id) || {};
 
-    const add = (item) => {
+    const add = (item: any) => {
         let previousData = get() || [];
         try {
             const newItem = {
@@ -39,13 +41,13 @@ const localHistory = () => {
         }
     };
 
-    const update = (item) => {
+    const update = (item: any) => {
         const { id } = item;
 
         let newStorage = [];
 
         try {
-            newStorage = historyStorage.map((m) =>
+            newStorage = historyStorage.map((m: any) =>
                 m.id === id ? { ...m, ...item } : m
             );
             set(newStorage);
@@ -56,18 +58,18 @@ const localHistory = () => {
     };
 
     function getAll() {
-        const actualStorage = j_parse(l_get(_HISTORY_ITEM)) || [];
+        const actualStorage = j_parse(l_get(_HISTORY_ITEM) || 'null') || [];
 
         return (
-            actualStorage?.map((m) => ({
+            actualStorage?.map((m: any) => ({
                 ...m,
                 data: decodeURI(m.data),
             })) || []
         );
     }
 
-    const remove = (item) => {
-        const filtered = historyStorage.filter(({ id }) => id !== item.id);
+    const remove = (item: any) => {
+        const filtered = historyStorage.filter(({ id }: any) => id !== item.id);
 
         set(filtered);
         return getAll();

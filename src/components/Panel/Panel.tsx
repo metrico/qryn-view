@@ -7,7 +7,7 @@ import { setRightPanel } from "../../actions/setRightPanel";
 import { setLeftPanel } from "../../actions/setLeftPanel";
 import DataViews from "../DataViews";
 
-const PanelCont = styled.div`
+const PanelCont: any = styled.div`
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -15,21 +15,21 @@ const PanelCont = styled.div`
     width: 100%;
 `;
 // Panel should have injected data
-export default function Panel(props) {
+export default function Panel(props: any) {
     
-    const ref = useRef(null);
+    const ref: any = useRef(null);
     const [width, setWidth] = useState(0);
 
     const dispatch = useDispatch();
     const { name } = props;
 
-    const panelDispatch = (name, data) => {
+    const panelDispatch = (name: string, data: any) => {
         if (name === "left") return setLeftPanel(data);
         return setRightPanel(data);
     };
 
-    const panel = useSelector((store) => store[name]);
-    const isSplit = useSelector((store) => store.isSplit);
+    const panel = useSelector((store: any) => store[name]);
+    const isSplit = useSelector((store: any) => store.isSplit);
     const { hash } = useLocation();
 
     useEffect(() => {
