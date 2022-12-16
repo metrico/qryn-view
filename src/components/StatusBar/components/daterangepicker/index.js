@@ -36,8 +36,8 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import useOutsideRef from "./hooks/useOutsideRef";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -318,11 +318,11 @@ export function DateRangePickerMain(props) {
                 emptySide={'l'}
                 className={"date-time-selector"}
             >
-                <ArrowBackIosIcon />
+                <KeyboardArrowLeft />
             </DatePickerButton>
             <DatePickerButton
                 onClick={handleClick}
-                attachedSide={'l'}
+                attachedSide={'both'}
                 size={'small'}
                 className={"date-time-selector"}
                 aria-controls={open ? 'backward-menu' : undefined}
@@ -351,6 +351,7 @@ export function DateRangePickerMain(props) {
                 <DatePickerButton
                     onClick={openButtonHandler}
                     className={"date-time-selector"}
+                    attachedSide={"both"}
                 >
                     <AccessTimeOutlinedIcon />
 
@@ -377,8 +378,7 @@ export function DateRangePickerMain(props) {
             </Tooltip>
             <DatePickerButton
                 onClick={handleClickRight}
-                emptySide={'l'}
-                attachedSide={'r'}
+                attachedSide={'both'}
                 size={'small'}
                 className={"date-time-selector"}
                 aria-controls={openRight ? 'forward-menu' : undefined}
@@ -409,7 +409,7 @@ export function DateRangePickerMain(props) {
                 attachedSide={'l'}
                 className={"date-time-selector"}
             >
-                <ArrowForwardIosIcon />
+                <KeyboardArrowRight />
             </DatePickerButton>
             {rangeOpen ? (
                 <div tabIndex={"0"} ref={ref}>

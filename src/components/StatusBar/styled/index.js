@@ -135,13 +135,14 @@ export const DatePickerButton = styled(BtnSmall)`
     background: ${(props) => props.theme.buttonDefault};
     border: 1px solid ${(props) => props.theme.buttonBorder};
     color: ${(props) => props.theme.textColor};
-    border-top-left-radius: ${(props) => props.attachedSide === 'l' ? '0' : ''};
-    border-top-right-radius: ${(props) => props.attachedSide === 'r' ? '0' : ''};
-    border-bottom-left-radius: ${(props) => props.attachedSide === 'l' ? '0' : ''};
-    border-bottom-right-radius: ${(props) => props.attachedSide === 'r' ? '0' : ''};
-    border-right: ${(props) => props.attachedSide === 'r' ? 'unset' : ''};
+    border-top-left-radius: ${(props) => props.attachedSide === 'l' || props.attachedSide === 'both' ? '0' : ''};
+    border-top-right-radius: ${(props) => props.attachedSide === 'r' || props.attachedSide === 'both' ? '0' : ''};
+    border-bottom-left-radius: ${(props) => props.attachedSide === 'l' || props.attachedSide === 'both' ? '0' : ''};
+    border-bottom-right-radius: ${(props) => props.attachedSide === 'r' || props.attachedSide === 'both' ? '0' : ''};
+    border-right: ${(props) => props.attachedSide === 'r' || props.attachedSide === 'both' ? 'unset' : ''};
     height: 26px;
-    margin-left: ${(props) => props.attachedSide && !props.emptySide ? '' : '10px'};
+    margin-left: ${(props) => props.emptySide === 'l' || props.emptySide === 'both' ? '10px' : ''};
+    margin-right: ${(props) => props.emptySide === 'r' || props.emptySide === 'both' ? '10px' : ''};
     padding: ${(props) => props.size === 'small' ? '3px 5px' : ''};
     span {
         margin-left: 5px;
