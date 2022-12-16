@@ -1,4 +1,4 @@
-export function formatUrl(state) {
+export function formatUrl(state: any) {
     const { searchName, name, minDuration, maxDuration, tags, limit } = state;
     let sn = "";
 
