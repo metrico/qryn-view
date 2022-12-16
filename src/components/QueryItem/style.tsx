@@ -4,8 +4,8 @@ import styled from "@emotion/styled";
 
 
 export const QueryItemToolbarStyled = styled.div`
-    background: ${({ theme }) => `${theme.secondaryWidgetContainer}`};
-    color: ${({ theme }) => `${theme.textColor}`};
+    background: ${({ theme }: any) => `${theme.secondaryWidgetContainer}`};
+    color: ${({ theme }: any) => `${theme.textColor}`};
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -35,12 +35,12 @@ export const ShowQueryButton = styled.button`
 
 export const OpenQuery = styled(KeyboardArrowDownOutlinedIcon)`
     font-size: 13px;
-    color: ${({ theme }) => theme.textColor};
+    color: ${({ theme }: any) => theme.textColor};
 `;
 
 export const CloseQuery = styled(KeyboardArrowRightOutlinedIcon)`
     font-size: 13px;
-    color: ${({ theme }) => theme.textColor};
+    color: ${({ theme }: any) => theme.textColor};
 `;
 
 export const InputGroup = styled.div`
@@ -50,9 +50,9 @@ export const InputGroup = styled.div`
     margin-top: 5px;
     align-items: center;
     select {
-        background: ${(props) => props.theme.inputBg};
-        color:  ${(props) => props.theme.textColor};
-        border: 1px solid ${(props) => props.theme.buttonBorder};
+        background: ${(props: any) => props.theme.inputBg};
+        color:  ${(props: any) => props.theme.textColor};
+        border: 1px solid ${(props: any) => props.theme.buttonBorder};
         border-radius:3px;
         font-size:12px;
         height:26px;
@@ -60,7 +60,7 @@ export const InputGroup = styled.div`
 `;
 
 export const Label = styled.div`
-    color: ${(props) => props.theme.textColor};
+    color: ${(props: any) => props.theme.textColor};
     display: flex;
     align-items: center;
     font-size: 12px;

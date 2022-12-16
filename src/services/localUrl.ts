@@ -7,10 +7,10 @@ const localUrl = () => {
     const { l_set, l_get, j_parse, j_string } = localService();
 
     const get = () => {
-        return j_parse(l_get(_URL_ITEM));
+        return j_parse(l_get(_URL_ITEM) || 'null');
     };
 
-    const set = (item) => {
+    const set = (item: any) => {
         return l_set(_URL_ITEM, j_string(item));
     };
 
@@ -21,14 +21,14 @@ const localUrl = () => {
 
     const urlStorage = get();
 
-    const findById = (item) =>
-        urlStorage.find(({ id }) => item.id === id) || {};
+    const findById = (item: any) =>
+        urlStorage.find(({ id }: any) => item.id === id) || {};
 
-    const update = (item) => {
+    const update = (item: any) => {
         const { id } = item;
         let newStorage = [];
         try {
-            newStorage = urlStorage.map((m) =>
+            newStorage = urlStorage.map((m: any) =>
                 m.id === id ? { ...m, ...item } : m
             );
             set(newStorage);
@@ -38,14 +38,14 @@ const localUrl = () => {
         }
     };
 
-    const add = (item) => {
+    const add = (item: any) => {
         let previousData = get() || [];
 
         const { hash } = window.location;
         const origin = window.location.origin;
         const urlParams = new URLSearchParams(hash.replace("#", ""));
-        let paramsData = {};
-        urlParams.set("isSubmit", true);
+        let paramsData: any = {};
+        urlParams.set("isSubmit", "true");
         for (let [key, value] of urlParams) {
             paramsData[key] = value;
         }
@@ -77,19 +77,19 @@ const localUrl = () => {
         }
     };
 
-    const remove = (item) => {
-        const filtered = urlStorage?.filter(({ id }) => id !== item.id);
+    const remove = (item: any) => {
+        const filtered = urlStorage?.filter(({ id }: any) => id !== item.id);
         set(filtered);
         return getAll();
     };
-    const share = (item) => {
+    const share = (item: any) => {
         const hash = item.urlParams;
         const origin = item.origin;
         return `${origin}/#${hash.toString()}`;
     };
 
     function getAll() {
-        const actualStorage = JSON.parse(localStorage.getItem(_URL_ITEM)) || [];
+        const actualStorage = JSON.parse(localStorage.getItem(_URL_ITEM) || 'null') || [];
         return actualStorage;
     }
 
