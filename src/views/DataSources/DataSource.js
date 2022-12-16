@@ -30,7 +30,8 @@ export function DataSourceSetting(props) {
             },
         },
     } = props;
-    // const [cookie, setCookie] = useCookies(['qryn-dev-cookie']) // for testing cookies feature
+
+    const [cookie, setCookie] = useCookies(["qryn-dev-cookie"]); // for testing cookies feature
 
     const dispatch = useDispatch();
     const dataSources = useSelector((store) => store.dataSources);
@@ -58,34 +59,61 @@ export function DataSourceSetting(props) {
                 },
             },
         }));
-        // var today = new Date()
-        // var tomorrow = new Date();
-        // tomorrow.setDate(today.getDate()+1);
-        // setCookie('qryn-session', `${btoa('harry')}:${btoa('potter')}`, {path:'/',expires:tomorrow} ) // uncomment for testing cookies feature
-        
+
+        // uncomment for testing cookies feature
+
         localStorage.setItem("dataSources", JSON.stringify(newDs));
         dispatch(setDataSources(newDs));
-        dispatch(createAlert({
-            type:'success',
-            message:'Set same URL and Basic Auth for All Data Sources'
-        }))
+        dispatch(
+            createAlert({
+                type: "success",
+                message: "Set same URL and Basic Auth for All Data Sources",
+            })
+        );
     };
+
+    function addCookie() {
+        var today = new Date();
+        var tomorrow = new Date();
+        tomorrow.setDate(today.getDate() + 1);
+        const parsedDs = JSON.stringify({ url });
+        try {
+            setCookie(
+                `qryn-settings`,
+                `${btoa(user.value)}:${btoa(password.value)}@${btoa(parsedDs)}`,
+                { path: "/" }
+            );
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     return (
         <div className="ds-cont">
             <div className={cx(HeaderRow)}>
                 <DataSourceSettingHeader {...props} />
+                <div style={{ display: "flex", alignItems: "center" }}>
+                    <Button
+                        title={"Set Cookie with name: qryn-settings"}
+                        value={"Save Cookie"}
+                        onClick={addCookie}
+                        primary={true}
+                    />
 
-                <Button
-                    title={"Use same URL and Basic Auth for all Data Sources"}
-                    value={"Use For All"}
-                    onClick={useForAll}
-                    primary={true}
-                />
+                    <Button
+                        title={
+                            "Use same URL and Basic Auth for all Data Sources"
+                        }
+                        value={"Use For All"}
+                        onClick={useForAll}
+                        primary={true}
+                    />
+                </div>
             </div>
 
             <div className="ds-settings">
                 <Settings {...props} />
-                <Notification/>
+                <Notification />
             </div>
         </div>
     );
@@ -129,7 +157,6 @@ export function DataSource() {
                     <div className="datasource-body">
                         <DataSourceSetting {...datasource} />
                     </div>
-                    
                 </div>
             </Container>
         </ThemeProvider>
