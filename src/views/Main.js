@@ -43,6 +43,7 @@ export const MainContainer = styled.div`
  * @returns Mobile View
  */
 
+const PANEL_WIDTH = 10000 // Set width above screen size, that way it doesn't go past "max-width: 100%" and fill container nicely.
 export function MobileView({ theme, isEmbed, settingsDialogOpen }) {
     return (
         <ThemeProvider theme={theme}>
@@ -140,9 +141,9 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
                 {!isEmbed && <StatusBar />}
                 <div className="panels-container" ref={refTotal}>
                     <ResizableBox
-                        width={widthLeft}
-                        minWidth={minWidth}
-                        maxWidth={maxWidth}
+                        width={isSplit ? widthLeft : PANEL_WIDTH}
+                        minWidth={isSplit ? minWidth : PANEL_WIDTH}
+                        maxWidth={isSplit ? maxWidth : PANEL_WIDTH}
                         minHeight={height}
                         maxHeight={height}
                         height={height}

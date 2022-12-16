@@ -24,6 +24,7 @@ const getStyles = (theme: string): any =>  {
     return {
     "react-resizable": css`
         position: relative;
+        max-width: 100%;
     `,
     "react-resizable-handle": css`
         position: absolute;
