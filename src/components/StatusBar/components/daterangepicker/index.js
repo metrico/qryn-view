@@ -277,7 +277,6 @@ export function DateRangePickerMain(props) {
                 duration.seconds = parseInt(adjustment);
             }
         }
-        console.log(duration)
         const adjustedStart = directionFunc(dateStart, duration);
         const adjustedStop = directionFunc(dateEnd, duration);
         const dateRange = {
@@ -303,7 +302,6 @@ export function DateRangePickerMain(props) {
         setAnchorElRight(event.currentTarget)
     }
     const handleClose = (e, direction,  option) => {
-        console.log(direction, option)
         setAnchorEl(null);
         setAnchorElRight(null);
         if (direction && option) {
@@ -341,7 +339,7 @@ export function DateRangePickerMain(props) {
                 qryntheme={qrynTheme}
             >
                 {timeAdjustmentOptions.map(option => (
-                    <MenuItem 
+                    <MenuItem key={`${option} l`}
                     onClick={(e) => handleClose(e, 'backward', option)}>
                         {option}
                     </MenuItem>
@@ -398,7 +396,7 @@ export function DateRangePickerMain(props) {
                 qryntheme={qrynTheme}
             >
                 {timeAdjustmentOptions.map(option => (
-                    <MenuItem 
+                    <MenuItem key={`${option} r`}
                     onClick={(e) => handleClose(e, 'forward', option)}>
                         {option}
                     </MenuItem>
