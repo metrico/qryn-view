@@ -266,6 +266,7 @@ export function updateDataSourcesWithUrl(
                 if (typeof cookieDsData === "object" && cookieDsData["url"]) {
                     apiUrl = cookieDsData["url"];
                     haveUrl = true;
+                    urlApi = true;
                 }
             } catch (e) {
                 console.log(e);
@@ -283,7 +284,10 @@ export function updateDataSourcesWithUrl(
     if (!haveUrl && basicAuth) {
         apiUrl = window.location.protocol + "//" + window.location.host;
         urlApi = true;
-    } else {
+    } 
+    
+    if(apiUrl === '')  {
+        urlApi = true;
         apiUrl = url;
     }
 
@@ -335,7 +339,6 @@ export default function Main() {
 
     const { cookiesAvailable, cookieAuth } = useCookiesAvailable(paramsMemo);
     const { urlAvailable, url } = useUrlAvailable(paramsMemo);
-
     useEffect(() => {
         const onlyCookie = cookiesAvailable && !urlAvailable;
         const onlyUrl = !cookiesAvailable && urlAvailable;
@@ -367,6 +370,7 @@ export default function Main() {
     const autoTheme = useSelector((store) => store.autoTheme);
     const settingsDialogOpen = useSelector((store) => store.settingsDialogOpen);
     const themeMemo = useMemo(() => themes[theme], [theme]);
+
     useEffect(() => {
         if (autoTheme) {
             const theme = isAutoDark ? "dark" : "light";
