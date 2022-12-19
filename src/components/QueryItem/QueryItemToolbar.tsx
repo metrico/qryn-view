@@ -26,14 +26,6 @@ export function QueryItemToolbar(props: any) {
 
     const [extValue, setExtValue] = useState(props.data.dataSourceId);
 
-    useEffect(() => {
-        setExtValue(props.data.dataSourceId);
-    }, []);
-
-    useEffect(() => {
-        setExtValue(props.data.dataSourceId);
-    }, [props.data.dataSourceId]);
-
     const dataSourceOptions = useMemo(() => {
         if (dataSources.length > 0) {
             return dataSources.map((m: any) => ({
@@ -46,6 +38,13 @@ export function QueryItemToolbar(props: any) {
         return null;
     }, [dataSources]);
 
+    useEffect(() => {
+        setExtValue(props.data.dataSourceId);
+    }, []);
+
+    useEffect(() => {
+        setExtValue(props.data.dataSourceId);
+    }, [props.data.dataSourceId]);
     const [dataSourceValue, setDataSourceValue] = useState({
         value: props.data.dataSourceId,
         name:
