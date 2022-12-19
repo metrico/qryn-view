@@ -399,45 +399,7 @@ export const QueryBar = (props) => {
             dispatch(setIsEmptyView(true));
         }
     }, [dataSourceId, id]);
-
-    const handleQueryChange = useCallback((e) => {
-        setQueryValue(e);
-        saveQuery(e);
-    },[setQueryValue, saveQuery])
-
-    const handleInputKeyDown = useCallback((e) => {
-        if (e.code === "Enter" && e.ctrlKey) {
-            onSubmit(e);
-        }
-    },[onSubmit]);
-
-    const onMetricChange = useCallback((e) => {
-        const query = [{ children: [{ text: e }] }];
-        handleQueryChange(query);
-    },[]);
-
-    const onSubmit = useCallback((e) => {
-        e.preventDefault();
-        if (onQueryValid(queryInput)) {
-            try {
-                updateHistory(queryInput, queryType, limit, id);
-
-                // Decode query to translate into labels selection
-                decodeQueryAndUpdatePanel(queryInput, true);
-
-                updateLinksHistory();
-
-                setLocalStorage();
-            } catch (e) {
-                console.error(e);
-            }
-        } else {
-            dispatch(setIsEmptyView(true));
-
-            console.log("Please make a log query", expr);
-        }
-    },[queryInput, queryType, limit, id, expr]);
-    const getLocalStorage = () => {
+    const getLocalStorage = useCallback(() => {
         // 1- if has previous id with data => modify data
         // 2- if no previous data => create entry
         try {
@@ -452,8 +414,8 @@ export const QueryBar = (props) => {
         } catch (e) {
             return [];
         }
-    };
-    const setLocalStorage = () => {
+    },[]);
+    const setLocalStorage = useCallback(() => {
         const queryData = {
             expr,
             queryId: id,
@@ -482,7 +444,7 @@ export const QueryBar = (props) => {
             newData = [...prevData, queryData];
         }
         localStorage.setItem("queryData", JSON.stringify(newData));
-    };
+    },[dataSourceId, expr, getLocalStorage, id]);
     const saveQuery = useCallback((e = []) => {
         const queryParams = new URLSearchParams(hash.replace("#", ""));
         const multiline = e?.map((text) => text.children[0].text).join("\n");
@@ -497,55 +459,24 @@ export const QueryBar = (props) => {
         dispatch(panelAction(name, panel));
         queryParams.set(name, encodeURIComponent(JSON.stringify(panel)));
         setLocalStorage();
-    },[panelQuery,name,hash,id]);
-    const onSubmitRate = useCallback((e, type = "logs") => {
-        e.preventDefault();
-        const isEmptyQuery = queryInput.length === 0;
-        let query = "";
-        if (!isEmptyQuery) {
-            const isRate = queryInput.startsWith(`rate(`);
+    },[panelQuery,name,hash,id, setLocalStorage, dispatch]);
+    const handleQueryChange = useCallback((e) => {
+        setQueryValue(e);
+        saveQuery(e);
+    },[setQueryValue, saveQuery])
 
-            if (type === "metrics") {
-                if (isRate) {
-                    query = queryInput.replace(/{([^}]+)}/g, "{}");
-                    query = query.replace(/\[\d+ms\]/, "[$__interval]");
-                } else {
-                    query = `rate(${queryInput.replace(
-                        /{([^}]+)}/g,
-                        "{}"
-                    )}[$__interval])`;
-                }
-            } else {
-                if (!isRate) {
-                    query = `rate(${queryInput}[$__interval])`;
-                } else {
-                    query = queryInput.replace(/\[\d+ms\]/, `[$__interval]`);
-                }
-            }
 
-            setQueryInput(query);
 
-            setQueryValue([{ children: [{ text: query }] }]);
+    const onMetricChange = useCallback((e) => {
+        const query = [{ children: [{ text: e }] }];
+        handleQueryChange(query);
+    },[handleQueryChange]);
 
-            setQueryValid(onQueryValid(query));
-        }
-        if (onQueryValid(query)) {
-            try {
-                updateHistory(query, queryType, limit, id);
-                // Decode query to translate into labels selection
-                decodeQueryAndUpdatePanel(query, true);
 
-                updateLinksHistory();
-            } catch (e) {
-                console.error(e);
-            }
-        } else {
-            dispatch(setIsEmptyView(true));
-            console.log("Please make a log query", expr);
-        }
-    },[]);
 
-    const updateHistory = (queryInput, queryType, limit, id) => {
+
+
+    const updateHistory = useCallback((queryInput, queryType, limit, id) => {
         const historyUpdated = historyService.add({
             data: JSON.stringify({
                 type: dataSourceType,
@@ -559,8 +490,8 @@ export const QueryBar = (props) => {
         });
 
         dispatch(setQueryHistory(historyUpdated));
-    };
-    const decodeQueryAndUpdatePanel = (queryExpr, isSearch) => {
+    },[dispatch, name, historyService, dataSourceType]);
+    const decodeQueryAndUpdatePanel = useCallback((queryExpr, isSearch) => {
         const currentDataSource = dataSources.find(
             (f) => f.id === dataSourceId
         );
@@ -630,25 +561,97 @@ export const QueryBar = (props) => {
                 )
             );
         }
-    };
-    const updateLinksHistory = () => {
+    },[dataSources, data.expr, panelQuery, dispatch, name, dataSourceId, props.data.labels, id, dataSourceType, stop, start, width, queryType, limit, direction]);
+    const updateLinksHistory = useCallback(() => {
         const storedUrl = saveUrl.add({
             data: window.location.href,
             description: "From Query Submit",
         });
 
         dispatch(setLinksHistory(storedUrl));
-    };
+    },[dispatch, saveUrl]);
     const handleHistoryClick = useCallback((e) => {
         dispatch(setHistoryOpen(!historyOpen));
-    },[historyOpen])
+    },[historyOpen, dispatch])
     const showQuerySettings = useCallback(() => {
         setOpen(open ? false : true);
     },[open])
     function onClose() {
         showQuerySettings();
     }
+    const onSubmit = useCallback((e) => {
+        e.preventDefault();
+        if (onQueryValid(queryInput)) {
+            try {
+                updateHistory(queryInput, queryType, limit, id);
 
+                // Decode query to translate into labels selection
+                decodeQueryAndUpdatePanel(queryInput, true);
+
+                updateLinksHistory();
+
+                setLocalStorage();
+            } catch (e) {
+                console.error(e);
+            }
+        } else {
+            dispatch(setIsEmptyView(true));
+
+            console.log("Please make a log query", expr);
+        }
+    },[queryInput, queryType, limit, id, expr, decodeQueryAndUpdatePanel, updateHistory, updateLinksHistory, setLocalStorage, dispatch]);
+
+    const onSubmitRate = useCallback((e, type = "logs") => {
+        e.preventDefault();
+        const isEmptyQuery = queryInput.length === 0;
+        let query = "";
+        if (!isEmptyQuery) {
+            const isRate = queryInput.startsWith(`rate(`);
+
+            if (type === "metrics") {
+                if (isRate) {
+                    query = queryInput.replace(/{([^}]+)}/g, "{}");
+                    query = query.replace(/\[\d+ms\]/, "[$__interval]");
+                } else {
+                    query = `rate(${queryInput.replace(
+                        /{([^}]+)}/g,
+                        "{}"
+                    )}[$__interval])`;
+                }
+            } else {
+                if (!isRate) {
+                    query = `rate(${queryInput}[$__interval])`;
+                } else {
+                    query = queryInput.replace(/\[\d+ms\]/, `[$__interval]`);
+                }
+            }
+
+            setQueryInput(query);
+
+            setQueryValue([{ children: [{ text: query }] }]);
+
+            setQueryValid(onQueryValid(query));
+        }
+        if (onQueryValid(query)) {
+            try {
+                updateHistory(query, queryType, limit, id);
+                // Decode query to translate into labels selection
+                decodeQueryAndUpdatePanel(query, true);
+
+                updateLinksHistory();
+            } catch (e) {
+                console.error(e);
+            }
+        } else {
+            dispatch(setIsEmptyView(true));
+            console.log("Please make a log query", expr);
+        }
+    },[decodeQueryAndUpdatePanel, dispatch, expr, id, limit, queryInput, queryType, updateHistory, updateLinksHistory]);
+    const handleInputKeyDown = useCallback((e) => {
+        if (e.code === "Enter" && e.ctrlKey) {
+            onSubmit(e);
+        }
+    },[onSubmit]);
     function onTraceSearchChange(e) {
         setTraceSearch((_) => e);
     }
@@ -887,15 +890,17 @@ export const QueryBarCont = (props) => {
     const buttonsContainerRef = useRef(null);
     const labelsButtonRef = useRef(null);
     const getMaxWidth = useMemo(() => {
-        const labelButtonWidth = !isNaN(labelsButtonRef?.current?.clientWidth) ? labelsButtonRef?.current?.clientWidth : 0;
-        const buttonsContainerWidth = !isNaN(buttonsContainerRef?.current?.clientWidth) ? buttonsContainerRef?.current?.clientWidth : 0;
-        if (isSplit || isTabletOrMobile) {
-            return 0;
-        } else {
-            // return ( labelButtonWidth + buttonsContainerWidth + 150)
-            return 350;
-        }
-    },[isSplit, isTabletOrMobile])
+        const labelButtonWidth = buttonsHidden && dataSourceType === 'logs' ? 75 : 0 
+        let resultsWidth = 100;
+        let historyWidth = 45;
+        let marginWidth = 10;
+        const buttonsContainerWidth = buttonsHidden && dataSourceType === 'logs' 
+        ? 275 // Logs
+        : buttonsHidden 
+        ? resultsWidth + historyWidth + marginWidth // Metrics
+        : 0; // Traces and Flux
+        return labelButtonWidth + buttonsContainerWidth;
+    },[dataSourceType, buttonsHidden])
     return (
         <QueryBarContainer>
             {buttonsHidden && dataSourceType === "logs" && (

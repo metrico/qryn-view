@@ -126,15 +126,12 @@ export default function QueryEditor({
     const theme = useSelector((store) => store.theme);
 
     const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
-    const [height, setHeight] = useState(0);
+    const [height, setHeight] = useState(DEFAULT_QUERY_BAR_INNER_HEIGHT);
     const editor = useMemo(() => withHistory(withReact(createEditor())), []);
     const ref = useRef(null);
     const editorRef = useRef(null);
     const isInit = useState(true);
     const editorSize = editorRef?.current?.firstChild?.firstChild?.clientHeight;
-    useEffect(()=> {
-        setHeight(DEFAULT_QUERY_BAR_INNER_HEIGHT);
-    },[setHeight])
     // Keep track of state for the value of the editor.
 
     const [language] = useState("sql");
@@ -173,6 +170,9 @@ export default function QueryEditor({
     }, []);
 
     const adjustHeight = useCallback((editorHeight) => {
+        if (typeof editorHeight === 'undefined') {
+            return;
+        }
         if (isInit || height < editorHeight) {
             const maxHeight = window.innerHeight * 0.5;
             if (maxHeight < editorHeight) {
