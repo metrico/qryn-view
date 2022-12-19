@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@emotion/react";
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { themes } from "../../theme/themes";
 import { PageContainer } from "./styles";
 import { Route, Routes } from "react-router-dom";
@@ -8,6 +8,8 @@ import { DataSource } from "./DataSource";
 import { List } from "./views/List";
 import { Header } from "./components";
 import { DataSourcesFiller } from "./components/DataSourcesFiller";
+import { setTheme } from "../../actions";
+import { useMediaQuery } from "react-responsive";
 
 export function getURlParams(params) {
 
@@ -26,7 +28,16 @@ export function getURlParams(params) {
 export default function DataSources() {
 
     const themeState = useSelector((store) => store.theme) || "light";
+    const isAutoDark = useMediaQuery({ query: "(prefers-color-scheme: dark)" });
+    const dispatch = useDispatch();
 
+    const autoTheme = useSelector((store) => store.autoTheme);
+    useEffect(() => {
+        if (autoTheme) {
+            const theme = isAutoDark ? "dark" : "light";
+            dispatch(setTheme(theme));
+        }
+    }, [isAutoDark, autoTheme, dispatch]);
     const theme = useMemo(() => {
         return themes[themeState];
     }, [themeState]);
