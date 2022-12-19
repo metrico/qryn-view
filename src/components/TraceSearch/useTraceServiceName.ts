@@ -3,18 +3,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { getHeaders } from "./helpers";
 
-export function useTraceNames({ id }) {
-    const dataSources = useSelector((store) => store.dataSources);
-
-    const [traceNames, settraceNames] = useState(
+export function useTraceServiceName({ id }: any) {
+    const dataSources = useSelector(({ dataSources }: any) => dataSources);
+    const [serviceNames, setserviceNames] = useState(
         { data: { tagValues: [] } } || {}
     );
-
     const dataSource = useMemo(() => {
-        return dataSources.find((f) => f.id === id);
+        return dataSources.find((f: any) => f.id === id);
     }, [dataSources, id]);
-
-    // get the auth headers in here \
 
     useEffect(() => {
         if (
@@ -24,15 +20,13 @@ export function useTraceNames({ id }) {
         ) {
             const traceHeaders = getHeaders(dataSource);
 
-            const url = `${dataSource.url}/api/search/tag/name/values`;
+            const url = `${dataSource.url}/api/search/tag/service.name/values`;
             const apiRequest = async () => {
-                // setLoading(true);
-
                 try {
                     const req = await axios.get(url, traceHeaders);
-                    settraceNames(req || []);
+                    setserviceNames(req || []);
                 } catch (e) {
-                    console.log("Error at loading Span Names", e);
+                    console.log("Error at loading Service Names", e);
                 }
             };
 
@@ -41,14 +35,14 @@ export function useTraceNames({ id }) {
     }, []);
 
     return useMemo(() => {
-        if (traceNames?.["data"]?.["tagValues"]) {
-            return [{ name: "Search Span Name", value: "" }].concat(
-                traceNames["data"]["tagValues"].map((m) => ({
+        if (serviceNames?.data?.tagValues) {
+            return [{ name: "Select Service Name", value: "" }].concat(
+                serviceNames.data.tagValues.map((m) => ({
                     name: m,
                     value: m,
                 }))
             );
         }
         return [{ name: "", value: "" }];
-    }, [traceNames]);
+    }, [serviceNames]);
 }
