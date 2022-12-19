@@ -102,7 +102,7 @@ function Leaf({ attributes, children, leaf }) {
 }
 const handle = ["se"];
 const QUERY_BAR_WIDTH = 10000 // Set width above screen size, that way it doesn't go past "max-width: 100%" and fill container nicely.
-const DEFAULT_QUERY_BAR_INNER_HEIGHT = 19;
+const DEFAULT_QUERY_BAR_INNER_HEIGHT = 20;
 export function getTokenLength(token) {
     if (typeof token === "string") {
         return token.length;

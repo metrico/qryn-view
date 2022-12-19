@@ -23,6 +23,7 @@ export const MainContainer = styled.div`
     position: absolute;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
     height: 100%;
     width: 100%;
     flex: 1;
