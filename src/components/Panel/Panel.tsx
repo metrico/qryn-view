@@ -43,13 +43,27 @@ export default function Panel(props: any) {
             dispatch(panelDispatch(name, panelQueries));
         }
     }, []);
-
+    useEffect(()=>{
+        if (typeof ref.current.clientWidth === 'number'){
+            setWidth(ref.current.clientWidth)
+        }
+    },[ref?.current?.clientWidth])
+    // 
+    useEffect(() => {
+        const onWindowResize = () => {
+            setWidth(ref.current.clientWidth);
+        };
+        window.addEventListener("resize", onWindowResize);
+        return () => {
+            window.removeEventListener("resize", onWindowResize);
+        };
+    }, []);
     // CHECK ALSO THAT DATAVIEWS IS AN ARRAY
 
     return (
         <>
             <PanelCont isSplit={isSplit} ref={ref}>
-                <QueriesContainer {...props} queries={panel} />
+                <QueriesContainer {...props} width={width} queries={panel} />
                 <DataViews {...props} />
             </PanelCont>
         </>
