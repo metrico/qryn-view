@@ -16,7 +16,6 @@ const PanelCont: any = styled.div`
 `;
 // Panel should have injected data
 export default function Panel(props: any) {
-    
     const ref: any = useRef(null);
     const [width, setWidth] = useState(0);
 
@@ -47,11 +46,10 @@ export default function Panel(props: any) {
 
     // CHECK ALSO THAT DATAVIEWS IS AN ARRAY
 
-    const panelData = useMemo(() => panel, [panel]);
     return (
         <>
             <PanelCont isSplit={isSplit} ref={ref}>
-                <QueriesContainer {...props} queries={panelData} />
+                <QueriesContainer {...props} queries={panel} />
                 <DataViews {...props} />
             </PanelCont>
         </>
