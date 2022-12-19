@@ -623,8 +623,18 @@ export const QueryBar = (props) => {
         }
     };
     const updateLinksHistory = () => {
+        const ds = dataSources.find( f => f.id === dataSourceId)
         const storedUrl = saveUrl.add({
-            data: window.location.href,
+            data: {
+                href: window.location.href,
+                url: ds.url,
+                type: dataSourceType,
+                queryInput,
+                queryType,
+                limit,
+                panel: name,
+                id,
+            },
             description: "From Query Submit",
         });
 
