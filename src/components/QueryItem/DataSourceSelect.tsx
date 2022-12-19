@@ -9,13 +9,13 @@ export const DataSourceSelect = (props: any) => {
     const selectRef: any = useRef(null);
 
     useEffect(() => {
-        if (value.value !== extValue) {
+        if (value.value !== extValue && extValue !== '') {
             selectRef.current.value = extValue;
         }
     }, []);
 
     useEffect(() => {
-        if (value.value !== extValue) {
+        if (value.value !== extValue && extValue !== '') {
             selectRef.current.value = extValue;
         }
     }, [extValue]);

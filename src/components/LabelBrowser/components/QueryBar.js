@@ -90,6 +90,7 @@ export const QueryBar = (props) => {
     } = props;
     const { hash } = useLocation();
     const dispatch = useDispatch();
+    const saveUrl = localUrl();
     const historyService = localService().historyStore();
     const { historyOpen, isEmbed, theme, queryHistory, start, stop } =
         useSelector((store) => store);
@@ -130,28 +131,6 @@ export const QueryBar = (props) => {
         }
     }, [id, dataSourceId]);
 
-    // const actLocalDsSelected = useMemo(() => {
-    //     try {
-    //         const localData = JSON.parse(localStorage.getItem("dsSelected"));
-
-    //         if(localData?.length > 0) {
-    //             const localStored = localData?.find((f) => f.queryId === id) ;
-    //             if(localStored) {
-    //                 return localStored
-    //             } else {
-    //                 return {queryId:id,dataSourceId};
-    //             }
-
-    //         } else {
-    //             return {queryId:id,dataSourceId};
-    //         }
-
-    //     } catch (e) {
-    //         console.log(e);
-    //         return {queryId:id,dataSourceId};
-    //     }
-    // }, [id]);
-
     const actLocalDs = useMemo(() => {
         try {
             const localData = JSON.parse(localStorage.getItem("dataSources"));
@@ -160,22 +139,14 @@ export const QueryBar = (props) => {
             return {};
         }
     }, [dataSourceId]);
-
+    const expr = useMemo(() => {
+        return data.expr;
+    }, [data.expr]);
     const initialDefault = useMemo(() => {
         return defaultDataSources.find((f) => f.id === dataSourceId);
     }, [dataSourceId]);
 
-    useEffect(() => {
-        if (isTabletOrMobile && isSplit) {
-            dispatch(setSplitView(false));
-        }
-    }, [isTabletOrMobile]);
-
-    const saveUrl = localUrl();
-    const expr = useMemo(() => {
-        return data.expr;
-    }, [data.expr]);
-
+    // on init
     useEffect(() => {
         setQueryInput(actLocalQuery.expr);
         setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
@@ -284,14 +255,18 @@ export const QueryBar = (props) => {
         }
     }, []);
 
+    // force single view from small width
+
     useEffect(() => {
-        setQueryInput(expr);
-        setQueryValue([{ children: [{ text: expr }] }]);
-        setQueryValid(onQueryValid(expr));
-        decodeQueryAndUpdatePanel(queryInput, false);
-        saveQuery();
-        setLocalStorage();
-    }, [expr]);
+        if (isTabletOrMobile && isSplit) {
+            dispatch(setSplitView(false));
+        }
+    }, [isTabletOrMobile]);
+
+  
+
+
+    // changes on changin dataSource Id
 
     useEffect(() => {
         setQueryInput(actLocalQuery.expr);
@@ -400,6 +375,20 @@ export const QueryBar = (props) => {
         }
     }, [dataSourceId, id]);
 
+
+    // changes on changing exp
+
+    useEffect(() => {
+        setQueryInput(expr);
+        setQueryValue([{ children: [{ text: expr }] }]);
+        setQueryValid(onQueryValid(expr));
+        decodeQueryAndUpdatePanel(queryInput, false);
+        saveQuery();
+        setLocalStorage();
+    }, [expr]);
+
+    // handlers
+
     function handleQueryChange(e) {
         setQueryValue(e);
         saveQuery(e);
@@ -483,6 +472,7 @@ export const QueryBar = (props) => {
         }
         localStorage.setItem("queryData", JSON.stringify(newData));
     };
+
     const saveQuery = (e = []) => {
         const queryParams = new URLSearchParams(hash.replace("#", ""));
         const multiline = e?.map((text) => text.children[0].text).join("\n");
@@ -498,6 +488,7 @@ export const QueryBar = (props) => {
         queryParams.set(name, encodeURIComponent(JSON.stringify(panel)));
         setLocalStorage();
     };
+
     const onSubmitRate = (e, type = "logs") => {
         e.preventDefault();
         const isEmptyQuery = queryInput.length === 0;
@@ -669,6 +660,12 @@ export const QueryBar = (props) => {
         dispatch(panelAction(name, newPanel));
     }
 
+    const switchTraceQueryType = (e) => {
+        setTraceQueryType((_) => e);
+    };
+
+    // renderers
+
     const inlineQueryOptionsRenderer = (type, isSplit, isMobile, typeBar) => {
         const isFullView = !isMobile && !isSplit;
         const isMetrics = type === "metrics" || type === "logs";
@@ -700,9 +697,7 @@ export const QueryBar = (props) => {
         return null;
     }
 
-    const switchTraceQueryType = (e) => {
-        setTraceQueryType((_) => e);
-    };
+
 
     const queryTypeRenderer = (
         type,
@@ -745,6 +740,8 @@ export const QueryBar = (props) => {
 
         return querySearch;
     };
+
+    // render
 
     if (isEmbed) {
         return null;
@@ -861,6 +858,8 @@ export const QueryBar = (props) => {
     );
 };
 
+// query bar container (full view)
+
 export const QueryBarCont = (props) => {
     const {
         isSplit,
@@ -932,6 +931,8 @@ export const QueryBarCont = (props) => {
     );
 };
 
+
+// mobile top query view (mobile view or splitted view)
 export const MobileTopQueryMenuCont = (props) => {
     const dispatch = useDispatch();
     const {
