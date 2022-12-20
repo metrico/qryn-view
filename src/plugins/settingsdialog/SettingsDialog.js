@@ -62,11 +62,13 @@ export default function SettingsDialog({ open, onClose }) {
         const switchedTheme = themeSet === "light" ? "dark" : "light"
         dispatch(setTheme(switchedTheme));
         setThemeSet(switchedTheme);
-        localStorage.setItem("theme", JSON.stringify({ theme: switchedTheme }));
+        localStorage.setItem("theme", JSON.stringify({ theme: switchedTheme, auto: autoThemeLocal }));
     }
     const handleAutoTheme = (val) => {
-        dispatch(setAutoTheme(!autoThemeLocal))
-        setLocalAutoTheme(autoTheme);
+        const switchedAutoTheme = !autoThemeLocal
+        dispatch(setAutoTheme(switchedAutoTheme))
+        setLocalAutoTheme(switchedAutoTheme);
+        localStorage.setItem("theme", JSON.stringify({ theme: theme, auto: switchedAutoTheme }));
     }
     function handleClose() {
         dispatch(setSettingsDialogOpen(false));
