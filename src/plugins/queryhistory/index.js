@@ -639,7 +639,7 @@ const QueryHistory = (props) => {
     const [linksStarredFiltered, setLinksStarredFiltered] = useState([]);
     const [starredFiltered, setStarredFiltered] = useState([]);
     const [linksStarredItems, setLinksStarredItems] = useState(false);
-
+    const { start, stop } = useSelector((store) => store);
     function handleDelete(id) {
         const removed = historyService.remove(id);
         dispatch(setQueryHistory(removed));
@@ -678,18 +678,50 @@ const QueryHistory = (props) => {
             panel,
             queryInput,
             queryType,
-            dataSourceType,
+            type,
+            dataSourceId,
+            url,
+
             direction,
         } = logData;
+
+        let querySubmit = "";
+
+        let customStep = 0;
+
+        if (queryInput.includes(`$__interval`)) {
+            const timeDiff = (stop.getTime() - start.getTime()) / 1000;
+
+            const timeProportion = timeDiff / 30;
+
+            const screenProportion = (1).toFixed(1);
+
+            const intval = timeProportion / screenProportion;
+
+            const ratiointval = Math.round(
+                intval * window.devicePixelRatio.toFixed(2)
+            );
+            querySubmit = queryInput.replace(
+                "[$__interval]",
+                `[${ratiointval}s]`
+            );
+            customStep = ratiointval;
+        } else {
+            querySubmit = queryInput;
+        }
+
         dispatch(
             getData(
-                dataSourceType,
-                queryInput,
+                type,
+                querySubmit,
                 queryType,
                 limit,
                 panel,
                 id,
-                direction
+                direction || "forward",
+                dataSourceId,
+                url,
+                customStep
             )
         );
     }
@@ -908,10 +940,10 @@ const QueryHistory = (props) => {
                                 filteredQueries={starredFiltered}
                                 filteredLinks={linksStarredFiltered}
                                 emptyQueryMessage={
-                                    "Click the ‘Star’ icon to save links and find them here to reuse again"
+                                    "Click the 'Star' icon to save links and find them here to reuse again"
                                 }
                                 emptyLinkMessage={
-                                    "Click the ‘Star’ icon to save queries and find them here to reuse again"
+                                    "Click the 'Star' icon to save queries and find them here to reuse again"
                                 }
                                 copyQuery={copyQuery}
                             />
