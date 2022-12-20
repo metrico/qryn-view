@@ -85,10 +85,47 @@ export default function QueryItem(props: any) {
         }
     }
 
-    const onDeleteQuery = () => {
+    const getStoredQueries = (): Array<any> => {
+        let stored = [];
+        try {
+            const fromStore =
+                JSON.parse(localStorage.getItem("queryData") || "[]") || [];
+            stored = [...fromStore];
+            return stored;
+        } catch (e) {
+            return [];
+        }
+    };
+
+    const setStoredQuery = (queries: Array<any>): void => {
+        localStorage.setItem("queryData", JSON.stringify(queries));
+    };
+    const filterQuery = (query: any) => query.queryId !== props.data.id;
+
+    const filterLocal = (queries: Array<any>): Array<any> => {
+        return queries.filter((f: any) => filterQuery(f));
+    };
+
+    const deleteStoredQuery = (): void => {
+        const prevStored = getStoredQueries();
+
+        if (prevStored?.length > 0) {
+            const filtered = filterLocal(prevStored);
+            setStoredQuery(filtered);
+        }
+    };
+
+    const onDeleteQuery = ():void => {
+
         const filtered = filterPanel(panelSelected);
 
         const viewFiltered = filterPanel(dataView);
+
+        const prevStoredQuery = getStoredQueries();
+
+        if (prevStoredQuery?.length > 0) {
+            deleteStoredQuery();
+        }
 
         if (filtered) {
             dispatch(panelAction(name, filtered));
@@ -141,9 +178,9 @@ export default function QueryItem(props: any) {
 
         dispatch(panelAction(name, panelData));
     };
-    
+
     const _themes: any = themes;
-    
+
     return (
         <ThemeProvider theme={_themes[theme]}>
             <QueryContainer>
