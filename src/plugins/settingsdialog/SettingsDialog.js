@@ -59,9 +59,10 @@ export default function SettingsDialog({ open, onClose }) {
 
 
     function handleThemeSwitch() {
-        dispatch(setTheme(themeSet === "light" ? "dark" : "light"));
-        setThemeSet(theme);
-        localStorage.setItem("theme", JSON.stringify({ theme }));
+        const switchedTheme = themeSet === "light" ? "dark" : "light"
+        dispatch(setTheme(switchedTheme));
+        setThemeSet(switchedTheme);
+        localStorage.setItem("theme", JSON.stringify({ theme: switchedTheme }));
     }
     const handleAutoTheme = (val) => {
         dispatch(setAutoTheme(!autoThemeLocal))
