@@ -549,14 +549,25 @@ export const QueryBar = (props) => {
             );
         }
     },[dataSources, data.expr, panelQuery, dispatch, name, dataSourceId, props.data.labels, id, dataSourceType, stop, start, width, queryType, limit, direction]);
+    
     const updateLinksHistory = useCallback(() => {
+        const ds = dataSources.find( f => f.id === dataSourceId)
         const storedUrl = saveUrl.add({
-            data: window.location.href,
+            data: {
+                href: window.location.href,
+                url: ds.url,
+                type: dataSourceType,
+                queryInput,
+                queryType,
+                limit,
+                panel: name,
+                id,
+            },
             description: "From Query Submit",
         });
 
         dispatch(setLinksHistory(storedUrl));
-    },[dispatch, saveUrl]);
+    },[dataSources, saveUrl, dataSourceType, queryInput, queryType, limit, name, id, dispatch, dataSourceId]);
     const handleHistoryClick = useCallback((e) => {
         dispatch(setHistoryOpen(!historyOpen));
     },[historyOpen, dispatch])

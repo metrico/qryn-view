@@ -1,6 +1,6 @@
 import { ThemeProvider, Tooltip } from "@mui/material";
 import localService from "../../services/localService";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import setQueryHistory from "../../actions/setQueryHistory";
 import getData from "../../actions/getData";
@@ -116,6 +116,7 @@ function HistoryLinkParams({
     handleSubmit,
 }) {
     const [open, setOpen] = useState(false);
+    const { fromDate, toDate, type, url, queryInput, limit } = item;
 
     const openParams = () => {
         setOpen((opened) => (opened ? false : true));
@@ -149,13 +150,11 @@ function HistoryLinkParams({
                             fontSize="14px"
                             style={{ marginRight: "3px" }}
                         />{" "}
-                        {item?.params?.apiUrl}
+                        {url}
                     </span>
                 </Tooltip>
 
-                <span style={{ whiteSpace: "nowrap" }}>
-                    limit: {item?.params?.limit}
-                </span>
+                <span style={{ whiteSpace: "nowrap" }}>limit: {limit}</span>
 
                 <span style={{ whiteSpace: "nowrap" }}>
                     step: {item?.params?.step}
@@ -168,16 +167,16 @@ function HistoryLinkParams({
                     }}
                 >
                     {" "}
-                    <Tooltip title={item?.fromDate + " - " + item?.toDate}>
+                    <Tooltip title={fromDate + " - " + toDate}>
                         <AccessTimeIcon
                             fontSize={"14px"}
                             style={{ marginRight: "3px" }}
                         />
                     </Tooltip>{" "}
                     <TimeSpan>
-                        {item?.fromDate}
+                        {fromDate}
                         {" - "}
-                        {item?.toDate}
+                        {toDate}
                     </TimeSpan>
                 </div>
             </div>
@@ -185,25 +184,27 @@ function HistoryLinkParams({
             <div className="block-params">
                 <p>
                     <span className="key"> Query:</span>{" "}
-                    <span className="value">
-                        {decodeURIComponent(item.params.query)}
-                    </span>{" "}
+                    <span className="value">{queryInput}</span>{" "}
                 </p>
                 <p>
                     <span className="key"> API URL:</span>{" "}
-                    <span className="value">{item.params.apiUrl}</span>{" "}
+                    <span className="value">{url}</span>{" "}
+                </p>
+                <p>
+                    <span className="key"> Data Source Type:</span>{" "}
+                    <span className="value">{type}</span>{" "}
                 </p>
                 <p>
                     <span className="key">From: </span>{" "}
-                    <span className="value">{item?.fromDate}</span>{" "}
+                    <span className="value">{fromDate}</span>{" "}
                 </p>
                 <p>
                     <span className="key"> To: </span>{" "}
-                    <span className="value"> {item?.toDate}</span>{" "}
+                    <span className="value"> {toDate}</span>{" "}
                 </p>
                 <p>
                     <span className="key">Limit: </span>{" "}
-                    <span className="value">{item.params.limit}</span>{" "}
+                    <span className="value">{limit}</span>{" "}
                 </p>
                 <p>
                     <span className="key"> Step:</span>{" "}

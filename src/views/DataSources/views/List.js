@@ -13,17 +13,24 @@ export function List() {
                     const { icon, id, name, type, url } = item;
                     return (
                         <div className="ds-cont" key={idx}>
-                            <div className="ds-item">
-                                <Icon icon={icon} />
-                                <div className="ds-text">
-                                    <Link to={id}>
-                                        <div className="ds-type">{name}</div>
-                                    </Link>
-                                    <small>
-                                        {type} | {url}{" "}
-                                    </small>
+                            <Link to={id}>
+                                <div className="ds-item">
+                                    <Icon icon={icon} />
+                                    <div className="ds-text">
+                                        
+                                            <div className="ds-type">{name}</div>
+                                        <span>
+                                            <small>
+                                            {type} | {" "}
+                                            </small>
+                                            <small style={{userSelect: 'all'}}>
+                                                {url}
+                                            </small>
+                                        </span>
+                                        
+                                    </div>
                                 </div>
-                            </div>
+                            </Link>
                         </div>
                     );
                 })}
