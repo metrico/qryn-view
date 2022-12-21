@@ -48,9 +48,6 @@ function alreadyExists(exp, op, k, v) {
 export function ValueTagsCont(props) {
     const { showLabels, tags, actQuery } = props;
 
-
-   
-
     if (showLabels) {
         return (
             <div className="value-tags-container">
@@ -65,7 +62,7 @@ export async function addLabel(e, key, value, isExcluded = false, queryObj) {
     e.preventDefault();
 
     e.stopPropagation();
-    const { expr, panel, id } = queryObj;
+    const { expr, panel, id, dataSourceType } = queryObj;
 
     const isAlreadyExcluded = alreadyExists(expr, "!=", key, value);
 
@@ -78,7 +75,14 @@ export async function addLabel(e, key, value, isExcluded = false, queryObj) {
         return;
     }
 
-    queryBuilderWithLabels(expr, panel, id, [key, value], isExcluded);
+    queryBuilderWithLabels(
+        expr,
+        panel,
+        id,
+        [key, value],
+        isExcluded,
+        dataSourceType
+    );
 }
 
 export class Panel {
@@ -103,7 +107,7 @@ export default function ValueTags(props) {
 
     const openTraces = (e, key, value, linkID, currentUrl, linkType) => {
         e.stopPropagation();
-        if (props?.actQuery?.panel === "left" && !isTabletOrMobile ) {
+        if (props?.actQuery?.panel === "left" && !isTabletOrMobile) {
             dispatch(setSplitView(true));
         }
 
