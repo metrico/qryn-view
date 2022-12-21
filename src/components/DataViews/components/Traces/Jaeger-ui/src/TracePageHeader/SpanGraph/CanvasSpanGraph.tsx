@@ -22,7 +22,7 @@ import renderIntoCanvas from "./render-into-canvas";
 import styled from "@emotion/styled";
 
 const StyledCanvas = styled.canvas<{ theme: any }>`
-    // background: ${(props) => props.theme.logBgColor};
+    // background: ${({theme}: any) => theme.logBgColor};
     //background:red !important;
     height: 60px;
     position: absolute;
