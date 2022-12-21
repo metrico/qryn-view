@@ -117,14 +117,12 @@ export const QuerySetting = (props) => {
     }
 
     const traceOptions = () => (
-        <div className="options-input">
-            <QueryTypeSwitch
-                label={"Trace Type"}
-                options={TRACE_OPTIONS}
-                onChange={onTraceQueryChange}
-                defaultActive={queryTraceSwitch}
-            />
-        </div>
+        <QueryTypeSwitch
+            label={"Trace Type"}
+            options={TRACE_OPTIONS}
+            onChange={onTraceQueryChange}
+            defaultActive={queryTraceSwitch}
+        />
     );
 
     function handleTsSwitch() {
