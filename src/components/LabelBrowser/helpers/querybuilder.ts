@@ -22,6 +22,7 @@ export const PIPE_PARSE = [
 const pipeParseOpts = ["json", "regexp", "logfmt", "pattern", "~", "="];
 
 const STREAM_SELECTOR_REGEX = /{[^}]*}/;
+
 const parseLog = {
     newQuery: (keyValue: any[], op: any, tags: any[]) => {
         const [key, value] = keyValue;
@@ -43,7 +44,7 @@ const parseLog = {
             ?.map((m) => m.split(","))
             ?.flat() || [],
     addLabel: (op: any, keySubtValue: any, keyValue: any) => 
-        op === "!=" ? keyValue : keySubtValue
+        op === "!=" ? keySubtValue : keyValue
     ,
     rmValueFromLabel: (label: any, value: any) => {
         const [lb, val] = label?.split("=~");
@@ -70,7 +71,12 @@ const parseLog = {
         return query === `{${key}="${value}"}`;
     },
     editQuery: (query: string, keyValue: any[], op: string, tags: any[]) => {
+
+        //console.log(query,"QUERY", keyValue,"KEYVALUE", op,"OPERATOR", tags,"TAGS" )
+
+
         if (parseLog.isEqualsQuery(query, keyValue) && keyValue !== null) {
+           
             return parseLog.equalLabels(keyValue, op, tags);
         }
 
@@ -79,7 +85,9 @@ const parseLog = {
 };
 const parseQuery = {
     fromLabels: (query: string, keyVal: any[], op: string, tags: any[]) => {
+
         const queryString = parseQueryLabels(keyVal, query, op);
+        console.log(queryString)
         return parseLog.formatQuery(queryString, tags);
     },
 };
@@ -93,20 +101,26 @@ function parseQueryLabels(keyVal: any[], query: string, op: string) {
         return "";
     }
 
+    console.log(queryArr)
+
     for (let label of queryArr) {
         const regexQuery = label.match(/([^{}=,~!]+)/gm);
+        console.log(regexQuery)
         const querySplitted = parseLog.splitLabels(query);
         if (!regexQuery) {
             return "";
         }
-
+        //console.log("VALUE", value, "LABEL: ", label, "KEY:", key,"QUERYSPLITTED:", querySplitted)
         if ( value !== null &&
             !label.includes(key?.trim()) &&
             !querySplitted?.some((s) => s.includes(key))
         ) {
             // add new label
+            console.log('first case')
             let labelMod = op === "!=" ? keySubtValue : label;
+            console.log(labelMod, keyValue)
             const parsed = parseLog.addLabel(op, labelMod, keyValue);
+            console.log(parsed)
             const regs = parseLog.splitLabels(query).concat(parsed);
             return regs.join(",");
         }
@@ -116,6 +130,7 @@ function parseQueryLabels(keyVal: any[], query: string, op: string) {
             label?.split("=")?.[0]?.trim() === key?.trim() &&
             !label?.includes(value)
         ) {
+            console.log('second case')
             // values group from existing label
             let labelMod = parseLog.addValueToLabel(label, value, true);
             return parseLog
@@ -129,6 +144,7 @@ function parseQueryLabels(keyVal: any[], query: string, op: string) {
             label?.split("=~")?.[0]?.trim() === key?.trim() &&
             label?.includes(value)
         ) {
+            console.log('third case')
             // filter value from existing values group from label
             const labelMod = parseLog.rmValueFromLabel(label, value);
             return parseLog
@@ -142,7 +158,9 @@ function parseQueryLabels(keyVal: any[], query: string, op: string) {
             label?.split("=~")?.[0]?.trim() === key?.trim() &&
             !label?.includes(value?.trim())
         ) {
+            console.log('forth case')
             // add value to existing values group from label
+            console.log('adding value to label')
             return parseLog.addValueToLabel(label, value, false);
         }
 
@@ -153,6 +171,7 @@ function parseQueryLabels(keyVal: any[], query: string, op: string) {
             (label?.split('"')?.[1]?.trim() === value?.trim() || value === null) &&
             querySplitted?.some((s) => s === label)
         ) {
+            console.log('fifth case')
             // remove label from query
             const filtered = querySplitted?.filter((f) => f !== label);
             return filtered?.join(",");
@@ -161,13 +180,14 @@ function parseQueryLabels(keyVal: any[], query: string, op: string) {
     return "";
 }
 
-export function decodeQuery(query: any, key: any, value: any, op: any, type: any) {
+export function decodeQuery(query: any, key: any, value: any, op: any, type: any) { 
     const { newQuery, editQuery } = parseLog;
 
     let keyValue = [key, value];
+    
     let tags = query?.split(/[{}]/);
     const isQuery = query?.match(STREAM_SELECTOR_REGEX) && tags[1].length > 7;
-
+    //
     if (tags[1]?.length < 1 && type === "metrics") {
         return `${value}{}`;
     }
@@ -177,6 +197,7 @@ export function decodeQuery(query: any, key: any, value: any, op: any, type: any
     }
 
     if (!isQuery && key !== "__name__") {
+        console.log('going inside newQuery')
         return newQuery(keyValue, op, tags);
     }
 
@@ -233,9 +254,11 @@ export function queryBuilderWithLabels(
     id: any, // query id
     keyVal: any, // key / value
     isInverted = false,
+    dataSourceType='logs',
     hasPipe = false,
     pipeLabels = []
 ) {
+  //  
     const [key, val] = keyVal;
     const dispatch = store.dispatch;
     const operator = () => {
@@ -244,8 +267,13 @@ export function queryBuilderWithLabels(
         }
         return "=";
     };
+    const op = operator()
     const { left, right } = store.getState();
-    const queryStr = decodeQuery(expr, key, val, operator(), null);
+
+   // decodeQuery(query: any, key: any, value: any, op: any, type: any)
+
+    const queryStr = decodeQuery(expr, key, val,op, dataSourceType); // this one should be the problem
+   // 
     // here will return without braces\
     //
     //   return [preTags, "{", selectedLabels.join(","), "}", postTags].join("");
