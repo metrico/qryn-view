@@ -142,12 +142,9 @@ export const QuerySetting = (props) => {
             onClose={handleClose}
             PaperProps={{
                 classes: {
-                    root: {
-                        DialogStyles,
-                    },
-                },
-            }}
-        >
+                    root: DialogStyles
+                }
+              }}>
             <SettingCont>
                 <SettingHeader>
                     <h3>Query Options</h3>
