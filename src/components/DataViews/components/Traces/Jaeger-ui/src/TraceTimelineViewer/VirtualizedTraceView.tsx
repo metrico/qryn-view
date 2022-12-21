@@ -97,6 +97,7 @@ type TVirtualizedTraceViewOwnProps = {
     clearShouldScrollToFirstUiFindMatch: () => void;
     detailLogItemToggle: (spanID: string, log: TraceLog) => void;
     detailLogsToggle: (spanID: string) => void;
+    detailEventsToggle: (spanID: string) => void;
     detailWarningsToggle: (spanID: string) => void;
     detailStackTracesToggle: (spanID: string) => void;
     detailReferencesToggle: (spanID: string) => void;
@@ -518,6 +519,7 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
         const {
             detailLogItemToggle,
             detailLogsToggle,
+            detailEventsToggle,
             detailProcessToggle,
             detailReferencesToggle,
             detailReferenceItemToggle,
@@ -560,6 +562,7 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
                     linksGetter={linksGetter}
                     logItemToggle={detailLogItemToggle}
                     logsToggle={detailLogsToggle}
+                    eventsToggle={detailEventsToggle}
                     processToggle={detailProcessToggle}
                     referenceItemToggle={detailReferenceItemToggle}
                     referencesToggle={detailReferencesToggle}

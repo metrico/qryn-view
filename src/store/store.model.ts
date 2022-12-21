@@ -35,8 +35,8 @@ export interface Store {
     isEmbed:            string;
     left:               Panel[];
     right:              Panel[];
-    leftDataView:       any[];
-    rightDataView:      any[];
+    leftDataView:       DataViews;
+    rightDataView:      DataViews;
     chartType:          string;
     resposeType:        string;
     notifications:      any[];
@@ -107,4 +107,50 @@ export interface URLQueryParams {
     theme:     string;
     isSplit:   string;
     autoTheme: string;
+}
+export type DataViews = DataView[]; 
+
+export interface DataView {
+    id:        string;
+    type:      string;
+    tableData: TableData;
+    data:      Datum[];
+    labels:    string[];
+    total:     number;
+    loading:   boolean;
+}
+
+export interface Datum {
+    type:       string;
+    timestamp:  number;
+    text:       string;
+    tags:       Tags;
+    isShowTs:   boolean;
+    showLabels: boolean;
+    id:         string;
+}
+
+export interface Tags {
+    job:   string;
+    level: string;
+}
+
+export interface TableData {
+    columnsData: ColumnsDatum[];
+    dataRows:    DataRow[];
+    length:      number;
+}
+
+export interface ColumnsDatum {
+    Header:    string;
+    accessor:  string;
+    width?:    number;
+    minWidth?: number;
+    maxWidth?: number;
+}
+
+export interface DataRow {
+    time:   string;
+    stream: string;
+    log:    string;
 }

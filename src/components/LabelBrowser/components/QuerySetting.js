@@ -193,7 +193,7 @@ export const QuerySetting = (props) => {
                     )}
                     {responseType !== "vector" && (
                         <div className="options-input">
-                            <InputGroup>
+                            {/* <InputGroup>
                                 <SettingLabel>Table View</SettingLabel>
                                 <Switch
                                     checked={isTableViewSet}
@@ -201,7 +201,7 @@ export const QuerySetting = (props) => {
                                     onChange={handleTableViewSwitch}
                                     inputProps={{ "aria-label": "controlled" }}
                                 />
-                            </InputGroup>
+                            </InputGroup> */}
                             <InputGroup>
                                 <SettingLabel>Timestamp</SettingLabel>
                                 <Switch

@@ -1,6 +1,6 @@
 import { ThemeProvider, Tooltip } from "@mui/material";
 import localService from "../../services/localService";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import setQueryHistory from "../../actions/setQueryHistory";
 import getData from "../../actions/getData";
@@ -116,6 +116,7 @@ function HistoryLinkParams({
     handleSubmit,
 }) {
     const [open, setOpen] = useState(false);
+    const { fromDate, toDate, type, url, queryInput, limit } = item;
 
     const openParams = () => {
         setOpen((opened) => (opened ? false : true));
@@ -149,13 +150,11 @@ function HistoryLinkParams({
                             fontSize="14px"
                             style={{ marginRight: "3px" }}
                         />{" "}
-                        {item?.params?.apiUrl}
+                        {url}
                     </span>
                 </Tooltip>
 
-                <span style={{ whiteSpace: "nowrap" }}>
-                    limit: {item?.params?.limit}
-                </span>
+                <span style={{ whiteSpace: "nowrap" }}>limit: {limit}</span>
 
                 <span style={{ whiteSpace: "nowrap" }}>
                     step: {item?.params?.step}
@@ -168,16 +167,16 @@ function HistoryLinkParams({
                     }}
                 >
                     {" "}
-                    <Tooltip title={item?.fromDate + " - " + item?.toDate}>
+                    <Tooltip title={fromDate + " - " + toDate}>
                         <AccessTimeIcon
                             fontSize={"14px"}
                             style={{ marginRight: "3px" }}
                         />
                     </Tooltip>{" "}
                     <TimeSpan>
-                        {item?.fromDate}
+                        {fromDate}
                         {" - "}
-                        {item?.toDate}
+                        {toDate}
                     </TimeSpan>
                 </div>
             </div>
@@ -185,25 +184,27 @@ function HistoryLinkParams({
             <div className="block-params">
                 <p>
                     <span className="key"> Query:</span>{" "}
-                    <span className="value">
-                        {decodeURIComponent(item.params.query)}
-                    </span>{" "}
+                    <span className="value">{queryInput}</span>{" "}
                 </p>
                 <p>
                     <span className="key"> API URL:</span>{" "}
-                    <span className="value">{item.params.apiUrl}</span>{" "}
+                    <span className="value">{url}</span>{" "}
+                </p>
+                <p>
+                    <span className="key"> Data Source Type:</span>{" "}
+                    <span className="value">{type}</span>{" "}
                 </p>
                 <p>
                     <span className="key">From: </span>{" "}
-                    <span className="value">{item?.fromDate}</span>{" "}
+                    <span className="value">{fromDate}</span>{" "}
                 </p>
                 <p>
                     <span className="key"> To: </span>{" "}
-                    <span className="value"> {item?.toDate}</span>{" "}
+                    <span className="value"> {toDate}</span>{" "}
                 </p>
                 <p>
                     <span className="key">Limit: </span>{" "}
-                    <span className="value">{item.params.limit}</span>{" "}
+                    <span className="value">{limit}</span>{" "}
                 </p>
                 <p>
                     <span className="key"> Step:</span>{" "}
@@ -638,7 +639,7 @@ const QueryHistory = (props) => {
     const [linksStarredFiltered, setLinksStarredFiltered] = useState([]);
     const [starredFiltered, setStarredFiltered] = useState([]);
     const [linksStarredItems, setLinksStarredItems] = useState(false);
-
+    const { start, stop } = useSelector((store) => store);
     function handleDelete(id) {
         const removed = historyService.remove(id);
         dispatch(setQueryHistory(removed));
@@ -677,18 +678,50 @@ const QueryHistory = (props) => {
             panel,
             queryInput,
             queryType,
-            dataSourceType,
+            type,
+            dataSourceId,
+            url,
+
             direction,
         } = logData;
+
+        let querySubmit = "";
+
+        let customStep = 0;
+
+        if (queryInput.includes(`$__interval`)) {
+            const timeDiff = (stop.getTime() - start.getTime()) / 1000;
+
+            const timeProportion = timeDiff / 30;
+
+            const screenProportion = (1).toFixed(1);
+
+            const intval = timeProportion / screenProportion;
+
+            const ratiointval = Math.round(
+                intval * window.devicePixelRatio.toFixed(2)
+            );
+            querySubmit = queryInput.replace(
+                "[$__interval]",
+                `[${ratiointval}s]`
+            );
+            customStep = ratiointval;
+        } else {
+            querySubmit = queryInput;
+        }
+
         dispatch(
             getData(
-                dataSourceType,
-                queryInput,
+                type,
+                querySubmit,
                 queryType,
                 limit,
                 panel,
                 id,
-                direction
+                direction || "forward",
+                dataSourceId,
+                url,
+                customStep
             )
         );
     }
@@ -907,10 +940,10 @@ const QueryHistory = (props) => {
                                 filteredQueries={starredFiltered}
                                 filteredLinks={linksStarredFiltered}
                                 emptyQueryMessage={
-                                    "Click the ‘Star’ icon to save links and find them here to reuse again"
+                                    "Click the 'Star' icon to save links and find them here to reuse again"
                                 }
                                 emptyLinkMessage={
-                                    "Click the ‘Star’ icon to save queries and find them here to reuse again"
+                                    "Click the 'Star' icon to save queries and find them here to reuse again"
                                 }
                                 copyQuery={copyQuery}
                             />

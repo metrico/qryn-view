@@ -33,8 +33,6 @@ export const defaultFluxDataSourceHeaders = [
     }
 ];
 
-// 'Authorization' : 'Basic ZGVmYXVsdDo='
-
 export const defaultLogsLinkedFields = [
     {
         id: nanoid(),

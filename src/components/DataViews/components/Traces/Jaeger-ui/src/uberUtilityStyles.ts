@@ -57,7 +57,7 @@ export const ubInlineBlock = css`
 `;
 
 export const uAlignIcon = css`
-  margin: -0.2rem 0.25rem 0 0;
+ // margin: -0.2rem 0.25rem 0 0;
 `;
 
 export const uTxEllipsis = css`
