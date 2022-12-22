@@ -198,13 +198,13 @@ export const QueryBar = (props) => {
         }
 
         // search for auth params  and send inside
-        const labels = sendLabels(
-            dataSourceId,
-            dataSourceType,
-            currentDataSource?.url, // which one should be?
-            start,
-            stop
-        );
+        // const labels = sendLabels(
+        //     dataSourceId,
+        //     dataSourceType,
+        //     currentDataSource?.url, // which one should be?
+        //     start,
+        //     stop
+        // );
         // if is view only mode (embedded) do an auto request on init
         if (isEmbed)
             dispatch(
@@ -221,38 +221,10 @@ export const QueryBar = (props) => {
                 )
             );
 
-        if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
-            return labels.then((data) => {
-                if (data) {
-                    const prevLabels = [...props.data.labels];
-                    const prevMap = prevLabels.map((m) => m.name) || [];
-                    const newLabels = [...data];
-                    setLabels(newLabels);
-                    if (newLabels.length > 0) {
-                        if (prevMap.length > 0) {
-                            newLabels.forEach((l) => {
-                                const labelFound = prevMap.includes(l.name);
-                                if (labelFound) {
-                                    const pl = prevLabels.find(
-                                        (f) => f.name === l.name
-                                    );
-                                    l = { ...pl };
-                                }
-                            });
-                        }
-                        decodeQuery(
-                            expr,
-                            currentDataSource.url,
-                            newLabels,
-                            currentDataSource.id
-                        );
-                    }
-                }
-            });
-        } else {
+
             // if there is nothing to request, show empty view
-            dispatch(setIsEmptyView(true));
-        }
+          //  dispatch(setIsEmptyView(true));
+        
     }, []);
 
     // force single view from small width
@@ -291,7 +263,6 @@ export const QueryBar = (props) => {
                 );
             }
             const labelsDecoded = decodeExpr(data.expr);
-
             panelCP.forEach((query) => {
                 if (query.id === id) {
                     query.labels = [...labelsDecoded];
