@@ -156,7 +156,7 @@ function getTableData(responseProps: QueryResult) {
 }
 export function parseFluxResponse(responseProps: QueryResult) {
 
-    let { result, debugMode, dispatch, panel, id } = responseProps;
+    let { result, debugMode, dispatch, panel, id, raw } = responseProps;
     result = fluxDataToMetricData(result);
     // here should set the table response
     const tableResult = getFluxTableResult(result);
@@ -187,6 +187,7 @@ export function parseFluxResponse(responseProps: QueryResult) {
             type: "vector",
             tableData: tableResult,
             data: data,
+            raw,
             total: idResult?.length || 0,
         };
 
