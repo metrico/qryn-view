@@ -259,9 +259,9 @@ export function updateDataSourcesWithUrl(
     if (haveCookies) {
         let [auth, dsData] = cookies.split("@");
         let cookieDsData = "";
-        if (dsData !== "") {
-            cookieDsData = atob(dsData);
+        if (dsData && dsData !== "") {
             try {
+                cookieDsData = atob(dsData);
                 cookieDsData = JSON.parse(cookieDsData);
                 if (typeof cookieDsData === "object" && cookieDsData["url"]) {
                     apiUrl = cookieDsData["url"];
