@@ -38,7 +38,7 @@ const localUrl = () => {
         }
     };
 
-    const add = (item: any) => {
+    const add = (item: any, maxLength = Infinity) => {
         let previousData = get() || [];
         const { href, url, type, queryInput, queryType, limit, panel } =
             item.data;
@@ -59,7 +59,7 @@ const localUrl = () => {
             parseInt(paramsData.stop) / 1000000,
             "yyyy-MM-dd HH:mm:ss"
         );
-
+            console.log(maxLength)
         try {
             const newItem = {
                 url,
@@ -78,7 +78,7 @@ const localUrl = () => {
                 toDate,
                 data: `${origin}/#${urlParams.toString()}` || "",
             };
-            let newStorage = [newItem].concat(previousData);
+            let newStorage = [newItem].concat(previousData).slice(0, maxLength);
             set(newStorage);
             return getAll();
         } catch (e) {

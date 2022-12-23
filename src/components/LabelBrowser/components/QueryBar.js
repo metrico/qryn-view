@@ -548,7 +548,7 @@ export const QueryBar = (props) => {
                 id,
             }),
             url: window.location.hash,
-        });
+        }, 10);
 
         dispatch(setQueryHistory(historyUpdated));
     };
@@ -637,7 +637,7 @@ export const QueryBar = (props) => {
                 id,
             },
             description: "From Query Submit",
-        });
+        }, 10);
 
         dispatch(setLinksHistory(storedUrl));
     };
