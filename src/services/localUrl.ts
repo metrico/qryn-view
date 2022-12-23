@@ -59,7 +59,6 @@ const localUrl = () => {
             parseInt(paramsData.stop) / 1000000,
             "yyyy-MM-dd HH:mm:ss"
         );
-            console.log(maxLength)
         try {
             const newItem = {
                 url,
