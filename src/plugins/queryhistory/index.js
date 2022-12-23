@@ -735,7 +735,6 @@ const QueryHistory = (props) => {
     const [linksStarredItems, setLinksStarredItems] = useState(false);
     const { start, stop } = useSelector((store) => store);
     const label = useSelector(({label}) => label);
-    console.log(label)
     function handleDelete(id) {
         const removed = historyService.remove(id);
         dispatch(setQueryHistory(removed));

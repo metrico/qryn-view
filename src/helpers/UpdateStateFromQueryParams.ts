@@ -118,7 +118,6 @@ export function UpdateStateFromQueryParams() {
                         (STRING_VALUES.includes(param) || READ_ONLY_STRING_VALUES.includes(param)) &&
                         startParams[param] !== ""
                     ) {
-                        console.log(param, startParams[param])
                         dispatch(STORE_ACTIONS[param](startParams[param]));
                     } else if (param === "theme") {
                         dispatch(STORE_ACTIONS[param](themeSet));
