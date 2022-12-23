@@ -462,7 +462,7 @@ export const QueryBar = (props) => {
             }
         });
         dispatch(panelAction(name, panel));
-        queryParams.set(name, encodeURIComponent(JSON.stringify(panel)));
+        queryParams.set(name, JSON.stringify(panel));
         setLocalStorage();
     };
 
