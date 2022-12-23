@@ -60,7 +60,7 @@ export const StyledMenu = styled((props) => (
         }}
         {...props}
     />
-))(({ theme, qryntheme }) => ({
+))(({ theme, qryntheme, size }) => ({
     "& .MuiPaper-root": {
         borderRadius: 6,
         marginTop: theme.spacing(1),
@@ -68,7 +68,7 @@ export const StyledMenu = styled((props) => (
         border: `1px solid ${qryntheme.buttonBorder}`,
         backgroundColor: qryntheme.buttonDefault,
         "& .MuiMenu-list": {
-            padding: "4px 0",
+            padding: size === 'small' ? '0px' : "4px 0",
         },
         "& .MuiMenuItem-root": {
             fontSize: 12,

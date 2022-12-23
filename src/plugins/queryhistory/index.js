@@ -21,6 +21,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import { Typography } from '@mui/material';
 
 import localUrl from "../../services/localUrl";
 
@@ -277,7 +278,7 @@ function HistoryLinkTools(props) {
             }}
         >
             <>
-                <Tooltip title={"Copy Link to Clipboard"}>
+                <Tooltip title={"Copy Link to Clipboard"} placement="right-end">
                     <span style={{ display: "flex" }}>
                         <HistoryButton
                             onClick={(e) =>
@@ -307,14 +308,36 @@ function HistoryLinkTools(props) {
                             open={open}
                             onClose={handleClose}
                             qryntheme={qrynTheme}
+                            size={'small'}
                         >
-                            <MenuItem key={`relativeTime`}>
+                            <MenuItem
+                                key={`relativeTime`}
+                                style={{ padding: "0 14px" }}
+                            >
                                 <FormGroup>
                                     <FormControlLabel
+                                        style={{
+                                            padding: "0",
+                                            marginRight: 0,
+                                            cursor: !label
+                                                ? "not-allowed"
+                                                : "default",
+                                        }}
                                         checked={isRelative}
                                         onChange={handleChange}
-                                        control={<Checkbox disabled={!label} />}
-                                        label="Copy link with relative timestamp"
+                                        control={
+                                            <Checkbox
+                                                style={{ paddingRight: "0px" }}
+                                                disabled={!label}
+                                            />
+                                        }
+                                        label={
+                                            <Typography
+                                                style={{ fontSize: "12px", color: qrynTheme.textColor }}
+                                            >
+                                                Relative time
+                                            </Typography>
+                                        }
                                     />
                                 </FormGroup>
                             </MenuItem>

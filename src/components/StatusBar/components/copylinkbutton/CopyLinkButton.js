@@ -5,14 +5,12 @@ import { setIsSubmit } from "../../../../actions/setIsSubmit";
 import { DatePickerButton, UrlCopyButton } from "../../styled";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
-import { Checkbox, FormControlLabel, FormGroup, MenuItem, Tooltip } from "@mui/material";
+import { Checkbox, FormControlLabel, FormGroup, MenuItem, Tooltip, Typography } from "@mui/material";
 import { storedUrl } from "./helpers";
 import { StyledMenu } from "../daterangepicker";
 import { useState } from "react";
 import { themes } from "../../../../theme/themes";
-import { Label } from "@mui/icons-material";
 import { useLocation } from "react-router-dom";
-import { cloneDeep } from "lodash";
 
 export default function CopyLinkButton() {
     const LINK_COPIED = "Link Copied To Clipboard";
@@ -131,19 +129,45 @@ export default function CopyLinkButton() {
                     <KeyboardArrowDownOutlinedIcon fontSize={"12px"} />
                 </DatePickerButton>
                 <StyledMenu
-                id='backward-menu'
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                qryntheme={qrynTheme}
-            >
-                <MenuItem key={`relativeTime`}>
-                    <FormGroup>
-                        <FormControlLabel style={{cursor: !label ? "not-allowed" : 'default'}} checked={isRelative} onChange={handleChange} control={<Checkbox 
-                            disabled={!label} />} label="Copy link with relative timestamp" />
-                    </FormGroup>
-                </MenuItem>
-            </StyledMenu>
+                            id="backward-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            qryntheme={qrynTheme}
+                            size={'small'}
+                        >
+                            <MenuItem
+                                key={`relativeTime`}
+                                style={{ padding: "0 14px" }}
+                            >
+                                <FormGroup>
+                                    <FormControlLabel
+                                        style={{
+                                            padding: "0",
+                                            marginRight: 0,
+                                            cursor: !label
+                                                ? "not-allowed"
+                                                : "default",
+                                        }}
+                                        checked={isRelative}
+                                        onChange={handleChange}
+                                        control={
+                                            <Checkbox
+                                                style={{ paddingRight: "0px" }}
+                                                disabled={!label}
+                                            />
+                                        }
+                                        label={
+                                            <Typography
+                                                style={{ fontSize: "12px", color: qrynTheme.textColor }}
+                                            >
+                                                Relative time
+                                            </Typography>
+                                        }
+                                    />
+                                </FormGroup>
+                            </MenuItem>
+                        </StyledMenu>
                 </>
             </Tooltip>
         </>
