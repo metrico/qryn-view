@@ -1,4 +1,4 @@
-import { ThemeProvider, Tooltip } from "@mui/material";
+import { Checkbox, FormControlLabel, FormGroup, MenuItem, ThemeProvider, Tooltip } from "@mui/material";
 import localService from "../../services/localService";
 import { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -20,6 +20,7 @@ import LaunchIcon from "@mui/icons-material/Launch";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 
 import localUrl from "../../services/localUrl";
 
@@ -52,6 +53,9 @@ import EmptyHistoryDisplay from "./components/EmptyHistoryDisplay/EmptyHistoryDi
 import CloseButton from "./components/CloseButton/CloseButton";
 import { themes } from "../../theme/themes";
 import { notificationTypes } from "../../qryn-ui/notifications/consts";
+import { DatePickerButton, UrlCopyButton } from "../../components/StatusBar/styled";
+import { StyledMenu } from "../../components/StatusBar/components/daterangepicker";
+import { useLocation } from "react-router-dom";
 function QueryHistoryTabs(props) {
     const {
         historyTabHeader,
@@ -114,6 +118,7 @@ function HistoryLinkParams({
     handleDelete,
     handleStarLinkItem,
     handleSubmit,
+    label
 }) {
     const [open, setOpen] = useState(false);
     const { fromDate, toDate, type, url, queryInput, limit } = item;
@@ -218,6 +223,7 @@ function HistoryLinkParams({
                 handleDelete={handleDelete}
                 handleStarLinkItem={handleStarLinkItem}
                 handleSubmit={handleSubmit}
+                label={label}
             />
         </LinkParams>
     );
@@ -242,7 +248,25 @@ function HistoryLinkTools(props) {
         handleDelete,
         handleStarLinkItem,
         handleSubmit,
+        label
     } = props;
+    const storeTheme = useSelector((store) => store.theme);
+    const qrynTheme = themes[storeTheme];
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const [isRelative, setIsRelative] = useState(false);
+    
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = (e, direction,  option) => {
+        setAnchorEl(null);
+    };
+
+    const handleChange = (event) => {
+      setIsRelative(event.target.checked);
+    };
+
     return (
         <div
             style={{
@@ -251,12 +275,52 @@ function HistoryLinkTools(props) {
                 justifyContent: "space-between",
             }}
         >
-            <Tooltip title={"Copy Link to Clipboard"}>
-                <HistoryButton onClick={(e) => copyLink(item?.data)}>
-                    <LinkIcon fontSize={"14px"} />
-                </HistoryButton>
-            </Tooltip>
-
+            <>
+                <Tooltip title={"Copy Link to Clipboard"}>
+                    <span style={{ display: "flex" }}>
+                        <HistoryButton
+                            onClick={(e) =>
+                                copyLink(item?.data, "link", isRelative)
+                            }
+                            isActive={true}
+                            style={{ flex: 1 }}
+                            className={"URL-COPY"}
+                            attachedSide={"r"}
+                        >
+                            <LinkIcon fontSize={"14px"} />
+                        </HistoryButton>
+                        <HistoryButton
+                            attachedSide={"l"}
+                            onClick={handleClick}
+                            size={"small"}
+                            className={"date-time-selector"}
+                            aria-controls={open ? "backward-menu" : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? "true" : undefined}
+                        >
+                            <KeyboardArrowDownOutlinedIcon fontSize={"12px"} />
+                        </HistoryButton>
+                        <StyledMenu
+                            id="backward-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            qryntheme={qrynTheme}
+                        >
+                            <MenuItem key={`relativeTime`}>
+                                <FormGroup>
+                                    <FormControlLabel
+                                        checked={isRelative}
+                                        onChange={handleChange}
+                                        control={<Checkbox disabled={!label} />}
+                                        label="Copy link with relative timestamp"
+                                    />
+                                </FormGroup>
+                            </MenuItem>
+                        </StyledMenu>
+                    </span>
+                </Tooltip>
+            </>
             <Tooltip title={"Delete Query"}>
                 <HistoryButton onClick={(e) => handleDelete(item)}>
                     <DeleteOutlineIcon fontSize={"14px"} />
@@ -399,6 +463,7 @@ function LinksHistoryTab({
     filtered,
     emptyMessage,
     isStarred,
+    label
 }) {
     const [listDisplay, setListDisplay] = useState([]);
 
@@ -435,6 +500,7 @@ function LinksHistoryTab({
                             handleDelete={handleDelete}
                             handleStarLinkItem={handleStarLinkItem}
                             handleSubmit={handleSubmit}
+                            label={label}
                         />
                     </HistoryRow>
                 ))
@@ -462,6 +528,7 @@ function StarredHistoryTab({
     emptyQueryMessage,
     emptyLinkMessage,
     copyQuery,
+    label
 }) {
     const [queryListDisplay, setQueryListDisplay] = useState([]);
     const [linksListDisplay, setLinksListDisplay] = useState([]);
@@ -526,6 +593,7 @@ function StarredHistoryTab({
                     filtered={filteredLinks}
                     emptyMessage={emptyLinkMessage}
                     isStarred={true}
+                    label={label}
                 />
             </TabPanel>
         </TabsUnstyled>
@@ -625,6 +693,8 @@ function SettingTab({ clearHistory, clearLinksHistory }) {
 }
 
 const QueryHistory = (props) => {
+    const LINK_COPIED = "Link Copied To Clipboard";
+
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
     const linkService = localUrl();
@@ -640,6 +710,7 @@ const QueryHistory = (props) => {
     const [starredFiltered, setStarredFiltered] = useState([]);
     const [linksStarredItems, setLinksStarredItems] = useState(false);
     const { start, stop } = useSelector((store) => store);
+    const label = useSelector(({label}) => label);
     function handleDelete(id) {
         const removed = historyService.remove(id);
         dispatch(setQueryHistory(removed));
@@ -799,26 +870,79 @@ const QueryHistory = (props) => {
         }
     }
 
-    function copyQuery(item) {
-        const query = JSON.parse(item)["queryInput"];
+    // function copyQuery(item) {
+    //     const query = JSON.parse(item)["queryInput"];
 
-        navigator.clipboard.writeText(query).then(
-            function () {
-                if (item.length > 0) {
-                    dispatch(
-                        createAlert({
-                            message: "Query copied succesfully",
-                            type: notificationTypes.success,
-                        })
-                    );
-                }
-            },
-            function (err) {
-                console.err("error on copy", err);
-            }
+    //     navigator.clipboard.writeText(query).then(
+    //         function () {
+    //             if (item.length > 0) {
+    //                 dispatch(
+    //                     createAlert({
+    //                         message: "Query copied succesfully",
+    //                         type: notificationTypes.success,
+    //                     })
+    //                 );
+    //             }
+    //         },
+    //         function (err) {
+    //             console.err("error on copy", err);
+    //         }
+    //     );
+    // }
+    function alertSuccess() {
+        dispatch(
+            createAlert({
+                type: "success",
+                message: LINK_COPIED,
+            })
         );
     }
 
+    function shareDefaultLink(copyText) {
+        navigator.clipboard.writeText(copyText).then(
+            function () {
+                    alertSuccess();
+            },
+            function (err) {
+                console.log("error on copy", err);
+            }
+        );
+    }
+    function shareDomLink(copyText) {
+        let textArea = document.createElement("textarea");
+        textArea.value = copyText;
+        textArea.style = {
+            position: "fixed",
+            left: "-999999px",
+            top: "-999999px",
+        };
+
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        return new Promise((res, rej) => {
+            alertSuccess();
+            document.execCommand("copy") ? res() : rej();
+            textArea.remove();
+        });
+    }
+    function copyQuery(item, type = 'query', isRelative = false) {
+        const url = new URL(item);
+        const { hash } = url;
+        const params = new URLSearchParams(hash.replace("#", ""))
+        params.set('label', label)
+        const locationWithLabel = new URL(window.location.href);
+        locationWithLabel.hash = `#${params.toString()}`;
+        const copyText = type === 'query' ? JSON.parse(item)["queryInput"] : isRelative && label ? locationWithLabel : item;
+        setTimeout(() => {
+            if (navigator?.clipboard && window.isSecureContext) {
+                shareDefaultLink(copyText);
+            } else {
+                shareDomLink(copyText);
+            }
+        }, 200);
+    }
     function handleClose() {
         dispatch(setHistoryOpen(false));
     }
@@ -939,6 +1063,7 @@ const QueryHistory = (props) => {
                                 setFilteredStarQuery={filterStarred}
                                 filteredQueries={starredFiltered}
                                 filteredLinks={linksStarredFiltered}
+                                label={label}
                                 emptyQueryMessage={
                                     "Click the 'Star' icon to save links and find them here to reuse again"
                                 }

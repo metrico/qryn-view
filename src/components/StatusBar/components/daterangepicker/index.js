@@ -47,7 +47,7 @@ import { DatePickerButton } from "../../styled";
 import { themes } from "../../../../theme/themes";
 import { styled } from "@mui/material/styles";
 
-const StyledMenu = styled((props) => (
+export const StyledMenu = styled((props) => (
     <Menu
         elevation={0}
         anchorOrigin={{
