@@ -258,13 +258,14 @@ function HistoryLinkTools(props) {
     
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
+        setIsRelative(isRelative && label);
     };
     const handleClose = (e, direction,  option) => {
         setAnchorEl(null);
     };
 
     const handleChange = (event) => {
-      setIsRelative(event.target.checked);
+        setIsRelative(event.target.checked);
     };
 
     return (
@@ -711,6 +712,7 @@ const QueryHistory = (props) => {
     const [linksStarredItems, setLinksStarredItems] = useState(false);
     const { start, stop } = useSelector((store) => store);
     const label = useSelector(({label}) => label);
+    console.log(label)
     function handleDelete(id) {
         const removed = historyService.remove(id);
         dispatch(setQueryHistory(removed));
@@ -1021,6 +1023,7 @@ const QueryHistory = (props) => {
                                 handleStarLinkItem={handleStarLinkItem}
                                 handleSubmit={handleLinkSubmit}
                                 filtered={linksFiltered}
+                                label={label}
                                 emptyMessage={
                                     "There is no links history. Please execute some queries and share links and you will see a history here."
                                 }
@@ -1063,7 +1066,6 @@ const QueryHistory = (props) => {
                                 setFilteredStarQuery={filterStarred}
                                 filteredQueries={starredFiltered}
                                 filteredLinks={linksStarredFiltered}
-                                label={label}
                                 emptyQueryMessage={
                                     "Click the 'Star' icon to save links and find them here to reuse again"
                                 }

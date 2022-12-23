@@ -101,13 +101,14 @@ export default function CopyLinkButton() {
     }
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
+        setIsRelative(isRelative && label);
     };
     const handleClose = (e, direction,  option) => {
         setAnchorEl(null);
     };
 
     const handleChange = (event) => {
-      setIsRelative(event.target.checked);
+        setIsRelative(event.target.checked);
     };
   
     return (
@@ -138,8 +139,7 @@ export default function CopyLinkButton() {
             >
                 <MenuItem key={`relativeTime`}>
                     <FormGroup>
-                        <FormControlLabel checked={isRelative} onChange={handleChange} control={<Checkbox 
-                            style={{cursor: label ? "not-allowed" : 'default'}}
+                        <FormControlLabel style={{cursor: !label ? "not-allowed" : 'default'}} checked={isRelative} onChange={handleChange} control={<Checkbox 
                             disabled={!label} />} label="Copy link with relative timestamp" />
                     </FormGroup>
                 </MenuItem>
