@@ -13,10 +13,10 @@ export function InfoDialog({
     total,
     onClose,
     open,
-}) {
-    const theme = useSelector((store) => store.theme);
+}: any) {
+    const theme = useSelector((store: any) => store.theme);
     return (
-        <ThemeProvider theme={themes[theme]}>
+        <ThemeProvider theme={(themes as any)[theme]}>
             <Dialog open={open} onClose={onClose} PaperProps={{
             classes: {
                 root: DialogStyles

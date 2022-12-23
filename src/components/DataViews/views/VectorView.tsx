@@ -4,7 +4,7 @@ import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
 import { ViewStyled } from "./styled";
 
-export const VectorView = (props) => {
+export const VectorView = (props: any) => {
     const {
         viewRef,
         panelSize,
@@ -22,7 +22,7 @@ export const VectorView = (props) => {
     } = props;
     const [size, setSize] = useState(0);
 
-    const parentRef = useRef(null);
+    const parentRef: any = useRef(null);
     useEffect(() => {
         setSize(parentRef.current.offsetHeight);
     }, [parentRef]);

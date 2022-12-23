@@ -6,7 +6,7 @@ import { InputSmall } from "../../../theme/styles/Input";
 const BtnSmall = btnSmall as any;
 export const HistoryIconStyled = styled(HistoryIcon)`
     height: 18px;
-    color: ${({ color }) => color};
+    color: ${({ color }: any) => color};
     width: 18px;
 `;
 export const HistoryButtonStyled = styled(BtnSmall)`
@@ -25,7 +25,7 @@ export const HistoryButtonStyled = styled(BtnSmall)`
 `;
 
 export const ShowLabelsBtn = styled(BtnSmall)`
-    background: ${({ theme }) => theme.buttonDefault};
+    background: ${({ theme }: any) => theme.buttonDefault};
     border: 1px solid ${({theme}: any) => theme.buttonBorder};
     text-overflow: ellipsis;
     transition: 0.25s all;
@@ -37,7 +37,7 @@ export const ShowLabelsBtn = styled(BtnSmall)`
         background: ${({ theme }: any) => theme.buttonHover};
     }
     @media screen and (max-width: 864px) {
-        display: ${({ isMobile }) => (isMobile ? "flex" : "none")};
+        display: ${({ isMobile }: any) => (isMobile ? "flex" : "none")};
 
         margin: 0;
     }
@@ -120,7 +120,7 @@ export const SettingCont: any = styled.div<{theme:any}>`
     flex: 1;
     flex-direction: column;
 
-    background: ${({ theme }) => theme.widgetContainer};
+    background: ${({ theme }: any) => theme.widgetContainer};
 `;
 
 export const SettingsInputContainer = styled.div`

@@ -72,7 +72,7 @@ export function getTimeSpan(data: any) {
     return { first, last, timeSpan };
 }
 
-export function formatDateRange(data: any) {
+export function formatDateRange(data: any): any {
     const { timeSpan, first, last } = getTimeSpan(data);
     const formatted =
         timeSpan > 1

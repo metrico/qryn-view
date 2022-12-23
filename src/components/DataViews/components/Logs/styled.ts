@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 export const LogRowStyled = styled.div`
-    color: ${({theme}) => theme.textColor};
+    color: ${({theme}: any) => theme.textColor};
     font-size: 12px;
     cursor: pointer;
     padding-left: 0.5rem;
@@ -12,14 +12,14 @@ export const LogRowStyled = styled.div`
     margin-top: 2px;
     font-family: monospace;
     &:hover {
-        background: ${({theme}) => theme.logBgColor};
+        background: ${({theme}: any) => theme.logBgColor};
     }
 
     p {
         display: inline-block;
         overflow-wrap: anywhere;
     }
-    border-left: 4px solid ${({rowColor}) => rowColor};
+    border-left: 4px solid ${({rowColor}: any) => rowColor};
     .log-ts-row {
         display: flex;
     }
@@ -27,13 +27,13 @@ export const LogRowStyled = styled.div`
 
 export const RowLogContent = styled.span`
     font-size: 12px;
-    color: ${({theme}) => theme.textPrimary};
+    color: ${({theme}: any) => theme.textPrimary};
     line-height: 1.5;
 `;
 
 export const RowTimestamp = styled.span`
     position: relative;
-    color: ${({theme}) => theme.textColor};
+    color: ${({theme}: any) => theme.textColor};
     margin-right: 0.25rem;
     white-space: nowrap;
     font-size: 12px;

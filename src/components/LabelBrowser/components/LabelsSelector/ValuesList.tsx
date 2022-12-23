@@ -11,7 +11,7 @@ import { setRightPanel } from "../../../../actions/setRightPanel";
 import { Loader, LoaderCont, SmallInput } from "./styled";
 import store from "../../../../store/store";
 
-export function panelAction(name, value) {
+export function panelAction(name: any, value: any) {
     if (name === "left") {
         return setLeftPanel(value);
     }
@@ -22,7 +22,7 @@ export const selectedStyle = {
     color: "#11abab",
 };
 
-export const LabelValue = (props) => {
+export const LabelValue = (props: any) => {
     let { value, data, onValueClick } = props;
 
     const valueSelected = useMemo(() => value.selected, [value.selected]);
@@ -42,7 +42,7 @@ export const LabelValue = (props) => {
     const onValueSelected = () => {
         let isSelected = false;
 
-        setIsValueSelected((prev) => {
+        setIsValueSelected((prev: any) => {
             isSelected = !prev;
             return !prev
         });
@@ -62,19 +62,19 @@ export const LabelValue = (props) => {
     );
 };
 
-export default function ValuesList(props) {
+export default function ValuesList(props: any) {
     const dispatch = useDispatch();
     const { name, data } = props;
 
     const { dataSourceId, dataSourceType } = data;
-    const { start, stop } = useSelector((store) => store);
-    const panelQuery = useSelector((store) => store[name]);
+    const { start, stop }: any = useSelector((store) => store);
+    const panelQuery = useSelector((store: any) => store[name]);
 
     const [filterState, setFilterState] = useState("");
 
     // get values hook
 
-    const { response, controller, loading } = useLabelValues(
+    const { response, controller, loading }: any = useLabelValues(
         dataSourceId,
         props.label,
         start,
@@ -83,7 +83,7 @@ export default function ValuesList(props) {
 
     // clone data helper
 
-    const JSONClone = (arr) => {
+    const JSONClone = (arr: any) => {
         const arrToJSON = JSON.stringify(arr);
         const actArr = JSON.parse(arrToJSON);
         return actArr;
@@ -94,8 +94,8 @@ export default function ValuesList(props) {
     const [valsSelection, setValsSelection] = useState([]);
 
     useEffect(() => {
-        const panel = panelQuery.find(panel => panel.id === data.id);
-        const label = panel?.labels?.find((label)=>label.name === props.label)
+        const panel = panelQuery.find((panel: any) => panel.id === data.id);
+        const label = panel?.labels?.find((label: any)=>label.name === props.label)
         const values = label?.values
         if (typeof values !== 'undefined') {
             setValsSelection(values)
@@ -107,7 +107,7 @@ export default function ValuesList(props) {
             return [];
         }
 
-        const actLabel = props.data.labels.find((f) => f.name === props.label);
+        const actLabel = props.data.labels.find((f: any) => f.name === props.label);
 
         if (!actLabel) {
             return [];
@@ -118,14 +118,14 @@ export default function ValuesList(props) {
 
     const resp = useMemo(() => {
         if (response?.data?.data?.length > 0) {
-            const panel = panelQuery.find(panel => panel.id === data.id);
-            const label = panel?.labels?.find((label)=>label.name === props.label)
+            const panel = panelQuery.find((panel: any) => panel.id === data.id);
+            const label = panel?.labels?.find((label: any) => label.name === props.label)
             const values = label?.values;
             const valuesMap = new Map();
-            values?.forEach((value)=>{
+            values?.forEach((value: any)=>{
                 valuesMap.set(value.name, value);
             })
-            return response?.data?.data?.map((val) => ({
+            return response?.data?.data?.map((val: any) => ({
                 label: props.label,
                 name: val,
                 selected: valuesMap.get(val)?.selected || false,
@@ -153,12 +153,12 @@ export default function ValuesList(props) {
         if (resp && valuesFromProps) {
             let clonedValues = JSONClone(resp);
 
-            let modValues = [];
+            let modValues: any = [];
 
-            clonedValues.forEach((value) => {
-                if (valuesFromProps.some((s) => s.name === value.name)) {
+            clonedValues.forEach((value: any) => {
+                if (valuesFromProps.some((s: any) => s.name === value.name)) {
                     const valueFound = valuesFromProps.find(
-                        (f) => f.name === value.name
+                        (f: any) => f.name === value.name
                     );
 
                     modValues.push({ ...valueFound });
@@ -171,7 +171,7 @@ export default function ValuesList(props) {
         }
     }, [valuesFromProps, resp, setValuesState]);
 
-    const onClear = (label) => {
+    const onClear = (label: any) => {
         const newQuery = decodeQuery(
             data.expr || "",
             label || props.label,
@@ -191,30 +191,30 @@ export default function ValuesList(props) {
         controller?.abort();
     };
 
-    const onValueFilter = (val, selection) => {
-        if (selection.some((s) => s.name === val.name)) {
-            const filtered = selection.filter((f) => f.name !== val.name);
+    const onValueFilter = (val: any, selection: any) => {
+        if (selection.some((s: any) => s.name === val.name)) {
+            const filtered = selection.filter((f: any) => f.name !== val.name);
             return filtered;
         }
 
-        if (!selection.some((s) => s.name === val.name)) {
+        if (!selection.some((s: any) => s.name === val.name)) {
             return [...selection, { ...val }];
         }
     };
 
-    const onValueClick = (val, isAll = false) => {
-        let initialValues = [];
+    const onValueClick = (val: any, isAll = false) => {
+        let initialValues: any = [];
         if(isAll) {
             setValsSelection([]);
         }
         if (valsSelection.length > 0) {
             initialValues = onValueFilter(val, valsSelection);
             if (val.type === "metrics") {
-                setValuesState((prev) => {
-                    const found = prev.some((s) => s.id === val.id);
+                setValuesState((prev: any) => {
+                    const found = prev.some((s: any) => s.id === val.id);
 
                     if (found) {
-                        return prev.map((m) => {
+                        return prev.map((m: any) => {
                             if (m.id === val.id) {
                                 return { ...m, selected: false };
                             }
@@ -245,7 +245,7 @@ export default function ValuesList(props) {
                 },
             ];
         } else {
-            if (propsLabels.some((s) => s.name === props.label)) {
+            if (propsLabels.some((s: any) => s.name === props.label)) {
                 for (let LCP of propsLabels) {
                     if (LCP.name === props.label) {
                         LCP = {
@@ -292,13 +292,13 @@ export default function ValuesList(props) {
             setFilterState((prev) => value);
 
             if (e !== "") {
-                setFilterValuesState((prev) =>
-                    valuesState.filter((f) =>
+                setFilterValuesState((prev: any) =>
+                    valuesState.filter((f: any) =>
                         f.name.toLowerCase().includes(value.toLowerCase())
                     )
                 );
             } else {
-                setFilterValuesState((prev) => valuesState);
+                setFilterValuesState((prev: any) => valuesState);
             }
         },
         [filterState]
@@ -322,7 +322,7 @@ export default function ValuesList(props) {
                     </LoaderCont>
                 )}
                 {valuesState?.length > 0 &&
-                    filterValuesState?.map((value, key) => (
+                    filterValuesState?.map((value: any, key: any) => (
                         <LabelValue
                             {...props}
                             key={key}
@@ -342,7 +342,7 @@ export function LabelHeader({
     onClear,
     filterState,
     onFilterChange,
-}) {
+}: any) {
 
 // Add here a replace for label with a custom name 
 

@@ -7,16 +7,16 @@ import { setLeftPanel } from "../../../../actions/setLeftPanel";
 import { setRightPanel } from "../../../../actions/setRightPanel";
 import store from "../../../../store/store";
 
-function panelAction(name, value) {
+function panelAction(name: any, value: any) {
     if (name === "left") {
         return setLeftPanel(value);
     }
     return setRightPanel(value);
 }
-export const EmptyLabels = (props) => {
+export const EmptyLabels = (props: any) => {
     
     const EmptyCont = styled.div`
-        color: ${({ theme }) => theme.textColor};
+        color: ${({ theme }: any) => theme.textColor};
         padding: 10px;
     `;
 
@@ -26,7 +26,7 @@ export const EmptyLabels = (props) => {
 // split labels for metrics and labels for logs
 
 
-function LabelItem(props) {
+function LabelItem(props: any) {
     const { selected, label, type } = props;
 
     const isSelected = useMemo(() => selected, [selected]);
@@ -50,20 +50,20 @@ function LabelItem(props) {
     );
 }
 
-export default function LabelsList(props) {
+export default function LabelsList(props: any) {
     const dispatch = useDispatch();
     const { labels, data, name } = props;
     const { dataSourceType } = data;
-    const panelQuery = useSelector((store) => store[name]);
+    const panelQuery = useSelector((store: any) => store[name]);
 
-    const onClick = (e) => {
+    const onClick = (e: any) => {
         if (e === "Select Metric") {
             props.onLabelSelected("__name__");
         }
         props.onLabelSelected(e);
     };
 
-    const onMetricOptionsClick = (e) => {
+    const onMetricOptionsClick = (e: any) => {
 
         console.log(e)
     }
@@ -73,7 +73,7 @@ export default function LabelsList(props) {
             return labels;
         }
 
-        return labels?.filter((f) => f.name !== "__name__");
+        return labels?.filter((f: any) => f.name !== "__name__");
     }, [dataSourceType, labels]);
 
     const useQuery = () => {
@@ -102,7 +102,7 @@ export default function LabelsList(props) {
 
             {lsList &&
                 <>
-                    {lsList.map((label, key) => (
+                    {lsList.map((label: any, key: any) => (
                         <LabelItem
                             key={key}
                             label={label.name}

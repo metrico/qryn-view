@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
  * @returns Formatted log text line
  */
 
-function LogRow({ text, dateFormated, isMobile, isSplit, isShowTs }) {
+function LogRow({ text, dateFormated, isMobile, isSplit, isShowTs }: any) {
     return (
         <div className="log-ts-row">
             {isShowTs && !isMobile && !isSplit && (
@@ -31,7 +31,7 @@ function LogRow({ text, dateFormated, isMobile, isSplit, isShowTs }) {
  * @returns Log Line With log line tags options
  */
 
-function Row(props) {
+function Row(props: any) {
     const {
         toggleItemActive,
         index,
@@ -44,9 +44,9 @@ function Row(props) {
 
     const { tags, timestamp, text, showLabels } = log;
 
-    const linkedFieldTags = useMemo(() => {
+    const linkedFieldTags: any = useMemo(() => {
         if (dataSourceData?.linkedFields?.length > 0) {
-            const mapped = dataSourceData.linkedFields.map((linked) => {
+            const mapped: any = dataSourceData.linkedFields.map((linked: any) => {
                 const { id, regex, name, internalLink } = linked;
                 const newGex = new RegExp(regex, "i");
                 const matched = text.match(newGex);
@@ -61,7 +61,7 @@ function Row(props) {
                 return {};
             });
 
-            let linked = { tags: {}, fields: [] };
+            let linked: any = { tags: {}, fields: [] };
             for (let tag of mapped) {
                 linked.tags = { ...linked.tags, ...tag.tagGroups };
                 linked.fields.push(tag);
@@ -113,15 +113,15 @@ function Row(props) {
  * @returns  iterable of rows (items)
  */
 
-function Logs(props) {
+function Logs(props: any) {
     const { items, toggleItemActive, actQuery, dataSourceId } = props;
 
     const itemData = createItemData(items, toggleItemActive);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
-    const isSplit = useSelector((store) => store.isSplit);
+    const isSplit = useSelector((store: any) => store.isSplit);
 
-    const dataSourceData = useSelector(({ dataSources }) =>
-        dataSources?.find((f) => f.id === dataSourceId)
+    const dataSourceData = useSelector(({ dataSources }: any) =>
+        dataSources?.find((f: any) => f.id === dataSourceId)
     );
 
     const dsData = useMemo(() => {
@@ -139,7 +139,7 @@ function Logs(props) {
 
     return (
         itemData &&
-        itemData.items.map((log, key) => (
+        itemData.items.map((log: any, key: any) => (
             <Row
                 dataSourceId={dataSourceId}
                 dataSourceData={dsData}
@@ -160,7 +160,7 @@ function Logs(props) {
  * returns: the container for the rows view
  */
 export class LogRows extends PureComponent {
-    constructor(props) {
+    constructor(props: any) {
         super(props);
         const { messages } = props || [];
 
@@ -169,8 +169,8 @@ export class LogRows extends PureComponent {
         };
     }
 
-    toggleItemActive = (index) =>
-        this.setState((prevState) => {
+    toggleItemActive = (index: any) =>
+        this.setState((prevState: any) => {
             const message = prevState.messages[index];
             const messages = prevState.messages.concat();
             messages[index] = {
@@ -181,15 +181,16 @@ export class LogRows extends PureComponent {
         });
 
     render() {
-        const { actualQuery } = this.props;
-        const { dataSourceId } = actualQuery;
+        const { actualQuery }: any = this.props;
+        const { dataSourceId }: any = actualQuery;
+        const { messages }: any = this.state;
         return (
             <RowsCont>
                 <Logs
                     {...this.props}
                     dataSourceId={dataSourceId}
-                    actQuery={this.props.actualQuery}
-                    items={this.state.messages}
+                    actQuery={actualQuery}
+                    items={messages}
                     toggleItemActive={this.toggleItemActive}
                 />
             </RowsCont>

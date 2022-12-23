@@ -4,17 +4,17 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { themes } from "../../../theme/themes";
 const PageContainer = styled.div`
-    background: ${({ theme }) => theme.viewBg};
+    background: ${({ theme }: any) => theme.viewBg};
     p {
-        color: ${({ theme }) => theme.textColor};
+        color: ${({ theme }: any) => theme.textColor};
     }
 `;
 
 export default function LabelLinks() {
-    const themeState = useSelector(({ theme }) => theme);
+    const themeState = useSelector(({ theme }: any) => theme);
 
     const theme = useMemo(() => {
-        return themes[themeState];
+        return (themes as any)[themeState];
     }, [themeState]);
     return (
         <ThemeProvider theme={theme}>

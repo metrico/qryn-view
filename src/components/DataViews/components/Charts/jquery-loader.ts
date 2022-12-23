@@ -1,4 +1,5 @@
 import $ from 'jquery';
 
-window.$ = $;
-window.jQuery = $;
+const w: any = window;
+w.$ = $;
+w.jQuery = $;

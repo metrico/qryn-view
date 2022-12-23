@@ -3,24 +3,24 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { getHeaders } from "./helpers";
 import * as moment from "moment";
-export function useMetricsList(id, value) {
+export function useMetricsList(id: any, value: any) {
 
     
-    const dataSources = useSelector((store) => store.dataSources);
-    const start = useSelector((store) => store.start);
-    const stop = useSelector((store) => store.stop);
+    const dataSources = useSelector((store: any) => store.dataSources);
+    const start = useSelector((store: any) => store.start);
+    const stop = useSelector((store: any) => store.stop);
 
     const timeParams = useMemo(() => {
         return {
-            start: moment(start).unix(),
-            end: moment(stop).unix(),
+            start: (moment as any)(start).unix(),
+            end: (moment as any)(stop).unix(),
         };
     }, [start, stop]);
 
     const [metricNames, setMetricNames] = useState([]);
 
     const dataSource = useMemo(() => {
-        return dataSources.find((f) => f.id === id);
+        return dataSources.find((f: any) => f.id === id);
     }, [dataSources, id]);
 
     // get the auth headers in here \
@@ -64,13 +64,13 @@ export function useMetricsList(id, value) {
     return useMemo(() => {
         if (metricNames?.length > 0) {
             const metricsCP = [...metricNames];
-            let metricSelect = {};
+            let metricSelect: any = {};
             metricsCP.forEach((metric) => {
                 const metricKeys = Object.keys(metric);
-                metricKeys.forEach((metricKey) => {
+                metricKeys.forEach((metricKey: any) => {
                     if (
                         !metricSelect[metricKey]?.some(
-                            (s) => s === metric[metricKey]
+                            (s: any) => s === metric[metricKey]
                         )
                     ) {
                         metricSelect[metricKey] = [

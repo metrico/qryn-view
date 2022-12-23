@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 //Flot
 import "./jquery-loader";
-import ReactFlot from "react-flot";
+// import ReactFlot from "react-flot";
 import "react-flot/flot/jquery.flot.time.min";
 import "react-flot/flot/jquery.flot.selection.min";
 import "react-flot/flot/jquery.flot.crosshair.min";
@@ -31,18 +31,18 @@ import UseTooltip from "./UseTooltip";
 import { useChartOptions, useMatrixData, useTheme } from "./hooks";
 import { FlotChart } from "./FlotChart";
 
-export default function QrynChart(props) {
+export default function QrynChart(props: any): any {
     const { matrixData, actualQuery } = props;
     const { tWidth } = props;
 
     const { expr, dataSourceType, queryType, limit, panel, id } = actualQuery;
 
     const chartRef = useRef(null);
-    const storeTheme = useSelector(({ theme }) => theme);
+    const storeTheme = useSelector(({ theme }: any) => theme);
 
     const theme = useTheme(storeTheme);
 
-    const $q = window.jQuery;
+    const $q = (window as any).jQuery;
     $q.fn.UseTooltip = UseTooltip;
 
     const matrix = useMatrixData(true, matrixData);
@@ -61,7 +61,7 @@ export default function QrynChart(props) {
 
     const [chartType, setChartType] = useState(getTypeFromLocal() || "line");
 
-    function plotChartData(data, type, element) {
+    function plotChartData(data: any, type: any, element: any) {
         const chartSeries = setChartTypeSeries(type);
         const { timeformat, min, max } = formatDateRange(data);
         return $q.plot(
@@ -74,7 +74,7 @@ export default function QrynChart(props) {
         );
     }
 
-    function onSetChartType(type) {
+    function onSetChartType(type: any) {
         const element = $q(chartRef.current);
         const data = isSpliced ? chartData : allData;
         const newData = getNewData(data, type);
@@ -91,18 +91,18 @@ export default function QrynChart(props) {
         }
     }
 
-    function setRanges(event, ranges) {
+    function setRanges(event: any, ranges: any) {
         const element = $q(chartRef.current);
         const data = isSpliced ? chartData : allData;
         event.preventDefault();
 
         let newData = [];
         const lSelected =
-            JSON.parse(localStorage.getItem("labelsSelected")) || [];
+            JSON.parse(localStorage.getItem("labelsSelected") || 'null') || [];
         if (lSelected?.length > 0) {
             const { lines, bars, points } = getSeriesFromChartType(chartType);
-            const ids = lSelected?.map((m) => m.id);
-            const dataMapped = data?.map((series) => {
+            const ids = lSelected?.map((m: any) => m.id);
+            const dataMapped = data?.map((series: any) => {
                 if (!ids.includes(series.id)) {
                     return {
                         ...series,
@@ -147,12 +147,12 @@ export default function QrynChart(props) {
                 const toTime = ranges.xaxis.to;
 
                 const fromTs = new Date(
-                    moment(parseInt(fromTime)).format(
+                    (moment as any)(parseInt(fromTime)).format(
                         "YYYY-MM-DDTHH:mm:ss.SSSZ"
                     )
                 );
                 const toTs = new Date(
-                    moment(parseInt(toTime)).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+                    (moment as any)(parseInt(toTime)).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
                 );
                 const fromLabel = format(fromTs, "yyyy/MM/dd HH:mm:ss");
                 const toLabel = format(toTs, "yyyy/MM/dd HH:mm:ss");
@@ -171,13 +171,13 @@ export default function QrynChart(props) {
         }
     }
 
-    function onLabelClick(e, v) {
+    function onLabelClick(e: any, v: any) {
         let newList = [];
         const lSelected =
-            JSON.parse(localStorage.getItem("labelsSelected")) || [];
+            JSON.parse(localStorage.getItem("labelsSelected") || 'null') || [];
 
-        if (lSelected.some(({ id }) => id === v.id)) {
-            const filtered = lSelected.filter((f) => f.id !== v.id);
+        if (lSelected.some(({ id }: any) => id === v.id)) {
+            const filtered = lSelected.filter((f: any) => f.id !== v.id);
             localStorage.setItem("labelsSelected", JSON.stringify(filtered));
             newList = filtered;
         } else {
@@ -186,9 +186,9 @@ export default function QrynChart(props) {
         }
 
         if (newList.length > 0) {
-            const ids = newList?.map((m) => m.id);
+            const ids = newList?.map((m: any) => m.id);
             const { lines, bars, points } = getSeriesFromChartType(chartType);
-            let dataSelected = e?.map((series) => {
+            let dataSelected = e?.map((series: any) => {
                 if (!ids.includes(series.id)) {
                     return {
                         ...series,
@@ -253,7 +253,7 @@ export default function QrynChart(props) {
 
     useEffect(() => {
         setElement(chartRef.current);
-        setLabels(chartData?.map(({ label }) => label));
+        setLabels(chartData?.map(({ label }: any) => label) as any);
         $q(chartRef.current).bind("plotselected", setRanges);
         //setChartData(getDataParsed(isSpliced));
         setChartData(matrix);
@@ -269,7 +269,7 @@ export default function QrynChart(props) {
     function drawChartFromData() {
         const data = isSpliced ? chartData : allData;
         const element = $q(chartRef.current);
-        let newData = getNewData(data);
+        let newData = getNewData(data, null);
         try {
             const { timeformat, min, max } = formatDateRange(newData);
             let plot = $q.plot(
@@ -289,16 +289,16 @@ export default function QrynChart(props) {
         }
     }
 
-    const handleNoLimitData = (e) => {
+    const handleNoLimitData = (e: any) => {
         setIsSpliced(false);
     };
 
-    const handleLimitData = (e) => {
+    const handleLimitData = (e: any) => {
         setIsSpliced(true);
     };
 
     if (matrixData) {
-        const flotChartProps = {
+        const flotChartProps: any = {
             height: props.vHeight,
             theme,
             matrixData,
@@ -312,13 +312,13 @@ export default function QrynChart(props) {
             labels,
         };
         const pointSet = new Set();
-        matrixData.forEach((dataPoint)=>{
-            dataPoint?.values?.forEach(dataPointValue => pointSet.add(dataPointValue?.[0]))
+        matrixData.forEach((dataPoint: any)=>{
+            dataPoint?.values?.forEach((dataPointValue: any) => pointSet.add(dataPointValue?.[0]))
         })
         if (pointSet.size === 1 && chartType !== 'bar') {
             onSetChartType('bar')
         }
-        return <FlotChart {...flotChartProps} />;
+        return (<FlotChart {...flotChartProps} />);
     }
 
     return null;

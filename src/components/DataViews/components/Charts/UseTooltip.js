@@ -20,7 +20,7 @@ export default function UseTooltip(plot) {
             let plotData = plot.getData();
             const [plotTime, _] = item.datapoint;
             const selectedPlots = JSON.parse(
-                localStorage.getItem("labelsSelected")
+                localStorage.getItem("labelsSelected") || 'null'
             );
             const itemValue = isFloat(parseFloat(item.datapoint[1]))
                 ? parseFloat(item.datapoint[1]).toFixed(3)

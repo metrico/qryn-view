@@ -4,7 +4,7 @@ import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
 import { TabsUnstyled } from "@mui/base";
 import { TabsList, Tab, TabPanel, ViewStyled } from "./styled";
-export const MatrixView = (props) => {
+export const MatrixView = (props: any) => {
     const {
         viewRef,
         panelSize,

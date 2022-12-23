@@ -15,7 +15,7 @@ export function FlotChart({
     chartRef,
     onLabelClick,
     labels,
-}: any) {
+}: any): any {
     return (
         <ThemeProvider theme={theme}>
             <ChartCont>

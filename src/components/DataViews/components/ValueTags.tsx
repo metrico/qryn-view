@@ -31,7 +31,7 @@ const TracesButton = styled.div`
     align-items: center;
     white-space: nowrap;
 `;
-function alreadyExists(exp, op, k, v) {
+function alreadyExists(exp: string, op: string, k: string, v: string) {
     return exp.includes(`${k}${op}"${v}"`);
 }
 
@@ -45,7 +45,7 @@ function alreadyExists(exp, op, k, v) {
  * @returns
  */
 
-export function ValueTagsCont(props) {
+export function ValueTagsCont(props: any) {
     const { showLabels, tags, actQuery } = props;
 
 
@@ -61,7 +61,7 @@ export function ValueTagsCont(props) {
     return null;
 }
 
-export async function addLabel(e, key, value, isExcluded = false, queryObj) {
+export async function addLabel(e: any, key: any, value: any, isExcluded = false, queryObj: any) {
     e.preventDefault();
 
     e.stopPropagation();
@@ -82,9 +82,9 @@ export async function addLabel(e, key, value, isExcluded = false, queryObj) {
 }
 
 export class Panel {
-    set(keys, values) {
-        keys.forEach((key, i) => {
-            this[key] = values[i];
+    set(keys: any, values: any) {
+        keys.forEach((key: any, i: any) => {
+            (this as any)[key] = values[i];
         });
     }
     get() {
@@ -92,16 +92,16 @@ export class Panel {
     }
 }
 
-export default function ValueTags(props) {
+export default function ValueTags(props: any) {
     const { tags, actQuery, dataSourceData, linkedFieldTags } = props;
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
-    const dataSources = useSelector((store) => store.dataSources);
-    const theme = useSelector((store) => store.theme);
-    const isEmbed = useSelector((store) => store.isEmbed);
+    const dataSources = useSelector((store: any) => store.dataSources);
+    const theme = useSelector((store: any) => store.theme);
+    const isEmbed = useSelector((store: any) => store.isEmbed);
     const dispatch = useDispatch();
-    const rightPanel = useSelector((store) => store.right);
+    const rightPanel = useSelector((store: any) => store.right);
 
-    const openTraces = (e, key, value, linkID, currentUrl, linkType) => {
+    const openTraces = (e: any, key: any, value: any, linkID: any, currentUrl: any, linkType: any) => {
         e.stopPropagation();
         if (props?.actQuery?.panel === "left" && !isTabletOrMobile ) {
             dispatch(setSplitView(true));
@@ -153,10 +153,10 @@ export default function ValueTags(props) {
         }
     };
 
-    const linkButton = (key, value) => {
+    const linkButton = (key: any, value: any) => {
         const { linkedFields } = dataSourceData;
         const fieldsFromParent = linkedFieldTags?.fields
-            .map((m) => {
+            .map((m: any) => {
                 if (m?.tagGroups) {
                     const tagEntries = Object.entries(m?.tagGroups);
                     const entriesMapped = tagEntries?.map(([key, val]) => ({
@@ -171,18 +171,18 @@ export default function ValueTags(props) {
             })
             ?.flat();
 
-        const fieldNames = fieldsFromParent?.map((m) => m.name);
+        const fieldNames = fieldsFromParent?.map((m: any) => m.name);
         if (linkedFields?.length > 0) {
             const { dataSourceId, linkType, internalLink } = linkedFields[0];
             const currentDataSource = dataSources?.find(
-                (f) => f.id === dataSourceId
+                (f: any) => f.id === dataSourceId
             );
             const currentURL = currentDataSource?.url;
 
             if (fieldNames.includes(key) && value && internalLink === true) {
                 return (
                     <TracesButton
-                        onClick={(e) => {
+                        onClick={(e: any) => {
                             openTraces(
                                 e,
                                 key,
@@ -208,7 +208,7 @@ export default function ValueTags(props) {
         return null;
     };
     return (
-        <ThemeProvider theme={themes[theme]}>
+        <ThemeProvider theme={(themes as any)[theme]}>
             {Object.entries(tags).map(([key, value], k) => (
                 <ValueTagsStyled key={key}>
                     <div className={"value-tags"} key={k}>
@@ -233,7 +233,7 @@ export default function ValueTags(props) {
                                 <span
                                     aria-label="Filter out value"
                                     title="Filter out value"
-                                    onClick={(e) =>
+                                    onClick={(e: any) =>
                                         addLabel(e, key, value, true, actQuery)
                                     }
                                     className={"icon"}

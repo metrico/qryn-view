@@ -5,7 +5,7 @@ import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
 import { TabsList, Tab, TabPanel, ViewStyled } from "./styled";
 
-export default function LogsView(props) {
+export default function LogsView(props: any) {
     const {
         viewRef,
         panelSize,

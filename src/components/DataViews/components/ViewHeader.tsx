@@ -15,16 +15,16 @@ import CropSquareIcon from "@mui/icons-material/CropSquare";
 import { InfoDialog } from "./InfoDialog";
 
 
-export function ViewHeader(props) {
+export function ViewHeader(props: any) {
     const { fixedSize } = props || { fixedSize: false };
     const dispatch = useDispatch();
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
-    const [open, setOpen] = useState(false);
-    const theme = useSelector((store) => store.theme);
-    const isEmbed = useSelector((store)=> store.isEmbed)
+    const isTabletOrMobile: any = useMediaQuery({ query: "(max-width: 914px)" });
+    const [open, setOpen]: any = useState(false);
+    const theme = useSelector((store: any) => store.theme);
+    const isEmbed = useSelector((store: any)=> store.isEmbed)
     const { actualQuery, dataView, name, type, total } = props;
-    const DataViewList = useSelector((store) => store[`${name}DataView`]);
-    const action = (name) => {
+    const DataViewList = useSelector((store: any) => store[`${name}DataView`]);
+    const action = (name: any) => {
         if (name === "left") {
             return setLeftDataView;
         } else {
@@ -50,7 +50,7 @@ export function ViewHeader(props) {
     }, [type, actualQuery?.tableView]);
 
     function onClose() {
-        const filtered = DataViewList.filter((f) => f.id !== dataView.id) || [];
+        const filtered = DataViewList.filter((f: any) => f.id !== dataView.id) || [];
         dispatch(action(name)([]));
         dispatch(action(name)(filtered));
         props.onClose();
@@ -83,7 +83,7 @@ export function ViewHeader(props) {
             } else {
                 return (
                     <>
-                        {dataView.labels.map((name, index) => (
+                        {dataView.labels.map((name: any, index: any) => (
                             <LabelChip key={index}>
                                 <ViewLabel name={name} {...props.theme} />
                             </LabelChip>
@@ -97,7 +97,7 @@ export function ViewHeader(props) {
     if(actualQuery) {
         const { idRef, expr, limit, queryType } = actualQuery;
         return (
-            <ThemeProvider theme={themes[theme]}>
+            <ThemeProvider theme={(themes as any)[theme]}>
                 <ViewHeaderStyled>
                     <div className="view-header-info">
                         <span>
@@ -171,7 +171,7 @@ export function ViewHeader(props) {
                             idRef={idRef}
                             open={open}
                             total={total}
-                            onClose={(e) => setOpen(false)}
+                            onClose={(e: any) => setOpen(false)}
                         />
                     )}
                 </ViewHeaderStyled>

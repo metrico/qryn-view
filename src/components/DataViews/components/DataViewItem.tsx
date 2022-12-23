@@ -5,15 +5,15 @@ import { EmptyView } from "../views/EmptyView";
 import LogsView from "../views/LogsView";
 import { MatrixView } from "../views/MatrixView";
 import { VectorView } from "../views/VectorView";
-import { TraceView } from "./Traces/TraceView.tsx";
-export function DataViewItem(props) {
+import { TraceView } from "./Traces/TraceView";
+export function DataViewItem(props: any) {
     // add a header for table view / json view
     const { dataView, name, vHeight } = props;
     const { type, total } = dataView;
 
-    const viewRef = useRef(null);
-    const isSplit = useSelector((store) => store.isSplit);
-    const panel = useSelector((store) => store[name]);
+    const viewRef: any = useRef(null);
+    const isSplit: any = useSelector((store: any) => store.isSplit);
+    const panel = useSelector((store: any) => store[name]);
     // panelSize: min , regular, max
     const [panelSize, setPanelSize] = useState("max");
     // get actual query from panel
@@ -78,7 +78,7 @@ export function DataViewItem(props) {
     }
     if (actualQuery && type === "matrix" && streamData.length > 0) {
         // return matrix type component
-        const { limit } = actualQuery;
+        const { limit }: any = actualQuery;
         const matrixProps = {
             viewRef,
             panelSize,
@@ -123,7 +123,7 @@ export function DataViewItem(props) {
         
         
         // return vector type (table) component
-       const { limit } = actualQuery;
+       const { limit }: any = actualQuery;
         const vectorProps = {
             viewRef,
             panelSize,

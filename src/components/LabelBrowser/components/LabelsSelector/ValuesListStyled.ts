@@ -83,7 +83,7 @@ const ValuesListStyled = styled.div`
             max-width: 40ch;
             transition: .5s all;
             &:hover {
-                background: ${({ theme }) => theme.buttonHover};
+                background: ${({ theme }: any) => theme.buttonHover};
             }
             &.metric {
                 color: ${({theme}: any) => theme.buttonText};

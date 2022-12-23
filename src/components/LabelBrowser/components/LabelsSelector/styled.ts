@@ -16,10 +16,10 @@ export const Loader = styled(CircularProgress)`
 `;
 
 export const SmallInput = styled.input`
-    background: ${({ theme }) => theme.inputBg};
-    color: ${({ theme }) => theme.textColor};
+    background: ${({ theme }: any) => theme.inputBg};
+    color: ${({ theme }: any) => theme.textColor};
     font-size: 10px;
-    border: 1px solid ${({ theme }) => theme.buttonBorder};
+    border: 1px solid ${({ theme }: any) => theme.buttonBorder};
     border-radius: 3px;
     outline: none;
 `;

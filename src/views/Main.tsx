@@ -9,7 +9,7 @@ import { UpdateStateFromQueryParams } from "../helpers/UpdateStateFromQueryParam
 import StatusBar from "../components/StatusBar";
 import QueryHistory from "../plugins/queryhistory";
 import { useMediaQuery } from "react-responsive";
-import MainTabs from "./MainTabs.js";
+import MainTabs from "./MainTabs";
 import { setTheme } from "../actions";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";

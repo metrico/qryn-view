@@ -148,111 +148,114 @@ export const QueryBar = (props: any) => {
 
     // on init
     useEffect(() => {
-        setQueryInput(actLocalQuery.expr);
-        setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
+        (() => {
 
-        const dataSource = dataSources?.find((f: any) => f.id === dataSourceId);
+            setQueryInput(actLocalQuery.expr);
+            setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
 
-        let currentDataSource: any = {};
+            const dataSource = dataSources?.find((f: any) => f.id === dataSourceId);
 
-        if (
-            actLocalDs &&
-            actLocalDs?.url !== initialDefault &&
-            actLocalDs?.url !== ""
-        ) {
-            currentDataSource = { ...actLocalDs };
+            let currentDataSource: any = {};
 
-            const panelCP = [...panelData];
+            if (
+                actLocalDs &&
+                actLocalDs?.url !== initialDefault &&
+                actLocalDs?.url !== ""
+            ) {
+                currentDataSource = { ...actLocalDs };
 
-            if (currentDataSource?.type !== "flux") {
-                decodeQuery(
-                    queryInput,
-                    currentDataSource?.url,
-                    props.data.labels,
-                    currentDataSource.id
-                );
-            }
-            const labelsDecoded = decodeExpr(data.expr);
+                const panelCP = [...panelData];
 
-            panelCP.forEach((query) => {
-                if (query.id === id) {
-                    query.labels = [...labelsDecoded];
-                    query.dataSourceId = currentDataSource.id;
-                    query.dataSourceType = currentDataSource.type;
-                    query.dataSourceURL = currentDataSource.url;
+                if (currentDataSource?.type !== "flux") {
+                    decodeQuery(
+                        queryInput,
+                        currentDataSource?.url,
+                        props.data.labels,
+                        currentDataSource.id
+                    );
                 }
-            });
+                const labelsDecoded = decodeExpr(data.expr);
 
-            dispatch(panelAction(name, panelCP));
-
-            const dsCopy = [...dataSources];
-            dsCopy.forEach((ds) => {
-                if (ds.id === dataSourceId) {
-                    ds = currentDataSource;
-                }
-            });
-
-            dispatch(setDataSources(dsCopy));
-        } else if (dataSource && dataSource.url !== "") {
-            currentDataSource = { ...dataSource };
-        }
-
-        // search for auth params  and send inside
-        const labels = sendLabels(
-            dataSourceId,
-            dataSourceType,
-            currentDataSource?.url, // which one should be?
-            start,
-            stop
-        );
-        // if is view only mode (embedded) do an auto request on init
-        if (isEmbed)
-            dispatch(
-                getData(
-                    dataSourceType,
-                    queryInput,
-                    queryType,
-                    limit,
-                    name,
-                    id,
-                    direction,
-                    dataSourceId,
-                    currentDataSource?.url
-                )
-            );
-
-        if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
-            return labels.then((data) => {
-                if (data) {
-                    const prevLabels = [...props.data.labels];
-                    const prevMap = prevLabels.map((m) => m.name) || [];
-                    const newLabels: any = [...data];
-                    setLabels(newLabels);
-                    if (newLabels.length > 0) {
-                        if (prevMap.length > 0) {
-                            newLabels.forEach((l: any) => {
-                                const labelFound = prevMap.includes(l.name);
-                                if (labelFound) {
-                                    const pl = prevLabels.find(
-                                        (f: any) => f.name === l.name
-                                    );
-                                    l = { ...pl };
-                                }
-                            });
-                        }
-                        decodeQuery(
-                            expr,
-                            currentDataSource.url,
-                            newLabels,
-                            currentDataSource.id
-                        );
+                panelCP.forEach((query) => {
+                    if (query.id === id) {
+                        query.labels = [...labelsDecoded];
+                        query.dataSourceId = currentDataSource.id;
+                        query.dataSourceType = currentDataSource.type;
+                        query.dataSourceURL = currentDataSource.url;
                     }
-                }
-            });
-        } else {
-            // if there is nothing to request, show empty view
-            dispatch(setIsEmptyView(true));
-        }
+                });
+
+                dispatch(panelAction(name, panelCP));
+
+                const dsCopy = [...dataSources];
+                dsCopy.forEach((ds) => {
+                    if (ds.id === dataSourceId) {
+                        ds = currentDataSource;
+                    }
+                });
+
+                dispatch(setDataSources(dsCopy));
+            } else if (dataSource && dataSource.url !== "") {
+                currentDataSource = { ...dataSource };
+            }
+
+            // search for auth params  and send inside
+            const labels = sendLabels(
+                dataSourceId,
+                dataSourceType,
+                currentDataSource?.url, // which one should be?
+                start,
+                stop
+            );
+            // if is view only mode (embedded) do an auto request on init
+            if (isEmbed)
+                dispatch(
+                    getData(
+                        dataSourceType,
+                        queryInput,
+                        queryType,
+                        limit,
+                        name,
+                        id,
+                        direction,
+                        dataSourceId,
+                        currentDataSource?.url
+                    )
+                );
+
+            if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
+                return labels.then((data) => {
+                    if (data) {
+                        const prevLabels = [...props.data.labels];
+                        const prevMap = prevLabels.map((m) => m.name) || [];
+                        const newLabels: any = [...data];
+                        setLabels(newLabels);
+                        if (newLabels.length > 0) {
+                            if (prevMap.length > 0) {
+                                newLabels.forEach((l: any) => {
+                                    const labelFound = prevMap.includes(l.name);
+                                    if (labelFound) {
+                                        const pl = prevLabels.find(
+                                            (f: any) => f.name === l.name
+                                        );
+                                        l = { ...pl };
+                                    }
+                                });
+                            }
+                            decodeQuery(
+                                expr,
+                                currentDataSource.url,
+                                newLabels,
+                                currentDataSource.id
+                            );
+                        }
+                    }
+                });
+            } else {
+                // if there is nothing to request, show empty view
+                dispatch(setIsEmptyView(true));
+            }
+        })();
     }, []);
 
     // force single view from small width
@@ -263,116 +266,120 @@ export const QueryBar = (props: any) => {
         }
     }, [isTabletOrMobile]);
 
-  
+
 
 
     // changes on changin dataSource Id
 
     useEffect(() => {
-        setQueryInput(actLocalQuery.expr);
-        setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
+        (() => {
 
-        const dataSource = dataSources?.find((f: any) => f.id === dataSourceId);
 
-        let currentDataSource: any = {};
+            setQueryInput(actLocalQuery.expr);
+            setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
 
-        if (
-            actLocalDs &&
-            actLocalDs?.url !== initialDefault &&
-            actLocalDs?.url !== ""
-        ) {
-            currentDataSource = { ...actLocalDs };
+            const dataSource = dataSources?.find((f: any) => f.id === dataSourceId);
 
-            const panelCP = [...panelData];
+            let currentDataSource: any = {};
 
-            if (currentDataSource?.type !== "flux") {
-                decodeQuery(
-                    queryInput,
-                    currentDataSource?.url,
-                    props.data.labels,
-                    currentDataSource.id
-                );
-            }
-            const labelsDecoded = decodeExpr(data.expr);
+            if (
+                actLocalDs &&
+                actLocalDs?.url !== initialDefault &&
+                actLocalDs?.url !== ""
+            ) {
+                currentDataSource = { ...actLocalDs };
 
-            panelCP.forEach((query) => {
-                if (query.id === id) {
-                    query.labels = [...labelsDecoded];
-                    query.dataSourceId = currentDataSource.id;
-                    query.dataSourceType = currentDataSource.type;
-                    query.dataSourceURL = currentDataSource.url;
+                const panelCP = [...panelData];
+
+                if (currentDataSource?.type !== "flux") {
+                    decodeQuery(
+                        queryInput,
+                        currentDataSource?.url,
+                        props.data.labels,
+                        currentDataSource.id
+                    );
                 }
-            });
+                const labelsDecoded = decodeExpr(data.expr);
 
-            dispatch(panelAction(name, panelCP));
-
-            const dsCopy = [...dataSources];
-            dsCopy.forEach((ds) => {
-                if (ds.id === dataSourceId) {
-                    ds = currentDataSource;
-                }
-            });
-
-            dispatch(setDataSources(dsCopy));
-        } else if (dataSource && dataSource.url !== "") {
-            currentDataSource = { ...dataSource };
-        }
-
-        // search for auth params  and send inside
-        const labels = sendLabels(
-            dataSourceId,
-            dataSourceType,
-            currentDataSource?.url, // which one should be?
-            start,
-            stop
-        );
-        dispatch(
-            getData(
-                dataSourceType,
-                actLocalQuery?.expr,
-                queryType,
-                limit,
-                name,
-                id,
-                direction,
-                dataSourceId,
-                currentDataSource?.url
-            )
-        );
-        // if is view only mode (embedded) do an auto request on init
-
-        if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
-            return labels.then((data) => {
-                if (data) {
-                    const prevLabels = [...props.data.labels];
-                    const prevMap = prevLabels.map((m) => m.name) || [];
-                    const newLabels: any = [...data];
-                    setLabels(newLabels);
-                    if (newLabels.length > 0) {
-                        if (prevMap.length > 0) {
-                            newLabels.forEach((l: any) => {
-                                const labelFound = prevMap.includes(l.name);
-                                if (labelFound) {
-                                    const pl = prevLabels.find(
-                                        (f) => f.name === l.name
-                                    );
-                                    l = { ...pl };
-                                }
-                            });
-                        }
-                        decodeQuery(
-                            expr,
-                            currentDataSource.url,
-                            newLabels,
-                            currentDataSource.id
-                        );
+                panelCP.forEach((query) => {
+                    if (query.id === id) {
+                        query.labels = [...labelsDecoded];
+                        query.dataSourceId = currentDataSource.id;
+                        query.dataSourceType = currentDataSource.type;
+                        query.dataSourceURL = currentDataSource.url;
                     }
-                }
-            });
-        } else {
-            // if there is nothing to request, show empty view
-            dispatch(setIsEmptyView(true));
-        }
+                });
+
+                dispatch(panelAction(name, panelCP));
+
+                const dsCopy = [...dataSources];
+                dsCopy.forEach((ds) => {
+                    if (ds.id === dataSourceId) {
+                        ds = currentDataSource;
+                    }
+                });
+
+                dispatch(setDataSources(dsCopy));
+            } else if (dataSource && dataSource.url !== "") {
+                currentDataSource = { ...dataSource };
+            }
+
+            // search for auth params  and send inside
+            const labels = sendLabels(
+                dataSourceId,
+                dataSourceType,
+                currentDataSource?.url, // which one should be?
+                start,
+                stop
+            );
+            dispatch(
+                getData(
+                    dataSourceType,
+                    actLocalQuery?.expr,
+                    queryType,
+                    limit,
+                    name,
+                    id,
+                    direction,
+                    dataSourceId,
+                    currentDataSource?.url
+                )
+            );
+            // if is view only mode (embedded) do an auto request on init
+
+            if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
+                return labels.then((data) => {
+                    if (data) {
+                        const prevLabels = [...props.data.labels];
+                        const prevMap = prevLabels.map((m) => m.name) || [];
+                        const newLabels: any = [...data];
+                        setLabels(newLabels);
+                        if (newLabels.length > 0) {
+                            if (prevMap.length > 0) {
+                                newLabels.forEach((l: any) => {
+                                    const labelFound = prevMap.includes(l.name);
+                                    if (labelFound) {
+                                        const pl = prevLabels.find(
+                                            (f) => f.name === l.name
+                                        );
+                                        l = { ...pl };
+                                    }
+                                });
+                            }
+                            decodeQuery(
+                                expr,
+                                currentDataSource.url,
+                                newLabels,
+                                currentDataSource.id
+                            );
+                        }
+                    }
+                });
+            } else {
+                // if there is nothing to request, show empty view
+                dispatch(setIsEmptyView(true));
+            }
+        })();
     }, [dataSourceId, id]);
 
 
@@ -765,7 +772,7 @@ export const QueryBar = (props: any) => {
                             onSubmit={onSubmit}
                             onSubmitRate={onSubmitRate}
                             labels={labels}
-                            loading={loading||false}
+                            loading={loading || false}
                             hasStats={hasStats}
                             showStatsOpen={showStatsOpen}
                             handleStatsOpen={handleStatsOpen}
@@ -793,7 +800,7 @@ export const QueryBar = (props: any) => {
                         onSubmitRate={onSubmitRate}
                         isTabletOrMobile={isTabletOrMobile}
                         labels={labels}
-                        loading={loading||false}
+                        loading={loading || false}
                     />,
                     <MetricsSearch
                         {...props}
@@ -830,7 +837,7 @@ export const QueryBar = (props: any) => {
                     <ShowLogsButton
                         disabled={!queryValid}
                         onClick={onSubmit}
-                        loading={loading||false}
+                        loading={loading || false}
                         isMobile={false}
                         alterText={"Search Trace"}
                     />
@@ -913,7 +920,7 @@ export const QueryBarCont = (props: any) => {
                         disabled={!queryValid}
                         onClick={onSubmit}
                         isMobile={false}
-                        loading={loading||false}
+                        loading={loading || false}
                     />
                 </>
             )}
@@ -925,7 +932,7 @@ export const QueryBarCont = (props: any) => {
                             disabled={!queryValid}
                             onClick={onSubmit}
                             isMobile={false}
-                            loading={loading||false}
+                            loading={loading || false}
                         />
                     </>
                 )}
@@ -1026,7 +1033,7 @@ export const MobileTopQueryMenuCont = (props: any) => {
                 disabled={!queryValid}
                 onClick={onSubmit}
                 isMobile={true}
-                loading={loading||false}
+                loading={loading || false}
             />
 
             {dataSourceType === "flux" && (
