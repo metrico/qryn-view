@@ -416,7 +416,8 @@ function QueryHistoryTab({
                         <span
                             style={{
                                 color: "#666",
-                                marginRight: "10px",
+                                paddingRight: "10px",
+                                width: '10px'
                             }}
                         >
                             {listDisplay.length - index}
@@ -512,6 +513,7 @@ function LinksHistoryTab({
                             style={{
                                 paddingRight: "10px",
                                 color: "#666",
+                                width: '10px'
                             }}
                         >
                             {listDisplay?.length - index}
