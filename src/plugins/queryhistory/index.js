@@ -1073,6 +1073,7 @@ const QueryHistory = (props) => {
                                     "Click the 'Star' icon to save queries and find them here to reuse again"
                                 }
                                 copyQuery={copyQuery}
+                                label={label}
                             />
                         }
                         settingTabHeader={
