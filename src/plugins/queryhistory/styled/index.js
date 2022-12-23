@@ -10,6 +10,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import LinkIcon from "@mui/icons-material/Link";
 import { Drawer } from "@mui/material";
 import { TabsUnstyled } from "@mui/base";
+import { DatePickerButton } from "../../../components/StatusBar/styled";
 export const StyledDrawer = styled((props) => (
     <Drawer
         anchor={"bottom"}
@@ -159,10 +160,10 @@ export const QueryHistoryContainer = styled.div`
     }
 `;
 
-export const HistoryButton = styled.button`
+export const HistoryButton = styled(DatePickerButton)`
     padding: 3px 6px;
     background: ${({ theme }) => theme.buttonDefault};
-    border:1px solid ${(props)=>props.theme.buttonBorder};
+    border: 1px solid ${(props)=>props.theme.buttonBorder};
     border-radius: 3px;
     border: none;
     color: ${({ theme }) => theme.textColor};

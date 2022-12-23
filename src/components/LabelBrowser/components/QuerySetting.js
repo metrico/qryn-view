@@ -117,14 +117,12 @@ export const QuerySetting = (props) => {
     }
 
     const traceOptions = () => (
-        <div className="options-input">
-            <QueryTypeSwitch
-                label={"Trace Type"}
-                options={TRACE_OPTIONS}
-                onChange={onTraceQueryChange}
-                defaultActive={queryTraceSwitch}
-            />
-        </div>
+        <QueryTypeSwitch
+            label={"Trace Type"}
+            options={TRACE_OPTIONS}
+            onChange={onTraceQueryChange}
+            defaultActive={queryTraceSwitch}
+        />
     );
 
     function handleTsSwitch() {
@@ -144,12 +142,9 @@ export const QuerySetting = (props) => {
             onClose={handleClose}
             PaperProps={{
                 classes: {
-                    root: {
-                        DialogStyles,
-                    },
-                },
-            }}
-        >
+                    root: DialogStyles
+                }
+              }}>
             <SettingCont>
                 <SettingHeader>
                     <h3>Query Options</h3>
@@ -193,7 +188,7 @@ export const QuerySetting = (props) => {
                     )}
                     {responseType !== "vector" && (
                         <div className="options-input">
-                            <InputGroup>
+                            {/* <InputGroup>
                                 <SettingLabel>Table View</SettingLabel>
                                 <Switch
                                     checked={isTableViewSet}
@@ -201,7 +196,7 @@ export const QuerySetting = (props) => {
                                     onChange={handleTableViewSwitch}
                                     inputProps={{ "aria-label": "controlled" }}
                                 />
-                            </InputGroup>
+                            </InputGroup> */}
                             <InputGroup>
                                 <SettingLabel>Timestamp</SettingLabel>
                                 <Switch

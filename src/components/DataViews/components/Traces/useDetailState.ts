@@ -31,6 +31,20 @@ export function useDetailState(frame: any) {
         [detailStates]
     );
 
+    const detailEventsItemToggle = useCallback(
+        function detailEventsItemToggle(spanID:string, event: any) {
+            const old = detailStates.get(spanID);
+            if(!old){
+                return;
+            }
+            const detailState = old.toggleEventItem(event);
+            const newDetailStates = new Map(detailStates);
+            newDetailStates.set(spanID, detailState);
+            return setDetailStates(newDetailStates);
+        },
+        [detailStates]
+    )
+
     const detailLogItemToggle = useCallback(
         function detailLogItemToggle(spanID: string, log: TraceLog) {
             const old = detailStates.get(spanID);
@@ -73,6 +87,16 @@ export function useDetailState(frame: any) {
                     detailStates,
                     setDetailStates
                 )(spanID),
+            [detailStates]
+        ),
+        detailEventsItemToggle,
+        detailEventsToggle: useCallback(
+            (spanID: string) => 
+            makeDetailSubsectionToggle(
+                'events',
+                detailStates,
+                setDetailStates
+            )(spanID),
             [detailStates]
         ),
         detailWarningsToggle: useCallback(
@@ -129,6 +153,7 @@ function makeDetailSubsectionToggle(
         | "tags"
         | "process"
         | "logs"
+        | "events"
         | "warnings"
         | "references"
         | "stackTraces",
@@ -145,6 +170,8 @@ function makeDetailSubsectionToggle(
             detailState = old.toggleTags();
         } else if (subSection === "process") {
             detailState = old.toggleProcess();
+        }  else if (subSection === "events") {
+            detailState = old.toggleEvents();
         } else if (subSection === "warnings") {
             detailState = old.toggleWarnings();
         } else if (subSection === "references") {

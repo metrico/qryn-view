@@ -13,6 +13,9 @@ import {
     min,
     format,
     isValid,
+    add, 
+    sub,
+    intervalToDuration
 } from "date-fns";
 
 import { PickerNav } from "./components/Nav";
@@ -33,18 +36,62 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import useOutsideRef from "./hooks/useOutsideRef";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import { Tooltip } from "@mui/material";
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { Tooltip, IconButton } from "@mui/material";
 import TimeLabel from "./components/TimeLabel";
 import { DatePickerButton } from "../../styled";
 import { themes } from "../../../../theme/themes";
+import { styled } from "@mui/material/styles";
 
-
+export const StyledMenu = styled((props) => (
+    <Menu
+        elevation={0}
+        anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+        }}
+        transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+        }}
+        {...props}
+    />
+))(({ theme, qryntheme, size }) => ({
+    "& .MuiPaper-root": {
+        borderRadius: 6,
+        marginTop: theme.spacing(1),
+        color: qryntheme.textColor,
+        border: `1px solid ${qryntheme.buttonBorder}`,
+        backgroundColor: qryntheme.buttonDefault,
+        "& .MuiMenu-list": {
+            padding: size === 'small' ? '0px' : "4px 0",
+        },
+        "& .MuiMenuItem-root": {
+            fontSize: 12,
+            "& .MuiSvgIcon-root": {
+                fontSize: 12,
+                color: qryntheme.textColor,
+                marginRight: theme.spacing(1.5),
+            },
+            "&:active": {
+                backgroundColor: qryntheme.buttonDefault,
+            },
+        },
+    },
+}));
+const timeAdjustmentOptions = ['1m', '5m', '10m', '30m', '1h', '3h', '6h', '12h', '24h']
 export function DateRangePickerMain(props) {
     const today = Date.now();
     const { isOpen, minDate, maxDate } = props;
 
     const startTs = useSelector((store) => store.start);
     const stopTs = useSelector((store) => store.stop);
+    const storeTheme = useSelector((store) => store.theme);
+    const qrynTheme = themes[storeTheme];
     const initialDateRange = () => {
         try {
             const ls = JSON.parse(localStorage.getItem(DATE_TIME_RANGE));
@@ -206,17 +253,105 @@ export function DateRangePickerMain(props) {
          
         }
     };
-
+    const adjustTimeRange = (direction, adjustment = 'range') => {
+        const directionFunc = direction === 'backward' ? sub : add;
+        let duration = {
+            years: 0,
+            months: 0,
+            days: 0,
+            hours: 0,
+            minutes: 0,
+            seconds: 0
+        };
+        if (adjustment === 'range') {
+            duration = intervalToDuration({start:dateStart, end: dateEnd})
+        } else {
+            
+            if (adjustment.includes('d')) {
+                duration.days = parseInt(adjustment);
+            } else if(adjustment.includes('h')) {
+                duration.hours = parseInt(adjustment);
+            } else if(adjustment.includes('m')) {
+                duration.minutes = parseInt(adjustment);
+            } else if(adjustment.includes('s')) {
+                duration.seconds = parseInt(adjustment);
+            }
+        }
+        const adjustedStart = directionFunc(dateStart, duration);
+        const adjustedStop = directionFunc(dateEnd, duration);
+        const dateRange = {
+            dateStart: adjustedStart,
+            dateEnd: adjustedStop,
+            label: ''
+        }
+        setDateRange(dateRange);
+        saveDateRange(dateRange);
+        onChange(dateRange);
+    }
     const theme = useSelector(store => store.theme);
+
+    // Handle menus
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const [anchorElRight, setAnchorElRight] = useState(null);
+    const openRight = Boolean(anchorElRight);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClickRight = (event) => {
+        setAnchorElRight(event.currentTarget)
+    }
+    const handleClose = (e, direction,  option) => {
+        setAnchorEl(null);
+        setAnchorElRight(null);
+        if (direction && option) {
+            adjustTimeRange(direction, option)
+        }
+    };
     return (
-        <div>
+        <div style={{ display: "flex" }}>
+            <DatePickerButton
+                onClick={() => {
+                    adjustTimeRange("backward");
+                }}
+                attachedSide={'r'}
+                emptySide={'l'}
+                className={"date-time-selector"}
+            >
+                <KeyboardArrowLeft />
+            </DatePickerButton>
+            <DatePickerButton
+                onClick={handleClick}
+                attachedSide={'both'}
+                size={'small'}
+                className={"date-time-selector"}
+                aria-controls={open ? 'backward-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+            >
+                <KeyboardArrowDownOutlinedIcon />
+            </DatePickerButton>
+            <StyledMenu
+                id='backward-menu'
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                qryntheme={qrynTheme}
+            >
+                {timeAdjustmentOptions.map(option => (
+                    <MenuItem key={`${option} l`}
+                    onClick={(e) => handleClose(e, 'backward', option)}>
+                        {option}
+                    </MenuItem>
+                ))}
+            </StyledMenu>
             <Tooltip
                 title={timeLabel ? <TimeLabel dateRange={dateRange} /> : ""}
             >
                 <DatePickerButton
-                    
                     onClick={openButtonHandler}
                     className={"date-time-selector"}
+                    attachedSide={"both"}
                 >
                     <AccessTimeOutlinedIcon />
 
@@ -241,6 +376,41 @@ export function DateRangePickerMain(props) {
                     </span>
                 </DatePickerButton>
             </Tooltip>
+            <DatePickerButton
+                onClick={handleClickRight}
+                attachedSide={'both'}
+                size={'small'}
+                className={"date-time-selector"}
+                aria-controls={openRight ? 'forward-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={openRight ? 'true' : undefined}
+            >
+                <KeyboardArrowDownOutlinedIcon />
+            </DatePickerButton>
+            
+            <StyledMenu
+                id='forward-menu'
+                anchorEl={anchorElRight}
+                open={openRight}
+                onClose={handleClose}
+                qryntheme={qrynTheme}
+            >
+                {timeAdjustmentOptions.map(option => (
+                    <MenuItem key={`${option} r`}
+                    onClick={(e) => handleClose(e, 'forward', option)}>
+                        {option}
+                    </MenuItem>
+                ))}
+            </StyledMenu>
+            <DatePickerButton
+                onClick={() => {
+                    adjustTimeRange("forward");
+                }}
+                attachedSide={'l'}
+                className={"date-time-selector"}
+            >
+                <KeyboardArrowRight />
+            </DatePickerButton>
             {rangeOpen ? (
                 <div tabIndex={"0"} ref={ref}>
                     <ThemeProvider theme={themes[theme]}>

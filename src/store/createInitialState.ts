@@ -195,9 +195,9 @@ export default function initialState() {
                 lastIdx: 1,
                 panel: "right",
                 queryType: "range",
-                dataSourceType: "logs",
-                dataSourceId:'cHI2SqPzH_kxYRXj',
-                dataSourceURL:getDatasourceURL('cHI2SqPzH_kxYRXj'),
+                dataSourceType: "traces",
+                dataSourceId:"32D16h5uYBqUUzhD",
+                dataSourceURL:getDatasourceURL("32D16h5uYBqUUzhD"),
                 limit: 100,
                 step: 100,
                 tableView: false,
@@ -230,6 +230,7 @@ export default function initialState() {
         theme: urlState.theme || "light",
         isEmptyView: false,
         isSplit: false,
+        showDataSourceSetting: true,
     };
     
     const debug = state.debugMode;

@@ -49,6 +49,7 @@ export const PageContainer = styled.div`
         margin-bottom: 10px;
         border: 1px solid ${({ theme }) => theme.buttonBorder};
         border-radius: 3px;
+        color: ${({theme})=> theme.textColor};
     }
 
     .ds-item {
@@ -58,6 +59,7 @@ export const PageContainer = styled.div`
         border-radius: 3px 3px 0px 0px;
         padding-bottom: 14px;
         display: flex;
+        color: ${({theme})=> theme.textColor};
         .logo {
             padding: 10px;
             padding-right: 20px;

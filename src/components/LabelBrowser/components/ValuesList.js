@@ -56,7 +56,7 @@ export const ValuesList = (props) => {
         const actQuery = panelQuery.find((f) => f.id === id);
         isOpen = actQuery["browserOpen"];
         setOpen(isOpen);
-    }, [panelQuery, id]);
+    }, [panelQuery,id]);
 
     return (
         open && (

@@ -4,7 +4,7 @@
  * @returns timestamp Sec
  */
 
- function fromNanoSec(
+function fromNanoSec(
     ts: number // :timestamp
 ) {
     return ts / 1000000;
@@ -16,11 +16,11 @@
  * @returns timestamp Ns
  */
 
- function getTimeParsed(time: Date) {
+function getTimeParsed(time: Date) {
     return time.getTime() + "000000";
 }
 
-function getTimeSec(time:Date) {
+function getTimeSec(time: Date) {
     return Math.round(time.getTime() / 1000)
 }
 

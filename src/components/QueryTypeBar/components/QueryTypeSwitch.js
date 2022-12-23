@@ -7,7 +7,7 @@ const Label = styled.div`
     align-items: center;
     justify-content: center;
     font-size: 12px;
-    padding: 0px 8px;
+    padding: 0px 10px;
 `;
 const QuerySwitchCont = styled.div`
     display: flex;

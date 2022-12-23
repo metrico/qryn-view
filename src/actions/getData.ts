@@ -13,6 +13,9 @@ import { getTimeSpan } from "./helpers/getTimeSpan";
 import { boscoSend } from "./helpers/boscoRequest";
 import { setLeftPanel } from "./setLeftPanel";
 import { setRightPanel } from "./setRightPanel";
+import { DataViews } from "../store/store.model";
+import { setLeftDataView } from "./setLeftDataView";
+import { setRightDataView } from "./setRightDataView";
 
 /**
  *
@@ -36,11 +39,16 @@ function panelDispatch(panel: string, dispatch: Function, data: any) {
         return dispatch(setRightPanel(data));
     }
 }
-
+export function dataViewDispatch(panel: string, dataViews: DataViews, dispatch: Function) {
+    if (panel === "left") {
+        return dispatch(setLeftDataView(dataViews));
+    }
+    return dispatch(setRightDataView(dataViews));
+}
 function changeLoadingState(panel: any[], id: string, state: boolean) {
     return [...panel].map((m) => {
         if (m.id === id) {
-            return { ...m, loading: state };
+            return { ...m, loading: state || false };
         }
         return m;
     });
@@ -150,10 +158,17 @@ export default function getData(
     );
 
     const endpoint = getEndpoint(type, queryType, params);
-
+    const setLoading = (state: boolean, dispatch: Function) => {
+        const dataViews: DataViews = store.getState()?.[`${panel}DataView`];
+        const dataView = dataViews?.find((view) => view.id === id);
+        if (dataView) {
+            dataView.loading = state;
+        }
+        dataViewDispatch(panel, dataViews, dispatch);
+    }
     return async function (dispatch: Function) {
         await resetParams(dispatch, panel);
-        dispatch(setLoading(true));
+        setLoading(true, dispatch);
         loadingState(dispatch, true);
         let cancelToken: any;
 
@@ -187,13 +202,13 @@ export default function getData(
                     .catch((error) => {
                         resetNoData(dispatch);
                         dispatch(setIsEmptyView(true));
-                        dispatch(setLoading(false));
+                        setLoading(false, dispatch)
                         if (debugMode) {
                             console.log("Error loading flux data", error);
                         }
                     })
                     .finally(() => {
-                        dispatch(setLoading(false));
+                        setLoading(false, dispatch)
                         loadingState(dispatch, false);
                     });
             } else if (options?.method === "GET") {
@@ -224,7 +239,7 @@ export default function getData(
                     .catch((error) => {
                         resetNoData(dispatch);
                         dispatch(setIsEmptyView(true));
-                        dispatch(setLoading(false));
+                        setLoading(false, dispatch)
                         loadingState(dispatch, false);
                         if (debugMode) {
                             boscoSend(
@@ -240,7 +255,7 @@ export default function getData(
                     })
                     .finally(() => {
                         loadingState(dispatch, false);
-                        dispatch(setLoading(false));
+                        setLoading(false, dispatch)
                     });
             }
         } catch (e) {

@@ -35,6 +35,7 @@ export async function processResponse(
         ) {
             const resultQuery: TracesResult = {
                 result: response.data.traces || [],
+                raw:response.data,
                 time,
                 debugMode,
                 dispatch,
@@ -50,6 +51,7 @@ export async function processResponse(
         if (response?.data?.resourceSpans?.length > 0) {
             const resultQuery: TracesResult = {
                 result: response?.data || [],
+                raw: response?.data,
                 time,
                 debugMode,
                 dispatch,
@@ -67,6 +69,7 @@ export async function processResponse(
             if (data?.data?.length > 0) {
                 const resultQuery: QueryResult = {
                     result: data.data || [],
+                    raw:data?.data,
                     time,
                     debugMode,
                     queryType,
@@ -86,6 +89,7 @@ export async function processResponse(
     if (response?.data?.streams?.length === 0) {
         const resultQuery: QueryResult = {
             result: [],
+            raw: '[]',
             time,
             debugMode,
             queryType,
@@ -134,6 +138,7 @@ export async function processResponse(
 
         const resultQuery: QueryResult = {
             result,
+            raw:response?.data?.data,
             time,
             debugMode,
             queryType,

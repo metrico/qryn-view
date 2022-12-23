@@ -12,6 +12,10 @@ import { useMediaQuery } from "react-responsive";
 import MainTabs from "./MainTabs.js";
 import { setTheme } from "../actions";
 import { useMemo, useState, useEffect, useRef } from "react";
+import { useCookies } from "react-cookie";
+import { useLocation } from "react-router-dom";
+import setDataSources from "./DataSources/store/setDataSources";
+import { setShowDataSourceSetting } from "./Main/setShowDataSourceSetting";
 
 export const MainContainer = styled.div`
     position: absolute;
@@ -75,16 +79,20 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
     const [maxWidth, setMaxWidth] = useState(0);
     const refTotal = useRef(null);
     useEffect(() => {
-        const widthTotal = refTotal.current.clientWidth
+        const widthTotal = refTotal.current.clientWidth;
         setHeight(refTotal.current.clientHeight);
         setWidthTotal(refTotal.current.clientWidth);
         setWidthLeft(widthTotal / (isSplit ? 2 : 1));
         if (isSplit) {
             setWidthRight(widthTotal / 2);
         }
-        const realMinWidth = !isSplit ? widthTotal : widthTotal / 4 > 370 ? widthTotal / 4 : 370;
+        const realMinWidth = !isSplit
+            ? widthTotal
+            : widthTotal / 4 > 370
+            ? widthTotal / 4
+            : 370;
         setMinWidth(realMinWidth);
-        const realMaxWidth = !isSplit ? widthTotal : widthTotal - realMinWidth
+        const realMaxWidth = !isSplit ? widthTotal : widthTotal - realMinWidth;
         setMaxWidth(realMaxWidth);
     }, [
         setWidthLeft,
@@ -97,7 +105,7 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
         isSplit,
     ]);
     useEffect(() => {
-        const widthTotal = refTotal.current.clientWidth
+        const widthTotal = refTotal.current.clientWidth;
         setWidthLeftPercent(widthLeft / widthTotal);
         if (isSplit) {
             setWidthRightercent(widthRight / widthTotal);
@@ -105,7 +113,7 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
     }, [widthLeft, widthRight]);
     useEffect(() => {
         const onWindowResize = () => {
-            const widthTotal = refTotal.current.clientWidth
+            const widthTotal = refTotal.current.clientWidth;
             setWidthTotal(widthTotal);
             setWidthLeft(widthTotal * widthLeftPercent);
             if (isSplit) {
@@ -156,7 +164,7 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
                         handleSize={[10, 10]}
                         onResize={onSplitResize}
                     > */}
-                        <Panel name="left" />
+                    <Panel name="left" />
                     {/* </ResizableBox> */}
                     {isSplit && (
                         // <ResizableBox
@@ -174,7 +182,7 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
                         //     handleSize={[10, 10]}
                         //     onResize={onSplitResize}
                         // >
-                            <Panel name="right" />
+                        <Panel name="right" />
                         // </ResizableBox>
                     )}
                 </div>
@@ -185,10 +193,186 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }) {
     );
 }
 
+// useCookiesAvailable:
+
+export function useCookiesAvailable(urlParams) {
+    let cookieAuth = "";
+    let cookiesAvailable = false;
+
+    const hasCookie = useMemo(() => {
+        return urlParams.has("cookie") || false;
+    }, [urlParams]);
+
+    const cookieParam = useMemo(() => {
+        if (hasCookie) {
+            return urlParams.get("cookie");
+        }
+        return "";
+    }, [urlParams, hasCookie]);
+
+    const [cookie, _] = useCookies([cookieParam]);
+
+    if (cookie[cookieParam] && cookie[cookieParam] !== "") {
+        cookieAuth = cookie[cookieParam];
+        cookiesAvailable = true;
+    }
+    return { cookieAuth, cookiesAvailable };
+}
+
+// useUrlAvailable:
+
+export function useUrlAvailable(urlParams) {
+    const hasOneForAll = useMemo(() => {
+        return urlParams.has("url");
+    }, [urlParams]);
+
+    const oneForAllParam = useMemo(() => {
+        if (hasOneForAll) {
+            return urlParams.get("url");
+        }
+        return "";
+    }, [urlParams, hasOneForAll]);
+
+    return { url: oneForAllParam, urlAvailable: hasOneForAll };
+}
+
+// updateDataSources:
+
+export function updateDataSourcesWithUrl(
+    dispatch,
+    url,
+    cookies,
+    haveUrl,
+    haveCookies,
+    dataSources
+) {
+    let apiUrl = "";
+    let basicAuth = false;
+    let urlApi = false;
+    let cookieAuth = {};
+
+    if (haveUrl) {
+        urlApi = true;
+    }
+
+    if (haveCookies) {
+        let [auth, dsData] = cookies.split("@");
+        let cookieDsData = "";
+        if (dsData && dsData !== "") {
+            try {
+                cookieDsData = atob(dsData);
+                cookieDsData = JSON.parse(cookieDsData);
+                if (typeof cookieDsData === "object" && cookieDsData["url"]) {
+                    apiUrl = cookieDsData["url"];
+                    haveUrl = true;
+                    urlApi = true;
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        let [user, pass] = auth.split(":");
+
+        if (user !== "" && pass !== "") {
+            cookieAuth = { user, password: pass };
+            basicAuth = true;
+        }
+    }
+
+    if (!haveUrl && basicAuth) {
+        apiUrl = window.location.protocol + "//" + window.location.host;
+        urlApi = true;
+    }
+
+    if (apiUrl === "") {
+        urlApi = true;
+        apiUrl = url;
+    }
+
+    const dsCP = [...dataSources];
+    const prevDs = JSON.parse(JSON.stringify(dsCP));
+
+    const newDs = prevDs?.map((m) => ({
+        ...m,
+        url: urlApi ? apiUrl : m.url,
+        auth: {
+            ...m.auth,
+            basicAuth: { ...m.auth.basicAuth, value: basicAuth },
+            fields: {
+                ...m.auth.fields,
+                basicAuth: basicAuth
+                    ? [...m.auth.fields.basicAuth]?.map((ba) => {
+                          if (ba.name === "user") {
+                              return { ...ba, value: cookieAuth.user };
+                          }
+                          if (ba.name === "password") {
+                              return { ...ba, value: cookieAuth.password };
+                          }
+                          return ba;
+                      })
+                    : [...m.auth.fields.basicAuth],
+            },
+        },
+    }));
+
+    if (cookies && cookieAuth) {
+        dispatch(setShowDataSourceSetting(false));
+    }
+
+    localStorage.setItem("dataSources", JSON.stringify(newDs));
+    dispatch(setDataSources(newDs));
+}
+
 export default function Main() {
     UpdateStateFromQueryParams();
+
+    const dataSources = useSelector((store) => store.dataSources);
+    // get hash from current location
+    const { hash } = useLocation();
+    // get url params as object
+    const paramsMemo = useMemo(() => {
+        return new URLSearchParams(hash.replace("#", ""));
+    }, [hash]);
+    //
+
+    const { cookiesAvailable, cookieAuth } = useCookiesAvailable(paramsMemo);
+    const { urlAvailable, url } = useUrlAvailable(paramsMemo);
+    useEffect(() => {
+        const onlyCookie = cookiesAvailable && !urlAvailable;
+        const onlyUrl = !cookiesAvailable && urlAvailable;
+        const urlAndCookie =
+            cookiesAvailable &&
+            cookieAuth !== "" &&
+            urlAvailable &&
+            urlAvailable !== "";
+
+        if (onlyCookie || onlyUrl || urlAndCookie) {
+            // update datasources with url and basic auth
+            updateDataSourcesWithUrl(
+                dispatch,
+                url,
+                cookieAuth,
+                urlAvailable,
+                cookiesAvailable,
+                dataSources
+            );
+        }
+    }, []);
+
+    useEffect(() => {
+        const urlSetting = {
+            url: window.location.hash,
+            cookiesAvailable,
+        };
+
+        localStorage.setItem(
+            btoa("cookie-location"),
+            btoa(JSON.stringify(urlSetting))
+        );
+    }, [cookiesAvailable]);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
-    const isAutoDark = useMediaQuery({query: "(prefers-color-scheme: dark)"});
+    const isAutoDark = useMediaQuery({ query: "(prefers-color-scheme: dark)" });
     const dispatch = useDispatch();
     const isSplit = useSelector((store) => store.isSplit);
     const isEmbed = useSelector((store) => store.isEmbed);
@@ -196,12 +380,17 @@ export default function Main() {
     const autoTheme = useSelector((store) => store.autoTheme);
     const settingsDialogOpen = useSelector((store) => store.settingsDialogOpen);
     const themeMemo = useMemo(() => themes[theme], [theme]);
-    useEffect(()=>{
+
+    useEffect(() => {
         if (autoTheme) {
-            const theme = isAutoDark ? 'dark' : 'light';  
+            const theme = isAutoDark ? "dark" : "light";
             dispatch(setTheme(theme));
+            localStorage.setItem(
+                "theme",
+                JSON.stringify({ theme: theme, auto: autoTheme })
+            );
         }
-    },[isAutoDark, autoTheme, dispatch])
+    }, [isAutoDark, autoTheme, dispatch]);
     if (!isTabletOrMobile) {
         // desktop view
         return (

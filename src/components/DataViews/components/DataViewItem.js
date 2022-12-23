@@ -9,8 +9,7 @@ import { TraceView } from "./Traces/TraceView.tsx";
 export function DataViewItem(props) {
     // add a header for table view / json view
     const { dataView, name, vHeight } = props;
-    const { type, total } = dataView;
-
+    const { type, total, loading } = dataView;
     const viewRef = useRef(null);
     const isSplit = useSelector((store) => store.isSplit);
     const panel = useSelector((store) => store[name]);
@@ -153,6 +152,7 @@ export function DataViewItem(props) {
             setMaxHeight,
             actualQuery,
             total,
+            loading,
             ...props,
         };
 

@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import isPropValid from '@emotion/is-prop-valid'
 
 import HistoryIcon from "@mui/icons-material/History";
 import { BtnSmall as btnSmall } from "../../../../theme/styles/Button";
@@ -52,7 +53,9 @@ export const QueryBarContainer = styled.div`
     flex-wrap: wrap;
     border-radius: 3px;
 `;
-export const ShowLogsBtn = styled(BtnSmall)`
+export const ShowLogsBtn = styled(BtnSmall, {
+    shouldForwardProp: prop => isPropValid(prop) && prop !== 'loading'
+})`
     background: ${(props) => props.loading ? '#44bcd8' : props.theme.primaryDark};
     border: 1px solid ${(props) => props.theme.buttonBorder};
     color: ${(props) => props.theme.buttonText};
@@ -131,6 +134,7 @@ export const SettingsInputContainer = styled.div`
     .options-input {
         margin: 10px;
         display: flex;
+        justify-content: space-between;
     }
 `;
 

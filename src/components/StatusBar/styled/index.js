@@ -114,9 +114,34 @@ export const ApiSelectorInput = styled(InputSmall)`
         color: orange;
     }
 `;
-export const UrlCopyButton = styled(BtnSmall)`
+
+
+export const DatePickerButton = styled(BtnSmall)`
     background: ${(props) => props.theme.buttonDefault};
     border: 1px solid ${(props) => props.theme.buttonBorder};
+    color: ${(props) => props.theme.textColor};
+    border-top-left-radius: ${(props) => props.attachedSide === 'l' || props.attachedSide === 'both' ? '0 !important' : ''};
+    border-top-right-radius: ${(props) => props.attachedSide === 'r' || props.attachedSide === 'both' ? '0 !important' : ''};
+    border-bottom-left-radius: ${(props) => props.attachedSide === 'l' || props.attachedSide === 'both' ? '0 !important' : ''};
+    border-bottom-right-radius: ${(props) => props.attachedSide === 'r' || props.attachedSide === 'both' ? '0 !important' : ''};
+    border-right: ${(props) => props.attachedSide === 'r' || props.attachedSide === 'both' ? 'unset' : ''};
+    height: 26px;
+    margin-left: ${(props) => props.emptySide === 'l' || props.emptySide === 'both' ? '10px' : props.attachedSide === 'l' || props.attachedSide === 'both' ? "0px !important" : ''};
+    margin-right: ${(props) => props.emptySide === 'r' || props.emptySide === 'both' ? '10px' : props.attachedSide === 'r' || props.attachedSide === 'both' ? "0px !important" : ''};
+    padding: ${(props) => props.size === 'small' ? '3px 5px' : ''};
+    span {
+        margin-left: 5px;
+    }
+    svg {
+        margin: 0;
+        padding: 0;
+    }
+    &:hover {
+        color: orange;
+    }
+`;
+export const UrlCopyButton = styled(DatePickerButton)`
+    background: ${(props) => props.theme.buttonDefault};
     color: ${({ isActive, theme }) => (isActive ? "orange" : theme.textColor)};
     cursor: ${({ isActive }) => (isActive ? "pointer" : "not-allowed")};
     text-overflow: ellipsis;
@@ -128,19 +153,5 @@ export const UrlCopyButton = styled(BtnSmall)`
     }
     &:hover {
         background: ${(props) => props.theme.buttonHover};
-    }
-`;
-
-export const DatePickerButton = styled(BtnSmall)`
-    background: ${(props) => props.theme.buttonDefault};
-    border: 1px solid ${(props) => props.theme.buttonBorder};
-    color: ${(props) => props.theme.textColor};
-    height: 26px;
-    margin-left: 10px;
-    span {
-        margin-left: 5px;
-    }
-    &:hover {
-        color: orange;
     }
 `;
