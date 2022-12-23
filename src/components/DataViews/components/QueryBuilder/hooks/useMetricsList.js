@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { getHeaders } from "./helpers";
 import * as moment from "moment";
-export function useValuesFromMetrics(id) {
+import { getHeaders } from "../helpers";
+
+export function useMetricsList(id, value) {
     const dataSources = useSelector((store) => store.dataSources);
     const start = useSelector((store) => store.start);
     const stop = useSelector((store) => store.stop);
@@ -21,20 +22,29 @@ export function useValuesFromMetrics(id) {
         return dataSources.find((f) => f.id === id);
     }, [dataSources, id]);
 
-    // get the auth headers in here \
+
+    const valueFormatter = useMemo(() => {
+        const val = encodeURIComponent(`{__name__="${value}"}`);
+        const paren = "[]";
+        const param = `match${encodeURIComponent(paren)}`;
+
+        if (value) {
+            return `${param}=${val}`;
+        }
+    }, [value]);
 
     useEffect(() => {
         if (
             dataSource.type === "metrics" &&
             dataSource?.url &&
-            dataSource?.url !== ""
+            dataSource?.url !== ""&&
+            value && value !== ''
+
         ) {
             const metricsHeaders = getHeaders(dataSource);
 
-            const url = `${dataSource.url}/api/v1/label/__name__/values?start=${timeParams.start}&end=${timeParams.end}`;
+            const url = `${dataSource.url}/api/v1/series?start=${timeParams.start}&end=${timeParams.end}&${valueFormatter}`;
             const apiRequest = async () => {
-                // setLoading(true);
-
                 try {
                     const req = await axios.get(url, metricsHeaders);
                     if (req?.status === 200) {
@@ -47,15 +57,30 @@ export function useValuesFromMetrics(id) {
 
             apiRequest();
         }
-    }, []);
+    }, [dataSource, timeParams.end, timeParams.start, valueFormatter]);
 
     return useMemo(() => {
         if (metricNames?.length > 0) {
-            return metricNames.map((val) => ({
-                label: val,
-                value: val,
-            }));
+            const metricsCP = [...metricNames];
+            let metricSelect = {};
+            metricsCP.forEach((metric) => {
+                const metricKeys = Object.keys(metric);
+                metricKeys.forEach((metricKey) => {
+                    if (
+                        !metricSelect[metricKey]?.some(
+                            (s) => s === metric[metricKey]
+                        )
+                    ) {
+                        metricSelect[metricKey] = [
+                            ...(metricSelect[metricKey] || []),
+                            metric[metricKey],
+                        ];
+                    }
+                });
+            });
+
+            return metricSelect;
         }
-        return [{ label: "", value: "" }];
+        return {};
     }, [metricNames]);
 }

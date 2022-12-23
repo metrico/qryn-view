@@ -87,16 +87,3 @@ export function useMetricsList(id, value) {
     }, [metricNames]);
 }
 
-// /api/v1/series?start=1669714367&end=1669714594&match%5B%5D=%7B__name__%3D%22go_goroutines%22%7D
-
-// api/v1/label/__name__/values?start=1669710347&end=1669713947
-
-// https://view-oss-demo.qryn.dev/api/v1/series?start=1669710361&end=1669713961&match%5B%5D=%7B__name__%3D%22go_gc_duration_seconds_sum%22%7D
-
-//}
-
-// api/v1/label/__name__/values?start=1669710347&end=1669713947
-
-// api/v1/series?start=1669710361&end=1669713961&match%5B%5D=%7B__name__%3D%22go_gc_duration_seconds_sum%22%7D
-
-// api/v1/series?start=1669713812&end=1669714704&match%5B%5D=%7Bhomer%3D%22http%3A%2F%2Fheplify-server%3A9096%2Fmetrics%22%7D
