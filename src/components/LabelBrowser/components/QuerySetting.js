@@ -24,10 +24,11 @@ export const QuerySetting = (props) => {
     const dispatch = useDispatch();
     const responseType = useSelector((store) => store.responseType);
     const { hash } = useLocation();
-    const { id, idRef, dataSourceType } = props.data;
+    const { id, idRef, dataSourceType, isBuilder } = props.data;
     const { open, handleClose, actPanel, name } = props;
     const [isTableViewSet, setIsTableViewSet] = useState(props.data.tableView);
     const [isShowTsSet, setIsShowTsSet] = useState(props.data.isShowTs);
+    const [isBuilderSet, setIsBuilderSet] = useState(isBuilder || false);
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(
         props.data.queryType
     );
@@ -71,6 +72,10 @@ export const QuerySetting = (props) => {
     useEffect(() => {
         setIsShowTsSet(props.data.isShowTs);
     }, [setIsShowTsSet, props.data.isShowTs]);
+
+    useEffect(() => {
+        setIsBuilderSet(props.data.isBuilder);
+    }, [setIsBuilderSet, props.data.isBuilder]);
 
     function onSwitchChange(e) {
         // modify query type switch value
@@ -130,6 +135,17 @@ export const QuerySetting = (props) => {
         panel.forEach((query) => {
             if (query.id === id) {
                 query.isShowTs = isShowTsSet ? false : true;
+            }
+        });
+
+        dispatch(panelAction(name, panel));
+    }
+    
+    function handleBuilderSwitch() {
+        const panel = [...actPanel];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.isBuilder = isBuilderSet ? false : true;
             }
         });
 
@@ -203,6 +219,17 @@ export const QuerySetting = (props) => {
                                     checked={isShowTsSet}
                                     size={"small"}
                                     onChange={handleTsSwitch}
+                                    inputProps={{
+                                        "aria-label": "controlled-ts",
+                                    }}
+                                />
+                            </InputGroup>
+                            <InputGroup>
+                                <SettingLabel>Query Builder</SettingLabel>
+                                <Switch
+                                    checked={isBuilderSet}
+                                    size={"small"}
+                                    onChange={handleBuilderSwitch}
                                     inputProps={{
                                         "aria-label": "controlled-ts",
                                     }}

@@ -1,40 +1,30 @@
 import { cx } from "@emotion/css";
-import { ThemeProvider } from "@emotion/react";
+import { ThemeProvider, useTheme } from "@emotion/react";
 import { useEffect, useState } from "react";
 import { InitialLabelValueState, NewLabel } from "./consts";
-import { metricsToString } from "./helpers";
-import { useLabelOpts, useTheme, useValueSelectOpts } from "./hooks";
-import { useMetricsList } from "./hooks/useMetricsList";
+import { logsToString } from "./helpers";
+import useLogLabels from "./hooks/useLogLabels";
 import { InitialAddButton } from "./InitialAddButton";
-import { LabelValueForm } from "./LabelValueForm";
+import { LogLabelValueForm } from "./LogLabelValueForm";
 import { FlexWrap } from "./styles";
-import {Label} from './types';
+import { Label } from "./types";
 
-// here inject the label selector
-export function MetricsLabelValueSelectors(props: any) {
-
-
-    const { dataSourceId, type, value, metricValueChange, onChange } = props;
-    const valuesOpts = useMetricsList(dataSourceId, value);
-
+export function LogsLabelValueSelector(props: any) {
+    const { dataSourceId, value, onChange, labelValueChange } = props;
+    const { loading, logsResponse } = useLogLabels(dataSourceId);
     const [labelValuesState, setLabelValuesState] = useState<Label[]>(
         InitialLabelValueState
     );
 
     const [labelValueString, setLabelValueString] = useState("");
-
     const mainTheme = useTheme();
 
-    const labelOpts = useLabelOpts(valuesOpts);
-
     const onRemove = (id: any) => {
-
         setLabelValuesState((prev: Label[]) => {
             const prevValue = JSON.parse(JSON.stringify(prev)) || [];
             const newState = prevValue?.filter((f: any) => f.id !== id);
             return newState;
         });
-
         setLabelValueString((prev: any) => {
             let prevValue = [];
             if (prev?.length > 1) {
@@ -76,8 +66,8 @@ export function MetricsLabelValueSelectors(props: any) {
 
     useEffect(() => {
         const labValue = labelValueString || JSON.stringify("");
-        const metricString = metricsToString(value, JSON.parse(labValue));
-        metricValueChange(metricString); // pass the processing function from parent
+        const logsString = logsToString(value, JSON.parse(labValue)); // logs string function
+        labelValueChange(logsString); // pass the processing function from parent
     }, [labelValueString, value]);
 
     const resetLabelsState = (e: any) => {
@@ -95,24 +85,24 @@ export function MetricsLabelValueSelectors(props: any) {
         }
         return null;
     };
-
+    if (loading) {
+        return null;
+    }
     return (
         <ThemeProvider theme={mainTheme}>
             <div className={cx(FlexWrap)}>
                 {labelValuesState?.length > 0 &&
                     labelValuesState?.map((keyval, key) => (
-                        <LabelValueForm
+                        <LogLabelValueForm
+                            dataSourceId={dataSourceId}
                             id={keyval.id}
-                            idx={key}
                             key={key}
                             keyVal={keyval}
-                            labelOpts={labelOpts}
-                            valuesOpts={valuesOpts}
+                            labelOpts={logsResponse}
                             labelAdd={onAdd}
                             labelRemove={onRemove}
                             onChange={onLabelChange}
                             currentState={labelValuesState}
-                            useValueSelectOpts={useValueSelectOpts}
                             labelValuesLength={labelValuesState.length || 0}
                         />
                     ))}

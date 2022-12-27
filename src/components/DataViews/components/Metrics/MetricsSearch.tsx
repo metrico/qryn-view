@@ -9,12 +9,13 @@ import { InputSelect } from "../QueryBuilder/InputSelect";
 
 export default function MetricsSearch(props: any) {
     const {
-        handleMetricValueChange,
-        data: { dataSourceId, hasStats },
+        handleMetricValueChange, // goes to process AT query bar
+        data: { dataSourceId, dataSourceType, hasStats },
         searchButton,
         logsRateButton,
         statsSwitch,
     } = props;
+
     // get the options for metrics selector
     const metricsOpts = useValuesFromMetrics(dataSourceId);
 
@@ -74,6 +75,7 @@ export default function MetricsSearch(props: any) {
                     />
                 </div>
                 <MetricsLabelValueSelectors
+                type={dataSourceType}
                     onChange={onLabelValueChange}
                     dataSourceId={dataSourceId}
                     value={metricValue.value}
