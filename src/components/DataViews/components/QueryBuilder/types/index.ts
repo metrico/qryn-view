@@ -1,3 +1,4 @@
+
 export type operator =
     | "equals"
     | "regexequals"
@@ -25,3 +26,26 @@ export interface operatorsTypes {
     excludeequals: string | any;
     regexexclude: string | any;
 }
+
+export interface LabelSelectOption {
+    label?: string;
+    value?: string;
+}
+export interface UseLogLabelsResponse {
+    logsResponse: LabelSelectOption[];
+    loading: boolean;
+}
+
+export interface ApiDataSource {
+    type: string;
+    url: string;
+}
+
+export interface GetApiRequestArgs {
+    dataSource: ApiDataSource;
+    url: string;
+    setLoading: Function;
+    setResponse: Function;
+}
+
+
