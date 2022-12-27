@@ -227,7 +227,7 @@ export function UpdateStateFromQueryParams() {
                     paramsFromHash.set("right", parsed);
                 }
             });
-            console.log(paramsFromHash.toString());
+          
             ;(window as any).location.hash = paramsFromHash;
         }
     }, [STORE_KEYS]);
