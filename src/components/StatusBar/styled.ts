@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { BtnSmall } from "../../theme/styles/Button";
 import { InputSmall } from "../../theme/styles/Input";
-export const MenuButton = styled(BtnSmall)`
+export const MenuButton: any = styled(BtnSmall)`
     background: none;
     border: none;
     display: flex;
@@ -25,18 +25,18 @@ export const StatusCont = styled.div`
         margin-left: 10px;
         .label {
             flex: 1;
-            color: ${({theme}: any) => theme.inputLabelColor};
+            color: ${(props: any) => props.theme.inputLabelColor};
             padding: 4px 8px;
             font-size: 12px;
             text-transform: uppercase;
-            background: ${({theme}: any) => theme.inputLabelBg};
+            background: ${(props: any) => props.theme.inputLabelBg};
             border-radius: 4px;
             white-space: nowrap;
         }
     }
     input {
-        color: ${({theme}: any) => theme.textColor};
-        background: ${({theme}: any) => theme.inputBg};
+        color: ${(props: any) => props.theme.textColor};
+        background: ${(props: any) => props.theme.inputBg};
         border: none;
         outline: none;
         padding: 4px 8px;
@@ -57,7 +57,7 @@ export const StatusCont = styled.div`
     }
 `;
 
-export const ApiSelectorStyled = styled.div`
+export const ApiSelectorStyled: any = styled.div`
     display: flex;
     align-items: center;
     margin-left: 20px;
@@ -69,16 +69,16 @@ export const ApiSelectorStyled = styled.div`
         margin-left: 10px;
         .label {
             flex: 1;
-            color: ${({theme}: any) => theme.inputLabelColor};
+            color: ${(props: any) => props.theme.inputLabelColor};
             padding: 4px 8px;
             font-size: 12px;
             text-transform: uppercase;
-            background: ${({theme}: any) => theme.mainBgColor};
+            background: ${(props: any) => props.theme.mainBgColor};
             border-radius: 4px;
             white-space: nowrap;
         }
         .input {
-            bacgkround: ${({theme}: any) => theme.inputLabelBg};
+            bacgkround: ${(props: any) => props.theme.inputLabelBg};
         }
     }
     & div {
@@ -88,16 +88,16 @@ export const ApiSelectorStyled = styled.div`
 `;
 
 export const ApiSelectorButton = styled(BtnSmall)`
-    background: ${({theme}: any) => theme.buttonDefault};
-    border: 1px solid ${({theme}: any) => theme.buttonBorder};
-    color: ${({theme}: any) => theme.textColor};
+    background: ${(props: any) => props.theme.buttonDefault};
+    border: 1px solid ${(props: any) => props.theme.buttonBorder};
+    color: ${(props: any) => props.theme.textColor};
     text-overflow: ellipsis;
     transition: 0.2s all;
     display:flex;
     align-items:center;
     height: 26px;
     &:hover {
-        background: ${({theme}: any) => theme.buttonHover};
+        background: ${(props: any) => props.theme.buttonHover};
     }
     span {
         margin:0;
@@ -105,8 +105,8 @@ export const ApiSelectorButton = styled(BtnSmall)`
     }
 `;
 export const ApiSelectorInput = styled(InputSmall)`
-    color: ${({theme}: any) => theme.textColor};
-    background: ${({theme}: any) => theme.inputBg};
+    color: ${(props: any) => props.theme.textColor};
+    background: ${(props: any) => props.theme.inputBg};
     border: 1px solid ${({ theme }: any) => theme.buttonBorder};
     height: 18px;
     margin-right: 4px;
@@ -114,35 +114,20 @@ export const ApiSelectorInput = styled(InputSmall)`
         color: orange;
     }
 `;
-export const UrlCopyButton: any = styled(BtnSmall)`
-    background: ${({theme}: any) => theme.buttonDefault};
-    border: 1px solid ${({theme}: any) => theme.buttonBorder};
-    color: ${({ isActive, theme }: any) => (isActive ? "orange" : theme.textColor)};
-    cursor: ${({ isActive }: any) => (isActive ? "pointer" : "not-allowed")};
-    text-overflow: ellipsis;
-    transition: 0.2s all;
-    height: 26px;
-    span {
-        margin-left: 4px;
-        color: ${({theme}: any) => theme.textColor};
-    }
-    &:hover {
-        background: ${({theme}: any) => theme.buttonHover};
-    }
-`;
+
 
 export const DatePickerButton = styled(BtnSmall)`
-    background: ${({theme}: any) => theme.buttonDefault};
-    border: 1px solid ${({theme}: any) => theme.buttonBorder};
-    color: ${({theme}: any) => theme.textColor};
-    border-top-left-radius: ${(props: any) => props.attachedSide === 'l' || props.attachedSide === 'both' ? '0' : ''};
-    border-top-right-radius: ${(props: any) => props.attachedSide === 'r' || props.attachedSide === 'both' ? '0' : ''};
-    border-bottom-left-radius: ${(props: any) => props.attachedSide === 'l' || props.attachedSide === 'both' ? '0' : ''};
-    border-bottom-right-radius: ${(props: any) => props.attachedSide === 'r' || props.attachedSide === 'both' ? '0' : ''};
+    background: ${(props: any) => props.theme.buttonDefault};
+    border: 1px solid ${(props: any) => props.theme.buttonBorder};
+    color: ${(props: any) => props.theme.textColor};
+    border-top-left-radius: ${(props: any) => props.attachedSide === 'l' || props.attachedSide === 'both' ? '0 !important' : ''};
+    border-top-right-radius: ${(props: any) => props.attachedSide === 'r' || props.attachedSide === 'both' ? '0 !important' : ''};
+    border-bottom-left-radius: ${(props: any) => props.attachedSide === 'l' || props.attachedSide === 'both' ? '0 !important' : ''};
+    border-bottom-right-radius: ${(props: any) => props.attachedSide === 'r' || props.attachedSide === 'both' ? '0 !important' : ''};
     border-right: ${(props: any) => props.attachedSide === 'r' || props.attachedSide === 'both' ? 'unset' : ''};
     height: 26px;
-    margin-left: ${(props: any) => props.emptySide === 'l' || props.emptySide === 'both' ? '10px' : ''};
-    margin-right: ${(props: any) => props.emptySide === 'r' || props.emptySide === 'both' ? '10px' : ''};
+    margin-left: ${(props: any) => props.emptySide === 'l' || props.emptySide === 'both' ? '10px' : props.attachedSide === 'l' || props.attachedSide === 'both' ? "0px !important" : ''};
+    margin-right: ${(props: any) => props.emptySide === 'r' || props.emptySide === 'both' ? '10px' : props.attachedSide === 'r' || props.attachedSide === 'both' ? "0px !important" : ''};
     padding: ${(props: any) => props.size === 'small' ? '3px 5px' : ''};
     span {
         margin-left: 5px;
@@ -153,5 +138,20 @@ export const DatePickerButton = styled(BtnSmall)`
     }
     &:hover {
         color: orange;
+    }
+`;
+export const UrlCopyButton = styled(DatePickerButton)`
+    background: ${(props: any) => props.theme.buttonDefault};
+    color: ${({ isActive, theme }: any) => (isActive ? "orange" : theme.textColor)};
+    cursor: ${({ isActive }: any) => (isActive ? "pointer" : "not-allowed")};
+    text-overflow: ellipsis;
+    transition: 0.2s all;
+    height: 26px;
+    span {
+        margin-left: 4px;
+        color: ${(props: any) => props.theme.textColor};
+    }
+    &:hover {
+        background: ${(props: any) => props.theme.buttonHover};
     }
 `;
