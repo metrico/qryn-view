@@ -1,7 +1,4 @@
 import { useMemo, useRef, useEffect } from "react";
-import { InputGroup } from "../../views/DataSources/styles";
-
-import { Label } from "./style";
 import { IconSelect } from "./components/DataSourceSelectOption";
 export const DataSourceSelect = (props: any) => {
     const { value, onChange, opts, label, extValue } = props;
@@ -33,15 +30,12 @@ export const DataSourceSelect = (props: any) => {
 
     if (opts && value) {
         return (
-            <InputGroup title={"Select Data Source Type"}>
-                {label?.length > 0 && <Label>{label}</Label>}
-                <IconSelect
-                    ref={selectRef}
-                    defaultValue={extValue}
-                    options={customFormattedSelect}
-                    onSelectChange={customSelectChange}
-                />
-            </InputGroup>
+            <IconSelect
+                ref={selectRef}
+                defaultValue={extValue}
+                options={customFormattedSelect}
+                onSelectChange={customSelectChange}
+            />
         );
     }
     return null;
