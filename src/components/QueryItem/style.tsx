@@ -11,6 +11,7 @@ export const QueryItemToolbarStyled = styled.div`
     align-items: center;
     border-radius: 3px;
     margin-bottom: 3px;
+    padding:5px;
     .query-title {
         display: flex;
         align-items: center;
