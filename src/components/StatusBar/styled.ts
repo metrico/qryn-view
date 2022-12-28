@@ -116,7 +116,7 @@ export const ApiSelectorInput = styled(InputSmall)`
 `;
 
 
-export const DatePickerButton = styled(BtnSmall)`
+export const DatePickerButton: any = styled(BtnSmall)`
     background: ${(props: any) => props.theme.buttonDefault};
     border: 1px solid ${(props: any) => props.theme.buttonBorder};
     color: ${(props: any) => props.theme.textColor};
@@ -140,7 +140,7 @@ export const DatePickerButton = styled(BtnSmall)`
         color: orange;
     }
 `;
-export const UrlCopyButton = styled(DatePickerButton)`
+export const UrlCopyButton: any = styled(DatePickerButton)`
     background: ${(props: any) => props.theme.buttonDefault};
     color: ${({ isActive, theme }: any) => (isActive ? "orange" : theme.textColor)};
     cursor: ${({ isActive }: any) => (isActive ? "pointer" : "not-allowed")};

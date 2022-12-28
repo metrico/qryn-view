@@ -13,7 +13,7 @@ export default function DataViews(props: any) {
     const dataViews = useSelector((store: any) => store[`${side}DataView`]);
     const queries = useSelector((store: any) => store[side]);
     const viewsMemo = useMemo(()=>{
-        return dataViews.sort((a,b) => {
+        return dataViews.sort((a: any, b: any) => {
             return queries.findIndex((query: any) => query.id === a.id) - queries.findIndex((query: any) => query.id === b.id)
         })
     },[dataViews, queries])

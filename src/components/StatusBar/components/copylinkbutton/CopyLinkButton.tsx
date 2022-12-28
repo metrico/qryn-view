@@ -120,7 +120,7 @@ export default function CopyLinkButton() {
                         onClick={copyLink}
                         isActive={setActive}
                     >
-                        <ContentCopyIcon fontSize={"15px"} />
+                        <ContentCopyIcon fontSize="medium" />
 
                         <span>{"Copy Link"}</span>
                     </UrlCopyButton>
@@ -134,7 +134,7 @@ export default function CopyLinkButton() {
                         aria-expanded={open ? "true" : undefined}
                         isActive={setActive}
                     >
-                        <KeyboardArrowDownOutlinedIcon fontSize={"12px"} />
+                        <KeyboardArrowDownOutlinedIcon fontSize="small" />
                     </DatePickerButton>
                     <StyledMenu
                         id="backward-menu"

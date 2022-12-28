@@ -37,7 +37,7 @@ export const LabelsFetchError = () => {
     );
 };
 
-export const ValuesList = (props: any) => {
+export const ValuesList: any = (props: any) => {
     const theme = useSelector((store: any) => store.theme);
     const { name }: any = props;
     const { id }: any = props.data;

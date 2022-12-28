@@ -58,7 +58,7 @@ import { notificationTypes } from "../../qryn-ui/notifications/consts";
 import { DatePickerButton, UrlCopyButton } from "../../components/StatusBar/styled";
 import { StyledMenu } from "../../components/StatusBar/components/daterangepicker";
 import { useLocation } from "react-router-dom";
-function QueryHistoryTabs(props) {
+function QueryHistoryTabs(props: any) {
     const {
         historyTabHeader,
         historyTab,
@@ -291,7 +291,7 @@ function HistoryLinkTools(props: any) {
                             className={"URL-COPY"}
                             attachedSide={"r"}
                         >
-                            <LinkIcon fontSize={"14px"} />
+                            <LinkIcon fontSize="small" />
                         </HistoryButton>
                         <HistoryButton
                             attachedSide={"l"}
@@ -302,7 +302,7 @@ function HistoryLinkTools(props: any) {
                             aria-haspopup="true"
                             aria-expanded={open ? "true" : undefined}
                         >
-                            <KeyboardArrowDownOutlinedIcon fontSize={"12px"} />
+                            <KeyboardArrowDownOutlinedIcon fontSize="small" />
                         </HistoryButton>
                         <StyledMenu
                             id="backward-menu"
@@ -349,7 +349,7 @@ function HistoryLinkTools(props: any) {
             </>
             <Tooltip title={"Delete Query"}>
                 <HistoryButton onClick={(e: any) => handleDelete(item)}>
-                    <DeleteOutlineIcon fontSize={"14px"} />
+                    <DeleteOutlineIcon fontSize="small" />
                 </HistoryButton>
             </Tooltip>
 

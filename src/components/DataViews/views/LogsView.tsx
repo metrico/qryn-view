@@ -22,7 +22,7 @@ export default function LogsView(props: any) {
         tableData,
         streamData,
     } = props;
-    const theme = useSelector((store) => store.theme);
+    const theme = useSelector((store: any) => store.theme);
     const jsonTheme = useMemo(() => {
         if (theme === "light") {
             return "rjv-default";
