@@ -20,7 +20,7 @@ export default function CopyButton() {
                             const storedUrl = saveUrl.add({
                                 data: window.location.href,
                                 description: "From Shared URL",
-                            });
+                            }, 10);
                             dispatch(setLinksHistory(storedUrl));
                         
 
@@ -51,7 +51,7 @@ export default function CopyButton() {
                         const storedUrl = saveUrl.add({
                             data: window.location.href,
                             description: "From Shared URL",
-                        });
+                        }, 10);
                         dispatch(setLinksHistory(storedUrl));
                  
               

@@ -47,7 +47,7 @@ import { DatePickerButton } from "../../styled";
 import { themes } from "../../../../theme/themes";
 import { styled } from "@mui/material/styles";
 
-const StyledMenu = styled((props) => (
+export const StyledMenu = styled((props) => (
     <Menu
         elevation={0}
         anchorOrigin={{
@@ -60,7 +60,7 @@ const StyledMenu = styled((props) => (
         }}
         {...props}
     />
-))(({ theme, qryntheme }) => ({
+))(({ theme, qryntheme, size }) => ({
     "& .MuiPaper-root": {
         borderRadius: 6,
         marginTop: theme.spacing(1),
@@ -68,7 +68,7 @@ const StyledMenu = styled((props) => (
         border: `1px solid ${qryntheme.buttonBorder}`,
         backgroundColor: qryntheme.buttonDefault,
         "& .MuiMenu-list": {
-            padding: "4px 0",
+            padding: size === 'small' ? '0px' : "4px 0",
         },
         "& .MuiMenuItem-root": {
             fontSize: 12,

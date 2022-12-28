@@ -3,9 +3,10 @@ import { useSelector } from "react-redux";
 import { themes } from "../../../theme/themes";
 import { EmptyViewContainer } from "../styled";
 
-export default function EmptyViewCont(): any {
+export default function EmptyViewCont(props: any) {
     const theme = useSelector((store: any) => store.theme);
-    const loading = useSelector((store: any) => store.loading);
+    const { loading }: any = props;
+
     return (
         !loading && (
             <ThemeProvider theme={(themes as any)[theme]}>

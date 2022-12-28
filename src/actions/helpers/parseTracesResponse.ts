@@ -19,7 +19,7 @@ function setDataView(panel: string) {
 }
 
 export async function parseTracesResponse(props: TracesResult) {
-    const { result, debugMode, dispatch, panel, id, type, queryType } = props;
+    const { result, debugMode, dispatch, panel, id, type, queryType, raw } = props;
     if (queryType === "trace-search") {
         await parseVectorResponse(props);
     } else {
@@ -29,6 +29,7 @@ export async function parseTracesResponse(props: TracesResult) {
                 type,
                 tableData: {},
                 data: result,
+                raw,
                 labels: [],
                 total: result?.resourceSpans?.length,
             };

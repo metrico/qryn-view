@@ -11,20 +11,20 @@ const InputGroup = styled.div`
 `;
 
 const Label = styled.div`
-    color: ${({theme}: any) => theme.textColor};
-    background: ${({theme}: any) => theme.buttonInactive};
+    color: ${(props: any) => props.theme.textColor};
+    background: ${(props: any) => props.theme.buttonInactive};
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 12px;
-    padding: 0px 8px;
+    padding: 0px 10px;
 `;
 
 const Input = styled.input`
     flex: 1;
-    background: ${({theme}: any) => theme.inputBg};
-    color: ${({theme}: any) => theme.textColor};
-    border: 1px solid ${({theme}: any) => theme.buttonBorder};
+    background: ${(props: any) => props.theme.inputBg};
+    color: ${(props: any) => props.theme.textColor};
+    border: 1px solid ${(props: any) => props.theme.buttonBorder};
     border-radius: 3px;
     max-width: 60px;
     padding-left: 8px;
@@ -39,8 +39,8 @@ export function panelAction(name: any, value: any) {
 
 export default function QueryLimit(props: any) {
     const dispatch = useDispatch();
-    const { id } = props.data;
-    const { name } = props;
+    const { id }: any = props.data;
+    const { name }: any = props;
     const panelQuery = useSelector((store: any) => store[name]);
     const [editedValue, setEditedValue] = useState(props.data.limit);
     const limitFromProps = useMemo(() => props.data.limit, [props.data.limit]);

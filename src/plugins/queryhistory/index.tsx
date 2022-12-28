@@ -1,6 +1,6 @@
-import { ThemeProvider, Tooltip } from "@mui/material";
+import { Checkbox, FormControlLabel, FormGroup, MenuItem, ThemeProvider, Tooltip } from "@mui/material";
 import localService from "../../services/localService";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import setQueryHistory from "../../actions/setQueryHistory";
 import getData from "../../actions/getData";
@@ -20,6 +20,8 @@ import LaunchIcon from "@mui/icons-material/Launch";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import { Typography } from '@mui/material';
 
 import localUrl from "../../services/localUrl";
 
@@ -52,17 +54,21 @@ import EmptyHistoryDisplay from "./components/EmptyHistoryDisplay";
 import CloseButton from "./components/CloseButton";
 import { themes } from "../../theme/themes";
 import { notificationTypes } from "../../qryn-ui/notifications/consts";
-function QueryHistoryTabs({
-    historyTabHeader,
-    historyTab,
-    starredHistoryTab,
-    closeButton,
-    linksTabHeader,
-    linksTab,
-    settingTab,
-    settingTabHeader,
-}: any) {
-    
+
+import { DatePickerButton, UrlCopyButton } from "../../components/StatusBar/styled";
+import { StyledMenu } from "../../components/StatusBar/components/daterangepicker";
+import { useLocation } from "react-router-dom";
+function QueryHistoryTabs(props) {
+    const {
+        historyTabHeader,
+        historyTab,
+        starredHistoryTab,
+        closeButton,
+        linksTabHeader,
+        linksTab,
+        settingTab,
+        settingTabHeader,
+    }: any = props;
     return (
         <TabsContainer defaultValue={0}>
             <TabsList>
@@ -114,8 +120,10 @@ function HistoryLinkParams({
     handleDelete,
     handleStarLinkItem,
     handleSubmit,
+    label
 }: any) {
     const [open, setOpen] = useState(false);
+    const { fromDate, toDate, type, url, queryInput, limit } = item;
 
     const openParams = () => {
         setOpen((opened) => (opened ? false : true));
@@ -149,13 +157,11 @@ function HistoryLinkParams({
                             fontSize="small"
                             style={{ marginRight: "3px" }}
                         />{" "}
-                        {item?.params?.apiUrl}
+                        {url}
                     </span>
                 </Tooltip>
 
-                <span style={{ whiteSpace: "nowrap" }}>
-                    limit: {item?.params?.limit}
-                </span>
+                <span style={{ whiteSpace: "nowrap" }}>limit: {limit}</span>
 
                 <span style={{ whiteSpace: "nowrap" }}>
                     step: {item?.params?.step}
@@ -168,16 +174,16 @@ function HistoryLinkParams({
                     }}
                 >
                     {" "}
-                    <Tooltip title={item?.fromDate + " - " + item?.toDate}>
+                    <Tooltip title={fromDate + " - " + toDate}>
                         <AccessTimeIcon
                             fontSize="small"
                             style={{ marginRight: "3px" }}
                         />
                     </Tooltip>{" "}
                     <TimeSpan>
-                        {item?.fromDate}
+                        {fromDate}
                         {" - "}
-                        {item?.toDate}
+                        {toDate}
                     </TimeSpan>
                 </div>
             </div>
@@ -185,25 +191,27 @@ function HistoryLinkParams({
             <div className="block-params">
                 <p>
                     <span className="key"> Query:</span>{" "}
-                    <span className="value">
-                        {decodeURIComponent(item.params.query)}
-                    </span>{" "}
+                    <span className="value">{queryInput}</span>{" "}
                 </p>
                 <p>
                     <span className="key"> API URL:</span>{" "}
-                    <span className="value">{item.params.apiUrl}</span>{" "}
+                    <span className="value">{url}</span>{" "}
+                </p>
+                <p>
+                    <span className="key"> Data Source Type:</span>{" "}
+                    <span className="value">{type}</span>{" "}
                 </p>
                 <p>
                     <span className="key">From: </span>{" "}
-                    <span className="value">{item?.fromDate}</span>{" "}
+                    <span className="value">{fromDate}</span>{" "}
                 </p>
                 <p>
                     <span className="key"> To: </span>{" "}
-                    <span className="value"> {item?.toDate}</span>{" "}
+                    <span className="value"> {toDate}</span>{" "}
                 </p>
                 <p>
                     <span className="key">Limit: </span>{" "}
-                    <span className="value">{item.params.limit}</span>{" "}
+                    <span className="value">{limit}</span>{" "}
                 </p>
                 <p>
                     <span className="key"> Step:</span>{" "}
@@ -217,6 +225,7 @@ function HistoryLinkParams({
                 handleDelete={handleDelete}
                 handleStarLinkItem={handleStarLinkItem}
                 handleSubmit={handleSubmit}
+                label={label}
             />
         </LinkParams>
     );
@@ -233,15 +242,35 @@ function HistoryLinkQuery({ pos, onOpen }: any) {
     );
 }
 
-function HistoryLinkTools({
-    item,
-    onOpen,
-    copyLink,
-    handleDelete,
-    handleStarLinkItem,
-    handleSubmit,
-}: any) {
+
+function HistoryLinkTools(props: any) {
+    const {
+        item,
+        onOpen,
+        copyLink,
+        handleDelete,
+        handleStarLinkItem,
+        handleSubmit,
+        label
+    }: any = props;
+    const storeTheme = useSelector((store: any) => store.theme);
+    const qrynTheme = (themes as any)[storeTheme];
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const [isRelative, setIsRelative] = useState(false);
     
+    const handleClick = (event: any) => {
+        setAnchorEl(event.currentTarget);
+        setIsRelative(isRelative && label);
+    };
+    const handleClose = (e: any, direction: any,  option: any) => {
+        setAnchorEl(null);
+    };
+
+    const handleChange = (event: any) => {
+        setIsRelative(event.target.checked);
+    };
+
     return (
         <div
             style={{
@@ -250,15 +279,77 @@ function HistoryLinkTools({
                 justifyContent: "space-between",
             }}
         >
-            <Tooltip title={"Copy Link to Clipboard"}>
-                <HistoryButton onClick={() => copyLink(item?.data)}>
-                    <LinkIcon fontSize="small" />
-                </HistoryButton>
-            </Tooltip>
-
-            <Tooltip title="Delete Query">
-                <HistoryButton onClick={() => handleDelete(item)}>
-                    <DeleteOutlineIcon fontSize="small" />
+            <>
+                <Tooltip title={"Copy Link to Clipboard"} placement="right-end">
+                    <span style={{ display: "flex" }}>
+                        <HistoryButton
+                            onClick={(e: any) =>
+                                copyLink(item?.data, "link", isRelative)
+                            }
+                            isActive={true}
+                            style={{ flex: 1 }}
+                            className={"URL-COPY"}
+                            attachedSide={"r"}
+                        >
+                            <LinkIcon fontSize={"14px"} />
+                        </HistoryButton>
+                        <HistoryButton
+                            attachedSide={"l"}
+                            onClick={handleClick}
+                            size={"small"}
+                            className={"date-time-selector"}
+                            aria-controls={open ? "backward-menu" : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? "true" : undefined}
+                        >
+                            <KeyboardArrowDownOutlinedIcon fontSize={"12px"} />
+                        </HistoryButton>
+                        <StyledMenu
+                            id="backward-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            qryntheme={qrynTheme}
+                            size={'small'}
+                        >
+                            <MenuItem
+                                key={`relativeTime`}
+                                style={{ padding: "0 14px" }}
+                            >
+                                <FormGroup>
+                                    <FormControlLabel
+                                        style={{
+                                            padding: "0",
+                                            marginRight: 0,
+                                            cursor: !label
+                                                ? "not-allowed"
+                                                : "default",
+                                        }}
+                                        checked={isRelative}
+                                        onChange={handleChange}
+                                        control={
+                                            <Checkbox
+                                                style={{ paddingRight: "0px" }}
+                                                disabled={!label}
+                                            />
+                                        }
+                                        label={
+                                            <Typography
+                                                style={{ fontSize: "12px", color: qrynTheme.textColor }}
+                                            >
+                                                Relative time
+                                            </Typography>
+                                        }
+                                    />
+                                </FormGroup>
+                            </MenuItem>
+                        </StyledMenu>
+                    </span>
+                </Tooltip>
+            </>
+            <Tooltip title={"Delete Query"}>
+                <HistoryButton onClick={(e: any) => handleDelete(item)}>
+                    <DeleteOutlineIcon fontSize={"14px"} />
                 </HistoryButton>
             </Tooltip>
 
@@ -327,7 +418,8 @@ function QueryHistoryTab({
                         <span
                             style={{
                                 color: "#666",
-                                marginRight: "10px",
+                                paddingRight: "10px",
+                                width: '10px'
                             }}
                         >
                             {listDisplay.length - index}
@@ -398,6 +490,7 @@ function LinksHistoryTab({
     filtered,
     emptyMessage,
     isStarred,
+    label
 }: any) {
     const [listDisplay, setListDisplay] = useState([]);
 
@@ -422,6 +515,7 @@ function LinksHistoryTab({
                             style={{
                                 paddingRight: "10px",
                                 color: "#666",
+                                width: '10px'
                             }}
                         >
                             {listDisplay?.length - index}
@@ -434,6 +528,7 @@ function LinksHistoryTab({
                             handleDelete={handleDelete}
                             handleStarLinkItem={handleStarLinkItem}
                             handleSubmit={handleSubmit}
+                            label={label}
                         />
                     </HistoryRow>
                 ))
@@ -461,6 +556,7 @@ function StarredHistoryTab({
     emptyQueryMessage,
     emptyLinkMessage,
     copyQuery,
+    label
 }: any) {
     const [queryListDisplay, setQueryListDisplay] = useState([]);
     const [linksListDisplay, setLinksListDisplay] = useState([]);
@@ -525,6 +621,7 @@ function StarredHistoryTab({
                     filtered={filteredLinks}
                     emptyMessage={emptyLinkMessage}
                     isStarred={true}
+                    label={label}
                 />
             </TabPanel>
         </TabsUnstyled>
@@ -624,6 +721,7 @@ function SettingTab({ clearHistory, clearLinksHistory }: any) {
 }
 
 const QueryHistory = (props: any) => {
+    const LINK_COPIED = "Link Copied To Clipboard";
     const dispatch = useDispatch();
     const historyService = localService().historyStore();
     const linkService = localUrl();
@@ -638,6 +736,9 @@ const QueryHistory = (props: any) => {
     const [linksStarredFiltered, setLinksStarredFiltered] = useState([]);
     const [starredFiltered, setStarredFiltered] = useState([]);
     const [linksStarredItems, setLinksStarredItems] = useState(false);
+
+    const { start, stop }: any = useSelector((store: any) => store);
+    const label = useSelector(({label}: any) => label);
 
     function handleDelete(id: any) {
         const removed = historyService.remove(id);
@@ -677,18 +778,51 @@ const QueryHistory = (props: any) => {
             panel,
             queryInput,
             queryType,
-            dataSourceType,
+            type,
+            dataSourceId,
+            url,
+
             direction,
+
         }: any = logData;
+
+        let querySubmit = "";
+
+        let customStep = 0;
+
+        if (queryInput.includes(`$__interval`)) {
+            const timeDiff = (stop.getTime() - start.getTime()) / 1000;
+
+            const timeProportion: number = timeDiff / 30;
+
+            const screenProportion: number = +(1).toFixed(1);
+
+            const intval = timeProportion / screenProportion;
+
+            const ratiointval = Math.round(
+                intval * (window as any).devicePixelRatio.toFixed(2)
+            );
+            querySubmit = queryInput.replace(
+                "[$__interval]",
+                `[${ratiointval}s]`
+            );
+            customStep = ratiointval;
+        } else {
+            querySubmit = queryInput;
+        }
+
         dispatch(
             getData(
-                dataSourceType,
-                queryInput,
+                type,
+                querySubmit,
                 queryType,
                 limit,
                 panel,
                 id,
-                direction
+                direction || "forward",
+                dataSourceId,
+                url,
+                customStep
             )
         );
     }
@@ -766,26 +900,80 @@ const QueryHistory = (props: any) => {
         }
     }
 
-    function copyQuery(item: any) {
-        const query = JSON.parse(item)["queryInput"];
 
-        navigator.clipboard.writeText(query).then(
-            function () {
-                if (item.length > 0) {
-                    dispatch(
-                        createAlert({
-                            message: "Query copied succesfully",
-                            type: notificationTypes.success,
-                        })
-                    );
-                }
-            },
-            function (err) {
-                console.error("error on copy", err);
-            }
+    // function copyQuery(item) {
+    //     const query = JSON.parse(item)["queryInput"];
+
+    //     navigator.clipboard.writeText(query).then(
+    //         function () {
+    //             if (item.length > 0) {
+    //                 dispatch(
+    //                     createAlert({
+    //                         message: "Query copied succesfully",
+    //                         type: notificationTypes.success,
+    //                     })
+    //                 );
+    //             }
+    //         },
+    //         function (err) {
+    //             console.err("error on copy", err);
+    //         }
+    //     );
+    // }
+    function alertSuccess() {
+        dispatch(
+            createAlert({
+                type: "success",
+                message: LINK_COPIED,
+            })
         );
     }
 
+    function shareDefaultLink(copyText: any) {
+        navigator.clipboard.writeText(copyText).then(
+            function () {
+                    alertSuccess();
+            },
+            function (err) {
+                console.log("error on copy", err);
+            }
+        );
+    }
+    function shareDomLink(copyText: any) {
+        let textArea: any = document.createElement("textarea");
+        textArea.value = copyText;
+        textArea.style = {
+            position: "fixed",
+            left: "-999999px",
+            top: "-999999px",
+        };
+
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        return new Promise((res: any, rej: any) => {
+            alertSuccess();
+            document.execCommand("copy") ? res() : rej();
+            textArea.remove();
+        });
+    }
+    function copyQuery(item: any, type = 'query', isRelative = false) {
+        const url = new URL(item);
+        const { hash } = url;
+        const params = new URLSearchParams(hash.replace("#", ""))
+        params.set('label', label)
+        const locationWithLabel = new URL(window.location.href);
+        locationWithLabel.hash = `#${params.toString()}`;
+        const copyText = type === 'query' ? JSON.parse(item)["queryInput"] : isRelative && label ? locationWithLabel : item;
+        setTimeout(() => {
+            if (navigator?.clipboard && window.isSecureContext) {
+                shareDefaultLink(copyText);
+            } else {
+                shareDomLink(copyText);
+            }
+        }, 200);
+    }
     function handleClose() {
         dispatch(setHistoryOpen(false));
     }
@@ -865,6 +1053,7 @@ const QueryHistory = (props: any) => {
                                 handleStarLinkItem={handleStarLinkItem}
                                 handleSubmit={handleLinkSubmit}
                                 filtered={linksFiltered}
+                                label={label}
                                 emptyMessage={
                                     "There is no links history. Please execute some queries and share links and you will see a history here."
                                 }
@@ -908,12 +1097,13 @@ const QueryHistory = (props: any) => {
                                 filteredQueries={starredFiltered}
                                 filteredLinks={linksStarredFiltered}
                                 emptyQueryMessage={
-                                    "Click the ‘Star’ icon to save links and find them here to reuse again"
+                                    "Click the 'Star' icon to save links and find them here to reuse again"
                                 }
                                 emptyLinkMessage={
-                                    "Click the ‘Star’ icon to save queries and find them here to reuse again"
+                                    "Click the 'Star' icon to save queries and find them here to reuse again"
                                 }
                                 copyQuery={copyQuery}
+                                label={label}
                             />
                         }
                         settingTabHeader={

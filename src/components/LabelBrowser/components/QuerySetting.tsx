@@ -117,15 +117,14 @@ export const QuerySetting: any = (props: any) => {
     }
 
     const traceOptions = () => (
-        <div className="options-input">
-            <QueryTypeSwitch
-                label={"Trace Type"}
-                options={TRACE_OPTIONS}
-                onChange={onTraceQueryChange}
-                defaultActive={queryTraceSwitch}
-            />
-        </div>
-    )
+        <QueryTypeSwitch
+            label={"Trace Type"}
+            options={TRACE_OPTIONS}
+            onChange={onTraceQueryChange}
+            defaultActive={queryTraceSwitch}
+        />
+    );
+
 
     function handleTsSwitch() {
         const panel = [...actPanel]
@@ -144,10 +143,10 @@ export const QuerySetting: any = (props: any) => {
             onClose={handleClose}
             PaperProps={{
                 classes: {
-                    root: DialogStyles,
-                },
-            }}
-        >
+
+                    root: DialogStyles
+                }
+              }}>
             <SettingCont>
                 <SettingHeader>
                     <h3>Query Options</h3>

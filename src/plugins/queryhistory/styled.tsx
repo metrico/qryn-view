@@ -11,6 +11,7 @@ import LinkIcon from "@mui/icons-material/Link";
 import { Drawer } from "@mui/material";
 import { TabsUnstyled } from "@mui/base";
 
+import { DatePickerButton } from "../../components/StatusBar/styled";
 export const StyledDrawer: any = styled((props: any) => (
     <Drawer
         anchor={"bottom"}
@@ -160,10 +161,11 @@ export const QueryHistoryContainer: any = styled.div`
     }
 `;
 
-export const HistoryButton: any = styled.button`
+
+export const HistoryButton: any = styled(DatePickerButton)`
     padding: 3px 6px;
     background: ${({ theme }: any) => theme.buttonDefault};
-    border:1px solid ${(props: any)=>props.theme.buttonBorder};
+    border: 1px solid ${(props: any)=>props.theme.buttonBorder};
     border-radius: 3px;
     border: none;
     color: ${({ theme }: any) => theme.textColor};
@@ -244,7 +246,7 @@ export const DialogCancelButton: any = styled(HistoryButton)`
 `;
 export const DialogConfirmButton: any = styled(HistoryButton)`
     background: ${({ theme }: any) => theme.primaryDark};
-    color:${({theme}) => theme.buttonText};
+    color:${({theme}: any) => theme.buttonText};
     padding: 8px 16px;
 `;
 

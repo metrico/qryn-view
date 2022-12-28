@@ -5,20 +5,20 @@ import { themes } from "../../theme/themes";
 import { DataViewItem } from "./components/DataViewItem";
 import { DataviewsContainer } from "./styled";
 
-export default function DataViews(props: any) {
+export default function DataViews(props) {
     const { name} = props;
-    const theme = useSelector((store: any) => store.theme);
+    const theme = useSelector((store) => store.theme);
     const [side] = useState(name);
-    const dataViews = useSelector((store: any) => store[`${side}DataView`]);
+    const dataViews = useSelector((store) => store[`${side}DataView`]);
     const viewsMemo = useMemo(()=>{
     return dataViews
     },[dataViews])
     if (viewsMemo.length > 0 ) {
 
         return (
-            <ThemeProvider theme={(themes as any)[theme]}>
+            <ThemeProvider theme={themes[theme]}>
                 <DataviewsContainer>
-                    {viewsMemo?.map((dv: any, index: number) => (
+                    {viewsMemo?.map((dv, index) => (
                         <DataViewItem
                             key={index}
                             {...props}

@@ -1,22 +1,22 @@
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
 const Label: any = styled.div`
-    color: ${({theme}: any) => theme.textColor};
-    background: ${({theme}: any) => theme.buttonInactive};
+    color: ${(props: any) => props.theme.textColor};
+    background: ${(props: any) => props.theme.buttonInactive};
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 12px;
-    padding: 0px 8px;
+    padding: 0px 10px;
 `;
 const QuerySwitchCont: any = styled.div`
     display: flex;
     align-items: center;
     font-size: 12px;
-    background-color: ${({theme}: any) => theme.buttonInactive};
+    background-color: ${(props: any) => props.theme.buttonInactive};
 
-    border: 1px solid ${({theme}: any) => theme.buttonBorder};
-    color: ${({theme}: any) => theme.textColor};
+    border: 1px solid ${(props: any) => props.theme.buttonBorder};
+    color: ${(props: any) => props.theme.textColor};
     border-radius: 3px;
     margin-right: 10px;
 `;
@@ -50,13 +50,13 @@ const QuerySwitchBtn: any = styled.div`
     font-size: 12px;
     line-height: 20px;
 `;
-const getBtnPos = (key: number, arr: any[]) => {
+const getBtnPos = (key: any, arr: any) => {
     const arrLen = arr.length;
     return key === 0 ? "first" : key === arrLen - 1 ? "last" : "center";
 };
 
 export default function QueryTypeSwitch(props: any) {
-    const { options, defaultActive, label, onChange } = props;
+    const { options, defaultActive, label, onChange }: any = props;
 
     const defaultact = useMemo(() => defaultActive, [defaultActive]);
 
@@ -75,7 +75,7 @@ export default function QueryTypeSwitch(props: any) {
             <Label>{label}</Label>
             <QuerySwitchCont>
                 {options &&
-                    options.map((value: any, key: number, arr: any[]) => (
+                    options.map((value: any, key: any, arr: any) => (
                         <QuerySwitchBtn
                             key={key}
                             selected={value.value === activeBtn}

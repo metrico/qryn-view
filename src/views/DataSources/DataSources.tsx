@@ -36,6 +36,7 @@ export default function DataSources() {
         if (autoTheme) {
             const theme = isAutoDark ? "dark" : "light";
             dispatch(setTheme(theme));
+            localStorage.setItem("theme", JSON.stringify({ theme: theme, auto: autoTheme }));
         }
     }, [isAutoDark, autoTheme, dispatch]);
     const theme = useMemo(() => {

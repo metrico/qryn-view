@@ -1,3 +1,4 @@
+
 import { queryBuilderWithLabels } from "../../LabelBrowser/helpers/querybuilder";
 
 import { ZoomIn, ZoomOut } from "@mui/icons-material/";
@@ -11,7 +12,7 @@ import { setRightPanel } from "../../../actions/setRightPanel";
 import getData from "../../../actions/getData";
 import { useMediaQuery } from "react-responsive";
 
-const ValueTagsStyled = styled.div`
+const ValueTagsStyled: any = styled.div`
     color: ${({theme}: any) => theme.textPrimary};
     flex: 1;
     display: flex;
@@ -19,7 +20,7 @@ const ValueTagsStyled = styled.div`
         background: ${({theme}: any) => theme.widgetContainer};
     }
 `;
-const TracesButton = styled.div`
+const TracesButton: any = styled.div`
     color: ${({theme}: any) => theme.buttonText};
     flex: 0;
     background-color: hsl(220, 67%, 55%);
@@ -31,7 +32,7 @@ const TracesButton = styled.div`
     align-items: center;
     white-space: nowrap;
 `;
-function alreadyExists(exp: string, op: string, k: string, v: string) {
+function alreadyExists(exp: any, op: any, k: any, v: any) {
     return exp.includes(`${k}${op}"${v}"`);
 }
 
@@ -48,9 +49,6 @@ function alreadyExists(exp: string, op: string, k: string, v: string) {
 export function ValueTagsCont(props: any) {
     const { showLabels, tags, actQuery } = props;
 
-
-   
-
     if (showLabels) {
         return (
             <div className="value-tags-container">
@@ -65,7 +63,7 @@ export async function addLabel(e: any, key: any, value: any, isExcluded = false,
     e.preventDefault();
 
     e.stopPropagation();
-    const { expr, panel, id } = queryObj;
+    const { expr, panel, id, dataSourceType } = queryObj;
 
     const isAlreadyExcluded = alreadyExists(expr, "!=", key, value);
 
@@ -78,7 +76,14 @@ export async function addLabel(e: any, key: any, value: any, isExcluded = false,
         return;
     }
 
-    queryBuilderWithLabels(expr, panel, id, [key, value], isExcluded);
+    queryBuilderWithLabels(
+        expr,
+        panel,
+        id,
+        [key, value],
+        isExcluded,
+        dataSourceType
+    );
 }
 
 export class Panel {
@@ -103,7 +108,7 @@ export default function ValueTags(props: any) {
 
     const openTraces = (e: any, key: any, value: any, linkID: any, currentUrl: any, linkType: any) => {
         e.stopPropagation();
-        if (props?.actQuery?.panel === "left" && !isTabletOrMobile ) {
+        if (props?.actQuery?.panel === "left" && !isTabletOrMobile) {
             dispatch(setSplitView(true));
         }
 
@@ -233,7 +238,7 @@ export default function ValueTags(props: any) {
                                 <span
                                     aria-label="Filter out value"
                                     title="Filter out value"
-                                    onClick={(e: any) =>
+                                    onClick={(e) =>
                                         addLabel(e, key, value, true, actQuery)
                                     }
                                     className={"icon"}
@@ -260,3 +265,4 @@ export default function ValueTags(props: any) {
         </ThemeProvider>
     );
 }
+

@@ -37,10 +37,10 @@ export const LabelsFetchError = () => {
     );
 };
 
-export const ValuesList: any = (props: any) => {
+export const ValuesList = (props: any) => {
     const theme = useSelector((store: any) => store.theme);
-    const { name } = props;
-    const { id } = props.data;
+    const { name }: any = props;
+    const { id }: any = props.data;
     const panelQuery = useSelector((store: any) => store[name]);
     const browserOpen = useMemo(() => {
         let isOpen = false;
@@ -56,7 +56,7 @@ export const ValuesList: any = (props: any) => {
         const actQuery = panelQuery.find((f: any) => f.id === id);
         isOpen = actQuery["browserOpen"];
         setOpen(isOpen);
-    }, [panelQuery, id]);
+    }, [panelQuery,id]);
 
     return (
         open && (

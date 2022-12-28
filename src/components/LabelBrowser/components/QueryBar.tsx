@@ -1,3 +1,4 @@
+
 /**React */
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useLocation } from "react-router-dom";
@@ -50,7 +51,7 @@ import { setSplitView } from "../../StatusBar/components/SplitViewButton/setSpli
 import { Switch } from "@mui/material";
 import { SettingLabel } from "./styled";
 import MetricsSearch from "../../DataViews/components/Metrics/MetricsSearch";
-export function panelAction(name: string, value: any) {
+export function panelAction(name: any, value: any) {
     if (name === "left") {
         return setLeftPanel(value);
     }
@@ -93,7 +94,7 @@ export const QueryBar = (props: any) => {
     const saveUrl = localUrl();
     const historyService = localService().historyStore();
     const { historyOpen, isEmbed, theme, queryHistory, start, stop }: any =
-        useSelector((store: any) => store);
+        useSelector((store) => store);
     const isSplit = useSelector((store: any) => store.isSplit);
     const panelQuery = useSelector((store: any) => store[name]);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 864px)" });
@@ -143,119 +144,88 @@ export const QueryBar = (props: any) => {
         return data.expr;
     }, [data.expr]);
     const initialDefault = useMemo(() => {
-        return defaultDataSources.find((f) => f.id === dataSourceId);
+        return defaultDataSources.find((f: any) => f.id === dataSourceId);
     }, [dataSourceId]);
 
     // on init
     useEffect(() => {
-        (() => {
+        setQueryInput(actLocalQuery.expr);
+        setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
 
-            setQueryInput(actLocalQuery.expr);
-            setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
+        const dataSource = dataSources?.find((f: any) => f.id === dataSourceId);
 
-            const dataSource = dataSources?.find((f: any) => f.id === dataSourceId);
+        let currentDataSource: any = {};
 
-            let currentDataSource: any = {};
+        if (
+            actLocalDs &&
+            actLocalDs?.url !== initialDefault &&
+            actLocalDs?.url !== ""
+        ) {
+            currentDataSource = { ...actLocalDs };
 
-            if (
-                actLocalDs &&
-                actLocalDs?.url !== initialDefault &&
-                actLocalDs?.url !== ""
-            ) {
-                currentDataSource = { ...actLocalDs };
+            const panelCP = [...panelData];
 
-                const panelCP = [...panelData];
-
-                if (currentDataSource?.type !== "flux") {
-                    decodeQuery(
-                        queryInput,
-                        currentDataSource?.url,
-                        props.data.labels,
-                        currentDataSource.id
-                    );
-                }
-                const labelsDecoded = decodeExpr(data.expr);
-
-                panelCP.forEach((query) => {
-                    if (query.id === id) {
-                        query.labels = [...labelsDecoded];
-                        query.dataSourceId = currentDataSource.id;
-                        query.dataSourceType = currentDataSource.type;
-                        query.dataSourceURL = currentDataSource.url;
-                    }
-                });
-
-                dispatch(panelAction(name, panelCP));
-
-                const dsCopy = [...dataSources];
-                dsCopy.forEach((ds) => {
-                    if (ds.id === dataSourceId) {
-                        ds = currentDataSource;
-                    }
-                });
-
-                dispatch(setDataSources(dsCopy));
-            } else if (dataSource && dataSource.url !== "") {
-                currentDataSource = { ...dataSource };
-            }
-
-            // search for auth params  and send inside
-            const labels = sendLabels(
-                dataSourceId,
-                dataSourceType,
-                currentDataSource?.url, // which one should be?
-                start,
-                stop
-            );
-            // if is view only mode (embedded) do an auto request on init
-            if (isEmbed)
-                dispatch(
-                    getData(
-                        dataSourceType,
-                        queryInput,
-                        queryType,
-                        limit,
-                        name,
-                        id,
-                        direction,
-                        dataSourceId,
-                        currentDataSource?.url
-                    )
+            if (currentDataSource?.type !== "flux") {
+                decodeQuery(
+                    queryInput,
+                    currentDataSource?.url,
+                    props.data.labels,
+                    currentDataSource.id
                 );
-
-            if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
-                return labels.then((data) => {
-                    if (data) {
-                        const prevLabels = [...props.data.labels];
-                        const prevMap = prevLabels.map((m) => m.name) || [];
-                        const newLabels: any = [...data];
-                        setLabels(newLabels);
-                        if (newLabels.length > 0) {
-                            if (prevMap.length > 0) {
-                                newLabels.forEach((l: any) => {
-                                    const labelFound = prevMap.includes(l.name);
-                                    if (labelFound) {
-                                        const pl = prevLabels.find(
-                                            (f: any) => f.name === l.name
-                                        );
-                                        l = { ...pl };
-                                    }
-                                });
-                            }
-                            decodeQuery(
-                                expr,
-                                currentDataSource.url,
-                                newLabels,
-                                currentDataSource.id
-                            );
-                        }
-                    }
-                });
-            } else {
-                // if there is nothing to request, show empty view
-                dispatch(setIsEmptyView(true));
             }
-        })();
+            const labelsDecoded = decodeExpr(data.expr);
+
+            panelCP.forEach((query) => {
+                if (query.id === id) {
+                    query.labels = [...labelsDecoded];
+                    query.dataSourceId = currentDataSource.id;
+                    query.dataSourceType = currentDataSource.type;
+                    query.dataSourceURL = currentDataSource.url;
+                }
+            });
+
+            dispatch(panelAction(name, panelCP));
+
+            const dsCopy = [...dataSources];
+            dsCopy.forEach((ds) => {
+                if (ds.id === dataSourceId) {
+                    ds = currentDataSource;
+                }
+            });
+
+            dispatch(setDataSources(dsCopy));
+        } else if (dataSource && dataSource.url !== "") {
+            currentDataSource = { ...dataSource };
+        }
+
+        // search for auth params  and send inside
+        // const labels = sendLabels(
+        //     dataSourceId,
+        //     dataSourceType,
+        //     currentDataSource?.url, // which one should be?
+        //     start,
+        //     stop
+        // );
+        // if is view only mode (embedded) do an auto request on init
+        if (isEmbed)
+            dispatch(
+                getData(
+                    dataSourceType,
+                    queryInput,
+                    queryType,
+                    limit,
+                    name,
+                    id,
+                    direction,
+                    dataSourceId,
+                    currentDataSource?.url
+                )
+            );
+
+
+        // if there is nothing to request, show empty view
+        //  dispatch(setIsEmptyView(true));
+
     }, []);
 
     // force single view from small width
@@ -265,9 +235,6 @@ export const QueryBar = (props: any) => {
             dispatch(setSplitView(false));
         }
     }, [isTabletOrMobile]);
-
-
-
 
     // changes on changin dataSource Id
 
@@ -300,7 +267,6 @@ export const QueryBar = (props: any) => {
                     );
                 }
                 const labelsDecoded = decodeExpr(data.expr);
-
                 panelCP.forEach((query) => {
                     if (query.id === id) {
                         query.labels = [...labelsDecoded];
@@ -382,7 +348,6 @@ export const QueryBar = (props: any) => {
         })();
     }, [dataSourceId, id]);
 
-
     // changes on changing exp
 
     useEffect(() => {
@@ -414,9 +379,19 @@ export const QueryBar = (props: any) => {
 
     const onSubmit = (e: any) => {
         e.preventDefault();
-        if (onQueryValid(queryInput)) {
+        const ds = dataSources.find((f: any) => f.id === dataSourceId);
+        if (onQueryValid(queryInput) && ds) {
             try {
-                updateHistory(queryInput, queryType, limit, id);
+                updateHistory(
+                    ds.type,
+                    queryInput,
+                    queryType,
+                    limit,
+                    id,
+                    direction,
+                    ds.id,
+                    ds.url
+                );
 
                 // Decode query to translate into labels selection
                 decodeQueryAndUpdatePanel(queryInput, true);
@@ -496,14 +471,14 @@ export const QueryBar = (props: any) => {
         setLocalStorage();
     };
 
-    const onSubmitRate = (e: any, type = "logs") => {
+    const onSubmitRate = (e: any) => {
         e.preventDefault();
         const isEmptyQuery = queryInput.length === 0;
         let query = "";
         if (!isEmptyQuery) {
             const isRate = queryInput.startsWith(`rate(`);
 
-            if (type === "metrics") {
+            if (dataSourceType === "metrics") {
                 if (isRate) {
                     query = queryInput.replace(/{([^}]+)}/g, "{}");
                     query = query.replace(/\[\d+ms\]/, "[$__interval]");
@@ -527,9 +502,21 @@ export const QueryBar = (props: any) => {
 
             setQueryValid(onQueryValid(query));
         }
+
         if (onQueryValid(query)) {
+            const ds = dataSources.find((f: any) => f.id === dataSourceId);
+
             try {
-                updateHistory(query, queryType, limit, id);
+                updateHistory(
+                    ds.type,
+                    query,
+                    queryType,
+                    limit,
+                    id,
+                    direction,
+                    ds.id,
+                    ds.url
+                );
                 // Decode query to translate into labels selection
                 decodeQueryAndUpdatePanel(query, true);
 
@@ -543,18 +530,30 @@ export const QueryBar = (props: any) => {
         }
     };
 
-    const updateHistory = (queryInput: any, queryType: any, limit: any, id: any) => {
+    const updateHistory = (
+        type: any,
+        queryInput: any,
+        queryType: any,
+        limit: any,
+        id: any,
+        direction: any,
+        dataSourceId: any,
+        url: any
+    ) => {
         const historyUpdated = historyService.add({
             data: JSON.stringify({
-                type: dataSourceType,
+                type,
                 queryInput,
                 queryType,
                 limit,
+                direction,
+                dataSourceId: dataSourceId,
+                url,
                 panel: name,
                 id,
             }),
             url: window.location.hash,
-        });
+        }, 10);
 
         dispatch(setQueryHistory(historyUpdated));
     };
@@ -596,12 +595,12 @@ export const QueryBar = (props: any) => {
 
             const timeProportion = timeDiff / 30;
 
-            const screenProportion = +(width / window.innerWidth).toFixed(1);
+            const screenProportion: any = (width / window.innerWidth).toFixed(1);
 
             const intval = timeProportion / screenProportion;
 
             const ratiointval = Math.round(
-                intval * +window.devicePixelRatio.toFixed(2)
+                intval * (window as any).devicePixelRatio.toFixed(2)
             );
             querySubmit = queryExpr.replace(
                 "[$__interval]",
@@ -630,10 +629,20 @@ export const QueryBar = (props: any) => {
         }
     };
     const updateLinksHistory = () => {
+        const ds = dataSources.find((f: any) => f.id === dataSourceId);
         const storedUrl = saveUrl.add({
-            data: window.location.href,
+            data: {
+                href: window.location.href,
+                url: ds.url,
+                type: dataSourceType,
+                queryInput,
+                queryType,
+                limit,
+                panel: name,
+                id,
+            },
             description: "From Query Submit",
-        });
+        }, 10);
 
         dispatch(setLinksHistory(storedUrl));
     };
@@ -673,7 +682,7 @@ export const QueryBar = (props: any) => {
 
     // renderers
 
-    const inlineQueryOptionsRenderer = (type: any, isSplit: any, isMobile: boolean, typeBar: any) => {
+    const inlineQueryOptionsRenderer = (type: any, isSplit: any, isMobile: any, typeBar: any) => {
         const isFullView = !isMobile && !isSplit;
         const isMetrics = type === "metrics" || type === "logs";
 
@@ -684,8 +693,8 @@ export const QueryBar = (props: any) => {
     };
 
     const querySettingRenderer = (
-        isMobile: boolean,
-        isSplit: boolean,
+        isMobile: any,
+        isSplit: any,
         dataSourceType: any,
         settingComp: any
     ) => {
@@ -703,8 +712,6 @@ export const QueryBar = (props: any) => {
     if (isEmbed) {
         return null;
     }
-
-
 
     const queryTypeRenderer = (
         type: any,
@@ -754,11 +761,9 @@ export const QueryBar = (props: any) => {
         return null;
     }
 
-    const _themes: any = themes;
-
     return (
         <div className={cx(maxWidth)} id={id}>
-            <ThemeProvider theme={_themes[theme]}>
+            <ThemeProvider theme={(themes as any)[theme]}>
                 {dataSourceType !== "metrics" &&
                     dataSourceType !== "traces" && (
                         <MobileTopQueryMenuCont
@@ -815,8 +820,8 @@ export const QueryBar = (props: any) => {
                         }
                         logsRateButton={
                             <ShowLogsRateButton
-                                isDisabled={!queryValid}
-                                onClick={(e: any) => onSubmitRate(e, "metrics")}
+                                disabled={!queryValid}
+                                onClick={onSubmitRate}
                                 isMobile={false}
                                 alterText={"Use as Rate Query"}
                             />
@@ -940,7 +945,6 @@ export const QueryBarCont = (props: any) => {
     );
 };
 
-
 // mobile top query view (mobile view or splitted view)
 export const MobileTopQueryMenuCont = (props: any) => {
     const dispatch = useDispatch();
@@ -958,7 +962,7 @@ export const MobileTopQueryMenuCont = (props: any) => {
         hasStats,
         showStatsOpen,
         handleStatsOpen,
-    } = props;
+    }: any = props;
     const { id, dataSourceType } = data;
     const [isChartViewSet, setIsChartViewSet] = useState(props.data.chartView);
 

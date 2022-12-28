@@ -11,6 +11,7 @@ export function EmptyView(props: any) {
         setMaxHeight,
         actualQuery,
         total,
+        loading
     } = props;
 
     return (
@@ -25,7 +26,7 @@ export function EmptyView(props: any) {
                 fixedSize={true}
                 {...props}
             />
-            <EmptyViewCont />
+            <EmptyViewCont loading={loading} />
         </ViewStyled>
     );
 }

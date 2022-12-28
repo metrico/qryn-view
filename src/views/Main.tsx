@@ -17,7 +17,6 @@ import { useLocation } from "react-router-dom";
 import setDataSources from "./DataSources/store/setDataSources";
 import { setShowDataSourceSetting } from "./Main/setShowDataSourceSetting";
 
-
 export const MainContainer = styled.div`
     position: absolute;
     display: flex;
@@ -259,9 +258,9 @@ export function updateDataSourcesWithUrl(
     if (haveCookies) {
         let [auth, dsData] = cookies.split("@");
         let cookieDsData = "";
-        if (dsData !== "") {
-            cookieDsData = atob(dsData);
+        if (dsData && dsData !== "") {
             try {
+                cookieDsData = atob(dsData);
                 cookieDsData = JSON.parse(cookieDsData);
                 if (typeof cookieDsData === "object" && cookieDsData["url"]) {
                     apiUrl = cookieDsData["url"];
@@ -284,9 +283,9 @@ export function updateDataSourcesWithUrl(
     if (!haveUrl && basicAuth) {
         apiUrl = window.location.protocol + "//" + window.location.host;
         urlApi = true;
-    } 
-    
-    if(apiUrl === '')  {
+    }
+
+    if (apiUrl === "") {
         urlApi = true;
         apiUrl = url;
     }
@@ -317,11 +316,11 @@ export function updateDataSourcesWithUrl(
         },
     }));
 
-    if(cookies && cookieAuth) {
-    
-        dispatch(setShowDataSourceSetting(false))
+    if (cookies && cookieAuth) {
+        dispatch(setShowDataSourceSetting(false));
     }
 
+    localStorage.setItem("dataSources", JSON.stringify(newDs));
     dispatch(setDataSources(newDs));
 }
 
@@ -360,7 +359,20 @@ export default function Main() {
             );
         }
     }, []);
-    const _themes: any = themes;
+
+
+    useEffect(() => {
+        const urlSetting = {
+            url: window.location.hash,
+            cookiesAvailable,
+        };
+
+        localStorage.setItem(
+            btoa("cookie-location"),
+            btoa(JSON.stringify(urlSetting))
+        );
+    }, [cookiesAvailable]);
+
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
     const isAutoDark = useMediaQuery({ query: "(prefers-color-scheme: dark)" });
     const dispatch = useDispatch();
@@ -369,12 +381,16 @@ export default function Main() {
     const theme = useSelector((store: any) => store.theme);
     const autoTheme = useSelector((store: any) => store.autoTheme);
     const settingsDialogOpen = useSelector((store: any) => store.settingsDialogOpen);
-    const themeMemo = useMemo(() => _themes[theme], [theme]);
+    const themeMemo = useMemo(() => (themes as any)[theme], [theme]);
 
     useEffect(() => {
         if (autoTheme) {
             const theme = isAutoDark ? "dark" : "light";
             dispatch(setTheme(theme));
+            localStorage.setItem(
+                "theme",
+                JSON.stringify({ theme: theme, auto: autoTheme })
+            );
         }
     }, [isAutoDark, autoTheme, dispatch]);
     if (!isTabletOrMobile) {
