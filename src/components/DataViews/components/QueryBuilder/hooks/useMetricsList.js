@@ -1,29 +1,27 @@
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { getHeaders } from "./helpers";
 import * as moment from "moment";
-export function useMetricsList(id: any, value: any) {
+import { getHeaders } from "../helpers";
 
-    
-    const dataSources = useSelector((store: any) => store.dataSources);
-    const start = useSelector((store: any) => store.start);
-    const stop = useSelector((store: any) => store.stop);
+export function useMetricsList(id, value) {
+    const dataSources = useSelector((store) => store.dataSources);
+    const start = useSelector((store) => store.start);
+    const stop = useSelector((store) => store.stop);
 
     const timeParams = useMemo(() => {
         return {
-            start: (moment as any)(start).unix(),
-            end: (moment as any)(stop).unix(),
+            start: moment(start).unix(),
+            end: moment(stop).unix(),
         };
     }, [start, stop]);
 
     const [metricNames, setMetricNames] = useState([]);
 
     const dataSource = useMemo(() => {
-        return dataSources.find((f: any) => f.id === id);
+        return dataSources.find((f) => f.id === id);
     }, [dataSources, id]);
 
-    // get the auth headers in here \
 
     const valueFormatter = useMemo(() => {
         const val = encodeURIComponent(`{__name__="${value}"}`);
@@ -64,13 +62,13 @@ export function useMetricsList(id: any, value: any) {
     return useMemo(() => {
         if (metricNames?.length > 0) {
             const metricsCP = [...metricNames];
-            let metricSelect: any = {};
+            let metricSelect = {};
             metricsCP.forEach((metric) => {
                 const metricKeys = Object.keys(metric);
-                metricKeys.forEach((metricKey: any) => {
+                metricKeys.forEach((metricKey) => {
                     if (
                         !metricSelect[metricKey]?.some(
-                            (s: any) => s === metric[metricKey]
+                            (s) => s === metric[metricKey]
                         )
                     ) {
                         metricSelect[metricKey] = [
@@ -86,4 +84,3 @@ export function useMetricsList(id: any, value: any) {
         return {};
     }, [metricNames]);
 }
-

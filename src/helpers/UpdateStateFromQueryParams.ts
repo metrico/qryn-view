@@ -174,9 +174,7 @@ export function UpdateStateFromQueryParams() {
                     }
                 } else if (ARRAY_VALUES.includes(param)) {
                     try {
-                        const encodedArray = encodeURIComponent(
-                            JSON.stringify(STORE_KEYS[param])
-                        );
+                        const encodedArray = JSON.stringify(STORE_KEYS[param]);
                         urlFromHash.set(param, encodedArray);
                     } catch (e) {
                         console.log(e);
@@ -222,14 +220,15 @@ export function UpdateStateFromQueryParams() {
                         console.error(e);
                     }
                 } else if (store_key === "left") {
-                    const parsed = encodeURIComponent(JSON.stringify(left));
+                    const parsed = JSON.stringify(left);
                     paramsFromHash.set("left", parsed);
                 } else if (store_key === "right") {
-                    const parsed = encodeURIComponent(JSON.stringify(right));
+                    const parsed = JSON.stringify(right);
                     paramsFromHash.set("right", parsed);
                 }
             });
-            (window as any).location.hash = paramsFromHash;
+          
+            ;(window as any).location.hash = paramsFromHash;
         }
     }, [STORE_KEYS]);
 }

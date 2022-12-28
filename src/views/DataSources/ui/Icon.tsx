@@ -8,11 +8,12 @@ const Icons: any = {
     traces_icon,
 };
 
-export const Icon = ({ icon }: any) => {
+export const Icon = ({ icon, style }: any) => {
     return (
         <img
             height="40px"
             className="logo"
+            style={style}
             src={Icons[icon] || logs_icon}
             alt={icon}
         />

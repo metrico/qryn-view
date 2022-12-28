@@ -1,4 +1,3 @@
-
 /**React */
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useLocation } from "react-router-dom";
@@ -152,7 +151,7 @@ export const QueryBar = (props: any) => {
         setQueryInput(actLocalQuery.expr);
         setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
 
-        const dataSource = dataSources?.find((f: any) => f.id === dataSourceId);
+        const dataSource: any = dataSources?.find((f: any) => f.id === dataSourceId);
 
         let currentDataSource: any = {};
 
@@ -467,7 +466,7 @@ export const QueryBar = (props: any) => {
             }
         });
         dispatch(panelAction(name, panel));
-        queryParams.set(name, encodeURIComponent(JSON.stringify(panel)));
+        queryParams.set(name, JSON.stringify(panel));
         setLocalStorage();
     };
 
@@ -593,14 +592,14 @@ export const QueryBar = (props: any) => {
         if (queryExpr.includes(`$__interval`)) {
             const timeDiff = (stop.getTime() - start.getTime()) / 1000;
 
-            const timeProportion = timeDiff / 30;
+            const timeProportion: number = timeDiff / 30;
 
-            const screenProportion: any = (width / window.innerWidth).toFixed(1);
+            const screenProportion: number = +(width / window.innerWidth).toFixed(1);
 
             const intval = timeProportion / screenProportion;
 
             const ratiointval = Math.round(
-                intval * (window as any).devicePixelRatio.toFixed(2)
+                intval * +(window as any).devicePixelRatio.toFixed(2)
             );
             querySubmit = queryExpr.replace(
                 "[$__interval]",
@@ -962,7 +961,7 @@ export const MobileTopQueryMenuCont = (props: any) => {
         hasStats,
         showStatsOpen,
         handleStatsOpen,
-    }: any = props;
+    } = props;
     const { id, dataSourceType } = data;
     const [isChartViewSet, setIsChartViewSet] = useState(props.data.chartView);
 
@@ -970,7 +969,7 @@ export const MobileTopQueryMenuCont = (props: any) => {
         setIsChartViewSet(props.data.chartView);
     }, [setIsChartViewSet, props.data.chartView]);
 
-    const panelQuery = useSelector((store: any) => store[name]);
+    const panelQuery: any = useSelector((store: any) => store[name]);
 
     const withLabels = (type: any) => {
         if (type !== "flux" && type !== "metrics" && type !== "traces") {
