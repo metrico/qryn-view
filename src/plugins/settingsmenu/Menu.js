@@ -58,7 +58,7 @@ export default function ClokiMenu() {
     const qrynTheme = themes[storeTheme];
 
     const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+        setAnchorEl(prev => event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);

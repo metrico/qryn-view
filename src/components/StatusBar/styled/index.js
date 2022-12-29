@@ -78,7 +78,7 @@ export const ApiSelectorStyled = styled.div`
             white-space: nowrap;
         }
         .input {
-            bacgkround: ${(props) => props.theme.inputLabelBg};
+            background: ${(props) => props.theme.inputLabelBg};
         }
     }
     & div {
@@ -120,14 +120,14 @@ export const DatePickerButton = styled(BtnSmall)`
     background: ${(props) => props.theme.buttonDefault};
     border: 1px solid ${(props) => props.theme.buttonBorder};
     color: ${(props) => props.theme.textColor};
-    border-top-left-radius: ${(props) => props.attachedSide === 'l' || props.attachedSide === 'both' ? '0 !important' : ''};
-    border-top-right-radius: ${(props) => props.attachedSide === 'r' || props.attachedSide === 'both' ? '0 !important' : ''};
-    border-bottom-left-radius: ${(props) => props.attachedSide === 'l' || props.attachedSide === 'both' ? '0 !important' : ''};
-    border-bottom-right-radius: ${(props) => props.attachedSide === 'r' || props.attachedSide === 'both' ? '0 !important' : ''};
-    border-right: ${(props) => props.attachedSide === 'r' || props.attachedSide === 'both' ? 'unset' : ''};
+    border-top-left-radius: ${(props) => props.attachedside === 'l' || props.attachedside === 'both' ? '0 !important' : ''};
+    border-top-right-radius: ${(props) => props.attachedside === 'r' || props.attachedside === 'both' ? '0 !important' : ''};
+    border-bottom-left-radius: ${(props) => props.attachedside === 'l' || props.attachedside === 'both' ? '0 !important' : ''};
+    border-bottom-right-radius: ${(props) => props.attachedside === 'r' || props.attachedside === 'both' ? '0 !important' : ''};
+    border-right: ${(props) => props.attachedside === 'r' || props.attachedside === 'both' ? 'unset' : ''};
     height: 26px;
-    margin-left: ${(props) => props.emptySide === 'l' || props.emptySide === 'both' ? '10px' : props.attachedSide === 'l' || props.attachedSide === 'both' ? "0px !important" : ''};
-    margin-right: ${(props) => props.emptySide === 'r' || props.emptySide === 'both' ? '10px' : props.attachedSide === 'r' || props.attachedSide === 'both' ? "0px !important" : ''};
+    margin-left: ${(props) => props.emptySide === 'l' || props.emptySide === 'both' ? '10px' : props.attachedside === 'l' || props.attachedside === 'both' ? "0px !important" : ''};
+    margin-right: ${(props) => props.emptySide === 'r' || props.emptySide === 'both' ? '10px' : props.attachedside === 'r' || props.attachedside === 'both' ? "0px !important" : ''};
     padding: ${(props) => props.size === 'small' ? '3px 5px' : ''};
     span {
         margin-left: 5px;
@@ -140,13 +140,14 @@ export const DatePickerButton = styled(BtnSmall)`
         color: orange;
     }
 `;
-export const UrlCopyButton = styled(DatePickerButton)`
+export const UrlCopyButton = styled.div`
+    
     background: ${(props) => props.theme.buttonDefault};
     color: ${({ isActive, theme }) => (isActive ? "orange" : theme.textColor)};
     cursor: ${({ isActive }) => (isActive ? "pointer" : "not-allowed")};
     text-overflow: ellipsis;
     transition: 0.2s all;
-    height: 26px;
+    margin-right:3px;
     span {
         margin-left: 4px;
         color: ${(props) => props.theme.textColor};
