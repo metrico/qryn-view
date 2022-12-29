@@ -20,7 +20,7 @@ export const RelativeTimeMenu = (props: any) => {
     } = props;
 
     const checkBoxRender = () => (
-        <Checkbox style={{ paddingRight: "0px" }} disabled={!label} />
+        <Checkbox style={{ paddingRight: "0px" }} checked={isRelative} disabled={!label} />
     );
     const typoRender = () => (
         <Typography style={typoStyle(qrynTheme)}>Relative time</Typography>
@@ -39,7 +39,7 @@ export const RelativeTimeMenu = (props: any) => {
                 <FormGroup>
                     <FormControlLabel
                         style={formControlLabelStyle(label)}
-                        checked={isRelative}
+                        checked={isRelative||false}
                         onChange={handleChange}
                         control={checkBoxRender()}
                         label={typoRender()}

@@ -259,14 +259,14 @@ function HistoryLinkTools(props) {
     
     const handleClick = (event) => {
         setAnchorEl(prev => event.currentTarget);
-        setIsRelative(isRelative && label);
+        setIsRelative(prev => isRelative );
     };
     const handleClose = (e, direction,  option) => {
         setAnchorEl(null);
     };
 
     const handleChange = (event) => {
-        setIsRelative(event.target.checked);
+        setIsRelative(prev => Boolean(event.target.checked));
     };
 
     return (
