@@ -578,7 +578,7 @@ export const QueryBar = (props) => {
                     query.expr = queryExpr;
                 }
                 query.labels = [...labelsDecoded];
-                query.browserOpen = !isSearch && dataSourceType === "logs";
+                query.browserOpen = false;
                 query.dataSourceId = currentDataSource.id;
                 query.dataSourceType = currentDataSource.type;
                 query.dataSourceURL = currentDataSource.url;
