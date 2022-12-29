@@ -258,7 +258,7 @@ function HistoryLinkTools(props) {
     const [isRelative, setIsRelative] = useState(false);
     
     const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+        setAnchorEl(prev => event.currentTarget);
         setIsRelative(isRelative && label);
     };
     const handleClose = (e, direction,  option) => {
@@ -287,12 +287,12 @@ function HistoryLinkTools(props) {
                             isActive={true}
                             style={{ flex: 1 }}
                             className={"URL-COPY"}
-                            attachedSide={"r"}
+                            attachedside={"r"}
                         >
                             <LinkIcon fontSize={"14px"} />
                         </HistoryButton>
                         <HistoryButton
-                            attachedSide={"l"}
+                            attachedside={"l"}
                             onClick={handleClick}
                             size={"small"}
                             className={"date-time-selector"}
