@@ -60,10 +60,9 @@ export default function CopyLinkButton() {
         );
     }
     const handleClick = (event: any) => {
-        event.stopPropagation();
         copyLink(event);
-        setAnchorEl((_: any) => event.currentTarget);
-        setIsRelative(isRelative && label);
+        setAnchorEl(event.currentTarget);
+        setIsRelative(isRelative && label?.length > 0);
     };
     const handleClose = (e: any, direction: any, option: any) => {
         e.stopPropagation();
@@ -71,7 +70,7 @@ export default function CopyLinkButton() {
     };
 
     const handleChange = (event: any) => {
-        setIsRelative(event.target.checked);
+        setIsRelative(prev => Boolean(event.target.checked));
     };
 
     return (
@@ -79,16 +78,19 @@ export default function CopyLinkButton() {
             <Tooltip title={"Copy Link"}>
                 <>
                     <DatePickerButton
-                        onClick={handleClick}
+                       
                         className={"date-time-selector"}
                         aria-controls={open ? "backward-menu" : undefined}
                         aria-haspopup={true}
                         aria-expanded={open ? true : undefined}
+                        onClick={handleClick}
                     >
-                        <CopyButton onClick={copyLink} attachedside={"r"} />
+                        <CopyButton onClick={copyLink} />
+
                         <KeyboardArrowDownOutlinedIcon
                             fontSize={"small"}
-                            style={{ flex: 1, zIndex: 1000, marginLeft: "3px" }}
+                            style={{ marginLeft: "3px" }}
+                           
                         />
                     </DatePickerButton>
                     <RelativeTimeMenu
@@ -97,7 +99,7 @@ export default function CopyLinkButton() {
                         handleClose={handleClose}
                         handleChange={handleChange}
                         label={label}
-                        isRelative={isRelative}
+                        isRelative={isRelative||false}
                         qrynTheme={qrynTheme}
                     />
                 </>
