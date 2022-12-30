@@ -1,12 +1,13 @@
+//Flot
 import "./jquery-loader";
 // import ReactFlot from "react-flot";
+import "react-flot/flot/jquery.flot.min";
 import "react-flot/flot/jquery.flot.time.min";
 import "react-flot/flot/jquery.flot.selection.min";
 import "react-flot/flot/jquery.flot.crosshair.min";
 //React
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-//Flot
 //Packages
 import * as moment from "moment";
 import { format } from "date-fns";
