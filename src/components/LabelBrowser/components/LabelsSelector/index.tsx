@@ -15,8 +15,8 @@ export default function LabelsSelector(props: any) {
     //const dataSourceURL = useSelector((store)=> store.dataSources.find(f => f.id === dataSourceId)) 
 
     const { JSONClone, updateLabel, updateLabelSelected } = labelHelpers;
-    const [labelsResponse, setLabelsResponse] = useState([]);
-    const [labelsSelected, setLabelsSelected] = useState([]);
+    const [labelsResponse, setLabelsResponse]: any = useState([]);
+    const [labelsSelected, setLabelsSelected]: any = useState([]);
 
     const { theme }: any = useSelector((store) => store);
 
@@ -47,8 +47,8 @@ export default function LabelsSelector(props: any) {
     // memoize and format labels response
 
     const labels = useMemo(() => {
-        if (labelsResponse.length > 0) {
-            return labelsResponse?.map((label) => ({
+        if (labelsResponse?.length > 0) {
+            return labelsResponse?.map((label: any) => ({
                 name: label,
                 selected: false,
             }));
@@ -100,11 +100,11 @@ export default function LabelsSelector(props: any) {
     }, [labelsFromProps, labels, setLabelsState, JSONClone]);
 
     const onLabelSelected = (e: any) => {
-        setLabelsState((prev) => {
+        setLabelsState((prev: any) => {
             return updateLabel(prev, e);
         });
 
-        setLabelsSelected((prev) => updateLabelSelected(prev, e));
+        setLabelsSelected((prev: any) => updateLabelSelected(prev, e));
     };
     if (data) {
         const _themes: any = themes;
