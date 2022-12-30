@@ -9,11 +9,10 @@
         "visType": "logs",
         "headers": [
             {
-                "header": "Content-type",
+                "header": "Content-Type",
                 "value": "application/json",
                 "id": "SALm2YFnZKJQD8pXeAywE"
             }
-
         ],
         "linkedFields": [
             {
@@ -47,10 +46,7 @@
             "method": {
                 "label": "Method",
                 "form_type": "select",
-                "options": [
-                    "GET",
-                    "POST"
-                ],
+                "options": ["GET", "POST"],
                 "value": "GET"
             },
             "fields": {
@@ -151,11 +147,15 @@
         "visType": "trace",
         "headers": [
             {
-                "header": "Content-type",
+                "header": "Content-Type",
                 "value": "application/json",
                 "id": "Kfrl4PKCHrXoQT-XE5QiM"
+            },
+            {
+                "header": "Accept",
+                "id": "yjwYMpgLAJCPYusHpUbJu",
+                "value": "application/json"
             }
- 
         ],
         "linkedFields": [
             {
@@ -189,10 +189,7 @@
             "method": {
                 "label": "Method",
                 "form_type": "select",
-                "options": [
-                    "GET",
-                    "POST"
-                ],
+                "options": ["GET", "POST"],
                 "value": "GET"
             },
             "fields": {
@@ -293,11 +290,10 @@
         "visType": "chart",
         "headers": [
             {
-                "header": "Content-type",
+                "header": "Content-Type",
                 "value": "application/json",
                 "id": "l7NqFAZNeK8n70QFRy4pu"
             }
-
         ],
         "linkedFields": [
             {
@@ -329,10 +325,7 @@
             "method": {
                 "label": "Method",
                 "form_type": "select",
-                "options": [
-                    "GET",
-                    "POST"
-                ],
+                "options": ["GET", "POST"],
                 "value": "GET"
             },
             "fields": {
@@ -438,21 +431,17 @@
                 "id": "EYsZnWD1ViRNChORDAB38"
             },
             {
-                "header": "Content-type",
+                "header": "Content-Type",
                 "value": "application/vnd.flux",
                 "id": "OoGmT6Z9bm6LNArNV7Lfp"
             }
-
         ],
         "linkedFields": [],
         "auth": {
             "method": {
                 "label": "Method",
                 "form_type": "select",
-                "options": [
-                    "GET",
-                    "POST"
-                ],
+                "options": ["GET", "POST"],
                 "value": "POST"
             },
             "fields": {
