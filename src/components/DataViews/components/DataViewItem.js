@@ -8,7 +8,7 @@ import { VectorView } from "../views/VectorView";
 import { TraceView } from "./Traces/TraceView.tsx";
 export function DataViewItem(props) {
     // add a header for table view / json view
-    const { dataView, name, vHeight } = props;
+    const { dataView, name, } = props;
     const { type, total, loading } = dataView;
     const viewRef = useRef(null);
     const isSplit = useSelector((store) => store.isSplit);

@@ -1,6 +1,4 @@
-import { cloneDeep } from "lodash";
 import moment, { Moment, MomentInput } from "moment";
-import { nanoid } from "nanoid";
 import { environment } from "../environment/env.dev";
 import stateFromQueryParams from "../helpers/stateFromQueryParams";
 import localService from "../services/localService";

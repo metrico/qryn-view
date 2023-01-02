@@ -134,17 +134,6 @@ export default function QueryTypeBar(props) {
         dispatch(panelAction(name, panel));
     }
 
-    function onTraceQueryChange(e) {
-        const panel = [...panelQuery];
-        panel.forEach((query) => {
-            if (query.id === id) {
-                query.traceQueyType = e;
-            }
-        });
-        dispatch(panelAction(name, panel));
-        // setQueryTraceSwitch(prev => e);
-    }
-
     function handleShowTsSwitch() {
         // modify table view switch value
         const panel = [...panelQuery];

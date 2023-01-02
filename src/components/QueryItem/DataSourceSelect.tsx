@@ -1,7 +1,7 @@
 import { useMemo, useRef, useEffect } from "react";
 import { IconSelect } from "./components/DataSourceSelectOption";
 export const DataSourceSelect = (props: any) => {
-    const { value, onChange, opts, label, extValue } = props;
+    const { value, onChange, opts, extValue } = props;
 
     const selectRef: any = useRef(null);
 

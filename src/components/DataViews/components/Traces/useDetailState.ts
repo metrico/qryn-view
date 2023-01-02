@@ -1,5 +1,5 @@
 import { TraceLog, TraceSpanReference } from "./Jaeger-ui/src/types/trace";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState } from "react";
 
 import { DetailState } from "./Jaeger-ui/src";
 

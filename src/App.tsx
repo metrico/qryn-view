@@ -1,10 +1,6 @@
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import boscoRequest from "./actions/helpers/boscoRequest";
+
 import Main from "./views/Main";
-interface storeProps {
-    apiUrl:string;
-}
+
 export default function App() {
 //    const url = useSelector((store:storeProps) => store.apiUrl)
 //     useEffect(()=>{

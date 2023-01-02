@@ -14,7 +14,6 @@
 
 import * as React from "react";
 
-import { autoColor } from "../../Theme";
 import { TNil } from "../../types";
 import { getRgbColorByKey } from "../../utils/color-generator";
 

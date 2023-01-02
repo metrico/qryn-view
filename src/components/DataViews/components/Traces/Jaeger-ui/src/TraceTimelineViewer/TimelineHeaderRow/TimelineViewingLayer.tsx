@@ -65,15 +65,6 @@ const TimelineViewingLayerDraggedReframeDrag = css`
     background-color: rgba(255, 68, 68, 0.2);
     border-color: #f44;
 `;
-const TimelineViewingLayerFullOverlay = css`
-    bottom: 0;
-    cursor: col-resize;
-    left: 0;
-    position: fixed;
-    right: 0;
-    top: 0;
-    user-select: none;
-`;
 
 type TimelineViewingLayerProps = {
     /**
