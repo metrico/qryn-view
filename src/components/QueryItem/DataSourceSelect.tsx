@@ -4,7 +4,7 @@ export const DataSourceSelect = (props: any) => {
     const { value, onChange, opts, extValue } = props;
 
     const selectRef: any = useRef(null);
-
+    /// add the initial data source name
     useEffect(() => {
         if (value.value !== extValue && extValue !== "") {
             selectRef.current.value = extValue;
@@ -13,7 +13,7 @@ export const DataSourceSelect = (props: any) => {
 
     useEffect(() => {
         if (value.value !== extValue && extValue !== "") {
-            selectRef.current.value = extValue;
+            selectRef.current.setValue(extValue);
         }
     }, [extValue]);
     const customSelectChange = (e: any) => {
