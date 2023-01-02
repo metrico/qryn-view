@@ -9,15 +9,14 @@ import {
 import setDataSources from "../store/setDataSources";
 
 import { DataSourceSettingsCont, InputCont, InputCol } from "../styles";
-import { Field, Select } from "../ui";
+import { Field } from "../ui";
 
 export const Settings = (props) => {
-    const { headers, id, linkedFields, name, url, visType } = props;
+    const { headers, id, linkedFields, name, url } = props;
 
     const dispatch = useDispatch();
 
     const state = useSelector(({ dataSources }) => dataSources);
-    const visTypes = useSelector(({ visTypes }) => visTypes);
 
     const onFieldChange = (prop, value) => {
         const arrayClone = JSON.parse(JSON.stringify(state));
@@ -33,17 +32,16 @@ export const Settings = (props) => {
     const [isEditing, setIsEditing] = useState(false);
 
     const onChange = (e, name) => {
-        setIsEditing( prev => true)
+        setIsEditing((prev) => true);
         const value = e.target.value;
-        
+
         const newVal = onFieldChange(name, value);
         localStorage.setItem("dataSources", JSON.stringify(newVal));
         dispatch(setDataSources(newVal));
-        setTimeout(()=>{
-            setIsEditing(prev => false)
-        },800)
+        setTimeout(() => {
+            setIsEditing((prev) => false);
+        }, 800);
     };
-
 
     return (
         <DataSourceSettingsCont>

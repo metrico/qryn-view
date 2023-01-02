@@ -1,4 +1,4 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { createAlert, setIsSubmit } from "../../../actions";
 import localUrl from "../../../services/localUrl";

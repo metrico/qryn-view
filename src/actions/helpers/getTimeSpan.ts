@@ -2,7 +2,7 @@
 
 export function getTimeSpan(queryInput: string) {
     const matched = queryInput.match(/\[(.*?)\]/gm);
-    const repl = matched?.[0].replace(/[\[\]']+/g, "").trim() || "";
+    const repl = matched?.[0].replace(/\[\]']+/g, "").trim() || "";
 
     let funcSpan = 0;
 

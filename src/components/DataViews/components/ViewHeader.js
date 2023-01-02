@@ -1,36 +1,23 @@
 import { ThemeProvider } from "@emotion/react";
 import { Tooltip } from "@mui/material";
 import { useState, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { ViewLabel } from "./ViewLabel";
-import { setLeftDataView } from "../../../actions/setLeftDataView";
-import { setRightDataView } from "../../../actions/setRightDataView";
 import { themes } from "../../../theme/themes";
 import { HeadLabelsCont, LabelChip, ViewHeaderStyled } from "../styled";
-import CloseIcon from "@mui/icons-material/Close";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import InfoIcon from "@mui/icons-material/Info";
 import CropSquareIcon from "@mui/icons-material/CropSquare";
 import { InfoDialog } from "./InfoDialog";
 
-
 export function ViewHeader(props) {
     const { fixedSize } = props || { fixedSize: false };
-    const dispatch = useDispatch();
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
     const [open, setOpen] = useState(false);
     const theme = useSelector((store) => store.theme);
-    const isEmbed = useSelector((store)=> store.isEmbed)
-    const { actualQuery, dataView, name, type, total } = props;
-    const DataViewList = useSelector((store) => store[`${name}DataView`]);
-    const action = (name) => {
-        if (name === "left") {
-            return setLeftDataView;
-        } else {
-            return setRightDataView;
-        }
-    };
+    const { actualQuery, dataView, type, total } = props;
+
 
     const headerType = useMemo(() => {
         const isMatrixTable = type === "matrix" && actualQuery?.tableView;
@@ -49,12 +36,6 @@ export function ViewHeader(props) {
         }
     }, [type, actualQuery?.tableView]);
 
-    function onClose() {
-        const filtered = DataViewList.filter((f) => f.id !== dataView.id) || [];
-        dispatch(action(name)([]));
-        dispatch(action(name)(filtered));
-        props.onClose();
-    }
     function setMinimize() {
         props.setMinimize();
     }

@@ -89,11 +89,7 @@ const gripIconDragging = css`
         border-right: 1px solid rgba(136, 0, 136, 0.5);
     }
 `;
-const wrapper = css`
-    bottom: 0;
-    position: absolute;
-    top: 0;
-`;
+
 type TimelineColumnResizerProps = {
     min: number;
     max: number;

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import {
     useFlexLayout,
     useResizeColumns,
@@ -11,7 +11,6 @@ import { scrollbarWidth } from "./helpers";
 import { getStyles } from "./styles";
 import { ZoomIn, ZoomOut } from "@mui/icons-material/";
 import { addLabel } from "../../ValueTags";
-
 
 export const AddLabels = (props) => {
     // get queryObject from parent
@@ -54,7 +53,7 @@ export const AddLabels = (props) => {
 export function Table(props) {
     // modify height from props in here
 
-    const { columns, data, actQuery,height, size } = props;
+    const { columns, data, actQuery, size } = props;
 
     const { responseType } = actQuery;
 
@@ -79,7 +78,6 @@ export function Table(props) {
         headerGroups,
         rows,
         prepareRow,
-
     } = useTable(options, useFlexLayout, useResizeColumns, useSortBy);
 
     const RenderRow = useCallback(

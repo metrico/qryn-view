@@ -1,7 +1,6 @@
 import { ThemeProvider } from "@emotion/react";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import store from "../../store/store";
 import { themes } from "../../theme/themes";
 import { DataViewItem } from "./components/DataViewItem";
 import { DataviewsContainer } from "./styled";

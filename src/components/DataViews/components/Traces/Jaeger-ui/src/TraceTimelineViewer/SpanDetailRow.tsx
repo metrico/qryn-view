@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { css } from "@emotion/css";
 import styled from "@emotion/styled";
 import React from "react";
 import { SpanLinkFunc } from "../types";

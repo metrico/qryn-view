@@ -15,7 +15,7 @@ function panelAction(name, value) {
 
 export default function ValuesSelector(props) {
     const { data, name } = props;
-    const { dataSourceType, id } = data;
+    const { dataSourceType } = data;
     const dispatch = useDispatch();
     const panelQuery = useSelector((store) => store[name]);
     const [labels, setLabels] = useState(props.labelsSelected);
