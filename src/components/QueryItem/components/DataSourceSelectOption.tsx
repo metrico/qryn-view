@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, useMemo } from "react";
 import Select, { components } from "react-select";
 import { Icon } from "../../../views/DataSources/ui";
 //import { InfoContent } from "../../DataViews/components/InfoContent";
@@ -26,6 +26,25 @@ export const SingleValueIconStyle = {
     width: "14px",
     marginRight: "3px",
 };
+
+export function Placeholder(props: any) {
+    const { defaultValue, options } = props;
+
+    const defaultOption = useMemo(() => {
+        const found = options.find((f: any) => f.value === defaultValue);
+        return {
+            icon: found.icon,
+            label: found.label,
+        };
+    }, [defaultValue, options]);
+
+    return (
+        <div style={SingleValueStyle}>
+            <Icon icon={defaultOption.icon} style={SingleValueIconStyle} />
+            <div>{defaultOption.label}</div>
+        </div>
+    );
+}
 
 export const DataSourceSelectOption = (props: any) => {
     const { Option } = components;
@@ -63,6 +82,7 @@ export const IconSelect = forwardRef((props: any, ref: any) => {
     return (
         <Select
             styles={cStyles(mainTheme, 100)}
+            placeholder={<Placeholder {...props} />}
             options={options}
             ref={ref}
             components={{
