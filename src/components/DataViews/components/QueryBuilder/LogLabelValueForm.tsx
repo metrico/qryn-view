@@ -1,10 +1,10 @@
 import { useMemo, useRef, useState } from "react";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { OPERATOR_OPTIONS } from "./consts";
 import {  LabelValueContStyles, FlexCenter, IconStyle } from "./styles";
 import { cx } from "@emotion/css";
-import { useTheme, useValueSelectOpts } from "./hooks";
+import { useTheme } from "./hooks";
 import { InputSelect } from "./InputSelect";
 import useLogLabelValues from "./hooks/useLogLabelValues";
 
@@ -149,14 +149,14 @@ export const LogLabelValueForm = (props: any) => {
                         minWidth={250}
                         labelsLength={labelValuesLength}
                     />
-                    <DeleteOutlineOutlinedIcon
+                    <RemoveOutlinedIcon
                         className={cx(IconStyle(mainTheme))}
-                        fontSize="small"
+                        style={{height:'14px', width:'14px'}}
                         onClick={cleanAndRemove}
                     />
                     <AddOutlinedIcon
                         className={cx(IconStyle(mainTheme))}
-                        fontSize="small"
+                        style={{height:'14px', width:'14px'}}
                         onClick={labelAdd}
                     />
                 </div>

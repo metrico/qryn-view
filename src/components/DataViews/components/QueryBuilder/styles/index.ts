@@ -47,11 +47,10 @@ export const cStyles = (theme: any, minWidth: number) => ({
         marginTop: "4px",
         color: theme.textColor,
     }),
-    valueContainer: (base:any)=> ({
+    valueContainer: (base: any) => ({
         ...base,
-        display:'flex'
-
-    })
+        display: "flex",
+    }),
 });
 
 export const LabelValueContStyles = css`
@@ -60,6 +59,8 @@ export const LabelValueContStyles = css`
     align-items: center;
     margin-left: 3px;
     margin-top: 3px;
+    margin-right: 3px;
+    gap: 3px;
 `;
 export const FlexCenter = css`
     display: flex;
@@ -68,32 +69,37 @@ export const FlexCenter = css`
 
 export const IconStyle = (theme: any) => css`
     color: ${theme.textColor};
-    margin: 0px 5px;
-    cursor: "pointer";
-`;
+    border: 1px solid ${theme.buttonBorder};
+    margin-left: 3px;
+    cursor: pointer;
 
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+`;
 
 export const InitialAddStyle = (theme: any) => css`
     display: flex;
     align-items: center;
-    margin-top: 3px; 
+    margin-top: 3px;
     margin-left: 3px;
     cursor: pointer;
     color: ${theme.textColor};
-   padding: 0px 12px;
-   border-radius:3px;
-   height:16px;
+    padding: 0px 12px;
+    border-radius: 3px;
+    height: 28px;
     small {
-        font-size:12px;
-        margin:0;
-        padding:0;
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
     }
 `;
 
 export const AddIconStyle = (theme: any) => css`
-   
     color: ${theme.textColor};
-    margin-right:2px;
+    margin-right: 2px;
 `;
 
 export const FlexWrap = css`
