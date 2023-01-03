@@ -25,7 +25,7 @@ export default function MetricsSearch(props: any) {
 
     const [labelFilters, setLabelFilters] = useState([] as any); // check label filters
 
-    console.log(labelFilters)
+    //console.log(labelFilters)
     //  this one  should go upstairs and be stored as default value
     
     const storeTheme = useSelector(

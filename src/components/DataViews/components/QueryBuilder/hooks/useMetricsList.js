@@ -22,7 +22,6 @@ export function useMetricsList(id, value) {
         return dataSources.find((f) => f.id === id);
     }, [dataSources, id]);
 
-
     const valueFormatter = useMemo(() => {
         const val = encodeURIComponent(`{__name__="${value}"}`);
         const paren = "[]";
@@ -37,9 +36,9 @@ export function useMetricsList(id, value) {
         if (
             dataSource.type === "metrics" &&
             dataSource?.url &&
-            dataSource?.url !== ""&&
-            value && value !== ''
-
+            dataSource?.url !== "" &&
+            value &&
+            value !== ""
         ) {
             const metricsHeaders = getHeaders(dataSource);
 

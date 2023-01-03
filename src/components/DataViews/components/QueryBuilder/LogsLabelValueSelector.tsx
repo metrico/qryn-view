@@ -1,5 +1,6 @@
 import { cx } from "@emotion/css";
 import { ThemeProvider, useTheme } from "@emotion/react";
+import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
 import { InitialLabelValueState, NewLabel } from "./consts";
 import { logsToString } from "./helpers";
@@ -37,7 +38,7 @@ export function LogsLabelValueSelector(props: any) {
 
     const onAdd = (e: any) => {
         setLabelValuesState((prev: Label[]) => {
-            return [...prev, NewLabel];
+            return [...prev, { ...NewLabel, id: nanoid() }];
         });
     };
 
