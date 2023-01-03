@@ -1,5 +1,5 @@
 import { TabsUnstyled } from "@mui/base";
-import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import QrynChart from "../components/Charts";
 import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";

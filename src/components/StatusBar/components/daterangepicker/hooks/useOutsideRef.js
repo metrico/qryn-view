@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { setRangeOpen } from '../../../../../actions/setRangeOpen';
 import { useDispatch } from 'react-redux';
 

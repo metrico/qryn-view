@@ -8,20 +8,19 @@ import { VectorView } from "../views/VectorView";
 import { TraceView } from "./Traces/TraceView";
 export function DataViewItem(props: any) {
     // add a header for table view / json view
-    const { dataView, name, vHeight }: any = props;
 
+    const { dataView, name }: any = props;
     const { type, total, loading }: any = dataView;
     const viewRef: any = useRef(null);
     const isSplit: any = useSelector((store: any) => store.isSplit);
-    const panel: any = useSelector((store: any) => store[name]);
-    
+    const panel = useSelector((store: any) => store[name]);
     // panelSize: min , regular, max
-    const [panelSize, setPanelSize] = useState("max");
+    const [panelSize, setPanelSize]: any = useState("max");
     // get actual query from panel
-    const actualQuery = useActualQuery({ panel, dataView });
+    const actualQuery: any = useActualQuery({ panel, dataView });
     // get  actual query from panel
 
-    const [viewWidth, setViewWidth] = useState(0);
+    const [viewWidth, setViewWidth]: any = useState(0);
 
     useEffect(() => {
         if (viewRef?.current?.clientWidth) {
@@ -46,11 +45,11 @@ export function DataViewItem(props: any) {
     };
 
     const setMinimize = () => {
-        setPanelSize((prev) => (prev !== "min" ? "min" : "regular"));
+        setPanelSize((prev: any) => (prev !== "min" ? "min" : "regular"));
     };
 
     const setMaxHeight = () => {
-        setPanelSize((prev) => (prev !== "max" ? "max" : "regular"));
+        setPanelSize((prev: any) => (prev !== "max" ? "max" : "regular"));
     };
 
     const theight = useTableHeight({ total, panelSize, dataView });

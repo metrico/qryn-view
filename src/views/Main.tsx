@@ -132,17 +132,6 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }: any
         widthRightPercent,
         isSplit,
     ]);
-    const onSplitResize = (event: any, { element, size, handle }: any) => {
-        if (handle === "e") {
-            setWidthRight(widthTotal - size.width);
-            setWidthLeft(size.width);
-        } else {
-            setWidthLeft(widthTotal - size.width);
-            setWidthRight(size.width);
-        }
-        setWidthLeftPercent(widthLeft / widthTotal);
-        setWidthRightercent(widthRight / widthTotal);
-    };
 
     return (
         <ThemeProvider theme={theme}>

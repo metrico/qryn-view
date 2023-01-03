@@ -2,7 +2,7 @@ import { nanoid } from "nanoid";
 
 export const defaultLogsDataSourceHeaders = [
     {
-        header: "Content-type",
+        header: "Content-Type",
         value: "application/json",
         id: nanoid(),
     },
@@ -10,7 +10,7 @@ export const defaultLogsDataSourceHeaders = [
 
 export const defaultMetricsDataSourceHeaders = [
     {
-        header: "Content-type",
+        header: "Content-Type",
         value: "application/json",
         id: nanoid(),
     }
@@ -18,7 +18,12 @@ export const defaultMetricsDataSourceHeaders = [
 
 export const defaultTracesDataSourceHeaders = [
     {
-        header: "Content-type",
+        header: "Content-Type",
+        value: "application/json",
+        id: nanoid(),
+    },
+    {
+        header: "Accept",
         value: "application/json",
         id: nanoid(),
     }
@@ -27,7 +32,7 @@ export const defaultTracesDataSourceHeaders = [
 export const defaultFluxDataSourceHeaders = [
     { header: "Accept", value: "application/csv", id: nanoid() },
     {
-        header: "Content-type",
+        header: "Content-Type",
         value: "application/vnd.flux",
         id: nanoid(),
     }

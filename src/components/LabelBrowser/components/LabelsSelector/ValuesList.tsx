@@ -1,15 +1,12 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
-
 import useLabelValues from "./useLabelValues";
-
 import { useDispatch, useSelector } from "react-redux";
 import { decodeQuery } from "../../../../components/LabelBrowser/helpers/querybuilder";
-
 import { nanoid } from "nanoid";
 import { setLeftPanel } from "../../../../actions/setLeftPanel";
 import { setRightPanel } from "../../../../actions/setRightPanel";
 import { Loader, LoaderCont, SmallInput } from "./styled";
-import store from "../../../../store/store";
+
 
 export function panelAction(name: any, value: any) {
     if (name === "left") {
@@ -66,7 +63,8 @@ export default function ValuesList(props: any) {
     const dispatch = useDispatch();
     const { name, data } = props;
 
-    const { dataSourceId, dataSourceType } = data;
+
+    const { dataSourceId } = data;
     const { start, stop }: any = useSelector((store) => store);
     const panelQuery = useSelector((store: any) => store[name]);
 

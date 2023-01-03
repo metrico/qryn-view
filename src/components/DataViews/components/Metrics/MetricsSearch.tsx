@@ -24,6 +24,9 @@ export default function MetricsSearch(props: any) {
 
     const [labelFilters, setLabelFilters] = useState([] as any); // check label filters
 
+    console.log(labelFilters)
+    //  this one  should go upstairs and be stored as default value
+    
     const storeTheme = useSelector(
         (store: { theme: "light" | "dark" }) => store.theme
     );
@@ -33,7 +36,7 @@ export default function MetricsSearch(props: any) {
     }, [storeTheme]);
 
     const onMetricChange = (e: any) => {
-        const { value, id } = e;
+        const { value } = e;
         setMetricValue((prev: any) => {
             return { value: value?.value, label: value?.value };
         });

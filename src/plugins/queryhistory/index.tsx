@@ -1,6 +1,6 @@
 import { Checkbox, FormControlLabel, FormGroup, MenuItem, ThemeProvider, Tooltip } from "@mui/material";
 import localService from "../../services/localService";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import setQueryHistory from "../../actions/setQueryHistory";
 import getData from "../../actions/getData";
@@ -55,10 +55,10 @@ import CloseButton from "./components/CloseButton";
 import { themes } from "../../theme/themes";
 import { notificationTypes } from "../../qryn-ui/notifications/consts";
 
-import { DatePickerButton, UrlCopyButton } from "../../components/StatusBar/styled";
 import { StyledMenu } from "../../components/StatusBar/components/daterangepicker";
-import { useLocation } from "react-router-dom";
+
 function QueryHistoryTabs(props: any) {
+
     const {
         historyTabHeader,
         historyTab,

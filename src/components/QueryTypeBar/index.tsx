@@ -14,7 +14,7 @@ import { setRightPanel } from "../../actions/setRightPanel";
 const QueryTypeCont = styled.div`
     display: flex;
     padding: 4px;
-    background: ${({theme}: any) => theme.widgetContainer};
+    background: ${(props: any) => props.theme.widgetContainer};
     color: ${(props: any) => props.color};
     height: 26px;
 `;
@@ -37,7 +37,7 @@ export const DIRECTION_SWITCH_OPTIONS = [
 
 export default function QueryTypeBar(props: any) {
     const dispatch = useDispatch();
-    const { name, data } = props;
+    const { name, data }: any = props;
     const theme = useSelector((store: any) => store.theme);
     const panelQuery = useSelector((store: any) => store[name]);
 
@@ -65,7 +65,7 @@ export default function QueryTypeBar(props: any) {
     );
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(hash.replace("#", ""));
+        const urlParams: any = new URLSearchParams(hash.replace("#", ""));
         const urlPanel: any = urlParams.get(name);
 
         const parsedPanel = JSON.parse(decodeURIComponent(urlPanel));
@@ -128,17 +128,6 @@ export default function QueryTypeBar(props: any) {
         dispatch(panelAction(name, panel));
     }
 
-    function onTraceQueryChange(e: any) {
-        const panel = [...panelQuery];
-        panel.forEach((query) => {
-            if (query.id === id) {
-                query.traceQueyType = e;
-            }
-        });
-        dispatch(panelAction(name, panel));
-        // setQueryTraceSwitch(prev => e);
-    }
-
     function handleShowTsSwitch() {
         // modify table view switch value
         const panel = [...panelQuery];
@@ -162,9 +151,9 @@ export default function QueryTypeBar(props: any) {
         });
         dispatch(panelAction(name, panel));
     }
-    const _themes: any = themes;
+
     return (
-        <ThemeProvider theme={_themes[theme]}>
+        <ThemeProvider theme={(themes as any)[theme]}>
             <QueryTypeCont>
                 <QueryTypeSwitch
                     label={"Query Type"}

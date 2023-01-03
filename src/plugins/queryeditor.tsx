@@ -11,8 +11,7 @@ import "prismjs/components/prism-sql";
 import { themes } from "../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import { useSelector } from "react-redux";
-// import { ResizableBox } from "./ResizableBox";
-// import { useMediaQuery } from "react-responsive";
+
 const CustomEditor = styled(Editable)`
     flex: 1;
  //   height: 100%;

@@ -12,50 +12,43 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { css } from '@emotion/css';
-import styled from '@emotion/styled';
-import cx from 'classnames';
-import * as React from 'react';
+import styled from "@emotion/styled";
+import * as React from "react";
 
-
-
-    const TextListStyled = styled.div`
-      max-height: 450px;
-      overflow: auto;
-    `
-    const List = styled.ul`
-      width: 100%;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    `
-    const Item = styled.li`
-      padding: 0.25rem 0.5rem;
-      vertical-align: top;
-      &:nth-of-type(2n) {
+const TextListStyled = styled.div`
+    max-height: 450px;
+    overflow: auto;
+`;
+const List = styled.ul`
+    width: 100%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+`;
+const Item = styled.li`
+    padding: 0.25rem 0.5rem;
+    vertical-align: top;
+    &:nth-of-type(2n) {
         background: #f5f5f5;
-      }
-    `
-
+    }
+`;
 
 type TextListProps = {
-  data: string[];
+    data: string[];
 };
 
 export default function TextList(props: TextListProps) {
-  const { data } = props;
-  return (
-    <TextListStyled  data-testid="TextList">
-      <List>
-        {data.map((row, i) => {
-          return (
-            // `i` is necessary in the key because row.key can repeat
-            <Item  key={`${i}`}>
-              {row}
-            </Item>
-          );
-        })}
-      </List>
-    </TextListStyled>
-  );
+    const { data } = props;
+    return (
+        <TextListStyled data-testid="TextList">
+            <List>
+                {data.map((row, i) => {
+                    return (
+                        // `i` is necessary in the key because row.key can repeat
+                        <Item key={`${i}`}>{row}</Item>
+                    );
+                })}
+            </List>
+        </TextListStyled>
+    );
 }
