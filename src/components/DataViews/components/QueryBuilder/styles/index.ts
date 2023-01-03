@@ -76,14 +76,24 @@ export const IconStyle = (theme: any) => css`
 export const InitialAddStyle = (theme: any) => css`
     display: flex;
     align-items: center;
-    margin-top: 5px;
+    margin-top: 3px; 
+    margin-left: 3px;
     cursor: pointer;
     color: ${theme.textColor};
+   padding: 0px 12px;
+   border-radius:3px;
+   height:16px;
+    small {
+        font-size:12px;
+        margin:0;
+        padding:0;
+    }
 `;
 
 export const AddIconStyle = (theme: any) => css`
-    margin: 0px 5px;
+   
     color: ${theme.textColor};
+    margin-right:2px;
 `;
 
 export const FlexWrap = css`

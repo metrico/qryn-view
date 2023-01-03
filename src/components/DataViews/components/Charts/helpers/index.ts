@@ -5,27 +5,34 @@ import {
     LOCAL_CHART_TYPE,
 } from "../consts";
 
-export function highlightItems(list) {
-    list.forEach((item) => {
+export function highlightItems(list: any) {
+    list.forEach((item: any) => {
         item.plot.highlight(item.i, item.plotIndex);
     });
 }
 
-export function isFloat(x) {
+export function isFloat(x: number) {
     return !!(x % 1);
 }
 
-export function getSortedItems(list) {
-    return list?.filter(
-        (f) => parseFloat(f.value) === parseFloat(f.item.datapoint[1])
-    );
+export function getSortedItems(list: []) {
+    if (list?.length > 0) {
+        return (
+            list?.filter(
+                (f: any) =>
+                    parseFloat(f.value) === parseFloat(f.item.datapoint[1])
+            ) || []
+        );
+    }
+    return [];
 }
 
-export function getLabelTemplate(sortedList) {
-    return sortedList
-        ?.map(
-            (template) =>
-                ` <div style="display:flex;justify-content:space-between">
+export function getLabelTemplate(sortedList: any) {
+    return (
+        sortedList
+            ?.map(
+                (template: any) =>
+                    ` <div style="display:flex;justify-content:space-between">
                            <div style="display:flex;margin-right:10px;">
                                <span style="background:${template.color};
                                height:6px;width:24px;pading:3px;
@@ -37,29 +44,38 @@ export function getLabelTemplate(sortedList) {
                     </div>
                 </div>
     `
-        )
+            )
 
-        .join("");
+            .join("") || []
+    );
 }
 
-export function makeTolltipItems(list) {
+export function makeTolltipItems(list: []) {
     const sorted = getSortedItems(list);
     return getLabelTemplate(sorted);
 }
 
-export function getItemsLength(list) {
+export function getItemsLength(list: any): number {
     const sList = getSortedItems(list);
 
     if (sList?.length > 0) {
-        return sList?.sort((a, b) =>
+        const sorted: any = sList?.sort((a: any, b: any) =>
             a.label.length > b.label.length ? 0 : 1
-        )[0].label.length;
+        );
+
+        if (sorted && sorted.length > 0) {
+            return sorted[0]?.label?.length;
+        }
+        return 0;
     }
+    return 0;
 }
 
-export function getTimeSpan(data) {
+export function getTimeSpan(data: any) {
     const tsArray = data
-        .map((tsItem) => tsItem?.data?.map(([t, v]) => t))
+        .map((tsItem: any) =>
+            tsItem?.data?.map(([t, v]: [t: any, v: any]) => t)
+        )
         .flat()
         .sort();
     const first = tsArray[0];
@@ -72,7 +88,7 @@ export function getTimeSpan(data) {
     return { first, last, timeSpan };
 }
 
-export function formatDateRange(data) {
+export function formatDateRange(data: any) {
     const { timeSpan, first, last } = getTimeSpan(data);
     const formatted =
         timeSpan > 1
@@ -87,11 +103,13 @@ export function formatDateRange(data) {
     };
 }
 
-export function formatTs(values) {
-    return values?.map(([ts, val]) => [ts * 1000, val]) || [];
+export function formatTs(values: any) {
+    return (
+        values?.map(([ts, val]: [ts: any, val: any]) => [ts * 1000, val]) || []
+    );
 }
 
-export function getSeriesFromChartType(type) {
+export function getSeriesFromChartType(type: any) {
     switch (type) {
         case "bar":
             return CHART_BAR_SERIES;
@@ -107,7 +125,7 @@ export function getSeriesFromChartType(type) {
     }
 }
 
-export function setChartTypeSeries(type) {
+export function setChartTypeSeries(type: any) {
     switch (type) {
         case "bar":
             return { series: CHART_BAR_SERIES };
@@ -127,11 +145,11 @@ export function getTypeFromLocal() {
     return localStorage.getItem(LOCAL_CHART_TYPE);
 }
 
-export function setTypeToLocal(type) {
+export function setTypeToLocal(type: any) {
     localStorage.setItem(LOCAL_CHART_TYPE, type);
 }
 
-export function formatLabel(labels) {
+export function formatLabel(labels: any) {
     if (labels) {
         return (
             "{ " +
@@ -143,7 +161,7 @@ export function formatLabel(labels) {
     } else return "";
 }
 
-export function hideSeries(series) {
+export function hideSeries(series: any) {
     return {
         ...series,
         lines: { ...series.lines, show: false },
@@ -152,7 +170,7 @@ export function hideSeries(series) {
         isVisible: false,
     };
 }
-export function showSeries(series, type) {
+export function showSeries(series: any, type: any) {
     const { lines, bars, points } = getSeriesFromChartType(type);
 
     return {
@@ -164,26 +182,39 @@ export function showSeries(series, type) {
     };
 }
 
-export function mapIds(arr) {
-    return arr?.map((m) => m.id);
+export function mapIds(arr: []) {
+    return arr?.map((m: any) => m.id);
 }
 
 export function getLabelsSelected() {
-    return JSON.parse(localStorage.getItem("labelsSelected")) || [];
+    let labelSelected = [];
+    try {
+        const itemFromStorage = localStorage.getItem("labelsSelected");
+        if (typeof itemFromStorage === "string") {
+            labelSelected = JSON.parse(itemFromStorage);
+        }
+        return labelSelected;
+    } catch (e) {
+        console.log(e);
+        return labelSelected;
+    }
 }
 
-export function isLAbelSelected(label) {
-    const labelsSelected = JSON.parse(localStorage.getItem("labelsSelected"));
-    return labelsSelected.some((l) => l.id === label.id);
+export function isLAbelSelected({ label: { id } }: { label: any }) {
+    let labelsSelected = getLabelsSelected();
+    if (labelsSelected?.length > 0) {
+        return labelsSelected.some((l: any) => l.id === id);
+    }
+    return false;
 }
 
-export function getNewData(data, type) {
+export function getNewData(data:any, type:any) {
     const lSelected = getLabelsSelected();
 
     if (lSelected.length > 0) {
         const ids = mapIds(lSelected);
 
-        const dataMapped = data?.map((series) => {
+        const dataMapped = data?.map((series:any) => {
             if (!ids?.includes(series.id)) {
                 return hideSeries(series);
             } else {
@@ -196,22 +227,23 @@ export function getNewData(data, type) {
     }
 }
 
-export function yAxisTickFormatter(val, axis) {
-    const floatNum = (val, suffix) => {
-        let num = 0;
-        if (suffix === "M") {
-            num = 1_000_000;
-        }
+export function floatNum(val:number, suffix:string) {
+    let num = 0;
+    if (suffix === "M") {
+        num = 1_000_000;
+    }
 
-        if (suffix === "K") {
-            num = 1_000;
-        }
+    if (suffix === "K") {
+        num = 1_000;
+    }
 
-        if (val % num === 0) {
-            return 0;
-        }
-        return 1;
-    };
+    if (val % num === 0) {
+        return 0;
+    }
+    return 1;
+}
+
+export function yAxisTickFormatter(val:any, axis:any) {
 
     if (val > 999999) {
         return (val / 1000000).toFixed(floatNum(val, "M")) + " M";
@@ -222,4 +254,16 @@ export function yAxisTickFormatter(val, axis) {
     }
 
     return val.toFixed(axis.tickDecimals);
+}
+
+export function getLabelsFromLocal() {
+    try {
+        const labelsFromLocal = localStorage.getItem("labelsSelected");
+        if (typeof labelsFromLocal === "string") {
+            return JSON.parse(labelsFromLocal);
+        }
+    } catch (e) {
+        console.log(e);
+        return [];
+    }
 }

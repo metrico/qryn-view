@@ -3,8 +3,7 @@ import ChartLabelsList from "./ChartLabelList";
 import ChartTools from "./ChartTools";
 import { ChartCont } from "./styled";
 
-
-export function FlotChart(props) {
+export function FlotChart(props: any) {
     const {
         theme,
         matrixData,
@@ -30,17 +29,17 @@ export function FlotChart(props) {
                     onSetChartType={onSetChartType}
                 />
                 <div className="chart-cont">
-                <div
-                    ref={chartRef}
-                    id={"chart-container"}
-                    style={{
-                        flex: "1",
-                        minHeight:'180px',
-                        height:'100%',
-                        display: "block",
-                        position: "relative",
-                    }}
-                ></div>
+                    <div
+                        ref={chartRef}
+                        id={"chart-container"}
+                        style={{
+                            flex: "1",
+                            minHeight: "180px",
+                            height: "100%",
+                            display: "block",
+                            position: "relative",
+                        }}
+                    ></div>
                 </div>
                 <ChartLabelsList onLabelClick={onLabelClick} labels={labels} />
             </ChartCont>

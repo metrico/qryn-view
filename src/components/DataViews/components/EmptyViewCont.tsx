@@ -1,14 +1,13 @@
 import { ThemeProvider } from "@emotion/react";
-import { useSelector } from "react-redux";
-import { themes } from "../../../theme/themes";
 import { EmptyViewContainer } from "../styled";
+import { useTheme } from "./QueryBuilder/hooks";
 
-export default function EmptyViewCont(props) {
-    const theme = useSelector((store) => store.theme);
+export default function EmptyViewCont(props: any) {
+    const theme = useTheme();
     const { loading } = props;
     return (
         !loading && (
-            <ThemeProvider theme={themes[theme]}>
+            <ThemeProvider theme={theme}>
                 <EmptyViewContainer>
                     {
                         "Please adjust search parameters and click on ‘Show Results’ button"
