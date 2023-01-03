@@ -1,4 +1,4 @@
-import localUrl from "../../../../../services/localUrl";
+import localUrl from "../../../../services/localUrl";
 
 export function storedUrl() {
     return localUrl().add(
