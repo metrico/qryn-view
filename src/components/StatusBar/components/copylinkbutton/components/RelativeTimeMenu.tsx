@@ -5,7 +5,7 @@ import {
     MenuItem,
     Typography,
 } from "@mui/material";
-import { StyledMenu } from "../../daterangepicker";
+import { CustomMenu } from "../../daterangepicker";
 import { formControlLabelStyle, menuItemStyle, typoStyle } from "../styles";
 
 export const RelativeTimeMenu = (props: any) => {
@@ -27,7 +27,7 @@ export const RelativeTimeMenu = (props: any) => {
     );
 
     return (
-        <StyledMenu
+        <CustomMenu
             id="backward-menu"
             anchorEl={anchorEl}
             open={open}
@@ -46,6 +46,6 @@ export const RelativeTimeMenu = (props: any) => {
                     />
                 </FormGroup>
             </MenuItem>
-        </StyledMenu>
+        </CustomMenu>
     );
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import {
     addMonths,
@@ -13,9 +13,9 @@ import {
     min,
     format,
     isValid,
-    add, 
+    add,
     sub,
-    intervalToDuration
+    intervalToDuration,
 } from "date-fns";
 
 import { PickerNav } from "./components/Nav";
@@ -36,67 +36,82 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import useOutsideRef from "./hooks/useOutsideRef";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import { Tooltip } from "@mui/material";
 import TimeLabel from "./components/TimeLabel";
 import { DatePickerButton } from "../../styled";
 import { themes } from "../../../../theme/themes";
 import { styled } from "@mui/material/styles";
+import { useTheme } from "../../../DataViews/components/QueryBuilder/hooks";
+import { css, cx } from "@emotion/css";
 
-export const StyledMenu = styled((props) => (
-    <Menu
-        elevation={0}
-        anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-        }}
-        transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-        }}
-        {...props}
-    />
-))(({ theme, qryntheme, size }) => ({
-    "& .MuiPaper-root": {
-        borderRadius: 6,
-        marginTop: theme.spacing(1),
-        color: qryntheme.textColor,
-        border: `1px solid ${qryntheme.buttonBorder}`,
-        backgroundColor: qryntheme.buttonDefault,
-        "& .MuiMenu-list": {
-            padding: size === 'small' ? '0px' : "4px 0",
-        },
-        "& .MuiMenuItem-root": {
-            fontSize: 12,
-            "& .MuiSvgIcon-root": {
-                fontSize: 12,
-                color: qryntheme.textColor,
-                marginRight: theme.spacing(1.5),
-            },
-            "&:active": {
-                backgroundColor: qryntheme.buttonDefault,
-            },
-        },
-    },
-}));
-const timeAdjustmentOptions = ['1m', '5m', '10m', '30m', '1h', '3h', '6h', '12h', '24h']
-export function DateRangePickerMain(props) {
+export const timeDateRangeFromLocal = (item: string) => {
+    try {
+        let localData = localStorage.getItem(item);
+        if (typeof localData === "string") {
+            let parsed = JSON.parse(localData);
+
+            if (parsed.dateStart && parsed.dateEnd)
+                return JSON.parse(localData);
+        }
+    } catch (e) {
+        console.log(e);
+        return { dateStart: "", dateEnd: "" };
+    }
+};
+
+export const CustomMenu = (props: any) => {
+    return (
+        <Menu
+            id={props.id}
+            elevation={0}
+            anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+            }}
+            PaperProps={{
+                sx: {
+                    background: props.qryntheme.buttonDefault,
+                    color: props.qryntheme.textColor,
+                },
+            }}
+            transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+            }}
+            {...props}
+        />
+    );
+};
+
+const timeAdjustmentOptions = [
+    "1m",
+    "5m",
+    "10m",
+    "30m",
+    "1h",
+    "3h",
+    "6h",
+    "12h",
+    "24h",
+];
+export function DateRangePickerMain(props: any) {
     const today = Date.now();
     const { isOpen, minDate, maxDate } = props;
 
-    const startTs = useSelector((store) => store.start);
-    const stopTs = useSelector((store) => store.stop);
-    const storeTheme = useSelector((store) => store.theme);
-    const qrynTheme = themes[storeTheme];
+    const startTs = useSelector((store: any) => store.start);
+    const stopTs = useSelector((store: any) => store.stop);
+
+    const theme = useTheme();
     const initialDateRange = () => {
         try {
-            const ls = JSON.parse(localStorage.getItem(DATE_TIME_RANGE));
+            const ls = timeDateRangeFromLocal(DATE_TIME_RANGE);
             if (ls?.label !== "" && typeof ls.label !== "undefined") {
-                const range = findRangeByLabel(ls?.label);
+                const range: any = findRangeByLabel(ls?.label);
                 ls.dateStart = range.dateStart;
                 ls.dateEnd = range.dateEnd;
             } else {
@@ -118,7 +133,10 @@ export function DateRangePickerMain(props) {
         minDateValid,
         maxDateValid
     );
-    const [dateRange, setDateRange] = useState({ ...initialDateRange() });
+    const [dateRange, setDateRange] = useState<{
+        dateStart: any;
+        dateEnd: any;
+    }>({ ...initialDateRange() });
     const [hoverDay, setHoverDay] = useState();
     const [firstMonth, setFirstMonth] = useState(intialFirstMonth || today);
     const [secondMonth, setSecondMonth] = useState(
@@ -127,8 +145,8 @@ export function DateRangePickerMain(props) {
     const [timeLabel, setTimeLabel] = useState("");
     const dispatch = useDispatch();
 
-    const rangeOpen = useSelector((store) => store.rangeOpen);
-    const range = useSelector((store) => ({
+    const rangeOpen = useSelector((store: any) => store.rangeOpen);
+    const range = useSelector((store: any) => ({
         dateStart: store.start,
         dateEnd: store.stop,
         label: store.label,
@@ -140,22 +158,21 @@ export function DateRangePickerMain(props) {
 
     const { dateStart, dateEnd } = dateRange;
 
-    const { ref } = useOutsideRef(true);
+    const { ref } = useOutsideRef();
 
-
-    const setFirstMonthValidated = (date) => {
+    const setFirstMonthValidated = (date: any) => {
         if (isBefore(date, secondMonth)) {
             setFirstMonth(date);
         }
     };
 
-    const setSecondMonthValidated = (date) => {
+    const setSecondMonthValidated = (date: any) => {
         if (isAfter(date, firstMonth)) {
             setSecondMonth(date);
         }
     };
 
-    const setDateRangeValidated = (range) => {
+    const setDateRangeValidated = (range: any) => {
         let { label, dateStart: newStart, dateEnd: newEnd } = range;
         if (newStart && newEnd) {
             range.label = label;
@@ -170,12 +187,12 @@ export function DateRangePickerMain(props) {
             );
         }
     };
-    const saveDateRange = (range) => {
+    const saveDateRange = (range: any) => {
         localStorage.setItem(DATE_TIME_RANGE, JSON.stringify(range));
     };
-    const onDayClick = (day) => {
+    const onDayClick = (day: any) => {
         if (dateStart && !dateEnd && !isBefore(day, dateStart)) {
-            const newRange = { dateStart, dateEnd: day };
+            const newRange: any = { dateStart, dateEnd: day };
             onChange(newRange);
             saveDateRange(newRange);
             setDateRange(newRange);
@@ -187,7 +204,7 @@ export function DateRangePickerMain(props) {
         setHoverDay(day);
     };
 
-    const onMonthNavigate = (marker, action) => {
+    const onMonthNavigate = (marker: any, action: any) => {
         if (marker === MARKERS.FIRST_MONTH) {
             const firstNew = addMonths(firstMonth, action);
             if (isBefore(firstNew, secondMonth)) setFirstMonth(firstNew);
@@ -197,20 +214,20 @@ export function DateRangePickerMain(props) {
         }
     };
 
-    const onDayHover = (date) => {
+    const onDayHover = (date: any) => {
         if (dateStart && !dateEnd) {
             if (!hoverDay || !isSameDay(date, hoverDay)) {
                 setHoverDay(date);
             }
         }
     };
-    const onClose = (e = null) => {
+    const onClose = (e: any = null) => {
         e?.preventDefault();
         dispatch(setRangeOpen(false));
         isOpen(e);
     };
 
-    const inHoverRange = (day) => {
+    const inHoverRange = (day: any) => {
         return (
             dateStart &&
             !dateEnd &&
@@ -223,7 +240,6 @@ export function DateRangePickerMain(props) {
         );
     };
 
-
     const helpers = {
         inHoverRange,
     };
@@ -234,7 +250,8 @@ export function DateRangePickerMain(props) {
         onMonthNavigate,
     };
 
-    function onChange({ dateStart, dateEnd, label }) {
+    function onChange(range: any) {
+        const { dateStart, dateEnd, label } = range;
         const isStart = isDate(dateStart);
         const isEnd = isDate(dateEnd);
         const isLabel = typeof label !== "undefined";
@@ -243,37 +260,34 @@ export function DateRangePickerMain(props) {
         if (isLabel) dispatch(setTimeRangeLabel(label));
     }
 
-    const openButtonHandler = (e) => {
+    const openButtonHandler = (e: any) => {
         e.preventDefault();
         if (rangeOpen === true) {
             onClose(e);
-          
         } else {
             dispatch(setRangeOpen(true));
-         
         }
     };
-    const adjustTimeRange = (direction, adjustment = 'range') => {
-        const directionFunc = direction === 'backward' ? sub : add;
-        let duration = {
+    const adjustTimeRange = (direction: any, adjustment: any = "range") => {
+        const directionFunc = direction === "backward" ? sub : add;
+        let duration: any = {
             years: 0,
             months: 0,
             days: 0,
             hours: 0,
             minutes: 0,
-            seconds: 0
+            seconds: 0,
         };
-        if (adjustment === 'range') {
-            duration = intervalToDuration({start:dateStart, end: dateEnd})
+        if (adjustment === "range") {
+            duration = intervalToDuration({ start: dateStart, end: dateEnd });
         } else {
-            
-            if (adjustment.includes('d')) {
+            if (adjustment.includes("d")) {
                 duration.days = parseInt(adjustment);
-            } else if(adjustment.includes('h')) {
+            } else if (adjustment.includes("h")) {
                 duration.hours = parseInt(adjustment);
-            } else if(adjustment.includes('m')) {
+            } else if (adjustment.includes("m")) {
                 duration.minutes = parseInt(adjustment);
-            } else if(adjustment.includes('s')) {
+            } else if (adjustment.includes("s")) {
                 duration.seconds = parseInt(adjustment);
             }
         }
@@ -282,30 +296,30 @@ export function DateRangePickerMain(props) {
         const dateRange = {
             dateStart: adjustedStart,
             dateEnd: adjustedStop,
-            label: ''
-        }
+            label: "",
+        };
         setDateRange(dateRange);
         saveDateRange(dateRange);
         onChange(dateRange);
-    }
-    const theme = useSelector(store => store.theme);
+    };
 
     // Handle menus
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [anchorElRight, setAnchorElRight] = useState(null);
     const openRight = Boolean(anchorElRight);
-    const handleClick = (event) => {
-        setAnchorEl( prev => event.currentTarget);
+
+    const handleClick = (event: any) => {
+        setAnchorEl((prev) => event.currentTarget);
     };
-    const handleClickRight = (event) => {
-        setAnchorElRight(prev => event.currentTarget)
-    }
-    const handleClose = (e, direction,  option) => {
+    const handleClickRight = (event: any) => {
+        setAnchorElRight((prev) => event.currentTarget);
+    };
+    const handleClose = (e: any, direction: any, option: any) => {
         setAnchorEl(null);
         setAnchorElRight(null);
         if (direction && option) {
-            adjustTimeRange(direction, option)
+            adjustTimeRange(direction, option);
         }
     };
     return (
@@ -314,37 +328,40 @@ export function DateRangePickerMain(props) {
                 onClick={() => {
                     adjustTimeRange("backward");
                 }}
-                attachedside={'r'}
-                emptySide={'l'}
+                attachedside={"r"}
+                emptySide={"l"}
                 className={"date-time-selector"}
             >
                 <KeyboardArrowLeft />
             </DatePickerButton>
             <DatePickerButton
                 onClick={handleClick}
-                attachedside={'both'}
-                size={'small'}
+                attachedside={"both"}
+                size={"small"}
                 className={"date-time-selector"}
-                aria-controls={open ? 'backward-menu' : undefined}
+                aria-controls={open ? "backward-menu" : undefined}
                 aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
+                aria-expanded={open ? "true" : undefined}
             >
                 <KeyboardArrowDownOutlinedIcon />
             </DatePickerButton>
-            <StyledMenu
-                id='backward-menu'
+            <CustomMenu
+                id={"backward-menu"}
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                qryntheme={qrynTheme}
+                qryntheme={theme}
             >
-                {timeAdjustmentOptions.map(option => (
-                    <MenuItem key={`${option} l`}
-                    onClick={(e) => handleClose(e, 'backward', option)}>
+                {timeAdjustmentOptions.map((option) => (
+                    <MenuItem
+                        key={`${option} l`}
+                        sx={{ "&.MuiMenuItem-root": { fontSize: 12 } }}
+                        onClick={(e) => handleClose(e, "backward", option)}
+                    >
                         {option}
                     </MenuItem>
                 ))}
-            </StyledMenu>
+            </CustomMenu>
             <Tooltip
                 title={timeLabel ? <TimeLabel dateRange={dateRange} /> : ""}
             >
@@ -378,42 +395,45 @@ export function DateRangePickerMain(props) {
             </Tooltip>
             <DatePickerButton
                 onClick={handleClickRight}
-                attachedside={'both'}
-                size={'small'}
+                attachedside={"both"}
+                size={"small"}
                 className={"date-time-selector"}
-                aria-controls={openRight ? 'forward-menu' : undefined}
+                aria-controls={openRight ? "forward-menu" : undefined}
                 aria-haspopup="true"
-                aria-expanded={openRight ? 'true' : undefined}
+                aria-expanded={openRight ? "true" : undefined}
             >
                 <KeyboardArrowDownOutlinedIcon />
             </DatePickerButton>
-            
-            <StyledMenu
-                id='forward-menu'
+
+            <CustomMenu
+                id="forward-menu"
                 anchorEl={anchorElRight}
                 open={openRight}
                 onClose={handleClose}
-                qryntheme={qrynTheme}
+                qryntheme={theme}
             >
-                {timeAdjustmentOptions.map(option => (
-                    <MenuItem key={`${option} r`}
-                    onClick={(e) => handleClose(e, 'forward', option)}>
+                {timeAdjustmentOptions.map((option) => (
+                    <MenuItem
+                        key={`${option} r`}
+                        sx={{ "&.MuiMenuItem-root": { fontSize: 12 } }}
+                        onClick={(e) => handleClose(e, "forward", option)}
+                    >
                         {option}
                     </MenuItem>
                 ))}
-            </StyledMenu>
+            </CustomMenu>
             <DatePickerButton
                 onClick={() => {
                     adjustTimeRange("forward");
                 }}
-                attachedside={'l'}
+                attachedside={"l"}
                 className={"date-time-selector"}
             >
                 <KeyboardArrowRight />
             </DatePickerButton>
             {rangeOpen ? (
-                <div tabIndex={"0"} ref={ref}>
-                    <ThemeProvider theme={themes[theme]}>
+                <div tabIndex={0} ref={ref}>
+                    <ThemeProvider theme={theme}>
                         <PickerNav
                             dateRange={dateRange}
                             minDate={minDateValid}
@@ -436,6 +456,4 @@ export function DateRangePickerMain(props) {
 }
 export const DateRangePicker = DateRangePickerMain;
 
-//shouldnt be at same div!! 
-
-
+//shouldnt be at same div!!

@@ -6,7 +6,6 @@ export default function ChartLabelsList({ onLabelClick, labels }: any) {
     const labelsSelected = JSON.parse(localStorage.getItem("labelsSelected") || 'null');
 
     const isLabelsSelected = useMemo(()=> labelsSelected?.length > 0, [labelsSelected]);
-
     const matchHeight = useMatchHeight({ length: labels?.length || 0 });
 
     function setIsVisible(label: any) {

@@ -54,13 +54,13 @@ export const useTheme = ( name: string ) => {
 export const useMatchHeight = ({ length }: any) => {
     return useMemo(() => {
         if (length <= 12) {
-            return 150;
+            return 140;
         } else if (length <= 20) {
-            return 250;
+            return 240;
         } else if (length <= 15) {
-            return 175;
+            return 165;
         } else if (length > 0) {
-            return 450;
+            return 440;
         }
     }, [length]);
 };

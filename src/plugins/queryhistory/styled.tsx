@@ -269,6 +269,8 @@ export const FilterInput: any = styled.input`
 export const RowData: any = styled.span`
     flex: 1;
     font-family: monospace;
+    display:flex;
+    align-items: center;
     font-size: "13px";
     color: ${({theme}: any) => theme.textColor};
     white-space: nowrap;
@@ -330,14 +332,13 @@ export const LinkParams: any = styled.div`
 export const HistoryRow: any = styled.div`
     padding: 5px 0px;
     padding-left: 10px;
-    background: ${({ theme }: any) => theme.historyRow};
+    border: 1px solid ${({ theme }: any) => theme.historyRow};
     margin: 5px;
     border-radius: 3px;
     font-size: 13px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    //height: 30px;
 `;
 export const TimeSpan: any = styled.div`
     @media screen and (max-width: 1370px) {

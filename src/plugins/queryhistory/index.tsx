@@ -1,4 +1,11 @@
-import { Checkbox, FormControlLabel, FormGroup, MenuItem, ThemeProvider, Tooltip } from "@mui/material";
+import {
+    Checkbox,
+    FormControlLabel,
+    FormGroup,
+    MenuItem,
+    ThemeProvider,
+    Tooltip,
+} from "@mui/material";
 import localService from "../../services/localService";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -20,8 +27,8 @@ import LaunchIcon from "@mui/icons-material/Launch";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
-import { Typography } from '@mui/material';
+import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
+import { Typography } from "@mui/material";
 
 import localUrl from "../../services/localUrl";
 
@@ -55,10 +62,9 @@ import CloseButton from "./components/CloseButton";
 import { themes } from "../../theme/themes";
 import { notificationTypes } from "../../qryn-ui/notifications/consts";
 
-import { StyledMenu } from "../../components/StatusBar/components/daterangepicker";
+import { CustomMenu } from "../../components/StatusBar/components/daterangepicker";
 
 function QueryHistoryTabs(props: any) {
-
     const {
         historyTabHeader,
         historyTab,
@@ -120,7 +126,7 @@ function HistoryLinkParams({
     handleDelete,
     handleStarLinkItem,
     handleSubmit,
-    label
+    label,
 }: any) {
     const [open, setOpen] = useState(false);
     const { fromDate, toDate, type, url, queryInput, limit } = item;
@@ -176,8 +182,8 @@ function HistoryLinkParams({
                     {" "}
                     <Tooltip title={fromDate + " - " + toDate}>
                         <AccessTimeIcon
-                            fontSize="small"
-                            style={{ marginRight: "3px" }}
+                        
+                            style={{ marginRight: "3px", height:'14px', width:'14px' }}
                         />
                     </Tooltip>{" "}
                     <TimeSpan>
@@ -242,7 +248,6 @@ function HistoryLinkQuery({ pos, onOpen }: any) {
     );
 }
 
-
 function HistoryLinkTools(props: any) {
     const {
         item,
@@ -251,26 +256,24 @@ function HistoryLinkTools(props: any) {
         handleDelete,
         handleStarLinkItem,
         handleSubmit,
-        label
+        label,
     }: any = props;
     const storeTheme = useSelector((store: any) => store.theme);
     const qrynTheme = (themes as any)[storeTheme];
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [isRelative, setIsRelative] = useState(false);
-    
 
     const handleClick = (event: any) => {
-        setAnchorEl(prev => event.currentTarget);
-        setIsRelative(prev => isRelative );
+        setAnchorEl((prev) => event.currentTarget);
+        setIsRelative((prev) => isRelative);
     };
-    const handleClose = (e: any, direction: any,  option: any) => {
+    const handleClose = (e: any, direction: any, option: any) => {
         setAnchorEl(null);
     };
 
-
     const handleChange = (event: any) => {
-        setIsRelative(prev => Boolean(event.target.checked));
+        setIsRelative((prev) => Boolean(event.target.checked));
     };
 
     return (
@@ -279,6 +282,7 @@ function HistoryLinkTools(props: any) {
                 display: "flex",
                 flexDirection: onOpen ? "column-reverse" : "row",
                 justifyContent: "space-between",
+                alignItems:'center'
             }}
         >
             <>
@@ -293,7 +297,10 @@ function HistoryLinkTools(props: any) {
                             className={"URL-COPY"}
                             attachedside={"r"}
                         >
-                            <LinkIcon fontSize="small" />
+                            <LinkIcon
+                                style={{ height: "14px", width: "14px" }}
+                                fontSize="small"
+                            />
                         </HistoryButton>
                         <HistoryButton
                             attachedside={"l"}
@@ -306,13 +313,13 @@ function HistoryLinkTools(props: any) {
                         >
                             <KeyboardArrowDownOutlinedIcon fontSize="small" />
                         </HistoryButton>
-                        <StyledMenu
+                        <CustomMenu
                             id="backward-menu"
                             anchorEl={anchorEl}
                             open={open}
                             onClose={handleClose}
                             qryntheme={qrynTheme}
-                            size={'small'}
+                            size={"small"}
                         >
                             <MenuItem
                                 key={`relativeTime`}
@@ -331,13 +338,24 @@ function HistoryLinkTools(props: any) {
                                         onChange={handleChange}
                                         control={
                                             <Checkbox
-                                                style={{ paddingRight: "0px" }}
+                                                style={{
+                                                    paddingRight: "0px",
+                                                    marginRight: "3px",
+                                                }}
+                                                sx={{
+                                                    "& .MuiSvgIcon-root": {
+                                                        fontSize: 14,
+                                                    },
+                                                }}
                                                 disabled={!label}
                                             />
                                         }
                                         label={
                                             <Typography
-                                                style={{ fontSize: "12px", color: qrynTheme.textColor }}
+                                                style={{
+                                                    fontSize: "12px",
+                                                    color: qrynTheme.textColor,
+                                                }}
                                             >
                                                 Relative time
                                             </Typography>
@@ -345,22 +363,31 @@ function HistoryLinkTools(props: any) {
                                     />
                                 </FormGroup>
                             </MenuItem>
-                        </StyledMenu>
+                        </CustomMenu>
                     </span>
                 </Tooltip>
             </>
             <Tooltip title={"Delete Query"}>
                 <HistoryButton onClick={(e: any) => handleDelete(item)}>
-                    <DeleteOutlineIcon fontSize="small" />
+                    <DeleteOutlineIcon
+                        style={{ height: "14px", width: "14px" }}
+                        fontSize="small"
+                    />
                 </HistoryButton>
             </Tooltip>
 
             <Tooltip title="Star / Unstar Link">
                 <HistoryButton onClick={() => handleStarLinkItem(item)}>
                     {item.starred ? (
-                        <StarIcon fontSize="small" />
+                        <StarIcon
+                            style={{ height: "14px", width: "14px" }}
+                            fontSize="small"
+                        />
                     ) : (
-                        <StarBorderIcon fontSize="small" />
+                        <StarBorderIcon
+                            style={{ height: "14px", width: "14px" }}
+                            fontSize="small"
+                        />
                     )}
                 </HistoryButton>
             </Tooltip>
@@ -421,7 +448,9 @@ function QueryHistoryTab({
                             style={{
                                 color: "#666",
                                 paddingRight: "10px",
-                                width: '10px'
+                                width: "10px",
+                                display:"flex",
+                                alignItems:"center"
                             }}
                         >
                             {listDisplay.length - index}
@@ -433,12 +462,18 @@ function QueryHistoryTab({
                             {format(item.timestamp, "yyyy/MM/dd HH:mm:ss")}
                         </span>
 
-                        <div style={{ display: "flex" }}>
+                        <div style={{ display: "flex", alignItems:'center' }}>
                             <Tooltip title={"Copy Query to Clipboard"}>
                                 <HistoryButton
                                     onClick={() => copyQuery(item.data)}
                                 >
-                                    <ContentCopyIcon fontSize="small" />
+                                    <ContentCopyIcon
+                                        style={{
+                                            height: "14px",
+                                            width: "14px",
+                                        }}
+                                        fontSize="small"
+                                    />
                                 </HistoryButton>
                             </Tooltip>
 
@@ -446,7 +481,13 @@ function QueryHistoryTab({
                                 <HistoryButton
                                     onClick={() => handleDelete(item)}
                                 >
-                                    <DeleteOutlineIcon fontSize="small" />
+                                    <DeleteOutlineIcon
+                                        style={{
+                                            height: "14px",
+                                            width: "14px",
+                                        }}
+                                        fontSize="small"
+                                    />
                                 </HistoryButton>
                             </Tooltip>
 
@@ -455,9 +496,21 @@ function QueryHistoryTab({
                                     onClick={() => handleStarItem(item)}
                                 >
                                     {item.starred ? (
-                                        <StarIcon fontSize="small" />
+                                        <StarIcon
+                                            style={{
+                                                height: "14px",
+                                                width: "14px",
+                                            }}
+                                            fontSize="small"
+                                        />
                                     ) : (
-                                        <StarBorderIcon fontSize="small" />
+                                        <StarBorderIcon
+                                            style={{
+                                                height: "14px",
+                                                width: "14px",
+                                            }}
+                                            fontSize="small"
+                                        />
                                     )}
                                 </HistoryButton>
                             </Tooltip>
@@ -492,7 +545,7 @@ function LinksHistoryTab({
     filtered,
     emptyMessage,
     isStarred,
-    label
+    label,
 }: any) {
     const [listDisplay, setListDisplay] = useState([]);
 
@@ -517,7 +570,9 @@ function LinksHistoryTab({
                             style={{
                                 paddingRight: "10px",
                                 color: "#666",
-                                width: '10px'
+                                width: "10px",
+                                display:'flex',
+                                alignItems:'center'
                             }}
                         >
                             {listDisplay?.length - index}
@@ -558,7 +613,7 @@ function StarredHistoryTab({
     emptyQueryMessage,
     emptyLinkMessage,
     copyQuery,
-    label
+    label,
 }: any) {
     const [queryListDisplay, setQueryListDisplay] = useState([]);
     const [linksListDisplay, setLinksListDisplay] = useState([]);
@@ -740,7 +795,7 @@ const QueryHistory = (props: any) => {
     const [linksStarredItems, setLinksStarredItems] = useState(false);
 
     const { start, stop }: any = useSelector((store: any) => store);
-    const label = useSelector(({label}: any) => label);
+    const label = useSelector(({ label }: any) => label);
 
     function handleDelete(id: any) {
         const removed = historyService.remove(id);
@@ -785,7 +840,6 @@ const QueryHistory = (props: any) => {
             url,
 
             direction,
-
         }: any = logData;
 
         let querySubmit = "";
@@ -902,7 +956,6 @@ const QueryHistory = (props: any) => {
         }
     }
 
-
     // function copyQuery(item) {
     //     const query = JSON.parse(item)["queryInput"];
 
@@ -934,7 +987,7 @@ const QueryHistory = (props: any) => {
     function shareDefaultLink(copyText: any) {
         navigator.clipboard.writeText(copyText).then(
             function () {
-                    alertSuccess();
+                alertSuccess();
             },
             function (err) {
                 console.log("error on copy", err);
@@ -960,14 +1013,19 @@ const QueryHistory = (props: any) => {
             textArea.remove();
         });
     }
-    function copyQuery(item: any, type = 'query', isRelative = false) {
+    function copyQuery(item: any, type = "query", isRelative = false) {
         const url = new URL(item);
         const { hash } = url;
-        const params = new URLSearchParams(hash.replace("#", ""))
-        params.set('label', label)
+        const params = new URLSearchParams(hash.replace("#", ""));
+        params.set("label", label);
         const locationWithLabel = new URL(window.location.href);
         locationWithLabel.hash = `#${params.toString()}`;
-        const copyText = type === 'query' ? JSON.parse(item)["queryInput"] : isRelative && label ? locationWithLabel : item;
+        const copyText =
+            type === "query"
+                ? JSON.parse(item)["queryInput"]
+                : isRelative && label
+                ? locationWithLabel
+                : item;
         setTimeout(() => {
             if (navigator?.clipboard && window.isSecureContext) {
                 shareDefaultLink(copyText);

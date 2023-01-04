@@ -2,13 +2,12 @@ import styled from "@emotion/styled";
 /**
  * Labels styles
  */
-export const LabelsContainer: any = styled("div")`
+export const LabelsContainer: any = styled.div`
   display: flex;
   flex-wrap: wrap;
   max-height: 60px;
   overflow-y: auto;
-  margin: 10px;
-  padding-bottom: 10px;
+  margin: 5px;
   &::-webkit-scrollbar {
     width: 5px;
     height: 5px;
@@ -22,7 +21,7 @@ export const LabelsContainer: any = styled("div")`
   }
 `;
 
-export const ChartLabel: any = styled("div")`
+export const ChartLabel: any = styled.div`
   font-size: 12px;
   color: ${({theme}: any) => theme.textColor};
   font-family: sans-serif;
@@ -38,7 +37,7 @@ export const ChartLabel: any = styled("div")`
   }
 `;
 
-export const ColorLabel: any = styled("div")`
+export const ColorLabel: any = styled.div`
   height: 4px;
   width: 16px;
   margin-right: 8px;

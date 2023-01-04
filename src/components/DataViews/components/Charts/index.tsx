@@ -5,12 +5,14 @@ import "react-flot/flot/jquery.flot.min";
 import "react-flot/flot/jquery.flot.time.min";
 import "react-flot/flot/jquery.flot.selection.min";
 import "react-flot/flot/jquery.flot.crosshair.min";
+import "react-flot/flot-override/jquery.flot.resize";
 //React
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 //Packages
 import * as moment from "moment";
 import { format } from "date-fns";
+//import   ReactFlot from "react-flot/temp";
 
 //Global
 import {
@@ -44,6 +46,7 @@ export default function QrynChart(props: any): any {
     const theme = useTheme(storeTheme);
 
     const $q = (window as any).jQuery;
+    
     $q.fn.UseTooltip = UseTooltip;
 
     const matrix = useMatrixData(true, matrixData);

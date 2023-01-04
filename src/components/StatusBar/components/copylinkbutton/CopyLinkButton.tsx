@@ -14,14 +14,15 @@ import {
     Typography,
 } from "@mui/material";
 import { storedUrl } from "./helpers";
-import { StyledMenu } from "../daterangepicker";
+import { CustomMenu } from "../daterangepicker";
 import { useState } from "react";
 import { themes } from "../../../../theme/themes";
 import { useLocation } from "react-router-dom";
+import { useTheme } from "../../../DataViews/components/QueryBuilder/hooks";
 
 export default function CopyLinkButton() {
     const LINK_COPIED = "Link Copied To Clipboard";
-
+    const theme = useTheme();
     const dispatch = useDispatch();
     const storeTheme = useSelector((store: any) => store.theme);
     const qrynTheme = (themes as any)[storeTheme];
@@ -120,7 +121,9 @@ export default function CopyLinkButton() {
                         onClick={copyLink}
                         isActive={setActive}
                     >
-                        <ContentCopyIcon fontSize="medium" />
+                        <ContentCopyIcon
+                            style={{ height: "14px", width: "14px" }}
+                        />
 
                         <span>{"Copy Link"}</span>
                     </UrlCopyButton>
@@ -136,17 +139,17 @@ export default function CopyLinkButton() {
                     >
                         <KeyboardArrowDownOutlinedIcon fontSize="small" />
                     </DatePickerButton>
-                    <StyledMenu
+                    <CustomMenu
                         id="backward-menu"
                         anchorEl={anchorEl}
                         open={open}
                         onClose={handleClose}
-                        qryntheme={qrynTheme}
+                        qryntheme={theme}
                         size={"small"}
                     >
                         <MenuItem
                             key={`relativeTime`}
-                            style={{ padding: "0 14px" }}
+                            style={{ background: theme.buttonDefault }}
                         >
                             <FormGroup>
                                 <FormControlLabel
@@ -156,12 +159,22 @@ export default function CopyLinkButton() {
                                         cursor: !label
                                             ? "not-allowed"
                                             : "default",
+                                        display: "flex",
+                                        alignItems: "center",
                                     }}
                                     checked={isRelative}
                                     onChange={handleChange}
                                     control={
                                         <Checkbox
-                                            style={{ paddingRight: "0px" }}
+                                            style={{
+                                                paddingRight: "0px",
+                                                marginRight: "3px",
+                                            }}
+                                            sx={{
+                                                "& .MuiSvgIcon-root": {
+                                                    fontSize: 14,
+                                                },
+                                            }}
                                             disabled={!label}
                                         />
                                     }
@@ -178,7 +191,7 @@ export default function CopyLinkButton() {
                                 />
                             </FormGroup>
                         </MenuItem>
-                    </StyledMenu>
+                    </CustomMenu>
                 </>
             </Tooltip>
         </>

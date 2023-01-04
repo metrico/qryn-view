@@ -78,7 +78,7 @@ export const ApiSelectorStyled: any = styled.div`
             white-space: nowrap;
         }
         .input {
-            bacgkround: ${(props: any) => props.theme.inputLabelBg};
+            background: ${(props: any) => props.theme.inputLabelBg};
         }
     }
     & div {
@@ -102,6 +102,9 @@ export const ApiSelectorButton = styled(BtnSmall)`
     span {
         margin:0;
         padding:0;
+        @media screen and (max-width: 565px) {
+        display: none;
+        }
     }
 `;
 export const ApiSelectorInput = styled(InputSmall)`
@@ -150,8 +153,12 @@ export const UrlCopyButton: any = styled(DatePickerButton)`
     span {
         margin-left: 4px;
         color: ${(props: any) => props.theme.textColor};
+        @media screen and (max-width: 565px) {
+        display: none;
+    }
     }
     &:hover {
         background: ${(props: any) => props.theme.buttonHover};
     }
+    
 `;

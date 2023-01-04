@@ -16,7 +16,7 @@ export default function StatusBar() {
                 <div className="logo-section">
                     <img
                         src={Logo}
-                        alt="cLoki View"
+                        alt="Qryn View"
                         height="24px"
                         className="logo"
                     />
