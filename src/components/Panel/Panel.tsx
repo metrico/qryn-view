@@ -1,6 +1,6 @@
 import QueriesContainer from "../QueryItem/QueriesContainer";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "@emotion/styled";
 import { useLocation } from "react-router-dom";
 import { setRightPanel } from "../../actions/setRightPanel";

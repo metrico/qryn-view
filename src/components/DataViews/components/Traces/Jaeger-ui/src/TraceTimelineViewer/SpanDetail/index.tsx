@@ -122,7 +122,6 @@ export default function SpanDetail(props: SpanDetailProps) {
         stackTracesToggle,
         referencesToggle,
         referenceItemToggle,
-        topOfViewRefType,
     } = props;
     const {
         isTagsOpen,

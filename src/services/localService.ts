@@ -59,7 +59,7 @@ function localService(item: any = null) {
             }
         };
 
-        const add = (item: any) => {
+        const add = (item: any, maxLength = Infinity) => {
             let previousData = get() || [];
             try {
                 const newItem = {
@@ -68,7 +68,7 @@ function localService(item: any = null) {
                     starred: item.starred || false,
                     data: encodeURI(item.data) || "",
                 };
-                let newStorage = [newItem].concat(previousData);
+                let newStorage = [newItem].concat(previousData).slice(0, maxLength);
 
                 set(newStorage);
                 return getAll()

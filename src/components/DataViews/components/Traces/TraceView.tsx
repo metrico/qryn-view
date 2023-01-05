@@ -1,11 +1,9 @@
-import React, { RefObject, useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import {
-    SpanBarOptionsData,
-    Trace,
+
     TracePageHeader,
     TraceTimelineViewer,
-    TTraceTimeline,
 } from "./Jaeger-ui/src";
 import { useDetailState } from "./useDetailState";
 import { useViewRange } from "./useViewRange";
@@ -36,7 +34,7 @@ export function TraceView(props: any) {
     } = props;
 
     const { dataView } = props;
-    const { id, data } = dataView;
+    const { data } = dataView;
 
     const tracePropMapped = useMemo(() => {
         return mapTracesResponse(data)[0];

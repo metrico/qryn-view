@@ -111,7 +111,7 @@ export default class DraggableManager {
   _stopDragging() {
     window.removeEventListener('mousemove', this._handleDragEvent);
     window.removeEventListener('mouseup', this._handleDragEvent);
-    const style = _get(document, 'body.style');
+    const style: any = _get(document, 'body.style');
     if (style) {
       style.userSelect = null;
     }

@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { css, cx } from '@emotion/css';
 import * as React from 'react';
 import IoIosArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import IoIosArrowRight from '@mui/icons-material/ArrowForwardIos';
 
 import { TraceSpanReference } from '../../types/trace';
 import { uAlignIcon, ubMb1 } from '../../uberUtilityStyles';
-import ReferenceLink from '../../url/ReferenceLink';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import AccordianKeyValues from './AccordianKeyValues';
 export type LinkTarget = '_blank' | '_self' | undefined;
 export interface LinkModel<T = any> {

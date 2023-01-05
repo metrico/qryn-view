@@ -11,7 +11,7 @@ export function getQueryOptions(type:string, headers:any):QueryOptions {
            
             headers: queryHeaders || {
                 'Accept':'application/csv',
-                'Content-type':'application/vnd.flux',
+                'Content-Type':'application/vnd.flux',
             }
         }
     }

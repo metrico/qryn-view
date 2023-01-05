@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { css } from "@emotion/css";
 import { RefObject } from "react";
 
 import * as React from "react";
 
 import { Accessors } from "../ScrollManager";
-import { autoColor } from "../Theme";
 import { merge as mergeShortcuts } from "../keyboard-shortcuts";
 import { SpanBarOptions } from "../settings/SpanBarSettings";
 import { SpanLinkFunc, TNil } from "../types";

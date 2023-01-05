@@ -10,7 +10,8 @@ import {
     setStartTime,
     setStopTime,
     setTheme,
-    setAutoTheme
+    setAutoTheme,
+    setTimeRangeLabel
 } from "../actions";
 
 import setFromTime from "../actions/setFromTime";
@@ -25,8 +26,8 @@ import { setSplitView } from "../components/StatusBar/components/SplitViewButton
 
 
 export const STRING_VALUES = ["step", "theme",  "time"];
+export const READ_ONLY_STRING_VALUES = ['label'];
 export const ARRAY_VALUES = ["left", "right"];
-
 export const TIME_VALUES = ["start", "stop"];
 
 export const BOOLEAN_VALUES = ["isSubmit", "isSplit", "autoTheme", "isEmbed"];
@@ -40,6 +41,7 @@ export function UpdateStateFromQueryParams() {
     const urlQueryParams = useSelector(({urlQueryParams}: any) => urlQueryParams);
     const start = useSelector(({start}: any) => start);
     const stop = useSelector(({stop}: any) => stop);
+    const label = useSelector(({label}: any) => label);
     const from = useSelector(({from}: any) => from);
     const to = useSelector(({to}: any) => to);
     const step = useSelector(({step}: any) => step);
@@ -60,6 +62,7 @@ export function UpdateStateFromQueryParams() {
         start,
         step,
         stop,
+        label,
         from,
         to,
         time,
@@ -76,6 +79,7 @@ export function UpdateStateFromQueryParams() {
         start: setStartTime,
         step: setQueryStep,
         stop: setStopTime,
+        label: setTimeRangeLabel,
         from: setFromTime,
         to: setToTime,
         time: setQueryTime,
@@ -111,7 +115,7 @@ export function UpdateStateFromQueryParams() {
 
                 Object.keys(startParams).forEach((param) => {
                     if (
-                        STRING_VALUES.includes(param) &&
+                        (STRING_VALUES.includes(param) || READ_ONLY_STRING_VALUES.includes(param)) &&
                         startParams[param] !== ""
                     ) {
                         dispatch(STORE_ACTIONS[param](startParams[param]));
@@ -170,9 +174,7 @@ export function UpdateStateFromQueryParams() {
                     }
                 } else if (ARRAY_VALUES.includes(param)) {
                     try {
-                        const encodedArray = encodeURIComponent(
-                            JSON.stringify(STORE_KEYS[param])
-                        );
+                        const encodedArray = JSON.stringify(STORE_KEYS[param]);
                         urlFromHash.set(param, encodedArray);
                     } catch (e) {
                         console.log(e);
@@ -190,7 +192,6 @@ export function UpdateStateFromQueryParams() {
             for (let [key, value] of paramsFromHash.entries()) {
                 previousParams[key] = value;
             }
-
             Object.keys(STORE_KEYS).forEach((store_key) => {
                 if (
                     STRING_VALUES.includes(store_key) &&
@@ -219,14 +220,15 @@ export function UpdateStateFromQueryParams() {
                         console.error(e);
                     }
                 } else if (store_key === "left") {
-                    const parsed = encodeURIComponent(JSON.stringify(left));
+                    const parsed = JSON.stringify(left);
                     paramsFromHash.set("left", parsed);
                 } else if (store_key === "right") {
-                    const parsed = encodeURIComponent(JSON.stringify(right));
+                    const parsed = JSON.stringify(right);
                     paramsFromHash.set("right", parsed);
                 }
             });
-            (window as any).location.hash = paramsFromHash;
+          
+            ;(window as any).location.hash = paramsFromHash;
         }
     }, [STORE_KEYS]);
 }
