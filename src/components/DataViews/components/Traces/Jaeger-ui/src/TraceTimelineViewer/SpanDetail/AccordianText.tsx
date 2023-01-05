@@ -62,7 +62,7 @@ export default function AccordianText(props: AccordianTextProps) {
         label,
         onToggle,
         TextComponent = DefaultTextComponent,
-    } = props;
+    }: any = props;
     const isEmpty = !Array.isArray(data) || !data.length;
       const iconCls = cx(uAlignIcon, { [emptyIcon]: isEmpty });
     let arrow: React.ReactNode | null = null;

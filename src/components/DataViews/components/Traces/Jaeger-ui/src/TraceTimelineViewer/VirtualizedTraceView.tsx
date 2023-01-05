@@ -65,7 +65,7 @@ const RowsWrapper = css`
     width: 100%;
 `;
 const Row = styled.div<{ theme: any }>`
-    color: ${(props) => props.theme.textColor};
+    color: ${({theme}: any) => theme.textColor};
     width: 100%;
 `;
 

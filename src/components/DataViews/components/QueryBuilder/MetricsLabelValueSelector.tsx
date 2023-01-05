@@ -1,5 +1,6 @@
 import { cx } from "@emotion/css";
 import { ThemeProvider } from "@emotion/react";
+import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
 import { InitialLabelValueState, NewLabel } from "./consts";
 import { metricsToString } from "./helpers";
@@ -44,7 +45,7 @@ export function MetricsLabelValueSelectors(props: any) {
 
     const onAdd = (e: any) => {
         setLabelValuesState((prev: Label[]) => {
-            return [...prev, NewLabel];
+            return [...prev, {...NewLabel,id:nanoid()}];
         });
     };
 

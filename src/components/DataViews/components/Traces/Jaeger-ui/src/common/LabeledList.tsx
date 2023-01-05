@@ -36,12 +36,12 @@ const LabeledListItemDivider = (color: string) => css`
     padding: 0 8px;
 `;
 const LabeledListLabel = styled.span<{ theme: any }>`
-    color: ${(props) => props.theme.textColor};
+    color: ${({theme}: any) => theme.textColor};
     margin-right: 0.25rem;
     font-size: 12px;
 `;
 const LabeledListValue = styled.strong<{ theme: any }>`
-    color: ${(props) => props.theme.textColor};
+    color: ${({theme}: any) => theme.textColor};
     margin-right: 0.55rem;
     font-size: 12px;
 `;
