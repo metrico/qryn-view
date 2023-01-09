@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {memo, useCallback,  useMemo, FC } from "react";
 import {
+
     useFlexLayout,
     useResizeColumns,
     useSortBy,
@@ -49,7 +50,18 @@ export const AddLabels = (props: any) => {
     );
 };
 
-export function Table(props: any) {
+export interface Props {
+    columns: any;
+    data:any;
+    actQuery: any;
+    size: any;
+    width: any;
+    height:any;
+
+}
+
+
+export const Table: FC <Props> =  memo((props: Props)=> {
     // modify height from props in here
 
     const { columns, data, actQuery, size, width } = props;
@@ -158,11 +170,11 @@ export function Table(props: any) {
                     height={parseInt(size) || 600}
                     itemCount={rows.length}
                     itemSize={26}
-                    width={width}
+                    width={'100%'}
                 >
                     {RenderRow}
                 </FixedSizeList>
             </div>
         </div>
     );
-}
+});
