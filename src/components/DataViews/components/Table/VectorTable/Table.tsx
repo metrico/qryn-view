@@ -11,7 +11,7 @@ import { getStyles } from "./styles";
 import { ZoomIn, ZoomOut } from "@mui/icons-material/";
 import { addLabel } from "../../ValueTags";
 
-export const AddLabels = (props:any) => {
+export const AddLabels = (props: any) => {
     // get queryObject from parent
     const { tkey, value, actualQuery } = props;
 
@@ -49,18 +49,22 @@ export const AddLabels = (props:any) => {
     );
 };
 
-export function Table(props:any) {
+export function Table(props: any) {
     // modify height from props in here
 
     const { columns, data, actQuery, size, width } = props;
 
     const { responseType } = actQuery;
 
-    const cellProps = (props:any, { cell }:{cell:any}) => getStyles(props, cell.column.align);
+    const cellProps = (props: any, { cell }: { cell: any }) =>
+        getStyles(props, cell.column.align);
 
     const defaultColumn = useMemo(
         () => ({
-            width: 75,
+          width: 75,
+            minWidth: 20,
+            maxWidth:150,
+           // canResize: true,
         }),
         []
     );
@@ -70,13 +74,8 @@ export function Table(props:any) {
         [columns, data, defaultColumn]
     );
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-    } = useTable(options, useFlexLayout, useResizeColumns, useSortBy);
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+        useTable(options, useFlexLayout, useResizeColumns, useSortBy);
 
     const RenderRow = useCallback(
         ({ index, style }) => {
@@ -89,9 +88,10 @@ export function Table(props:any) {
                     })}
                     className="tr"
                 >
-                    {row.cells.map((cell:any) => {
+                    {row.cells.map((cell: any, id:any) => {
                         return (
                             <div
+                            key={id}
                                 {...cell.getCellProps(cellProps)}
                                 className="td"
                                 title={cell.render("Cell").props.value}
@@ -100,7 +100,7 @@ export function Table(props:any) {
                                 {responseType === "vector" && (
                                     <AddLabels
                                         actualQuery={actQuery}
-                                        tkey={
+                                        tkey={ 
                                             cell.render("Cell").props.column
                                                 .Header
                                         }
@@ -113,31 +113,33 @@ export function Table(props:any) {
                 </div>
             );
         },
-        [prepareRow, rows]
+        [prepareRow, rows,actQuery,responseType]
     );
-
 
     return (
         <div {...getTableProps()} className="table">
             <div>
-                {headerGroups.map((headerGroup:any) => (
-                    <div {...headerGroup.getHeaderGroupProps()} className="tr">
-                        {headerGroup.headers.map((column:any) => (
+                {headerGroups?.map((headerGroup: any) => (
+                    <div {...headerGroup.getHeaderGroupProps({})} className="tr">
+                        {headerGroup.headers.map((column: any) => (
                             <div
+                                key={column.id}
                                 {...column.getHeaderProps(
                                     column.getSortByToggleProps()
                                 )}
+                             
                                 className="th"
                             >
-                                {column.render("Header")}
-
-                                <span>
+                                      <span>
                                     {column.isSorted
                                         ? column.isSortedDesc
                                             ? " 🔽"
                                             : " 🔼"
                                         : ""}
                                 </span>
+                                {column.render("Header")}
+
+                          
 
                                 <div
                                     {...column.getResizerProps()}
@@ -151,7 +153,7 @@ export function Table(props:any) {
                 ))}
             </div>
 
-            <div {...getTableBodyProps()} >
+            <div {...getTableBodyProps()}>
                 <FixedSizeList
                     height={parseInt(size) || 600}
                     itemCount={rows.length}

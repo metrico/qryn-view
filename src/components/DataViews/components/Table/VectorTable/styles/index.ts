@@ -76,16 +76,16 @@ export const TableStyles = styled.div`
             .resizer {
                 display: inline-block;
                 background: ${({theme}:{theme:any}) => theme.buttonBorder};
-                width: 3px;
+                width: 5px;
                 height: 100%;
                 position: absolute;
-                right: 0;
+               right: 0;
                 top: 0;
                 transform: translateX(50%);
                 z-index: 1;
-                touch-action:none;
+               // touch-action:none;
                 &.isResizing {
-                    background: blue;
+                    background: red;
                 }
             }
         }

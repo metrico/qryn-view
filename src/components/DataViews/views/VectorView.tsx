@@ -30,18 +30,8 @@ export const VectorView = (props: any) => {
         }
         return "tomorrow";
     }, [theme]);
-    const [size, setSize] = useState(0);
-    const [width, setWidth] = useState(0);
 
     const parentRef: any = useRef(null);
-
-    useEffect(() => {
-        setSize(parentRef.current.offsetHeight);
-    }, [parentRef]);
-
-    useEffect(()=>{
-        setWidth(parentRef.current.offsetWidth)
-    },[parentRef.current.offsetWidth])
 
     return (
         <ViewStyled ref={viewRef} size={panelSize} vheight={viewHeight}>
@@ -69,8 +59,6 @@ export const VectorView = (props: any) => {
                     >
                         <VectorTable
                             {...props}
-                            size={size}
-                            width={width}
                             height={theight}
                             data={streamData.tableData}
                             actualQuery={actualQuery}
