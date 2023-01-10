@@ -77,23 +77,6 @@ export default function LogsView(props: any) {
                     </div>
                 </TabPanel>
             </TabsUnstyled>
-            {/* <div className="view-content">
-                    {actualQuery?.tableView ? (
-                        <VectorTable
-                            {...props}
-                            height={theight}
-                            data={tableData}
-                            actualQuery={actualQuery}
-                        />
-                    ) : (
-                        <LogRows
-                            {...props}
-                            onClose={setStreamClose}
-                            messages={streamData}
-                            actualQuery={actualQuery}
-                        />
-                    )}
-                </div> */}
         </ViewStyled>
     );
 }

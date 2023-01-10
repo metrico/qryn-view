@@ -7,7 +7,6 @@ import styled from "@emotion/styled";
 import TabsUnstyled from "@mui/base/TabsUnstyled";
 
 export const TabsContainer = styled(TabsUnstyled)`
-    height: "320px";
     background: ${({theme}: any) => theme.inputBg};
 `;
 
@@ -68,6 +67,7 @@ export const TabHeaderContainer = styled.div`
 export const TabPanel = styled(TabPanelUnstyled)`
     width: 100%;
     background: ${({ theme }: any) => theme.widgetContainer};
+    height: inherit;
 `;
 
 export const TabsList = styled(TabsListUnstyled)`
