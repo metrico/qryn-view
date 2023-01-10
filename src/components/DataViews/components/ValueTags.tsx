@@ -106,7 +106,7 @@ export default function ValueTags(props: any) {
     const { tags, actQuery, dataSourceData, linkedFieldTags } = props;
     //console.log(dataSourceData);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
-   //  const dataSources = useSelector((store: any) => store.dataSources);
+    //  const dataSources = useSelector((store: any) => store.dataSources);
     const theme = useSelector((store: any) => store.theme);
     const isEmbed = useSelector((store: any) => store.isEmbed);
     const dispatch = useDispatch();
@@ -127,9 +127,8 @@ export default function ValueTags(props: any) {
         }
 
         let previousRight = JSON.parse(JSON.stringify(rightPanel));
-        console.log(previousRight);
         const panelCP = JSON.parse(JSON.stringify(props.actQuery));
-       // debugger;
+        // debugger;
         try {
             const newRight = {
                 ...previousRight[0],
@@ -137,8 +136,8 @@ export default function ValueTags(props: any) {
                 idRef: linkType + "=" + value,
                 panel: "right",
                 queryType: "range",
-                dataSourceType: linkType.toLowerCase() || 'traces',
-                dataSourceId: linkID || '32D16h5uYBqUUzhD',
+                dataSourceType: linkType.toLowerCase() || "traces",
+                dataSourceId: linkID || "32D16h5uYBqUUzhD",
                 dataSourceURL: currentUrl,
                 expr: value,
                 limit: 100,
@@ -152,23 +151,21 @@ export default function ValueTags(props: any) {
                 direction: "forward",
                 loading: false,
             };
-           // debugger;
+            // debugger;
             dispatch(
                 getData(
-                    linkType.toLowerCase() || 'traces',
+                    linkType.toLowerCase() || "traces",
                     value,
                     "range",
                     panelCP.limit || 100,
                     "right",
                     newRight.id,
                     "forward",
-                    linkID || '32D16h5uYBqUUzhD', // datasourceid
+                    linkID || "32D16h5uYBqUUzhD", // datasourceid
                     currentUrl
                 )
             );
             dispatch(setRightPanel([newRight]));
-
-   
         } catch (e) {
             console.log(e);
         }
@@ -220,12 +217,12 @@ export default function ValueTags(props: any) {
                         <span style={{ flex: 1 }}>
                             {value}
                             <LinkButton
-                            {...props}
-                            dataSourceData={dataSourceData}
-                            linkedFieldTags={linkedFieldTags}
-                            buttonKey={key}
-                            value={value}
-                            openTraces={openTraces}
+                                {...props}
+                                dataSourceData={dataSourceData}
+                                linkedFieldTags={linkedFieldTags}
+                                buttonKey={key}
+                                value={value}
+                                openTraces={openTraces}
                             />
                         </span>
                     </div>
@@ -235,10 +232,10 @@ export default function ValueTags(props: any) {
     );
 }
 
-export const LinkButton = (props:any) => {
-
-    const { dataSourceData, linkedFieldTags, buttonKey, value, openTraces} = props
-    const dataSources = useSelector((store:any)=> store.dataSources)
+export const LinkButton = (props: any) => {
+    const { dataSourceData, linkedFieldTags, buttonKey, value, openTraces } =
+        props;
+    const dataSources = useSelector((store: any) => store.dataSources);
 
     if (dataSourceData?.linkedFields) {
         const { linkedFields } = dataSourceData;
@@ -260,10 +257,7 @@ export const LinkButton = (props:any) => {
 
         const fieldNames = fieldsFromParent?.map((m: any) => m.name);
         if (linkedFields?.length > 0) {
-
-
-            const { dataSourceId, linkType, internalLink } =
-                linkedFields[0];
+            const { dataSourceId, linkType, internalLink } = linkedFields[0];
             const currentDataSource = dataSources?.find(
                 (f: any) => f.id === dataSourceId
             );
@@ -301,4 +295,4 @@ export const LinkButton = (props:any) => {
     }
 
     return null;
-} 
+};
