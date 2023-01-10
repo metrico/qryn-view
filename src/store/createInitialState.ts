@@ -206,7 +206,7 @@ export default function initialState() {
                 labels: [], // name: selected:
                 values: [], // label name selected
                 direction: "forward",
-                laoding: false,
+                loading: false,
             },
         ],
 

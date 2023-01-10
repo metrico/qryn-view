@@ -52,21 +52,25 @@ export const MatrixView = (props: any) => {
                     <Tab>Raw</Tab>
                 </TabsList>
                 <TabPanel value={0}>
-                    <QrynChart
-                        {...props}
-                        tWidth={viewWidth}
-                        chartLimit={limit}
-                        matrixData={streamData}
-                        actualQuery={actualQuery}
-                    />
+                    <div className="view-content" style={{ height: "100%" }}>
+                        <QrynChart
+                            {...props}
+                            tWidth={viewWidth}
+                            chartLimit={limit}
+                            matrixData={streamData}
+                            actualQuery={actualQuery}
+                        />
+                    </div>
                 </TabPanel>
                 <TabPanel value={1}>
-                    <VectorTable
-                        {...props}
-                        height={theight}
-                        data={tableData}
-                        actualQuery={actualQuery}
-                    />
+                    <div className={"view-content"}>
+                        <VectorTable
+                            {...props}
+                            height={theight}
+                            data={tableData}
+                            actualQuery={actualQuery}
+                        />
+                    </div>
                 </TabPanel>
                 <TabPanel value={2}>
                     <div className="view-content">
@@ -82,24 +86,6 @@ export const MatrixView = (props: any) => {
                 </TabPanel>
             </TabsUnstyled>
 
-            {/* <div className="view-content">
-                {actualQuery?.tableView ? (
-                    <VectorTable
-                        {...props}
-                        height={theight}
-                        data={tableData}
-                        actualQuery={actualQuery}
-                    />
-                ) : (
-                    <QrynChart
-                        {...props}
-                        tWidth={viewWidth}
-                        chartLimit={limit}
-                        matrixData={streamData}
-                        actualQuery={actualQuery}
-                    />
-                )}
-            </div> */}
         </ViewStyled>
     );
 };

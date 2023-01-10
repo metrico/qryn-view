@@ -556,13 +556,13 @@ export const QueryBar = (props: any) => {
     };
     const decodeQueryAndUpdatePanel = (queryExpr: any, isSearch: any) => {
         const currentDataSource = dataSources.find(
-            (f: any) => f.id === dataSourceId
+            (f: any) => f?.id === dataSourceId
         );
         if (currentDataSource?.type !== "flux") {
             decodeQuery(
                 queryExpr,
                 currentDataSource?.url,
-                props.data.labels,
+                props?.data?.labels,
                 currentDataSource?.id
             );
         }
@@ -576,9 +576,9 @@ export const QueryBar = (props: any) => {
                 }
                 query.labels = [...labelsDecoded];
                 query.browserOpen = false;
-                query.dataSourceId = currentDataSource.id;
-                query.dataSourceType = currentDataSource.type;
-                query.dataSourceURL = currentDataSource.url;
+                query.dataSourceId = currentDataSource?.id;
+                query.dataSourceType = currentDataSource?.type;
+                query.dataSourceURL = currentDataSource?.url;
             }
         });
 
@@ -626,11 +626,11 @@ export const QueryBar = (props: any) => {
         }
     };
     const updateLinksHistory = () => {
-        const ds = dataSources.find((f: any) => f.id === dataSourceId);
+        const ds = dataSources.find((f: any) => f?.id === dataSourceId);
         const storedUrl = saveUrl.add({
             data: {
                 href: window.location.href,
-                url: ds.url,
+                url: ds?.url,
                 type: dataSourceType,
                 queryInput,
                 queryType,
@@ -664,7 +664,7 @@ export const QueryBar = (props: any) => {
         const prevPanel = JSON.parse(JSON.stringify(panelData));
 
         const newPanel = prevPanel?.map((m: any) => {
-            if (m.id === id) {
+            if (m?.id === id) {
                 return { ...m, isShowStats: value };
             }
             return m;

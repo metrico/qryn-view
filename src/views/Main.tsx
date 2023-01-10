@@ -21,7 +21,7 @@ export const MainContainer = styled.div`
     position: absolute;
     display: flex;
     flex-direction: column;
-    height: inherit;
+    height:inherit;
     width: 100%;
     flex: 1;
 
@@ -138,41 +138,13 @@ export function DesktopView({ theme, isEmbed, isSplit, settingsDialogOpen }: any
             <MainContainer>
                 {!isEmbed && <StatusBar />}
                 <div className="panels-container" ref={refTotal}>
-                    {/* <ResizableBox
-                        width={widthLeft}
-                        minConstraints={[minWidth, height]}
-                        maxConstraints={[maxWidth, height]}
-                        minWidth={minWidth}
-                        maxWidth={maxWidth}
-                        minHeight={height}
-                        maxHeight={height}
-                        height={height}
-                        axis={"x"}
-                        resizeHandles={isSplit ? ["e"] : []}
-                        lockAspectRatio={false}
-                        handleSize={[10, 10]}
-                        onResize={onSplitResize}
-                    > */}
+ 
                     <Panel name="left" />
-                    {/* </ResizableBox> */}
+                  
                     {isSplit && (
-                        // <ResizableBox
-                        //     width={widthRight}
-                        //     minConstraints={[minWidth, height]}
-                        //     maxConstraints={[maxWidth, height]}
-                        //     minWidth={minWidth}
-                        //     maxWidth={maxWidth}
-                        //     minHeight={height}
-                        //     maxHeight={height}
-                        //     height={height}
-                        //     axis={"x"}
-                        //     resizeHandles={["w"]}
-                        //     lockAspectRatio={false}
-                        //     handleSize={[10, 10]}
-                        //     onResize={onSplitResize}
-                        // >
+  
                         <Panel name="right" />
-                        // </ResizableBox>
+                     
                     )}
                 </div>
             </MainContainer>

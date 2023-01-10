@@ -1,18 +1,23 @@
 import styled from "@emotion/styled";
-import { TabPanelUnstyled, TabsListUnstyled, TabsUnstyled, TabUnstyled } from "@mui/base";
+import {
+    TabPanelUnstyled,
+    TabsListUnstyled,
+    TabsUnstyled,
+    TabUnstyled,
+} from "@mui/base";
 import { tabUnstyledClasses } from "@mui/base/TabUnstyled";
 import { buttonUnstyledClasses } from "@mui/base/ButtonUnstyled";
 
 export const ViewStyled: any = styled.div`
     margin: 4px;
     padding: 5px;
-    margin-top:0px;
+    margin-top: 0px;
     border: 1px solid ${({ theme }: any) => theme.buttonBorder};
     border-radius: 3px;
-    display:flex;
-    flex-direction:column;
-    flex:${({size}: any)=> size === 'min' ? 0 : 1};
- 
+    display: flex;
+    flex-direction: column;
+    flex: ${({ size }: any) => (size === "min" ? 0 : 1)};
+
     height: ${(props: any) =>
         props.size === "regular"
             ? props.vheight.regularCont
@@ -34,37 +39,33 @@ export const ViewStyled: any = styled.div`
                 : "flex"};
         flex-direction: ${(props: any) =>
             props.size === "regular" ? "column" : "column"};
-        flex:1;
+        flex: 1;
     }
 `;
-
-
 
 export const TabPanel = styled(TabPanelUnstyled)`
     width: 100%;
     background: ${({ theme }: any) => theme.widgetContainer};
-   height:100%;
-   flex:1;
+    height: inherit;
+    flex: 1;
 `;
 export const TabsContainer = styled(TabsUnstyled)`
-display:flex;
-height:100%;
-`
+    display: flex;
+    height: 100%;
+`;
 export const TabsList: any = styled(TabsListUnstyled)`
-
     min-width: 320px;
     background: ${({ theme }: any) => theme.tabHeader};
     border-bottom: 4px solid ${({ theme }: any) => theme.historyRow};
-    display: ${({panelsize}: any)=> panelsize === 'min' ? 'none' : 'flex'};
+    display: ${({ panelsize }: any) => (panelsize === "min" ? "none" : "flex")};
     align-items: center;
     align-content: space-between;
-    
-`;    
+`;
 
 export const Tab = styled(TabUnstyled)`
-    color: ${({theme}: any) => theme.textColor};
-    background: ${({theme}: any) => theme.buttonDefault};
-    border:1px solid ${(props: any)=>props.theme.buttonBorder};
+    color: ${({ theme }: any) => theme.textColor};
+    background: ${({ theme }: any) => theme.buttonDefault};
+    border: 1px solid ${(props: any) => props.theme.buttonBorder};
     cursor: pointer;
     font-size: 13px;
     background-color: transparent;
@@ -104,6 +105,3 @@ export const Tab = styled(TabUnstyled)`
         padding: 5px 20px;
     }
 `;
-
-
-
