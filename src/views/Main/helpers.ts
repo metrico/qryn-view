@@ -95,7 +95,7 @@ export const getAxiosConf = () => {
 
     conf.validateStatus = (status: number) => {
         return (
-            (status >= 200 && status < 300) || status === 404 || status === 500
+            (status >= 200 && status < 400) || status === 404 || status === 500
         );
     };
     return conf;
