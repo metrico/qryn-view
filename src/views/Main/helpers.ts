@@ -92,7 +92,17 @@ export function updateDataSourcesWithUrl(
 
 export const getAxiosConf = () => {
     let conf: any = {};
+    const headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+    };
 
+    const options = {
+        method: "GET",
+        headers: headers,
+    };
+
+    conf.options = options;
     conf.validateStatus = (status: number) => {
         return (
             (status >= 200 && status < 400) || status === 404 || status === 500
@@ -105,8 +115,11 @@ export const getReadyResponse = async (url: string, conf: any, response: any) =>
     await axios
         .get(`${url}/ready`, conf)
         .then((res: AxiosResponse) => {
-            if (res) {
-                response = res.status;
+            if (res && res?.status && res?.headers) {
+                response = {
+                    status: res.status,
+                    contentType: res?.headers?.["content-type"],
+                };
                 return response;
             }
         })
@@ -123,11 +136,16 @@ export async function checkLocalAPI(url: string) {
     let isReady = false;
     try {
         let res = await getReadyResponse(url, conf, response);
+
         response = res;
     } catch (e: any) {
         isReady = false;
     } finally {
-        if (response && response === 200) {
+        if (
+            response &&
+            response?.status === 200 &&
+            response?.contentType === "application/json; charset=utf-8"
+        ) {
             isReady = true;
         }
     }
