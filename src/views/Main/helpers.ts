@@ -2,7 +2,6 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import setDataSources from "../DataSources/store/setDataSources";
 import { setShowDataSourceSetting } from "./setShowDataSourceSetting";
 
-
 // updateDataSources:
 
 export function updateDataSourcesWithUrl(
@@ -112,7 +111,7 @@ export const getReadyResponse = async (url: string, conf: any, response: any) =>
             }
         })
         .catch((e: AxiosError) => {
-           return e
+            return e;
         })
         .finally(() => {
             return response;
@@ -128,9 +127,7 @@ export async function checkLocalAPI(url: string) {
     } catch (e: any) {
         isReady = false;
     } finally {
-        if (!response || response === 404 || response === 500) {
-            isReady = false;
-        } else {
+        if (response && response === 200) {
             isReady = true;
         }
     }
