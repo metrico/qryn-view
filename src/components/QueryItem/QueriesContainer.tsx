@@ -11,7 +11,6 @@ const QueriesContainerStyled = styled.div`
 `;
 export default function QueriesContainer(props: any) {
     const { queries } = props;
-    console.log(queries)
     const queriesLoad = useMemo(()=>queries,[queries])
     return (
         <QueriesContainerStyled>

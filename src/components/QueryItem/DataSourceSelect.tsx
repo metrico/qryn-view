@@ -13,8 +13,6 @@ interface Props {
 export const DataSourceSelect = (props: Props) => {
     const { value, onChange, opts, extValue } = props;
 
-    console.log(opts, value) // undefined value
-    // set a value from somewhere
 
     const selectRef: any = useRef(null);
     /// add the initial data source name
