@@ -94,7 +94,7 @@ export const getAxiosConf = () => {
     let conf: any = {};
     const headers = {
         "Content-Type": "application/json",
-        "Accept": "application/json"
+        Accept: "application/json",
     };
 
     const options = {
@@ -115,9 +115,11 @@ export const getReadyResponse = async (url: string, conf: any, response: any) =>
     await axios
         .get(`${url}/ready`, conf)
         .then((res: AxiosResponse) => {
-            if (res) {
-                console.log(res)
-                response = res.status;
+            if (res && res?.status && res?.headers) {
+                response = {
+                    status: res.status,
+                    contentType: res?.headers?.["content-type"],
+                };
                 return response;
             }
         })
@@ -134,13 +136,16 @@ export async function checkLocalAPI(url: string) {
     let isReady = false;
     try {
         let res = await getReadyResponse(url, conf, response);
-        console.log(res)
+
         response = res;
     } catch (e: any) {
         isReady = false;
     } finally {
-        console.log(response)
-        if (response && response === 200) {
+        if (
+            response &&
+            response?.status === 200 &&
+            response?.contentType === "application/json; charset=utf-8"
+        ) {
             isReady = true;
         }
     }
