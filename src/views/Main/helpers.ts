@@ -106,6 +106,7 @@ export const getReadyResponse = async (url: string, conf: any, response: any) =>
         .get(`${url}/ready`, conf)
         .then((res: AxiosResponse) => {
             if (res) {
+                console.log(res)
                 response = res.status;
                 return response;
             }
