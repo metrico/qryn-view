@@ -92,7 +92,17 @@ export function updateDataSourcesWithUrl(
 
 export const getAxiosConf = () => {
     let conf: any = {};
+    const headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+    };
 
+    const options = {
+        method: "GET",
+        headers: headers,
+    };
+
+    conf.options = options;
     conf.validateStatus = (status: number) => {
         return (
             (status >= 200 && status < 400) || status === 404 || status === 500
