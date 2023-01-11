@@ -123,10 +123,12 @@ export async function checkLocalAPI(url: string) {
     let isReady = false;
     try {
         let res = await getReadyResponse(url, conf, response);
+        console.log(res)
         response = res;
     } catch (e: any) {
         isReady = false;
     } finally {
+        console.log(response)
         if (response && response === 200) {
             isReady = true;
         }
