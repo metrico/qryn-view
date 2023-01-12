@@ -159,24 +159,26 @@ export async function updateDataSourcesFromLocalUrl(
 ) {
     const location = window.location.origin;
     const logsDs = dataSources.find((f: any) => f.type === "logs");
+    let dsReady = false;
     let isLocalReady = false;
-
-    const dsReady = await checkLocalAPI(logsDs.url);
+    if (logsDs?.url !== "") {
+        dsReady = await checkLocalAPI(logsDs.url);
+    }
     if (!dsReady) {
         isLocalReady = await checkLocalAPI(location);
-    }
 
-    if (isLocalReady && !dsReady) {
-        const dsCP = [...dataSources];
-        const prevDs = JSON.parse(JSON.stringify(dsCP));
+        if (isLocalReady && !dsReady) {
+            const dsCP = [...dataSources];
+            const prevDs = JSON.parse(JSON.stringify(dsCP));
 
-        const newDs = prevDs?.map((m: any) => ({
-            ...m,
-            url: location,
-        }));
-        localStorage.setItem("dataSources", JSON.stringify(newDs));
-        dispatch(setDataSources(newDs));
-    } else if (!dsReady && !isLocalReady) {
-        navigate("datasources");
+            const newDs = prevDs?.map((m: any) => ({
+                ...m,
+                url: location,
+            }));
+            localStorage.setItem("dataSources", JSON.stringify(newDs));
+            dispatch(setDataSources(newDs));
+        } else if (!dsReady && !isLocalReady) {
+            navigate("datasources");
+        }
     }
 }
