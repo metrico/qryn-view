@@ -6,6 +6,7 @@ import { TabsList, Tab, TabPanel, ViewStyled } from "./styled";
 import ReactJSON from 'react-json-view';
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
+import Table from "../../../qryn-ui/Table/Table";
 
 export default function LogsView(props: any) {
     const {
@@ -50,6 +51,7 @@ export default function LogsView(props: any) {
                 </TabsList>
                 <TabPanel value={0}>
                     <div className="view-content">
+                        <Table/>
                         <LogRows
                             {...props}
                             onClose={setStreamClose}
