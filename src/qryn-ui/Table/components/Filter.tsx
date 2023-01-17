@@ -1,5 +1,6 @@
 import { Column, RowData, Table } from '@tanstack/react-table'
-import React from 'react'
+import {Fragment, useMemo, FC} from 'react'
+import { useTheme } from '../../../components/DataViews/components/QueryBuilder/hooks'
 import DebouncedInput from './DebouncedInput'
 
 type NumberInputProps = {
@@ -13,6 +14,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
   getFacetedMinMaxValues,
   setFilterValue,
 }) => {
+  const theme = useTheme();
   const minOpt = getFacetedMinMaxValues()?.[0]
   const min = Number(minOpt ?? '')
 
@@ -21,8 +23,9 @@ const NumberInput: React.FC<NumberInputProps> = ({
 
   return (
     <div>
-      <div className="flex space-x-2">
+      <div style={{display:'flex', gap:'4px', alignItems:'center', justifyContent:'center'}}>
         <DebouncedInput
+          theme={theme}
           type="number"
           min={min}
           max={max}
@@ -34,6 +37,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
           className="w-24 border shadow rounded"
         />
         <DebouncedInput
+          theme={theme}
           type="number"
           min={min}
           max={max}
@@ -58,7 +62,7 @@ type TextInputProps = {
   sortedUniqueValues: any[]
 }
 
-const TextInput: React.FC<TextInputProps> = ({
+const TextInput: FC<TextInputProps> = ({
   columnId,
   columnFilterValue,
   columnSize,
@@ -66,15 +70,16 @@ const TextInput: React.FC<TextInputProps> = ({
   sortedUniqueValues,
 }) => {
   const dataListId = columnId + 'list'
-
+  const theme = useTheme();
   return (
-    <React.Fragment>
+    <Fragment>
       <datalist id={dataListId}>
         {sortedUniqueValues.slice(0, 5000).map((value: any) => (
           <option value={value} key={value} />
         ))}
       </datalist>
       <DebouncedInput
+        theme={theme}
         type="text"
         value={columnFilterValue ?? ''}
         onChange={value => setFilterValue(value)}
@@ -83,7 +88,7 @@ const TextInput: React.FC<TextInputProps> = ({
         list={dataListId}
       />
       <div className="h-1" />
-    </React.Fragment>
+    </Fragment>
   )
 }
 
@@ -100,7 +105,7 @@ export function Filter<T extends RowData>({ column, table }: Props<T>) {
   const columnFilterValue = column.getFilterValue()
   const uniqueValues = column.getFacetedUniqueValues()
 
-  const sortedUniqueValues = React.useMemo(
+  const sortedUniqueValues = useMemo(
     () =>
       typeof firstValue === 'number'
         ? []

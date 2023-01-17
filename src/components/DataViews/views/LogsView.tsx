@@ -51,7 +51,7 @@ export default function LogsView(props: any) {
                 </TabsList>
                 <TabPanel value={0}>
                     <div className="view-content">
-                        <Table/>
+                        {/* <Table/> */}
                         <LogRows
                             {...props}
                             onClose={setStreamClose}

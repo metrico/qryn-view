@@ -1,4 +1,4 @@
-import React from "react";
+import {StrictMode} from "react";
 import ReactDOM from "react-dom";
 import "./scss/app.scss";
 import App from "./App";
@@ -13,7 +13,7 @@ import { CookiesProvider } from "react-cookie";
 import ProtectedRoute from "./providers/ProtectedRoute";
 errorInterceptor(axios);
 ReactDOM.render(
-    <React.StrictMode>
+    <StrictMode>
         <CookiesProvider>
             <Provider store={store}>
                 <BrowserRouter>
@@ -28,6 +28,6 @@ ReactDOM.render(
                 </BrowserRouter>
             </Provider>
         </CookiesProvider>
-    </React.StrictMode>,
+    </StrictMode>,
     document.getElementById("root")
 );

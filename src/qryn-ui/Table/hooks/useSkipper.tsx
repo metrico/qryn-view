@@ -1,19 +1,19 @@
-import React from 'react'
+import {useRef, useCallback, useEffect, useMemo} from 'react'
 
 export function useSkipper() {
-  const shouldSkipRef = React.useRef<boolean | null>(true)
+  const shouldSkipRef = useRef<boolean | null>(true)
   const shouldSkip = shouldSkipRef.current
 
   // Wrap a function with this to skip a pagination reset temporarily
-  const skip = React.useCallback(() => {
+  const skip = useCallback(() => {
     shouldSkipRef.current = false
   }, [])
 
-  React.useEffect(() => {
+  useEffect(() => {
     shouldSkipRef.current = true
   })
 
-  const result = React.useMemo(
+  const result = useMemo(
     () => [Boolean(shouldSkip), skip] as const,
     [shouldSkip, skip]
   )

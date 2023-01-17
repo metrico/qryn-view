@@ -11,16 +11,9 @@ import {
     compareItems,
     RankingInfo,
 } from "@tanstack/match-sorter-utils";
-import IndeterminateCheckbox from "../components/IndeterminateCheckbox";
 
-import { Person } from "../mock/makeData";
 
-export const fuzzyFilter: FilterFn<Person> = (
-    row,
-    columnId,
-    value,
-    addMeta
-) => {
+export const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     // Rank the item
     const itemRank = rankItem(row.getValue(columnId), value);
 
@@ -31,7 +24,7 @@ export const fuzzyFilter: FilterFn<Person> = (
     return itemRank.passed;
 };
 
-export const fuzzySort: SortingFn<Person> = (rowA, rowB, columnId) => {
+export const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
     let dir = 0;
 
     // Only sort by rank if the column has ranking information
@@ -52,95 +45,13 @@ export type TableMeta = {
 
 // Give our default column cell renderer editing superpowers!
 
-export const defaultColumn: Partial<ColumnDef<Person>> = {
-    cell: ({ getValue, row: { index }, column: { id }, table }) => {
-        //   const initialValue = getValue()
-        //   // We need to keep and update the state of the cell normally
-        //   const [value, setValue] = React.useState(initialValue)
-
-        //   // When the input is blurred, we'll call our table meta's updateData function
-        //   const onBlur = () => {
-        //     ;(table.options.meta as TableMeta).updateData(index, id, value)
-        //   }
-
-        //   // If the initialValue is changed external, sync it up with our state
-        //   React.useEffect(() => {
-        //     setValue(initialValue)
-        //   }, [initialValue])
-
-        return (
-            <input
-                style={{ color: "black" }}
-                value={getValue() as string}
-                // onChange={e => setValue(e.target.value)}
-                //onBlur={onBlur}
-            />
-        );
-    },
+export const defaultColumn: Partial<ColumnDef<any>> = {
+    cell: (info: any) => info.getValue(),
 };
 
-export const columns: ColumnDef<Person>[] = [
-    {
-        id: "select",
-        header: ({ table }) => (
-            <IndeterminateCheckbox
-                checked={table.getIsAllRowsSelected()}
-                indeterminate={table.getIsSomeRowsSelected()}
-                onChange={table.getToggleAllRowsSelectedHandler()}
-            />
-        ),
-        cell: ({ row }) => (
-            <div className="px-1">
-                <IndeterminateCheckbox
-                    checked={row.getIsSelected()}
-                    indeterminate={row.getIsSomeSelected()}
-                    onChange={row.getToggleSelectedHandler()}
-                />
-            </div>
-        ),
-    },
-
-    {
-        accessorKey: "firstName",
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-    },
-    {
-        accessorFn: (row) => row.lastName,
-        id: "lastName",
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: (props) => props.column.id,
-    },
-    {
-        accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-        id: "fullName",
-        header: "Full Name",
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-        filterFn: fuzzyFilter,
-        sortingFn: fuzzySort,
-    },
-
-    {
-        accessorKey: "visits",
-        header: () => <span>Visits</span>,
-        footer: (props) => props.column.id,
-    },
-    {
-        accessorKey: "status",
-        header: "Status",
-        footer: (props) => props.column.id,
-    },
-    {
-        accessorKey: "progress",
-        header: "Profile Progress",
-        footer: (props) => props.column.id,
-    },
-];
 
 export const getTableMeta = (
-    setData: React.Dispatch<React.SetStateAction<Person[]>>,
+    setData: React.Dispatch<React.SetStateAction<any[]>>,
     skipAutoResetPageIndex: () => void
 ) =>
     ({

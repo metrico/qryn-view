@@ -1,4 +1,4 @@
-import * as React from "react";
+import {useState} from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
@@ -54,7 +54,7 @@ const StyledMenu = styled((props: any) => (
 export default function ClokiMenu() {
     const dispatch = useDispatch();
     const showDs = useSelector((store: any) => store.showDataSourceSetting);
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const open = Boolean(anchorEl);
 
