@@ -10,7 +10,9 @@ import { useTheme } from "../../../components/DataViews/components/QueryBuilder/
 import Filter from "./Filter";
 import "../styles/table.css";
 import { ThemeProvider } from "@emotion/react";
-
+import SortOutlinedIcon from "@mui/icons-material/SortOutlined";
+import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
+import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 export const TableHeader = css`
     position: relative;
     &.resizer {
@@ -27,6 +29,15 @@ export const TableHeader = css`
             opacity: 1;
         }
     }
+`;
+export const SortIcon = (color: string, border: string) => css`
+    height: 14px !important;
+    width: 14px !important;
+    color: ${color} !important;
+    cursor: pointer;
+    border: 1px solid ${border};
+    border-radius: 3px;
+    padding: 2px;
 `;
 
 type TableGroup = "center" | "left" | "right";
@@ -139,7 +150,10 @@ export function CustomTable<T extends RowData>({
                                                 style={{
                                                     border: "none",
                                                     background: "none",
+                                                    display:'flex',
+                                                    alignItems:'center'
                                                 }}
+                                                title={'Sort'}
                                                 className={
                                                     header.column.getCanSort()
                                                         ? "cursor-pointer select-none"
@@ -147,11 +161,38 @@ export function CustomTable<T extends RowData>({
                                                 }
                                             >
                                                 {{
-                                                    asc: "🔼",
-                                                    desc: "🔽",
+                                                    asc: (
+                                                        <KeyboardArrowUpOutlinedIcon
+                                                            className={cx(
+                                                                SortIcon(
+                                                                    theme.textColor,
+                                                                    theme.buttonBorder
+                                                                )
+                                                            )}
+                                                        />
+                                                    ),
+                                                    desc: (
+                                                        <KeyboardArrowDownOutlinedIcon
+                                                            className={cx(
+                                                                SortIcon(
+                                                                    theme.textColor,
+                                                                    theme.buttonBorder
+                                                                )
+                                                            )}
+                                                        />
+                                                    ),
                                                 }[
                                                     header.column.getIsSorted() as string
-                                                ] ?? "📶"}
+                                                ] ?? (
+                                                    <SortOutlinedIcon
+                                                        className={cx(
+                                                            SortIcon(
+                                                                theme.textColor,
+                                                                theme.buttonBorder
+                                                            )
+                                                        )}
+                                                    />
+                                                )}
                                             </button>
                                         </div>
                                     </div>
