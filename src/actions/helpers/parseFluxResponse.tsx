@@ -68,7 +68,7 @@ export function getFluxTableRows(data: any[]) {
 
 export function formattedWhiteSpaceCell(info: any) {
     return (
-        <span style={{ whiteSpace: "nowrap" }} title={info.getValue()}>
+        <span title={info.getValue()}>
             {info.getValue()}
         </span>
     );
