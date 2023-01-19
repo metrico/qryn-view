@@ -3,7 +3,7 @@ import { LogRows } from "../components/Logs/LogRows";
 import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
 import { TabsList, Tab, TabPanel, ViewStyled } from "./styled";
-import ReactJSON from 'react-json-view';
+import ReactJSON from "react-json-view";
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
 
@@ -44,8 +44,8 @@ export default function LogsView(props: any) {
             <TabsUnstyled defaultValue={0}>
                 <TabsList panelsize={props.panelSize}>
                     <Tab>Logs</Tab>
-                    {tableData && ( <Tab>Table</Tab>)}
-                   
+                    {tableData && <Tab>Table</Tab>}
+
                     <Tab>Raw</Tab>
                 </TabsList>
                 <TabPanel value={0}>
@@ -70,10 +70,14 @@ export default function LogsView(props: any) {
                 </TabPanel>
                 <TabPanel value={2}>
                     <div className="view-content">
-                        <div style={{padding:'20px'}}>
-                        <ReactJSON theme={jsonTheme} src={JSON.parse(JSON.stringify(props?.dataView?.raw))} />
+                        <div style={{ padding: "20px" }}>
+                            <ReactJSON
+                                theme={jsonTheme}
+                                src={JSON.parse(
+                                    JSON.stringify(props?.dataView?.raw)
+                                )}
+                            />
                         </div>
-                       
                     </div>
                 </TabPanel>
             </TabsUnstyled>

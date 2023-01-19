@@ -8,6 +8,7 @@ import moment from "moment";
 import { sortBy } from "lodash";
 import { setLeftDataView } from "../setLeftDataView";
 import { setRightDataView } from "../setRightDataView";
+import { ColumnDef } from "@tanstack/react-table";
 import store from "../../store/store";
 /**
  *
@@ -23,7 +24,7 @@ import store from "../../store/store";
 // time  / value
 
 function timeFormatter(props: any) {
-    return moment(props.value).format("YYYY-MM-DDTHH:mm:ss.SSZ");
+    return moment(props.getValue()).format("YYYY-MM-DDTHH:mm:ss.SSZ");
 }
 
 export function getMatrixTableRows(data: any[]) {
@@ -44,22 +45,18 @@ export function getMatrixTableRows(data: any[]) {
 }
 
 export function getMatrixTableResult(data: any[]) {
-    const headers = [
+    const headers :ColumnDef<any>[] = [
         {
-            Header: "Time",
-            accesor: "time",
-            Cell: (props: any) => timeFormatter(props),
-            width: 20,
-            minWidth: 20,
-            maxWidth: 20,
+            header: "Time",
+            accessorKey: "time",
+            cell: (props: any) => timeFormatter(props),
+     
         },
-        { Header: "Metric", accessor: "metric" },
+        { header: "Metric", accessorKey: "metric" },
         {
-            Header: "Value",
-            accessor: "value",
-            width: 30,
-            minWidth: 30,
-            maxWidth: 30,
+            header: "Value",
+            accessorKey: "value",
+        
         },
     ];
 
@@ -71,11 +68,11 @@ export function getMatrixTableResult(data: any[]) {
         dataRows.push(row.rows);
     }
 
-    const dr = sortBy(dataRows.flat(), (row) => row.time)
+    const dr = sortBy(dataRows.flat(), (row) => row.time);
     return {
         columnsData: headers,
         dataRows: dr,
-        total: dr.length
+        total: dr.length,
     };
 }
 
@@ -94,7 +91,7 @@ function setDataView(panel: string) {
 }
 
 export function parseMatrixResponse(responseProps: QueryResult) {
-    const { result, debugMode, dispatch, panel, id, raw } = responseProps;
+    const { result, debugMode, dispatch, panel, id, raw, dsType } = responseProps;
     // here should set the table response
     const tableResult = getMatrixTableResult(result);
     // get current dataview and update action
@@ -118,6 +115,7 @@ export function parseMatrixResponse(responseProps: QueryResult) {
             type: "matrix",
             tableData: tableResult,
             data: idResult,
+            dsType,
             raw,
             total: idResult?.length || 0,
         };

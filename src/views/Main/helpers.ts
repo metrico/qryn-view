@@ -119,6 +119,7 @@ export const getReadyResponse = async (url: string, conf: any, response: any) =>
                 response = {
                     status: res.status,
                     contentType: res?.headers?.["content-type"],
+                    contentLength: res?.headers?.["content-length"],
                 };
                 return response;
             }
@@ -130,12 +131,27 @@ export const getReadyResponse = async (url: string, conf: any, response: any) =>
             return response;
         });
 
-export async function checkLocalAPI(url: string) {
+type AuthParams = {
+    username: string;
+    password: string;
+};
+
+export async function checkLocalAPI(
+    url: string,
+    auth?: AuthParams,
+    isAuth?: boolean
+) {
     let response: any = {};
     let conf = getAxiosConf();
     let isReady = false;
+    let opts: any = { ...conf };
+
+    if (auth?.username !== "" && isAuth) {
+        opts.auth = auth;
+    }
+
     try {
-        let res = await getReadyResponse(url, conf, response);
+        let res = await getReadyResponse(url, opts, response);
 
         response = res;
     } catch (e: any) {
@@ -144,7 +160,8 @@ export async function checkLocalAPI(url: string) {
         if (
             response &&
             response?.status === 200 &&
-            response?.contentType === "application/json; charset=utf-8"
+            (response?.contentType === "application/json; charset=utf-8" ||
+                response?.contentLength === "0")
         ) {
             isReady = true;
         }
@@ -159,10 +176,24 @@ export async function updateDataSourcesFromLocalUrl(
 ) {
     const location = window.location.origin;
     const logsDs = dataSources.find((f: any) => f.type === "logs");
+    const isBasicAuth = logsDs?.auth?.basicAuth?.value;
+    let auth = { username: "", password: "" };
+    let basicAuthFields = logsDs?.auth?.fields?.basicAuth;
+    const isBasicAuthFields = basicAuthFields?.length > 0;
+    if (isBasicAuth && isBasicAuthFields) {
+        for (let field of basicAuthFields) {
+            if (field?.name === "user") {
+                auth.username = field?.value || "";
+            }
+            if (field?.name === "password") {
+                auth.password = field?.value || "";
+            }
+        }
+    }
     let dsReady = false;
     let isLocalReady = false;
     if (logsDs?.url !== "") {
-        dsReady = await checkLocalAPI(logsDs.url);
+        dsReady = await checkLocalAPI(logsDs.url, auth, isBasicAuth); // add the auth in here
     }
     if (!dsReady) {
         isLocalReady = await checkLocalAPI(location);

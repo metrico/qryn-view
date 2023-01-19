@@ -13,14 +13,14 @@
 // limitations under the License.
 
 import Combokeys from 'combokeys';
-import * as React from 'react';
+import {KeyboardEvent} from 'react';
 
 import keyboardMappings from './keyboard-mappings';
 
 export type CombokeysHandler =
   | (() => void)
-  | ((event: React.KeyboardEvent<any>) => void)
-  | ((event: React.KeyboardEvent<any>, s: string) => void);
+  | ((event: KeyboardEvent<any>) => void)
+  | ((event: KeyboardEvent<any>, s: string) => void);
 
 export type ShortcutCallbacks = {
   [name: string]: CombokeysHandler;

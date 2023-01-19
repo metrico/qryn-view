@@ -6,6 +6,7 @@ import LogsView from "../views/LogsView";
 import { MatrixView } from "../views/MatrixView";
 import { VectorView } from "../views/VectorView";
 import { TraceView } from "./Traces/TraceView";
+
 export function DataViewItem(props: any) {
     // add a header for table view / json view
 

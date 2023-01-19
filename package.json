@@ -20,6 +20,8 @@
     "@opentelemetry/exporter-collector": "^0.25.0",
     "@opentelemetry/semantic-conventions": "^1.8.0",
     "@reduxjs/toolkit": "^1.8.5",
+    "@tanstack/match-sorter-utils": "^8.7.6",
+    "@tanstack/react-table": "^8.7.6",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -64,7 +66,6 @@
     "react-router-dom": "^6.2.1",
     "react-select": "^5.5.0",
     "react-sequence-diagram": "^0.0.12",
-    "react-table": "7.7.0",
     "react-window": "^1.8.7",
     "recoil": "^0.7.5",
     "redux-devtools-extension": "^2.13.9",
@@ -72,6 +73,7 @@
     "slate": "^0.73.1",
     "slate-history": "^0.66.0",
     "slate-react": "^0.74.2",
+    "source-map-explorer": "^2.5.3",
     "tinycolor2": "^1.4.2"
   },
   "scripts": {
@@ -87,7 +89,8 @@
     "https-start": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem react-scripts start",
     "build-old": "webpack --mode production",
     "webpack-build": "webpack --config webpack.config.prod.js --mode=production",
-    "build": "CI=false && react-scripts build"
+    "build": "CI=false && react-scripts build",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "eslintConfig": {
     "extends": [

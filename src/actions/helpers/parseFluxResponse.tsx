@@ -9,11 +9,12 @@ import { sortBy } from "lodash";
 import { setLeftDataView } from "../setLeftDataView";
 import { setRightDataView } from "../setRightDataView";
 import store from "../../store/store";
-
+import { ColumnDef } from "@tanstack/react-table";
 import { setVectorData } from "../setVectorData";
 import { prepareVectorRows } from "./prepareVectorRows";
 import { setColumnsData } from "./setColumnsData";
 import { prepareFluxCols } from "./prepareCols";
+
 /**
  *
  * @param responseProps : QueryResult
@@ -28,7 +29,7 @@ import { prepareFluxCols } from "./prepareCols";
 // time  / value
 
 function timeFormatter(props: any) {
-    return moment(props.value).format("YYYY-MM-DDTHH:mm:ss.SSZ");
+    return moment(props.getValue()).format("YYYY-MM-DDTHH:mm:ss.SSZ");
 }
 function fluxDataToMetricData(data: any[]) {
     const out: any[] = [
@@ -65,23 +66,30 @@ export function getFluxTableRows(data: any[]) {
     }));
 }
 
+export function formattedWhiteSpaceCell(info: any) {
+    return (
+        <span title={info.getValue()}>
+            {info.getValue()}
+        </span>
+    );
+}
+
 export function getFluxTableResult(data: any[]) {
-    const headers = [
+    const headers: ColumnDef<any>[] = [
         {
-            Header: "Time",
-            accesor: "time",
-            Cell: (props: any) => timeFormatter(props),
-            width: 20,
-            minWidth: 20,
-            maxWidth: 20,
+            accessorKey: "time",
+            header: () => <span>Time</span>,
+            cell: (props: any) => timeFormatter(props),
         },
-        { Header: "Metric", accessor: "metric" },
         {
-            Header: "Value",
-            accessor: "value",
-            width: 30,
-            minWidth: 30,
-            maxWidth: 30,
+            header: "Metric",
+            cell: (info: any) => formattedWhiteSpaceCell(info),
+            accessorKey: "metric",
+        },
+        {
+            header: "Value",
+            accessorKey: "value",
+            cell: (info: any) => formattedWhiteSpaceCell(info),
         },
     ];
 
@@ -115,7 +123,7 @@ function setDataView(panel: string) {
     }
 }
 function getTableData(responseProps: QueryResult) {
-    const { result,  dispatch, panel, id, type } = responseProps;
+    const { result, dispatch, panel, id, type } = responseProps;
     const data = {
         panel,
         id,
@@ -153,7 +161,7 @@ function getTableData(responseProps: QueryResult) {
     }
 }
 export function parseFluxResponse(responseProps: QueryResult) {
-    let { result, debugMode, dispatch, panel, id, raw } = responseProps;
+    let { result, debugMode, dispatch, panel, id, raw, dsType } = responseProps;
     result = fluxDataToMetricData(result);
     // here should set the table response
     const tableResult = getFluxTableResult(result);
@@ -184,6 +192,7 @@ export function parseFluxResponse(responseProps: QueryResult) {
             type: "vector",
             tableData: tableResult,
             data: data,
+            dsType,
             raw,
             total: idResult?.length || 0,
         };
