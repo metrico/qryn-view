@@ -114,12 +114,15 @@ export function SectionHeader(props: any) {
                         Saving ...
                     </div>
                 )}
-                {fieldErrors?.url && (
+                {fieldErrors?.protocol && (
                     <InputErrorWarning
                         errorText={
                             "Insecure Mixed Content. Mixing HTTP and HTTPS is insecure and is not supported."
                         }
                     />
+                )}
+                {fieldErrors?.url && (
+                    <InputErrorWarning errorText={"Please complete API URL"} />
                 )}
                 {isSaved && <ConfirmSave setIsSaved={setIsSaved} />}
 

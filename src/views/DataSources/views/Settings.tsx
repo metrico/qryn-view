@@ -17,7 +17,10 @@ export const Settings = (props: any) => {
     const dispatch = useDispatch();
 
     const state = useSelector(({ dataSources }: any) => dataSources);
-    const [fieldErrors, setFieldErrors] = useState({ url: false });
+    const [fieldErrors, setFieldErrors] = useState({
+        url: false,
+        protocol: false,
+    });
     const onFieldChange = (prop: any, value: any) => {
         const arrayClone = JSON.parse(JSON.stringify(state));
         arrayClone.forEach((field: any) => {
@@ -31,10 +34,14 @@ export const Settings = (props: any) => {
 
     const [isEditing, setIsEditing] = useState(false);
 
-    const checkURLProtocol = (value: URL) => {
-        const current_protocol = window.location.protocol;
-        const value_protocol = new URL(value)["protocol"];
-        return current_protocol === value_protocol;
+    const checkURLProtocol = (value: URL | any) => {
+        try {
+            const current_protocol = window.location.protocol;
+            const value_protocol = new URL(value)["protocol"];
+            return { value: current_protocol === value_protocol, error: "" };
+        } catch (e) {
+            return { value: false, error: "url" };
+        }
     };
 
     const onChange = (e: any, name: any) => {
@@ -43,16 +50,27 @@ export const Settings = (props: any) => {
         // check here if name === url
         if (name === "url") {
             const protocol_match = checkURLProtocol(value);
-            if (protocol_match) {
-                setFieldErrors((prev) => ({ ...prev, url: false }));
+
+            if (protocol_match?.error === "url") {
+                setFieldErrors((prev) => ({ ...prev, url: true }));
+            }
+
+            if (!protocol_match?.value && protocol_match?.error === "") {
+                setFieldErrors((prev) => ({ ...prev, protocol: true }));
+            }
+
+            if (protocol_match?.error === "" && protocol_match?.value) {
+                setFieldErrors((prev) => ({
+                    ...prev,
+                    protocol: false,
+                    url: false,
+                }));
                 const newVal = onFieldChange(name, value);
                 localStorage.setItem("dataSources", JSON.stringify(newVal));
                 dispatch(setDataSources(newVal));
                 setTimeout(() => {
                     setIsEditing((_) => false);
                 }, 800);
-            } else {
-                setFieldErrors((prev) => ({ ...prev, url: true }));
             }
         }
 
@@ -85,7 +103,7 @@ export const Settings = (props: any) => {
                     <Field
                         value={url}
                         label={"URL"}
-                        error={fieldErrors.url}
+                        error={fieldErrors.url || fieldErrors.protocol}
                         onChange={(e: any) => onChange(e, "url")}
                     />
                 </InputCol>
