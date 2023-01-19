@@ -87,6 +87,7 @@ export const sendLabels = async (id: string, type: string, apiUrl: string, start
 
         return res;
     }
+    return []
 
 
 };

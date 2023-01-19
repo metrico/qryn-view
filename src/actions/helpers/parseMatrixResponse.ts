@@ -91,7 +91,7 @@ function setDataView(panel: string) {
 }
 
 export function parseMatrixResponse(responseProps: QueryResult) {
-    const { result, debugMode, dispatch, panel, id, raw } = responseProps;
+    const { result, debugMode, dispatch, panel, id, raw, dsType } = responseProps;
     // here should set the table response
     const tableResult = getMatrixTableResult(result);
     // get current dataview and update action
@@ -115,6 +115,7 @@ export function parseMatrixResponse(responseProps: QueryResult) {
             type: "matrix",
             tableData: tableResult,
             data: idResult,
+            dsType,
             raw,
             total: idResult?.length || 0,
         };

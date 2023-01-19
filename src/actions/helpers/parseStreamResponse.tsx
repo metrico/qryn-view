@@ -118,6 +118,7 @@ export function parseStreamResponse(responseProps: QueryResult) {
         panel,
         id,
         dispatch,
+        dsType,
         direction,
     } = responseProps;
     // get sorted messages
@@ -145,6 +146,7 @@ export function parseStreamResponse(responseProps: QueryResult) {
         raw: "[]",
         labels: [],
         total: 0,
+        dsType
     };
 
     if (messSorted) {
@@ -165,6 +167,7 @@ export function parseStreamResponse(responseProps: QueryResult) {
             panelResult = {
                 id,
                 type: "stream",
+                dsType,
                 tableData: tableResult,
                 data: messSorted,
                 raw,
