@@ -119,6 +119,7 @@ export const getReadyResponse = async (url: string, conf: any, response: any) =>
                 response = {
                     status: res.status,
                     contentType: res?.headers?.["content-type"],
+                    contentLength: res?.headers?.["content-length"],
                 };
                 return response;
             }
@@ -159,7 +160,8 @@ export async function checkLocalAPI(
         if (
             response &&
             response?.status === 200 &&
-            response?.contentType === "application/json; charset=utf-8"
+            (response?.contentType === "application/json; charset=utf-8" ||
+                response?.contentLength === "0")
         ) {
             isReady = true;
         }
