@@ -10,7 +10,7 @@ export default function LabelBrowser(props: any) {
     const isEmbed = useSelector((store: any) => store.isEmbed);
     return (
         <div style={{ margin: "3px 0px" }}>
-            <QueryBar {...props} className={"query-bar-placeholder"} />
+            <QueryBar {...props}/>
 
             {!isEmbed && dataSourceType === "logs" && <ValuesList {...props} />}
             {isShowStats && <Stats {...props} />}

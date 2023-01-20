@@ -1,7 +1,6 @@
 import { Dialog, Switch, Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    setApiUrl,
     setTheme,
     setAutoTheme
 } from "../../actions";
@@ -33,9 +32,6 @@ export default function SettingsDialog({ open, onClose }: any) {
     const theme = useSelector((store: any) => store.theme);
     const autoTheme = useSelector((store: any) => store.autoTheme)
     const debugMode = useSelector((store: any) => store.debugMode);
-    const apiUrl = useSelector((store: any)=> store.apiUrl)
-    const [apiEdited, setApiEdited] = useState(apiUrl);
-
     const [embedEdited, setEmbedEdited] = useState(
         getEmbed(window.location.href)
     );

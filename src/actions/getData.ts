@@ -9,7 +9,7 @@ import { resetNoData } from "./helpers/resetNoData";
 import { processResponse } from "./helpers/processResponse";
 import { QueryType, QueryDirection } from "./types";
 import { getTimeSpan } from "./helpers/getTimeSpan";
-import { boscoSend } from "./helpers/boscoRequest";
+// import { boscoSend } from "./helpers/boscoRequest";
 import { setLeftPanel } from "./setLeftPanel";
 import { setRightPanel } from "./setRightPanel";
 import { DataViews } from "../store/store.model";
@@ -227,12 +227,12 @@ export default function getData(
                             queryType
                         );
 
-                        if (debugMode) {
-                            boscoSend(
-                                { level: "info", id, type, direction },
-                                id
-                            );
-                        }
+                        // if (debugMode) {
+                        //     boscoSend(
+                        //         { level: "info", id, type, direction },
+                        //         id
+                        //     );
+                        // }
                         loadingState(dispatch, false);
                     })
                     .catch((error) => {
@@ -240,17 +240,17 @@ export default function getData(
                         dispatch(setIsEmptyView(true));
                         setLoading(false, dispatch)
                         loadingState(dispatch, false);
-                        if (debugMode) {
-                            boscoSend(
-                                { level: "error", id, type, direction },
-                                id
-                            );
+                        // if (debugMode) {
+                        //     boscoSend(
+                        //         { level: "error", id, type, direction },
+                        //         id
+                        //     );
 
-                            console.log(
-                                "getting an error from response: ",
-                                error
-                            );
-                        }
+                        //     console.log(
+                        //         "getting an error from response: ",
+                        //         error
+                        //     );
+                        // }
                     })
                     .finally(() => {
                         loadingState(dispatch, false);

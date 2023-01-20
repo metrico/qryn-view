@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 import {
     addMonths,
@@ -44,10 +44,34 @@ import MenuItem from "@mui/material/MenuItem";
 import { Tooltip } from "@mui/material";
 import TimeLabel from "./components/TimeLabel";
 import { DatePickerButton } from "../../styled";
-import { themes } from "../../../../theme/themes";
-import { styled } from "@mui/material/styles";
 import { useTheme } from "../../../DataViews/components/QueryBuilder/hooks";
 import { css, cx } from "@emotion/css";
+
+export const DateTimeSelector = css`
+    svg {
+        font-size: 1.15em;
+        margin-right: 3px;
+    }
+    .tooltip {
+        background-color: red;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+    }
+
+    @media screen and (max-width: 1200px) {
+        font-size: 1em;
+        padding: 8px;
+        color: #ddd;
+        line-height: 1.5;
+        svg {
+            margin-right: 0;
+        }
+        span {
+            display: none;
+        }
+    }
+`;
 
 export const timeDateRangeFromLocal = (item: string) => {
     try {
@@ -330,7 +354,7 @@ export function DateRangePickerMain(props: any) {
                 }}
                 attachedside={"r"}
                 emptySide={"l"}
-                className={"date-time-selector"}
+                className={cx(DateTimeSelector)}
             >
                 <KeyboardArrowLeft />
             </DatePickerButton>
@@ -338,7 +362,7 @@ export function DateRangePickerMain(props: any) {
                 onClick={handleClick}
                 attachedside={"both"}
                 size={"small"}
-                className={"date-time-selector"}
+                className={cx(DateTimeSelector)}
                 aria-controls={open ? "backward-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
@@ -367,7 +391,7 @@ export function DateRangePickerMain(props: any) {
             >
                 <DatePickerButton
                     onClick={openButtonHandler}
-                    className={"date-time-selector"}
+                    className={cx(DateTimeSelector)}
                     attachedside={"both"}
                 >
                     <AccessTimeOutlinedIcon />
@@ -397,7 +421,7 @@ export function DateRangePickerMain(props: any) {
                 onClick={handleClickRight}
                 attachedside={"both"}
                 size={"small"}
-                className={"date-time-selector"}
+                className={cx(DateTimeSelector)}
                 aria-controls={openRight ? "forward-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={openRight ? "true" : undefined}
@@ -427,7 +451,7 @@ export function DateRangePickerMain(props: any) {
                     adjustTimeRange("forward");
                 }}
                 attachedside={"l"}
-                className={"date-time-selector"}
+                className={cx(DateTimeSelector)}
             >
                 <KeyboardArrowRight />
             </DatePickerButton>

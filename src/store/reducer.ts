@@ -34,8 +34,6 @@ const reducer = (state: any, action: any) => {
             return { ...state, query: action.query };
         case "SET_QUERY_STEP":
             return { ...state, step: action.step };
-        case "SET_API_URL":
-            return { ...state, apiUrl: action.apiUrl };
         case "SET_API_ERRORS":
             return { ...state, apiErrors: action.apiErrors };
         case "SET_URL_QUERY_PARAMS":
@@ -48,8 +46,6 @@ const reducer = (state: any, action: any) => {
             return { ...state, isSubmit: action.isSubmit };
         case "SET_IS_EMBED":
             return { ...state, isEmbed: action.isEmbed };
-        case "SET_MATRIX_DATA":
-            return { ...state, matrixData: action.matrixData };
         case "SET_CHART_TYPE":
             return { ...state, chartType: action.setChartType };
         case "SET_QUERY_HISTORY":
@@ -68,16 +64,12 @@ const reducer = (state: any, action: any) => {
             return { ...state, theme: action.theme };
         case "SET_AUTO_THEME":
             return { ...state, autoTheme: action.autoTheme };
-        case "SET_TABLE_DATA":
-            return { ...state, tableData: action.tableData };
         case "SET_QUERY_TIME":
             return { ...state, time: action.time };
         case "SET_QUERY_RESOLUTION":
             return { ...state, queryResolution: action.queryResolution };
         case "SET_IS_EMPTY_VIEW":
             return { ...state, isEmptyView: action.isEmptyView };
-        case "SET_VECTOR_DATA":
-            return { ...state, vectorData: action.vectorData };
         case "SET_RESPONSE_TYPE":
             return { ...state, responseType: action.responseType };
         case "SET_IS_TABLE_VIEW":

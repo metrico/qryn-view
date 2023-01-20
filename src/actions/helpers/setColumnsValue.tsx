@@ -4,7 +4,6 @@
  * @returns Default Time and Value column headers with time formatter
  */
 
-import React from "react";
 import * as _moment from "moment";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";

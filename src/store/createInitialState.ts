@@ -1,5 +1,4 @@
 import moment, { Moment, MomentInput } from "moment";
-import { environment } from "../environment/env.dev";
 import stateFromQueryParams from "../helpers/stateFromQueryParams";
 import localService from "../services/localService";
 import localUrl from "../services/localUrl";
@@ -40,7 +39,6 @@ export interface URLState {
     label: string;
     limit: string | number;
     step: string | number;
-    apiUrl: string;
     isSubmit: boolean;
     isEmbed: boolean;
     theme: string;
@@ -60,7 +58,6 @@ export const initialUrlState: URLState = {
     label: "",
     limit: 100,
     step: 100,
-    apiUrl: "",
     isSubmit: false,
     isEmbed: false,
     autoTheme: true,
@@ -124,8 +121,6 @@ export default function initialState() {
         timeRange: [],
         queryType: urlState.queryType || "range",
         logs: [],
-        matrixData: [],
-        vectorData: {},
         loading: false,
         queryResolution: 1,
         start:
@@ -143,7 +138,6 @@ export default function initialState() {
         to: urlState.to || null,
         label: urlState.label,
         messages: [],
-        limitLoad: false,
         limit: urlState.limit || 100,
         step: urlState.step || 100,
         rangeOpen: false,
@@ -155,7 +149,6 @@ export default function initialState() {
         apiErrors: "",
         urlQueryParams: urlState || {},
         urlLocation: "",
-        apiUrl: urlState.apiUrl || environment.apiUrl || "",
         isSubmit: urlState.isSubmit || false,
         isEmbed: urlState.isEmbed || false,
         // dont mention queries // its obvious
@@ -222,7 +215,6 @@ export default function initialState() {
         chartType: "line",
         resposeType: "",
         notifications: [],
-        tableData: {},
         isTableView: false,
         autoTheme: urlState.autoTheme || true,
         theme: urlState.theme || "light",

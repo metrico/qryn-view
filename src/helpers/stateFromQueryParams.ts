@@ -61,7 +61,6 @@ export const initialUrlState = {
     label: "",
     limit: 100,
     step: 5,
-    apiUrl: "",
     isSubmit: false,
     isEmbed: false,
     autoTheme: true,

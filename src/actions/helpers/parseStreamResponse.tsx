@@ -1,9 +1,7 @@
 import { sortBy } from "lodash";
 import setIsEmptyView from "../setIsEmptyView";
 import setLogs from "../setLogs";
-import setMatrixData from "../setMatrixData";
 import { setQueryTime } from "../setQueryTime";
-import { setTableData } from "../setTableData";
 import { QueryResult } from "../types";
 import {
     getAsyncResponse,
@@ -18,8 +16,6 @@ import store from "../../store/store";
 import {
     ColumnDef,
 } from "@tanstack/react-table";
-import { fuzzyFilter, fuzzySort } from "../../qryn-ui/Table/models/tableModels";
-
 function timeFormatter(props: any) {
     return moment(parseInt(props.getValue()) / 1000000).format(
         "YYYY-MM-DDTHH:mm:ss.SSZ"
@@ -125,12 +121,7 @@ export function parseStreamResponse(responseProps: QueryResult) {
     const messages = mapStreams(result, direction);
     // get current dataView and update action
     const dataView = setDataView(panel);
-
-    dispatch(setMatrixData([]));
-
     const tableResult = getStreamTableResult(result);
-    dispatch(setTableData(tableResult));
-
     const messSorted = sortMessagesByTimestamp(messages, direction);
     function unite(args: any) {
         return [].concat.apply([], args).filter(function (elem, index, self) {

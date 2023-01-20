@@ -31,6 +31,44 @@ const TracesButton: any = styled.div`
     align-items: center;
     white-space: nowrap;
 `;
+
+const ValueTagsContainer = styled.div`
+    
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(128, 128, 128, 0.466);
+    border-radius: 4px;
+    padding: 4px;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    .value-tags {
+        font-family: monospace;
+        font-size: 12px;
+        display: flex;
+        margin: 2px;
+        padding: 2px;
+        flex: 1;
+        justify-content: space-between;
+
+        span {
+            display: flex;
+            flex: 1;
+            line-height: 20px;
+            margin-left: 6px;
+        }
+
+        .icon {
+            margin-right: 4px;
+            flex: 0;
+        }
+    }
+
+
+
+`
+
 function alreadyExists(exp: any, op: any, k: any, v: any) {
     return exp.includes(`${k}${op}"${v}"`);
 }
@@ -50,9 +88,9 @@ export function ValueTagsCont(props: any) {
 
     if (showLabels) {
         return (
-            <div className="value-tags-container">
+            <ValueTagsContainer>
                 <ValueTags {...props} tags={tags} actQuery={actQuery} />
-            </div>
+            </ValueTagsContainer>
         );
     }
     return null;

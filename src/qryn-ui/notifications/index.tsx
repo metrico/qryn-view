@@ -3,6 +3,23 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Alert } from "@mui/material";
 import { removeAlert } from "../../actions";
+import styled from "@emotion/styled";
+
+export const AlertWrapper = styled.div`
+    position: fixed;
+    bottom: 20px;
+    right: 15%;
+   
+    display: flex;
+    flex-direction: column;
+    z-index: 10000;
+    pointer-events: none;
+    .alert {
+        margin-top: 10px;
+        pointer-events: all;
+    }
+
+`
 
 export function Notification() {
     const { notifications }: {notifications: any[]} = useSelector((state) => state) as any;
@@ -21,7 +38,7 @@ export function Notification() {
     };
 
     return (
-        <div className={"alertWrapper"}>
+        <AlertWrapper>
             {notifications.map((notification, index) => {
                 if (notification.visible) {
                     return (
@@ -43,6 +60,6 @@ export function Notification() {
                     return undefined;
                 }
             })}
-        </div>
+        </AlertWrapper>
     );
 }

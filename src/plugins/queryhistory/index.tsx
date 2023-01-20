@@ -294,7 +294,7 @@ function HistoryLinkTools(props: any) {
                             }
                             isActive={true}
                             style={{ flex: 1 }}
-                            className={"URL-COPY"}
+                            className={"url-copy"}
                             attachedside={"r"}
                         >
                             <LinkIcon

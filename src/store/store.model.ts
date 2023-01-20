@@ -7,8 +7,6 @@ export interface Store {
     timeRange: any[];
     queryType: string;
     logs: any[];
-    matrixData: any[];
-    vectorData: TableData;
     loading: boolean;
     queryResolution: number;
     start: string;
@@ -18,7 +16,6 @@ export interface Store {
     to: null;
     label: string;
     messages: any[];
-    limitLoad: boolean;
     limit: number;
     step: string;
     rangeOpen: boolean;
@@ -30,7 +27,6 @@ export interface Store {
     apiErrors: string;
     urlQueryParams: URLQueryParams;
     urlLocation: string;
-    apiUrl: string;
     isSubmit: string;
     isEmbed: string;
     left: Panel[];
@@ -40,7 +36,6 @@ export interface Store {
     chartType: string;
     resposeType: string;
     notifications: any[];
-    tableData: TableData;
     isTableView: boolean;
     theme: string;
     isEmptyView: boolean;
@@ -100,7 +95,6 @@ export interface URLQueryParams {
     label: string;
     limit: number;
     step: string;
-    apiUrl: string;
     isSubmit: string;
     isEmbed: string;
     theme: string;
