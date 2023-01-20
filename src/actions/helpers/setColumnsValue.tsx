@@ -125,7 +125,6 @@ export function setColumnsTsValue(
 
     const _themes: any = themes;
     const theme = _themes[storeTheme];
-    console.log(columns)
     if (columns.length > 0 && type === "traces") {
        
         return columns?.map((m: any) => {
