@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { themes } from "../../../../../theme/themes";
-import { CHART_OPTIONS } from "../consts";
-import { formatTs, formatLabel, getLabelsFromLocal } from "../helpers";
+import { formatTs, formatLabel, getLabelsFromLocal } from "./helpers";
+import { CHART_OPTIONS } from "./consts";
+import { themes } from "../../../../theme/themes";
 
 export const useMatrixData = (spliced: any, data: any) => {
     return useMemo(() => {

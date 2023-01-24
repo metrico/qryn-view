@@ -140,7 +140,7 @@ export default function QrynChart(props: any): any {
                     xaxis: {
                         min: ranges.xaxis.from - 100000,
                         max: ranges.xaxis.to + 100000,
-                        timeformat: formatDateRange(newData).timerange,
+                        timeformat: formatDateRange(newData).timeformat,
                     },
                 })
             );
@@ -228,7 +228,7 @@ export default function QrynChart(props: any): any {
         } else {
             const data = isSpliced ? chartData : allData;
             const { lines, bars, points } = getSeriesFromChartType(chartType);
-            const newData = data?.map((series) => {
+            const newData = data?.map((series:any) => {
                 return {
                     ...series,
                     bars,

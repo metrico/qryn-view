@@ -27,7 +27,7 @@ export default function UseTooltip(this: void, plot: any) {
                 : item.datapoint[1];
 
             const isSelectedPlots = selectedPlots.length > 0;
-            const labelsList = [];
+            const labelsList:any = [];
             for (let i = 0; i < plotData.length; i++) {
                 const plotIsVisible = isSelectedPlots
                     ? isLAbelSelected(plotData[i])
