@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-export const Container = styled.div<{theme:any}>`
+export const Container: any = styled.div<{theme:any}>`
     position: absolute;
     left: 0;
     top: 0;

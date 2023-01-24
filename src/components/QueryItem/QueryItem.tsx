@@ -45,22 +45,11 @@ export default function QueryItem(props: any) {
         direction,
         dataSourceURL,
     } = props.data;
-
-    useEffect(() => {
-        dispatch(
-            getData(
-                dataSourceType,
-                expr,
-                queryType,
-                limit,
-                panel,
-                id,
-                direction,
-                dataSourceId,
-                dataSourceURL
-            )
-        );
-    }, []);
+    const dispatch = useDispatch();
+    const theme = useSelector((store: any) => store.theme);
+    const dataView = useSelector((store: any) => store[`${name}DataView`]);
+    const panelSelected = useSelector((store: any) => store[name]);
+    const isQueryOpen = useState(true);
 
     const idRefs = useMemo(() => {
         const alpha = Array.from(Array(26)).map((e, i) => i + 65);
@@ -71,11 +60,28 @@ export default function QueryItem(props: any) {
         return alphabet;
     }, []);
 
-    const dispatch = useDispatch();
-    const theme = useSelector((store: any) => store.theme);
-    const dataView = useSelector((store: any) => store[`${name}DataView`]);
-    const panelSelected = useSelector((store: any) => store[name]);
-    const isQueryOpen = useState(true);
+        useEffect(() => {
+
+        if(dataView?.length < 1) {
+            dispatch(
+                getData(
+                    dataSourceType,
+                    expr,
+                    queryType,
+                    limit,
+                    panel,
+                    id,
+                    direction,
+                    dataSourceId,
+                    dataSourceURL
+                )
+            );
+        }
+
+
+    }, []);
+
+ 
     
     function filterPanel(panel: any) {
         if (panel?.length > 1) {

@@ -142,11 +142,9 @@ export interface TableData {
 }
 
 export interface ColumnsDatum {
-    Header: string;
-    accessor: string;
-    width?: number;
-    minWidth?: number;
-    maxWidth?: number;
+    header?: string;
+    accessorKey?: string;
+    cell?: any;
 }
 
 export interface DataRow {

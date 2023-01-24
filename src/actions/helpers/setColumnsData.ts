@@ -1,5 +1,5 @@
 import { setColumnsTsValue } from "./setColumnsValue";
-
+import { ColumnDef } from "@tanstack/react-table";
 /**
  *
  * @param {*} columns : the table columns ;
@@ -12,7 +12,13 @@ export function setColumnsData(
     timeAccessor: any,
     data: any = {}
 ) {
-    const columnsData = columns?.map((row: any) => ({ Header: row, accessor: row }));
+    console.log(columns)
+    const columnsData: ColumnDef<any>[] = columns?.map((row: any) => ({
+        header: row,
+        accessorKey: row,
+        id: row,
+        cell: (info: any) => info.getValue(),
+    }));
     const columnsDated = setColumnsTsValue(
         columnsData,
         type,

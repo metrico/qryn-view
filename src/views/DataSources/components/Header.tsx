@@ -9,6 +9,7 @@ import { Button, QrynLogo } from "../ui";
 
 export interface HeaderProps {
     title: string;
+    datasource?: any
 }
 
 export function Header(props: HeaderProps) {

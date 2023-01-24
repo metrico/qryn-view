@@ -25,3 +25,4 @@ yarn-error.log*
 cert.pem
 key.pem
 src/setupProxy.js
+src/setupProxy.ts

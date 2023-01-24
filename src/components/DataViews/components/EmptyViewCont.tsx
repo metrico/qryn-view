@@ -5,8 +5,8 @@ import { useTheme } from "./QueryBuilder/hooks";
 export default function EmptyViewCont(props: any) {
     const theme = useTheme();
     const { loading } = props;
-    return (
-        !loading && (
+    if (!loading) {
+        return (
             <ThemeProvider theme={theme}>
                 <EmptyViewContainer>
                     {
@@ -14,6 +14,7 @@ export default function EmptyViewCont(props: any) {
                     }
                 </EmptyViewContainer>
             </ThemeProvider>
-        )
-    );
+        );
+    }
+    return null;
 }

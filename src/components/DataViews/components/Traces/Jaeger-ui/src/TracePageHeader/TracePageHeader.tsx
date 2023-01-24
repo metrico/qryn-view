@@ -39,7 +39,7 @@ import moment from "moment";
 
 const TracePageHeaderStyled = styled.header<{ theme: any }>`
     & > :first-of-type {
-        border-bottom: 1px solid ${(props) => props.theme?.buttonBorder};
+        border-bottom: 1px solid ${({theme}: any) => theme?.buttonBorder};
     }
     & > :nth-of-type(2) {
         background-color: ${(props) => props?.theme?.widgetContainer};

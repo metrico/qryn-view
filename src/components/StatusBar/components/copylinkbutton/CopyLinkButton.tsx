@@ -1,107 +1,197 @@
-import { useDispatch } from "react-redux";
+import { createAlert } from "../../../../actions/createAlert";
+import { useDispatch, useSelector } from "react-redux";
 import setLinksHistory from "../../../../actions/setLinksHistory";
 import { setIsSubmit } from "../../../../actions/setIsSubmit";
-import { DatePickerButton } from "../../styled";
+import { DatePickerButton, UrlCopyButton } from "../../styled";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
-import { Tooltip } from "@mui/material";
 import {
-    handleAlertSuccess,
-    handleShareDefaultLink,
-    handleShareDomLink,
-    handleCopyLink,
-    storedUrl,
-} from "./helpers";
-
+    Checkbox,
+    FormControlLabel,
+    FormGroup,
+    MenuItem,
+    Tooltip,
+    Typography,
+} from "@mui/material";
+import { storedUrl } from "./helpers";
+import { CustomMenu } from "../daterangepicker";
 import { useState } from "react";
+import { themes } from "../../../../theme/themes";
 import { useLocation } from "react-router-dom";
-import { useTimeLabel, useTheme } from "./hooks";
-import { RelativeTimeMenu } from "./components/RelativeTimeMenu";
-import { CopyButton } from "./components/CopyButton";
-import { createAlert } from "../../../../actions";
+import { useTheme } from "../../../DataViews/components/QueryBuilder/hooks";
 
 export default function CopyLinkButton() {
+    const LINK_COPIED = "Link Copied To Clipboard";
+    const theme = useTheme();
     const dispatch = useDispatch();
-    const qrynTheme = useTheme();
-    const { hash } = useLocation();
-    const label = useTimeLabel();
-
+    const storeTheme = useSelector((store: any) => store.theme);
+    const qrynTheme = (themes as any)[storeTheme];
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [isRelative, setIsRelative] = useState(false);
 
+    const label = useSelector(({ label }: any) => label);
     function alertSuccess() {
-        handleAlertSuccess(dispatch, createAlert);
+        dispatch(
+            createAlert({
+                type: "success",
+                message: LINK_COPIED,
+            })
+        );
     }
 
     function storeHistory() {
         dispatch(setLinksHistory(storedUrl()));
     }
-
     function shareDefaultLink(copyText: any) {
-        handleShareDefaultLink(storeHistory, alertSuccess, copyText);
+        navigator.clipboard.writeText(copyText).then(
+            function () {
+                storeHistory();
+                alertSuccess();
+            },
+            function (err) {
+                console.log("error on copy", err);
+            }
+        );
     }
     function setSubmitted() {
         dispatch(setIsSubmit(true));
     }
     function shareDomLink(copyText: any) {
-        handleShareDomLink(copyText, storeHistory, alertSuccess);
-    }
+        let textArea: any = document.createElement("textarea");
+        textArea.value = copyText;
+        textArea.style = {
+            position: "fixed",
+            left: "-999999px",
+            top: "-999999px",
+        };
 
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        return new Promise((res: any, rej: any) => {
+            storeHistory();
+
+            alertSuccess();
+            document.execCommand("copy") ? res() : rej();
+            textArea.remove();
+        });
+    }
+    const setTitle = "Copy Link";
+
+    const setActive = true;
+
+    const { hash } = useLocation();
     function copyLink(e: any) {
-        e.stopPropagation();
-        handleCopyLink(
-            e,
-            setSubmitted,
-            hash,
-            label,
-            isRelative,
-            shareDefaultLink,
-            shareDomLink
-        );
+        e.preventDefault();
+        setSubmitted();
+        const params = new URLSearchParams(hash.replace("#", ""));
+        params.set("label", label);
+        const locationWithLabel = new URL(window.location.href);
+        locationWithLabel.hash = `#${params.toString()}`;
+        const copyText =
+            isRelative && label ? locationWithLabel : window.location.href;
+        setTimeout(() => {
+            if (navigator?.clipboard && window.isSecureContext) {
+                shareDefaultLink(copyText);
+            } else {
+                shareDomLink(copyText);
+            }
+        }, 200);
     }
     const handleClick = (event: any) => {
-        copyLink(event);
         setAnchorEl(event.currentTarget);
-        setIsRelative(isRelative && label?.length > 0);
+        setIsRelative(isRelative && label);
     };
     const handleClose = (e: any, direction: any, option: any) => {
-        e.stopPropagation();
         setAnchorEl(null);
     };
 
     const handleChange = (event: any) => {
-        setIsRelative(prev => Boolean(event.target.checked));
+        setIsRelative(event.target.checked);
     };
 
     return (
         <>
-            <Tooltip title={"Copy Link"}>
+            <Tooltip title={setTitle}>
                 <>
+                    <UrlCopyButton
+                        attachedSide={"r"}
+                        onClick={copyLink}
+                        isActive={setActive}
+                    >
+                        <ContentCopyIcon
+                            style={{ height: "14px", width: "14px" }}
+                        />
+
+                        <span>{"Copy Link"}</span>
+                    </UrlCopyButton>
                     <DatePickerButton
-                       
+                        attachedSide={"l"}
+                        onClick={handleClick}
+                        size={"small"}
                         className={"date-time-selector"}
                         aria-controls={open ? "backward-menu" : undefined}
-                        aria-haspopup={true}
-                        aria-expanded={open ? true : undefined}
-                        onClick={handleClick}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                        isActive={setActive}
                     >
-                        <CopyButton onClick={copyLink} />
-
-                        <KeyboardArrowDownOutlinedIcon
-                            fontSize={"small"}
-                            style={{ marginLeft: "3px" }}
-                           
-                        />
+                        <KeyboardArrowDownOutlinedIcon fontSize="small" />
                     </DatePickerButton>
-                    <RelativeTimeMenu
+                    <CustomMenu
+                        id="backward-menu"
                         anchorEl={anchorEl}
                         open={open}
-                        handleClose={handleClose}
-                        handleChange={handleChange}
-                        label={label}
-                        isRelative={isRelative||false}
-                        qrynTheme={qrynTheme}
-                    />
+                        onClose={handleClose}
+                        qryntheme={theme}
+                        size={"small"}
+                    >
+                        <MenuItem
+                            key={`relativeTime`}
+                            style={{ background: theme.buttonDefault }}
+                        >
+                            <FormGroup>
+                                <FormControlLabel
+                                    style={{
+                                        padding: "0",
+                                        marginRight: 0,
+                                        cursor: !label
+                                            ? "not-allowed"
+                                            : "default",
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                    checked={isRelative}
+                                    onChange={handleChange}
+                                    control={
+                                        <Checkbox
+                                            style={{
+                                                paddingRight: "0px",
+                                                marginRight: "3px",
+                                            }}
+                                            sx={{
+                                                "& .MuiSvgIcon-root": {
+                                                    fontSize: 14,
+                                                },
+                                            }}
+                                            disabled={!label}
+                                        />
+                                    }
+                                    label={
+                                        <Typography
+                                            style={{
+                                                fontSize: "12px",
+                                                color: qrynTheme.textColor,
+                                            }}
+                                        >
+                                            Relative time
+                                        </Typography>
+                                    }
+                                />
+                            </FormGroup>
+                        </MenuItem>
+                    </CustomMenu>
                 </>
             </Tooltip>
         </>

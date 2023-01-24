@@ -1,6 +1,6 @@
 import { StyledInfoContent } from "../styled";
 
-const InfoLabels = ({ labels }: { labels: any }) => {
+const InfoLabels = ({ labels }: any) => {
     if (labels?.length > 0)
         return (
             <p>

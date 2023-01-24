@@ -6,7 +6,7 @@ import { Button } from "./Button.model";
 import { Store } from "../../../../store/store.model";
 
 const _themes = themes as any;
-export default function ShowLogsRateButton({ isDisabled, onClick, isMobile, alterText }: Button) {
+export default function ShowLogsRateButton({ isDisabled, onClick, isMobile, alterText }: any) {
     const SHOW_LOGS_RATE = "Show Logs Rate";
     const theme = useSelector((store: Store) => store.theme);
     return (

@@ -1,6 +1,5 @@
-//@ts-ignore
-import defaultTheme from "@mui/material/styles/defaultTheme";
-
+import { createTheme } from "@mui/material";
+const defaultTheme = createTheme()
 
 const black = {
     b10: "hsla(0, 0%, 7%, 0.404)",
@@ -54,10 +53,7 @@ const turquoise = {
 const orange = {
     or100: "hsl(39, 100%, 50%)",
 };
-const typography = {
-    ...defaultTheme.typography,
-    fontFamily: "Roboto, Helvetica, Arial, sans-serif",
-};
+
 const mainBgColor = black.b300;
 const shBgColor = black.b400; // a shadow color => for panels container
 const logBgColor = black.b100;
@@ -97,7 +93,8 @@ const trace = "hsl(195, 53%, 79%)";
 const unknown = "hsl(0, 0%, 50%)";
 const buttonSecondaryBg = '#4a525c'
 
-const darkTheme = {
+const darkTheme:any = {
+    ...defaultTheme,
     black,
     white,
     lightgrey,
@@ -131,7 +128,6 @@ const darkTheme = {
     unknown,
     darkgrey,
     turquoise,
-    typography,
     logBgColor,
     tabActive,
     tabHeader,
@@ -143,6 +139,6 @@ const darkTheme = {
     widgetTitleBorder,
     highlitedButton,
 
-    ...defaultTheme,
+  
 };
 export default darkTheme;

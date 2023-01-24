@@ -31,7 +31,7 @@ export default function ChartLabelsList({
                     <ChartLabel
                         isVisible={!isLabelsSelected ? true : setIsVisible(val)}
                         key={idx}
-                        onClick={(e) => handleLabelClick(val)}
+                        onClick={() => handleLabelClick(val)}
                     >
                         <ColorLabel color={val.color} />
                         {val.label}

@@ -1,11 +1,14 @@
 import { useMemo } from "react";
 import { themes } from "../../../../../theme/themes";
 import { CHART_OPTIONS } from "../consts";
-import { formatTs, formatLabel, getLabelsFromLocal } from "../helpers";
+import { getLabelsFromLocal } from "../helpers";
+
+import { formatTs, formatLabel } from "../helpers";
 
 export const useMatrixData = (spliced: any, data: any) => {
     return useMemo(() => {
         let parsed: any = [
+
             {
                 data: [],
                 label: [],
@@ -52,15 +55,16 @@ export const useTheme = (name: "dark" | "light") => {
 };
 
 export const useMatchHeight = ({ length }: { length: number }) => {
+
     return useMemo(() => {
         if (length <= 12) {
-            return 150;
+            return 140;
         } else if (length <= 20) {
-            return 250;
+            return 240;
         } else if (length <= 15) {
-            return 175;
+            return 165;
         } else if (length > 0) {
-            return 450;
+            return 440;
         }
     }, [length]);
 };

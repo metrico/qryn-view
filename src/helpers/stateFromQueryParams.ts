@@ -2,7 +2,8 @@ import { environment } from "../environment/env.dev";
 import setDebug from "./setDebug";
 import * as moment from "moment";
 import { nanoid } from "nanoid";
-import { BOOLEAN_VALUES } from "./UpdateStateFromQueryParams";
+
+const BOOLEAN_VALUES = ["isSubmit", "isSplit", "autoTheme", "isEmbed"];
 export const initialUrlState = {
     query: "",
     queryType: "range",
