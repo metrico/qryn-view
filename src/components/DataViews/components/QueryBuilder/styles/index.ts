@@ -106,3 +106,8 @@ export const FlexWrap = css`
     display: flex;
     flex-wrap: wrap;
 `;
+
+export const FlexColumn = css`
+display:flex;
+flex-direction: column;
+`
