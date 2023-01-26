@@ -13,21 +13,36 @@ export const Select = ({
     locked,
     onChange,
     opts,
-    label, 
+    label,
     name,
     fullWidth,
-    width
+    width,
 }: any) => {
     const [initialValue, setInitialValue] = useState("");
     const selectRef: any = useRef(null);
+    function formatCharsLength(char: string) {
+        if (char?.length < 60) {
+            return char;
+        }
+        return `${char.substring(0, 60)}...`;
+    }
     const formattedSelect = useMemo(() => {
         if (typeof opts[0] === "string") {
-            return opts.map((k: any) => ({ value: k, name: k }));
-        } else return opts;
+            return opts.map((k: string) => ({
+                value: k,
+                name: formatCharsLength(k),
+            }));
+        } else
+            return opts?.map((m: any) => ({
+                ...m,
+                name: formatCharsLength(m.name),
+            }));
     }, [opts]);
 
     useEffect(() => {
-        const selected = formattedSelect?.find((f: any) => f.name === value)?.["value"];
+        const selected = formattedSelect?.find((f: any) => f.name === value)?.[
+            "value"
+        ];
         if (selected && selectRef?.current?.value !== selected) {
             setInitialValue(selected);
             selectRef.current.value = selected;
