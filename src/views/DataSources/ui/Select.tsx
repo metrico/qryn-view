@@ -60,7 +60,10 @@ export const Select = ({
                 onChange={(e) => onChange(e, name)}
             >
                 {formattedSelect?.map((field: any, key: number) => (
-                    <option key={key} value={field.value}>
+                    <option
+                        key={key}
+                        value={field.value}
+                    >
                         {field.name}
                     </option>
                 ))}

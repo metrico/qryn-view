@@ -21,7 +21,6 @@ const SearchRow = css`
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
-    max-width: 500px;
 `;
 
 const TraceButton = (theme: any) => css`
@@ -37,6 +36,8 @@ const TraceButton = (theme: any) => css`
     height: 30px;
     display: flex;
     align-items: center;
+    align-self: flex-end;
+    max-width:200px;
     cursor: pointer;
     &:hover {
         background: ${theme.primaryLight};
