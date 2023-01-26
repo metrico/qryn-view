@@ -20,23 +20,15 @@ export const Select = ({
 }: any) => {
     const [initialValue, setInitialValue] = useState("");
     const selectRef: any = useRef(null);
-    function formatCharsLength(char: string) {
-        if (char?.length < 60) {
-            return char;
-        }
-        return `${char.substring(0, 60)}...`;
-    }
+
     const formattedSelect = useMemo(() => {
         if (typeof opts[0] === "string") {
             return opts.map((k: string) => ({
                 value: k,
-                name: formatCharsLength(k),
+                name:k,
             }));
         } else
-            return opts?.map((m: any) => ({
-                ...m,
-                name: formatCharsLength(m.name),
-            }));
+       return opts
     }, [opts]);
 
     useEffect(() => {
