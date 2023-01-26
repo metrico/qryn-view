@@ -14,6 +14,7 @@ export const Select = ({
     onChange,
     opts,
     label,
+    labelWidth,
     name,
     fullWidth,
     width,
@@ -43,7 +44,7 @@ export const Select = ({
 
     return (
         <InputGroup width={width}>
-            {label?.length > 0 && <Label width={width || null}>{label}</Label>}
+            {label?.length > 0 && <Label width={labelWidth || null}>{label}</Label>}
             <select
                 ref={selectRef}
                 className={cx(FlexOne(fullWidth))}
