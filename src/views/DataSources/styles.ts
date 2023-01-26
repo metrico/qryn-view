@@ -97,7 +97,7 @@ export const Label: any = styled.div`
     padding: 0px 10px;
     //flex: 0;
     white-space: nowrap;
-    ${(props: any) => (props.width !== null ? `width:${props.width};` : "")}
+    ${(props: any) => (props.width !== null ? `width:${props.width}px;` : "")}
     border-radius: 3px 0px 0px 3px;
     display: flex;
     align-items: center;
