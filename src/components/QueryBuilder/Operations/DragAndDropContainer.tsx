@@ -5,6 +5,7 @@ import update from "immutability-helper";
 import type { FC } from "react";
 import { useCallback, useState } from "react";
 import { Operations } from "./Operations";
+import OperationSelector from "./OperationSelector";
 
 const style = {
     width: "100%",
@@ -25,43 +26,6 @@ export interface ContainerState {
 export const Container: FC = (props:any) => {
     console.log(props)
     const {operations, setOperations} = props
-    // const [operations, ] = useState([
-    //     {
-    //         id: 1,
-    //         header: <div>Container Header</div>,
-    //         body: <div>this bodyent is rendered</div>,
-    //     },
-    //     {
-    //         id: 2,
-    //         header: <div>Container Header2 </div>,
-    //         body: <div>this bodyent is rendered</div>,
-    //     },
-    //     {
-    //         id: 3,
-    //         header: <div>Container Header3</div>,
-    //         body: <div>this bodyent is rendered</div>,
-    //     },
-    //     {
-    //         id: 4,
-    //         header: <div>Container Header4</div>,
-    //         body: <div>this somex bodyent is rendered</div>,
-    //     },
-    //     {
-    //         id: 5, // add header inhere // also id should be array index
-    //         header: <div>Container Header5</div>,
-    //         body: <div>this Twitter bodyent is rendered</div>,
-    //     },
-    //     {
-    //         id: 6,
-    //         header: <div>Container Header6</div>,
-    //         body: <div>this ??? bodyent is rendered</div>,
-    //     },
-    //     {
-    //         id: 7,
-    //         header: <div>Container Header7</div>,
-    //         body: <div>this PROFIT content is rendered</div>,
-    //     },
-    // ]);
 
     const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
             console.log(dragIndex, hoverIndex)
@@ -112,6 +76,7 @@ export default function DragAndDropContainer(props:any) {
     
     return (
         <DndProvider backend={HTML5Backend}>
+            <OperationSelector/>
             <Container {...props}/>
         </DndProvider>
     );
