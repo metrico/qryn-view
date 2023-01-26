@@ -146,6 +146,14 @@ export const InputGroup: any = styled.div`
         display: flex;
         align-items: center;
         padding: 1px 2px 1px 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        option {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 `;
 
