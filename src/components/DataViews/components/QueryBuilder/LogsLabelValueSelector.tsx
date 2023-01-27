@@ -28,41 +28,7 @@ export function LogsLabelValueSelector(props: any) {
     );
 
     const [operations, setOperations] = useState([
-        {
-            id: 1,
-            header: <div>JSON</div>,
-            body: <div>this bodyent is rendered</div>,
-        },
-        {
-            id: 2,
-            header: <div>LogFmt</div>,
-            body: <div>this bodyent is rendered</div>,
-        },
-        {
-            id: 3,
-            header: <div>Regexp</div>,
-            body: <div>this bodyent is rendered</div>,
-        },
-        {
-            id: 4,
-            header: <div>Pattern</div>,
-            body: <div>this somex bodyent is rendered</div>,
-        },
-        {
-            id: 5, // add header inhere // also id should be array index
-            header: <div>Unpack</div>,
-            body: <div>this Twitter bodyent is rendered</div>,
-        },
-        {
-            id: 6,
-            header: <div>Line Format</div>,
-            body: <div>this ??? bodyent is rendered</div>,
-        },
-        {
-            id: 7,
-            header: <div>LabelFormat</div>,
-            body: <div>this PROFIT content is rendered</div>,
-        },
+{...InitialOperation}
     ]);
     const [labelValueString, setLabelValueString] = useState("");
     const mainTheme = useTheme();
@@ -122,9 +88,9 @@ export function LogsLabelValueSelector(props: any) {
         setLabelValuesState((prev) => InitialLabelValueState);
     };
 
-    const addOperator = (e: any, name:string) => {
+    const addOperator = (e: any, name:string,opType:string) => {
         setOperations((prev: any) =>
-            [...prev,{ ...InitialOperation, header: name, id: operations?.length + 1 }]
+            [...prev,{ ...InitialOperation, header: name, id: operations?.length + 1,opType }]
         );
     };
 

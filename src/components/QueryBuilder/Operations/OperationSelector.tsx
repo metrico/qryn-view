@@ -10,8 +10,11 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useMemo } from "react";
 import { css, keyframes } from "@emotion/css";
 import rightArrow from "../chevron-right-solid.svg";
-import classNames from "classnames";
 
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import classNames from "classnames";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { useTheme } from "../../DataViews/components/QueryBuilder/hooks";
 const menuShow = keyframes`
   from {
     opacity: 0;
@@ -36,7 +39,7 @@ const submenuItem = css`
     position: relative;
     font-size: 12px;
     &::after {
-        content: url(${rightArrow});
+        // content: <NavigateNextIcon/>;
         position: absolute;
         width: 4px;
         right: 0.625rem;
@@ -157,17 +160,43 @@ export type OperationOptions =
     | "Label Filters"
     | "Line Filters";
 
-export default function OperationSelector({menuClick}:any) {
+export function CustomSubMenu({ item }: any) {
+    return (
+        <div
+            style={{
+                display: "flex",
+                flex:1,
+                alignItems: "center",
+                justifyContent: "space-between",
+            }}
+        >
+            {item} <NavigateNextIcon />
+        </div>
+    );
+}
+
+export default function OperationSelector({ menuClick }: any) {
     const operationTypes = useMemo(() => {
         return Object.keys(OperationsOptions);
     }, []);
-
+    const theme = useTheme()
     return (
         <Menu
             menuButton={
-                <MenuButton>
+                <MenuButton style={{
+                    background:theme.inputBg,
+                    color:theme.textColor,
+                    border: `1px solid ${theme.buttonBorder}`,
+                    borderRadius:'3px',
+                    padding:'4px 8px',
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    marginLeft:'4px'
+                    
+                    }}>
                     {" "}
-                    <div style={{ display: "flex", alignItems: "center",cursor:'pointer',  }}>
+                
                         <AddOutlinedIcon
                             style={{ height: "13px", width: "13px" }}
                         />
@@ -179,18 +208,50 @@ export default function OperationSelector({menuClick}:any) {
                         >
                             Add Operator
                         </span>
-                    </div>
+                   
                 </MenuButton>
             }
         >
             {operationTypes?.map((t: any, i: number) => (
                 <SubMenu label={t}>
                     {OperationsOptions[t]?.map((op: any, key: number) => (
-                        <MenuItem onClick={(e)=>menuClick(e,op)} style={{ fontSize: "12px" }} key={key}>
+                        <MenuItem
+                            onClick={(e) => menuClick(e, op, t)}
+                            style={{ fontSize: "12px" }}
+                            key={key}
+                        >
                             {op}
                         </MenuItem>
                     ))}
                 </SubMenu>
+            ))}
+        </Menu>
+    );
+}
+
+export function OperationSelectorFromType({ opType, onOperationSelect }: any) {
+    console.log(opType);
+    return (
+        <Menu
+            menuButton={
+                <KeyboardArrowDownIcon
+                    style={{
+                        height: "13px",
+                        width: "13px",
+                        margin: "0px 12px",
+                        cursor: "pointer",
+                    }}
+                />
+            }
+        >
+            {OperationsOptions[opType]?.map((op: any, key: number) => (
+                <MenuItem
+                    onClick={(e) => onOperationSelect(e, op)}
+                    style={{ fontSize: "12px" }}
+                    key={key}
+                >
+                    {op}
+                </MenuItem>
             ))}
         </Menu>
     );

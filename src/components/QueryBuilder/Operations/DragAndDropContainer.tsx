@@ -5,27 +5,37 @@ import update from "immutability-helper";
 import type { FC } from "react";
 import { useCallback } from "react";
 import { Operations } from "./Operations";
+import { css, cx } from "@emotion/css";
 
-const style = {
-    width: "100%",
-    display: "flex",
-    margin: "2px",
-};
+// Drag and Drop container for the operation function for query builder
 
+export const OperationsContainerStyles = css`
+    width: 100%;
+    display: flex;
+`;
 export interface Item {
     id: number;
     header: any;
     body: any;
+    opType: string;
 }
 
 export interface ContainerState {
     operations: Item[];
 }
 
-export const Container: FC = (props:any) => {
-    const {operations, setOperations} = props
+export type OperationsContainerProps = {
+    operations: any[];
+    setOperations: (operations: any) => void;
+};
 
-    const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
+// OPERATIONS CONTAINER
+
+export const Container: FC<OperationsContainerProps> = (props) => {
+    const { operations, setOperations } = props;
+
+    
+    const moveItem = useCallback((dragIndex: number, hoverIndex: number) => {
         setOperations((prevCards: Item[]) =>
             update(prevCards, {
                 $splice: [
@@ -36,45 +46,41 @@ export const Container: FC = (props:any) => {
         );
     }, []);
 
-    const removeCard = useCallback((dragIndex:number)=>{
-      
-        setOperations((prevCards:Item[])=>
-        update( prevCards,  { $splice: [[dragIndex,1]]})
-        )
-    },[])
+    const removeItem = useCallback((dragIndex: number) => {
+        setOperations((prevCards: Item[]) =>
+            update(prevCards, { $splice: [[dragIndex, 1]] })
+        );
+    }, []);
 
-    const renderCard = useCallback(
-        (operation: { id: number; header: any; body?: any }, index: number) => {
-            return (
-                <Operations
-                    key={operation.id}
-                    index={index}
-                    id={operation.id}
-                    header={operation.header}
-                    body={operation.body || <></>}
-                    moveCard={moveCard}
-                    removeCard={removeCard}
-                />
-            );
-        },
-        []
-    );
+    const renderCard = useCallback((operation: Item, index: number) => {
+        return (
+            <Operations
+                key={operation.id}
+                index={index}
+                id={operation.id}
+                opType={operation.opType}
+                header={operation.header}
+                body={operation.body || <></>}
+                moveItem={moveItem}
+                removeItem={removeItem}
+            />
+        );
+    }, []);
 
     return (
-        <>
-            <div style={style}>
-                {operations.map((operation:any, i:number) => renderCard(operation, i))}
-            </div>
-        </>
+        <div className={cx(OperationsContainerStyles)}>
+            {operations.map((operation: any, i: number) =>
+                renderCard(operation, i)
+            )}
+        </div>
     );
 };
 
-export default function DragAndDropContainer(props:any) {
-    
+// Drag and drop base provider
+export default function DragAndDropContainer(props: any) {
     return (
         <DndProvider backend={HTML5Backend}>
-            
-            <Container {...props}/>
+            <Container {...props} />
         </DndProvider>
     );
 }

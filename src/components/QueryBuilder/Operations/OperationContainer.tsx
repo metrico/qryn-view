@@ -1,19 +1,24 @@
 import { cx, css } from "@emotion/css";
 /// add select in here
 import CloseIcon from "@mui/icons-material/Close";
-export const OperationContainerStyles = css`
+import { useCallback,useState } from "react";
+import { useTheme } from "../../DataViews/components/QueryBuilder/hooks";
+import { OperationSelectorFromType } from "./OperationSelector";
+export const OperationContainerStyles =(theme:any) => css`
     display: flex;
     flex-direction: column;
     .operation-header {
-        background: #eee;
-        color: gray;
-        padding: 8px;
-        border-bottom: 1px solid gray;
+        background:${theme.viewBg};
+        color: ${theme.textColor};
+        padding: 0px 8px;
+        border-bottom: 1px solid ${theme.buttonBorder};
         display: flex;
         justify-content: space-between;
         align-items: center;
+        height:28px;
         span {
-            font-weight: bold;
+          //  font-weight: bold;
+          font-size:12px;
         }
         .operation-tools {
             display: none;
@@ -32,28 +37,39 @@ type Props = {
     id: number;
     header: any;
     body: any;
-    removeCard: any;
+    removeItem: any;
     index:number;
+    opType:string;
 };
 
 export default function OperationContainer(props: Props) {
-    const { id, header, body, removeCard, index } = props;
-
+    const { id, opType, header, body, removeItem, index } = props;
+    console.log(opType)
     // add selector with name
     // add close button
+    const theme = useTheme()
+
+    const [opHeader, setOpHeader] = useState(header)
+
+    const onOpChange = useCallback((e:any, header:string)=>{
+        setOpHeader(header)
+    },[opHeader])
 
     return (
-        <div className={cx(OperationContainerStyles)}>
+        <div className={cx(OperationContainerStyles(theme))}>
             <div className="operation-header">
-                <span>{header}</span>
+                <span>{opHeader}</span>
                 <div className="operation-tools">
+                    <OperationSelectorFromType  opType={opType} onOperationSelect={onOpChange} />
                     <CloseIcon
                         style={{
-                            height: "13px",
-                            width: "13px",
+                            margin:'0px',
+                            padding:'0px',
+                            height: "12px",
+                            width: "12px",
                             cursor: "pointer",
                         }}
-                        onClick={(e) => removeCard(index)}
+                        onClick={(e) => removeItem(index)}
                     />
                 </div>
             </div>

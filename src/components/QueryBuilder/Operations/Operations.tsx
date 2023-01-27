@@ -2,29 +2,31 @@ import type { Identifier, XYCoord } from "dnd-core";
 import type { FC } from "react";
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import { useTheme } from "../../DataViews/components/QueryBuilder/hooks";
 import OperationContainer from "./OperationContainer";
 
 export const ItemTypes = {
     CARD: "card",
 };
 
-const style = {
-    border: "1px solid gray",
-    backgroundColor: "white",
+const style = (theme:any) => ({
+    border: `1px solid ${theme.buttonBorder}`,
+    backgroundColor: `${theme.inputBg}`,
     fontSize: "12px",
     cursor: "move",
     display: "flex",
     margin: "4px",
     borderRadius: "3px",
-};
+});
 
 export interface CardProps {
     id: any;
     header: any;
     index: number;
     body: any;
-    moveCard: (dragIndex: number, hoverIndex: number) => void;
-    removeCard: any;
+    moveItem: (dragIndex: number, hoverIndex: number) => void;
+    removeItem: any;
+    opType:string;
 }
 
 interface DragItem {
@@ -36,12 +38,15 @@ interface DragItem {
 export const Operations: FC<CardProps> = ({
     id,
     header,
+    opType,
     index,
     body,
-    moveCard,
-    removeCard,
+    moveItem,
+    removeItem,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
+
+    const theme = useTheme()
     const [{ handlerId }, drop] = useDrop<
         DragItem,
         void,
@@ -95,7 +100,7 @@ export const Operations: FC<CardProps> = ({
             }
 
             // Time to actually perform the action
-            moveCard(dragIndex, hoverIndex);
+            moveItem(dragIndex, hoverIndex);
 
             // Note: we're mutating the monitor item here!
             // Generally it's better to avoid mutations,
@@ -120,15 +125,16 @@ export const Operations: FC<CardProps> = ({
     return (
         <div
             ref={ref}
-            style={{ ...style, opacity }}
+            style={{ ...style(theme), opacity }}
             data-handler-id={handlerId}
         >
             <OperationContainer
                 id={id}
                 header={header}
+                opType={opType}
                 body={body}
                 index={index}
-                removeCard={removeCard}
+                removeItem={removeItem}
             />
         </div>
     );
