@@ -105,6 +105,7 @@ export const AddIconStyle = (theme: any) => css`
 export const FlexWrap = css`
     display: flex;
     flex-wrap: wrap;
+    margin:5px;
 `;
 
 export const FlexColumn = css`

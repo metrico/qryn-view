@@ -1,15 +1,16 @@
-import { Menu, 
-  MenuButton, 
-  MenuItem,
-  SubMenu as SubMenuInner } from "@szhsin/react-menu";
+import {
+    Menu,
+    MenuButton,
+    MenuItem,
+    SubMenu as SubMenuInner,
+} from "@szhsin/react-menu";
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useMemo } from "react";
-import { css,keyframes } from "@emotion/css";
+import { css, keyframes } from "@emotion/css";
 import rightArrow from "../chevron-right-solid.svg";
 import classNames from "classnames";
-
 
 const menuShow = keyframes`
   from {
@@ -22,67 +23,64 @@ const menuHide = keyframes`
   }
 `;
 const menu = css`
-  font-family: sans-serif;
-  font-size:12px;
-  user-select: none;
-  box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
-  padding: 6px;
-  min-width: 10rem;
+    font-family: sans-serif;
+    font-size: 12px;
+    user-select: none;
+    box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    padding: 6px;
+    min-width: 10rem;
 `;
 
 const submenuItem = css`
-  position: relative;
-  font-size: 12px;
-  &::after {
-    content: url(${rightArrow});
-    position: absolute;
-    width: 4px;
-    right: 0.625rem;
-  }
+    position: relative;
+    font-size: 12px;
+    &::after {
+        content: url(${rightArrow});
+        position: absolute;
+        width: 4px;
+        right: 0.625rem;
+    }
 `;
 
 const menuOpening = css`
-  animation: ${menuShow} 0.15s ease-out;
+    animation: ${menuShow} 0.15s ease-out;
 `;
 
 const menuClosing = css`
-  animation: ${menuHide} 0.2s ease-out forwards;
+    animation: ${menuHide} 0.2s ease-out forwards;
 `;
 
 const menuItem = css`
-  border-radius: 3px;
-  padding: 0.275rem 0.525rem;
+    border-radius: 3px;
+    padding: 0.275rem 0.525rem;
 `;
 const menuItemHover = css`
-//  color: #fff;
-  background: #59a2ff;
+    //  color: #fff;
+    background: #59a2ff;
 `;
 
+const menuItemClassName = ({ hover, disabled }: any) =>
+    classNames(menuItem, {
+        [menuItemHover]: hover,
+    });
 
-const menuItemClassName = ({ hover, disabled }:any) =>
-  classNames(menuItem, {
-    [menuItemHover]: hover
-  });
+const submenuItemClassName = (modifiers: any) =>
+    classNames(menuItemClassName(modifiers), submenuItem);
 
-const submenuItemClassName = (modifiers:any) =>
-  classNames(menuItemClassName(modifiers), submenuItem);
+const menuClassName = ({ state }: any) =>
+    classNames(menu, {
+        [menuOpening]: state === "opening",
+        [menuClosing]: state === "closing",
+    });
 
-
-const menuClassName = ({ state }:any) =>
-  classNames(menu, {
-    [menuOpening]: state === "opening",
-    [menuClosing]: state === "closing"
-  });
-
-const SubMenu =(props:any) => (
-  <SubMenuInner
-  {...props}
-  menuClassName={menuClassName}
-  itemProps={{className: submenuItemClassName}}
-  />
-)
-
+const SubMenu = (props: any) => (
+    <SubMenuInner
+        {...props}
+        menuClassName={menuClassName}
+        itemProps={{ className: submenuItemClassName }}
+    />
+);
 
 export const OperationsOptions: any = {
     Aggregations: [
@@ -159,7 +157,7 @@ export type OperationOptions =
     | "Label Filters"
     | "Line Filters";
 
-export default function OperationSelector() {
+export default function OperationSelector({menuClick}:any) {
     const operationTypes = useMemo(() => {
         return Object.keys(OperationsOptions);
     }, []);
@@ -168,17 +166,29 @@ export default function OperationSelector() {
         <Menu
             menuButton={
                 <MenuButton>
-                    <AddOutlinedIcon
-                        style={{ height: "13px", width: "13px" }}
-                    />
-                    Add Operator
+                    {" "}
+                    <div style={{ display: "flex", alignItems: "center",cursor:'pointer',  }}>
+                        <AddOutlinedIcon
+                            style={{ height: "13px", width: "13px" }}
+                        />
+                        <span
+                            style={{
+                                fontSize: "12px",
+                                fontFamily: "sans-serif",
+                            }}
+                        >
+                            Add Operator
+                        </span>
+                    </div>
                 </MenuButton>
             }
         >
             {operationTypes?.map((t: any, i: number) => (
                 <SubMenu label={t}>
                     {OperationsOptions[t]?.map((op: any, key: number) => (
-                        <MenuItem style={{fontSize:'12px'}} key={key}>{op}</MenuItem>
+                        <MenuItem onClick={(e)=>menuClick(e,op)} style={{ fontSize: "12px" }} key={key}>
+                            {op}
+                        </MenuItem>
                     ))}
                 </SubMenu>
             ))}

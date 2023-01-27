@@ -3,6 +3,7 @@ import { ThemeProvider, useTheme } from "@emotion/react";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
 import DragAndDropContainer from "../../../QueryBuilder/Operations/DragAndDropContainer";
+import OperationSelector from "../../../QueryBuilder/Operations/OperationSelector";
 import { AddOperatorButton } from "./AddOperatorButton";
 import { InitialLabelValueState, NewLabel } from "./consts";
 import { logsToString } from "./helpers";
@@ -11,6 +12,8 @@ import { InitialAddButton } from "./InitialAddButton";
 import { LogLabelValueForm } from "./LogLabelValueForm";
 import { FlexWrap, FlexColumn } from "./styles";
 import { Label } from "./types";
+
+
 
 const InitialOperation = {
     id: 0,
@@ -119,9 +122,9 @@ export function LogsLabelValueSelector(props: any) {
         setLabelValuesState((prev) => InitialLabelValueState);
     };
 
-    const addOperator = (e: any) => {
+    const addOperator = (e: any, name:string) => {
         setOperations((prev: any) =>
-            [...prev,{ ...InitialOperation, id: operations?.length + 1 }]
+            [...prev,{ ...InitialOperation, header: name, id: operations?.length + 1 }]
         );
     };
 
@@ -173,6 +176,7 @@ export function LogsLabelValueSelector(props: any) {
             </div>
             <div className={cx(FlexWrap)}>
                 {/* {addOperatorsRenderer()} */}
+                <OperationSelector menuClick={addOperator} />
                 <DragAndDropContainer
                     setOperations={setOperations}
                     operations={operations}
