@@ -172,7 +172,7 @@ export function LogsLabelValueSelector(props: any) {
                 {initialButtonRenderer()}
             </div>
             <div className={cx(FlexWrap)}>
-                {addOperatorsRenderer()}
+                {/* {addOperatorsRenderer()} */}
                 <DragAndDropContainer
                     setOperations={setOperations}
                     operations={operations}
