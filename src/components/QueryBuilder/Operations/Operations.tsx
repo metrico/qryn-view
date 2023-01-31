@@ -27,6 +27,9 @@ export interface CardProps {
     moveItem: (dragIndex: number, hoverIndex: number) => void;
     removeItem: any;
     opType:string;
+    expressions:[];
+    onExpChange:(expressions:[])=>void
+    setOperations:any;
 }
 
 interface DragItem {
@@ -35,15 +38,19 @@ interface DragItem {
     type: string;
 }
 
-export const Operations: FC<CardProps> = ({
-    id,
-    header,
-    opType,
-    index,
-    body,
-    moveItem,
-    removeItem,
-}) => {
+export const Operations: FC<CardProps> = (props) => {
+
+    const {
+        id,
+        header,
+        opType,
+        index,
+        body,
+        moveItem,
+        removeItem,
+    } = props
+
+
     const ref = useRef<HTMLDivElement>(null);
 
     const theme = useTheme()
@@ -54,7 +61,6 @@ export const Operations: FC<CardProps> = ({
     >({
         accept: ItemTypes.CARD,
         collect(monitor) {
-            //console.log(monitor)
             return {
                 handlerId: monitor.getHandlerId(),
             };
@@ -77,7 +83,6 @@ export const Operations: FC<CardProps> = ({
             // Get hotizontal middle
             const hoverMiddleX =
                 (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
-            // console.log(hoverMiddleX)
             // Determine mouse position
             const clientOffset = monitor.getClientOffset();
 
@@ -129,12 +134,14 @@ export const Operations: FC<CardProps> = ({
             data-handler-id={handlerId}
         >
             <OperationContainer
+                {...props}
                 id={id}
                 header={header}
                 opType={opType}
                 body={body}
                 index={index}
                 removeItem={removeItem}
+
             />
         </div>
     );

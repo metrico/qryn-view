@@ -67,6 +67,29 @@ export const LogFmtBuilder: LogFmtFn = () => ({
     },
 });
 
+
+export interface UnwrapBuilderProps extends CommonFormatProps {
+    setUnwrapFmt(): string;
+}
+
+
+
+export type UnwrapFmtFn = () => UnwrapBuilderProps;
+// add each as a prop inside the main builder
+//
+
+export const UnwrapBuilder: UnwrapFmtFn = () => ({
+    result: "",
+    setUnwrapFmt(this: UnwrapBuilderProps) {
+        this.result += " | unwrap";
+        return this.result;
+    },
+    build(this: any, initial: string) {
+        this.result += initial + this.setUnwrapFmt();
+        return this.result;
+    },
+});
+
 export interface UnPackBuilderProps extends CommonFormatProps {
     setUnPack(): string;
 }
@@ -89,80 +112,109 @@ export const UnPackBuilder: UnPackFn = () => ({
 
 export interface RegexFmtBuilderProps {
     result: string;
+    expression:string;
     setRegex(intial: string): void;
     setExpression(expression: string): void;
-    buildRegex(initial: string, expression: string): string;
+    setText():void;
+    build(initial: string): string;
 }
 
 export type RegexFmtFn = () => RegexFmtBuilderProps;
 
 export const RegexFmtBuilder: RegexFmtFn = () => ({
     result: "",
+    expression: "",
     setRegex(this: RegexFmtBuilderProps, initial: string) {
-        this.result = initial + " | regex";
+        this.result = initial + " | regexp";
     },
     setExpression(this: RegexFmtBuilderProps, expression: string) {
-        this.result += " `" + expression + "`";
+        this.expression = expression || ''
+       
     },
-    buildRegex(
+    setText(this:RegexFmtBuilderProps) {
+        this.result += " `" + this.expression + "`";
+    },
+    build(
         this: RegexFmtBuilderProps,
         initial: string,
-        expression: string
     ) {
         this.setRegex(initial);
-        this.setExpression(expression);
+        this.setText()
         return this.result;
     },
 });
 
 export interface PatternFmtBuilderProps {
     result: string;
+    expression: string;
     setPattern(intial: string): void;
     setExpression(expression: string): void;
-    buildPattern(initial: string, expression: string): string;
+    setText():void
+    build(initial: string, expression: string): string;
 }
 
 export type PatternFmtFn = () => PatternFmtBuilderProps;
 
 export const PatternFmtBuilder: PatternFmtFn = () => ({
     result: "",
+    expression: "",
     setPattern(this: PatternFmtBuilderProps, initial: string) {
         this.result = initial + " | pattern";
     },
     setExpression(this: PatternFmtBuilderProps, expression: string) {
-        this.result += " `" + expression + "`";
+        this.expression = expression || '';
     },
-    buildPattern(
+    setText(this:PatternFmtBuilderProps ) {
+        this.result += " `" + this.expression + "`";
+    },
+    build(
         this: PatternFmtBuilderProps,
         initial: string,
         expression: string
     ) {
         this.setPattern(initial);
-        this.setExpression(expression);
+        this.setText()
         return this.result;
     },
 });
 
 export interface LineFmtBuilderProps {
     result: string;
+    expression: string;
     setLine(intial: string): void;
+    setText():void;
     setExpression(expression: string): void;
-    buildLine(initial: string, expression: string): string;
+    build(initial: string, expression: string): string;
 }
 
 export type LineFmtFn = () => LineFmtBuilderProps;
 
 export const LineFmtBuilder: LineFmtFn = () => ({
     result: "",
+    expression: "",
     setLine(this: LineFmtBuilderProps, initial: string) {
         this.result = initial + " | line_format";
     },
     setExpression(this: LineFmtBuilderProps, expression: string) {
-        this.result += " `" + expression + "`";
+        this.expression = expression || '';
     },
-    buildLine(this: LineFmtBuilderProps, initial: string, expression: string) {
+    setText(this:LineFmtBuilderProps ) {
+        this.result += " `" + this.expression + "`";
+    },
+    build(this: LineFmtBuilderProps, initial: string, expression: string) {
         this.setLine(initial);
-        this.setExpression(expression);
+        this.setText()
         return this.result;
     },
 });
+
+export const FormatOperators:any = {
+    json:JSONBuilder,
+    logfmt: LogFmtBuilder,
+    unpack: UnPackBuilder,
+    regexp: RegexFmtBuilder,
+    pattern: PatternFmtBuilder,
+    line_format: LineFmtBuilder,
+    unwrap: UnwrapBuilder
+
+}

@@ -17,6 +17,7 @@ export interface Item {
     id: number;
     header: any;
     body: any;
+    expressions:[];
     opType: string;
 }
 
@@ -31,7 +32,7 @@ export type OperationsContainerProps = {
 
 // OPERATIONS CONTAINER
 
-export const Container: FC<OperationsContainerProps> = (props) => {
+export const Container: FC<OperationsContainerProps> = (props:any) => {
     const { operations, setOperations } = props;
 
     
@@ -55,6 +56,7 @@ export const Container: FC<OperationsContainerProps> = (props) => {
     const renderCard = useCallback((operation: Item, index: number) => {
         return (
             <Operations
+                {...props}
                 key={operation.id}
                 index={index}
                 id={operation.id}
@@ -63,6 +65,7 @@ export const Container: FC<OperationsContainerProps> = (props) => {
                 body={operation.body || <></>}
                 moveItem={moveItem}
                 removeItem={removeItem}
+               
             />
         );
     }, []);

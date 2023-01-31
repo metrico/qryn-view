@@ -8,7 +8,7 @@ import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useMemo } from "react";
-import { css, keyframes } from "@emotion/css";
+import { css, cx, keyframes } from "@emotion/css";
 import rightArrow from "../chevron-right-solid.svg";
 
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -44,6 +44,25 @@ const submenuItem = css`
         width: 4px;
         right: 0.625rem;
     }
+`;
+
+const customSubMenu = css`
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+`;
+
+const menuButtonStyles = (theme: any) => css`
+    background: ${theme.inputBg};
+    color: ${theme.textColor};
+    border: 1px solid ${theme.buttonBorder};
+    border-radius: 3px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 4px;
 `;
 
 const menuOpening = css`
@@ -85,6 +104,9 @@ const SubMenu = (props: any) => (
     />
 );
 
+
+
+
 export const OperationsOptions: any = {
     Aggregations: [
         "Sum",
@@ -119,8 +141,8 @@ export const OperationsOptions: any = {
         "Pattern",
         "Unpack",
         "Line Format",
-        "Label Format",
-        "Unwrap",
+     //  "Label Format", // label format not supported yet
+      //  "Unwrap", // unwrap should work later with range functions
     ],
     "Binary Operations": [
         "Add Scalar",
@@ -162,14 +184,7 @@ export type OperationOptions =
 
 export function CustomSubMenu({ item }: any) {
     return (
-        <div
-            style={{
-                display: "flex",
-                flex:1,
-                alignItems: "center",
-                justifyContent: "space-between",
-            }}
-        >
+        <div className={cx(customSubMenu)}>
             {item} <NavigateNextIcon />
         </div>
     );
@@ -179,36 +194,23 @@ export default function OperationSelector({ menuClick }: any) {
     const operationTypes = useMemo(() => {
         return Object.keys(OperationsOptions);
     }, []);
-    const theme = useTheme()
+    const theme = useTheme();
     return (
         <Menu
             menuButton={
-                <MenuButton style={{
-                    background:theme.inputBg,
-                    color:theme.textColor,
-                    border: `1px solid ${theme.buttonBorder}`,
-                    borderRadius:'3px',
-                    padding:'4px 8px',
-                    display: "flex",
-                    alignItems: "center",
-                    cursor: "pointer",
-                    marginLeft:'4px'
-                    
-                    }}>
+                <MenuButton className={cx(menuButtonStyles(theme))}>
                     {" "}
-                
-                        <AddOutlinedIcon
-                            style={{ height: "13px", width: "13px" }}
-                        />
-                        <span
-                            style={{
-                                fontSize: "12px",
-                                fontFamily: "sans-serif",
-                            }}
-                        >
-                            Add Operator
-                        </span>
-                   
+                    <AddOutlinedIcon
+                        style={{ height: "13px", width: "13px" }}
+                    />
+                    <span
+                        style={{
+                            fontSize: "12px",
+                            fontFamily: "sans-serif",
+                        }}
+                    >
+                        Add Operator
+                    </span>
                 </MenuButton>
             }
         >
@@ -230,7 +232,6 @@ export default function OperationSelector({ menuClick }: any) {
 }
 
 export function OperationSelectorFromType({ opType, onOperationSelect }: any) {
-    console.log(opType);
     return (
         <Menu
             menuButton={
