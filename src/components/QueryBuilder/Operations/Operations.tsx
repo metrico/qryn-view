@@ -24,6 +24,7 @@ export interface CardProps {
     header: any;
     index: number;
     body: any;
+    rate:string;
     moveItem: (dragIndex: number, hoverIndex: number) => void;
     removeItem: any;
     opType:string;
@@ -43,6 +44,7 @@ export const Operations: FC<CardProps> = (props) => {
     const {
         id,
         header,
+        rate,
         opType,
         index,
         body,
@@ -135,6 +137,7 @@ export const Operations: FC<CardProps> = (props) => {
         >
             <OperationContainer
                 {...props}
+                rate={rate}
                 id={id}
                 header={header}
                 opType={opType}

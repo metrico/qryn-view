@@ -67,12 +67,9 @@ export const LogFmtBuilder: LogFmtFn = () => ({
     },
 });
 
-
 export interface UnwrapBuilderProps extends CommonFormatProps {
     setUnwrapFmt(): string;
 }
-
-
 
 export type UnwrapFmtFn = () => UnwrapBuilderProps;
 // add each as a prop inside the main builder
@@ -112,10 +109,10 @@ export const UnPackBuilder: UnPackFn = () => ({
 
 export interface RegexFmtBuilderProps {
     result: string;
-    expression:string;
+    expression: string;
     setRegex(intial: string): void;
     setExpression(expression: string): void;
-    setText():void;
+    setText(): void;
     build(initial: string): string;
 }
 
@@ -128,18 +125,14 @@ export const RegexFmtBuilder: RegexFmtFn = () => ({
         this.result = initial + " | regexp";
     },
     setExpression(this: RegexFmtBuilderProps, expression: string) {
-        this.expression = expression || ''
-       
+        this.expression = expression || "";
     },
-    setText(this:RegexFmtBuilderProps) {
+    setText(this: RegexFmtBuilderProps) {
         this.result += " `" + this.expression + "`";
     },
-    build(
-        this: RegexFmtBuilderProps,
-        initial: string,
-    ) {
+    build(this: RegexFmtBuilderProps, initial: string) {
         this.setRegex(initial);
-        this.setText()
+        this.setText();
         return this.result;
     },
 });
@@ -149,7 +142,7 @@ export interface PatternFmtBuilderProps {
     expression: string;
     setPattern(intial: string): void;
     setExpression(expression: string): void;
-    setText():void
+    setText(): void;
     build(initial: string, expression: string): string;
 }
 
@@ -162,18 +155,14 @@ export const PatternFmtBuilder: PatternFmtFn = () => ({
         this.result = initial + " | pattern";
     },
     setExpression(this: PatternFmtBuilderProps, expression: string) {
-        this.expression = expression || '';
+        this.expression = expression || "";
     },
-    setText(this:PatternFmtBuilderProps ) {
+    setText(this: PatternFmtBuilderProps) {
         this.result += " `" + this.expression + "`";
     },
-    build(
-        this: PatternFmtBuilderProps,
-        initial: string,
-        expression: string
-    ) {
+    build(this: PatternFmtBuilderProps, initial: string, expression: string) {
         this.setPattern(initial);
-        this.setText()
+        this.setText();
         return this.result;
     },
 });
@@ -182,7 +171,7 @@ export interface LineFmtBuilderProps {
     result: string;
     expression: string;
     setLine(intial: string): void;
-    setText():void;
+    setText(): void;
     setExpression(expression: string): void;
     build(initial: string, expression: string): string;
 }
@@ -196,25 +185,85 @@ export const LineFmtBuilder: LineFmtFn = () => ({
         this.result = initial + " | line_format";
     },
     setExpression(this: LineFmtBuilderProps, expression: string) {
-        this.expression = expression || '';
+        this.expression = expression || "";
     },
-    setText(this:LineFmtBuilderProps ) {
+    setText(this: LineFmtBuilderProps) {
         this.result += " `" + this.expression + "`";
     },
     build(this: LineFmtBuilderProps, initial: string, expression: string) {
         this.setLine(initial);
-        this.setText()
+        this.setText();
         return this.result;
     },
 });
 
-export const FormatOperators:any = {
-    json:JSONBuilder,
+export interface RangeBuilderProps {
+    result: string;
+    range: string;
+    setFn(initial: string): void;
+    setRange(): void;
+    setRate(): void;
+    build(initial: string): string;
+}
+
+// this one will be for this range fuctions: 
+
+export type SimpleRangeOperator =
+    | "rate"
+    | "rate_counter"
+    | "count_over_time"
+    | "sum_over_time"
+    | "bytes_rate"
+    | "bytes_over_time"
+    | "absent_over_time";
+
+export type RangeFn = (rangeType:SimpleRangeOperator) => RangeBuilderProps;
+
+export const RangeBuilder = (rangeType: SimpleRangeOperator) => ({
+    result: "",
+    range: "",
+
+    setFn(this: RangeBuilderProps, initial: string) {
+        this.result = `${rangeType}(${initial}`
+    },
+    // range should be set before building always!
+    setRange(this: RangeBuilderProps, range: string) {
+        this.range = range;
+    },
+    setRate(this: RangeBuilderProps) {
+        this.result += ` [${this.range}])`;
+    },
+
+    build(this: RangeBuilderProps, initial: string) {
+        this.setFn(initial);
+        this.setRate();
+        return this.result;
+    },
+});
+
+// from RANGE FUNCTIONS COULD BE ONLY ONE PER QUERY
+// * STEPS:
+
+// - iniit      ==> res = RangeBuilder( rageType )
+
+// - set range  ===> res.setRange('[range]')
+// - build      ===> res.build()
+
+export const FormatOperators: any = {
+    json: JSONBuilder,
     logfmt: LogFmtBuilder,
     unpack: UnPackBuilder,
     regexp: RegexFmtBuilder,
     pattern: PatternFmtBuilder,
     line_format: LineFmtBuilder,
-    unwrap: UnwrapBuilder
+    unwrap: UnwrapBuilder,
+};
+// add by and without functions
+// this functions are at the end of operation
+export const RangeOperators: any = (rangeType:any)=> ({
+    range: RangeBuilder(rangeType),
+});
 
-}
+// rate functions with a range
+// rate funcitons with a range and label selection option
+//

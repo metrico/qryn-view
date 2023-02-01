@@ -1,6 +1,6 @@
 import { cx, css } from "@emotion/css";
 import CloseIcon from "@mui/icons-material/Close";
-import {  useCallback,  useState } from "react";
+import { useCallback, useState, useMemo } from "react";
 import { useTheme } from "../../DataViews/components/QueryBuilder/hooks";
 import { OperationSelectorFromType } from "./OperationSelector";
 export const OperationContainerStyles = (theme: any) => css`
@@ -32,54 +32,74 @@ export const OperationContainerStyles = (theme: any) => css`
     }
 `;
 
-export const OperationBodyStyles = (theme:any) => css`
-    
-display: flex;
-flex-direction: column;
-gap: 3px;
-.input-group {
-    display:flex;
-    align-items:center;
-    gap:3px;
-}
-input {
-    height:26px;
-    color: ${theme.textColor};
-    background: ${theme.inputBg};
-    border: 1px solid ${theme.buttonBorder};
-    border-radius:3px;
-    padding: 0px 6px;
-   
+export const OperationBodyStyles = (theme: any) => css`
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    .input-group {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+    input {
+        height: 26px;
+        color: ${theme.textColor};
+        background: ${theme.inputBg};
+        border: 1px solid ${theme.buttonBorder};
+        border-radius: 3px;
+        padding: 0px 6px;
+    }
+    button {
+        height: 26px;
+        color: ${theme.textColor};
+        background: ${theme.inputBg};
+        border: 1px solid ${theme.buttonBorder};
+        border-radius: 3px;
+        padding: 4px 8px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+`;
 
-}
-button {
-    height:26px;
-    color: ${theme.textColor};
-    background: ${theme.inputBg};
-    border: 1px solid ${theme.buttonBorder};
-    border-radius:3px;
-    padding:4px 8px;
-    cursor:pointer;
-    font-size:12px;
-}
-
-`
+type ranges = "$__interval" | "1m" | "5m" | "10m" | "1h" | "24h";
 
 type Props = {
     id: number;
     header: any;
     body: any;
+    rate: string;
     removeItem: any;
     index: number;
     opType: string;
-    expressions:[];
+    expressions: [];
     onExpChange: (expressions: []) => void;
     setOperations: any;
 };
 
+export const RangesSelector = (props: any) => {
+    const { initial, onChange } = props;
+    const rangeOpts: any[] = useMemo(() => {
+        return ["$__interval", "1m", "5m", "10m", "1h", "24h"]?.map(
+            (m: string) => ({ name: m, value: m })
+        );
+    }, []);
+
+    return (
+        <select defaultValue={initial} onChange={onChange}>
+            {rangeOpts.map(
+                (opt: { name: string; value: string }, key: number) => (
+                    <option key={key} value={opt.value}>
+                        {opt.name}
+                    </option>
+                )
+            )}
+        </select>
+    );
+};
+
 export const JSONFormatBody = (props: any) => {
     const { setOperations, id } = props;
-    const theme = useTheme()
+    const theme = useTheme();
     const [expressions, setExpressions] = useState<string[]>([]);
     // we need: input and 'add expression' button
     // here: add the expressions
@@ -96,7 +116,7 @@ export const JSONFormatBody = (props: any) => {
             return next?.map((m: any) => {
                 if (m.id === id) {
                     m.expressions[index] = e.target.value;
-                    return m
+                    return m;
                 }
                 return m;
             });
@@ -115,7 +135,7 @@ export const JSONFormatBody = (props: any) => {
                     m.expressions = [...m?.expressions]?.filter(
                         (_, i) => i !== index
                     );
-                    return m
+                    return m;
                 }
                 return m;
             });
@@ -127,8 +147,8 @@ export const JSONFormatBody = (props: any) => {
             const next = [...prev];
             return next?.map((m: any) => {
                 if (m.id === id) {
-                    m.expressions = [...m.expressions,'']
-                    return m
+                    m.expressions = [...m.expressions, ""];
+                    return m;
                 }
                 return m;
             });
@@ -141,7 +161,7 @@ export const JSONFormatBody = (props: any) => {
                 <div key={index} className="input-group">
                     {" "}
                     <input
-                    className={'expression-input'}
+                        className={"expression-input"}
                         value={exp}
                         onChange={(e: any) => onExpChange(e, index)}
                     />{" "}
@@ -160,95 +180,141 @@ export const JSONFormatBody = (props: any) => {
     );
 };
 
+
+
 // add the simple input types
 export const PatternFormatBody = (props: Props) => {
-const {setOperations, id} = props
-const [expression, setExpression] = useState('')
-const theme = useTheme()
+    const { setOperations, id } = props;
+    const [expression, setExpression] = useState("");
+    const theme = useTheme();
 
-const onExpChange = useCallback((e:any)=>{
+    const onExpChange = useCallback(
+        (e: any) => {
+            setExpression(e.target.value);
 
-    setExpression(e.target.value)
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.expressions[0] = e.target.value;
+                        return m;
+                    }
+                    return m;
+                });
+            });
+        },
+        [expression]
+    );
 
-    setOperations((prev: any) => {
-        const next = [...prev];
-        return next?.map((m: any) => {
-            if (m.id === id) {
-                m.expressions[0] = e.target.value;
-                return m
-            }
-            return m;
-        });
-    });
-},[expression])
-
-
-    return <div className={cx(OperationBodyStyles(theme))}>
-        <input value={expression} placeholder={'<pattern|expression>'} onChange={onExpChange} />
-
-    </div>;
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <input
+                value={expression}
+                placeholder={"<pattern|expression>"}
+                onChange={onExpChange}
+            />
+        </div>
+    );
 };
 export const RegexpFormatBody = (props: any) => {
-    const {setOperations, id} = props
-    const [expression, setExpression] = useState('')
-    const theme = useTheme()
-    
-    const onExpChange = useCallback((e:any)=>{
-    
-        setExpression(e.target.value)
-    
-        setOperations((prev: any) => {
-            const next = [...prev];
-            return next?.map((m: any) => {
-                if (m.id === id) {
-                    m.expressions[0] = e.target.value;
-                    return m
-                }
-                return m;
+    const { setOperations, id } = props;
+    const [expression, setExpression] = useState("");
+    const theme = useTheme();
+
+    const onExpChange = useCallback(
+        (e: any) => {
+            setExpression(e.target.value);
+
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.expressions[0] = e.target.value;
+                        return m;
+                    }
+                    return m;
+                });
             });
-        });
-    },[expression])
-    
-    
-        return <div className={cx(OperationBodyStyles(theme))}>
-            <input value={expression} placeholder={'<re>'} onChange={onExpChange} />
-    
-        </div>;
+        },
+        [expression]
+    );
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <input
+                value={expression}
+                placeholder={"<re>"}
+                onChange={onExpChange}
+            />
+        </div>
+    );
 };
 // extract  label - values from JSON expression for later unwrap function
 
-export const LineFormatBody = (props:any) =>{
+export const LineFormatBody = (props: any) => {
+    const { setOperations, id } = props;
+    const [expression, setExpression] = useState("");
+    const theme = useTheme();
+
+    const onExpChange = useCallback(
+        (e: any) => {
+            setExpression(e.target.value);
+
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.expressions[0] = e.target.value;
+                        return m;
+                    }
+                    return m;
+                });
+            });
+        },
+        [expression]
+    );
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <input
+                value={expression}
+                placeholder={"{{.status_code}}"}
+                onChange={onExpChange}
+            />
+        </div>
+    );
+};
+
+export const DefaultFormatBody = (props: any) => {
+    return <></>;
+};
+
+export const RangeBody = (props:any) => {
     const {setOperations, id} = props
-    const [expression, setExpression] = useState('')
-    const theme = useTheme()
-    
-    const onExpChange = useCallback((e:any)=>{
-    
-        setExpression(e.target.value)
-    
+    const [range, setRange] = useState(props.range) 
+    const theme = useTheme();
+    const onRangeChange = useCallback( (e:any) => {
+        let val:string = e.target.value
+        setRange(val)
         setOperations((prev: any) => {
             const next = [...prev];
             return next?.map((m: any) => {
                 if (m.id === id) {
-                    m.expressions[0] = e.target.value;
-                    return m
+                    m.range = val;
+                    return m;
                 }
                 return m;
             });
         });
-    },[expression])
-    
-    
-        return <div className={cx(OperationBodyStyles(theme))}>
-            <input value={expression} placeholder={'{{.status_code}}'} onChange={onExpChange} />
-    
-        </div>;
-};
+    },[range])
 
-export const DefaultFormatBody = (props: any) => {
-  
-    return <></>;
-};
+   return <div className={cx(OperationBodyStyles(theme))}>
+    <RangesSelector
+    onChange={onRangeChange}
+    initial={range}
+    />
+   </div>
+} 
 
 export const formatsRenderer = (op: string, props: any) => {
     switch (op) {
@@ -264,6 +330,33 @@ export const formatsRenderer = (op: string, props: any) => {
             return <DefaultFormatBody {...props} />;
     }
 };
+const ranges = [
+    "rate",
+    "rate_counter",
+    "count_over_time",
+    "sum_over_time",
+    "bytes_rate",
+    "bytes_over_time",
+    "absent_over_time",
+];
+
+export const rangeRenderer = (op:string, props:any) => {
+    if(ranges.includes(op)) {
+        return <RangeBody {...props}/>
+    }
+    return null
+}
+
+export const opTypeSwitch = (opType:string, op:string, props:any) => {
+
+    switch(opType) {
+        case "formats": return formatsRenderer(op,props);
+        case "range_functions" :return rangeRenderer(op,props);
+        default: return rangeRenderer(op,props);
+    }
+
+}
+
 
 export default function OperationContainer(props: Props) {
     const { id, opType, header, body, removeItem, index, setOperations } =
@@ -271,7 +364,6 @@ export default function OperationContainer(props: Props) {
 
     const theme = useTheme();
     const [opHeader, setOpHeader] = useState(header);
-
     const onOpChange = useCallback(
         (e: any, header: string) => {
             setOpHeader(header);
@@ -284,14 +376,16 @@ export default function OperationContainer(props: Props) {
                             header,
                             name: header.toLowerCase().split(" ").join("_"),
                         };
-                        return m
+                        return m;
                     }
                     return m;
                 });
-            }); 
+            });
         },
         [opHeader]
     );
+
+    const typeFormat = (str:string) => str?.toLowerCase()?.split(" ")?.join("_") || ""
     if (header && typeof header === "string") {
         return (
             <div className={cx(OperationContainerStyles(theme))}>
@@ -315,10 +409,11 @@ export default function OperationContainer(props: Props) {
                     </div>
                 </div>
                 <div className="operation-body">
-                    {formatsRenderer(
-                        header?.toLowerCase()?.split(" ")?.join("_") || "",
+                    {opTypeSwitch(typeFormat(opType), typeFormat(header), props)}
+                    {/* {formatsRenderer(
+                      typeFormat(header),
                         props
-                    )}
+                    )} */}
                 </div>
             </div>
         );

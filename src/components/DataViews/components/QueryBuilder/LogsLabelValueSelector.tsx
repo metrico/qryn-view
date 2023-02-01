@@ -3,7 +3,11 @@ import { ThemeProvider, useTheme } from "@emotion/react";
 import { nanoid } from "nanoid";
 import { useEffect, useState, useCallback } from "react";
 import DragAndDropContainer from "../../../QueryBuilder/Operations/DragAndDropContainer";
-import { FormatOperators } from "../../../QueryBuilder/Operations/helpers";
+import {
+    FormatOperators,
+    RangeOperators,
+} from "../../../QueryBuilder/Operations/helpers";
+
 import OperationSelector from "../../../QueryBuilder/Operations/OperationSelector";
 import { AddOperatorButton } from "./AddOperatorButton";
 import { InitialLabelValueState, NewLabel } from "./consts";
@@ -30,6 +34,16 @@ const formats = [
     "line_format",
     "label_format",
     "unwrap",
+];
+
+const ranges = [
+    "rate",
+    "rate_counter",
+    "count_over_time",
+    "sum_over_time",
+    "bytes_rate",
+    "bytes_over_time",
+    "absent_over_time",
 ];
 
 export type OperationsManagerType = (
@@ -123,10 +137,9 @@ export function LogsLabelValueSelector(props: any) {
         if (initial && typeof initial === "string") {
             const logString = logsToString(value, JSON.parse(initial));
 
-           //  const operationNames = operations?.map((m: any) => m.name);
+            //  const operationNames = operations?.map((m: any) => m.name);
 
             operations.forEach((operation: any) => {
-
                 if (formats.includes(operation.name)) {
                     // if initial data, use previous
                     const resultType = setResultType(result, logString);
@@ -141,7 +154,7 @@ export function LogsLabelValueSelector(props: any) {
 
                         // single expression cases
                     } else if (isSingleExpression(operation.name)) {
-                        const [expression] = operation.expressions
+                        const [expression] = operation.expressions;
                         // single expression at this types
                         if (expression !== "") {
                             result.setExpression(operation.expressions[0]);
@@ -151,6 +164,14 @@ export function LogsLabelValueSelector(props: any) {
                     // build operator
                     result = result.build(resultType);
                 }
+
+                if(ranges.includes(operation.name)) {
+                   const resultType = setResultType(result, logString);
+                   // initialize with operation type 
+                   result = RangeOperators(operation.name)['range']
+                   result.setRange(operation.range || '$__interval')
+                   result = result.build(resultType)
+                }
             });
         }
         return result;
@@ -158,9 +179,8 @@ export function LogsLabelValueSelector(props: any) {
 
     useEffect(() => {
         const labValue = labelValueString || JSON.stringify("");
-        const logsString = logsToString(value, JSON.parse(labValue)); 
+        const logsString = logsToString(value, JSON.parse(labValue));
         labelValueChange(logsString);
-
     }, [labelValueString, value]);
 
     const resetLabelsState = (e: any) => {
@@ -171,7 +191,6 @@ export function LogsLabelValueSelector(props: any) {
     // send to operations manager
 
     useEffect(() => {
-
         let res = OperationsManager(
             labelValueString,
             jsonExpressions,
@@ -179,9 +198,7 @@ export function LogsLabelValueSelector(props: any) {
             value
         );
 
-
         labelValueChange(res);
-
     }, [operations, labelValueString, value, jsonExpressions]);
 
     const addOperator = useCallback(
@@ -191,18 +208,16 @@ export function LogsLabelValueSelector(props: any) {
                 {
                     ...InitialOperation,
                     header: name,
+                    range: '$__interval',
                     name: name?.toLowerCase()?.split(" ")?.join("_"),
                     id: operations?.length + 1,
-                    expressions:[],
+                    expressions: [],
                     opType,
                 },
             ]);
-
-    
         },
         [operations]
     );
-
 
     const onExpChange = useCallback(
         (expressions: []) => {
@@ -210,7 +225,6 @@ export function LogsLabelValueSelector(props: any) {
         },
         [jsonExpressions]
     );
-
 
     const initialButtonRenderer = () => {
         if (labelValuesState?.length < 1) {
