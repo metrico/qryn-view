@@ -46,12 +46,27 @@ const ranges = [
     "absent_over_time",
 ];
 
+
+// unwrapped expressions
+// should add unwrap function to the formats for it to work
+
+const label_ranges = [
+    "avg_over_time",
+    "max_over_time",
+    "min_over_time",
+    "first_over_time",
+    "last_over_time",
+    "stdvar_over_time",
+    "stddev_over_time",
+];
+
 export type OperationsManagerType = (
     initial: string,
     jsonExpressions: any[],
     operations: any[],
     value: any
 ) => string;
+
 export function LogsLabelValueSelector(props: any) {
     const { dataSourceId, value, onChange, labelValueChange } = props;
     const { loading, logsResponse } = useLogLabels(dataSourceId);
@@ -121,9 +136,17 @@ export function LogsLabelValueSelector(props: any) {
             : JSON.parse(JSON.stringify(result));
 
     const setExpressions = (result: any, expressions: string[]) => {
-        if (expressions.length > 0) {
+        if (Array.isArray(expressions) && expressions.length > 0) {
             expressions.forEach((expr) => {
                 result.addExpression(expr);
+            });
+        }
+    };
+
+    const setRangeLabels = (result: any, labels: string[]) => {
+        if (Array.isArray(labels) && labels?.length > 0) {
+            labels.forEach((label) => {
+                result.addLabel(label);
             });
         }
     };
@@ -138,7 +161,7 @@ export function LogsLabelValueSelector(props: any) {
             const logString = logsToString(value, JSON.parse(initial));
 
             //  const operationNames = operations?.map((m: any) => m.name);
-
+            console.log(operations)
             operations.forEach((operation: any) => {
                 if (formats.includes(operation.name)) {
                     // if initial data, use previous
@@ -165,12 +188,21 @@ export function LogsLabelValueSelector(props: any) {
                     result = result.build(resultType);
                 }
 
-                if(ranges.includes(operation.name)) {
-                   const resultType = setResultType(result, logString);
-                   // initialize with operation type 
-                   result = RangeOperators(operation.name)['range']
-                   result.setRange(operation.range || '$__interval')
-                   result = result.build(resultType)
+                if (ranges.includes(operation.name)) {
+                    const resultType = setResultType(result, logString);
+                    // initialize with operation type
+                    result = RangeOperators(operation.name)["range"];
+                    result.setRange(operation.range || "$__interval");
+                    result = result.build(resultType);
+                }
+
+                if (label_ranges.includes(operation.name)) {
+                    const resultType = setResultType(result, logString);
+                    result = RangeOperators(operation.name)["label_range"];
+                    setRangeLabels(result, operation.labels);
+                    result.updRange(operation.range || "$__interval");
+
+                    result = result.build(resultType);
                 }
             });
         }
@@ -208,10 +240,12 @@ export function LogsLabelValueSelector(props: any) {
                 {
                     ...InitialOperation,
                     header: name,
-                    range: '$__interval',
+                    range: "$__interval",
                     name: name?.toLowerCase()?.split(" ")?.join("_"),
                     id: operations?.length + 1,
                     expressions: [],
+                    labels: [],
+                    labelOpts:logsResponse,
                     opType,
                 },
             ]);

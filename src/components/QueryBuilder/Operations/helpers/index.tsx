@@ -10,7 +10,6 @@ interface JSONBuilderObjProps extends CommonFormatProps {
     expressionsString: string;
     setJSON(initial: string): string;
     addExpression(expression: string): void;
-    removeExpression(expression: string): void;
     setExpressions(): void;
 }
 
@@ -30,9 +29,7 @@ export const JSONBuilder: JSONBuilderFn = () => ({
     addExpression(this: JSONBuilderObjProps, expression: string) {
         this.expressions = [...this.expressions, expression];
     },
-    removeExpression(this: JSONBuilderObjProps, expression: string) {
-        this.expressions = this.expressions.filter((f) => f !== expression);
-    },
+
     setExpressions(this: JSONBuilderObjProps) {
         this.expressionsString = this.expressions.join(" ");
     },
@@ -201,12 +198,12 @@ export interface RangeBuilderProps {
     result: string;
     range: string;
     setFn(initial: string): void;
-    setRange(): void;
+    setRange(range: string): void;
     setRate(): void;
     build(initial: string): string;
 }
 
-// this one will be for this range fuctions: 
+// this one will be for this range fuctions:
 
 export type SimpleRangeOperator =
     | "rate"
@@ -217,24 +214,24 @@ export type SimpleRangeOperator =
     | "bytes_over_time"
     | "absent_over_time";
 
-export type RangeFn = (rangeType:SimpleRangeOperator) => RangeBuilderProps;
+export type RangeFn = (rangeType: SimpleRangeOperator) => RangeBuilderProps;
 
-export const RangeBuilder = (rangeType: SimpleRangeOperator) => ({
+export const RangeBuilder: RangeFn = (rangeType: SimpleRangeOperator) => ({
     result: "",
     range: "",
 
-    setFn(this: RangeBuilderProps, initial: string) {
-        this.result = `${rangeType}(${initial}`
+    setFn(initial: string) {
+        this.result = `${rangeType}(${initial}`;
     },
     // range should be set before building always!
-    setRange(this: RangeBuilderProps, range: string) {
+    setRange(range: string) {
         this.range = range;
     },
-    setRate(this: RangeBuilderProps) {
+    setRate() {
         this.result += ` [${this.range}])`;
     },
 
-    build(this: RangeBuilderProps, initial: string) {
+    build(initial: string) {
         this.setFn(initial);
         this.setRate();
         return this.result;
@@ -249,6 +246,71 @@ export const RangeBuilder = (rangeType: SimpleRangeOperator) => ({
 // - set range  ===> res.setRange('[range]')
 // - build      ===> res.build()
 
+export type LabelRangeOperator =
+    | "avg_over_time"
+    | "min_over_time"
+    | "max_over_time"
+    | "first_over_time"
+    | "last_over_time"
+    | "stdvar_over_time"
+    | "stddev_over_time";
+
+export interface LabelRangeProps {
+    result: string;
+    range: string;
+    labels: string[];
+    labelsString: string;
+    setFn(initial: string): void;
+    updRange(range: string): void;
+    setRange(): void;
+    addLabel(label: string): void;
+    setLabels(): void;
+    build(initial: string): string;
+}
+export type LabelRangeFn = (rangeType: LabelRangeOperator) => LabelRangeProps;
+
+export const LabelRangeBuilder: LabelRangeFn = (
+    rangeType: LabelRangeOperator
+) => ({
+    result: "",
+    range: "",
+    labels: [],
+    labelsString: "",
+    setFn(initial: string) {
+        this.result = `${rangeType}(${initial}`;
+    },
+    updRange(range: string) {
+        this.range = range;
+    },
+    setRange() {
+        this.result += `[${this.range}])`;
+    },
+    addLabel(label: string) {
+        this.labels = [...this.labels, label];
+    },
+
+    setLabels() {
+        this.labelsString = this.labels.join(",");
+    },
+
+    build(initial: string) {
+        this.setFn(initial);
+        this.setRange();
+        if (this.labels.length > 0) {
+            this.setLabels();
+            return (this.result += ` by(${this.labelsString})`);
+        }
+
+        return this.result;
+    },
+});
+
+// 'quantile_over_time' // this one should be splitted ad quantile
+
+export type QuantileRangeOperator = "quantile_over_time";
+
+//quantile will be label selection with a quantile amount input
+
 export const FormatOperators: any = {
     json: JSONBuilder,
     logfmt: LogFmtBuilder,
@@ -260,8 +322,9 @@ export const FormatOperators: any = {
 };
 // add by and without functions
 // this functions are at the end of operation
-export const RangeOperators: any = (rangeType:any)=> ({
+export const RangeOperators: any = (rangeType: any) => ({
     range: RangeBuilder(rangeType),
+    label_range: LabelRangeBuilder(rangeType)
 });
 
 // rate functions with a range

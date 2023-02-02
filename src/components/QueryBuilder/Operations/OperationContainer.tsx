@@ -216,6 +216,7 @@ export const PatternFormatBody = (props: Props) => {
         </div>
     );
 };
+
 export const RegexpFormatBody = (props: any) => {
     const { setOperations, id } = props;
     const [expression, setExpression] = useState("");
@@ -316,6 +317,111 @@ export const RangeBody = (props:any) => {
    </div>
 } 
 
+export const LabelRangeBody = (props:any) => {
+    const {setOperations, id} = props
+
+    const [labels, setLabels] = useState<string[]>(props.labels||[""])
+    const [range, setRange] = useState(props.range) 
+    const theme = useTheme();
+    const onLabelAdd = useCallback((e:any) => {
+        setLabels((prev) => [...prev, ""]);
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.labels = [...m.labels, ""];
+                    return m;
+                }
+                return m;
+            });
+        });
+    },[labels])
+
+    const onLabelRemove = useCallback((e:any,index:number)=> {
+        setLabels((prev) => {
+            const next = [...prev];
+            return next?.filter((_, i) => i !== index);
+        });
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.labels = [...m?.labels]?.filter(
+                        (_, i) => i !== index
+                    );
+                    return m;
+                }
+                return m;
+            });
+        });
+
+    },[labels])
+    
+    const onLabelChange = useCallback((e:any, index:number)=>{
+
+        setLabels((prev) => {
+            let n = [...prev];
+            n[index] = e?.target?.value;
+            return n;
+        });
+
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.labels[index] = e.target.value;
+                    return m;
+                }
+                return m;
+            });
+        });
+    },[labels])
+
+
+
+    const onRangeChange = useCallback( (e:any) => {
+        let val:string = e.target.value
+        setRange(val)
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.range = val;
+                    return m;
+                }
+                return m;
+            });
+        });
+    },[range])
+
+
+    const rangeLabelsRenderer = () => {
+        if(Array.isArray(labels) && labels?.length > 0) {
+            return labels?.map((exp: string, index: number) => (
+                <div key={index} className="input-group">
+                    {" "}
+                    <input
+                        className={"expression-input"}
+                        value={exp}
+                        onChange={(e: any) => onLabelChange(e, index)}
+                    />{" "}
+                    <button onClick={(e) => onLabelRemove(e, index)}>x</button>{" "}
+                </div>
+            ));
+        }
+        return null;
+    }
+
+   return <div className={cx(OperationBodyStyles(theme))}>
+    {rangeLabelsRenderer()}
+    <RangesSelector
+    onChange={onRangeChange}
+    initial={range}
+    />
+
+   </div>
+} 
+
 export const formatsRenderer = (op: string, props: any) => {
     switch (op) {
         case "json":
@@ -340,9 +446,23 @@ const ranges = [
     "absent_over_time",
 ];
 
+const label_ranges = [
+     "avg_over_time",
+     "max_over_time",
+     "min_over_time",
+     "first_over_time",
+     "last_over_time",
+     "stdvar_over_time",
+     "stddev_over_time"
+]
+
 export const rangeRenderer = (op:string, props:any) => {
     if(ranges.includes(op)) {
         return <RangeBody {...props}/>
+    }
+
+    if( label_ranges.includes(op)) {
+        return <LabelRangeBody {...props}/>
     }
     return null
 }

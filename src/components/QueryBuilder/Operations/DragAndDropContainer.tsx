@@ -18,6 +18,7 @@ export interface Item {
     header: any;
     body: any;
     expressions:[];
+    labels:[];
     opType: string;
 }
 
