@@ -29,6 +29,8 @@ export interface CardProps {
     removeItem: any;
     opType:string;
     expressions:[];
+    labels:[];
+    labelOpts: string[]
     onExpChange:(expressions:[])=>void
     setOperations:any;
 }

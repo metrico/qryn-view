@@ -6,7 +6,8 @@ import DragAndDropContainer from "../../../QueryBuilder/Operations/DragAndDropCo
 import {
     FormatOperators,
     RangeOperators,
-} from "../../../QueryBuilder/Operations/helpers";
+} from "../../../QueryBuilder/Operations/builders";
+import { useLabelSeries } from "../../../QueryBuilder/Operations/hooks/useLabelSeries";
 
 import OperationSelector from "../../../QueryBuilder/Operations/OperationSelector";
 import { AddOperatorButton } from "./AddOperatorButton";
@@ -74,6 +75,10 @@ export function LogsLabelValueSelector(props: any) {
         InitialLabelValueState
     );
 
+   
+
+    const [labelsString,setLabelsString] = useState('')
+    const {labelSeries} = useLabelSeries(dataSourceId,labelsString)
     const [jsonExpressions, setJsonExpressions] = useState([]);
 
     const [operations, setOperations] = useState<any>([]);
@@ -160,8 +165,6 @@ export function LogsLabelValueSelector(props: any) {
         if (initial && typeof initial === "string") {
             const logString = logsToString(value, JSON.parse(initial));
 
-            //  const operationNames = operations?.map((m: any) => m.name);
-            console.log(operations)
             operations.forEach((operation: any) => {
                 if (formats.includes(operation.name)) {
                     // if initial data, use previous
@@ -212,8 +215,12 @@ export function LogsLabelValueSelector(props: any) {
     useEffect(() => {
         const labValue = labelValueString || JSON.stringify("");
         const logsString = logsToString(value, JSON.parse(labValue));
+        setLabelsString(logsString)
         labelValueChange(logsString);
     }, [labelValueString, value]);
+
+
+    
 
     const resetLabelsState = (e: any) => {
         setLabelValuesState((prev) => InitialLabelValueState);
@@ -235,6 +242,8 @@ export function LogsLabelValueSelector(props: any) {
 
     const addOperator = useCallback(
         (e: any, name: string, opType: string) => {
+
+          
             setOperations((prev: any) => [
                 ...prev,
                 {
@@ -245,12 +254,12 @@ export function LogsLabelValueSelector(props: any) {
                     id: operations?.length + 1,
                     expressions: [],
                     labels: [],
-                    labelOpts:logsResponse,
+                    labelOpts:[...labelSeries], // here we should have the labels from the .. initial operation
                     opType,
                 },
             ]);
         },
-        [operations]
+        [operations,labelSeries]
     );
 
     const onExpChange = useCallback(

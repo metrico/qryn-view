@@ -3,6 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useCallback, useState, useMemo } from "react";
 import { useTheme } from "../../DataViews/components/QueryBuilder/hooks";
 import { OperationSelectorFromType } from "./OperationSelector";
+import { useLabelsFromProps } from "./hooks";
 export const OperationContainerStyles = (theme: any) => css`
     display: flex;
     flex-direction: column;
@@ -49,6 +50,14 @@ export const OperationBodyStyles = (theme: any) => css`
         border-radius: 3px;
         padding: 0px 6px;
     }
+    select {
+        height: 26px;
+        color: ${theme.textColor};
+        background: ${theme.inputBg};
+        border: 1px solid ${theme.buttonBorder};
+        border-radius: 3px;
+        padding: 0px 6px;
+    }
     button {
         height: 26px;
         color: ${theme.textColor};
@@ -72,6 +81,8 @@ type Props = {
     index: number;
     opType: string;
     expressions: [];
+    labelOpts: string[];
+    labels: [];
     onExpChange: (expressions: []) => void;
     setOperations: any;
 };
@@ -87,6 +98,30 @@ export const RangesSelector = (props: any) => {
     return (
         <select defaultValue={initial} onChange={onChange}>
             {rangeOpts.map(
+                (opt: { name: string; value: string }, key: number) => (
+                    <option key={key} value={opt.value}>
+                        {opt.name}
+                    </option>
+                )
+            )}
+        </select>
+    );
+};
+
+export const RangeLabelsSelector = (props: any) => {
+    const { initial, onChange, labels } = props;
+
+    const labelOpts: any[] = useMemo(() => {
+        return (
+            labels?.map((m: string) => ({ name: m, value: m })) || [
+                { name: "Select Label", value: "" },
+            ]
+        );
+    }, []);
+
+    return (
+        <select defaultValue={initial} onChange={onChange}>
+            {labelOpts.map(
                 (opt: { name: string; value: string }, key: number) => (
                     <option key={key} value={opt.value}>
                         {opt.name}
@@ -179,8 +214,6 @@ export const JSONFormatBody = (props: any) => {
         </div>
     );
 };
-
-
 
 // add the simple input types
 export const PatternFormatBody = (props: Props) => {
@@ -290,137 +323,133 @@ export const DefaultFormatBody = (props: any) => {
     return <></>;
 };
 
-export const RangeBody = (props:any) => {
-    const {setOperations, id} = props
-    const [range, setRange] = useState(props.range) 
+export const RangeBody = (props: any) => {
+    const { setOperations, id } = props;
+    const [range, setRange] = useState(props.range);
     const theme = useTheme();
-    const onRangeChange = useCallback( (e:any) => {
-        let val:string = e.target.value
-        setRange(val)
-        setOperations((prev: any) => {
-            const next = [...prev];
-            return next?.map((m: any) => {
-                if (m.id === id) {
-                    m.range = val;
+    const onRangeChange = useCallback(
+        (e: any) => {
+            let val: string = e.target.value;
+            setRange(val);
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.range = val;
+                        return m;
+                    }
                     return m;
-                }
-                return m;
+                });
             });
-        });
-    },[range])
+        },
+        [range]
+    );
 
-   return <div className={cx(OperationBodyStyles(theme))}>
-    <RangesSelector
-    onChange={onRangeChange}
-    initial={range}
-    />
-   </div>
-} 
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <RangesSelector onChange={onRangeChange} initial={range} />
+        </div>
+    );
+};
 
-export const LabelRangeBody = (props:any) => {
-    const {setOperations, id} = props
+export const LabelRangeBody = (props: any) => {
+    const { setOperations, id } = props;
+    const labelsList = useLabelsFromProps(id, props);
 
-    const [labels, setLabels] = useState<string[]>(props.labels||[""])
-    const [range, setRange] = useState(props.range) 
+    const [labels, setLabels] = useState<string[]>(props.labels || []);
+    const [range, setRange] = useState(props.range);
     const theme = useTheme();
-    const onLabelAdd = useCallback((e:any) => {
+    const onLabelAdd = (e: any) => {
         setLabels((prev) => [...prev, ""]);
-        setOperations((prev: any) => {
-            const next = [...prev];
-            return next?.map((m: any) => {
-                if (m.id === id) {
-                    m.labels = [...m.labels, ""];
-                    return m;
-                }
-                return m;
+    };
+
+    const onLabelRemove = useCallback(
+        (e: any, index: number) => {
+            setLabels((prev) => {
+                const next = [...prev];
+                return next?.filter((_, i) => i !== index);
             });
-        });
-    },[labels])
-
-    const onLabelRemove = useCallback((e:any,index:number)=> {
-        setLabels((prev) => {
-            const next = [...prev];
-            return next?.filter((_, i) => i !== index);
-        });
-        setOperations((prev: any) => {
-            const next = [...prev];
-            return next?.map((m: any) => {
-                if (m.id === id) {
-                    m.labels = [...m?.labels]?.filter(
-                        (_, i) => i !== index
-                    );
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.labels = [...m?.labels]?.filter(
+                            (_, i) => i !== index
+                        );
+                        return m;
+                    }
                     return m;
-                }
-                return m;
+                });
             });
-        });
+        },
+        [labels]
+    );
 
-    },[labels])
-    
-    const onLabelChange = useCallback((e:any, index:number)=>{
+    const onLabelChange = useCallback(
+        (e: any, index: number) => {
+            setLabels((prev) => {
+                let n = [...prev];
+                n[index] = e?.target?.value;
+                return n;
+            });
 
-        setLabels((prev) => {
-            let n = [...prev];
-            n[index] = e?.target?.value;
-            return n;
-        });
-
-        setOperations((prev: any) => {
-            const next = [...prev];
-            return next?.map((m: any) => {
-                if (m.id === id) {
-                    m.labels[index] = e.target.value;
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.labels[index] = e.target.value;
+                        return m;
+                    }
                     return m;
-                }
-                return m;
+                });
             });
-        });
-    },[labels])
+        },
+        [labels]
+    );
 
-
-
-    const onRangeChange = useCallback( (e:any) => {
-        let val:string = e.target.value
-        setRange(val)
-        setOperations((prev: any) => {
-            const next = [...prev];
-            return next?.map((m: any) => {
-                if (m.id === id) {
-                    m.range = val;
+    const onRangeChange = useCallback(
+        (e: any) => {
+            let val: string = e.target.value;
+            setRange(val);
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.range = val;
+                        return m;
+                    }
                     return m;
-                }
-                return m;
+                });
             });
-        });
-    },[range])
-
+        },
+        [range]
+    );
 
     const rangeLabelsRenderer = () => {
-        if(Array.isArray(labels) && labels?.length > 0) {
+        if (Array.isArray(labels) && labels?.length > 0) {
             return labels?.map((exp: string, index: number) => (
                 <div key={index} className="input-group">
-                    {" "}
-                    <input
-                        className={"expression-input"}
-                        value={exp}
+                    <RangeLabelsSelector
+                        initial=""
                         onChange={(e: any) => onLabelChange(e, index)}
-                    />{" "}
+                        className={"expression-input"}
+                        labels={labelsList}
+                    />
                     <button onClick={(e) => onLabelRemove(e, index)}>x</button>{" "}
                 </div>
             ));
         }
         return null;
-    }
+    };
 
-   return <div className={cx(OperationBodyStyles(theme))}>
-    {rangeLabelsRenderer()}
-    <RangesSelector
-    onChange={onRangeChange}
-    initial={range}
-    />
-
-   </div>
-} 
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            {rangeLabelsRenderer()}
+            <button onClick={onLabelAdd}>Add Label</button>
+            <RangesSelector onChange={onRangeChange} initial={range} />
+        </div>
+    );
+};
 
 export const formatsRenderer = (op: string, props: any) => {
     switch (op) {
@@ -447,40 +476,39 @@ const ranges = [
 ];
 
 const label_ranges = [
-     "avg_over_time",
-     "max_over_time",
-     "min_over_time",
-     "first_over_time",
-     "last_over_time",
-     "stdvar_over_time",
-     "stddev_over_time"
-]
+    "avg_over_time",
+    "max_over_time",
+    "min_over_time",
+    "first_over_time",
+    "last_over_time",
+    "stdvar_over_time",
+    "stddev_over_time",
+];
 
-export const rangeRenderer = (op:string, props:any) => {
-    if(ranges.includes(op)) {
-        return <RangeBody {...props}/>
+export const rangeRenderer = (op: string, props: any) => {
+    if (ranges.includes(op)) {
+        return <RangeBody {...props} />;
     }
 
-    if( label_ranges.includes(op)) {
-        return <LabelRangeBody {...props}/>
+    if (label_ranges.includes(op)) {
+        return <LabelRangeBody {...props} />;
     }
-    return null
-}
+    return null;
+};
 
-export const opTypeSwitch = (opType:string, op:string, props:any) => {
-
-    switch(opType) {
-        case "formats": return formatsRenderer(op,props);
-        case "range_functions" :return rangeRenderer(op,props);
-        default: return rangeRenderer(op,props);
+export const opTypeSwitch = (opType: string, op: string, props: any) => {
+    switch (opType) {
+        case "formats":
+            return formatsRenderer(op, props);
+        case "range_functions":
+            return rangeRenderer(op, props);
+        default:
+            return rangeRenderer(op, props);
     }
-
-}
-
+};
 
 export default function OperationContainer(props: Props) {
-    const { id, opType, header, body, removeItem, index, setOperations } =
-        props;
+    const { id, opType, header, removeItem, index, setOperations } = props;
 
     const theme = useTheme();
     const [opHeader, setOpHeader] = useState(header);
@@ -505,7 +533,8 @@ export default function OperationContainer(props: Props) {
         [opHeader]
     );
 
-    const typeFormat = (str:string) => str?.toLowerCase()?.split(" ")?.join("_") || ""
+    const typeFormat = (str: string) =>
+        str?.toLowerCase()?.split(" ")?.join("_") || "";
     if (header && typeof header === "string") {
         return (
             <div className={cx(OperationContainerStyles(theme))}>
@@ -529,7 +558,11 @@ export default function OperationContainer(props: Props) {
                     </div>
                 </div>
                 <div className="operation-body">
-                    {opTypeSwitch(typeFormat(opType), typeFormat(header), props)}
+                    {opTypeSwitch(
+                        typeFormat(opType),
+                        typeFormat(header),
+                        props
+                    )}
                     {/* {formatsRenderer(
                       typeFormat(header),
                         props
