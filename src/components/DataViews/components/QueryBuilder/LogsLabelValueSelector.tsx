@@ -3,14 +3,8 @@ import { ThemeProvider, useTheme } from "@emotion/react";
 import { nanoid } from "nanoid";
 import { useEffect, useState, useCallback } from "react";
 import DragAndDropContainer from "../../../QueryBuilder/Operations/DragAndDropContainer";
-import {
-    FormatOperators,
-    RangeOperators,
-} from "../../../QueryBuilder/Operations/builders";
 import { useLabelSeries } from "../../../QueryBuilder/Operations/hooks/useLabelSeries";
-
 import OperationSelector from "../../../QueryBuilder/Operations/OperationSelector";
-import { AddOperatorButton } from "./AddOperatorButton";
 import { InitialLabelValueState, NewLabel } from "./consts";
 import { logsToString } from "./helpers";
 import useLogLabels from "./hooks/useLogLabels";
@@ -18,6 +12,7 @@ import { InitialAddButton } from "./InitialAddButton";
 import { LogLabelValueForm } from "./LogLabelValueForm";
 import { FlexWrap, FlexColumn } from "./styles";
 import { Label } from "./types";
+import { OperationsManager } from "./builders/OperationsManager";
 
 const InitialOperation = {
     id: 0,
@@ -26,48 +21,6 @@ const InitialOperation = {
     body: <div></div>,
 };
 
-const formats = [
-    "json",
-    "logfmt",
-    "regexp",
-    "pattern",
-    "unpack",
-    "line_format",
-    "label_format",
-    "unwrap",
-];
-
-const ranges = [
-    "rate",
-    "rate_counter",
-    "count_over_time",
-    "sum_over_time",
-    "bytes_rate",
-    "bytes_over_time",
-    "absent_over_time",
-];
-
-
-// unwrapped expressions
-// should add unwrap function to the formats for it to work
-
-const label_ranges = [
-    "avg_over_time",
-    "max_over_time",
-    "min_over_time",
-    "first_over_time",
-    "last_over_time",
-    "stdvar_over_time",
-    "stddev_over_time",
-];
-
-export type OperationsManagerType = (
-    initial: string,
-    jsonExpressions: any[],
-    operations: any[],
-    value: any
-) => string;
-
 export function LogsLabelValueSelector(props: any) {
     const { dataSourceId, value, onChange, labelValueChange } = props;
     const { loading, logsResponse } = useLogLabels(dataSourceId);
@@ -75,10 +28,8 @@ export function LogsLabelValueSelector(props: any) {
         InitialLabelValueState
     );
 
-   
-
-    const [labelsString,setLabelsString] = useState('')
-    const {labelSeries} = useLabelSeries(dataSourceId,labelsString)
+    const [labelsString, setLabelsString] = useState("");
+    const { labelSeries } = useLabelSeries(dataSourceId, labelsString);
     const [jsonExpressions, setJsonExpressions] = useState([]);
 
     const [operations, setOperations] = useState<any>([]);
@@ -132,95 +83,12 @@ export function LogsLabelValueSelector(props: any) {
         onChange(e);
     };
 
-    const isSingleExpression = (expr: string) =>
-        ["line_format", "regexp", "pattern"].includes(expr);
-
-    const setResultType = (result: string, logString: string) =>
-        result === ""
-            ? JSON.parse(JSON.stringify(logString))
-            : JSON.parse(JSON.stringify(result));
-
-    const setExpressions = (result: any, expressions: string[]) => {
-        if (Array.isArray(expressions) && expressions.length > 0) {
-            expressions.forEach((expr) => {
-                result.addExpression(expr);
-            });
-        }
-    };
-
-    const setRangeLabels = (result: any, labels: string[]) => {
-        if (Array.isArray(labels) && labels?.length > 0) {
-            labels.forEach((label) => {
-                result.addLabel(label);
-            });
-        }
-    };
-    const OperationsManager: OperationsManagerType = (
-        initial: string,
-        jsonExpressions: any[],
-        operations: any[],
-        value: any
-    ) => {
-        let result: any = "";
-        if (initial && typeof initial === "string") {
-            const logString = logsToString(value, JSON.parse(initial));
-
-            operations.forEach((operation: any) => {
-                if (formats.includes(operation.name)) {
-                    // if initial data, use previous
-                    const resultType = setResultType(result, logString);
-
-                    // initialize operator
-                    result = FormatOperators[operation.name]();
-
-                    // json case, multiple expressions
-                    if (operation.name === "json") {
-                        // at json format we could have multiple expressions
-                        setExpressions(result, operation.expressions);
-
-                        // single expression cases
-                    } else if (isSingleExpression(operation.name)) {
-                        const [expression] = operation.expressions;
-                        // single expression at this types
-                        if (expression !== "") {
-                            result.setExpression(operation.expressions[0]);
-                        }
-                    }
-
-                    // build operator
-                    result = result.build(resultType);
-                }
-
-                if (ranges.includes(operation.name)) {
-                    const resultType = setResultType(result, logString);
-                    // initialize with operation type
-                    result = RangeOperators(operation.name)["range"];
-                    result.setRange(operation.range || "$__interval");
-                    result = result.build(resultType);
-                }
-
-                if (label_ranges.includes(operation.name)) {
-                    const resultType = setResultType(result, logString);
-                    result = RangeOperators(operation.name)["label_range"];
-                    setRangeLabels(result, operation.labels);
-                    result.updRange(operation.range || "$__interval");
-
-                    result = result.build(resultType);
-                }
-            });
-        }
-        return result;
-    };
-
     useEffect(() => {
         const labValue = labelValueString || JSON.stringify("");
         const logsString = logsToString(value, JSON.parse(labValue));
-        setLabelsString(logsString)
+        setLabelsString(logsString);
         labelValueChange(logsString);
     }, [labelValueString, value]);
-
-
-    
 
     const resetLabelsState = (e: any) => {
         setLabelValuesState((prev) => InitialLabelValueState);
@@ -232,7 +100,6 @@ export function LogsLabelValueSelector(props: any) {
     useEffect(() => {
         let res = OperationsManager(
             labelValueString,
-            jsonExpressions,
             operations,
             value
         );
@@ -242,8 +109,6 @@ export function LogsLabelValueSelector(props: any) {
 
     const addOperator = useCallback(
         (e: any, name: string, opType: string) => {
-
-          
             setOperations((prev: any) => [
                 ...prev,
                 {
@@ -254,12 +119,12 @@ export function LogsLabelValueSelector(props: any) {
                     id: operations?.length + 1,
                     expressions: [],
                     labels: [],
-                    labelOpts:[...labelSeries], // here we should have the labels from the .. initial operation
+                    labelOpts: [...labelSeries], // here we should have the labels from the .. initial operation
                     opType,
                 },
             ]);
         },
-        [operations,labelSeries]
+        [operations, labelSeries]
     );
 
     const onExpChange = useCallback(
@@ -280,16 +145,7 @@ export function LogsLabelValueSelector(props: any) {
         }
         return null;
     };
-    const addOperatorsRenderer = () => {
-        if (labelValuesState?.length > 0) {
-            return (
-                <AddOperatorButton
-                    mainTheme={mainTheme}
-                    addOperator={addOperator}
-                />
-            );
-        }
-    };
+
     if (loading) {
         return null;
     }
@@ -316,7 +172,6 @@ export function LogsLabelValueSelector(props: any) {
                     {initialButtonRenderer()}
                 </div>
                 <div className={cx(FlexWrap)}>
-                    {/* {addOperatorsRenderer()} */}
                     <OperationSelector menuClick={addOperator} />
                     <DragAndDropContainer
                         onExpChange={onExpChange}

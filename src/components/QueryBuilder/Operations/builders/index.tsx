@@ -9,6 +9,11 @@ import {
     LineFmtFn,
     RangeFn,
     LabelRangeFn,
+    AggregationsFn,
+    AggregationsBTKFn,
+    AggregationsOp,
+    BTKAggregationsOp,
+    AggrType,
 } from "../types";
 
 export const JSONBuilder: JSONBuilderFn = () => ({
@@ -197,6 +202,60 @@ export const LabelRangeBuilder: LabelRangeFn = (rangeType) => ({
     },
 });
 
+export const AggregationsBuilder: AggregationsFn = (aggregationType:AggregationsOp ) => ({
+    result: "",
+    labels: [],
+    labelString: "",
+    aggrType: "by",
+    setAggrType(type) {
+        this.aggrType = type;
+    },
+    addLabel(label) {
+        this.labels = [...this.labels, label];
+    },
+    setLabels() {
+        this.labelString = this.labels.join(",");
+    },
+    setFn(initial) {},
+    build(initial) {
+        this.setFn(initial);
+        if (this.labels.length > 0) {
+            this.setLabels();
+        }
+        return this.result;
+    },
+});
+
+export const AggregationsBTKBuilder: AggregationsBTKFn = (aggregationType:BTKAggregationsOp) => ({
+    result: "",
+    labels: [],
+    labelString: "",
+    kvalue: 5,
+    aggrType: "by",
+    setAggrType(type:AggrType) {
+        this.aggrType = type;
+    },
+    addLabel(label) {
+        this.labels = [...this.labels, label];
+    },
+    setLabels() {
+        this.labelString = this.labels.join(",");
+    },
+    setKValue(kvalue:number){
+        this.kvalue = kvalue;
+    },
+    
+    setFn(initial) {
+        this.result = initial
+    },
+    build(initial) {
+        this.setFn(initial);
+        if (this.labels.length > 0) {
+            this.setLabels();
+        }
+        return this.result;
+    },
+});
 
 export const FormatOperators: any = {
     json: JSONBuilder,
@@ -213,3 +272,9 @@ export const RangeOperators: any = (rangeType: any) => ({
     label_range: LabelRangeBuilder(rangeType),
 });
 
+export const AgregationOperators: any = (
+    aggregationType: AggregationsOp & BTKAggregationsOp
+) => ({
+    aggr: AggregationsBuilder(aggregationType),
+    aggr_btk: AggregationsBTKBuilder(aggregationType),
+});

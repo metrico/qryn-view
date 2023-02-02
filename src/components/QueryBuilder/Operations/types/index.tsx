@@ -82,6 +82,32 @@ export interface RegexFmtBuilderProps {
     build(initial: string): string;
 }
 
+export interface AggregationsBuilderProps {
+    result: string;
+    labels: any[]
+    labelString:string;
+    aggrType:AggrType; // this aggregation type sound come from header
+    setAggrType(type:AggrType):void
+    addLabel(label:string):void 
+    setLabels():void
+    setFn(initial:string):void
+    build(initial:string):string
+}
+
+// we should add the selection type at adding a label
+export interface AggregationsBTKBuilderProps {
+    result: string;
+    labels: any[]
+    labelString:string;
+    kvalue: number;
+    aggrType:AggrType;
+    setAggrType(type:AggrType):void
+    addLabel(label:string):void 
+    setLabels():void
+    setFn(initial:string):void
+    build(initial:string):string
+}
+
 export interface LogFmtBuilderProps extends CommonFormatProps {
     setLogFmt(): string;
 }
@@ -115,6 +141,10 @@ export type UnwrapFmtFn = () => UnwrapBuilderProps;
 
 export type LogFmtFn = () => LogFmtBuilderProps;
 
+export type AggregationsFn = (aggregationType:AggregationsOp) => AggregationsBuilderProps; 
+
+export type AggregationsBTKFn = (aggregationType:BTKAggregationsOp) => AggregationsBTKBuilderProps;
+
 // Range types
 
 export type SimpleRangeOperator =
@@ -137,5 +167,19 @@ export type LabelRangeOperator =
 
 export type QuantileRangeOperator = "quantile_over_time";
 
+export type AggrType = 'by' | 'without'
+
+export type AggregationsOp =  // normal aggregations
+|"sum" 
+|"min"
+|"max" 
+|"avg" 
+|"stddev" 
+|"stdvar" 
+|"count"
 
 
+
+export type BTKAggregationsOp =  // topk / bottomk
+|'bottomk' 
+| 'topk'
