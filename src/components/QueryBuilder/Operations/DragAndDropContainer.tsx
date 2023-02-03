@@ -18,6 +18,7 @@ export interface Item {
     header: any;
     body: any;
     expressions: [];
+    kValue:number;
     labels: [];
     opType: string;
 }
@@ -62,6 +63,7 @@ export const Container: FC<OperationsContainerProps> = (props: any) => {
                 id={operation.id}
                 opType={operation.opType}
                 header={operation.header}
+                kValue={operation.kValue}
                 body={operation.body || <></>}
                 moveItem={moveItem}
                 removeItem={removeItem}

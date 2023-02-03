@@ -81,6 +81,7 @@ type Props = {
     index: number;
     opType: string;
     expressions: [];
+    kValue:number;
     labelOpts: string[];
     labels: [];
     onExpChange: (expressions: []) => void;
@@ -456,15 +457,32 @@ export const LabelRangeBody = (props: any) => {
 //
 
 export const AggregationsBody = (props: any) => {
-    const { setOperations, id, aggrK } = props;
+    const { setOperations, id, aggrType } = props;
 
     const labelsList = useLabelsFromProps(id, props);
 
-    const [labels, setLabels] = useState<string[]>(props.labels || []);
+    const [labels, setLabels] = useState<string[]>([""]);
+
+    const [kValue, setKValue] = useState<number>(props.kValue || []);
 
     const theme = useTheme();
     const onLabelAdd = (e: any) => {
-        setLabels((prev) => [...prev, ""]);
+
+       setLabels((prev) => [...prev,'']);
+       
+       setOperations((prev: any) => {
+        const next = [...prev];
+        return next?.map((m: any) => {
+            if (m.id === id) {
+               m.labels = [...labels]
+              
+                return m;
+            } else { 
+                return m;
+            }
+           
+        });
+    });
     };
 
     const onLabelRemove = useCallback(
@@ -511,6 +529,24 @@ export const AggregationsBody = (props: any) => {
         [labels]
     );
 
+    const onKValueChange = useCallback(
+        (e: any) => {
+            setKValue(e.target.value);
+
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.kValue = e.target.value;
+                        return m;
+                    }
+                    return m;
+                });
+            });
+        },
+        [kValue]
+    );
+
     const rangeLabelsRenderer = () => {
         if (Array.isArray(labels) && labels?.length > 0) {
             return labels?.map((exp: string, index: number) => (
@@ -528,8 +564,19 @@ export const AggregationsBody = (props: any) => {
         return null;
     };
 
+    const isKValue: (type: string) => boolean = (type) =>
+        type === "topk" || type === "bottomk";
+
     return (
         <div className={cx(OperationBodyStyles(theme))}>
+            {isKValue(aggrType) && (
+                <input
+                    value={kValue}
+                    placeholder={"<pattern|expression>"}
+                    onChange={onKValueChange}
+                />
+            )}
+
             {rangeLabelsRenderer()}
             <button onClick={onLabelAdd}>Add Label</button>
             {/* <RangesSelector onChange={onRangeChange} initial={range} /> */}
@@ -602,7 +649,7 @@ export const opTypeSwitch = (opType: string, op: string, props: any) => {
         case "range_functions":
             return rangeRenderer(op, props);
         case "aggregations":
-            return aggregationRenderer(op,props)
+            return aggregationRenderer(op, props);
         default:
             return rangeRenderer(op, props);
     }

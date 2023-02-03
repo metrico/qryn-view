@@ -215,7 +215,7 @@ export default function OperationSelector({ menuClick }: any) {
             }
         >
             {operationTypes?.map((t: any, i: number) => (
-                <SubMenu label={t}>
+                <SubMenu label={t} >
                     {OperationsOptions[t]?.map((op: any, key: number) => (
                         <MenuItem
                             onClick={(e) => menuClick(e, op, t)}

@@ -118,6 +118,7 @@ export function LogsLabelValueSelector(props: any) {
                     name: name?.toLowerCase()?.split(" ")?.join("_"),
                     id: operations?.length + 1,
                     expressions: [],
+                    kValue:5,
                     labels: [],
                     labelOpts: [...labelSeries], // here we should have the labels from the .. initial operation
                     opType,

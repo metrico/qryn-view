@@ -29,6 +29,7 @@ export interface CardProps {
     removeItem: any;
     opType:string;
     expressions:[];
+    kValue:number;
     labels:[];
     labelOpts: string[]
     onExpChange:(expressions:[])=>void
@@ -52,6 +53,7 @@ export const Operations: FC<CardProps> = (props) => {
         body,
         moveItem,
         removeItem,
+        kValue
     } = props
 
 
@@ -145,6 +147,7 @@ export const Operations: FC<CardProps> = (props) => {
                 opType={opType}
                 body={body}
                 index={index}
+                kValue={kValue}
                 removeItem={removeItem}
 
             />

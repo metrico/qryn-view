@@ -72,6 +72,10 @@ const setRangeLabels = (result: any, labels: string[]) => {
     }
 };
 
+const setKeyVal = (result:any, kval:number) => {
+    result.setKValue(kval)
+}
+
 export const OperationsManager: OperationsManagerType = (
     initial: string,
     operations: any[],
@@ -136,7 +140,8 @@ export const OperationsManager: OperationsManagerType = (
                 const resultType = setResultType(result, logString);
                 result = AggregationOperators(operation.name)["aggr_btk"];
                 setRangeLabels(result, operation.labels);
-
+                console.log(operation)
+                setKeyVal(result, operation.kValue)
                 result = result.build(resultType);
             }
         });
