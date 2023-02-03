@@ -45,6 +45,30 @@ const label_ranges = [
     "stddev_over_time",
 ];
 
+const line_filters = [
+    "line_contains", // |=
+    "line_does_not_contain", // !=
+    "line_contains_regex_match", // |~ ``
+    "line_does_not_match_regex", // !~ ``
+];
+
+// only filter
+
+const line_expression_filters = [
+    "line_contains_case_insensitive", // |~ `(?i)`
+    "line_does_not_contain_case_insensitive", // !~ `(?i)`
+    "ip_line_filter_expression", // |= ip(``)
+    "ip_line_not_filter_expression", //  != ip(``)
+];
+
+// filter with expression
+
+const label_filters = [
+    "no_pipeline_errors",
+    "ip_label_filter_expression",
+    "label_filter_expression",
+];
+
 const aggregations = ["sum", "min", "max", "avg", "stddev", "stdvar", "count"];
 const aggregations_k = ["topk", "bottomk"];
 
@@ -72,9 +96,9 @@ const setRangeLabels = (result: any, labels: string[]) => {
     }
 };
 
-const setKeyVal = (result:any, kval:number) => {
-    result.setKValue(kval)
-}
+const setKeyVal = (result: any, kval: number) => {
+    result.setKValue(kval);
+};
 
 export const OperationsManager: OperationsManagerType = (
     initial: string,
@@ -140,8 +164,23 @@ export const OperationsManager: OperationsManagerType = (
                 const resultType = setResultType(result, logString);
                 result = AggregationOperators(operation.name)["aggr_btk"];
                 setRangeLabels(result, operation.labels);
-                console.log(operation)
-                setKeyVal(result, operation.kValue)
+                setKeyVal(result, operation.kValue);
+                result = result.build(resultType);
+            }
+
+            if (line_filters.includes(operation.name)) {
+                const resultType = setResultType(result, logString);
+                result = AggregationOperators(operation.name)["line_filter"];
+                setRangeLabels(result, operation.labels);
+                setKeyVal(result, operation.kValue);
+                result = result.build(resultType);
+            }
+
+            if (label_filters.includes(operation.name)) {
+                const resultType = setResultType(result, logString);
+                result = AggregationOperators(operation.name)["label_filters"];
+                setRangeLabels(result, operation.labels);
+                setKeyVal(result, operation.kValue);
                 result = result.build(resultType);
             }
         });

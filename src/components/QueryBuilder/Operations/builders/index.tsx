@@ -11,9 +11,13 @@ import {
     LabelRangeFn,
     AggregationsFn,
     AggregationsBTKFn,
+    LineFilterFn,
+    LabelFilterFn,
     AggregationsOp,
     BTKAggregationsOp,
     AggrType,
+    LineFilter,
+    LabelFilter,
 } from "../types";
 
 export const JSONBuilder: JSONBuilderFn = () => ({
@@ -229,7 +233,6 @@ export const AggregationsBuilder: AggregationsFn = (
     },
 });
 
-
 export const AggregationsBTKBuilder: AggregationsBTKFn = (
     aggregationType: BTKAggregationsOp
 ) => ({
@@ -271,6 +274,80 @@ export const AggregationsBTKBuilder: AggregationsBTKFn = (
     },
 });
 
+// should add a selector by type
+
+const line_filters: any = {
+    line_contains: "|= `",
+    line_does_not_contain: "!= `",
+    line_contains_regex_match: "|~ ``",
+    line_does_not_match_regex: "!~ ``",
+    line_contains_case_insensitive: "|~ `(?i)",
+    line_does_not_contain_case_insensitive: "!~ `(?i)",
+    ip_line_filter_expression: "|= ip(`",
+    ip_line_not_filter_expression: "!= ip(`",
+};
+
+const isIP = (txt: string) => txt.includes("ip_");
+
+export const LineFilterBuilder: LineFilterFn = (linefilter: string) => ({
+    result: "",
+    filterText: "",
+    lineFilter: line_filters[linefilter],
+    setFilterText(filterText) {
+        this.filterText = filterText;
+    },
+    setFn(initial) {
+        this.result = `${initial} ${this.lineFilter}${this.filterText}`;
+    },
+    closeFn() {
+        const closeType = isIP(linefilter) ? "`)" : "`";
+        this.result += `${closeType}`;
+    },
+    build(initial) {
+        this.setFn(initial);
+        this.closeFn();
+        return this.result;
+    },
+});
+
+export const LabelFilterBuilder: LabelFilterFn = (labelfilter: string) => ({
+    result: "",
+    label: "",
+    operator: "=",
+    value: "",
+    labelValueString: "",
+    setLabel(label) {
+        this.label = label;
+    },
+    setOperator(operator) {
+        this.operator = operator;
+    },
+    setValue(value) {
+        this.value = value;
+    },
+    setFilterType(content) {
+        return isIP(labelfilter)
+            ? "ip(`" + content + "`)"
+            : "`" + content + "`";
+    },
+    setLabelValueString() {
+        this.labelValueString =
+            " " +
+            this.label +
+            " " +
+            this.operator +
+            this.setFilterType(this.value);
+    },
+    setFn(initial) {
+        this.result = `${initial} |${this.labelValueString}`;
+    },
+
+    build(initial) {
+        this.setFn(initial);
+        return this.result;
+    },
+});
+
 export const FormatOperators: any = {
     json: JSONBuilder,
     logfmt: LogFmtBuilder,
@@ -291,4 +368,12 @@ export const AggregationOperators: any = (
 ) => ({
     aggr: AggregationsBuilder(aggregationType),
     aggr_btk: AggregationsBTKBuilder(aggregationType),
+});
+
+export const LineFilterOperators: any = (linefilter: LineFilter) => ({
+    line_filter: LineFilterBuilder(linefilter),
+});
+
+export const LabelFilterOperators: any = (labelfilter: LabelFilter) => ({
+    label_filter: LabelFilterBuilder(labelfilter),
 });

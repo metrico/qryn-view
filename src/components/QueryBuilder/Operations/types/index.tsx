@@ -1,4 +1,3 @@
-
 // Labels extraction from series
 
 export interface LabelSeries {
@@ -16,9 +15,9 @@ export interface SeriesResponse {
     data: Object[];
 }
 
-// Operator Builders 
+// Operator Builders
 
-// props 
+// props
 
 interface CommonFormatProps {
     result: string;
@@ -84,14 +83,29 @@ export interface RegexFmtBuilderProps {
 
 export interface AggregationsBuilderProps {
     result: string;
-    labels: any[]
-    labelString:string;
-    aggrType:AggrType; // this aggregation type sound come from header
-    aggrTypeString:string;
-    setAggrType(type:AggrType):void
-    setAggrTypeString():void
-    addLabel(label:string):void 
-    setLabels():void
+    labels: any[];
+    labelString: string;
+    aggrType: AggrType; // this aggregation type sound come from header
+    aggrTypeString: string;
+    setAggrType(type: AggrType): void;
+    setAggrTypeString(): void;
+    addLabel(label: string): void;
+    setLabels(): void;
+    setFn(initial: string): void;
+    build(initial: string): string;
+}
+
+export interface LabelFilterProps {
+    result: string;
+    label:string;
+    operator:string;
+    value: string;
+    labelValueString:string;
+    setLabel(label:string):void
+    setOperator(operator:string):void 
+    setValue(value:string):void
+    setFilterType(content:string):string
+    setLabelValueString():void
     setFn(initial:string):void
     build(initial:string):string
 }
@@ -100,18 +114,28 @@ export interface AggregationsBuilderProps {
 
 export interface AggregationsBTKBuilderProps {
     result: string;
-    labels: any[]
-    labelString:string;
+    labels: any[];
+    labelString: string;
     kvalue: number;
-    aggrType:AggrType;
-    aggrTypeString:string;
-    setAggrType(type:AggrType):void
-    setAggrTypeString():void
-    addLabel(label:string):void
-    setKValue(kvalue:number):void 
-    setLabels():void
-    setFn(initial:string):void
-    build(initial:string):string
+    aggrType: AggrType;
+    aggrTypeString: string;
+    setAggrType(type: AggrType): void;
+    setAggrTypeString(): void;
+    addLabel(label: string): void;
+    setKValue(kvalue: number): void;
+    setLabels(): void;
+    setFn(initial: string): void;
+    build(initial: string): string;
+}
+
+export interface LineFilterBuilderProps {
+    result: string;
+    filterText: string;
+    lineFilter: string;
+    setFilterText(filterText: string): void;
+    setFn(initial: string): void;
+    closeFn(): void;
+    build(initial: string): void;
 }
 
 export interface LogFmtBuilderProps extends CommonFormatProps {
@@ -146,9 +170,18 @@ export type UnwrapFmtFn = () => UnwrapBuilderProps;
 
 export type LogFmtFn = () => LogFmtBuilderProps;
 
-export type AggregationsFn = (aggregationType:AggregationsOp) => AggregationsBuilderProps; 
+export type LabelFilterFn = (labelFilter:string) => LabelFilterProps 
+    
 
-export type AggregationsBTKFn = (aggregationType:BTKAggregationsOp) => AggregationsBTKBuilderProps;
+export type AggregationsFn = (
+    aggregationType: AggregationsOp
+) => AggregationsBuilderProps;
+
+export type AggregationsBTKFn = (
+    aggregationType: BTKAggregationsOp
+) => AggregationsBTKBuilderProps;
+
+export type LineFilterFn = (linefilter: LineFilter) => LineFilterBuilderProps;
 
 // Range types
 
@@ -172,19 +205,25 @@ export type LabelRangeOperator =
 
 export type QuantileRangeOperator = "quantile_over_time";
 
-export type AggrType = 'by' | 'without'
+export type AggrType = "by" | "without";
 
-export type AggregationsOp =  // normal aggregations
-|"sum" 
-|"min"
-|"max" 
-|"avg" 
-|"stddev" 
-|"stdvar" 
-|"count"
+export type AggregationsOp = // normal aggregations
+    "sum" | "min" | "max" | "avg" | "stddev" | "stdvar" | "count";
 
+export type BTKAggregationsOp = // topk / bottomk
+    "bottomk" | "topk";
 
+export type LineFilter =
+    | "line_contains"
+    | "line_does_not_contain"
+    | "line_contains_regex_match"
+    | "line_does_not_match_regex"
+    | "line_contains_case_insensitive"
+    | "line_does_not_contain_case_insensitive"
+    | "ip_line_filter_expression"
+    | "ip_line_not_filter_expression";
 
-export type BTKAggregationsOp =  // topk / bottomk
-|'bottomk' 
-| 'topk'
+export type LabelFilter =
+    | "label_filter_expression"
+    | "ip_label_filter_expression"
+    | "no_pipeline_errors";
