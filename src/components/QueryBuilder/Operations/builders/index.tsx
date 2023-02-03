@@ -161,13 +161,6 @@ export const RangeBuilder: RangeFn = (rangeType) => ({
     },
 });
 
-// * STEPS:
-
-// - iniit      ==> res = RangeBuilder( rageType )
-
-// - set range  ===> res.setRange('[range]')
-// - build      ===> res.build()
-
 export const LabelRangeBuilder: LabelRangeFn = (rangeType) => ({
     result: "",
     range: "",
@@ -202,11 +195,14 @@ export const LabelRangeBuilder: LabelRangeFn = (rangeType) => ({
     },
 });
 
-export const AggregationsBuilder: AggregationsFn = (aggregationType:AggregationsOp ) => ({
+export const AggregationsBuilder: AggregationsFn = (
+    aggregationType: AggregationsOp
+) => ({
     result: "",
     labels: [],
     labelString: "",
     aggrType: "by",
+    aggrTypeString: "",
     setAggrType(type) {
         this.aggrType = type;
     },
@@ -216,24 +212,39 @@ export const AggregationsBuilder: AggregationsFn = (aggregationType:Aggregations
     setLabels() {
         this.labelString = this.labels.join(",");
     },
-    setFn(initial) {},
+    setAggrTypeString() {
+        this.aggrTypeString = `${this.aggrType}(${this.labelString})`;
+    },
+    setFn(initial) {
+        this.result = `${aggregationType}(${initial})`;
+    },
     build(initial) {
         this.setFn(initial);
         if (this.labels.length > 0) {
             this.setLabels();
+            this.setAggrTypeString();
+            this.result = `${aggregationType} ${this.aggrTypeString} (${initial})`;
         }
         return this.result;
     },
 });
 
-export const AggregationsBTKBuilder: AggregationsBTKFn = (aggregationType:BTKAggregationsOp) => ({
+
+export const AggregationsBTKBuilder: AggregationsBTKFn = (
+    aggregationType: BTKAggregationsOp
+) => ({
     result: "",
     labels: [],
     labelString: "",
     kvalue: 5,
     aggrType: "by",
-    setAggrType(type:AggrType) {
+    aggrTypeString: "",
+
+    setAggrType(type: AggrType) {
         this.aggrType = type;
+    },
+    setAggrTypeString() {
+        this.aggrTypeString = `${this.aggrType}(${this.labelString})`;
     },
     addLabel(label) {
         this.labels = [...this.labels, label];
@@ -241,17 +252,20 @@ export const AggregationsBTKBuilder: AggregationsBTKFn = (aggregationType:BTKAgg
     setLabels() {
         this.labelString = this.labels.join(",");
     },
-    setKValue(kvalue:number){
+    setKValue(kvalue: number) {
         this.kvalue = kvalue;
     },
-    
+
     setFn(initial) {
-        this.result = initial
+        this.result = `${aggregationType} (${this.kvalue}, ${initial})`;
     },
     build(initial) {
         this.setFn(initial);
+
         if (this.labels.length > 0) {
             this.setLabels();
+            this.setAggrTypeString();
+            this.result = `${aggregationType} ${this.aggrTypeString} (${this.kvalue}, ${initial})`;
         }
         return this.result;
     },
@@ -272,7 +286,7 @@ export const RangeOperators: any = (rangeType: any) => ({
     label_range: LabelRangeBuilder(rangeType),
 });
 
-export const AgregationOperators: any = (
+export const AggregationOperators: any = (
     aggregationType: AggregationsOp & BTKAggregationsOp
 ) => ({
     aggr: AggregationsBuilder(aggregationType),

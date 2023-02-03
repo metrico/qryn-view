@@ -17,8 +17,8 @@ export interface Item {
     id: number;
     header: any;
     body: any;
-    expressions:[];
-    labels:[];
+    expressions: [];
+    labels: [];
     opType: string;
 }
 
@@ -33,10 +33,9 @@ export type OperationsContainerProps = {
 
 // OPERATIONS CONTAINER
 
-export const Container: FC<OperationsContainerProps> = (props:any) => {
+export const Container: FC<OperationsContainerProps> = (props: any) => {
     const { operations, setOperations } = props;
 
-    
     const moveItem = useCallback((dragIndex: number, hoverIndex: number) => {
         setOperations((prevCards: Item[]) =>
             update(prevCards, {
@@ -66,7 +65,6 @@ export const Container: FC<OperationsContainerProps> = (props:any) => {
                 body={operation.body || <></>}
                 moveItem={moveItem}
                 removeItem={removeItem}
-               
             />
         );
     }, []);

@@ -451,6 +451,92 @@ export const LabelRangeBody = (props: any) => {
     );
 };
 
+// change:
+// labels
+//
+
+export const AggregationsBody = (props: any) => {
+    const { setOperations, id, aggrK } = props;
+
+    const labelsList = useLabelsFromProps(id, props);
+
+    const [labels, setLabels] = useState<string[]>(props.labels || []);
+
+    const theme = useTheme();
+    const onLabelAdd = (e: any) => {
+        setLabels((prev) => [...prev, ""]);
+    };
+
+    const onLabelRemove = useCallback(
+        (e: any, index: number) => {
+            setLabels((prev) => {
+                const next = [...prev];
+                return next?.filter((_, i) => i !== index);
+            });
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.labels = [...m?.labels]?.filter(
+                            (_, i) => i !== index
+                        );
+                        return m;
+                    }
+                    return m;
+                });
+            });
+        },
+        [labels]
+    );
+
+    const onLabelChange = useCallback(
+        (e: any, index: number) => {
+            setLabels((prev) => {
+                let n = [...prev];
+                n[index] = e?.target?.value;
+                return n;
+            });
+
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.labels[index] = e.target.value;
+                        return m;
+                    }
+                    return m;
+                });
+            });
+        },
+        [labels]
+    );
+
+    const rangeLabelsRenderer = () => {
+        if (Array.isArray(labels) && labels?.length > 0) {
+            return labels?.map((exp: string, index: number) => (
+                <div key={index} className="input-group">
+                    <RangeLabelsSelector
+                        initial=""
+                        onChange={(e: any) => onLabelChange(e, index)}
+                        className={"expression-input"}
+                        labels={labelsList}
+                    />
+                    <button onClick={(e) => onLabelRemove(e, index)}>x</button>{" "}
+                </div>
+            ));
+        }
+        return null;
+    };
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            {rangeLabelsRenderer()}
+            <button onClick={onLabelAdd}>Add Label</button>
+            {/* <RangesSelector onChange={onRangeChange} initial={range} /> */}
+        </div>
+    );
+};
+
 export const formatsRenderer = (op: string, props: any) => {
     switch (op) {
         case "json":
@@ -485,6 +571,9 @@ const label_ranges = [
     "stddev_over_time",
 ];
 
+const aggregations = ["sum", "min", "max", "avg", "stddev", "stdvar", "count"];
+const aggregations_k = ["topk", "bottomk"];
+
 export const rangeRenderer = (op: string, props: any) => {
     if (ranges.includes(op)) {
         return <RangeBody {...props} />;
@@ -496,12 +585,24 @@ export const rangeRenderer = (op: string, props: any) => {
     return null;
 };
 
+export const aggregationRenderer = (op: string, props: any) => {
+    if (aggregations.includes(op)) {
+        return <AggregationsBody {...props} aggrType={op} />;
+    }
+
+    if (aggregations_k.includes(op)) {
+        return <AggregationsBody {...props} aggrType={op} />;
+    }
+};
+
 export const opTypeSwitch = (opType: string, op: string, props: any) => {
     switch (opType) {
         case "formats":
             return formatsRenderer(op, props);
         case "range_functions":
             return rangeRenderer(op, props);
+        case "aggregations":
+            return aggregationRenderer(op,props)
         default:
             return rangeRenderer(op, props);
     }
@@ -509,7 +610,6 @@ export const opTypeSwitch = (opType: string, op: string, props: any) => {
 
 export default function OperationContainer(props: Props) {
     const { id, opType, header, removeItem, index, setOperations } = props;
-
     const theme = useTheme();
     const [opHeader, setOpHeader] = useState(header);
     const onOpChange = useCallback(

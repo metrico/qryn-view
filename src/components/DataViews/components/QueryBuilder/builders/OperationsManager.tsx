@@ -1,4 +1,8 @@
-import { FormatOperators, RangeOperators } from "../../../../QueryBuilder/Operations/builders";
+import {
+    FormatOperators,
+    RangeOperators,
+    AggregationOperators,
+} from "../../../../QueryBuilder/Operations/builders";
 import { logsToString } from "../helpers";
 
 export type OperationsManagerType = (
@@ -28,7 +32,6 @@ const ranges = [
     "absent_over_time",
 ];
 
-
 // unwrapped expressions
 // should add unwrap function to the formats for it to work
 
@@ -42,9 +45,11 @@ const label_ranges = [
     "stddev_over_time",
 ];
 
+const aggregations = ["sum", "min", "max", "avg", "stddev", "stdvar", "count"];
+const aggregations_k = ["topk", "bottomk"];
 
-const isSingleExpression = (expr: string) =>["line_format", "regexp", "pattern"].includes(expr);
-
+const isSingleExpression = (expr: string) =>
+    ["line_format", "regexp", "pattern"].includes(expr);
 
 const setResultType = (result: string, logString: string) =>
     result === ""
@@ -115,6 +120,22 @@ export const OperationsManager: OperationsManagerType = (
                 result = RangeOperators(operation.name)["label_range"];
                 setRangeLabels(result, operation.labels);
                 result.updRange(operation.range || "$__interval");
+
+                result = result.build(resultType);
+            }
+
+            if (aggregations.includes(operation.name)) {
+                const resultType = setResultType(result, logString);
+
+                result = AggregationOperators(operation.name)["aggr"];
+                setRangeLabels(result, operation.labels);
+                result = result.build(resultType);
+            }
+
+            if (aggregations_k.includes(operation.name)) {
+                const resultType = setResultType(result, logString);
+                result = AggregationOperators(operation.name)["aggr_btk"];
+                setRangeLabels(result, operation.labels);
 
                 result = result.build(resultType);
             }

@@ -87,7 +87,9 @@ export interface AggregationsBuilderProps {
     labels: any[]
     labelString:string;
     aggrType:AggrType; // this aggregation type sound come from header
+    aggrTypeString:string;
     setAggrType(type:AggrType):void
+    setAggrTypeString():void
     addLabel(label:string):void 
     setLabels():void
     setFn(initial:string):void
@@ -95,14 +97,18 @@ export interface AggregationsBuilderProps {
 }
 
 // we should add the selection type at adding a label
+
 export interface AggregationsBTKBuilderProps {
     result: string;
     labels: any[]
     labelString:string;
     kvalue: number;
     aggrType:AggrType;
+    aggrTypeString:string;
     setAggrType(type:AggrType):void
-    addLabel(label:string):void 
+    setAggrTypeString():void
+    addLabel(label:string):void
+    setKValue(kvalue:number):void 
     setLabels():void
     setFn(initial:string):void
     build(initial:string):string
@@ -119,7 +125,6 @@ export interface UnPackBuilderProps extends CommonFormatProps {
 export interface UnwrapBuilderProps extends CommonFormatProps {
     setUnwrapFmt(): string;
 }
-
 
 // Functions
 
