@@ -4,7 +4,7 @@ import { useCallback, useState, useMemo, useEffect } from "react";
 import { useTheme } from "../../DataViews/components/QueryBuilder/hooks";
 import { OperationSelectorFromType } from "./OperationSelector";
 import { useLabelsFromProps } from "./hooks";
-import { LabelFilter } from "./DragAndDropContainer";
+import { BinaryOperation, LabelFilter } from "./DragAndDropContainer";
 export const OperationContainerStyles = (theme: any) => css`
     display: flex;
     flex-direction: column;
@@ -43,6 +43,10 @@ export const OperationBodyStyles = (theme: any) => css`
         align-items: center;
         gap: 3px;
     }
+    label {
+        font-size:12px;
+        color: ${theme.textColor};
+    }
     input {
         height: 26px;
         color: ${theme.textColor};
@@ -50,7 +54,13 @@ export const OperationBodyStyles = (theme: any) => css`
         border: 1px solid ${theme.buttonBorder};
         border-radius: 3px;
         padding: 0px 6px;
+        &.checkbox {
+            font-size: 12px;
+           height:12px;
+            
+        }
     }
+   
     select {
         height: 26px;
         color: ${theme.textColor};
@@ -83,6 +93,7 @@ type Props = {
     opType: string;
     expressions: any[];
     labelFilter: LabelFilter;
+    binaryOperation: BinaryOperation;
     lineFilter: string;
     kValue: number;
     labelOpts: string[];
@@ -715,6 +726,56 @@ export const LabelFilterBody = (props: any) => {
         </div>
     );
 };
+
+const BinaryOperationsBody = (props: any) => {
+    const { setOperations, id } = props;
+    const theme = useTheme();
+
+    const [binaryOperationState, setBinaryOperationState] = useState({
+        value: 0,
+        bool: false,
+    });
+
+    const onChange = useCallback(
+        (e: any, key: "value" | "bool") => {
+            let value = key === "value" ? e.target.value : e.target.checked;
+            setBinaryOperationState(value);
+
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.binaryOperation = { ...m, [key]: value };
+                        return m;
+                    }
+                    return m;
+                });
+            });
+        },
+        [binaryOperationState]
+    );
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <input
+                value={binaryOperationState.value}
+                placeholder={"Value"}
+                onChange={(e) => onChange(e, "value")}
+            />
+            <div className={'input-group'}>
+        <label>Boolean</label>
+            <input
+                type={"checkbox"}
+                className={'checkbox'}
+                checked={binaryOperationState.bool}
+                onChange={(e) => onChange(e, "bool")}
+            />
+            </div>
+
+        </div>
+    );
+};
+
 const ranges = [
     "rate",
     "rate_counter",
@@ -771,6 +832,8 @@ export const opTypeSwitch = (opType: string, op: string, props: any) => {
             return <LineFilterBody {...props} />;
         case "label_filters":
             return <LabelFilterBody {...props} />;
+        case "binary_operations":
+            return <BinaryOperationsBody {...props} />;
         default:
             return rangeRenderer(op, props);
     }

@@ -13,11 +13,13 @@ import {
     AggregationsBTKFn,
     LineFilterFn,
     LabelFilterFn,
+    BinaryOperationFn,
     AggregationsOp,
     BTKAggregationsOp,
     AggrType,
     LineFilter,
     LabelFilter,
+    BinaryOperation,
 } from "../types";
 
 export const JSONBuilder: JSONBuilderFn = () => ({
@@ -311,15 +313,15 @@ export const LineFilterBuilder: LineFilterFn = (linefilter: string) => ({
 });
 
 const label_filter: any = {
-     "equals" : "=",  
-     "not_equals" : "!=",  
-     "regex_equals" : "=~",  
-     "regex_not_equals" : "!~",  
-     "more" : ">",  
-     "less" : "<",  
-     "more_equals" : ">=",  
-     "less_equals" : "<=",  
-}
+    equals: "=",
+    not_equals: "!=",
+    regex_equals: "=~",
+    regex_not_equals: "!~",
+    more: ">",
+    less: "<",
+    more_equals: ">=",
+    less_equals: "<=",
+};
 
 export const LabelFilterBuilder: LabelFilterFn = (labelfilter: string) => ({
     result: "",
@@ -360,6 +362,48 @@ export const LabelFilterBuilder: LabelFilterFn = (labelfilter: string) => ({
     },
 });
 
+const binary_operation: any = {
+    add_scalar: "+",
+    subtract_scalar: "-",
+    multiply_by_scalar: "*",
+    divide_by_scalar: "/",
+    modulo_by_scalar: "%",
+    exponent: "^",
+    equal_to: "==",
+    not_equal_to: "!=",
+    greater_than: ">",
+    less_than: "<",
+    greater_or_equal_to: ">=",
+    less_or_equal_to: "<=",
+    binary_operation_with_query: "",
+};
+
+export const BinaryOperationBuilder: BinaryOperationFn = (
+    binaryOperation: string
+) => ({
+    result: "",
+    value: "",
+    bool: false,
+    boolString: "",
+    setValue(value) {
+        this.value = value;
+    },
+    setBoolean(bool) {
+        this.bool = bool;
+    },
+    setBooleanString() {
+        this.boolString = this.bool ? "bool " : "";
+    },
+    setFn(initial) {
+        this.result = `${initial} ${binary_operation[binaryOperation]} ${this.boolString}${this.value}`;
+    },
+    build(initial) {
+        this.setBooleanString();
+        this.setFn(initial);
+        return this.result;
+    },
+});
+
 export const FormatOperators: any = {
     json: JSONBuilder,
     logfmt: LogFmtBuilder,
@@ -388,4 +432,8 @@ export const LineFilterOperators: any = (linefilter: LineFilter) => ({
 
 export const LabelFilterOperators: any = (labelfilter: LabelFilter) => ({
     label_filter: LabelFilterBuilder(labelfilter),
+});
+
+export const BinaryOperations: any = (binaryOperation: BinaryOperation) => ({
+    binary_operation: BinaryOperationBuilder(binaryOperation),
 });

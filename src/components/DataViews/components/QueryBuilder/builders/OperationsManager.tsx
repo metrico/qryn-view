@@ -4,6 +4,7 @@ import {
     AggregationOperators,
     LineFilterOperators,
     LabelFilterOperators,
+    BinaryOperations,
 } from "../../../../QueryBuilder/Operations/builders";
 import { logsToString } from "../helpers";
 
@@ -57,6 +58,24 @@ const line_filters = [
     "ip_line_filter_expression", // |= ip(``)
     "ip_line_not_filter_expression", //  != ip(``)
 ];
+
+const binary_operations = [
+    
+        "add_scalar",
+        "subtract_scalar",
+        "multiply_by_scalar",
+        "divide_by_scalar",
+        "modulo_by_scalar",
+        "exponent",
+        "equal_to",
+        "not_equal_to",
+        "greater_than",
+        "less_than",
+        "greater_or_equal_to",
+        "less_or_equal_to",
+        "binary_operation_with_query",
+    
+]
 
 // filter with expression
 
@@ -181,6 +200,17 @@ export const OperationsManager: OperationsManagerType = (
                 result.setLabel(operation?.labelFilter?.label || "");
                 result.setOperator(operation?.labelFilter?.operator || "");
                 result.setValue(operation?.labelFilter?.value || "");
+                result = result.build(resultType);
+            }
+
+            if (
+                binary_operations.includes(operation.name) &&
+                operation?.binaryOperation
+            ) {
+                const resultType = setResultType(result, logString);
+                result = BinaryOperations(operation.name)?.["binary_operation"];
+                result.setValue(operation?.binaryOperation?.value || 1);
+                result.setBoolean(operation?.binaryOperation?.bool || false);
                 result = result.build(resultType);
             }
         });

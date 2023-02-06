@@ -3,7 +3,7 @@ import type { FC } from "react";
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { useTheme } from "../../DataViews/components/QueryBuilder/hooks";
-import { LabelFilter } from "./DragAndDropContainer";
+import { BinaryOperation, LabelFilter } from "./DragAndDropContainer";
 import OperationContainer from "./OperationContainer";
 
 export const ItemTypes = {
@@ -31,6 +31,7 @@ export interface CardProps {
     opType:string;
     expressions:[];
     lineFilter:string;
+    binaryOperation:BinaryOperation;
     labelFilter:LabelFilter;
     kValue:number;
     labels:[];
@@ -58,7 +59,8 @@ export const Operations: FC<CardProps> = (props) => {
         removeItem,
         kValue,
         labelFilter,
-        lineFilter
+        lineFilter,
+        binaryOperation
     } = props
 
 
@@ -154,6 +156,7 @@ export const Operations: FC<CardProps> = (props) => {
                 index={index}
                 kValue={kValue}
                 labelFilter={labelFilter}
+                binaryOperation={binaryOperation}
                 lineFilter={lineFilter}
                 removeItem={removeItem}
 

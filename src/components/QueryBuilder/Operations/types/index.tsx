@@ -97,17 +97,29 @@ export interface AggregationsBuilderProps {
 
 export interface LabelFilterProps {
     result: string;
-    label:string;
-    operator:string;
+    label: string;
+    operator: string;
     value: string;
-    labelValueString:string;
-    setLabel(label:string):void
-    setOperator(operator:string):void 
-    setValue(value:string):void
-    setFilterType(content:string):string
-    setLabelValueString():void
-    setFn(initial:string):void
-    build(initial:string):string
+    labelValueString: string;
+    setLabel(label: string): void;
+    setOperator(operator: string): void;
+    setValue(value: string): void;
+    setFilterType(content: string): string;
+    setLabelValueString(): void;
+    setFn(initial: string): void;
+    build(initial: string): string;
+}
+
+export interface BinaryOperationProps {
+    result: string;
+    value: string | number;
+    bool: boolean;
+    boolString: string;
+    setValue(value: string | number): void;
+    setBoolean(bool: boolean): void;
+    setBooleanString(): void;
+    setFn(initial: string): void;
+    build(initial: string): string;
 }
 
 // we should add the selection type at adding a label
@@ -170,8 +182,11 @@ export type UnwrapFmtFn = () => UnwrapBuilderProps;
 
 export type LogFmtFn = () => LogFmtBuilderProps;
 
-export type LabelFilterFn = (labelFilter:string) => LabelFilterProps 
-    
+export type LabelFilterFn = (labelFilter: string) => LabelFilterProps;
+
+export type BinaryOperationFn = (
+    binaryOperation: BinaryOperation
+) => BinaryOperationProps;
 
 export type AggregationsFn = (
     aggregationType: AggregationsOp
@@ -227,3 +242,18 @@ export type LabelFilter =
     | "label_filter_expression"
     | "ip_label_filter_expression"
     | "no_pipeline_errors";
+
+export type BinaryOperation =
+    | "add_scalar"
+    | "subtract_scalar"
+    | "multiply_by_scalar"
+    | "divide_by_scalar"
+    | "modulo_by_scalar"
+    | "exponent"
+    | "equal_to"
+    | "not_equal_to"
+    | "greater_than"
+    | "less_than"
+    | "greater_or_equal_to"
+    | "less_or_equal_to"
+    | "binary_operation_with_query";

@@ -114,6 +114,7 @@ export function LogsLabelValueSelector(props: any) {
                     id: operations?.length + 1,
                     expressions: [],
                     labelFilter: { label: "", operator: "=", value: "" },
+                    binaryOperation:{value:"",bool:false},
                     lineFilter: "",
                     kValue: 5,
                     labels: [],

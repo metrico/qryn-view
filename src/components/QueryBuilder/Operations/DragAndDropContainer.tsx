@@ -19,12 +19,18 @@ export interface LabelFilter {
     operator:string;
     value:string;
 }
+
+export interface BinaryOperation {
+    value: string | number;
+    bool:boolean;
+}
 export interface Item {
     id: number;
     header: any;
     body: any;
     expressions: any[];
-    labelFilter: LabelFilter,
+    labelFilter: LabelFilter;
+    binaryOperation: BinaryOperation;
     lineFilter:string;
     kValue:number;
     labels: any[];
