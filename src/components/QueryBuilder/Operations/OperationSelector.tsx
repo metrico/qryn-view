@@ -168,9 +168,11 @@ export const OperationsOptions: any = {
         "Line Contains",
         "Line Does Not Contain",
         "Line Contains Case Insensitive",
+        "Line Does Not Contain Case Insensitive",
         "Line Contains Regex Match",
         "Line Does Not Match Regex",
         "IP Line Filter Expression",
+        "IP Line Not Filter Expression"
     ],
 };
 

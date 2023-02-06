@@ -98,12 +98,7 @@ export function LogsLabelValueSelector(props: any) {
     // send to operations manager
 
     useEffect(() => {
-        let res = OperationsManager(
-            labelValueString,
-            operations,
-            value
-        );
-
+        let res = OperationsManager(labelValueString, operations, value);
         labelValueChange(res);
     }, [operations, labelValueString, value, jsonExpressions]);
 
@@ -118,7 +113,9 @@ export function LogsLabelValueSelector(props: any) {
                     name: name?.toLowerCase()?.split(" ")?.join("_"),
                     id: operations?.length + 1,
                     expressions: [],
-                    kValue:5,
+                    labelFilter: { label: "", operator: "=", value: "" },
+                    lineFilter: "",
+                    kValue: 5,
                     labels: [],
                     labelOpts: [...labelSeries], // here we should have the labels from the .. initial operation
                     opType,

@@ -2,6 +2,8 @@ import {
     FormatOperators,
     RangeOperators,
     AggregationOperators,
+    LineFilterOperators,
+    LabelFilterOperators,
 } from "../../../../QueryBuilder/Operations/builders";
 import { logsToString } from "../helpers";
 
@@ -50,11 +52,6 @@ const line_filters = [
     "line_does_not_contain", // !=
     "line_contains_regex_match", // |~ ``
     "line_does_not_match_regex", // !~ ``
-];
-
-// only filter
-
-const line_expression_filters = [
     "line_contains_case_insensitive", // |~ `(?i)`
     "line_does_not_contain_case_insensitive", // !~ `(?i)`
     "ip_line_filter_expression", // |= ip(``)
@@ -170,17 +167,20 @@ export const OperationsManager: OperationsManagerType = (
 
             if (line_filters.includes(operation.name)) {
                 const resultType = setResultType(result, logString);
-                result = AggregationOperators(operation.name)["line_filter"];
-                setRangeLabels(result, operation.labels);
-                setKeyVal(result, operation.kValue);
+                result = LineFilterOperators(operation.name)["line_filter"];
+                result.setFilterText(operation.filterText);
                 result = result.build(resultType);
             }
 
-            if (label_filters.includes(operation.name)) {
+            if (
+                label_filters.includes(operation.name) &&
+                operation?.labelFilter
+            ) {
                 const resultType = setResultType(result, logString);
-                result = AggregationOperators(operation.name)["label_filters"];
-                setRangeLabels(result, operation.labels);
-                setKeyVal(result, operation.kValue);
+                result = LabelFilterOperators(operation.name)?.["label_filter"];
+                result.setLabel(operation?.labelFilter?.label || "");
+                result.setOperator(operation?.labelFilter?.operator || "");
+                result.setValue(operation?.labelFilter?.value || "");
                 result = result.build(resultType);
             }
         });

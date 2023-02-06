@@ -347,12 +347,15 @@ export const QueryBar = (props:any) => {
     // changes on changing exp
 
     useEffect(() => {
-        setQueryInput(expr);
-        setQueryValue([{ children: [{ text: expr }] }]);
-        setQueryValid(onQueryValid(expr));
-        decodeQueryAndUpdatePanel(queryInput, false);
-        saveQuery();
-        setLocalStorage();
+        if(typeof expr === 'string') {
+            setQueryInput(expr);
+            setQueryValue([{ children: [{ text: expr }] }]);
+            setQueryValid(onQueryValid(expr));
+            decodeQueryAndUpdatePanel(queryInput, false);
+            saveQuery();
+            setLocalStorage();
+        }
+
     }, [expr]);
 
     // handlers

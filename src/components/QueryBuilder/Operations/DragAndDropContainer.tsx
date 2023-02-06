@@ -13,13 +13,21 @@ export const OperationsContainerStyles = css`
     width: 100%;
     display: flex;
 `;
+
+export interface LabelFilter {
+    label:string;
+    operator:string;
+    value:string;
+}
 export interface Item {
     id: number;
     header: any;
     body: any;
-    expressions: [];
+    expressions: any[];
+    labelFilter: LabelFilter,
+    lineFilter:string;
     kValue:number;
-    labels: [];
+    labels: any[];
     opType: string;
 }
 
@@ -64,6 +72,7 @@ export const Container: FC<OperationsContainerProps> = (props: any) => {
                 opType={operation.opType}
                 header={operation.header}
                 kValue={operation.kValue}
+                lineFilter={operation.lineFilter}
                 body={operation.body || <></>}
                 moveItem={moveItem}
                 removeItem={removeItem}

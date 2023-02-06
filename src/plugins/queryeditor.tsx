@@ -102,14 +102,14 @@ function Leaf({ attributes, children, leaf }: any) {
 
 export function getTokenLength(token: any) {
     if (typeof token === "string") {
-        return token.length;
+        return token?.length;
     }
 
-    if (typeof token.content === "string") {
-        return token.content.length;
+    if (typeof token?.content === "string") {
+        return token?.content.length;
     }
 
-    return token.content.reduce((l: any, t: any) => l + getTokenLength(t), 0);
+    return token?.content?.reduce((l: any, t: any) => l + getTokenLength(t), 0);
 }
 
 export default function QueryEditor({
@@ -141,7 +141,7 @@ export default function QueryEditor({
     const decorate = useCallback(
         ([node, path]: any) => {
             const ranges: any[] = [];
-            if (!Text.isText(node) || (node as any).length < 1) {
+            if (!Text.isText(node) || (node as any)?.length < 1) {
                 return ranges;
             }
             const tokens = Prism.tokenize(node.text, Prism.languages[language]);

@@ -114,7 +114,7 @@ export function MetricsLabelValueSelectors(props: any) {
                             onChange={onLabelChange}
                             currentState={labelValuesState}
                             useValueSelectOpts={useValueSelectOpts}
-                            labelValuesLength={labelValuesState.length || 0}
+                            labelValuesLength={labelValuesState?.length || 0}
                         />
                     ))}
 

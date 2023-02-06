@@ -1,9 +1,10 @@
 import { cx, css } from "@emotion/css";
 import CloseIcon from "@mui/icons-material/Close";
-import { useCallback, useState, useMemo } from "react";
+import { useCallback, useState, useMemo, useEffect } from "react";
 import { useTheme } from "../../DataViews/components/QueryBuilder/hooks";
 import { OperationSelectorFromType } from "./OperationSelector";
 import { useLabelsFromProps } from "./hooks";
+import { LabelFilter } from "./DragAndDropContainer";
 export const OperationContainerStyles = (theme: any) => css`
     display: flex;
     flex-direction: column;
@@ -80,8 +81,10 @@ type Props = {
     removeItem: any;
     index: number;
     opType: string;
-    expressions: [];
-    kValue:number;
+    expressions: any[];
+    labelFilter: LabelFilter;
+    lineFilter: string;
+    kValue: number;
     labelOpts: string[];
     labels: [];
     onExpChange: (expressions: []) => void;
@@ -467,22 +470,20 @@ export const AggregationsBody = (props: any) => {
 
     const theme = useTheme();
     const onLabelAdd = (e: any) => {
+        setLabels((prev) => [...prev, ""]);
 
-       setLabels((prev) => [...prev,'']);
-       
-       setOperations((prev: any) => {
-        const next = [...prev];
-        return next?.map((m: any) => {
-            if (m.id === id) {
-               m.labels = [...labels]
-              
-                return m;
-            } else { 
-                return m;
-            }
-           
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.labels = [...labels];
+
+                    return m;
+                } else {
+                    return m;
+                }
+            });
         });
-    });
     };
 
     const onLabelRemove = useCallback(
@@ -598,6 +599,122 @@ export const formatsRenderer = (op: string, props: any) => {
             return <DefaultFormatBody {...props} />;
     }
 };
+
+export const LineFilterBody = (props: any) => {
+    const { setOperations, id } = props;
+    const [expression, setExpression] = useState("");
+    const theme = useTheme();
+
+    const onExpChange = useCallback(
+        (e: any) => {
+            setExpression(e.target.value);
+
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.filterText = e.target.value;
+                        return m;
+                    }
+                    return m;
+                });
+            });
+        },
+        [expression]
+    );
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <input
+                value={expression}
+                placeholder={"Text Filter"}
+                onChange={onExpChange}
+            />
+        </div>
+    );
+};
+
+interface FilterState {
+    label: string;
+    operator: string;
+    value: string;
+}
+export const LabelFilterBody = (props: any) => {
+    const { setOperations, id } = props;
+
+    const [labelFilterState, setLabelFilterState] = useState<FilterState>({
+        label: "",
+        operator: "=",
+        value: "",
+    });
+
+    const theme = useTheme();
+    const operatorOptions = useMemo(() => {
+        return [
+            { name: "=", value: "equals" },
+            { name: "!=", value: "not_equals" },
+            { name: "=~", value: "regex_equals" },
+            { name: "!~", value: "regex_not_equals" },
+            { name: ">", value: "more" },
+            { name: "<", value: "less" },
+            { name: ">=", value: "more_equals" },
+            { name: "<=", value: "less_equals" },
+        ];
+    }, []);
+
+    useEffect(() => {
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.labelFilter = { ...labelFilterState };
+                    return m;
+                }
+                return m;
+            });
+        });
+    }, [labelFilterState]);
+
+    const onChange = useCallback(
+        (e: any, key: "label" | "operator" | "value") => {
+            setLabelFilterState((prev: FilterState) => ({
+                ...prev,
+                [key]: e.target.value,
+            }));
+        },
+
+        [operatorOptions]
+    );
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <input
+                value={labelFilterState.label}
+                placeholder={"Text Filter"}
+                onChange={(e) => onChange(e, "label")}
+            />
+
+            <select
+                defaultValue={labelFilterState.operator}
+                onChange={(e) => onChange(e, "operator")}
+            >
+                {operatorOptions.map(
+                    (opt: { name: string; value: string }, key: number) => (
+                        <option key={key} value={opt.value}>
+                            {opt.name}
+                        </option>
+                    )
+                )}
+            </select>
+
+            <input
+                value={labelFilterState.value}
+                placeholder={"Text Filter"}
+                onChange={(e) => onChange(e, "value")}
+            />
+        </div>
+    );
+};
 const ranges = [
     "rate",
     "rate_counter",
@@ -650,6 +767,10 @@ export const opTypeSwitch = (opType: string, op: string, props: any) => {
             return rangeRenderer(op, props);
         case "aggregations":
             return aggregationRenderer(op, props);
+        case "line_filters":
+            return <LineFilterBody {...props} />;
+        case "label_filters":
+            return <LabelFilterBody {...props} />;
         default:
             return rangeRenderer(op, props);
     }

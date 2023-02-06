@@ -310,6 +310,17 @@ export const LineFilterBuilder: LineFilterFn = (linefilter: string) => ({
     },
 });
 
+const label_filter: any = {
+     "equals" : "=",  
+     "not_equals" : "!=",  
+     "regex_equals" : "=~",  
+     "regex_not_equals" : "!~",  
+     "more" : ">",  
+     "less" : "<",  
+     "more_equals" : ">=",  
+     "less_equals" : "<=",  
+}
+
 export const LabelFilterBuilder: LabelFilterFn = (labelfilter: string) => ({
     result: "",
     label: "",
@@ -320,7 +331,7 @@ export const LabelFilterBuilder: LabelFilterFn = (labelfilter: string) => ({
         this.label = label;
     },
     setOperator(operator) {
-        this.operator = operator;
+        this.operator = label_filter[operator];
     },
     setValue(value) {
         this.value = value;
@@ -339,6 +350,7 @@ export const LabelFilterBuilder: LabelFilterFn = (labelfilter: string) => ({
             this.setFilterType(this.value);
     },
     setFn(initial) {
+        this.setLabelValueString();
         this.result = `${initial} |${this.labelValueString}`;
     },
 
