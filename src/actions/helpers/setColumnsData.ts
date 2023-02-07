@@ -12,7 +12,7 @@ export function setColumnsData(
     timeAccessor: any,
     data: any = {}
 ) {
-    console.log(columns)
+  
     const columnsData: ColumnDef<any>[] = columns?.map((row: any) => ({
         header: row,
         accessorKey: row,

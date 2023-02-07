@@ -281,8 +281,8 @@ export const AggregationsBTKBuilder: AggregationsBTKFn = (
 const line_filters: any = {
     line_contains: "|= `",
     line_does_not_contain: "!= `",
-    line_contains_regex_match: "|~ ``",
-    line_does_not_match_regex: "!~ ``",
+    line_contains_regex_match: "|~ `",
+    line_does_not_match_regex: "!~ `",
     line_contains_case_insensitive: "|~ `(?i)",
     line_does_not_contain_case_insensitive: "!~ `(?i)",
     ip_line_filter_expression: "|= ip(`",

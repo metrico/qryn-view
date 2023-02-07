@@ -46,7 +46,7 @@ const StatsValue = css`
 
 
 export function Stats(props: any) {
-console.log(props)
+
 const {data:{hasStats,statsData }} = props
     const storeTheme = useSelector((store:{theme:'dark'|'light'})=>store.theme)
 

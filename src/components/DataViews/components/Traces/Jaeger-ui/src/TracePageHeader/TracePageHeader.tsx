@@ -190,7 +190,7 @@ export default function TracePageHeader(props: TracePageHeaderEmbedProps) {
     if (!trace) {
         return null;
     }
-    // console.log(trace)
+
     const summaryItems =
         !hideSummary &&
         !slimView &&
