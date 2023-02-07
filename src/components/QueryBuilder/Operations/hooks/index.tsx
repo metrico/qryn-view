@@ -40,22 +40,18 @@ export const useSeries = (res: AxiosResponse) =>
         ) {
             return getLabelsFromData(res.data.data);
         } else {
-            return [""];
+            return [];
         }
     }, [res]);
 
 // extract labels from operation id
 
 export const useLabelsFromProps = (id: number, props: any) => {
-
+    // we should pass labelOps
     return useMemo(() => {
-        if (
-            props?.operations &&
-            Array.isArray(props?.operations) && props?.operations?.length > 0
-        ) {
-            const found = props.operations?.find((f: any) => f.id === id);
-            return found?.labelOpts?.filter((f:any)=> f !== '__name__') || [""];
+        if (props?.labelOpts) {
+            return props.labelOpts?.filter((f: any) => f !== "__name__") || [];
         }
-        return [""];
+        return [];
     }, [id, props]);
 };

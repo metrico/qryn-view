@@ -12,6 +12,7 @@ import { css, cx } from "@emotion/css";
 export const OperationsContainerStyles = css`
     width: 100%;
     display: flex;
+    flex-wrap:wrap;
 `;
 
 export interface LabelFilter {
@@ -29,11 +30,13 @@ export interface Item {
     header: any;
     body: any;
     expressions: any[];
+    filterText:string;
     labelFilter: LabelFilter;
     binaryOperation: BinaryOperation;
     lineFilter:string;
     kValue:number;
     labels: any[];
+    labelOpts:string[];
     opType: string;
 }
 
@@ -50,7 +53,6 @@ export type OperationsContainerProps = {
 
 export const Container: FC<OperationsContainerProps> = (props: any) => {
     const { operations, setOperations } = props;
-
     const moveItem = useCallback((dragIndex: number, hoverIndex: number) => {
         setOperations((prevCards: Item[]) =>
             update(prevCards, {
@@ -78,6 +80,8 @@ export const Container: FC<OperationsContainerProps> = (props: any) => {
                 opType={operation.opType}
                 header={operation.header}
                 kValue={operation.kValue}
+                binaryOperation={operation.binaryOperation}
+                labelOpts={operation.labelOpts}
                 lineFilter={operation.lineFilter}
                 body={operation.body || <></>}
                 moveItem={moveItem}

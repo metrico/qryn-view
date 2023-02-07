@@ -92,12 +92,13 @@ type Props = {
     index: number;
     opType: string;
     expressions: any[];
+    filterText:string;
     labelFilter: LabelFilter;
     binaryOperation: BinaryOperation;
     lineFilter: string;
     kValue: number;
-    labelOpts: string[];
     labels: [];
+    labelOpts:string[];
     onExpChange: (expressions: []) => void;
     setOperations: any;
 };
@@ -472,11 +473,8 @@ export const LabelRangeBody = (props: any) => {
 
 export const AggregationsBody = (props: any) => {
     const { setOperations, id, aggrType } = props;
-
     const labelsList = useLabelsFromProps(id, props);
-
     const [labels, setLabels] = useState<string[]>([""]);
-
     const [kValue, setKValue] = useState<number>(props.kValue || []);
 
     const theme = useTheme();
@@ -655,7 +653,7 @@ export const LabelFilterBody = (props: any) => {
 
     const [labelFilterState, setLabelFilterState] = useState<FilterState>({
         label: "",
-        operator: "=",
+        operator: "equals",
         value: "",
     });
 
@@ -706,7 +704,7 @@ export const LabelFilterBody = (props: any) => {
             />
 
             <select
-                defaultValue={labelFilterState.operator}
+                defaultValue={"equals"}
                 onChange={(e) => onChange(e, "operator")}
             >
                 {operatorOptions.map(
@@ -728,24 +726,22 @@ export const LabelFilterBody = (props: any) => {
 };
 
 const BinaryOperationsBody = (props: any) => {
-    const { setOperations, id } = props;
+    const { setOperations, id, binaryOperation } = props;
     const theme = useTheme();
-
-    const [binaryOperationState, setBinaryOperationState] = useState({
+    const [binaryOperationState, setBinaryOperationState] = useState(binaryOperation || {
         value: 0,
         bool: false,
     });
 
     const onChange = useCallback(
         (e: any, key: "value" | "bool") => {
-            let value = key === "value" ? e.target.value : e.target.checked;
-            setBinaryOperationState(value);
-
+            let value = key === "value" ? e.target.value : e.target.checked ? true : false;
+            setBinaryOperationState((prev:any) => ({...prev, [key]:value}));
             setOperations((prev: any) => {
                 const next = [...prev];
                 return next?.map((m: any) => {
                     if (m.id === id) {
-                        m.binaryOperation = { ...m, [key]: value };
+                        m.binaryOperation = { ...m.binaryOperation, [key]: value };
                         return m;
                     }
                     return m;
@@ -767,7 +763,9 @@ const BinaryOperationsBody = (props: any) => {
             <input
                 type={"checkbox"}
                 className={'checkbox'}
-                checked={binaryOperationState.bool}
+                checked={binaryOperationState.bool|| false}
+                value={'Boolean'}
+               
                 onChange={(e) => onChange(e, "bool")}
             />
             </div>
@@ -892,12 +890,9 @@ export default function OperationContainer(props: Props) {
                     {opTypeSwitch(
                         typeFormat(opType),
                         typeFormat(header),
-                        props
+                       { ...props}
                     )}
-                    {/* {formatsRenderer(
-                      typeFormat(header),
-                        props
-                    )} */}
+     
                 </div>
             </div>
         );

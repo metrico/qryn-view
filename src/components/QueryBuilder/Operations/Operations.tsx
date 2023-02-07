@@ -30,6 +30,7 @@ export interface CardProps {
     removeItem: any;
     opType:string;
     expressions:[];
+    filterText:string;
     lineFilter:string;
     binaryOperation:BinaryOperation;
     labelFilter:LabelFilter;
@@ -59,7 +60,9 @@ export const Operations: FC<CardProps> = (props) => {
         removeItem,
         kValue,
         labelFilter,
+        filterText,
         lineFilter,
+        labelOpts,
         binaryOperation
     } = props
 
@@ -158,6 +161,8 @@ export const Operations: FC<CardProps> = (props) => {
                 labelFilter={labelFilter}
                 binaryOperation={binaryOperation}
                 lineFilter={lineFilter}
+                labelOpts={labelOpts}
+                filterText={filterText}
                 removeItem={removeItem}
 
             />

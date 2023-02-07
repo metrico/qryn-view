@@ -9,8 +9,6 @@ import "@szhsin/react-menu/dist/transitions/slide.css";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useMemo } from "react";
 import { css, cx, keyframes } from "@emotion/css";
-import rightArrow from "../chevron-right-solid.svg";
-
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import classNames from "classnames";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -217,7 +215,7 @@ export default function OperationSelector({ menuClick }: any) {
             }
         >
             {operationTypes?.map((t: any, i: number) => (
-                <SubMenu label={t} >
+                <SubMenu label={t} key={i}>
                     {OperationsOptions[t]?.map((op: any, key: number) => (
                         <MenuItem
                             onClick={(e) => menuClick(e, op, t)}
