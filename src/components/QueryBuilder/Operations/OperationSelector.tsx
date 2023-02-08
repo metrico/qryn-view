@@ -39,7 +39,7 @@ const submenuItem = (theme: any) => css`
     position: relative;
     font-size: 12px;
     color: ${theme.textColor} !important;
-    background: ${theme.widgetContainer} !important;
+    background: ${theme.inputBg} !important;
     &::after {
         // content: <NavigateNextIcon/>;
         position: absolute;
@@ -47,7 +47,7 @@ const submenuItem = (theme: any) => css`
         right: 0.625rem;
     }
     &:hover {
-        background: ${theme.inputBg} !important;
+        background: ${theme.widgetContainer} !important;
     }
 `;
 
@@ -91,7 +91,7 @@ const menuItem = (theme: any) => css`
 const menuItemHover = (theme: any) => css`
     //  color: white !important;
     color: ${theme.textColor};
-    background: ${theme.inputBg} !important;
+    background: ${theme.widgetContainer} !important;
 `;
 
 const menuItemClassName = ({ hover, disabled }: any, theme: any) =>

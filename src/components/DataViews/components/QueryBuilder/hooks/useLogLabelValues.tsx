@@ -18,10 +18,12 @@ export default function useLogLabelValues(id: string, label: string) {
 
     const url = useMemo(() => {
         return getValuesUrl(currentDataSource.url, label, timeStart, timeEnd);
+        
     }, [currentDataSource.url, timeStart, timeEnd, label]);
 
     const logsResponse = useLogsResponse(response)
     useEffect(() => {
+        if(label && label !== '')
         getApiRequest(currentDataSource, url, setLoading, setResponse);
     }, [url, currentDataSource]);
 
