@@ -98,39 +98,90 @@ export function LogsLabelValueSelector(props: any) {
     // send to operations manager
 
     useEffect(() => {
-        if(labelValueString !== ''){
+        if (labelValueString !== "") {
             let res = OperationsManager(labelValueString, operations, value);
-        
-                labelValueChange(res);
-          
-           
+
+            labelValueChange(res);
+        }
+    }, [operations, labelValueString, value, jsonExpressions]);
+
+    const setOperatorByType = (type: string, initial: any, prev: any) => {
+        console.log(type);
+        // check there is no previous rate or range functions
+        console.log(prev);
+        const hasPrevRange = (prev: any) => {
+            return prev.some((op: any) => op.opType === "Range Functions");
+        };
+
+        const rateOp = {
+            ...initial,
+            header: "Rate",
+            name: "rate",
+            id: initial.id + 1,
+            opType: "Range Functions",
+        };
+
+        // if have previous range, replace previous with initial
+
+        if (type === "Range Functions" && hasPrevRange(prev)) {
+            let found = prev.find((f: any) => f.opType === "Range Functions");
+            let newInit = prev?.map((m: any) => {
+                if (m.id === found.id) {
+                    m = { ...initial, id: found.id };
+                    return m;
+                }
+                return m;
+            });
+
+            return [...newInit];
         }
 
-    }, [operations, labelValueString, value, jsonExpressions]);
+        if (type === "Aggregations" && !hasPrevRange(prev)) {
+            // add a rate operation following the aggregation
+            return [...prev, rateOp, initial];
+        }
+
+        return [...prev, initial];
+    };
+
+    const setInitialOperation = (
+        name: string,
+        opType: string,
+        labelSeries: any,
+        operations: any,
+        intialOperation: any
+    ) => ({
+        ...InitialOperation,
+        header: name,
+        range: "$__interval",
+        name: name?.toLowerCase()?.split(" ")?.join("_"),
+        id: operations?.length + 1,
+        expressions: [],
+        filterText: "",
+        labelFilter: { label: "", operator: "=", value: "" },
+        binaryOperation: { value: "", bool: false },
+        lineFilter: "",
+        kValue: 5,
+        labels: [],
+        labelOpts: labelSeries, // here we should have the labels from the .. initial operation
+        opType,
+    });
 
     const addOperator = useCallback(
         (e: any, name: string, opType: string) => {
-            setOperations((prev: any) => [
-                ...prev,
-                {
-                    ...InitialOperation,
-                    header: name,
-                    range: "$__interval",
-                    name: name?.toLowerCase()?.split(" ")?.join("_"),
-                    id: operations?.length + 1,
-                    expressions: [],
-                    filterText: "",
-                    labelFilter: { label: "", operator: "=", value: "" },
-                    binaryOperation:{value:"",bool:false},
-                    lineFilter: "",
-                    kValue: 5,
-                    labels: [],
-                    labelOpts:labelSeries, // here we should have the labels from the .. initial operation
-                    opType,
-                },
-            ]);
+            const initialOperator = setInitialOperation(
+                name,
+                opType,
+                labelSeries,
+                operations,
+                InitialOperation
+            );
+
+            setOperations((prev: any) =>
+                setOperatorByType(opType, initialOperator, prev)
+            );
         },
-        [operations, labelSeries,labelsString]
+        [operations, labelSeries, labelsString]
     );
 
     const onExpChange = useCallback(

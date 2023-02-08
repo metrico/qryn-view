@@ -44,7 +44,7 @@ export const OperationBodyStyles = (theme: any) => css`
         gap: 3px;
     }
     label {
-        font-size:12px;
+        font-size: 12px;
         color: ${theme.textColor};
     }
     input {
@@ -56,11 +56,10 @@ export const OperationBodyStyles = (theme: any) => css`
         padding: 0px 6px;
         &.checkbox {
             font-size: 12px;
-           height:12px;
-            
+            height: 12px;
         }
     }
-   
+
     select {
         height: 26px;
         color: ${theme.textColor};
@@ -92,13 +91,13 @@ type Props = {
     index: number;
     opType: string;
     expressions: any[];
-    filterText:string;
+    filterText: string;
     labelFilter: LabelFilter;
     binaryOperation: BinaryOperation;
     lineFilter: string;
     kValue: number;
     labels: [];
-    labelOpts:string[];
+    labelOpts: string[];
     onExpChange: (expressions: []) => void;
     setOperations: any;
 };
@@ -728,20 +727,30 @@ export const LabelFilterBody = (props: any) => {
 const BinaryOperationsBody = (props: any) => {
     const { setOperations, id, binaryOperation } = props;
     const theme = useTheme();
-    const [binaryOperationState, setBinaryOperationState] = useState(binaryOperation || {
-        value: 0,
-        bool: false,
-    });
+    const [binaryOperationState, setBinaryOperationState] = useState(
+        binaryOperation || {
+            value: 0,
+            bool: false,
+        }
+    );
 
     const onChange = useCallback(
         (e: any, key: "value" | "bool") => {
-            let value = key === "value" ? e.target.value : e.target.checked ? true : false;
-            setBinaryOperationState((prev:any) => ({...prev, [key]:value}));
+            let value =
+                key === "value"
+                    ? e.target.value
+                    : e.target.checked
+                    ? true
+                    : false;
+            setBinaryOperationState((prev: any) => ({ ...prev, [key]: value }));
             setOperations((prev: any) => {
                 const next = [...prev];
                 return next?.map((m: any) => {
                     if (m.id === id) {
-                        m.binaryOperation = { ...m.binaryOperation, [key]: value };
+                        m.binaryOperation = {
+                            ...m.binaryOperation,
+                            [key]: value,
+                        };
                         return m;
                     }
                     return m;
@@ -758,18 +767,16 @@ const BinaryOperationsBody = (props: any) => {
                 placeholder={"Value"}
                 onChange={(e) => onChange(e, "value")}
             />
-            <div className={'input-group'}>
-        <label>Boolean</label>
-            <input
-                type={"checkbox"}
-                className={'checkbox'}
-                checked={binaryOperationState.bool|| false}
-                value={'Boolean'}
-               
-                onChange={(e) => onChange(e, "bool")}
-            />
+            <div className={"input-group"}>
+                <label>Boolean</label>
+                <input
+                    type={"checkbox"}
+                    className={"checkbox"}
+                    checked={binaryOperationState.bool || false}
+                    value={"Boolean"}
+                    onChange={(e) => onChange(e, "bool")}
+                />
             </div>
-
         </div>
     );
 };
@@ -839,8 +846,13 @@ export const opTypeSwitch = (opType: string, op: string, props: any) => {
 
 export default function OperationContainer(props: Props) {
     const { id, opType, header, removeItem, index, setOperations } = props;
+
     const theme = useTheme();
+
     const [opHeader, setOpHeader] = useState(header);
+    useEffect(() => {
+        setOpHeader(header);
+    }, [header, setOpHeader]);
     const onOpChange = useCallback(
         (e: any, header: string) => {
             setOpHeader(header);
@@ -887,12 +899,9 @@ export default function OperationContainer(props: Props) {
                     </div>
                 </div>
                 <div className="operation-body">
-                    {opTypeSwitch(
-                        typeFormat(opType),
-                        typeFormat(header),
-                       { ...props}
-                    )}
-     
+                    {opTypeSwitch(typeFormat(opType), typeFormat(header), {
+                        ...props,
+                    })}
                 </div>
             </div>
         );
