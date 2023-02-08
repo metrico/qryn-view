@@ -171,7 +171,7 @@ export default function getData(
         loadingState(dispatch, true);
         let cancelToken: any;
 
-        if (url === "") {
+        if (url === "" || queryInput === '')  {
             loadingState(dispatch, false);
             return;
         }

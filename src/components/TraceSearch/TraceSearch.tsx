@@ -126,8 +126,10 @@ export default function TracesSearch(props: any) {
         onSearchChange(emit());
     };
 
+    
+
     const onSubmit = () => {
-        if (dataSourceURL && dataSourceURL !== "") {
+        if (dataSourceURL && dataSourceURL !== "" && expr!== '') {
             dispatch(
                 getData(
                     dataSourceType,

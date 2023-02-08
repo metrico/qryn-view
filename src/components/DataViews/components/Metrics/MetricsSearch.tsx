@@ -1,11 +1,10 @@
 import { ThemeProvider } from "@emotion/react";
-import {useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { themes } from "../../../../theme/themes";
 import { useValuesFromMetrics } from "./useValuesFromMetrics";
 import { MetricsLabelValueSelectors } from "../QueryBuilder/MetricsLabelValueSelector";
 import { InputSelect } from "../QueryBuilder/InputSelect";
-
 
 export default function MetricsSearch(props: any) {
     const {
@@ -25,7 +24,6 @@ export default function MetricsSearch(props: any) {
 
     const [labelFilters, setLabelFilters] = useState([] as any); // check label filters
     //  this one  should go upstairs and be stored as default value
-    
     const storeTheme = useSelector(
         (store: { theme: "light" | "dark" }) => store.theme
     );
@@ -62,7 +60,13 @@ export default function MetricsSearch(props: any) {
 
     return (
         <ThemeProvider theme={mainTheme}>
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
+            <div
+                style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                }}
+            >
                 <div style={{ marginTop: "3px" }}>
                     <InputSelect
                         isMulti={false}
@@ -76,7 +80,7 @@ export default function MetricsSearch(props: any) {
                     />
                 </div>
                 <MetricsLabelValueSelectors
-                type={dataSourceType}
+                    type={dataSourceType}
                     onChange={onLabelValueChange}
                     dataSourceId={dataSourceId}
                     value={metricValue.value}
