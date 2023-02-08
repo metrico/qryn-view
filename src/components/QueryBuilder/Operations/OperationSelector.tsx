@@ -23,24 +23,31 @@ const menuHide = keyframes`
     opacity: 0;
   }
 `;
-const menu = css`
+const menu = (theme: any) => css`
     font-family: sans-serif;
     font-size: 12px;
     user-select: none;
+    color: ${theme.textColor} !important;
+    background: ${theme.inputBg} !important;
     box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.1);
     border-radius: 3px;
     padding: 6px;
     min-width: 10rem;
 `;
 
-const submenuItem = css`
+const submenuItem = (theme: any) => css`
     position: relative;
     font-size: 12px;
+    color: ${theme.textColor} !important;
+    background: ${theme.widgetContainer} !important;
     &::after {
         // content: <NavigateNextIcon/>;
         position: absolute;
         width: 4px;
         right: 0.625rem;
+    }
+    &:hover {
+        background: ${theme.inputBg} !important;
     }
 `;
 
@@ -71,39 +78,50 @@ const menuClosing = css`
     animation: ${menuHide} 0.2s ease-out forwards;
 `;
 
-const menuItem = css`
+const menuItem = (theme: any) => css`
+    // color:white;
+    background:${theme.inputBg}  !important; 
+    color: ${theme.textColor} !important;
     border-radius: 3px;
     padding: 0.275rem 0.525rem;
+    &:hover {
+        background: ${theme.widgetContainer} !important;
+    }
 `;
-const menuItemHover = css`
-    //  color: #fff;
-    background: #59a2ff;
+const menuItemHover = (theme: any) => css`
+    //  color: white !important;
+    color: ${theme.textColor};
+    background: ${theme.inputBg} !important;
 `;
 
-const menuItemClassName = ({ hover, disabled }: any) =>
-    classNames(menuItem, {
-        [menuItemHover]: hover,
+const menuItemClassName = ({ hover, disabled }: any, theme: any) =>
+    classNames(menuItem(theme), {
+        [menuItemHover(theme)]: hover,
     });
 
-const submenuItemClassName = (modifiers: any) =>
-    classNames(menuItemClassName(modifiers), submenuItem);
+const submenuItemClassName = (modifiers: any, theme: any) => {
+    return classNames(menuItemClassName(modifiers, theme), submenuItem(theme));
+};
 
-const menuClassName = ({ state }: any) =>
-    classNames(menu, {
-        [menuOpening]: state === "opening",
-        [menuClosing]: state === "closing",
+const menuClassName = (props: any /*{ state }: any */, theme: any) => {
+
+    return classNames(menu(theme), {
+        [menuOpening]: props.state === "opening",
+        [menuClosing]: props.state === "closing",
     });
+};
 
-const SubMenu = (props: any) => (
-    <SubMenuInner
-        {...props}
-        menuClassName={menuClassName}
-        itemProps={{ className: submenuItemClassName }}
-    />
-);
+const SubMenu = (props: any) => {
+    const { theme } = props;
 
-
-
+    return (
+        <SubMenuInner
+            {...props}
+            menuClassName={(e) => menuClassName(e, theme)}
+            itemProps={{ className: (e) => submenuItemClassName(e, theme) }}
+        />
+    );
+};
 
 export const OperationsOptions: any = {
     Aggregations: [
@@ -139,8 +157,8 @@ export const OperationsOptions: any = {
         "Pattern",
         "Unpack",
         "Line Format",
-     //  "Label Format", // label format not supported yet
-      //  "Unwrap", // unwrap should work later with range functions
+        //  "Label Format", // label format not supported yet
+        //  "Unwrap", // unwrap should work later with range functions
     ],
     "Binary Operations": [
         "Add Scalar",
@@ -170,7 +188,7 @@ export const OperationsOptions: any = {
         "Line Contains Regex Match",
         "Line Does Not Match Regex",
         "IP Line Filter Expression",
-        "IP Line Not Filter Expression"
+        "IP Line Not Filter Expression",
     ],
 };
 
@@ -190,6 +208,18 @@ export function CustomSubMenu({ item }: any) {
     );
 }
 
+export const mainMenu = (theme: any) => css`
+    .szh-menu {
+        background: ${theme.inputBg} !important;
+        color: ${theme.textColor} !important;
+    }
+    .szh-menu__item {
+        &:hover {
+            background: ${theme.widgetContainer} !important;
+        }
+    }
+`;
+
 export default function OperationSelector({ menuClick }: any) {
     const operationTypes = useMemo(() => {
         return Object.keys(OperationsOptions);
@@ -197,6 +227,7 @@ export default function OperationSelector({ menuClick }: any) {
     const theme = useTheme();
     return (
         <Menu
+            className={cx(mainMenu(theme))}
             menuButton={
                 <MenuButton className={cx(menuButtonStyles(theme))}>
                     {" "}
@@ -215,7 +246,7 @@ export default function OperationSelector({ menuClick }: any) {
             }
         >
             {operationTypes?.map((t: any, i: number) => (
-                <SubMenu label={t} key={i}>
+                <SubMenu label={t} key={i} theme={theme}>
                     {OperationsOptions[t]?.map((op: any, key: number) => (
                         <MenuItem
                             onClick={(e) => menuClick(e, op, t)}
@@ -232,8 +263,11 @@ export default function OperationSelector({ menuClick }: any) {
 }
 
 export function OperationSelectorFromType({ opType, onOperationSelect }: any) {
+    const theme = useTheme();
+
     return (
         <Menu
+            className={cx(mainMenu(theme))}
             menuButton={
                 <KeyboardArrowDownIcon
                     style={{

@@ -94,9 +94,6 @@ export function LogsLabelValueSelector(props: any) {
         setLabelValuesState((prev) => InitialLabelValueState);
     };
 
-    // check for changes inside the operations
-    // send to operations manager
-
     useEffect(() => {
         if (labelValueString !== "") {
             let res = OperationsManager(labelValueString, operations, value);
@@ -106,9 +103,6 @@ export function LogsLabelValueSelector(props: any) {
     }, [operations, labelValueString, value, jsonExpressions]);
 
     const setOperatorByType = (type: string, initial: any, prev: any) => {
-        console.log(type);
-        // check there is no previous rate or range functions
-        console.log(prev);
         const hasPrevRange = (prev: any) => {
             return prev.some((op: any) => op.opType === "Range Functions");
         };
