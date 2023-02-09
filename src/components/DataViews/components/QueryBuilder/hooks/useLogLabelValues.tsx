@@ -23,8 +23,15 @@ export default function useLogLabelValues(id: string, label: string) {
 
     const logsResponse = useLogsResponse(response)
     useEffect(() => {
-        if(label && label !== '')
-        getApiRequest(currentDataSource, url, setLoading, setResponse);
+        if(label && label !== '') {
+            getApiRequest(currentDataSource, url, setLoading, setResponse);
+        }
+     
+        return()=> { 
+            setResponse([])
+            setLoading(false)
+        
+        }
     }, [url, currentDataSource]);
 
  

@@ -5,6 +5,7 @@ export const cStyles = (theme: any, minWidth: number) => ({
         ...base,
         fontSize: "12px",
         color: theme.textColor,
+       
     }),
     control: (base: any) => ({
         ...base,
@@ -13,6 +14,7 @@ export const cStyles = (theme: any, minWidth: number) => ({
         minHeight: 28,
         boxShadow: "none",
         color: theme.textColor,
+        border:`1px solid ${theme.buttonBorder}`,
         // marginTop: "5px",
         minWidth,
     }),
@@ -111,4 +113,5 @@ export const FlexWrap = css`
 export const FlexColumn = css`
 display:flex;
 flex-direction: column;
+flex:1;
 `

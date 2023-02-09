@@ -13,6 +13,7 @@ import { LogLabelValueForm } from "./LogLabelValueForm";
 import { FlexWrap, FlexColumn } from "./styles";
 import { Label } from "./types";
 import { OperationsManager } from "./builders/OperationsManager";
+import QueryPreview from "./QueryPreview";
 
 const InitialOperation = {
     id: 0,
@@ -27,7 +28,7 @@ export function LogsLabelValueSelector(props: any) {
     const [labelValuesState, setLabelValuesState] = useState<Label[]>(
         InitialLabelValueState
     );
-
+        
     const [labelsString, setLabelsString] = useState("");
     const { labelSeries } = useLabelSeries(dataSourceId, labelsString);
     const [jsonExpressions, setJsonExpressions] = useState([]);
@@ -35,6 +36,7 @@ export function LogsLabelValueSelector(props: any) {
     const [operations, setOperations] = useState<any>([]);
     const [labelValueString, setLabelValueString] = useState("");
     // const [logsString, setLogsString] = useState("")
+    const [finalQuery, setFinalQuery] = useState("")
 
     const mainTheme = useTheme();
 
@@ -87,6 +89,7 @@ export function LogsLabelValueSelector(props: any) {
         const labValue = labelValueString || JSON.stringify("");
         const logsString = logsToString(value, JSON.parse(labValue));
         setLabelsString(logsString);
+        setFinalQuery(logsString)
         labelValueChange(logsString);
     }, [labelValueString, value]);
 
@@ -97,7 +100,7 @@ export function LogsLabelValueSelector(props: any) {
     useEffect(() => {
         if (labelValueString !== "") {
             let res = OperationsManager(labelValueString, operations, value);
-
+            setFinalQuery(res)
             labelValueChange(res);
         }
     }, [operations, labelValueString, value, jsonExpressions]);
@@ -230,6 +233,7 @@ export function LogsLabelValueSelector(props: any) {
                         operations={operations}
                     />
                 </div>
+                <QueryPreview queryText={finalQuery}/>
             </div>
         </ThemeProvider>
     );

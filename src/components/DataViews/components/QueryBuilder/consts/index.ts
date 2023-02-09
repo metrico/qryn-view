@@ -3,14 +3,14 @@ import { operatorsTypes, Label } from "../types";
 
 export const OPERATOR_OPTIONS = [
     { label: "=", value: "equals" },
-    { label: "~=", value: "regexequals" },
+    { label: "=~", value: "regexequals" },
     { label: "!=", value: "excludeequals" },
     { label: "!~", value: "regexexclude" },
 ];
 
 export const OPERATORS: operatorsTypes | any = {
     equals: "=",
-    regexequals: "~=",
+    regexequals: "=~",
     excludeequals: "!=",
     regexexclude: "!~",
 };

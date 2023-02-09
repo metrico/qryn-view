@@ -17,6 +17,7 @@ export default function LogsSearch(props: any) {
         searchButton,
         logsRateButton,
         statsSwitch,
+        isBuilder
  
     } = props;
 
@@ -57,7 +58,7 @@ export default function LogsSearch(props: any) {
             </div>
             <div style={{ display: "flex", margin: "10px 0px" }}>
                 {searchButton}
-                {logsRateButton}
+                {!isBuilder && logsRateButton}
                 {hasStats && statsSwitch}
             </div>
         </ThemeProvider>

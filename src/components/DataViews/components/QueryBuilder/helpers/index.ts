@@ -135,7 +135,7 @@ export function selectTheme(theme: any, mainTheme: any) {
         colors: {
             ...theme.colors,
             primary: mainTheme.textColor,
-            neutral90: mainTheme.textColor,
+            neutral90: mainTheme.buttonBorder,
             neutral80: mainTheme.textColor,
             neutral0: mainTheme.inputBg,
             primary25: mainTheme.widgetContainer,

@@ -80,7 +80,7 @@ const menuClosing = css`
 
 const menuItem = (theme: any) => css`
     // color:white;
-    background:${theme.inputBg}  !important; 
+    background: ${theme.inputBg} !important;
     color: ${theme.textColor} !important;
     border-radius: 3px;
     padding: 0.275rem 0.525rem;
@@ -104,7 +104,6 @@ const submenuItemClassName = (modifiers: any, theme: any) => {
 };
 
 const menuClassName = (props: any /*{ state }: any */, theme: any) => {
-
     return classNames(menu(theme), {
         [menuOpening]: props.state === "opening",
         [menuClosing]: props.state === "closing",
@@ -209,6 +208,7 @@ export function CustomSubMenu({ item }: any) {
 }
 
 export const mainMenu = (theme: any) => css`
+    margin-bottom: 6px;
     .szh-menu {
         background: ${theme.inputBg} !important;
         color: ${theme.textColor} !important;
