@@ -303,19 +303,22 @@ export const QueryBar = (props: any) => {
             start,
             stop
         );
-        dispatch(
-            getData(
-                dataSourceType,
-                actLocalQuery?.expr,
-                queryType,
-                limit,
-                name,
-                id,
-                direction,
-                dataSourceId,
-                currentDataSource?.url
-            )
-        );
+        if(actLocalQuery?.expr !== '') {
+            dispatch(
+                getData(
+                    dataSourceType,
+                    actLocalQuery?.expr,
+                    queryType,
+                    limit,
+                    name,
+                    id,
+                    direction,
+                    dataSourceId,
+                    currentDataSource?.url
+                )
+            );
+        }
+  
         // if is view only mode (embedded) do an auto request on init
 
         if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
@@ -629,7 +632,7 @@ export const QueryBar = (props: any) => {
             querySubmit = queryExpr;
         }
 
-        if (isSearch) {
+        if (isSearch && querySubmit !== '') {
             dispatch(
                 getData(
                     dataSourceType,
@@ -971,7 +974,7 @@ export const QueryBarCont = (props: any) => {
             {buttonsHidden() && dataSourceType === "logs" && !isBuilder && (
                 <ShowLabelsButton {...props} />
             )}
-            {!isBuilder && (
+            { (dataSourceType !== "logs" || !isBuilder) && (
                 <QueryEditor
                     onQueryChange={handleQueryChange}
                     defaultValue={expr || ""}
@@ -980,7 +983,7 @@ export const QueryBarCont = (props: any) => {
                 />
             )}
 
-            {buttonsHidden() && !isBuilder && (
+            {buttonsHidden() && dataSourceType === "logs" &&  !isBuilder && (
                 <>
                     <HistoryButton
                         queryLength={queryHistory.length}
