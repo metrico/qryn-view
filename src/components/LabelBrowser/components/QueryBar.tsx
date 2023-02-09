@@ -303,7 +303,7 @@ export const QueryBar = (props: any) => {
             start,
             stop
         );
-        if(actLocalQuery?.expr !== '') {
+        if (actLocalQuery?.expr !== "") {
             dispatch(
                 getData(
                     dataSourceType,
@@ -318,7 +318,7 @@ export const QueryBar = (props: any) => {
                 )
             );
         }
-  
+
         // if is view only mode (embedded) do an auto request on init
 
         if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
@@ -423,17 +423,9 @@ export const QueryBar = (props: any) => {
         }
     };
     const getLocalStorage = () => {
-        // 1- if has previous id with data => modify data
-        // 2- if no previous data => create entry
         try {
-            const prevQuery =
-                JSON.parse(localStorage.getItem("queryData") || "[]") || [];
-
-            if (prevQuery) {
-                return prevQuery;
-            } else {
-                return [];
-            }
+            const prevQuery = JSON.parse(localStorage.getItem("queryData") || "[]");
+            return prevQuery;
         } catch (e) {
             return [];
         }
@@ -580,7 +572,7 @@ export const QueryBar = (props: any) => {
         const currentDataSource = dataSources.find(
             (f: any) => f.id === dataSourceId
         );
-        if (currentDataSource?.type !== "flux") {
+        if (currentDataSource?.type !== "flux" && currentDataSource?.type !== 'traces') {
             decodeQuery(
                 queryExpr,
                 currentDataSource?.url,
@@ -632,7 +624,7 @@ export const QueryBar = (props: any) => {
             querySubmit = queryExpr;
         }
 
-        if (isSearch && querySubmit !== '') {
+        if (isSearch && querySubmit !== "") {
             dispatch(
                 getData(
                     dataSourceType,
@@ -974,22 +966,22 @@ export const QueryBarCont = (props: any) => {
             {buttonsHidden() && dataSourceType === "logs" && !isBuilder && (
                 <ShowLabelsButton {...props} />
             )}
-            { (dataSourceType !== "logs" || !isBuilder) && (
+            {(dataSourceType !== "logs" || !isBuilder) && (
                 <QueryEditor
                     onQueryChange={handleQueryChange}
                     defaultValue={expr || ""}
-                    value={queryValue}
+                    value={queryValue} // queryValue should change and or update on datasource change
                     onKeyDown={handleInputKeyDown}
                 />
             )}
 
-            {buttonsHidden() && dataSourceType === "logs" &&  !isBuilder && (
+            {buttonsHidden() && dataSourceType === "logs" && !isBuilder && (
                 <>
                     <HistoryButton
                         queryLength={queryHistory.length}
                         handleHistoryClick={handleHistoryClick}
                     />
-                    {dataSourceType === "logs" && !isBuilder &&(
+                    {dataSourceType === "logs" && !isBuilder && (
                         <ShowLogsRateButton
                             disabled={!queryValid}
                             onClick={onSubmitRate}

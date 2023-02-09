@@ -94,11 +94,15 @@ export default function stateFromQueryParams() {
                     (moment as any)(croppedTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
                 );
             } else if (key === "left" || key === "right") {
-                const parsedQuery = JSON.parse(decodeURIComponent(value));
-                startParams[key] = parsedQuery;
+                let panel = decodeURIComponent(value)
+                if(typeof panel === 'string') {
+                    const parsedQuery = JSON.parse(decodeURIComponent(value)||"[]");
+                    startParams[key] = parsedQuery;
+                }
+           
             }  else if (BOOLEAN_VALUES.includes(key)) {
                 try {
-                    startParams[key] = JSON.parse(value);
+                    startParams[key] = JSON.parse(value || 'false');
                 } catch(e) {
                     console.error(key);
                     startParams[key] = false;

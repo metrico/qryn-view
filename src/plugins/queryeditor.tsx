@@ -174,10 +174,6 @@ export default function QueryEditor({
         setEditorValue(value);
         editor.children = value;
     }, [value, setEditorValue]);
-    // const onResize = (e, {size}) => {
-    //     console.log(size)
-    //     setHeight(size.height)
-    // };
 
     const _themes: any = themes;
 
@@ -193,25 +189,11 @@ export default function QueryEditor({
                     value={editorValue}
                     onChange={onQueryChange}
                 >
-                    {" "}
-                    {/* <ResizableBox
-                        height={height}
-                        width={width || 500}
-                        axis={"y"}
-                        onResize={onResize}
-                        lockAspectRatio={false}
-                        handleSize={[10, 10]}
-                        minWidth={width || 500}
-                        maxWidth={width || 500}
-                        minHeight={30}
-                        maxHeight={500}
-                        resizeHandles={["s"]}
-                        className={Resizable}
-                    > */}
+
                         <CustomEditor
                             decorate={decorate}
                             renderLeaf={renderLeaf}
-                            placeholder={defaultValue}
+                            placeholder={''}
                             onKeyDown={onKeyDown}
                             spellCheck="false"
                         />
