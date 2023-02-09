@@ -13,21 +13,29 @@ export const Select = ({
     locked,
     onChange,
     opts,
-    label, 
+    label,
+    labelWidth,
     name,
     fullWidth,
-    width
+    width,
 }: any) => {
     const [initialValue, setInitialValue] = useState("");
     const selectRef: any = useRef(null);
+
     const formattedSelect = useMemo(() => {
         if (typeof opts[0] === "string") {
-            return opts.map((k: any) => ({ value: k, name: k }));
-        } else return opts;
+            return opts.map((k: string) => ({
+                value: k,
+                name:k,
+            }));
+        } else
+       return opts
     }, [opts]);
 
     useEffect(() => {
-        const selected = formattedSelect?.find((f: any) => f.name === value)?.["value"];
+        const selected = formattedSelect?.find((f: any) => f.name === value)?.[
+            "value"
+        ];
         if (selected && selectRef?.current?.value !== selected) {
             setInitialValue(selected);
             selectRef.current.value = selected;
@@ -36,7 +44,7 @@ export const Select = ({
 
     return (
         <InputGroup width={width}>
-            {label?.length > 0 && <Label width={width || null}>{label}</Label>}
+            {label?.length > 0 && <Label width={labelWidth || null}>{label}</Label>}
             <select
                 ref={selectRef}
                 className={cx(FlexOne(fullWidth))}
@@ -45,7 +53,10 @@ export const Select = ({
                 onChange={(e) => onChange(e, name)}
             >
                 {formattedSelect?.map((field: any, key: number) => (
-                    <option key={key} value={field.value}>
+                    <option
+                        key={key}
+                        value={field.value}
+                    >
                         {field.name}
                     </option>
                 ))}
