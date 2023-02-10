@@ -10,7 +10,7 @@ export const ItemTypes = {
     CARD: "card",
 };
 
-const style = (theme:any) => ({
+const style = (theme: any) => ({
     border: `1px solid ${theme.buttonBorder}`,
     backgroundColor: `${theme.inputBg}`,
     fontSize: "12px",
@@ -25,20 +25,22 @@ export interface CardProps {
     header: any;
     index: number;
     body: any;
-    rate:string;
+    rate: string;
     moveItem: (dragIndex: number, hoverIndex: number) => void;
     removeItem: any;
-    opType:string;
-    expressions:[];
-    filterText:string;
-    lineFilter:string;
-    binaryOperation:BinaryOperation;
-    labelFilter:LabelFilter;
-    kValue:number;
-    labels:[];
-    labelOpts: string[]
-    onExpChange:(expressions:[])=>void
-    setOperations:any;
+    opType: string;
+    expressions: any[];
+    conversion_function: string;
+    labelValue: string;
+    filterText: string;
+    lineFilter: string;
+    binaryOperation: BinaryOperation;
+    labelFilter: LabelFilter;
+    kValue: number;
+    labels: [];
+    labelOpts: string[];
+    onExpChange: (expressions: []) => void;
+    setOperations: any;
 }
 
 interface DragItem {
@@ -48,7 +50,6 @@ interface DragItem {
 }
 
 export const Operations: FC<CardProps> = (props) => {
-
     const {
         id,
         header,
@@ -62,14 +63,15 @@ export const Operations: FC<CardProps> = (props) => {
         labelFilter,
         filterText,
         lineFilter,
+        conversion_function,
+        labelValue,
         labelOpts,
-        binaryOperation
-    } = props
-
+        binaryOperation,
+    } = props;
 
     const ref = useRef<HTMLDivElement>(null);
 
-    const theme = useTheme()
+    const theme = useTheme();
     const [{ handlerId }, drop] = useDrop<
         DragItem,
         void,
@@ -160,11 +162,12 @@ export const Operations: FC<CardProps> = (props) => {
                 kValue={kValue}
                 labelFilter={labelFilter}
                 binaryOperation={binaryOperation}
+                conversion_function={conversion_function}
+                labelValue={labelValue}
                 lineFilter={lineFilter}
                 labelOpts={labelOpts}
                 filterText={filterText}
                 removeItem={removeItem}
-
             />
         </div>
     );

@@ -31,6 +31,8 @@ export interface Item {
     body: any;
     expressions: any[];
     filterText:string;
+    conversion_function: string,
+    labelValue: string,
     labelFilter: LabelFilter;
     binaryOperation: BinaryOperation;
     lineFilter:string;
@@ -80,6 +82,8 @@ export const Container: FC<OperationsContainerProps> = (props: any) => {
                 opType={operation.opType}
                 header={operation.header}
                 kValue={operation.kValue}
+                labelValue={operation.labelValue}
+                conversion_function={operation.conversion_function}
                 binaryOperation={operation.binaryOperation}
                 labelOpts={operation.labelOpts}
                 lineFilter={operation.lineFilter}

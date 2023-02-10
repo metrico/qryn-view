@@ -15,11 +15,47 @@ import { Label } from "./types";
 import { OperationsManager } from "./builders/OperationsManager";
 import QueryPreview from "./QueryPreview";
 
+export interface LabelFilter {
+    label: string;
+    operator: string;
+    value: string;
+}
+
+export interface BinaryOperation {
+    value: string;
+    bool: boolean;
+}
+
+export interface Operation {
+    id: number;
+    name: string;
+    header: any;
+    range: string;
+    expressions: any[];
+    conversion_function: string;
+    labelValue: string;
+    filterText: string;
+    labelFilter: LabelFilter;
+    binaryOperation: BinaryOperation;
+    lineFilter: string;
+    quantile: string | number;
+    kValue: number;
+    labels: any[];
+    labelOpts: any[]; // here we should have the labels from the .. initial operation
+    opType: string;
+}
+
+export type InitialOperationFn = (
+    name: string,
+    opType: string,
+    labelSeries: any,
+    operations: any
+) => Operation;
+
 const InitialOperation = {
     id: 0,
     name: "none",
     header: <div>Container Header</div>,
-    body: <div></div>,
 };
 
 export function LogsLabelValueSelector(props: any) {
@@ -28,7 +64,7 @@ export function LogsLabelValueSelector(props: any) {
     const [labelValuesState, setLabelValuesState] = useState<Label[]>(
         InitialLabelValueState
     );
-        
+
     const [labelsString, setLabelsString] = useState("");
     const { labelSeries } = useLabelSeries(dataSourceId, labelsString);
     const [jsonExpressions, setJsonExpressions] = useState([]);
@@ -36,7 +72,7 @@ export function LogsLabelValueSelector(props: any) {
     const [operations, setOperations] = useState<any>([]);
     const [labelValueString, setLabelValueString] = useState("");
     // const [logsString, setLogsString] = useState("")
-    const [finalQuery, setFinalQuery] = useState("")
+    const [finalQuery, setFinalQuery] = useState("");
 
     const mainTheme = useTheme();
 
@@ -89,7 +125,7 @@ export function LogsLabelValueSelector(props: any) {
         const labValue = labelValueString || JSON.stringify("");
         const logsString = logsToString(value, JSON.parse(labValue));
         setLabelsString(logsString);
-        setFinalQuery(logsString)
+        setFinalQuery(logsString);
         labelValueChange(logsString);
     }, [labelValueString, value]);
 
@@ -100,7 +136,7 @@ export function LogsLabelValueSelector(props: any) {
     useEffect(() => {
         if (labelValueString !== "") {
             let res = OperationsManager(labelValueString, operations, value);
-            setFinalQuery(res)
+            setFinalQuery(res);
             labelValueChange(res);
         }
     }, [operations, labelValueString, value, jsonExpressions]);
@@ -141,12 +177,11 @@ export function LogsLabelValueSelector(props: any) {
         return [...prev, initial];
     };
 
-    const setInitialOperation = (
-        name: string,
-        opType: string,
-        labelSeries: any,
-        operations: any,
-        intialOperation: any
+    const setInitialOperation: InitialOperationFn = (
+        name,
+        opType,
+        labelSeries,
+        operations
     ) => ({
         ...InitialOperation,
         header: name,
@@ -154,13 +189,16 @@ export function LogsLabelValueSelector(props: any) {
         name: name?.toLowerCase()?.split(" ")?.join("_"),
         id: operations?.length + 1,
         expressions: [],
+        conversion_function: "",
+        labelValue: "",
         filterText: "",
         labelFilter: { label: "", operator: "=", value: "" },
         binaryOperation: { value: "", bool: false },
         lineFilter: "",
+        quantile: 0,
         kValue: 5,
         labels: [],
-        labelOpts: labelSeries, // here we should have the labels from the .. initial operation
+        labelOpts: labelSeries || [], // here we should have the labels from the .. initial operation
         opType,
     });
 
@@ -170,8 +208,7 @@ export function LogsLabelValueSelector(props: any) {
                 name,
                 opType,
                 labelSeries,
-                operations,
-                InitialOperation
+                operations
             );
 
             setOperations((prev: any) =>
@@ -233,7 +270,7 @@ export function LogsLabelValueSelector(props: any) {
                         operations={operations}
                     />
                 </div>
-                <QueryPreview queryText={finalQuery}/>
+                <QueryPreview queryText={finalQuery} />
             </div>
         </ThemeProvider>
     );

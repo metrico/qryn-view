@@ -157,9 +157,13 @@ export interface LogFmtBuilderProps extends CommonFormatProps {
 export interface UnPackBuilderProps extends CommonFormatProps {
     setUnPack(): string;
 }
-
 export interface UnwrapBuilderProps extends CommonFormatProps {
-    setUnwrapFmt(): string;
+    labelValue:string;
+    conversion_function: ConversionFn
+    setLabelValue(labelValue:string):void
+    setConversionFn(conversion_function:ConversionFn):void
+    setConversionFnString():void
+    setUnwrapFmt(): void;
 }
 
 // Functions
@@ -257,3 +261,5 @@ export type BinaryOperation =
     | "greater_or_equal_to"
     | "less_or_equal_to"
     | "binary_operation_with_query";
+
+    export type ConversionFn = 'duration' | 'duration_seconds' | 'bytes' | ''

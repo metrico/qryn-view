@@ -157,7 +157,7 @@ export const OperationsOptions: any = {
         "Unpack",
         "Line Format",
         //  "Label Format", // label format not supported yet
-        //  "Unwrap", // unwrap should work later with range functions
+        "Unwrap", // unwrap should work later with range functions
     ],
     "Binary Operations": [
         "Add Scalar",

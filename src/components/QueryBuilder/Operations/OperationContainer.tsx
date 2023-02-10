@@ -91,6 +91,8 @@ type Props = {
     index: number;
     opType: string;
     expressions: any[];
+    conversion_function: string;
+    labelValue: string;
     filterText: string;
     labelFilter: LabelFilter;
     binaryOperation: BinaryOperation;
@@ -106,6 +108,27 @@ export const RangesSelector = (props: any) => {
     const { initial, onChange } = props;
     const rangeOpts: any[] = useMemo(() => {
         return ["$__interval", "1m", "5m", "10m", "1h", "24h"]?.map(
+            (m: string) => ({ name: m, value: m })
+        );
+    }, []);
+
+    return (
+        <select defaultValue={initial} onChange={onChange}>
+            {rangeOpts.map(
+                (opt: { name: string; value: string }, key: number) => (
+                    <option key={key} value={opt.value}>
+                        {opt.name}
+                    </option>
+                )
+            )}
+        </select>
+    );
+};
+
+export const ConversionFunctionSelector = (props: any) => {
+    const { initial, onChange } = props;
+    const rangeOpts: any[] = useMemo(() => {
+        return ["duration", "duration_seconds", "bytes", ""]?.map(
             (m: string) => ({ name: m, value: m })
         );
     }, []);
@@ -260,6 +283,63 @@ export const PatternFormatBody = (props: Props) => {
                 value={expression}
                 placeholder={"<pattern|expression>"}
                 onChange={onExpChange}
+            />
+        </div>
+    );
+};
+
+export const UnwrapFormatBody: React.FC = (props: any) => {
+    const { setOperations, id } = props;
+    const theme = useTheme();
+    const [labelValue, setLabelValue] = useState<string>("");
+    const [conversionFunction, setConversionFunction] = useState<string>("");
+    const onLabelValueChange = useCallback(
+        (e) => {
+            setLabelValue(e.target.value);
+
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.labelValue = e.target.value;
+                        return m;
+                    }
+                    return m;
+                });
+            });
+        },
+        [labelValue]
+    );
+
+    const onConversionFunctionChange = useCallback(
+        (e) => {
+            setConversionFunction(e.target.value);
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.conversion_function = e.target.value;
+                        return m;
+                    }
+                    return m;
+                });
+            });
+        },
+        [conversionFunction]
+    );
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <input
+                value={labelValue}
+                placeholder={"Unrap Label"}
+                onChange={onLabelValueChange}
+            />
+
+            <ConversionFunctionSelector
+                initial=""
+                onChange={onConversionFunctionChange}
+                className={"expression-input"}
             />
         </div>
     );
@@ -603,6 +683,8 @@ export const formatsRenderer = (op: string, props: any) => {
             return <RegexpFormatBody {...props} />;
         case "line_format":
             return <LineFormatBody {...props} />;
+        case "unwrap":
+            return <UnwrapFormatBody {...props} />;
         default:
             return <DefaultFormatBody {...props} />;
     }

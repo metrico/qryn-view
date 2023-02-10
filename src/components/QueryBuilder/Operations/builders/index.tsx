@@ -63,15 +63,38 @@ export const LogFmtBuilder: LogFmtFn = () => ({
     },
 });
 
+//
+
 export const UnwrapBuilder: UnwrapFmtFn = () => ({
     result: "",
+    labelValue: "",
+    conversion_function: "",
+    setLabelValue(labelValue) {
+        this.labelValue = labelValue;
+    },
+    setConversionFn(conversion_function) {
+        this.conversion_function = conversion_function;
+    },
+
+    setConversionFnString() {
+        this.labelValue =
+            this.conversion_function + "(" + this.labelValue + ")";
+    },
+
     setUnwrapFmt() {
-        this.result += " | unwrap";
-        return this.result;
+        this.result = " | unwrap ";
+        if (this.labelValue !== "" && this.conversion_function === "") {
+            this.result += ` ${this.labelValue}`;
+        }
+        if (this.conversion_function !== "") {
+            this.setConversionFnString();
+            this.result += `${this.labelValue}`;
+        }
     },
     build(initial: string) {
-        this.result += initial + this.setUnwrapFmt();
-        return this.result;
+        this.setUnwrapFmt();
+
+        return initial + this.result;
     },
 });
 
