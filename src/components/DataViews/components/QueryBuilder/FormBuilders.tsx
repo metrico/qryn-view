@@ -16,10 +16,10 @@ export const FormBuilders = (props: FormBuilderProps) => {
     const theme = useTheme();
     const { builders, setBuilders, dataSourceId, logsResponse } = props;
 
-    if (Array.isArray(builders) && builders?.length > 0) {
+
         return (
             <div className={cx(FlexColumn)}>
-                {builders.map((builder, idx) => {
+                {builders?.map((builder, idx) => {
                     return (
                         <FormBuilder
                             {...props}
@@ -35,9 +35,9 @@ export const FormBuilders = (props: FormBuilderProps) => {
                 })}
             </div>
         );
-    }
+    
 
-    return null;
+   
 };
 
 // return an array of builders

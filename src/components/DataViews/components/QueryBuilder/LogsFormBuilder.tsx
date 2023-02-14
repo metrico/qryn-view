@@ -34,7 +34,7 @@ const binaryOperatorOpts: any = {
 export function LogsFormBuilder(props: LogsFormBuilderProps) {
     const { dataSourceId, labelValueChange } = props;
 
-    const { loading, logsResponse } = useLogLabels(dataSourceId);
+    const { logsResponse } = useLogLabels(dataSourceId);
 
     const [finalQuery, setFinalQuery] = useState("");
     const mainTheme = useTheme();
@@ -97,9 +97,7 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
         setFinalQuery(finalQueryOperator(builders));
     }, [builders]);
 
-    if (loading) {
-        return null;
-    }
+
     return (
         <ThemeProvider theme={mainTheme}>
             <div className={cx(FlexColumn)}>
