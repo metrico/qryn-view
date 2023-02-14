@@ -1,6 +1,10 @@
 import { css } from "@emotion/css";
 
-export const cStyles = (theme: any, minWidth: number) => ({
+export const cStyles = (theme: any, minWidth: number,flexOne?:boolean) => ({
+    constainer: (base: any) => ({
+        ...base,
+        flex:flexOne ? 1 : ''
+    }),
     menu: (base: any) => ({
         ...base,
         fontSize: "12px",
@@ -17,6 +21,8 @@ export const cStyles = (theme: any, minWidth: number) => ({
         border:`1px solid ${theme.buttonBorder}`,
         // marginTop: "5px",
         minWidth,
+        flex: flexOne ? 1 : '' 
+
     }),
     input: (base: any) => ({
         ...base,
@@ -46,12 +52,14 @@ export const cStyles = (theme: any, minWidth: number) => ({
         minHeight: 30,
         margin: 0,
         padding: 0,
+        width:'350px',
         marginTop: "4px",
         color: theme.textColor,
     }),
     valueContainer: (base: any) => ({
         ...base,
         display: "flex",
+        flex: flexOne ? 1 : '' 
     }),
 });
 
