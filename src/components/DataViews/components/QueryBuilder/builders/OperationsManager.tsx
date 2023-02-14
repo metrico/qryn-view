@@ -33,6 +33,7 @@ const ranges = [
     "bytes_rate",
     "bytes_over_time",
     "absent_over_time",
+    
 ];
 
 // unwrapped expressions
@@ -46,6 +47,7 @@ const label_ranges = [
     "last_over_time",
     "stdvar_over_time",
     "stddev_over_time",
+    "quantile_over_time"
 ];
 
 const line_filters = [
@@ -173,6 +175,7 @@ export const OperationsManager: OperationsManagerType = (
                     // initialize with operation type
                     result = RangeOperators(operation.name)["range"];
                     result.setRange(operation.range || "$__interval");
+              
                     result = result.build(resultType);
                 }
 
@@ -181,7 +184,9 @@ export const OperationsManager: OperationsManagerType = (
                     result = RangeOperators(operation.name)["label_range"];
                     setRangeLabels(result, operation.labels);
                     result.updRange(operation.range || "$__interval");
-
+                    if(operation.name === 'quantile_over_time'){
+                        result.setQuantile(operation.quantile)
+                    }
                     result = result.build(resultType);
                 }
 

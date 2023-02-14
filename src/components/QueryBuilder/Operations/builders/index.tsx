@@ -169,20 +169,17 @@ export const LineFmtBuilder: LineFmtFn = () => ({
 
 export const RangeBuilder: RangeFn = (rangeType) => ({
     result: "",
-
     range: "",
-
-    setFn(initial: string) {
-        this.result = `${rangeType}(${initial}`;
-    },
-    // range should be set before building always!
     setRange(range: string) {
         this.range = range;
     },
     setRate() {
         this.result += ` [${this.range}])`;
     },
-
+  
+    setFn(initial: string) {
+            this.result = `${rangeType}(${initial}`;
+    },
     build(initial: string) {
         this.setFn(initial);
         this.setRate();
@@ -195,8 +192,13 @@ export const LabelRangeBuilder: LabelRangeFn = (rangeType) => ({
     range: "",
     labels: [],
     labelsString: "",
+    quantile: 0.95,
     setFn(initial: string) {
-        this.result = `${rangeType}(${initial}`;
+        if (rangeType !== "quantile_over_time") {
+            this.result = `${rangeType}(${initial}`;
+        } else {
+            this.result = `${rangeType}(${this.quantile}, ${initial}`;
+        }
     },
     updRange(range: string) {
         this.range = range;
@@ -206,6 +208,10 @@ export const LabelRangeBuilder: LabelRangeFn = (rangeType) => ({
     },
     addLabel(label: string) {
         this.labels = [...this.labels, label];
+    },
+
+    setQuantile(quantile: number | string) {
+        this.quantile = quantile;
     },
 
     setLabels() {

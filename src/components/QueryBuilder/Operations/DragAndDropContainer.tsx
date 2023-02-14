@@ -36,6 +36,7 @@ export interface Item {
     labelFilter: LabelFilter;
     binaryOperation: BinaryOperation;
     lineFilter:string;
+    quantile:string|number
     kValue:number;
     labels: any[];
     labelOpts:string[];
@@ -83,6 +84,7 @@ export const OperationsContainer: FC<OperationsContainerProps> = (props: any) =>
                 opType={operation.opType}
                 header={operation.header}
                 kValue={operation.kValue}
+                quantile={operation.quantile}
                 labelValue={operation.labelValue}
                 conversion_function={operation.conversion_function}
                 binaryOperation={operation.binaryOperation}

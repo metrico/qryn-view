@@ -236,7 +236,7 @@ export const setInitialOperation: InitialOperationFn = (
     labelFilter: { label: "", operator: "=", value: "" },
     binaryOperation: { value: "", bool: false },
     lineFilter: "",
-    quantile: 0,
+    quantile: 0.95,
     kValue: 5,
     labels: [],
     labelOpts: labelSeries || [], // here we should have the labels from the .. initial operation

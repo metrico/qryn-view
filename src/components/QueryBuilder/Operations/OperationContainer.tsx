@@ -97,6 +97,7 @@ type Props = {
     labelFilter: LabelFilter;
     binaryOperation: BinaryOperation;
     lineFilter: string;
+    quantile: string | number;
     kValue: number;
     labels: [];
     labelOpts: string[];
@@ -125,21 +126,17 @@ export const RangesSelector = (props: any) => {
     );
 };
 
-
 export const BinaryOperatorsSelector = (props: any) => {
     // intial:   divide
     const { initial, onChange, opts } = props;
 
-
     return (
         <select defaultValue={initial} onChange={onChange}>
-            {opts.map(
-                (opt: { name: string; value: string }, key: number) => (
-                    <option key={key} value={opt.value}>
-                        {opt.name}
-                    </option>
-                )
-            )}
+            {opts.map((opt: { name: string; value: string }, key: number) => (
+                <option key={key} value={opt.value}>
+                    {opt.name}
+                </option>
+            ))}
         </select>
     );
 };
@@ -440,6 +437,7 @@ export const DefaultFormatBody = (props: any) => {
 export const RangeBody = (props: any) => {
     const { setOperations, id } = props;
     const [range, setRange] = useState(props.range);
+
     const theme = useTheme();
     const onRangeChange = useCallback(
         (e: any) => {
@@ -459,6 +457,8 @@ export const RangeBody = (props: any) => {
         [range]
     );
 
+
+
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <RangesSelector onChange={onRangeChange} initial={range} />
@@ -472,6 +472,7 @@ export const LabelRangeBody = (props: any) => {
 
     const [labels, setLabels] = useState<string[]>(props.labels || []);
     const [range, setRange] = useState(props.range);
+    const [quantile, setQuantile] = useState(props.quantile);
     const theme = useTheme();
     const onLabelAdd = (e: any) => {
         setLabels((prev) => [...prev, ""]);
@@ -521,6 +522,24 @@ export const LabelRangeBody = (props: any) => {
         [labels]
     );
 
+    const onQuantileChange = useCallback(
+        (e: any) => {
+            let val: string = e.target.value;
+            setQuantile(val);
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.quantile = val;
+                        return m;
+                    }
+                    return m;
+                });
+            });
+        },
+        [range]
+    );
+
     const onRangeChange = useCallback(
         (e: any) => {
             let val: string = e.target.value;
@@ -559,6 +578,9 @@ export const LabelRangeBody = (props: any) => {
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             {rangeLabelsRenderer()}
+            {props.header === "Quantile Over Time" && (
+                <input onChange={onQuantileChange} value={quantile} />
+            )}
             <button onClick={onLabelAdd}>Add Label</button>
             <RangesSelector onChange={onRangeChange} initial={range} />
         </div>
@@ -750,7 +772,6 @@ interface FilterState {
 }
 export const LabelFilterBody = (props: any) => {
     const { setOperations, id } = props;
-    console.log(props)
     const [labelFilterState, setLabelFilterState] = useState<FilterState>({
         label: "",
         operator: "equals",
@@ -794,38 +815,37 @@ export const LabelFilterBody = (props: any) => {
 
         [operatorOptions]
     );
-        if(props.header !== "No Pipeline Errors") {
-            return (
-                <div className={cx(OperationBodyStyles(theme))}>
-                    <input
-                        value={labelFilterState.label}
-                        placeholder={"Text Filter"}
-                        onChange={(e) => onChange(e, "label")}
-                    />
-        
-                    <select
-                        defaultValue={"equals"}
-                        onChange={(e) => onChange(e, "operator")}
-                    >
-                        {operatorOptions.map(
-                            (opt: { name: string; value: string }, key: number) => (
-                                <option key={key} value={opt.value}>
-                                    {opt.name}
-                                </option>
-                            )
-                        )}
-                    </select>
-        
-                    <input
-                        value={labelFilterState.value}
-                        placeholder={"Text Filter"}
-                        onChange={(e) => onChange(e, "value")}
-                    />
-                </div>
-            );
-        }
-        return null
- 
+    if (props.header !== "No Pipeline Errors") {
+        return (
+            <div className={cx(OperationBodyStyles(theme))}>
+                <input
+                    value={labelFilterState.label}
+                    placeholder={"Text Filter"}
+                    onChange={(e) => onChange(e, "label")}
+                />
+
+                <select
+                    defaultValue={"equals"}
+                    onChange={(e) => onChange(e, "operator")}
+                >
+                    {operatorOptions.map(
+                        (opt: { name: string; value: string }, key: number) => (
+                            <option key={key} value={opt.value}>
+                                {opt.name}
+                            </option>
+                        )
+                    )}
+                </select>
+
+                <input
+                    value={labelFilterState.value}
+                    placeholder={"Text Filter"}
+                    onChange={(e) => onChange(e, "value")}
+                />
+            </div>
+        );
+    }
+    return null;
 };
 
 const BinaryOperationsBody = (props: any) => {
@@ -893,6 +913,7 @@ const ranges = [
     "bytes_rate",
     "bytes_over_time",
     "absent_over_time",
+    
 ];
 
 const label_ranges = [
@@ -903,6 +924,8 @@ const label_ranges = [
     "last_over_time",
     "stdvar_over_time",
     "stddev_over_time",
+    "quantile_over_time",
+    "",
 ];
 
 const aggregations = ["sum", "min", "max", "avg", "stddev", "stdvar", "count"];

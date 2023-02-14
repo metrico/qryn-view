@@ -36,10 +36,12 @@ export interface LabelRangeProps {
     result: string;
     range: string;
     labels: string[];
+    quantile: string | number;
     labelsString: string;
     setFn(initial: string): void;
     updRange(range: string): void;
     setRange(): void;
+    setQuantile(quantile:string|number):void
     addLabel(label: string): void;
     setLabels(): void;
     build(initial: string): string;
@@ -211,7 +213,8 @@ export type SimpleRangeOperator =
     | "sum_over_time"
     | "bytes_rate"
     | "bytes_over_time"
-    | "absent_over_time";
+    | "absent_over_time"
+    
 
 export type LabelRangeOperator =
     | "avg_over_time"
@@ -220,7 +223,8 @@ export type LabelRangeOperator =
     | "first_over_time"
     | "last_over_time"
     | "stdvar_over_time"
-    | "stddev_over_time";
+    | "stddev_over_time"
+    | "quantile_over_time";
 
 export type QuantileRangeOperator = "quantile_over_time";
 

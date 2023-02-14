@@ -36,6 +36,7 @@ export interface OperationProps {
     lineFilter: string;
     binaryOperation: BinaryOperation;
     labelFilter: LabelFilter;
+    quantile: string | number
     kValue: number;
     labels: [];
     labelOpts: string[];
@@ -62,6 +63,7 @@ export const Operations: FC<OperationProps> = (props) => {
         moveItem,
         removeItem,
         kValue,
+        quantile,
         labelFilter,
         filterText,
         lineFilter,
@@ -162,6 +164,7 @@ export const Operations: FC<OperationProps> = (props) => {
                 body={body}
                 index={index}
                 kValue={kValue}
+                quantile={quantile}
                 labelFilter={labelFilter}
                 binaryOperation={binaryOperation}
                 conversion_function={conversion_function}
