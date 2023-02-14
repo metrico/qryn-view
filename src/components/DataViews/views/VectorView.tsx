@@ -39,7 +39,7 @@ export const VectorView = (props: any) => {
     }, [props?.dataView?.raw]);
 
     const [tabsState, setTabsState] = useState<number>(
-        localTabsState(actualQuery)[actualQuery.id]
+        localTabsState(actualQuery)[actualQuery.id] || 0
     );
 
     const onTabChange = (

@@ -26,7 +26,7 @@ export default function LogsView(props: any) {
     } = props;
 
     const [tabsState, setTabsState] = useState<number>(
-        localTabsState(actualQuery)[actualQuery.id]
+        localTabsState(actualQuery)[actualQuery.id] || 0
     );
 
     const rawData = useMemo(() => {
