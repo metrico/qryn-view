@@ -1,7 +1,7 @@
 import { css } from "@emotion/css";
 
 export const cStyles = (theme: any, minWidth: number,flexOne?:boolean) => ({
-    constainer: (base: any) => ({
+    container: (base: any) => ({
         ...base,
         flex:flexOne ? 1 : ''
     }),
@@ -52,7 +52,6 @@ export const cStyles = (theme: any, minWidth: number,flexOne?:boolean) => ({
         minHeight: 30,
         margin: 0,
         padding: 0,
-        width:'350px',
         marginTop: "4px",
         color: theme.textColor,
     }),
