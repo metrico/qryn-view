@@ -345,7 +345,8 @@ const label_filter: any = {
     more_equals: ">=",
     less_equals: "<=",
 };
-
+const isNoErrors = (labelFilter: string) =>
+    labelFilter === "no_pipeline_errors";
 export const LabelFilterBuilder: LabelFilterFn = (labelfilter: string) => ({
     result: "",
     label: "",
@@ -375,8 +376,12 @@ export const LabelFilterBuilder: LabelFilterFn = (labelfilter: string) => ({
             this.setFilterType(this.value);
     },
     setFn(initial) {
-        this.setLabelValueString();
-        this.result = `${initial} |${this.labelValueString}`;
+        if (!isNoErrors(labelfilter)) {
+            this.setLabelValueString();
+            this.result = `${initial} |${this.labelValueString}`;
+        } else {
+            this.result = initial + " | __error__=``";
+        }
     },
 
     build(initial) {

@@ -750,7 +750,7 @@ interface FilterState {
 }
 export const LabelFilterBody = (props: any) => {
     const { setOperations, id } = props;
-
+    console.log(props)
     const [labelFilterState, setLabelFilterState] = useState<FilterState>({
         label: "",
         operator: "equals",
@@ -794,35 +794,38 @@ export const LabelFilterBody = (props: any) => {
 
         [operatorOptions]
     );
-
-    return (
-        <div className={cx(OperationBodyStyles(theme))}>
-            <input
-                value={labelFilterState.label}
-                placeholder={"Text Filter"}
-                onChange={(e) => onChange(e, "label")}
-            />
-
-            <select
-                defaultValue={"equals"}
-                onChange={(e) => onChange(e, "operator")}
-            >
-                {operatorOptions.map(
-                    (opt: { name: string; value: string }, key: number) => (
-                        <option key={key} value={opt.value}>
-                            {opt.name}
-                        </option>
-                    )
-                )}
-            </select>
-
-            <input
-                value={labelFilterState.value}
-                placeholder={"Text Filter"}
-                onChange={(e) => onChange(e, "value")}
-            />
-        </div>
-    );
+        if(props.header !== "No Pipeline Errors") {
+            return (
+                <div className={cx(OperationBodyStyles(theme))}>
+                    <input
+                        value={labelFilterState.label}
+                        placeholder={"Text Filter"}
+                        onChange={(e) => onChange(e, "label")}
+                    />
+        
+                    <select
+                        defaultValue={"equals"}
+                        onChange={(e) => onChange(e, "operator")}
+                    >
+                        {operatorOptions.map(
+                            (opt: { name: string; value: string }, key: number) => (
+                                <option key={key} value={opt.value}>
+                                    {opt.name}
+                                </option>
+                            )
+                        )}
+                    </select>
+        
+                    <input
+                        value={labelFilterState.value}
+                        placeholder={"Text Filter"}
+                        onChange={(e) => onChange(e, "value")}
+                    />
+                </div>
+            );
+        }
+        return null
+ 
 };
 
 const BinaryOperationsBody = (props: any) => {

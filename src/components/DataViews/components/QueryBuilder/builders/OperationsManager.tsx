@@ -11,7 +11,7 @@ import { logsToString } from "../helpers";
 
 export type OperationsManagerType = (
     initial: string,
-    operations: any[],
+    operations: any[]
 ) => string;
 
 const formats = [
@@ -116,13 +116,12 @@ const setKeyVal = (result: any, kval: number) => {
 
 export const OperationsManager: OperationsManagerType = (
     initial: string,
-    operations: any[],
+    operations: any[]
 ) => {
     let result: any = "";
     if (initial && typeof initial === "string") {
-
         // it waits for raw labels (not the string itself )
-        const logString = logsToString( JSON.parse(initial));
+        const logString = logsToString(JSON.parse(initial));
         if (operations?.length > 0) {
             operations.forEach((operation: any) => {
                 if (formats.includes(operation.name)) {
@@ -133,7 +132,6 @@ export const OperationsManager: OperationsManagerType = (
                     result = FormatOperators[operation.name]();
 
                     if (operation.name === "unwrap") {
-                        
                         if (
                             operation?.labelValue !== "" &&
                             typeof operation.labelValue === "string"
@@ -143,11 +141,8 @@ export const OperationsManager: OperationsManagerType = (
 
                         if (
                             operation?.conversion_function !== "" &&
-                            typeof operation.conversion_function ===
-                                "string" &&
-                            conversionFn.includes(
-                                operation.conversion_function
-                            )
+                            typeof operation.conversion_function === "string" &&
+                            conversionFn.includes(operation.conversion_function)
                         ) {
                             result.setConversionFn(
                                 operation.conversion_function
@@ -161,8 +156,6 @@ export const OperationsManager: OperationsManagerType = (
                         setExpressions(result, operation.expressions);
 
                         // single expression cases
-                        
-               
                     } else if (isSingleExpression(operation.name)) {
                         const [expression] = operation.expressions;
                         // single expression at this types
@@ -228,6 +221,7 @@ export const OperationsManager: OperationsManagerType = (
                         operation?.labelFilter?.operator || "equals"
                     );
                     result.setValue(operation?.labelFilter?.value || "");
+
                     result = result.build(resultType);
                 }
 
