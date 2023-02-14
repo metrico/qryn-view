@@ -47,13 +47,14 @@ export interface ContainerState {
 }
 
 export type OperationsContainerProps = {
+    addBinary(index:number):void
     operations: any[];
     setOperations: (operations: any) => void;
 };
 
 // OPERATIONS CONTAINER
 
-export const Container: FC<OperationsContainerProps> = (props: any) => {
+export const OperationsContainer: FC<OperationsContainerProps> = (props: any) => {
     const { operations, setOperations } = props;
     const moveItem = useCallback((dragIndex: number, hoverIndex: number) => {
         setOperations((prevCards: Item[]) =>
@@ -95,19 +96,15 @@ export const Container: FC<OperationsContainerProps> = (props: any) => {
     }, []);
 
     return (
+        <DndProvider backend={HTML5Backend}>
         <div className={cx(OperationsContainerStyles)}>
             {operations.map((operation: any, i: number) =>
                 renderCard(operation, i)
             )}
         </div>
+        </DndProvider>
     );
 };
 
 // Drag and drop base provider
-export default function DragAndDropContainer(props: any) {
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <Container {...props} />
-        </DndProvider>
-    );
-}
+

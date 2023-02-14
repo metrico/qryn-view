@@ -1,15 +1,15 @@
-import { OPERATORS } from "../consts";
-import { Label, ApiDataSource } from "../types";
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { OPERATORS, useInitialOperation } from "../consts";
+import {
+    Label,
+    ApiDataSource,
+    InitialOperationFn,
+    RequestHeaders,
+    HeaderAuth,
+    LogsResponse,
+} from "../types";
+import axios, { AxiosRequestConfig } from "axios";
 
-export interface LogsResponseData {
-    data: any;
-    status: any;
-}
-export interface LogsResponse extends AxiosResponse {
-    data: LogsResponseData;
-}
-
+// convert labels object into string
 export function labelsToString(labels: Label[]): string {
     let finalString = [];
 
@@ -28,6 +28,7 @@ export function labelsToString(labels: Label[]): string {
     return finalString.join(",");
 }
 
+// convert metrics object into string
 export function metricsToString(metric: string, labels: Label[]): string {
     let metricString = "";
     let labelsBody = "";
@@ -44,7 +45,8 @@ export function metricsToString(metric: string, labels: Label[]): string {
 
     return metricString;
 }
-export function logsToString(metric: string, labels: Label[]): string {
+
+export function logsToString(labels: Label[]): string {
     let labelsBody = "";
 
     if (labels?.length > 0) {
@@ -52,16 +54,6 @@ export function logsToString(metric: string, labels: Label[]): string {
     }
 
     return labelsBody;
-}
-
-export interface HeaderAuth {
-    username?: any;
-    password?: any;
-}
-
-export interface RequestHeaders {
-    auth?: any;
-    options?: any;
 }
 
 export function getHeaders(dataSource: any) {
@@ -225,3 +217,64 @@ export async function getApiRequest(
         await apiRequest(url, options, basicAuth, setLoading, setResponse);
     }
 }
+
+export const setInitialOperation: InitialOperationFn = (
+    name,
+    opType,
+    labelSeries,
+    operations
+) => ({
+    ...useInitialOperation,
+    header: name,
+    range: "$__interval",
+    name: name?.toLowerCase()?.split(" ")?.join("_"),
+    id: operations?.length + 1,
+    expressions: [],
+    conversion_function: "",
+    labelValue: "",
+    filterText: "",
+    labelFilter: { label: "", operator: "=", value: "" },
+    binaryOperation: { value: "", bool: false },
+    lineFilter: "",
+    quantile: 0,
+    kValue: 5,
+    labels: [],
+    labelOpts: labelSeries || [], // here we should have the labels from the .. initial operation
+    opType,
+});
+
+export const setOperatorByType = (type: string, initial: any, prev: any) => {
+    const hasPrevRange = (prev: any) => {
+        return prev.some((op: any) => op.opType === "Range Functions");
+    };
+
+    const rateOp = {
+        ...initial,
+        header: "Rate",
+        name: "rate",
+        id: initial.id + 1,
+        opType: "Range Functions",
+    };
+
+    // if have previous range, replace previous with initial
+
+    if (type === "Range Functions" && hasPrevRange(prev)) {
+        let found = prev.find((f: any) => f.opType === "Range Functions");
+        let newInit = prev?.map((m: any) => {
+            if (m.id === found.id) {
+                m = { ...initial, id: found.id };
+                return m;
+            }
+            return m;
+        });
+
+        return [...newInit];
+    }
+
+    if (type === "Aggregations" && !hasPrevRange(prev)) {
+        // add a rate operation following the aggregation
+        return [...prev, rateOp, initial];
+    }
+
+    return [...prev, initial];
+};

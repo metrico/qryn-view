@@ -1,8 +1,8 @@
 import { css, cx } from "@emotion/css";
 import { ThemeProvider } from "@emotion/react";
-import { useState } from "react";
+
 import { useTheme } from "../../QueryBuilder/hooks";
-import { LogsLabelValueSelector } from "../../QueryBuilder/LogsLabelValueSelector";
+import { LogsFormBuilder } from "../../QueryBuilder/LogsFormBuilder";
 
 export const FlexWrap = css`
     display: flex;
@@ -17,45 +17,25 @@ export default function LogsSearch(props: any) {
         searchButton,
         logsRateButton,
         statsSwitch,
-        isBuilder
- 
+        isBuilder,
     } = props;
 
-    const handleLogChange = (e: any) => {
+    const handleLogChange = (e: string) => {
+        // this handles a string
         handleLogValueChange(e);
     };
 
     const theme = useTheme();
 
-    const [labelFilters, setLabelFilters] = useState([] as any); // check label filters
-
-    const onLabelValueChange = (e: any) => {
-        setLabelFilters((prev: any) => {
-            if (prev?.length > 0) {
-                if (prev?.some((s: any) => s.id === e.id)) {
-                    return prev.map((labelFilter: any) => {
-                        if (labelFilter.label === e.label) {
-                            return { ...e };
-                        }
-                        return labelFilter;
-                    });
-                }
-            }
-            return [e];
-        });
-    };
-
     return (
         <ThemeProvider theme={theme}>
             <div className={cx(FlexWrap)}>
-                <LogsLabelValueSelector
-                    onChange={onLabelValueChange}
+                <LogsFormBuilder
                     dataSourceId={dataSourceId}
-                    // value={metricValue.value} // we dont need initial metric value in this case
-
                     labelValueChange={handleLogChange}
                 />
             </div>
+
             <div style={{ display: "flex", margin: "10px 0px" }}>
                 {searchButton}
                 {!isBuilder && logsRateButton}

@@ -20,7 +20,7 @@ const style = (theme: any) => ({
     borderRadius: "3px",
 });
 
-export interface CardProps {
+export interface OperationProps {
     id: any;
     header: any;
     index: number;
@@ -41,6 +41,8 @@ export interface CardProps {
     labelOpts: string[];
     onExpChange: (expressions: []) => void;
     setOperations: any;
+    addBinary(index:number):void
+
 }
 
 interface DragItem {
@@ -49,7 +51,7 @@ interface DragItem {
     type: string;
 }
 
-export const Operations: FC<CardProps> = (props) => {
+export const Operations: FC<OperationProps> = (props) => {
     const {
         id,
         header,

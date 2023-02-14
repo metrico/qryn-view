@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import { operatorsTypes, Label } from "../types";
-
+import {useMemo} from 'react'
 export const OPERATOR_OPTIONS = [
     { label: "=", value: "equals" },
     { label: "=~", value: "regexequals" },
@@ -26,3 +26,9 @@ export const NewLabel: Label = {
 };
 
 export const EmptyOption = { label: "", value: "" };
+
+export const useInitialOperation =() => useMemo(()=>({
+    id: 0,
+    name: "none",
+    header: <div>{"Container Header"}</div>,
+}),[]);

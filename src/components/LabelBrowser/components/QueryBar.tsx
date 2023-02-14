@@ -381,6 +381,7 @@ export const QueryBar = (props: any) => {
         }
     };
 
+    // events 
     const onMetricChange = (e: any) => {
         const query = [{ children: [{ text: e }] }];
         handleQueryChange(query);
@@ -388,6 +389,10 @@ export const QueryBar = (props: any) => {
 
     const onLogChange = (e: any) => {
         const query = [{ children: [{ text: e }] }];
+        
+        // at this scope we should do the query change from the 
+        //  'use query' button
+
         handleQueryChange(query);
     };
 

@@ -125,6 +125,25 @@ export const RangesSelector = (props: any) => {
     );
 };
 
+
+export const BinaryOperatorsSelector = (props: any) => {
+    // intial:   divide
+    const { initial, onChange, opts } = props;
+
+
+    return (
+        <select defaultValue={initial} onChange={onChange}>
+            {opts.map(
+                (opt: { name: string; value: string }, key: number) => (
+                    <option key={key} value={opt.value}>
+                        {opt.name}
+                    </option>
+                )
+            )}
+        </select>
+    );
+};
+
 export const ConversionFunctionSelector = (props: any) => {
     const { initial, onChange } = props;
     const rangeOpts: any[] = useMemo(() => {

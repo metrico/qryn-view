@@ -12,7 +12,6 @@ import { logsToString } from "../helpers";
 export type OperationsManagerType = (
     initial: string,
     operations: any[],
-    value: any
 ) => string;
 
 const formats = [
@@ -118,11 +117,12 @@ const setKeyVal = (result: any, kval: number) => {
 export const OperationsManager: OperationsManagerType = (
     initial: string,
     operations: any[],
-    value: any
 ) => {
     let result: any = "";
     if (initial && typeof initial === "string") {
-        const logString = logsToString(value, JSON.parse(initial));
+
+        // it waits for raw labels (not the string itself )
+        const logString = logsToString( JSON.parse(initial));
         if (operations?.length > 0) {
             operations.forEach((operation: any) => {
                 if (formats.includes(operation.name)) {
