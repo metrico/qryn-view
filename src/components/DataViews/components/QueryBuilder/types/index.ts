@@ -1,5 +1,4 @@
-import {AxiosResponse} from  'axios'
-
+import { AxiosResponse } from "axios";
 
 export interface HeaderAuth {
     username?: any;
@@ -12,14 +11,12 @@ export interface RequestHeaders {
 }
 
 export interface LogsResponseData {
-   
     data: any;
     status: any;
 }
 export interface LogsResponse extends AxiosResponse {
     data: LogsResponseData;
 }
-
 
 export type operator =
     | "equals"
@@ -48,25 +45,28 @@ export interface Operation {
     opType: string;
 }
 
-
 export interface BinaryValue {
-    binaryOpt:string; vectOpt:string; vectValue:string
+    binaryOpt: string;
+    vectOpt: string;
+    vectValue: string;
 }
 export interface Builder {
-    operations: any[]
-    labelsState: any[]
-    binaryValue: BinaryValue
-    builderResult:string;
-    isBinary:boolean;
+    operations: any[];
+    labelsState: any[];
+    binaryValue: BinaryValue;
+    logsVolumeQuery: string;
+    builderResult: string;
+    isBinary: boolean;
 }
 
 export interface FormBuilderProps {
     builders: Builder[];
     finalQuery: string;
-    setBuilders:Function
-    dataSourceId:string;
-    logsResponse:any;
-    addBinary(idx:number):void
+    setBuilders: Function;
+    setLogsVolumeQuery: Function;
+    dataSourceId: string;
+    logsResponse: any;
+    addBinary(idx: number): void;
 }
 
 export interface Label {
@@ -136,7 +136,7 @@ export interface BinaryOperator {
 }
 
 export interface LogsFormBuilderProps {
-    dataSourceId:string
-    labelValueChange(labelValue:string):void
-
+    dataSourceId: string;
+    labelValueChange(labelValue: string): void;
+    handleLogsVolumeChange(logsVolumeQuery: string): void;
 }

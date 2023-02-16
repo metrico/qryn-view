@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { useMemo, useState, SyntheticEvent } from "react";
 
 import { localTabsState } from "../helpers";
+import QrynChart from "../components/Charts";
 
 export default function LogsView(props: any) {
     const {
@@ -21,10 +22,16 @@ export default function LogsView(props: any) {
         total,
         type,
         theight,
+        viewWidth,
         tableData,
         streamData,
+        logsVolumeData,
     } = props;
+    const { isLogsVolume } = actualQuery;
+    const { limit } = actualQuery;
+    // take logsVolumeDataFrom Here!!!!!!!!!!
 
+    // console.log(props);
     const [tabsState, setTabsState] = useState<number>(
         localTabsState(actualQuery)[actualQuery.id] || 0
     );
@@ -34,6 +41,7 @@ export default function LogsView(props: any) {
     }, [props?.dataView?.raw]);
 
     const theme = useSelector((store: any) => store.theme);
+
     const jsonTheme = useMemo(() => {
         if (theme === "light") {
             return "rjv-default";
@@ -54,9 +62,20 @@ export default function LogsView(props: any) {
             setTabsState((_: any) => value);
         }
     };
-
     return (
         <ViewStyled ref={viewRef} size={panelSize} vheight={viewHeight}>
+            {isLogsVolume && logsVolumeData?.length > 1 && (
+                <div>
+                    <QrynChart
+                        {...props}
+                        tWidth={viewWidth}
+                        chartLimit={limit}
+                        matrixData={logsVolumeData}
+                        actualQuery={actualQuery}
+                    />
+                </div>
+            )}
+
             <ViewHeader
                 onClose={setStreamClose}
                 setMinimize={setMinimize}

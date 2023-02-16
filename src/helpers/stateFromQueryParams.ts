@@ -28,6 +28,7 @@ export const initialUrlState = {
             chartView: false,
             isShowTs: true,
             isBuilder: false,
+            isLogsVolume: false,
             browserOpen: false,
             expr: "",
             labels: [], // name: selected:
@@ -52,6 +53,7 @@ export const initialUrlState = {
             chartView: false,
             isShowTs: true,
             isBuilder: false,
+            isLogsVolume: false,
             browserOpen: false,
             expr: "",
             labels: [], // name: selected:

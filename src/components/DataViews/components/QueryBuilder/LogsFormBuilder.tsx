@@ -1,6 +1,6 @@
 import { cx } from "@emotion/css";
 import { ThemeProvider, useTheme } from "@emotion/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useLogLabels from "./hooks/useLogLabels";
 import { FlexColumn } from "./styles";
 
@@ -13,6 +13,7 @@ const initialBuilder: Builder = {
     labelsState: [],
     binaryValue: { binaryOpt: "divide", vectOpt: "on", vectValue: "" },
     builderResult: "",
+    logsVolumeQuery:"",
     isBinary: false,
 };
 
@@ -32,7 +33,7 @@ const binaryOperatorOpts: any = {
 };
 
 export function LogsFormBuilder(props: LogsFormBuilderProps) {
-    const { dataSourceId, labelValueChange } = props;
+    const { dataSourceId, labelValueChange,  handleLogsVolumeChange } = props;
 
     const { logsResponse } = useLogLabels(dataSourceId);
 
@@ -41,6 +42,8 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
 
     const [builders, setBuilders] = useState<Builder[]>([initialBuilder]);
 
+    const [logsVolumeQuery, setLogsVolumeQuery] = useState("")
+
     const addBinaryOperation = useCallback(
         (idx: number) => {
             setBuilders((prev) => [...prev, { ...prev[idx], isBinary: true }]);
@@ -48,12 +51,17 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
         [builders]
     );
 
-    // each builder should have:
-    // close button
-    //
+
+    useEffect(()=>{
+    if(builders[0].logsVolumeQuery !== '') {
+        setLogsVolumeQuery(builders[0].logsVolumeQuery)
+        handleLogsVolumeChange(builders[0].logsVolumeQuery)
+    }
+    },[builders])
 
     useEffect(()=>{
         labelValueChange(finalQuery)
+        
     },[finalQuery])
 
     useEffect(() => {
@@ -62,9 +70,12 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
             return next.map((builder: Builder) => ({
                 ...builder,
                 logsResponse,
+
             }));
         });
     }, [logsResponse]);
+
+    // add logs to string and the logs volume
 
     const binaryToString = (builder: Builder) => {
         const { binaryValue } = builder;
@@ -73,7 +84,6 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
         if (vectValue !== "") {
             vectString = `${vectOpt}(${vectValue})`;
         }
-
         return ` ${binaryOperatorOpts[binaryOpt]} ${vectString}`;
     };
 
@@ -89,14 +99,12 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
                 }`;
             }
         });
-
         return finalQuery;
     };
 
     useEffect(() => {
         setFinalQuery(finalQueryOperator(builders));
     }, [builders]);
-
 
     return (
         <ThemeProvider theme={mainTheme}>
@@ -108,6 +116,7 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
                     setBuilders={setBuilders}
                     builders={builders}
                     finalQuery={finalQuery}
+                    setLogsVolumeQuery={setLogsVolumeQuery}
                 />
                 <QueryPreview queryText={finalQuery} />
             </div>

@@ -34,7 +34,7 @@ export function FlotChart(props: any) {
                         id={"chart-container"}
                         style={{
                             flex: "1",
-                            minHeight: "180px",
+                            minHeight: "97px",
                             height: "100%",
                             display: "block",
                             position: "relative",

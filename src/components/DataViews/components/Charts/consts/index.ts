@@ -12,8 +12,8 @@ export const CHART_OPTIONS = {
         reserveSpace: false,
         shadowSize: 0,
     },
-    yaxis:{
-        tickFormatter:yAxisTickFormatter
+    yaxis: {
+        tickFormatter: yAxisTickFormatter,
     },
     grid: {
         show: true,
@@ -28,7 +28,7 @@ export const CHART_OPTIONS = {
         minBorderMargin: 0,
         labelMarginX: 0,
         labelMarginY: 0,
-        shadowSize:0,
+        shadowSize: 0,
         margin: { left: 5, right: 5 },
     },
     legend: {
@@ -40,13 +40,14 @@ export const CHART_OPTIONS = {
     interaction: {
         redrawOverlayInterval: 1,
     },
-
     series: {
+        stacked: true,
         lines: { show: true, lineWidth: 1.5, shadowSize: 0, zero: false },
         bars: {
             align: "center",
             show: false,
-            barWidth: 1000,
+            // barWidth: 1000,
+            barWidth: 24 * 60 * 60 * 600,
             shadowSize: 0,
             zero: false,
         },
@@ -63,13 +64,19 @@ export const CHART_OPTIONS = {
 };
 
 export const CHART_BAR_SERIES = {
+    stacked: true,
     lines: { show: false, lineWidth: 1.5, shadowSize: 0 },
-    bars: { show: true, barWidth: 500, shadowSize: 0 },
-    points: { show: true, radius: .25, shadowSize: 0 },
+    bars: {
+        align: "center",
+        barWidth: 24 * 60 * 60 * 600,
+        show: true,
+        /*barWidth: 500,*/ shadowSize: 0,
+    },
+    points: { show: true, radius: 0.25, shadowSize: 0 },
 };
 
 export const CHART_LINE_SERIES = {
-    lines: { show: true, lineWidth: 1,shadowSize: 0 },
+    lines: { show: true, lineWidth: 1, shadowSize: 0 },
     bars: { show: false, barWidth: 100, shadowSize: 0 },
     points: { show: false, radius: 1, shadowSize: 0 },
 };

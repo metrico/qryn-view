@@ -87,7 +87,14 @@ export const QueryBar = (props: any) => {
         //  dataSourceURL,
     } = data;
     const {
-        data: { loading, hasStats, isShowStats, isBuilder },
+        data: {
+            loading,
+            hasStats,
+            isShowStats,
+            isBuilder,
+            isLogsVolume,
+            logsVolumeQuery,
+        },
     } = props;
     const { hash } = useLocation();
     const dispatch = useDispatch();
@@ -381,7 +388,7 @@ export const QueryBar = (props: any) => {
         }
     };
 
-    // events 
+    // events
     const onMetricChange = (e: any) => {
         const query = [{ children: [{ text: e }] }];
         handleQueryChange(query);
@@ -389,13 +396,54 @@ export const QueryBar = (props: any) => {
 
     const onLogChange = (e: any) => {
         const query = [{ children: [{ text: e }] }];
-        
-        // at this scope we should do the query change from the 
+
+        // at this scope we should do the query change from the
         //  'use query' button
 
         handleQueryChange(query);
     };
 
+    const setQueryTimeInterval = (
+        query: string,
+        width: number,
+        start: Date | any,
+        stop: Date | any
+    ) => {
+        let querySubmit = "";
+
+        let customStep = 0;
+
+        if (query.includes(`$__interval`)) {
+            const timeDiff = (stop.getTime() - start.getTime()) / 1000;
+
+            const timeProportion = timeDiff / 30;
+
+            const screenProportion = Number(
+                (width / window.innerWidth).toFixed(1)
+            );
+
+            const intval = timeProportion / screenProportion;
+
+            const ratiointval = Math.round(
+                intval * Number(window.devicePixelRatio.toFixed(2))
+            );
+            querySubmit = query.replace("[$__interval]", `[${ratiointval}s]`);
+            customStep = ratiointval;
+        } else {
+            querySubmit = query;
+        }
+        return { query: querySubmit, customStep };
+    };
+
+    const onLogVolumeChange = (queryString: string) => {
+        const { query, customStep } = setQueryTimeInterval(
+            queryString,
+            width,
+            start,
+            stop
+        );
+        saveLogsVolumeQuery({ query, customStep });
+    };
     const onSubmit = (e: any) => {
         e.preventDefault();
         const ds: any = dataSources.find((f: any) => f.id === dataSourceId);
@@ -429,7 +477,9 @@ export const QueryBar = (props: any) => {
     };
     const getLocalStorage = () => {
         try {
-            const prevQuery = JSON.parse(localStorage.getItem("queryData") || "[]");
+            const prevQuery = JSON.parse(
+                localStorage.getItem("queryData") || "[]"
+            );
             return prevQuery;
         } catch (e) {
             return [];
@@ -482,6 +532,24 @@ export const QueryBar = (props: any) => {
         dispatch(panelAction(name, panel));
         queryParams.set(name, JSON.stringify(panel));
         setLocalStorage();
+    };
+
+    const saveLogsVolumeQuery = (logsVolume: {
+        query: string;
+        customStep: any;
+    }) => {
+        const panel = [...panelQuery];
+        panel.forEach((query) => {
+            if (query.id === id) {
+                if (logsVolume && logsVolume.query !== "") {
+                    query.logsVolumeQuery = {
+                        query: logsVolume.query,
+                        customStep: logsVolume.customStep,
+                    };
+                }
+            }
+        });
+        dispatch(panelAction(name, panel));
     };
 
     const onSubmitRate = (e: any) => {
@@ -577,7 +645,10 @@ export const QueryBar = (props: any) => {
         const currentDataSource = dataSources.find(
             (f: any) => f.id === dataSourceId
         );
-        if (currentDataSource?.type !== "flux" && currentDataSource?.type !== 'traces') {
+        if (
+            currentDataSource?.type !== "flux" &&
+            currentDataSource?.type !== "traces"
+        ) {
             decodeQuery(
                 queryExpr,
                 currentDataSource?.url,
@@ -641,7 +712,26 @@ export const QueryBar = (props: any) => {
                     direction,
                     dataSourceId,
                     currentDataSource.url,
-                    customStep
+                    customStep,
+                    isLogsVolume
+                )
+            );
+        }
+        // this should be the signal to request for logs volume data
+        if (isLogsVolume && logsVolumeQuery?.query && logsVolumeQuery?.query !== "") {
+            dispatch(
+                getData(
+                    dataSourceType,
+                    logsVolumeQuery.query,
+                    queryType,
+                    limit,
+                    name,
+                    id,
+                    direction,
+                    dataSourceId,
+                    currentDataSource.url,
+                    logsVolumeQuery.customStep,
+                    true // isLogsVolume
                 )
             );
         }
@@ -908,6 +998,7 @@ export const QueryBar = (props: any) => {
                             </div>
                         }
                         handleLogValueChange={onLogChange}
+                        handleLogsVolumeChange={onLogVolumeChange}
                     />,
                     <ShowLogsButton
                         disabled={!queryValid}

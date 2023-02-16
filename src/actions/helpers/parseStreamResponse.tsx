@@ -15,9 +15,7 @@ import moment from "moment";
 import { setLeftDataView } from "../setLeftDataView";
 import { setRightDataView } from "../setRightDataView";
 import store from "../../store/store";
-import {
-    ColumnDef,
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { fuzzyFilter, fuzzySort } from "../../qryn-ui/Table/models/tableModels";
 
 function timeFormatter(props: any) {
@@ -25,8 +23,6 @@ function timeFormatter(props: any) {
         "YYYY-MM-DDTHH:mm:ss.SSZ"
     );
 }
-
-
 
 export function getStreamTableRows(data: any[]) {
     return data?.map(({ stream, values }: { stream: object; values: [] }) => ({
@@ -43,11 +39,7 @@ export function getStreamTableRows(data: any[]) {
 }
 
 export function formattedWhiteSpaceCell(info: any) {
-    return (
-        <span title={info.getValue()}>
-            {info.getValue()}
-        </span>
-    );
+    return <span title={info.getValue()}>{info.getValue()}</span>;
 }
 
 export function getStreamTableResult(data: any[]) {
@@ -69,7 +61,6 @@ export function getStreamTableResult(data: any[]) {
             accessorKey: "log",
             header: "Log",
             cell: (info: any) => formattedWhiteSpaceCell(info),
-            
         },
     ];
 
@@ -120,6 +111,7 @@ export function parseStreamResponse(responseProps: QueryResult) {
         dispatch,
         dsType,
         direction,
+        isLogsVolume,
     } = responseProps;
     // get sorted messages
     const messages = mapStreams(result, direction);
@@ -146,7 +138,8 @@ export function parseStreamResponse(responseProps: QueryResult) {
         raw: "[]",
         labels: [],
         total: 0,
-        dsType
+        isLogsVolume,
+        dsType,
     };
 
     if (messSorted) {
@@ -170,6 +163,7 @@ export function parseStreamResponse(responseProps: QueryResult) {
                 dsType,
                 tableData: tableResult,
                 data: messSorted,
+                isLogsVolume,
                 raw,
                 labels: [...labels],
                 total: messSorted?.length || 0,

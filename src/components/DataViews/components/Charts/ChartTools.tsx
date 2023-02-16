@@ -9,8 +9,8 @@ import { ChartToolsCont, ChartButton } from "./styled";
 interface ChartToolsProps {
     matrixData: any;
     chartType: string;
-    handleNoLimitData: (e:any)=>void;
-    handleLimitData: (e:any)=>void;
+    handleNoLimitData: (e: any) => void;
+    handleLimitData: (e: any) => void;
     isSpliced: boolean;
     onSetChartType: Function;
 }
@@ -23,9 +23,8 @@ export default function ChartTools({
     isSpliced,
     onSetChartType,
 }: ChartToolsProps) {
-  
     const theme = useTheme();
-    
+
     const isMobile = useMediaQuery({ query: "(max-width: 565px)" });
     function setBarChart() {
         onSetChartType("bar");

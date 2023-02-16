@@ -17,6 +17,11 @@ import {
 import { OperationsManager } from "../builders/OperationsManager";
 
 /// it renders the label = value selectors
+
+const setOperationForLogsVolume = (query:string) => {
+    return `sum by(level) (count_over_time(${query}[$__interval]))`
+} 
+
 export interface LabelValuesSelectorsProps {
     dataSourceId: string;
     logsResponse: any[];
@@ -107,7 +112,10 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
     }, [labelValueString]);
 
     // update builder state at label values change
+
     useEffect(() => {
+
+        console.log("LABEL VALUES STRING",logsToString(labelValuesState))
         setBuilders((prev: any[]) => {
             const next = [...prev];
             return next.map((builder) => {
@@ -115,6 +123,8 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
                     return {
                         ...builder,
                         labelValuesState: [...labelValuesState],
+                        logsVolumeQuery: setOperationForLogsVolume(logsToString(labelValuesState))
+                        // convert here the value into a logsVolumeQuery
                     };
                 }
                 return builder;
@@ -122,8 +132,10 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
         });
     }, [labelValuesState]);
 
+    // here we should set the logs volume string
     // at removing all labels selectors and starting from ground
     // set default label selection as first
+
     const resetLabelsState = (e: any) => {
         setLabelValuesState((_) => InitialLabelValueState);
     };
@@ -231,6 +243,7 @@ export const OperationFunctions = (props: any) => {
 
 // render initial button from label values selection
 // if there are no labels selection visible
+
 export const initialButtonRenderer = (
     theme: any,
     resetLabelsState: any,

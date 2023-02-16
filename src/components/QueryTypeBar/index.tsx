@@ -52,6 +52,7 @@ export default function QueryTypeBar(props:any) {
         idRef,
         isShowTs,
         isBuilder,
+        isLogsVolume,
         direction,
         dataSourceType,
         isShowStats,
@@ -61,6 +62,7 @@ export default function QueryTypeBar(props:any) {
     const [isTableViewSet, setIsTableViewSet] = useState(tableView);
     const [isShowTsSet, setIsShowTsSet] = useState(isShowTs || false);
     const [isBuilderSet, setIsBuilderSet] = useState(isBuilder || false);
+    const [isLogsVolumeSet, setIsLogsVolumeSet] = useState( isLogsVolume || false);
     const [isShowStatsSet, setIsShowStatsSet] = useState(isShowStats || false);
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(queryType);
     const [directionSwitch, setDirectionSwitch] = useState(
@@ -99,6 +101,10 @@ export default function QueryTypeBar(props:any) {
     useEffect(() => {
         setIsBuilderSet(props.data.isBuilder);
     }, [setIsBuilderSet, props.data.isBuilder]);
+
+    useEffect(()=>{
+        setIsLogsVolumeSet(props.data.isLogsVolume);
+    },[setIsLogsVolumeSet, props.data.isLogsVolume])
 
     function onSwitchChange(e:any) {
         // modify query type switch value
@@ -155,6 +161,17 @@ export default function QueryTypeBar(props:any) {
                 query.isBuilder = isBuilderSet ? false : true;
             }
         });
+
+        dispatch(panelAction(name, panel));
+    }
+
+    function handleLogsVolumeSwitch() {
+        const panel = [...panelQuery];
+        panel.forEach((query)=> {
+            if(query.id === id) {
+                query.isLogsVolume = isLogsVolumeSet ? false : true
+            }
+        })
 
         dispatch(panelAction(name, panel));
     }
@@ -224,6 +241,15 @@ export default function QueryTypeBar(props:any) {
                                 checked={isBuilderSet}
                                 size={"small"}
                                 onChange={handleBuilderSwitch}
+                                inputProps={{ "aria-label": "controlled-ts" }}
+                            />
+                        </InputGroup>
+                        <InputGroup>
+                            <SettingLabel>Logs Volume</SettingLabel>
+                            <Switch
+                                checked={isLogsVolumeSet}
+                                size={"small"}
+                                onChange={handleLogsVolumeSwitch}
                                 inputProps={{ "aria-label": "controlled-ts" }}
                             />
                         </InputGroup>

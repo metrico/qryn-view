@@ -42,6 +42,7 @@ export const CHART_OPTIONS = {
     },
 
     series: {
+        stacked:true,
         lines: { show: true, lineWidth: 1.5, shadowSize: 0, zero: false },
         bars: {
             align: "center",
@@ -63,6 +64,7 @@ export const CHART_OPTIONS = {
 };
 
 export const CHART_BAR_SERIES = {
+    stacked:true,
     lines: { show: false, lineWidth: 1.5, shadowSize: 0 },
     bars: { show: true, barWidth: 500, shadowSize: 0 },
     points: { show: true, radius: .25, shadowSize: 0 },

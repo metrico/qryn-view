@@ -53,6 +53,11 @@ function changeLoadingState(panel: any[], id: string, state: boolean) {
     });
 }
 
+
+// get in here from panel if its logVolume: true
+// if true, make two requests 
+// one for the log 
+
 export default function getData(
     type: string,
     queryInput: string,
@@ -63,7 +68,8 @@ export default function getData(
     direction: QueryDirection = "forward",
     dataSourceId = "",
     url = "",
-    customStep = 0
+    customStep = 0,
+    isLogsVolume= false
 ) {
     let dsSettings = {
         url: "",
@@ -138,6 +144,10 @@ export default function getData(
     }
     const loadingState = (dispatch: any, state: boolean) => {
         const pData = store.getState()[panel];
+
+
+
+
         panelDispatch(panel, dispatch, changeLoadingState(pData, id, state));
     };
 
@@ -210,6 +220,9 @@ export default function getData(
                         setLoading(false, dispatch)
                         loadingState(dispatch, false);
                     });
+
+            // should know in this case if its a logsVolume chart
+
             } else if (options?.method === "GET") {
                 await axios
                     ?.get(endpoint, {
@@ -224,7 +237,8 @@ export default function getData(
                             panel,
                             id,
                             direction,
-                            queryType
+                            queryType,
+                            isLogsVolume
                         );
 
                         if (debugMode) {
@@ -255,7 +269,7 @@ export default function getData(
                     .finally(() => {
                         loadingState(dispatch, false);
                         setLoading(false, dispatch)
-                    });
+                    }); 
             }
         } catch (e) {
             loadingState(dispatch, false);

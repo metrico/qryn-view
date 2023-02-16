@@ -20,7 +20,7 @@ export function DataViewItem(props: any) {
     // get actual query from panel
     const actualQuery: any = useActualQuery({ panel, dataView });
     // get  actual query from panel
-
+    
     const [viewWidth, setViewWidth]: any = useState(0);
 
     useEffect(() => {
@@ -105,8 +105,10 @@ export function DataViewItem(props: any) {
             viewRef,
             panelSize,
             viewHeight,
+            viewWidth,
             setStreamClose,
             setMaxHeight,
+            logsVolumeData:dataView.logsVolumeData,
             setMinimize,
             actualQuery,
             total,

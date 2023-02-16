@@ -150,10 +150,14 @@ export function setTypeToLocal(type: any) {
 }
 
 export function formatLabel(labels: any) {
-    if (labels) {
+    let labelResult = { ...labels };
+    if (Object.keys(labels)?.length === 0) {
+        labelResult = { level: "unknown" };
+    }
+    if (labelResult) {
         return (
             "{ " +
-            Object.entries(labels)
+            Object.entries(labelResult)
                 .map(([key, value]) => `${key}="${value}"`)
                 .join(", ") +
             " }"
@@ -175,6 +179,7 @@ export function showSeries(series: any, type: any) {
 
     return {
         ...series,
+        stacked: true,
         bars,
         lines,
         points,

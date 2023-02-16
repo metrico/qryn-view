@@ -45,18 +45,16 @@ export function getMatrixTableRows(data: any[]) {
 }
 
 export function getMatrixTableResult(data: any[]) {
-    const headers :ColumnDef<any>[] = [
+    const headers: ColumnDef<any>[] = [
         {
             header: "Time",
             accessorKey: "time",
             cell: (props: any) => timeFormatter(props),
-     
         },
         { header: "Metric", accessorKey: "metric" },
         {
             header: "Value",
             accessorKey: "value",
-        
         },
     ];
 
@@ -91,7 +89,16 @@ function setDataView(panel: string) {
 }
 
 export function parseMatrixResponse(responseProps: QueryResult) {
-    const { result, debugMode, dispatch, panel, id, raw, dsType } = responseProps;
+    const {
+        result,
+        debugMode,
+        dispatch,
+        panel,
+        id,
+        raw,
+        dsType,
+        isLogsVolume,
+    } = responseProps;
     // here should set the table response
     const tableResult = getMatrixTableResult(result);
     // get current dataview and update action
@@ -127,12 +134,34 @@ export function parseMatrixResponse(responseProps: QueryResult) {
 
         if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
             let newPanel = [];
-            dispatch(action([]));
-            const filtered = prevDV.filter(
-                (dv: any) => dv.id !== panelResult.id
-            );
-            newPanel = [...filtered, { ...panelResult }];
-            dispatch(action(newPanel));
+
+            let prev = prevDV?.find((dv: any) => dv.id === panelResult.id);
+            // if not previous stream type and no logsVolume active
+            if (
+                isLogsVolume &&
+                prev.type === "stream" &&
+                prev.dsType === "logs"
+            ) {
+                console.log("Adding to previous");
+                newPanel = [...prevDV];
+
+                let mapped = newPanel.map((m) => {
+                    console.log(id);
+                    if (m.id === id) {
+                        m = { ...m, logsVolumeData: idResult };
+                        return m;
+                    }
+                    return m;
+                });
+                dispatch(action(mapped));
+            } else {
+                dispatch(action([]));
+                const filtered = prevDV.filter(
+                    (dv: any) => dv.id !== panelResult.id
+                );
+                newPanel = [...filtered, { ...panelResult }];
+                dispatch(action(newPanel));
+            }
         } else {
             let newPanel = [...prevDV, panelResult];
             dispatch(action(newPanel));

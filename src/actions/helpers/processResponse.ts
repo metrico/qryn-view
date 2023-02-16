@@ -24,7 +24,8 @@ export async function processResponse(
     panel: string,
     id: string,
     direction: QueryDirection,
-    queryType: QueryType
+    queryType: QueryType,
+    isLogsVolume?:boolean
 ) {
     const { time } = getTimeParams(type);
     const { debugMode } = store.getState();
@@ -103,6 +104,7 @@ export async function processResponse(
             id,
             ts: Date.now(),
             direction,
+            isLogsVolume
         };
 
         parseResponse(resultQuery);
@@ -153,6 +155,7 @@ export async function processResponse(
             id,
             ts: Date.now(),
             direction,
+           isLogsVolume
         };
         parseResponse(resultQuery);
     } else {

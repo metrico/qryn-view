@@ -80,6 +80,7 @@ function traceRequest(data: any, value: any) {
             chartView: false,
             isShowTs: false,
             isBuilder: false,
+            isLogsVolume:false,
             browserOpen: false,
             labels: [],
             values: [],

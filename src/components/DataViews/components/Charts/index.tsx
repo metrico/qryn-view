@@ -5,6 +5,7 @@ import "react-flot/flot/jquery.flot.min";
 import "react-flot/flot/jquery.flot.time.min";
 import "react-flot/flot/jquery.flot.selection.min";
 import "react-flot/flot/jquery.flot.crosshair.min";
+import "react-flot/flot/jquery.flot.stack.min.js";
 import "react-flot/flot-override/jquery.flot.resize";
 //React
 import { useState, useEffect, useRef } from "react";
@@ -46,7 +47,7 @@ export default function QrynChart(props: any): any {
     const theme = useTheme(storeTheme);
 
     const $q = (window as any).jQuery;
-    
+
     $q.fn.UseTooltip = UseTooltip;
 
     const matrix = useMatrixData(true, matrixData);
@@ -102,7 +103,7 @@ export default function QrynChart(props: any): any {
 
         let newData = [];
         const lSelected =
-            JSON.parse(localStorage.getItem("labelsSelected") || 'null') || [];
+            JSON.parse(localStorage.getItem("labelsSelected") || "null") || [];
         if (lSelected?.length > 0) {
             const { lines, bars, points } = getSeriesFromChartType(chartType);
             const ids = lSelected?.map((m: any) => m.id);
@@ -119,6 +120,7 @@ export default function QrynChart(props: any): any {
                 } else {
                     return {
                         ...series,
+                        stacked: true,
                         bars,
                         lines,
                         points,
@@ -156,7 +158,9 @@ export default function QrynChart(props: any): any {
                     )
                 );
                 const toTs = new Date(
-                    (moment as any)(parseInt(toTime)).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+                    (moment as any)(parseInt(toTime)).format(
+                        "YYYY-MM-DDTHH:mm:ss.SSSZ"
+                    )
                 );
                 const fromLabel = format(fromTs, "yyyy/MM/dd HH:mm:ss");
                 const toLabel = format(toTs, "yyyy/MM/dd HH:mm:ss");
@@ -167,8 +171,10 @@ export default function QrynChart(props: any): any {
                 dispatch(setStartTime(fromTs));
 
                 dispatch(setTimeRangeLabel(timeRangeLabel));
-                
-                dispatch(getData(dataSourceType,expr, queryType, limit, panel, id));
+
+                dispatch(
+                    getData(dataSourceType, expr, queryType, limit, panel, id)
+                );
             }, 400);
         } catch (e) {
             console.log("error on chart redraw", e);
@@ -178,7 +184,7 @@ export default function QrynChart(props: any): any {
     function onLabelClick(e: any, v: any) {
         let newList = [];
         const lSelected =
-            JSON.parse(localStorage.getItem("labelsSelected") || 'null') || [];
+            JSON.parse(localStorage.getItem("labelsSelected") || "null") || [];
 
         if (lSelected.some(({ id }: any) => id === v.id)) {
             const filtered = lSelected.filter((f: any) => f.id !== v.id);
@@ -203,6 +209,7 @@ export default function QrynChart(props: any): any {
                 } else {
                     return {
                         ...series,
+                        stacked: true,
                         bars,
                         lines,
                         points,
@@ -228,7 +235,7 @@ export default function QrynChart(props: any): any {
         } else {
             const data = isSpliced ? chartData : allData;
             const { lines, bars, points } = getSeriesFromChartType(chartType);
-            const newData = data?.map((series:any) => {
+            const newData = data?.map((series: any) => {
                 return {
                     ...series,
                     bars,
@@ -316,13 +323,15 @@ export default function QrynChart(props: any): any {
             labels,
         };
         const pointSet = new Set();
-        matrixData.forEach((dataPoint: any)=>{
-            dataPoint?.values?.forEach((dataPointValue: any) => pointSet.add(dataPointValue?.[0]))
-        })
-        if (pointSet.size === 1 && chartType !== 'bar') {
-            onSetChartType('bar')
+        matrixData.forEach((dataPoint: any) => {
+            dataPoint?.values?.forEach((dataPointValue: any) =>
+                pointSet.add(dataPointValue?.[0])
+            );
+        });
+        if (pointSet.size === 1 && chartType !== "bar") {
+            onSetChartType("bar");
         }
-        return (<FlotChart {...flotChartProps} />);
+        return <FlotChart {...flotChartProps} />;
     }
 
     return null;

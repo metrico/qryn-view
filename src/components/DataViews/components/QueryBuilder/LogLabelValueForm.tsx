@@ -34,6 +34,7 @@ export const LogLabelValueForm = (props: any) => {
     const [labelValue, setLabelValue] = useState(
         labelOpts[0] || { label: "Select Option", value: "" }
     );
+    
     const {logsResponse:valueSelectOpts} = useLogLabelValues(dataSourceId,labelValue.value)
 
     const [operatorValue, setOperatorValue] = useState({

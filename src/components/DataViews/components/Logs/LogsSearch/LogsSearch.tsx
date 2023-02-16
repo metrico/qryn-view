@@ -30,7 +30,8 @@ export default function LogsSearch(props: any) {
     return (
         <ThemeProvider theme={theme}>
             <div className={cx(FlexWrap)}>
-                <LogsFormBuilder
+                <LogsFormBuilder 
+                    {...props}
                     dataSourceId={dataSourceId}
                     labelValueChange={handleLogChange}
                 />

@@ -22,6 +22,7 @@ export type QueryResult = {
     hasStats?: boolean;
     statsData?:any;
     raw?:any;
+    isLogsVolume?:boolean
 
 };
 

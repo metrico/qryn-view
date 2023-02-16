@@ -179,6 +179,7 @@ export default function initialState() {
                 hasStats:false,
                 statsData:{},
                 browserOpen: false,
+                isLogsVolume: false,
                 expr: "",
                 labels: [], // name: selected:
                 values: [], // label name selected
@@ -204,6 +205,7 @@ export default function initialState() {
                 isShowTs: true,
                 isBuilder: false,
                 browserOpen: false,
+                isLogsVolume: false,
                 expr: "",
                 labels: [], // name: selected:
                 values: [], // label name selected

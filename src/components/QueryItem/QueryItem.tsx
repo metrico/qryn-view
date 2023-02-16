@@ -33,6 +33,7 @@ const dataViewAction = (panel: any, data: any) => {
 };
 
 export default function QueryItem(props: any) {
+    console.log(props)
     const { name } = props;
     const {
         expr,
@@ -43,6 +44,8 @@ export default function QueryItem(props: any) {
         dataSourceType,
         dataSourceId,
         direction,
+        isLogsVolume,
+        logsVolumeQuery,
         dataSourceURL,
     } = props.data;
     const dispatch = useDispatch();

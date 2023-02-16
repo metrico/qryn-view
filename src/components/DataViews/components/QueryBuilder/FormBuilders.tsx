@@ -16,28 +16,24 @@ export const FormBuilders = (props: FormBuilderProps) => {
     const theme = useTheme();
     const { builders, setBuilders, dataSourceId, logsResponse } = props;
 
-
-        return (
-            <div className={cx(FlexColumn)}>
-                {builders?.map((builder, idx) => {
-                    return (
-                        <FormBuilder
-                            {...props}
-                            builder={builder}
-                            dataSourceId={dataSourceId}
-                            logsResponse={logsResponse}
-                            key={idx}
-                            idx={idx}
-                            theme={theme}
-                            setBuilders={setBuilders}
-                        />
-                    );
-                })}
-            </div>
-        );
-    
-
-   
+    return (
+        <div className={cx(FlexColumn)}>
+            {builders?.map((builder, idx) => {
+                return (
+                    <FormBuilder
+                        {...props}
+                        builder={builder}
+                        dataSourceId={dataSourceId}
+                        logsResponse={logsResponse}
+                        key={idx}
+                        idx={idx}
+                        theme={theme}
+                        setBuilders={setBuilders}
+                    />
+                );
+            })}
+        </div>
+    );
 };
 
 // return an array of builders
@@ -141,30 +137,34 @@ export const FormBuilder = (props: any) => {
     const { builder, theme, idx, setBuilders, logsResponse, dataSourceId } =
         props;
 
-   
-    const [labelsString, setLabelsString] = useState(logsToString(builder.labelValuesState)||'');
+    // send up a logsVolume
 
-    const [finalQuery, setFinalQuery] = useState(builder.builderResult || '');
+    // const [logsVolumeQuery, setLogsVolumeQuery] = useState(builder.logsVolumeQuery)
 
-    /// here we should set the initial labelValueString 
-
-    const [labelValueString, setLabelValueString] = useState(JSON.stringify(builder.labelValuesState)|| "");
-    const onFinalQueryChange = useCallback(
-        (query: string) => {
-            setBuilders((prev: any) => {
-                const next = [...prev];
-                return next.map((builder: Builder, i:number) => {
-                    if (i === idx ){
-                        return { ...builder, builderResult: query };
-                    }
-                    return builder;
-                });
-            });
-
-            setFinalQuery(query);
-        },
-        []
+    const [labelsString, setLabelsString] = useState(
+        logsToString(builder.labelValuesState) || ""
     );
+
+    const [finalQuery, setFinalQuery] = useState(builder.builderResult || "");
+
+    /// here we should set the initial labelValueString
+
+    const [labelValueString, setLabelValueString] = useState(
+        JSON.stringify(builder.labelValuesState) || ""
+    );
+    const onFinalQueryChange = useCallback((query: string) => {
+        setBuilders((prev: any) => {
+            const next = [...prev];
+            return next.map((builder: Builder, i: number) => {
+                if (i === idx) {
+                    return { ...builder, builderResult: query };
+                }
+                return builder;
+            });
+        });
+
+        setFinalQuery(query);
+    }, []);
 
     const onClose = () => {
         setBuilders((prev: any) => {
@@ -174,14 +174,16 @@ export const FormBuilder = (props: any) => {
     };
 
     const onBinaryOptionChange = (e: any, name: string) => {
-      
         setBuilders((prev: any) => {
             const next = [...prev];
-            return next.map((builder: Builder, i:number) => {
+            return next.map((builder: Builder, i: number) => {
                 if (i === idx) {
                     return {
                         ...builder,
-                        binaryValue: { ...builder.binaryValue, [name]: e.target.value },
+                        binaryValue: {
+                            ...builder.binaryValue,
+                            [name]: e.target.value,
+                        },
                     };
                 }
                 return builder;
