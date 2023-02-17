@@ -366,6 +366,15 @@ export const QueryBar = (props: any) => {
 
     useEffect(() => {
         if (typeof expr === "string") {
+            if (isLogsVolume) {
+                let pureLabels = expr.match(/[^{\}]+(?=})/g);
+                if (Array.isArray(pureLabels) && pureLabels?.length > 0) {
+                    let pureLabelsString = "{" + pureLabels?.join(",") + "}";
+                    let logsVolumeQuery = `sum by(level) (count_over_time(${pureLabelsString}[$__interval]))`
+                    onLogVolumeChange(logsVolumeQuery);
+                }
+            }
+
             setQueryInput(expr);
             setQueryValue([{ children: [{ text: expr }] }]);
             setQueryValid(onQueryValid(expr));
@@ -576,17 +585,13 @@ export const QueryBar = (props: any) => {
                     query = queryInput.replace(/\[\d+ms\]/, `[$__interval]`);
                 }
             }
-
             setQueryInput(query);
-
             setQueryValue([{ children: [{ text: query }] }]);
-
             setQueryValid(onQueryValid(query));
         }
 
         if (onQueryValid(query)) {
             const ds = dataSources.find((f: any) => f.id === dataSourceId);
-
             try {
                 updateHistory(
                     ds.type,
@@ -674,9 +679,7 @@ export const QueryBar = (props: any) => {
 
         dispatch(panelAction(name, panel));
         let querySubmit = "";
-
         let customStep = 0;
-
         if (queryExpr.includes(`$__interval`)) {
             const timeDiff = (stop.getTime() - start.getTime()) / 1000;
 
@@ -718,7 +721,11 @@ export const QueryBar = (props: any) => {
             );
         }
         // this should be the signal to request for logs volume data
-        if (isLogsVolume && logsVolumeQuery?.query && logsVolumeQuery?.query !== "") {
+        if (
+            isLogsVolume &&
+            logsVolumeQuery?.query &&
+            logsVolumeQuery?.query !== ""
+        ) {
             dispatch(
                 getData(
                     dataSourceType,
