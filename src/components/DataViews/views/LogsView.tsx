@@ -64,7 +64,17 @@ export default function LogsView(props: any) {
     };
     return (
         <ViewStyled ref={viewRef} size={panelSize} vheight={viewHeight}>
-            {isLogsVolume && logsVolumeData?.length > 1 && (
+            <ViewHeader
+                onClose={setStreamClose}
+                setMinimize={setMinimize}
+                setMaxHeight={setMaxHeight}
+                actualQuery={actualQuery}
+                total={total}
+                type={type}
+                {...props}
+            />
+
+            {isLogsVolume && logsVolumeData?.length > 0 && (
                 <div>
                     <QrynChart
                         {...props}
@@ -75,16 +85,6 @@ export default function LogsView(props: any) {
                     />
                 </div>
             )}
-
-            <ViewHeader
-                onClose={setStreamClose}
-                setMinimize={setMinimize}
-                setMaxHeight={setMaxHeight}
-                actualQuery={actualQuery}
-                total={total}
-                type={type}
-                {...props}
-            />
 
             <TabsUnstyled
                 defaultValue={localTabsState(actualQuery)[actualQuery.id] || 0}

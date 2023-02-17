@@ -42,12 +42,12 @@ export const CHART_OPTIONS = {
     },
 
     series: {
-        stacked:true,
+        stack:true,
         lines: { show: true, lineWidth: 1.5, shadowSize: 0, zero: false },
         bars: {
             align: "center",
             show: false,
-            barWidth: 1000,
+            barWidth: 5000,
             shadowSize: 0,
             zero: false,
         },
@@ -62,21 +62,26 @@ export const CHART_OPTIONS = {
         mode: "x",
     },
 };
+// pass the bar width
+// calculate here the span width
 
-export const CHART_BAR_SERIES = {
-    stacked:true,
-    lines: { show: false, lineWidth: 1.5, shadowSize: 0 },
-    bars: { show: true, barWidth: 500, shadowSize: 0 },
+export const CHART_BAR_SERIES = (barWidth?:number) => ({
+    stack:true,
+    lines: { show: false, lineWidth: 1.5, shadowSize: 0,stack:true,fill:true  },
+    bars: { show: true, barWidth: barWidth || 5000, shadowSize: 0, stack:true },
     points: { show: true, radius: .25, shadowSize: 0 },
-};
+});
 
 export const CHART_LINE_SERIES = {
-    lines: { show: true, lineWidth: 1,shadowSize: 0 },
-    bars: { show: false, barWidth: 100, shadowSize: 0 },
+    stack:true,
+    lines: { show: true, lineWidth: 1,shadowSize: 0,stack:true,fill:true },
+    bars: { show: false, barWidth: 0, shadowSize: 0 },
     points: { show: false, radius: 1, shadowSize: 0 },
 };
+
 export const CHART_POINT_SERIES = {
-    lines: { show: false, lineWidth: 1.5, shadowSize: 0 },
-    bars: { show: false, barWidth: 100, shadowSize: 0 },
+    stack:false,
+    lines: { show: false, lineWidth: 1.5, shadowSize: 0  },
+    bars: { show: false, barWidth: 0, shadowSize: 0 },
     points: { show: true, radius: 2, shadowSize: 0 },
 };

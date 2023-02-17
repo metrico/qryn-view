@@ -15,12 +15,21 @@ export function isFloat(x: number) {
     return !!(x % 1);
 }
 
+const getDataPointValue = (datapoint: any[]) => {
+    if (datapoint?.length === 2) {
+        return datapoint[1];
+    } else return datapoint[1] - datapoint[2];
+};
+
 export function getSortedItems(list: []) {
     if (list?.length > 0) {
+        console.log(list);
+
         return (
             list?.filter(
                 (f: any) =>
-                    parseFloat(f.value) === parseFloat(f.item.datapoint[1])
+                    parseFloat(f.value) ===
+                    parseFloat(getDataPointValue(f.item.datapoint))
             ) || []
         );
     }
@@ -30,28 +39,31 @@ export function getSortedItems(list: []) {
 export function getLabelTemplate(sortedList: any) {
     return (
         sortedList
-            ?.map(
-                (template: any) =>
-                    ` <div style="display:flex;justify-content:space-between">
+            ?.map((template: any) => {
+                console.log(template, "TEMPLATE");
+                return ` <div style="display:flex;justify-content:space-between">
                            <div style="display:flex;margin-right:10px;">
                                <span style="background:${template.color};
                                height:6px;width:24px;pading:3px;
                                border-radius:1px;margin:4px;"></span> 
-                               <p style="display:flex;flex-wrap:wrap;
-                               line-height:1.25">${template.label}</p>
+                               <p style="display:flex;flex-wrap:wrap; justify-content:space-between;
+                               line-height:1.25">${template.label}</p> 
                             </div>
                         <div>
                     </div>
                 </div>
-    `
-            )
+    `;
+            })
 
             .join("") || []
     );
 }
 
+// make a stacked template for labels
+
 export function makeTolltipItems(list: []) {
     const sorted = getSortedItems(list);
+    console.log(sorted);
     return getLabelTemplate(sorted);
 }
 
@@ -71,13 +83,27 @@ export function getItemsLength(list: any): number {
     return 0;
 }
 
-export function getTimeSpan(data: any) {
+export interface TimeSpan {
+    first: number;
+    last: number;
+    timeSpan: number;
+    length: number;
+    timeDiff: number;
+    seriesLength: number;
+}
+// should have sum of series somewhere
+export function getTimeSpan(data: any): TimeSpan {
+    console.log(data, "DATA");
+
     const tsArray = data
         .map((tsItem: any) =>
             tsItem?.data?.map(([t, v]: [t: any, v: any]) => t)
         )
         .flat()
         .sort();
+
+    console.log(tsArray.length);
+
     const first = tsArray[0];
     //const last = tsArray[tsArray.length - 1] ;
     const last = tsArray[tsArray.length - 1];
@@ -85,11 +111,33 @@ export function getTimeSpan(data: any) {
 
     const timeSpan = timeDiff / 1000 / 86400;
 
-    return { first, last, timeSpan };
+    return {
+        first,
+        last,
+        timeSpan,
+        length: tsArray.length,
+        timeDiff,
+        seriesLength: data.length,
+    };
 }
+
+export const getBarWidth = (tSpan: TimeSpan, width: number) => {
+    const { length, timeDiff, seriesLength } = tSpan;
+
+    const dividend = () => {
+        if (seriesLength === 1) {
+            return 1 / 2;
+        }
+        return seriesLength - 1;
+    };
+    return Math.round((timeDiff / width / length) * dividend() * 1000);
+};
 
 export function formatDateRange(data: any) {
     const { timeSpan, first, last } = getTimeSpan(data);
+
+    console.log(timeSpan, "TIME SPAN");
+
     const formatted =
         timeSpan > 1
             ? "%m/%d %H:%M"
@@ -108,11 +156,14 @@ export function formatTs(values: any) {
         values?.map(([ts, val]: [ts: any, val: any]) => [ts * 1000, val]) || []
     );
 }
+// should pass timestamp in whichever its defining the bar series
+// should pass colors at init
 
-export function getSeriesFromChartType(type: any) {
+export function getSeriesFromChartType(type: any, barWidth?: number) {
+    console.log("get series from chart type");
     switch (type) {
         case "bar":
-            return CHART_BAR_SERIES;
+            return CHART_BAR_SERIES(barWidth);
 
         case "line":
             return CHART_LINE_SERIES;
@@ -125,10 +176,11 @@ export function getSeriesFromChartType(type: any) {
     }
 }
 
-export function setChartTypeSeries(type: any) {
+export function setChartTypeSeries(type: any, barWidth?: number) {
+    console.log("set schart type series");
     switch (type) {
         case "bar":
-            return { series: CHART_BAR_SERIES };
+            return { series: CHART_BAR_SERIES(barWidth) };
 
         case "line":
             return { series: CHART_LINE_SERIES };
@@ -149,12 +201,15 @@ export function setTypeToLocal(type: any) {
     localStorage.setItem(LOCAL_CHART_TYPE, type);
 }
 
-export function formatLabel(labels: any) {
+export function formatLabel(labels: any, isLogsVolume = false) {
     let labelResult = { ...labels };
     if (Object.keys(labels)?.length === 0) {
         labelResult = { level: "unknown" };
     }
-    if (labelResult) {
+
+    if (isLogsVolume && labelResult) {
+        return Object.entries(labelResult)?.map(([_, value]) => value);
+    } else if (!isLogsVolume && labelResult) {
         return (
             "{ " +
             Object.entries(labelResult)
@@ -175,11 +230,12 @@ export function hideSeries(series: any) {
     };
 }
 export function showSeries(series: any, type: any) {
+    console.log(series);
     const { lines, bars, points } = getSeriesFromChartType(type);
 
     return {
         ...series,
-        stacked: true,
+        stack: true,
         bars,
         lines,
         points,

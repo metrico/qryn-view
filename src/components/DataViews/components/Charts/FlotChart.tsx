@@ -15,19 +15,33 @@ export function FlotChart(props: any) {
         chartRef,
         onLabelClick,
         labels,
+        isLogsVolume,
     } = props;
 
     return (
         <ThemeProvider theme={theme}>
             <ChartCont>
-                <ChartTools
-                    matrixData={matrixData}
-                    chartType={chartType}
-                    handleNoLimitData={handleNoLimitData}
-                    handleLimitData={handleLimitData}
-                    isSpliced={isSpliced}
-                    onSetChartType={onSetChartType}
-                />
+                {isLogsVolume ? (
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            fontSize: "12px",
+                            color: theme.textColor,
+                        }}
+                    >
+                        Logs Volume
+                    </div>
+                ) : (
+                    <ChartTools
+                        matrixData={matrixData}
+                        chartType={chartType}
+                        handleNoLimitData={handleNoLimitData}
+                        handleLimitData={handleLimitData}
+                        isSpliced={isSpliced}
+                        onSetChartType={onSetChartType}
+                    />
+                )}
                 <div className="chart-cont">
                     <div
                         ref={chartRef}
@@ -38,6 +52,7 @@ export function FlotChart(props: any) {
                             height: "100%",
                             display: "block",
                             position: "relative",
+                            paddingTop: "10px",
                         }}
                     ></div>
                 </div>

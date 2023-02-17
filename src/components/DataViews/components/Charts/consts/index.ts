@@ -41,7 +41,7 @@ export const CHART_OPTIONS = {
         redrawOverlayInterval: 1,
     },
     series: {
-        stacked: true,
+        stack: true,
         lines: { show: true, lineWidth: 1.5, shadowSize: 0, zero: false },
         bars: {
             align: "center",
@@ -64,7 +64,6 @@ export const CHART_OPTIONS = {
 };
 
 export const CHART_BAR_SERIES = {
-    stacked: true,
     lines: { show: false, lineWidth: 1.5, shadowSize: 0 },
     bars: {
         align: "center",

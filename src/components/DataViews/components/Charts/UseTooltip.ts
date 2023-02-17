@@ -13,8 +13,9 @@ export default function UseTooltip(this: void, plot: any) {
     let previousPoint: any = null;
     $q("#tooltip").remove();
     previousPoint = null;
-
+    // let isLogsVolume:any = this.isLogsVolume
     $q(this).on("plothover", function (event: any, pos: any, item: any) {
+
         plot.unhighlight();
         if (item) {
             let plotData = plot.getData();
@@ -22,9 +23,14 @@ export default function UseTooltip(this: void, plot: any) {
             const selectedPlots = JSON.parse(
                 localStorage.getItem("labelsSelected") || "null"
             );
+            const getDataPointValue = (datapoint: any[]) => {
+                if (datapoint?.length === 2) {
+                    return datapoint[1];
+                } else return datapoint[1] - datapoint[2];
+            };
             const itemValue = isFloat(parseFloat(item.datapoint[1]))
-                ? parseFloat(item.datapoint[1]).toFixed(3)
-                : item.datapoint[1];
+                ? parseFloat(getDataPointValue(item.datapoint)).toFixed(3)
+                : getDataPointValue(item.datapoint);
 
             const isSelectedPlots = selectedPlots.length > 0;
             const labelsList:any = [];
@@ -102,7 +108,7 @@ function showTooltip(x: any, y: any, contents: any, length: any) {
     if (clientX > halfScreen) {
         posX -= length < 125 ? length * 6 + 15 : 505;
     }
-
+    console.log(contents)
     $q(`<div id="tooltip">` + contents + `</div>`)
         .css({
             position: "absolute",

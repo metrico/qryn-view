@@ -142,11 +142,9 @@ export function parseMatrixResponse(responseProps: QueryResult) {
                 prev.type === "stream" &&
                 prev.dsType === "logs"
             ) {
-                console.log("Adding to previous");
                 newPanel = [...prevDV];
 
                 let mapped = newPanel.map((m) => {
-                    console.log(id);
                     if (m.id === id) {
                         m = { ...m, logsVolumeData: idResult };
                         return m;

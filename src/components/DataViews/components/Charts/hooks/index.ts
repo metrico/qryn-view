@@ -5,10 +5,35 @@ import { getLabelsFromLocal } from "../helpers";
 
 import { formatTs, formatLabel } from "../helpers";
 
-export const useMatrixData = (spliced: any, data: any) => {
+export const TAGS_LEVEL: any = {
+    critical: ["emerg", "fatal", "alert", "crit", "critical"],
+    error: ["err", "eror", "error"],
+    warning: ["warn", "warning"],
+    info: ["info", "information", "notice"],
+    debug: ["dbug", "debug"],
+    trace: ["trace"],
+};
+export const LEVEL_COLORS: any = {
+    critical: "purple",
+    error: "red",
+    warning: "orange",
+    info: "green",
+    debug: "blue",
+    trace: "lightblue",
+    unknown: "gray",
+};
+
+export const getColorByLevel = (level: any) => {
+ return LEVEL_COLORS[level[0]] || 'gray'
+};
+
+export const useMatrixData = (
+    spliced: any,
+    data: any,
+    isLogsVolume?: boolean
+) => {
     return useMemo(() => {
         let parsed: any = [
-
             {
                 data: [],
                 label: [],
@@ -19,13 +44,22 @@ export const useMatrixData = (spliced: any, data: any) => {
         ];
 
         if (data?.length > 0) {
-            parsed = [...data]?.map((m) => ({
-                data: formatTs(m?.values),
-                label: formatLabel(m?.metric),
-                isVisible: true,
-                shadowSize: 0,
-                id: m.id,
-            }));
+            parsed = [...data]?.map((m) => {
+                let DataPoint:any =  {
+                    data: formatTs(m?.values),
+                    label: formatLabel(m?.metric, isLogsVolume),
+                    isVisible: true,
+                    shadowSize: 0,
+                    id: m.id,
+                }
+
+                if(isLogsVolume) {
+                    let color = getColorByLevel(formatLabel(m?.metric, isLogsVolume) || "");
+                    DataPoint.color = color
+                }
+
+                return DataPoint
+            });
 
             if (spliced) {
                 const splicedData = parsed?.splice(0, 20);
@@ -55,7 +89,6 @@ export const useTheme = (name: "dark" | "light") => {
 };
 
 export const useMatchHeight = ({ length }: { length: number }) => {
-
     return useMemo(() => {
         if (length <= 12) {
             return 140;

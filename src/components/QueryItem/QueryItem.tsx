@@ -33,7 +33,6 @@ const dataViewAction = (panel: any, data: any) => {
 };
 
 export default function QueryItem(props: any) {
-    console.log(props)
     const { name } = props;
     const {
         expr,
