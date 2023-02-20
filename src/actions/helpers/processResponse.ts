@@ -17,6 +17,32 @@ export function setPanelData(panel: string, data: any) {
     }
 }
 
+export const resetTraceData = (
+    type: string,
+    dispatch: Function,
+    panel: string,
+    id: string,
+    direction: QueryDirection,
+    queryType: QueryType,
+) => {
+    const { time } = getTimeParams(type);
+    const { debugMode } = store.getState();
+
+    const resultQuery: TracesResult = {
+        result: { resourceSpans: [], result: [], length: 0 },
+        raw: [],
+        time,
+        debugMode,
+        dispatch,
+        type: "traces",
+        dsType: type,
+        panel,
+        id,
+        ts: Date.now(),
+        queryType,
+    };
+    parseResponse(resultQuery);
+};
 export async function processResponse(
     type: string,
     response: any,
@@ -25,7 +51,7 @@ export async function processResponse(
     id: string,
     direction: QueryDirection,
     queryType: QueryType,
-    isLogsVolume?:boolean
+    isLogsVolume?: boolean
 ) {
     const { time } = getTimeParams(type);
     const { debugMode } = store.getState();
@@ -36,7 +62,7 @@ export async function processResponse(
         ) {
             const resultQuery: TracesResult = {
                 result: response.data.traces || [],
-                raw:response.data,
+                raw: response.data,
                 time,
                 debugMode,
                 dispatch,
@@ -72,12 +98,12 @@ export async function processResponse(
             if (data?.data?.length > 0) {
                 const resultQuery: QueryResult = {
                     result: data.data || [],
-                    raw:data?.data,
+                    raw: data?.data,
                     time,
                     debugMode,
                     queryType,
                     dispatch,
-                    dsType:type,
+                    dsType: type,
                     type,
                     panel,
                     id,
@@ -93,18 +119,18 @@ export async function processResponse(
     if (response?.data?.streams?.length === 0) {
         const resultQuery: QueryResult = {
             result: [],
-            raw: '[]',
+            raw: "[]",
             time,
             debugMode,
             queryType,
             dispatch,
             type: "streams",
-            dsType:type,
+            dsType: type,
             panel,
             id,
             ts: Date.now(),
             direction,
-            isLogsVolume
+            isLogsVolume,
         };
 
         parseResponse(resultQuery);
@@ -144,18 +170,18 @@ export async function processResponse(
 
         const resultQuery: QueryResult = {
             result,
-            raw:response?.data?.data,
+            raw: response?.data?.data,
             time,
             debugMode,
             queryType,
             dispatch,
-            type:rtype,
+            type: rtype,
             dsType: type,
             panel,
             id,
             ts: Date.now(),
             direction,
-           isLogsVolume
+            isLogsVolume,
         };
         parseResponse(resultQuery);
     } else {

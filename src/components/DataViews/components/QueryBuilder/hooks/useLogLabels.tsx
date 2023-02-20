@@ -18,11 +18,13 @@ export interface LogsResponse extends AxiosResponse {
 }
 export default function useLogLabels(
     id: string,
-    dataSourceUrl = ""
+    start:any,
+    stop:any,
+    dataSources:any,
+    dataSourceUrl = "",
 ): UseLogLabelsResponse {
-    const { start, stop } = useSelector((store: any) => store);
-    const dataSources = useSelector((store: any) => store.dataSources);
-
+    
+  
     const [loading, setLoading] = useState(false);
     const [response, setResponse] = useState<LogsResponse | any>([]);
     const timeStart = useTimeStart(start);
@@ -40,10 +42,21 @@ export default function useLogLabels(
     );
 
     useEffect(() => {
+   
         getApiRequest(currentDataSource, url, setLoading, setResponse);
-    }, [currentDataSource, url]);
+    }, [currentDataSource]);
 
-    const logsResponse = useLogsResponse(response);
+    //const logsResponse = useLogsResponse(response);
+
+    const logsResponse = useMemo(() => {
+        if (response?.data?.data && Array.isArray(response?.data?.data)) {
+            return response.data.data?.map((val: string) => ({
+                label: val,
+                value: val,
+            }));
+        }
+        return [{ label: "", value: "" }];
+    }, [response]);
 
     return { loading, logsResponse };
 }

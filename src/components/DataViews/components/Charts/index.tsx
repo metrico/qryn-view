@@ -8,11 +8,11 @@ import "react-flot/flot/jquery.flot.crosshair.min";
 import "react-flot/flot-override/jquery.flot.resize";
 import "react-flot/flot/jquery.flot.stack.min.js";
 //React
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 //Packages
 import * as moment from "moment";
-import { format } from "date-fns";
+import { format, getTime } from "date-fns";
 //import   ReactFlot from "react-flot/temp";
 
 //Global
@@ -41,7 +41,9 @@ export default function QrynChart(props: any): any {
     const { matrixData, actualQuery } = props;
     const { tWidth } = props;
 
-    const { expr, dataSourceType, queryType, limit, panel, id, isLogsVolume } = actualQuery;
+    const { expr, dataSourceType, queryType, limit, panel, id, isLogsVolume } =
+        actualQuery;
+
 
     const chartRef = useRef(null);
     const storeTheme = useSelector(({ theme }: any) => theme);
@@ -52,26 +54,42 @@ export default function QrynChart(props: any): any {
 
     $q.fn.UseTooltip = UseTooltip;
 
-    const matrix = useMatrixData(true, matrixData,isLogsVolume);
+    const matrix = useMatrixData(true, matrixData, isLogsVolume);
     const dispatch = useDispatch();
 
     const [isSpliced, setIsSpliced] = useState(true);
     const [chartData, setChartData] = useState(matrix);
 
-    const [allData] = useState(useMatrixData(false, matrixData,isLogsVolume));
+    const [allData] = useState(useMatrixData(false, matrixData, isLogsVolume));
     const [labels, setLabels] = useState([]);
     const [element, setElement] = useState(chartRef.current);
 
-    const chartOpts = useChartOptions({ tWidth });
+    const chartOpts = useChartOptions({ tWidth }, isLogsVolume || false);
 
     const [chartOptions, setChartOptions] = useState(chartOpts);
 
-    const [chartType, setChartType] = useState(getTypeFromLocal() || "line");
+    const getInitialChartType = useMemo(() => {
+        let localType = getTypeFromLocal();
+        if (isLogsVolume) {
+            return "bar";
+        } else  {
+            if (localType !== ""){
+            return localType;
+        } else {
+            return "line";
+        }
+    }
+    }, [isLogsVolume]);
+
+    const [chartType, setChartType] = useState(getInitialChartType);
 
     function plotChartData(data: any, type: any, element: any) {
-        const barWidth = getBarWidth(getTimeSpan(data), tWidth);
+        let barWidth = 0;
+        if (isLogsVolume) {
+            barWidth = getBarWidth(getTimeSpan(data), tWidth);
+        }
 
-        const chartSeries = setChartTypeSeries(type,barWidth);
+        const chartSeries = setChartTypeSeries(type, barWidth);
         const { timeformat, min, max } = formatDateRange(data);
         return $q.plot(
             element,
@@ -109,8 +127,16 @@ export default function QrynChart(props: any): any {
         const lSelected =
             JSON.parse(localStorage.getItem("labelsSelected") || "null") || [];
         if (lSelected?.length > 0) {
-            const barWidth = getBarWidth(getTimeSpan(data), tWidth);
-            const { lines, bars, points } = getSeriesFromChartType(chartType,barWidth);
+            let barWidth = 0
+            if(isLogsVolume) {
+                barWidth = getBarWidth(getTimeSpan(data), tWidth);
+            }
+            
+            const { lines, bars, points } = getSeriesFromChartType(
+                chartType,
+                barWidth,
+                isLogsVolume
+            );
             const ids = lSelected?.map((m: any) => m.id);
             const dataMapped = data?.map((series: any) => {
                 if (!ids.includes(series.id)) {
@@ -202,8 +228,11 @@ export default function QrynChart(props: any): any {
 
         if (newList.length > 0) {
             const ids = newList?.map((m: any) => m.id);
-           
-            const { lines, bars, points } = getSeriesFromChartType(chartType);
+
+            const { lines, bars, points } = getSeriesFromChartType(
+                chartType,
+                0
+            );
             let dataSelected = e?.map((series: any) => {
                 if (!ids.includes(series.id)) {
                     return {
@@ -224,13 +253,17 @@ export default function QrynChart(props: any): any {
             });
 
             const { timeformat, min, max } = formatDateRange(dataSelected);
-            const barWidth = getBarWidth(getTimeSpan(dataSelected), tWidth);
+            let barWidth = 0
+            if(isLogsVolume) {
+                barWidth = getBarWidth(getTimeSpan(dataSelected), tWidth);
+            }
+            
             let plot = $q.plot(
                 element,
                 dataSelected,
 
                 $q.extend(true, {}, chartOptions, {
-                    series: getSeriesFromChartType(chartType,barWidth),
+                    series: getSeriesFromChartType(chartType, barWidth),
                     xaxis: { timeformat, min, max },
                 })
             );
@@ -240,10 +273,15 @@ export default function QrynChart(props: any): any {
             $q(chartRef.current).UseTooltip(plot);
         } else {
             const data = isSpliced ? chartData : allData;
-
-            const barWidth = getBarWidth(getTimeSpan(data), tWidth);
-            const { lines, bars, points } = getSeriesFromChartType(chartType,barWidth);
-
+            let barWidth = 0
+            if(isLogsVolume) {
+                barWidth = getBarWidth(getTimeSpan(data), tWidth);
+            }
+          
+            const { lines, bars, points } = getSeriesFromChartType(
+                chartType,
+                barWidth
+            );
 
             const newData = data?.map((series: any) => {
                 return {
@@ -261,7 +299,11 @@ export default function QrynChart(props: any): any {
                 element,
                 newData,
                 $q.extend(true, {}, chartOptions, {
-                    series: getSeriesFromChartType(chartType),
+                    series: getSeriesFromChartType(
+                        chartType,
+                        barWidth || 0,
+                        isLogsVolume
+                    ),
                     xaxis: { timeformat, min, max },
                 })
             );
@@ -288,28 +330,27 @@ export default function QrynChart(props: any): any {
     }, [matrixData, isSpliced]);
 
     function drawChartFromData() {
-        console.log("drawchart from data");
         const data = isSpliced ? chartData : allData;
         const element = $q(chartRef.current);
         let newData = getNewData(data, null);
 
-        // calculate the barWidth  with:
-        // amount of entries
-        // time span
-        // width of container
-        // express range in miliseconds
-
-        console.log(newData);
-
         try {
-            const barWidth = getBarWidth(getTimeSpan(newData), tWidth);
-
-            console.log("BAR WIDTH",barWidth);
+            let barWidth = 0;
+            if (isLogsVolume) {
+                console.log(isLogsVolume)
+                console.log(newData)
+                console.log(tWidth)
+                barWidth = getBarWidth(getTimeSpan(newData), tWidth);
+                console.log(barWidth)
+            }
 
             const { timeformat, min, max } = formatDateRange(newData);
 
-            let { bars, lines, points, stack } =
-                getSeriesFromChartType(chartType,barWidth);
+            let { bars, lines, points, stack } = getSeriesFromChartType(
+                chartType,
+                barWidth,
+                isLogsVolume
+            );
 
             let plot = $q.plot(
                 element,
@@ -349,7 +390,7 @@ export default function QrynChart(props: any): any {
             chartRef,
             onLabelClick,
             labels,
-            isLogsVolume
+            isLogsVolume,
         };
         const pointSet = new Set();
         matrixData.forEach((dataPoint: any) => {
@@ -360,6 +401,7 @@ export default function QrynChart(props: any): any {
         if (pointSet.size === 1 && chartType !== "bar") {
             onSetChartType("bar");
         }
+
         return <FlotChart {...flotChartProps} />;
     }
 

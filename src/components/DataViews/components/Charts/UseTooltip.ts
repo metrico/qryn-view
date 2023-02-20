@@ -108,7 +108,6 @@ function showTooltip(x: any, y: any, contents: any, length: any) {
     if (clientX > halfScreen) {
         posX -= length < 125 ? length * 6 + 15 : 505;
     }
-    console.log(contents)
     $q(`<div id="tooltip">` + contents + `</div>`)
         .css({
             position: "absolute",

@@ -3,7 +3,7 @@ import { yAxisTickFormatter } from "../helpers";
 const APP_NAME = "qryn_view";
 export const LOCAL_CHART_TYPE = `${APP_NAME}_chart_type`;
 
-export const CHART_OPTIONS = {
+export const CHART_OPTIONS = (isLogsVolume=false)=>({
     xaxis: {
         show: true,
         mode: "time",
@@ -41,7 +41,7 @@ export const CHART_OPTIONS = {
         redrawOverlayInterval: 1,
     },
     series: {
-        stack: true,
+        stack: isLogsVolume,
         lines: { show: true, lineWidth: 1.5, shadowSize: 0, zero: false },
         bars: {
             align: "center",
@@ -61,7 +61,7 @@ export const CHART_OPTIONS = {
     selection: {
         mode: "x",
     },
-};
+});
 
 export const CHART_BAR_SERIES = {
     lines: { show: false, lineWidth: 1.5, shadowSize: 0 },

@@ -7,6 +7,7 @@ import { FlexColumn } from "./styles";
 import { LogsFormBuilderProps, Builder } from "./types";
 import { FormBuilders } from "./FormBuilders";
 import QueryPreview from "./QueryPreview";
+import { useSelector } from "react-redux";
 
 const initialBuilder: Builder = {
     operations: [],
@@ -35,7 +36,12 @@ const binaryOperatorOpts: any = {
 export function LogsFormBuilder(props: LogsFormBuilderProps) {
     const { dataSourceId, labelValueChange,  handleLogsVolumeChange } = props;
 
-    const { logsResponse } = useLogLabels(dataSourceId);
+    const dataSources = useSelector((store: any) => store.dataSources);
+
+    const { start, stop } = useSelector((store: any) => store);
+
+
+    const { logsResponse } = useLogLabels(dataSourceId, start, stop, dataSources); // pass here all data needed
 
     const [finalQuery, setFinalQuery] = useState("");
     const mainTheme = useTheme();

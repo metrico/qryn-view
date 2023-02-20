@@ -141,7 +141,7 @@ export const QueryBar = (props: any) => {
             console.error(e);
             return exprQuery;
         }
-    }, [id, dataSourceId]);
+    }, [dataSourceId]);
 
     const actLocalDs = useMemo(() => {
         try {
@@ -161,13 +161,16 @@ export const QueryBar = (props: any) => {
     }, [dataSourceId]);
 
     // on init
+
+    const findCurrentDataSource = (dataSources: any, id: string) => {
+        return dataSources?.find((f: any) => f.id === dataSourceId);
+    };
+
     useEffect(() => {
         setQueryInput(actLocalQuery.expr);
         setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
-
-        const dataSource: any = dataSources?.find(
-            (f: any) => f.id === dataSourceId
-        );
+        setLogsLevel(expr, isLogsVolume);
+        const dataSource: any = findCurrentDataSource(dataSources, id);
 
         let currentDataSource: any = {};
 
@@ -180,19 +183,8 @@ export const QueryBar = (props: any) => {
 
             const panelCP = [...panelData];
 
-            if (currentDataSource?.type !== "flux") {
-                decodeQuery(
-                    queryInput,
-                    currentDataSource?.url,
-                    props.data.labels,
-                    currentDataSource.id
-                );
-            }
-            const labelsDecoded = decodeExpr(data.expr);
-
             panelCP.forEach((query) => {
                 if (query.id === id) {
-                    query.labels = [...labelsDecoded];
                     query.dataSourceId = currentDataSource.id;
                     query.dataSourceType = currentDataSource.type;
                     query.dataSourceURL = currentDataSource.url;
@@ -213,15 +205,6 @@ export const QueryBar = (props: any) => {
             currentDataSource = { ...dataSource };
         }
 
-        // search for auth params  and send inside
-        // const labels = sendLabels(
-        //     dataSourceId,
-        //     dataSourceType,
-        //     currentDataSource?.url, // which one should be?
-        //     start,
-        //     stop
-        // );
-        // if is view only mode (embedded) do an auto request on init
         if (isEmbed)
             dispatch(
                 getData(
@@ -236,9 +219,6 @@ export const QueryBar = (props: any) => {
                     currentDataSource?.url
                 )
             );
-
-        // if there is nothing to request, show empty view
-        //  dispatch(setIsEmptyView(true));
     }, []);
 
     // force single view from small width
@@ -270,18 +250,8 @@ export const QueryBar = (props: any) => {
 
             const panelCP = [...panelData];
 
-            if (currentDataSource?.type !== "flux") {
-                decodeQuery(
-                    queryInput,
-                    currentDataSource?.url,
-                    props.data.labels,
-                    currentDataSource.id
-                );
-            }
-            const labelsDecoded = decodeExpr(data.expr);
             panelCP.forEach((query) => {
                 if (query.id === id) {
-                    query.labels = [...labelsDecoded];
                     query.dataSourceId = currentDataSource.id;
                     query.dataSourceType = currentDataSource.type;
                     query.dataSourceURL = currentDataSource.url;
@@ -302,63 +272,42 @@ export const QueryBar = (props: any) => {
             currentDataSource = { ...dataSource };
         }
 
-        // search for auth params  and send inside
-        const labels: any = sendLabels(
-            dataSourceId,
-            dataSourceType,
-            currentDataSource?.url, // which one should be?
-            start,
-            stop
+        dispatch(
+            getData(
+                dataSourceType,
+                actLocalQuery?.expr,
+                queryType,
+                limit,
+                name,
+                id,
+                direction,
+                dataSourceId,
+                currentDataSource?.url
+            )
         );
-        if (actLocalQuery?.expr !== "") {
+
+        setLogsLevel(queryInput, isLogsVolume);
+        if (
+            isLogsVolume &&
+            logsVolumeQuery?.query &&
+            logsVolumeQuery?.query !== "" &&
+            dataSourceType === "logs"
+        ) {
             dispatch(
                 getData(
                     dataSourceType,
-                    actLocalQuery?.expr,
+                    logsVolumeQuery.query,
                     queryType,
                     limit,
                     name,
                     id,
                     direction,
                     dataSourceId,
-                    currentDataSource?.url
+                    currentDataSource.url,
+                    logsVolumeQuery.customStep,
+                    true // isLogsVolume
                 )
             );
-        }
-
-        // if is view only mode (embedded) do an auto request on init
-
-        if (onQueryValid(expr) && currentDataSource?.type !== "flux") {
-            return labels.then((data: any) => {
-                if (data) {
-                    const prevLabels = [...props.data.labels];
-                    const prevMap = prevLabels.map((m) => m.name) || [];
-                    const newLabels = [...data];
-                    setLabels(newLabels);
-                    if (newLabels.length > 0) {
-                        if (prevMap.length > 0) {
-                            newLabels.forEach((l) => {
-                                const labelFound = prevMap.includes(l.name);
-                                if (labelFound) {
-                                    const pl = prevLabels.find(
-                                        (f) => f.name === l.name
-                                    );
-                                    l = { ...pl };
-                                }
-                            });
-                        }
-                        decodeQuery(
-                            expr,
-                            currentDataSource.url,
-                            newLabels,
-                            currentDataSource.id
-                        );
-                    }
-                }
-            });
-        } else {
-            // if there is nothing to request, show empty view
-            dispatch(setIsEmptyView(true));
         }
     }, [dataSourceId, id]);
 
@@ -366,25 +315,31 @@ export const QueryBar = (props: any) => {
 
     useEffect(() => {
         if (typeof expr === "string") {
-            if (isLogsVolume) {
-                let pureLabels = expr.match(/[^{\}]+(?=})/g);
-                if (Array.isArray(pureLabels) && pureLabels?.length > 0) {
-                    let pureLabelsString = "{" + pureLabels?.join(",") + "}";
-                    let logsVolumeQuery = `sum by(level) (count_over_time(${pureLabelsString}[$__interval]))`
-                    onLogVolumeChange(logsVolumeQuery);
-                }
-            }
-
             setQueryInput(expr);
             setQueryValue([{ children: [{ text: expr }] }]);
             setQueryValid(onQueryValid(expr));
             decodeQueryAndUpdatePanel(queryInput, false);
             saveQuery();
-            setLocalStorage();
+            //  setLocalStorage();
         }
     }, [expr]);
 
+    useEffect(() => {
+        setLogsLevel(queryInput, isLogsVolume);
+    }, [queryInput]);
+
     // handlers
+
+    function setLogsLevel(queryInput: string, isLogsVolume: boolean) {
+        if (isLogsVolume && queryInput !== "") {
+            let pureLabels = queryInput.match(/[^{\}]+(?=})/g);
+            if (Array.isArray(pureLabels) && pureLabels?.length > 0) {
+                let pureLabelsString = "{" + pureLabels?.join(",") + "}";
+                let logsVolumeQuery = `sum by(level) (count_over_time(${pureLabelsString}[$__interval]))`;
+                onLogVolumeChange(logsVolumeQuery);
+            }
+        }
+    }
 
     function handleQueryChange(e: any) {
         setQueryValue(e);
@@ -561,8 +516,7 @@ export const QueryBar = (props: any) => {
         dispatch(panelAction(name, panel));
     };
 
-    const onSubmitRate = (e: any) => {
-        e.preventDefault();
+    function addQueryInterval(queryInput: string) {
         const isEmptyQuery = queryInput.length === 0;
         let query = "";
         if (!isEmptyQuery) {
@@ -585,36 +539,44 @@ export const QueryBar = (props: any) => {
                     query = queryInput.replace(/\[\d+ms\]/, `[$__interval]`);
                 }
             }
+        }
+        return query;
+    }
+    const onSubmitRate = (e: any) => {
+        e.preventDefault();
+        const isEmptyQuery = queryInput.length === 0;
+        let query = "";
+
+        if (!isEmptyQuery) {
+            query = addQueryInterval(queryInput);
             setQueryInput(query);
             setQueryValue([{ children: [{ text: query }] }]);
             setQueryValid(onQueryValid(query));
         }
 
         if (onQueryValid(query)) {
-            const ds = dataSources.find((f: any) => f.id === dataSourceId);
-            try {
-                updateHistory(
-                    ds.type,
-                    query,
-                    queryType,
-                    limit,
-                    id,
-                    direction,
-                    ds.id,
-                    ds.url
-                );
-                // Decode query to translate into labels selection
-                decodeQueryAndUpdatePanel(query, true);
-
-                updateLinksHistory();
-            } catch (e) {
-                console.error(e);
-            }
-        } else {
-            dispatch(setIsEmptyView(true));
-            console.log("Please make a log query", expr);
+            tryUpdateHistory(query);
         }
     };
+
+    function tryUpdateHistory(query: string) {
+        const ds = dataSources.find((f: any) => f.id === dataSourceId);
+        try {
+            updateHistory(
+                ds.type,
+                query,
+                queryType,
+                limit,
+                id,
+                direction,
+                ds.id,
+                ds.url
+            );
+            updateLinksHistory();
+        } catch (e) {
+            console.error(e);
+        }
+    }
 
     const updateHistory = (
         type: any,
@@ -650,58 +612,11 @@ export const QueryBar = (props: any) => {
         const currentDataSource = dataSources.find(
             (f: any) => f.id === dataSourceId
         );
-        if (
-            currentDataSource?.type !== "flux" &&
-            currentDataSource?.type !== "traces"
-        ) {
-            decodeQuery(
-                queryExpr,
-                currentDataSource?.url,
-                props.data.labels,
-                currentDataSource?.id
-            );
-        }
-        const labelsDecoded = decodeExpr(data.expr);
         const panel = [...panelQuery];
 
-        panel.forEach((query) => {
-            if (query.id === id) {
-                if (isSearch) {
-                    query.expr = queryExpr;
-                }
-                query.labels = [...labelsDecoded];
-                query.browserOpen = false;
-                query.dataSourceId = currentDataSource.id;
-                query.dataSourceType = currentDataSource.type;
-                query.dataSourceURL = currentDataSource.url;
-            }
-        });
-
         dispatch(panelAction(name, panel));
-        let querySubmit = "";
-        let customStep = 0;
-        if (queryExpr.includes(`$__interval`)) {
-            const timeDiff = (stop.getTime() - start.getTime()) / 1000;
 
-            const timeProportion = timeDiff / 30;
-
-            const screenProportion = Number(
-                (width / window.innerWidth).toFixed(1)
-            );
-
-            const intval = timeProportion / screenProportion;
-
-            const ratiointval = Math.round(
-                intval * Number(window.devicePixelRatio.toFixed(2))
-            );
-            querySubmit = queryExpr.replace(
-                "[$__interval]",
-                `[${ratiointval}s]`
-            );
-            customStep = ratiointval;
-        } else {
-            querySubmit = queryExpr;
-        }
+        let { querySubmit, customStep } = getIntvalData(queryExpr);
 
         if (isSearch && querySubmit !== "") {
             dispatch(
@@ -720,7 +635,6 @@ export const QueryBar = (props: any) => {
                 )
             );
         }
-        // this should be the signal to request for logs volume data
         if (
             isLogsVolume &&
             logsVolumeQuery?.query &&
@@ -743,6 +657,36 @@ export const QueryBar = (props: any) => {
             );
         }
     };
+
+    function getIntvalData(queryExpr: string): {
+        customStep: number;
+        querySubmit: string;
+    } {
+        let querySubmit = "";
+        let customStep = 0;
+
+        if (queryExpr.includes(`$__interval`)) {
+            const timeDiff = (stop.getTime() - start.getTime()) / 1000;
+            const timeProportion = timeDiff / 30;
+            const screenProportion = Number(
+                (width / window.innerWidth).toFixed(1)
+            );
+            const intval = timeProportion / screenProportion;
+
+            const ratiointval = Math.round(
+                intval * Number(window.devicePixelRatio.toFixed(2))
+            );
+            querySubmit = queryExpr.replace(
+                "[$__interval]",
+                `[${ratiointval}s]`
+            );
+            customStep = ratiointval;
+        } else {
+            querySubmit = queryExpr;
+        }
+
+        return { customStep, querySubmit };
+    }
     const updateLinksHistory = () => {
         const ds = dataSources.find((f: any) => f.id === dataSourceId);
         const storedUrl = saveUrl.add(

@@ -72,10 +72,10 @@ export const useMatrixData = (
     }, [spliced, data]);
 };
 
-export const useChartOptions = ({ tWidth }: { tWidth: number }) => {
+export const useChartOptions = ({ tWidth }: { tWidth: number },isLogsVolume=false) => {
     return useMemo(() => {
         if (tWidth) {
-            const chartOp: any = { ...CHART_OPTIONS };
+            const chartOp: any = { ...CHART_OPTIONS(isLogsVolume) };
             chartOp["xaxis"]["ticks"] = Math.round(tWidth / 125);
             return chartOp;
         } else {

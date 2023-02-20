@@ -29,9 +29,7 @@ export default function LogsView(props: any) {
     } = props;
     const { isLogsVolume } = actualQuery;
     const { limit } = actualQuery;
-    // take logsVolumeDataFrom Here!!!!!!!!!!
 
-    // console.log(props);
     const [tabsState, setTabsState] = useState<number>(
         localTabsState(actualQuery)[actualQuery.id] || 0
     );
@@ -74,7 +72,7 @@ export default function LogsView(props: any) {
                 {...props}
             />
 
-            {isLogsVolume && logsVolumeData?.length > 0 && (
+            {isLogsVolume && logsVolumeData?.length > 0  && viewWidth > 0 && (
                 <div>
                     <QrynChart
                         {...props}

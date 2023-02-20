@@ -23,8 +23,6 @@ const getDataPointValue = (datapoint: any[]) => {
 
 export function getSortedItems(list: []) {
     if (list?.length > 0) {
-        console.log(list);
-
         return (
             list?.filter(
                 (f: any) =>
@@ -40,7 +38,6 @@ export function getLabelTemplate(sortedList: any) {
     return (
         sortedList
             ?.map((template: any) => {
-                console.log(template, "TEMPLATE");
                 return ` <div style="display:flex;justify-content:space-between">
                            <div style="display:flex;margin-right:10px;">
                                <span style="background:${template.color};
@@ -63,7 +60,6 @@ export function getLabelTemplate(sortedList: any) {
 
 export function makeTolltipItems(list: []) {
     const sorted = getSortedItems(list);
-    console.log(sorted);
     return getLabelTemplate(sorted);
 }
 
@@ -93,16 +89,12 @@ export interface TimeSpan {
 }
 // should have sum of series somewhere
 export function getTimeSpan(data: any): TimeSpan {
-    console.log(data, "DATA");
-
     const tsArray = data
         .map((tsItem: any) =>
             tsItem?.data?.map(([t, v]: [t: any, v: any]) => t)
         )
         .flat()
         .sort();
-
-    console.log(tsArray.length);
 
     const first = tsArray[0];
     //const last = tsArray[tsArray.length - 1] ;
@@ -123,20 +115,18 @@ export function getTimeSpan(data: any): TimeSpan {
 
 export const getBarWidth = (tSpan: TimeSpan, width: number) => {
     const { length, timeDiff, seriesLength } = tSpan;
-
     const dividend = () => {
         if (seriesLength === 1) {
             return 1 / 2;
         }
         return seriesLength - 1;
     };
-    return Math.round((timeDiff / width / length) * dividend() * 1000);
+    let barWidth = Math.round((timeDiff / width / length) * dividend() * 1000);
+    return barWidth;
 };
 
 export function formatDateRange(data: any) {
     const { timeSpan, first, last } = getTimeSpan(data);
-
-    console.log(timeSpan, "TIME SPAN");
 
     const formatted =
         timeSpan > 1
@@ -159,37 +149,43 @@ export function formatTs(values: any) {
 // should pass timestamp in whichever its defining the bar series
 // should pass colors at init
 
-export function getSeriesFromChartType(type: any, barWidth?: number) {
-    console.log("get series from chart type");
+export function getSeriesFromChartType(
+    type: any,
+    barWidth?: number,
+    isLogsVolume = false
+) {
     switch (type) {
         case "bar":
-            return CHART_BAR_SERIES(barWidth);
+            return CHART_BAR_SERIES(barWidth, isLogsVolume);
 
         case "line":
-            return CHART_LINE_SERIES;
+            return CHART_LINE_SERIES(isLogsVolume);
 
         case "points":
-            return CHART_POINT_SERIES;
+            return CHART_POINT_SERIES(isLogsVolume);
 
         default:
-            return CHART_LINE_SERIES;
+            return CHART_LINE_SERIES(isLogsVolume);
     }
 }
 
-export function setChartTypeSeries(type: any, barWidth?: number) {
-    console.log("set schart type series");
+export function setChartTypeSeries(
+    type: any,
+    barWidth = 0,
+    isLogsVolume = false
+) {
     switch (type) {
         case "bar":
-            return { series: CHART_BAR_SERIES(barWidth) };
+            return { series: CHART_BAR_SERIES(barWidth, isLogsVolume) };
 
         case "line":
-            return { series: CHART_LINE_SERIES };
+            return { series: CHART_LINE_SERIES(isLogsVolume) };
 
         case "points":
-            return { series: CHART_POINT_SERIES };
+            return { series: CHART_POINT_SERIES(isLogsVolume) };
 
         default:
-            return { series: CHART_LINE_SERIES };
+            return { series: CHART_LINE_SERIES(isLogsVolume) };
     }
 }
 
@@ -208,7 +204,9 @@ export function formatLabel(labels: any, isLogsVolume = false) {
     }
 
     if (isLogsVolume && labelResult) {
+
         return Object.entries(labelResult)?.map(([_, value]) => value);
+        
     } else if (!isLogsVolume && labelResult) {
         return (
             "{ " +
@@ -229,13 +227,16 @@ export function hideSeries(series: any) {
         isVisible: false,
     };
 }
-export function showSeries(series: any, type: any) {
-    console.log(series);
-    const { lines, bars, points } = getSeriesFromChartType(type);
+export function showSeries(series: any, type: any, isLogsVolume = false) {
+    const { lines, bars, points } = getSeriesFromChartType(
+        type,
+        0,
+        isLogsVolume
+    );
 
     return {
         ...series,
-        stack: true,
+        stack: isLogsVolume,
         bars,
         lines,
         points,

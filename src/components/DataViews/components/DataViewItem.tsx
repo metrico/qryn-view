@@ -31,7 +31,6 @@ export function DataViewItem(props: any) {
 
     const [streamData, setStreamData] = useState(dataView.data); //
     const [tableData, setTableData] = useState(dataView.tableData || {});
-
     useEffect(() => {
         setStreamData(dataView.data);
     }, [dataView.data, setStreamData, isSplit]);

@@ -77,7 +77,7 @@ export default function useLabelValues(id: any, label: any, start: any, end: any
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (currentDataSource.type !== "flux") {
+        if (currentDataSource.type !== "flux" && label !== "") {
             const apiRequest = async () => {
                 setLoading(true);
                 if (url && url !== "") {
@@ -94,7 +94,8 @@ export default function useLabelValues(id: any, label: any, start: any, end: any
 
             apiRequest();
         }
-    }, [options, url, currentDataSource]);
+    }, [currentDataSource]);
+
     return {
         response,
         controller: options.signal,

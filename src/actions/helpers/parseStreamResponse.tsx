@@ -1,9 +1,7 @@
 import { sortBy } from "lodash";
 import setIsEmptyView from "../setIsEmptyView";
 import setLogs from "../setLogs";
-import setMatrixData from "../setMatrixData";
 import { setQueryTime } from "../setQueryTime";
-import { setTableData } from "../setTableData";
 import { QueryResult } from "../types";
 import {
     getAsyncResponse,
@@ -16,8 +14,6 @@ import { setLeftDataView } from "../setLeftDataView";
 import { setRightDataView } from "../setRightDataView";
 import store from "../../store/store";
 import { ColumnDef } from "@tanstack/react-table";
-import { fuzzyFilter, fuzzySort } from "../../qryn-ui/Table/models/tableModels";
-
 function timeFormatter(props: any) {
     return moment(parseInt(props.getValue()) / 1000000).format(
         "YYYY-MM-DDTHH:mm:ss.SSZ"
@@ -117,11 +113,7 @@ export function parseStreamResponse(responseProps: QueryResult) {
     const messages = mapStreams(result, direction);
     // get current dataView and update action
     const dataView = setDataView(panel);
-
-    dispatch(setMatrixData([]));
-
     const tableResult = getStreamTableResult(result);
-    dispatch(setTableData(tableResult));
 
     const messSorted = sortMessagesByTimestamp(messages, direction);
     function unite(args: any) {
@@ -173,6 +165,23 @@ export function parseStreamResponse(responseProps: QueryResult) {
             const { action, state } = dataView;
             const prevDV = store.getState()?.[state];
             if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
+               let newPanel = [];
+               if(isLogsVolume) {
+                newPanel = [...prevDV];
+
+                let mapped = newPanel.map((m) => {
+                    if (m.id === id) {
+                        let logsVolumeData = [...m.logsVolumeData] || []
+                        let prevStream  = {...panelResult };
+
+                        return {...prevStream, logsVolumeData};
+                    } else {
+                        return m;
+                    }
+                });
+                dispatch(action([]));
+                dispatch(action(mapped));
+               } else {
                 let newPanel = [];
                 dispatch(action([]));
                 const filtered = prevDV.filter(
@@ -180,6 +189,7 @@ export function parseStreamResponse(responseProps: QueryResult) {
                 );
                 newPanel = [...filtered, { ...panelResult }];
                 dispatch(action(newPanel));
+               }
             } else {
                 let newPanel = [...prevDV, panelResult];
                 dispatch(action(newPanel));

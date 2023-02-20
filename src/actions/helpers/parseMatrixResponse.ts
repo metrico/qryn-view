@@ -137,20 +137,20 @@ export function parseMatrixResponse(responseProps: QueryResult) {
 
             let prev = prevDV?.find((dv: any) => dv.id === panelResult.id);
             // if not previous stream type and no logsVolume active
-            if (
-                isLogsVolume &&
-                prev.type === "stream" &&
-                prev.dsType === "logs"
-            ) {
+            if (isLogsVolume) {
                 newPanel = [...prevDV];
-
                 let mapped = newPanel.map((m) => {
                     if (m.id === id) {
-                        m = { ...m, logsVolumeData: idResult };
+                        return {
+                            ...m,
+                            logsVolumeData: idResult,
+                            total: idResult.length,
+                        };
+                    } else {
                         return m;
                     }
-                    return m;
                 });
+                dispatch(action([]));
                 dispatch(action(mapped));
             } else {
                 dispatch(action([]));
