@@ -1,11 +1,12 @@
 import { TabsUnstyled } from "@mui/base";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, SyntheticEvent } from "react";
 import QrynChart from "../components/Charts";
 import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
 import { TabsList, Tab, TabPanel, ViewStyled } from "./styled";
 import ReactJSON from "react-json-view";
 import { useSelector } from "react-redux";
+import { localTabsState } from "../helpers";
 
 export const VectorView = (props: any) => {
     const {
@@ -30,18 +31,30 @@ export const VectorView = (props: any) => {
         }
         return "tomorrow";
     }, [theme]);
-    const [size, setSize] = useState(0);
-    const [width, setWidth] = useState(0);
 
     const parentRef: any = useRef(null);
 
-    useEffect(() => {
-        setSize(parentRef.current.offsetHeight);
-    }, [parentRef]);
+    const rawData = useMemo(() => {
+        return JSON.parse(JSON.stringify(props?.dataView?.raw)) || [];
+    }, [props?.dataView?.raw]);
 
-    useEffect(()=>{
-        setWidth(parentRef.current.offsetWidth)
-    },[parentRef.current.offsetWidth])
+    const [tabsState, setTabsState] = useState<number>(
+        localTabsState(actualQuery)[actualQuery.id] || 0
+    );
+
+    const onTabChange = (
+        e: SyntheticEvent<Element, Event>,
+        value: number | string | boolean
+    ) => {
+        const newState = {
+            ...localTabsState(actualQuery),
+            [actualQuery.id]: value,
+        };
+        localStorage.setItem("tabsState", JSON.stringify(newState));
+        if (typeof value === "number") {
+            setTabsState((_: any) => value);
+        }
+    };
 
     return (
         <ViewStyled ref={viewRef} size={panelSize} vheight={viewHeight}>
@@ -54,10 +67,14 @@ export const VectorView = (props: any) => {
                 type={type}
                 {...props}
             />
-            <TabsUnstyled defaultValue={0}>
+            <TabsUnstyled
+                defaultValue={localTabsState(actualQuery)[actualQuery.id] || 0}
+                value={tabsState}
+                onChange={onTabChange}
+            >
                 <TabsList panelsize={props.panelSize}>
                     <Tab>Table</Tab>
-                   
+
                     <Tab>Raw</Tab>
                     {streamData?.chartData && <Tab>Chart</Tab>}
                 </TabsList>
@@ -69,8 +86,6 @@ export const VectorView = (props: any) => {
                     >
                         <VectorTable
                             {...props}
-                            size={size}
-                            width={width}
                             height={theight}
                             data={streamData.tableData}
                             actualQuery={actualQuery}
@@ -80,12 +95,7 @@ export const VectorView = (props: any) => {
                 <TabPanel value={1}>
                     <div className="view-content">
                         <div style={{ padding: "20px" }}>
-                            <ReactJSON
-                            theme={jsonTheme}
-                                src={JSON.parse(
-                                    JSON.stringify(props?.dataView?.raw)
-                                )}
-                            />
+                            <ReactJSON theme={jsonTheme} src={rawData} />
                         </div>
                     </div>
                 </TabPanel>

@@ -20,7 +20,7 @@ import {
     min,
     max,
 } from "date-fns";
-import { isSameMinute } from "date-fns/esm";
+import  isSameMinute  from "date-fns/isSameMinute";
 
 export const chunks = (array: any, size: any) => {
     return Array.from({ length: Math.ceil(array.length / size) }, (v, i) =>

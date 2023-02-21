@@ -1,4 +1,3 @@
-
 import { queryBuilderWithLabels } from "../../LabelBrowser/helpers/querybuilder";
 
 import { ZoomIn, ZoomOut } from "@mui/icons-material/";
@@ -13,15 +12,15 @@ import getData from "../../../actions/getData";
 import { useMediaQuery } from "react-responsive";
 
 const ValueTagsStyled: any = styled.div`
-    color: ${({theme}: any) => theme.textPrimary};
+    color: ${({ theme }: any) => theme.textPrimary};
     flex: 1;
     display: flex;
     &:hover {
-        background: ${({theme}: any) => theme.widgetContainer};
+        background: ${({ theme }: any) => theme.widgetContainer};
     }
 `;
 const TracesButton: any = styled.div`
-    color: ${({theme}: any) => theme.buttonText};
+    color: ${({ theme }: any) => theme.buttonText};
     flex: 0;
     background-color: hsl(220, 67%, 55%);
     display: flex;
@@ -59,7 +58,13 @@ export function ValueTagsCont(props: any) {
     return null;
 }
 
-export async function addLabel(e: any, key: any, value: any, isExcluded = false, queryObj: any) {
+export async function addLabel(
+    e: any,
+    key: any,
+    value: any,
+    isExcluded = false,
+    queryObj: any
+) {
     e.preventDefault();
 
     e.stopPropagation();
@@ -99,23 +104,31 @@ export class Panel {
 
 export default function ValueTags(props: any) {
     const { tags, actQuery, dataSourceData, linkedFieldTags } = props;
+    //console.log(dataSourceData);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
-    const dataSources = useSelector((store: any) => store.dataSources);
+    //  const dataSources = useSelector((store: any) => store.dataSources);
     const theme = useSelector((store: any) => store.theme);
     const isEmbed = useSelector((store: any) => store.isEmbed);
     const dispatch = useDispatch();
     const rightPanel = useSelector((store: any) => store.right);
 
-    const openTraces = (e: any, key: any, value: any, linkID: any, currentUrl: any, linkType: any) => {
+    const openTraces = (
+        e: any,
+        key: any,
+        value: any,
+        linkID: any,
+        currentUrl: any,
+        linkType: any
+    ) => {
+        // debugger;
         e.stopPropagation();
         if (props?.actQuery?.panel === "left" && !isTabletOrMobile) {
             dispatch(setSplitView(true));
         }
 
         let previousRight = JSON.parse(JSON.stringify(rightPanel));
-
         const panelCP = JSON.parse(JSON.stringify(props.actQuery));
-
+        // debugger;
         try {
             const newRight = {
                 ...previousRight[0],
@@ -123,8 +136,8 @@ export default function ValueTags(props: any) {
                 idRef: linkType + "=" + value,
                 panel: "right",
                 queryType: "range",
-                dataSourceType: linkType.toLowerCase(),
-                dataSourceId: linkID,
+                dataSourceType: linkType.toLowerCase() || "traces",
+                dataSourceId: linkID || "32D16h5uYBqUUzhD",
                 dataSourceURL: currentUrl,
                 expr: value,
                 limit: 100,
@@ -136,82 +149,28 @@ export default function ValueTags(props: any) {
                 labels: [],
                 values: [],
                 direction: "forward",
+                loading: false,
             };
-
-            dispatch(setRightPanel([newRight]));
-
+            // debugger;
             dispatch(
                 getData(
-                    linkType.toLowerCase(),
+                    linkType.toLowerCase() || "traces",
                     value,
                     "range",
                     panelCP.limit || 100,
                     "right",
                     newRight.id,
                     "forward",
-                    linkID, // datasourceid
+                    linkID || "32D16h5uYBqUUzhD", // datasourceid
                     currentUrl
                 )
             );
+            dispatch(setRightPanel([newRight]));
         } catch (e) {
             console.log(e);
         }
     };
 
-    const linkButton = (key: any, value: any) => {
-        const { linkedFields } = dataSourceData;
-        const fieldsFromParent = linkedFieldTags?.fields
-            .map((m: any) => {
-                if (m?.tagGroups) {
-                    const tagEntries = Object.entries(m?.tagGroups);
-                    const entriesMapped = tagEntries?.map(([key, val]) => ({
-                        name: key,
-                        value: val,
-                    }));
-
-                    return entriesMapped;
-                }
-
-                return [];
-            })
-            ?.flat();
-
-        const fieldNames = fieldsFromParent?.map((m: any) => m.name);
-        if (linkedFields?.length > 0) {
-            const { dataSourceId, linkType, internalLink } = linkedFields[0];
-            const currentDataSource = dataSources?.find(
-                (f: any) => f.id === dataSourceId
-            );
-            const currentURL = currentDataSource?.url;
-
-            if (fieldNames.includes(key) && value && internalLink === true) {
-                return (
-                    <TracesButton
-                        onClick={(e: any) => {
-                            openTraces(
-                                e,
-                                key,
-                                value,
-                                dataSourceId,
-                                currentURL,
-                                linkType
-                            );
-                        }}
-                    >
-                        <OpenInNewIcon
-                            style={{
-                                width: "14px",
-                                height: "14px",
-                            }}
-                        />
-                        <span>{linkType}</span>
-                    </TracesButton>
-                );
-            }
-        }
-
-        return null;
-    };
     return (
         <ThemeProvider theme={(themes as any)[theme]}>
             {Object.entries(tags).map(([key, value], k) => (
@@ -257,7 +216,14 @@ export default function ValueTags(props: any) {
                         <span>{key}</span>
                         <span style={{ flex: 1 }}>
                             {value}
-                            {linkButton(key, value)}
+                            <LinkButton
+                                {...props}
+                                dataSourceData={dataSourceData}
+                                linkedFieldTags={linkedFieldTags}
+                                buttonKey={key}
+                                value={value}
+                                openTraces={openTraces}
+                            />
                         </span>
                     </div>
                 </ValueTagsStyled>
@@ -266,3 +232,67 @@ export default function ValueTags(props: any) {
     );
 }
 
+export const LinkButton = (props: any) => {
+    const { dataSourceData, linkedFieldTags, buttonKey, value, openTraces } =
+        props;
+    const dataSources = useSelector((store: any) => store.dataSources);
+
+    if (dataSourceData?.linkedFields) {
+        const { linkedFields } = dataSourceData;
+        const fieldsFromParent = linkedFieldTags?.fields
+            .map((m: any) => {
+                if (m?.tagGroups) {
+                    const tagEntries = Object.entries(m?.tagGroups);
+                    const entriesMapped = tagEntries?.map(([key, val]) => ({
+                        name: key,
+                        value: val,
+                    }));
+
+                    return entriesMapped;
+                }
+
+                return [];
+            })
+            ?.flat();
+
+        const fieldNames = fieldsFromParent?.map((m: any) => m.name);
+        if (linkedFields?.length > 0) {
+            const { dataSourceId, linkType, internalLink } = linkedFields[0];
+            const currentDataSource = dataSources?.find(
+                (f: any) => f.id === dataSourceId
+            );
+            const currentURL = currentDataSource?.url;
+
+            if (
+                fieldNames.includes(buttonKey) &&
+                value &&
+                internalLink === true
+            ) {
+                return (
+                    <TracesButton
+                        onClick={(e: any) => {
+                            openTraces(
+                                e,
+                                buttonKey,
+                                value,
+                                dataSourceId,
+                                currentURL,
+                                linkType
+                            );
+                        }}
+                    >
+                        <OpenInNewIcon
+                            style={{
+                                width: "14px",
+                                height: "14px",
+                            }}
+                        />
+                        <span>{linkType}</span>
+                    </TracesButton>
+                );
+            }
+        }
+    }
+
+    return null;
+};

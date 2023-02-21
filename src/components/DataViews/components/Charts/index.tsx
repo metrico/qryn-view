@@ -6,12 +6,13 @@ import "react-flot/flot/jquery.flot.time.min";
 import "react-flot/flot/jquery.flot.selection.min";
 import "react-flot/flot/jquery.flot.crosshair.min";
 import "react-flot/flot-override/jquery.flot.resize";
+import "react-flot/flot/jquery.flot.stack.min.js";
 //React
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 //Packages
 import * as moment from "moment";
-import { format } from "date-fns";
+import { format, getTime } from "date-fns";
 //import   ReactFlot from "react-flot/temp";
 
 //Global
@@ -29,6 +30,8 @@ import {
     setTypeToLocal,
     formatDateRange,
     getNewData,
+    getBarWidth,
+    getTimeSpan,
 } from "./helpers";
 import UseTooltip from "./UseTooltip";
 import { useChartOptions, useMatrixData, useTheme } from "./hooks";
@@ -38,7 +41,8 @@ export default function QrynChart(props: any): any {
     const { matrixData, actualQuery } = props;
     const { tWidth } = props;
 
-    const { expr, dataSourceType, queryType, limit, panel, id } = actualQuery;
+    const { expr, dataSourceType, queryType, limit, panel, id, isLogsVolume } =
+        actualQuery;
 
     const chartRef = useRef(null);
     const storeTheme = useSelector(({ theme }: any) => theme);
@@ -46,27 +50,45 @@ export default function QrynChart(props: any): any {
     const theme = useTheme(storeTheme);
 
     const $q = (window as any).jQuery;
-    
+
     $q.fn.UseTooltip = UseTooltip;
 
-    const matrix = useMatrixData(true, matrixData);
+    const matrix = useMatrixData(true, matrixData, isLogsVolume);
     const dispatch = useDispatch();
 
     const [isSpliced, setIsSpliced] = useState(true);
     const [chartData, setChartData] = useState(matrix);
 
-    const [allData] = useState(useMatrixData(false, matrixData));
+    const [allData] = useState(useMatrixData(false, matrixData, isLogsVolume));
     const [labels, setLabels] = useState([]);
     const [element, setElement] = useState(chartRef.current);
 
-    const chartOpts = useChartOptions({ tWidth });
+    const chartOpts = useChartOptions({ tWidth }, isLogsVolume || false);
 
     const [chartOptions, setChartOptions] = useState(chartOpts);
 
-    const [chartType, setChartType] = useState(getTypeFromLocal() || "line");
+    const getInitialChartType = useMemo(() => {
+        let localType = getTypeFromLocal();
+        if (isLogsVolume) {
+            return "bar";
+        } else {
+            if (localType !== "") {
+                return localType;
+            } else {
+                return "line";
+            }
+        }
+    }, [isLogsVolume]);
+
+    const [chartType, setChartType] = useState(getInitialChartType);
 
     function plotChartData(data: any, type: any, element: any) {
-        const chartSeries = setChartTypeSeries(type);
+        let barWidth = 0;
+        if (isLogsVolume) {
+            barWidth = getBarWidth(getTimeSpan(data), tWidth);
+        }
+
+        const chartSeries = setChartTypeSeries(type, barWidth);
         const { timeformat, min, max } = formatDateRange(data);
         return $q.plot(
             element,
@@ -102,9 +124,18 @@ export default function QrynChart(props: any): any {
 
         let newData = [];
         const lSelected =
-            JSON.parse(localStorage.getItem("labelsSelected") || 'null') || [];
+            JSON.parse(localStorage.getItem("labelsSelected") || "null") || [];
         if (lSelected?.length > 0) {
-            const { lines, bars, points } = getSeriesFromChartType(chartType);
+            let barWidth = 0;
+            if (isLogsVolume) {
+                barWidth = getBarWidth(getTimeSpan(data), tWidth);
+            }
+
+            const { lines, bars, points } = getSeriesFromChartType(
+                chartType,
+                barWidth,
+                isLogsVolume
+            );
             const ids = lSelected?.map((m: any) => m.id);
             const dataMapped = data?.map((series: any) => {
                 if (!ids.includes(series.id)) {
@@ -119,6 +150,7 @@ export default function QrynChart(props: any): any {
                 } else {
                     return {
                         ...series,
+                        stack: isLogsVolume,
                         bars,
                         lines,
                         points,
@@ -140,7 +172,7 @@ export default function QrynChart(props: any): any {
                     xaxis: {
                         min: ranges.xaxis.from - 100000,
                         max: ranges.xaxis.to + 100000,
-                        timeformat: formatDateRange(newData).timerange,
+                        timeformat: formatDateRange(newData).timeformat,
                     },
                 })
             );
@@ -156,7 +188,9 @@ export default function QrynChart(props: any): any {
                     )
                 );
                 const toTs = new Date(
-                    (moment as any)(parseInt(toTime)).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+                    (moment as any)(parseInt(toTime)).format(
+                        "YYYY-MM-DDTHH:mm:ss.SSSZ"
+                    )
                 );
                 const fromLabel = format(fromTs, "yyyy/MM/dd HH:mm:ss");
                 const toLabel = format(toTs, "yyyy/MM/dd HH:mm:ss");
@@ -167,8 +201,10 @@ export default function QrynChart(props: any): any {
                 dispatch(setStartTime(fromTs));
 
                 dispatch(setTimeRangeLabel(timeRangeLabel));
-                
-                dispatch(getData(dataSourceType,expr, queryType, limit, panel, id));
+
+                dispatch(
+                    getData(dataSourceType, expr, queryType, limit, panel, id)
+                );
             }, 400);
         } catch (e) {
             console.log("error on chart redraw", e);
@@ -178,7 +214,7 @@ export default function QrynChart(props: any): any {
     function onLabelClick(e: any, v: any) {
         let newList = [];
         const lSelected =
-            JSON.parse(localStorage.getItem("labelsSelected") || 'null') || [];
+            JSON.parse(localStorage.getItem("labelsSelected") || "null") || [];
 
         if (lSelected.some(({ id }: any) => id === v.id)) {
             const filtered = lSelected.filter((f: any) => f.id !== v.id);
@@ -191,7 +227,11 @@ export default function QrynChart(props: any): any {
 
         if (newList.length > 0) {
             const ids = newList?.map((m: any) => m.id);
-            const { lines, bars, points } = getSeriesFromChartType(chartType);
+
+            const { lines, bars, points } = getSeriesFromChartType(
+                chartType,
+                0
+            );
             let dataSelected = e?.map((series: any) => {
                 if (!ids.includes(series.id)) {
                     return {
@@ -203,6 +243,7 @@ export default function QrynChart(props: any): any {
                 } else {
                     return {
                         ...series,
+                        stack: isLogsVolume,
                         bars,
                         lines,
                         points,
@@ -211,13 +252,17 @@ export default function QrynChart(props: any): any {
             });
 
             const { timeformat, min, max } = formatDateRange(dataSelected);
+            let barWidth = 0;
+            if (isLogsVolume) {
+                barWidth = getBarWidth(getTimeSpan(dataSelected), tWidth);
+            }
 
             let plot = $q.plot(
                 element,
                 dataSelected,
 
                 $q.extend(true, {}, chartOptions, {
-                    series: getSeriesFromChartType(chartType),
+                    series: getSeriesFromChartType(chartType, barWidth),
                     xaxis: { timeformat, min, max },
                 })
             );
@@ -227,8 +272,17 @@ export default function QrynChart(props: any): any {
             $q(chartRef.current).UseTooltip(plot);
         } else {
             const data = isSpliced ? chartData : allData;
-            const { lines, bars, points } = getSeriesFromChartType(chartType);
-            const newData = data?.map((series) => {
+            let barWidth = 0;
+            if (isLogsVolume) {
+                barWidth = getBarWidth(getTimeSpan(data), tWidth);
+            }
+
+            const { lines, bars, points } = getSeriesFromChartType(
+                chartType,
+                barWidth
+            );
+
+            const newData = data?.map((series: any) => {
                 return {
                     ...series,
                     bars,
@@ -244,7 +298,11 @@ export default function QrynChart(props: any): any {
                 element,
                 newData,
                 $q.extend(true, {}, chartOptions, {
-                    series: getSeriesFromChartType(chartType),
+                    series: getSeriesFromChartType(
+                        chartType,
+                        barWidth || 0,
+                        isLogsVolume
+                    ),
                     xaxis: { timeformat, min, max },
                 })
             );
@@ -274,13 +332,26 @@ export default function QrynChart(props: any): any {
         const data = isSpliced ? chartData : allData;
         const element = $q(chartRef.current);
         let newData = getNewData(data, null);
+
         try {
+            let barWidth = 0;
+            if (isLogsVolume) {
+                barWidth = getBarWidth(getTimeSpan(newData), tWidth);
+            }
+
             const { timeformat, min, max } = formatDateRange(newData);
+
+            let { bars, lines, points, stack } = getSeriesFromChartType(
+                chartType,
+                barWidth,
+                isLogsVolume
+            );
+
             let plot = $q.plot(
                 element,
                 newData,
                 $q.extend(true, {}, chartOptions, {
-                    series: getSeriesFromChartType(chartType),
+                    series: { stack, bars, lines, points },
                     xaxis: { timeformat, min, max },
                 })
             );
@@ -314,15 +385,19 @@ export default function QrynChart(props: any): any {
             chartRef,
             onLabelClick,
             labels,
+            isLogsVolume,
         };
         const pointSet = new Set();
-        matrixData.forEach((dataPoint: any)=>{
-            dataPoint?.values?.forEach((dataPointValue: any) => pointSet.add(dataPointValue?.[0]))
-        })
-        if (pointSet.size === 1 && chartType !== 'bar') {
-            onSetChartType('bar')
+        matrixData.forEach((dataPoint: any) => {
+            dataPoint?.values?.forEach((dataPointValue: any) =>
+                pointSet.add(dataPointValue?.[0])
+            );
+        });
+        if (pointSet.size === 1 && chartType !== "bar") {
+            onSetChartType("bar");
         }
-        return (<FlotChart {...flotChartProps} />);
+
+        return <FlotChart {...flotChartProps} />;
     }
 
     return null;

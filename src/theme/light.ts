@@ -51,7 +51,6 @@ const turquoise = {
     tq500: "hsl(180, 62%, 60%)",
 };
 
-
 const orange = {
     or100: "hsl(39, 100%, 50%)",
 };
@@ -92,6 +91,7 @@ const info = "hsl(120, 100%, 25%)";
 const debug = "hsl(240, 100%, 50%)";
 const trace = "hsl(195, 53%, 79%)";
 const unknown = "hsl(0, 0%, 50%)";
+const buttonSecondaryBg = 'hsl(158, 64%, 85%, 86%)'
 
 const lightTheme:any = {
     ...defaultTheme,
@@ -101,6 +101,7 @@ const lightTheme:any = {
     textColor,
     primaryDark,
     primaryLight,
+    buttonSecondaryBg,
     widgetContainer,
     buttonDefault,
     buttonHover,

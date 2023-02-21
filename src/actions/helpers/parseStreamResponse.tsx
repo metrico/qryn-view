@@ -1,9 +1,7 @@
 import { sortBy } from "lodash";
 import setIsEmptyView from "../setIsEmptyView";
 import setLogs from "../setLogs";
-import setMatrixData from "../setMatrixData";
 import { setQueryTime } from "../setQueryTime";
-import { setTableData } from "../setTableData";
 import { QueryResult } from "../types";
 import {
     getAsyncResponse,
@@ -15,9 +13,9 @@ import moment from "moment";
 import { setLeftDataView } from "../setLeftDataView";
 import { setRightDataView } from "../setRightDataView";
 import store from "../../store/store";
-
+import { ColumnDef } from "@tanstack/react-table";
 function timeFormatter(props: any) {
-    return moment(parseInt(props.value) / 1000000).format(
+    return moment(parseInt(props.getValue()) / 1000000).format(
         "YYYY-MM-DDTHH:mm:ss.SSZ"
     );
 }
@@ -36,24 +34,30 @@ export function getStreamTableRows(data: any[]) {
     }));
 }
 
+export function formattedWhiteSpaceCell(info: any) {
+    return <span title={info.getValue()}>{info.getValue()}</span>;
+}
+
 export function getStreamTableResult(data: any[]) {
-    const headers = [
+    const headers: ColumnDef<any>[] = [
         {
-            Header: "Time",
-            accessor: "time",
-            Cell: (props: any) => timeFormatter(props),
-            width: 20,
-            minWidth: 20,
-            maxWidth: 20,
+            id: "time",
+            header: "Time",
+            accessorKey: "time",
+            cell: (info: any) => timeFormatter(info),
         },
         {
-            Header: "Stream",
-            accessor: "stream",
-            width: 30,
-            minWidth: 30,
-            maxWidth: 30,
+            id: "stream",
+            header: "Stream",
+            accessorKey: "stream",
+            cell: (info: any) => formattedWhiteSpaceCell(info),
         },
-        { Header: "Log", accessor: "log" },
+        {
+            id: "log",
+            accessorKey: "log",
+            header: "Log",
+            cell: (info: any) => formattedWhiteSpaceCell(info),
+        },
     ];
 
     const rows = getStreamTableRows(data);
@@ -61,11 +65,10 @@ export function getStreamTableResult(data: any[]) {
     const length = rows?.length || 0;
     let dataRows = [];
 
-    if(length > 0) {
+    if (length > 0) {
         for (let row of rows) {
             dataRows.push(row.rows);
         }
-    
     }
 
     return {
@@ -102,17 +105,15 @@ export function parseStreamResponse(responseProps: QueryResult) {
         panel,
         id,
         dispatch,
+        dsType,
         direction,
+        isLogsVolume,
     } = responseProps;
     // get sorted messages
     const messages = mapStreams(result, direction);
     // get current dataView and update action
     const dataView = setDataView(panel);
-
-    dispatch(setMatrixData([]));
-
     const tableResult = getStreamTableResult(result);
-    dispatch(setTableData(tableResult));
 
     const messSorted = sortMessagesByTimestamp(messages, direction);
     function unite(args: any) {
@@ -126,9 +127,11 @@ export function parseStreamResponse(responseProps: QueryResult) {
         type: "stream",
         tableData: {},
         data: [{}],
-        raw:'[]',
+        raw: "[]",
         labels: [],
         total: 0,
+        isLogsVolume,
+        dsType,
     };
 
     if (messSorted) {
@@ -149,8 +152,10 @@ export function parseStreamResponse(responseProps: QueryResult) {
             panelResult = {
                 id,
                 type: "stream",
+                dsType,
                 tableData: tableResult,
                 data: messSorted,
+                isLogsVolume,
                 raw,
                 labels: [...labels],
                 total: messSorted?.length || 0,
@@ -161,12 +166,38 @@ export function parseStreamResponse(responseProps: QueryResult) {
             const prevDV = store.getState()?.[state];
             if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
                 let newPanel = [];
-                dispatch(action([]));
-                const filtered = prevDV.filter(
-                    (dv: any) => dv.id !== panelResult.id
-                );
-                newPanel = [...filtered, { ...panelResult }];
-                dispatch(action(newPanel));
+                if (isLogsVolume) {
+                    newPanel = [...prevDV];
+
+                    let mapped: any = newPanel.map((m: any) => {
+                        if (m.id === id) {
+                            let logsVolumeData: any = [];
+
+                            if (
+                                m?.logsVolumeData &&
+                                m.logsVolumeData?.length > 0
+                            ) {
+                                logsVolumeData = [...m.logsVolumeData];
+                            }
+
+                            let prevStream = { ...panelResult };
+
+                            return { ...prevStream, logsVolumeData };
+                        } else {
+                            return m;
+                        }
+                    });
+                    dispatch(action([]));
+                    dispatch(action(mapped));
+                } else {
+                    let newPanel = [];
+                    dispatch(action([]));
+                    const filtered = prevDV.filter(
+                        (dv: any) => dv.id !== panelResult.id
+                    );
+                    newPanel = [...filtered, { ...panelResult }];
+                    dispatch(action(newPanel));
+                }
             } else {
                 let newPanel = [...prevDV, panelResult];
                 dispatch(action(newPanel));

@@ -5,7 +5,7 @@ const InfoLabels = ({ labels }: any) => {
         return (
             <p>
                 Labels:
-                {labels.map((val: string, key: number) => (
+                {labels.map((val: any, key: any) => (
                     <span className={"label"} key={key}>
                         {val}
                     </span>
@@ -15,7 +15,13 @@ const InfoLabels = ({ labels }: any) => {
     return null;
 };
 
-const InfoTitle = ({ idRef, expr, queryType }: any) => (
+interface InfoTitleProps {
+    idRef: string;
+    expr: string;
+    queryType: string;
+}
+
+const InfoTitle = ({ idRef, expr, queryType }: InfoTitleProps) => (
     <>
         <h4>{idRef}</h4>
         <div>
@@ -25,6 +31,15 @@ const InfoTitle = ({ idRef, expr, queryType }: any) => (
     </>
 );
 
+interface InfoContentProps {
+    expr: string;
+    idRef: string;
+    labels: any;
+    limit: any;
+    queryType: any;
+    total: any;
+}
+
 export const InfoContent = ({
     expr,
     idRef,
@@ -32,7 +47,7 @@ export const InfoContent = ({
     limit,
     queryType,
     total,
-}: any) => {
+}: InfoContentProps) => {
     const titleProps = {
         idRef,
         expr,

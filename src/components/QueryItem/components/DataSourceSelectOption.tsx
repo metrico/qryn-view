@@ -31,10 +31,10 @@ export function Placeholder(props: any) {
     const { defaultValue, options } = props;
 
     const defaultOption = useMemo(() => {
-        const found = options.find((f: any) => f.value === defaultValue);
+        const found = options?.find((f: any) => f?.value === defaultValue);
         return {
-            icon: found.icon,
-            label: found.label,
+            icon: found?.icon,
+            label: found?.label,
         };
     }, [defaultValue, options]);
 

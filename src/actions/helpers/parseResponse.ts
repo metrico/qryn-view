@@ -78,6 +78,7 @@ export function mapStreams(
                 text,
                 tags: stream.stream || {},
                 isShowTs: true,
+                isBuilder:false,
                 showLabels: false,
                 id: nanoid(),
             });

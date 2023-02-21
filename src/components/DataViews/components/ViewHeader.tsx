@@ -1,24 +1,25 @@
 import { ThemeProvider } from "@emotion/react";
 import { Tooltip } from "@mui/material";
-import { useState, useMemo } from "react";
-import {  useSelector } from "react-redux";
+import { useState, useMemo, useCallback } from "react";
+import { useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { ViewLabel } from "./ViewLabel";
 import { themes } from "../../../theme/themes";
 import { HeadLabelsCont, LabelChip, ViewHeaderStyled } from "../styled";
-import MinimizeIcon from "@mui/icons-material/Minimize";
 import InfoIcon from "@mui/icons-material/Info";
-import CropSquareIcon from "@mui/icons-material/CropSquare";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { InfoDialog } from "./InfoDialog";
-
 
 export function ViewHeader(props: any) {
     const { fixedSize } = props || { fixedSize: false };
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
     const [open, setOpen] = useState(false);
-    const theme = useSelector((store: any) => store.theme);
-    const { actualQuery, dataView, type, total } = props;
+    const [viewOpen, setViewOpen] = useState(true);
 
+    const theme = useSelector((store: any) => store.theme);
+    const { actualQuery, dataView, type, total, setMinimize, setMaxHeight } =
+        props;
 
     const headerType = useMemo(() => {
         const isMatrixTable = type === "matrix" && actualQuery?.tableView;
@@ -37,13 +38,19 @@ export function ViewHeader(props: any) {
         }
     }, [type, actualQuery?.tableView]);
 
+    const handleViewOpen = useCallback(() => {
+        if (viewOpen) {
+            setMinimize();
+            setViewOpen(false);
+        } else {
+            setMaxHeight();
+            setViewOpen(true);
+        }
+    }, [viewOpen, setMinimize, setMaxHeight]);
 
-    function setMinimize() {
-        props.setMinimize();
-    }
-    function setMaxHeight() {
-        props.setMaxHeight();
-    }
+    const handleInfoOpen = useCallback(() => {
+        setOpen(true);
+    }, []);
 
     const labelsLegend = useMemo(
         () => dataView?.labels?.join("  |  ") || "",
@@ -77,7 +84,7 @@ export function ViewHeader(props: any) {
         }
     }, [dataView.labels, props.theme]);
 
-    if(actualQuery) {
+    if (actualQuery) {
         const { idRef, expr, limit, queryType } = actualQuery;
         return (
             <ThemeProvider theme={(themes as any)[theme]}>
@@ -89,7 +96,9 @@ export function ViewHeader(props: any) {
                         <Tooltip title={actualQuery?.expr || ""}>
                             <span>
                                 {" "}
-                                <span className="exp">{actualQuery?.idRef}</span>
+                                <span className="exp">
+                                    {actualQuery?.idRef}
+                                </span>
                             </span>
                         </Tooltip>
                         {!isTabletOrMobile && (
@@ -105,7 +114,7 @@ export function ViewHeader(props: any) {
                                 </span>
                             </>
                         )}
-    
+
                         {dataView?.labels?.length > 0 && !isTabletOrMobile && (
                             <span>
                                 <HeadLabelsCont title={labelsLegend}>
@@ -115,35 +124,22 @@ export function ViewHeader(props: any) {
                             </span>
                         )}
                     </div>
-    
+
                     <div className="header-actions">
                         {!fixedSize && (
                             <>
                                 <InfoIcon
                                     className="header-icon"
                                     style={{ fontSize: "12px" }}
-                                    onClick={(e) => setOpen(true)}
+                                    onClick={handleInfoOpen}
                                 />
-                                <CropSquareIcon
-                                    className="header-icon"
-                                    onClick={setMaxHeight}
-                                    style={{ fontSize: "12px" }}
-                                />
-                                <MinimizeIcon
-                                    className="header-icon"
-                                    onClick={setMinimize}
-                                    style={{ fontSize: "12px" }}
+
+                                <ViewOpenButton
+                                    isOpen={viewOpen}
+                                    onClick={handleViewOpen}
                                 />
                             </>
                         )}
-                        {/* {!isEmbed && 
-                               <CloseIcon
-                               className="header-icon"
-                               onClick={onClose}
-                               style={{ fontSize: "12px" }}
-                           />
-                        } */}
-                 
                     </div>
                     {open && (
                         <InfoDialog
@@ -161,7 +157,32 @@ export function ViewHeader(props: any) {
             </ThemeProvider>
         );
     }
-   
-return null
-   
+
+    return null;
 }
+
+export interface ViewOpenProps {
+    isOpen: boolean;
+    onClick: (e: any) => void;
+}
+export const ViewOpenButton = (props: ViewOpenProps) => {
+    const { isOpen, onClick } = props;
+
+    if (isOpen) {
+        return (
+            <KeyboardArrowDownIcon
+                className="header-icon"
+                onClick={onClick}
+                style={{ fontSize: "14px" }}
+            />
+        );
+    }
+
+    return (
+        <ChevronLeftIcon
+            className="header-icon"
+            onClick={onClick}
+            style={{ fontSize: "14px" }}
+        />
+    );
+};

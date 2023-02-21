@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { BtnSmall } from "../../theme/styles/Button";
 
 export const PageContainer: any = styled.div`
-    overflow-x:hidden;
+    overflow-x: hidden;
     margin: 0px;
     padding: 0px;
     left: 0;
@@ -29,14 +29,14 @@ export const PageContainer: any = styled.div`
         display: flex;
         flex-direction: column;
         flex: 1;
-        overflow-x:hidden;
+        overflow-x: hidden;
     }
     .ds-header {
         padding: 10px;
         padding-bottom: 20px;
         font-size: 24px;
         display: flex;
-       
+
         margin: 10px;
         justify-content: space-between;
         align-items: center;
@@ -49,7 +49,7 @@ export const PageContainer: any = styled.div`
         margin-bottom: 10px;
         border: 1px solid ${({ theme }: any) => theme.buttonBorder};
         border-radius: 3px;
-        color: ${({theme}: any)=> theme.textColor};
+        color: ${({ theme }: any) => theme.textColor};
     }
 
     .ds-item {
@@ -59,7 +59,7 @@ export const PageContainer: any = styled.div`
         border-radius: 3px 3px 0px 0px;
         padding-bottom: 14px;
         display: flex;
-        color: ${({theme}: any)=> theme.textColor};
+        color: ${({ theme }: any) => theme.textColor};
         .logo {
             padding: 10px;
             padding-right: 20px;
@@ -90,27 +90,27 @@ export const PageContainer: any = styled.div`
 `;
 
 export const Label: any = styled.div`
-    color: ${({theme}: any) => theme.textColor};
+    color: ${({ theme }: any) => theme.textColor};
     display: flex;
     align-items: center;
     font-size: 12px;
     padding: 0px 10px;
     //flex: 0;
     white-space: nowrap;
-    ${(props: any) => props.width !== null ? `width:${props.width};` : ''}
+    ${(props: any) => (props.width !== null ? `width:${props.width}px;` : "")}
     border-radius: 3px 0px 0px 3px;
-    display:flex;
-    align-items:center;
-    height:28px;
-  
+    display: flex;
+    align-items: center;
+    height: 28px;
 `;
 
 export const Input: any = styled.input`
     display: flex;
     flex: 1;
-    background: ${({theme}: any) => theme.inputBg};
-    color: ${({theme}: any) => theme.textColor};
-    border: 1px solid ${({theme}: any) => theme.buttonBorder};
+    background: ${({ theme }: any) => theme.inputBg};
+    color: ${({ theme }: any) => theme.textColor};
+    border: 1px solid
+        ${(props: any) => (props.error ? "#b62c14" : props.theme.buttonBorder)};
     border-radius: 3px;
     justify-self: flex-end;
     height: 26px;
@@ -120,9 +120,9 @@ export const Input: any = styled.input`
 export const TextArea: any = styled.textarea`
     display: flex;
     flex: 1;
-    background: ${({theme}: any) => theme.inputBg};
-    color: ${({theme}: any) => theme.textColor};
-    border: 1px solid ${({theme}: any) => theme.buttonBorder};
+    background: ${({ theme }: any) => theme.inputBg};
+    color: ${({ theme }: any) => theme.textColor};
+    border: 1px solid ${({ theme }: any) => theme.buttonBorder};
     border-radius: 3px;
     justify-self: flex-end;
     padding-left: 8px;
@@ -133,18 +133,27 @@ export const InputGroup: any = styled.div`
     flex-direction: row;
     margin-top: 5px;
     align-items: center;
-    ${(props: any) => props?.width && props?.width === 'normal' ? '' : 'flex:1;'}
+    ${(props: any) =>
+        props?.width && props?.width === "normal" ? "" : "flex:1;"}
     //flex: 1;
     select {
-        background: ${({theme}: any) => theme.inputBg};
-        color: ${({theme}: any) => theme.textColor};
-        border: 1px solid ${({theme}: any) => theme.buttonBorder};
+        background: ${({ theme }: any) => theme.inputBg};
+        color: ${({ theme }: any) => theme.textColor};
+        border: 1px solid ${({ theme }: any) => theme.buttonBorder};
         border-radius: 3px;
         font-size: 12px;
         height: 30px;
-        display:flex;
-        align-items:center;
-        padding:1px 2px 1px 8px;
+        display: flex;
+        align-items: center;
+        padding: 1px 2px 1px 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        option {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 `;
 
@@ -156,7 +165,7 @@ export const InputCol: any = styled.div`
     align-items: center;
     flex: 1;
     &.internal {
-        max-width:400px;
+        max-width: 400px;
     }
 `;
 
@@ -177,7 +186,7 @@ export const LinkFieldsGroup: any = styled.div`
 
 export const SettingsTitle: any = styled.div`
     padding: 10px;
-    border-bottom: 1px solid  ${({ theme }: any) => theme.widgetContainer};
+    border-bottom: 1px solid ${({ theme }: any) => theme.widgetContainer};
     border-radius: 3px;
     display: flex;
     flex: 1;
@@ -193,7 +202,7 @@ export const SettingsTitle: any = styled.div`
 `;
 
 export const DataSourceSettingsCont: any = styled.div`
-    background: ${({theme}: any) => theme.inputBg};
+    background: ${({ theme }: any) => theme.inputBg};
     padding: 10px;
     border-radius: 0px 0px 3px 3px;
     border-top: 1px solid ${({ theme }: any) => theme.buttonBorder};
@@ -202,24 +211,25 @@ export const DataSourceSettingsCont: any = styled.div`
 export const DsButtonStyled: any = styled(BtnSmall)`
     background: ${(props: any) =>
         props.primary ? props.theme.primaryDark : props.theme.buttonDefault};
-    border: 1px solid ${({theme}: any) => theme.buttonBorder};
-    color: ${(props: any) => props.primary ? props.theme.buttonText: props.theme.textColor};
+    border: 1px solid ${({ theme }: any) => theme.buttonBorder};
+    color: ${(props: any) =>
+        props.primary ? props.theme.buttonText : props.theme.textColor};
     margin-left: 5px;
     transition: 0.25s all;
     justify-content: center;
     padding: 3px 12px;
     height: 28px;
-    display:flex;
+    display: flex;
     &:hover {
-        background: ${({theme}: any) => theme.primaryLight};
-        color: ${(props: any) => props.primary ? props.theme.textColor: props.theme.buttonText};
-        
+        background: ${({ theme }: any) => theme.primaryLight};
+        color: ${(props: any) =>
+            props.primary ? props.theme.textColor : props.theme.buttonText};
     }
     &:disabled {
-        background: ${({theme}: any) => theme.buttonDefault};
-        border: 1px solid ${({theme}: any) => theme.buttonBorder};
+        background: ${({ theme }: any) => theme.buttonDefault};
+        border: 1px solid ${({ theme }: any) => theme.buttonBorder};
         cursor: not-allowed;
-        color: ${({theme}: any) => theme.textColor};
+        color: ${({ theme }: any) => theme.textColor};
     }
     @media screen and (max-width: 864px) {
         display: flex;
