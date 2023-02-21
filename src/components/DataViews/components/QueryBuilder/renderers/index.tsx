@@ -114,8 +114,6 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
     // update builder state at label values change
 
     useEffect(() => {
-
-        console.log("LABEL VALUES STRING",logsToString(labelValuesState))
         setBuilders((prev: any[]) => {
             const next = [...prev];
             return next.map((builder) => {

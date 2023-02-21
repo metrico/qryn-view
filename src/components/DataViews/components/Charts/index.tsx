@@ -44,7 +44,6 @@ export default function QrynChart(props: any): any {
     const { expr, dataSourceType, queryType, limit, panel, id, isLogsVolume } =
         actualQuery;
 
-
     const chartRef = useRef(null);
     const storeTheme = useSelector(({ theme }: any) => theme);
 
@@ -72,13 +71,13 @@ export default function QrynChart(props: any): any {
         let localType = getTypeFromLocal();
         if (isLogsVolume) {
             return "bar";
-        } else  {
-            if (localType !== ""){
-            return localType;
         } else {
-            return "line";
+            if (localType !== "") {
+                return localType;
+            } else {
+                return "line";
+            }
         }
-    }
     }, [isLogsVolume]);
 
     const [chartType, setChartType] = useState(getInitialChartType);
@@ -127,11 +126,11 @@ export default function QrynChart(props: any): any {
         const lSelected =
             JSON.parse(localStorage.getItem("labelsSelected") || "null") || [];
         if (lSelected?.length > 0) {
-            let barWidth = 0
-            if(isLogsVolume) {
+            let barWidth = 0;
+            if (isLogsVolume) {
                 barWidth = getBarWidth(getTimeSpan(data), tWidth);
             }
-            
+
             const { lines, bars, points } = getSeriesFromChartType(
                 chartType,
                 barWidth,
@@ -253,11 +252,11 @@ export default function QrynChart(props: any): any {
             });
 
             const { timeformat, min, max } = formatDateRange(dataSelected);
-            let barWidth = 0
-            if(isLogsVolume) {
+            let barWidth = 0;
+            if (isLogsVolume) {
                 barWidth = getBarWidth(getTimeSpan(dataSelected), tWidth);
             }
-            
+
             let plot = $q.plot(
                 element,
                 dataSelected,
@@ -273,11 +272,11 @@ export default function QrynChart(props: any): any {
             $q(chartRef.current).UseTooltip(plot);
         } else {
             const data = isSpliced ? chartData : allData;
-            let barWidth = 0
-            if(isLogsVolume) {
+            let barWidth = 0;
+            if (isLogsVolume) {
                 barWidth = getBarWidth(getTimeSpan(data), tWidth);
             }
-          
+
             const { lines, bars, points } = getSeriesFromChartType(
                 chartType,
                 barWidth
@@ -337,11 +336,7 @@ export default function QrynChart(props: any): any {
         try {
             let barWidth = 0;
             if (isLogsVolume) {
-                console.log(isLogsVolume)
-                console.log(newData)
-                console.log(tWidth)
                 barWidth = getBarWidth(getTimeSpan(newData), tWidth);
-                console.log(barWidth)
             }
 
             const { timeformat, min, max } = formatDateRange(newData);

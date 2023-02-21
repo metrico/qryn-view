@@ -165,31 +165,39 @@ export function parseStreamResponse(responseProps: QueryResult) {
             const { action, state } = dataView;
             const prevDV = store.getState()?.[state];
             if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
-               let newPanel = [];
-               if(isLogsVolume) {
-                newPanel = [...prevDV];
-
-                let mapped = newPanel.map((m) => {
-                    if (m.id === id) {
-                        let logsVolumeData = [...m.logsVolumeData] || []
-                        let prevStream  = {...panelResult };
-
-                        return {...prevStream, logsVolumeData};
-                    } else {
-                        return m;
-                    }
-                });
-                dispatch(action([]));
-                dispatch(action(mapped));
-               } else {
                 let newPanel = [];
-                dispatch(action([]));
-                const filtered = prevDV.filter(
-                    (dv: any) => dv.id !== panelResult.id
-                );
-                newPanel = [...filtered, { ...panelResult }];
-                dispatch(action(newPanel));
-               }
+                if (isLogsVolume) {
+                    newPanel = [...prevDV];
+
+                    let mapped: any = newPanel.map((m: any) => {
+                        if (m.id === id) {
+                            let logsVolumeData: any = [];
+
+                            if (
+                                m?.logsVolumeData &&
+                                m.logsVolumeData?.length > 0
+                            ) {
+                                logsVolumeData = [...m.logsVolumeData];
+                            }
+
+                            let prevStream = { ...panelResult };
+
+                            return { ...prevStream, logsVolumeData };
+                        } else {
+                            return m;
+                        }
+                    });
+                    dispatch(action([]));
+                    dispatch(action(mapped));
+                } else {
+                    let newPanel = [];
+                    dispatch(action([]));
+                    const filtered = prevDV.filter(
+                        (dv: any) => dv.id !== panelResult.id
+                    );
+                    newPanel = [...filtered, { ...panelResult }];
+                    dispatch(action(newPanel));
+                }
             } else {
                 let newPanel = [...prevDV, panelResult];
                 dispatch(action(newPanel));

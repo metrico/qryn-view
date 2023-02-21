@@ -94,7 +94,7 @@ export const DataSourceSelectOption = (props: any) => {
     return (
         <Option {...props}>
             <div style={SelectOptionStyle}>
-                <span style={{ fontSize: "14px" }}>{label}</span>
+                <span style={{ fontSize: "12px" }}>{label}</span>
             </div>
         </Option>
     );
@@ -263,6 +263,7 @@ export default function TracesSearch(props: any) {
             <div className={cx(SearchRow)}>
                 <SearchSelect
                     {...props}
+                    defaultValue={""}
                     label={"Service Name"}
                     options={serviceNameOpts}
                     onSelectChange={onServiceChange}
@@ -271,6 +272,7 @@ export default function TracesSearch(props: any) {
 
                 <SearchSelect
                     {...props}
+                    defaultValue={""}
                     label={"Span Name"}
                     options={traceNameOpts}
                     onSelectChange={onSpanChange}
