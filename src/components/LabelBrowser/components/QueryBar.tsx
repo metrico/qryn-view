@@ -169,7 +169,9 @@ export const QueryBar = (props: any) => {
     useEffect(() => {
         setQueryInput(actLocalQuery.expr);
         setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
-        setLogsLevel(expr, isLogsVolume);
+
+        setLogsLevel(actLocalQuery.expr, isLogsVolume);
+
         const dataSource: any = findCurrentDataSource(dataSources, id);
 
         let currentDataSource: any = {};
@@ -234,7 +236,9 @@ export const QueryBar = (props: any) => {
     useEffect(() => {
         setQueryInput(actLocalQuery.expr);
         setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
-
+        if (isLogsVolume && logsVolumeQuery) {
+            setLogsLevel(actLocalQuery.expr, isLogsVolume);
+        }
         const dataSource: any = dataSources?.find(
             (f: any) => f.id === dataSourceId
         );
@@ -286,7 +290,7 @@ export const QueryBar = (props: any) => {
             )
         );
 
-        setLogsLevel(queryInput, isLogsVolume);
+        // setLogsLevel(queryInput, isLogsVolume);
         if (
             isLogsVolume &&
             logsVolumeQuery?.query &&
@@ -320,6 +324,7 @@ export const QueryBar = (props: any) => {
             setQueryValid(onQueryValid(expr));
             decodeQueryAndUpdatePanel(queryInput, false);
             saveQuery();
+            setLogsLevel(expr, true);
             //  setLocalStorage();
         }
     }, [expr]);
@@ -423,6 +428,10 @@ export const QueryBar = (props: any) => {
                     ds.id,
                     ds.url
                 );
+
+                if (isLogsVolume && !logsVolumeQuery) {
+                    setLogsLevel(queryInput, isLogsVolume);
+                }
 
                 // Decode query to translate into labels selection
                 decodeQueryAndUpdatePanel(queryInput, true);
