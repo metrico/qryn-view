@@ -6,7 +6,7 @@
     "url": "git+ssh://git@github.com/metrico/qryn-view.git"
   },
   "author": "joel@qxip.net",
-  "version": "0.22.5",
+  "version": "0.23.0",
   "private": false,
   "dependencies": {
     "@emotion/css": "^11.7.1",
