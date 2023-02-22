@@ -276,6 +276,8 @@ export const QueryBar = (props: any) => {
             currentDataSource = { ...dataSource };
         }
 
+        let { isMatrix } = getIntvalData(actLocalQuery?.expr);
+
         dispatch(
             getData(
                 dataSourceType,
@@ -295,7 +297,8 @@ export const QueryBar = (props: any) => {
             isLogsVolume &&
             logsVolumeQuery?.query &&
             logsVolumeQuery?.query !== "" &&
-            dataSourceType === "logs"
+            dataSourceType === "logs" &&
+            !isMatrix
         ) {
             dispatch(
                 getData(
@@ -321,11 +324,10 @@ export const QueryBar = (props: any) => {
         if (typeof expr === "string") {
             setQueryInput(expr);
             setQueryValue([{ children: [{ text: expr }] }]);
-            setQueryValid(onQueryValid(expr));
-            decodeQueryAndUpdatePanel(queryInput, false);
             saveQuery();
-            setLogsLevel(expr, true);
-            //  setLocalStorage();
+            if (isLogsVolume) {
+                setLogsLevel(expr, true);
+            }
         }
     }, [expr]);
 
@@ -625,7 +627,7 @@ export const QueryBar = (props: any) => {
 
         dispatch(panelAction(name, panel));
 
-        let { querySubmit, customStep } = getIntvalData(queryExpr);
+        let { querySubmit, customStep, isMatrix } = getIntvalData(queryExpr);
 
         if (isSearch && querySubmit !== "") {
             dispatch(
@@ -640,14 +642,17 @@ export const QueryBar = (props: any) => {
                     dataSourceId,
                     currentDataSource.url,
                     customStep,
-                    isLogsVolume
+                    isLogsVolume && !isMatrix
                 )
             );
         }
+
+        // get here if the previous is a matrix type response
         if (
             isLogsVolume &&
             logsVolumeQuery?.query &&
-            logsVolumeQuery?.query !== ""
+            logsVolumeQuery?.query !== "" &&
+            !isMatrix
         ) {
             dispatch(
                 getData(
@@ -670,11 +675,18 @@ export const QueryBar = (props: any) => {
     function getIntvalData(queryExpr: string): {
         customStep: number;
         querySubmit: string;
+        isMatrix: boolean;
     } {
         let querySubmit = "";
         let customStep = 0;
+        let isMatrix = false;
+        let matrixType = queryExpr.match(/\((?:[^]*?)*\)/);
+        if (matrixType !== null) {
+            isMatrix = true;
+        }
 
         if (queryExpr.includes(`$__interval`)) {
+            isMatrix = true;
             const timeDiff = (stop.getTime() - start.getTime()) / 1000;
             const timeProportion = timeDiff / 30;
             const screenProportion = Number(
@@ -694,7 +706,7 @@ export const QueryBar = (props: any) => {
             querySubmit = queryExpr;
         }
 
-        return { customStep, querySubmit };
+        return { customStep, querySubmit, isMatrix };
     }
     const updateLinksHistory = () => {
         const ds = dataSources.find((f: any) => f.id === dataSourceId);

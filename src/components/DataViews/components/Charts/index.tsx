@@ -38,7 +38,7 @@ import { useChartOptions, useMatrixData, useTheme } from "./hooks";
 import { FlotChart } from "./FlotChart";
 
 export default function QrynChart(props: any): any {
-    const { matrixData, actualQuery } = props;
+    const { matrixData, actualQuery, type } = props;
     const { tWidth } = props;
 
     const { expr, dataSourceType, queryType, limit, panel, id, isLogsVolume } =
@@ -53,23 +53,32 @@ export default function QrynChart(props: any): any {
 
     $q.fn.UseTooltip = UseTooltip;
 
-    const matrix = useMatrixData(true, matrixData, isLogsVolume);
+    const matrix = useMatrixData(
+        true,
+        matrixData,
+        isLogsVolume && type === "stream"
+    );
     const dispatch = useDispatch();
 
     const [isSpliced, setIsSpliced] = useState(true);
     const [chartData, setChartData] = useState(matrix);
 
-    const [allData] = useState(useMatrixData(false, matrixData, isLogsVolume));
+    const [allData] = useState(
+        useMatrixData(false, matrixData, isLogsVolume && type === "stream")
+    );
     const [labels, setLabels] = useState([]);
     const [element, setElement] = useState(chartRef.current);
 
-    const chartOpts = useChartOptions({ tWidth }, isLogsVolume || false);
+    const chartOpts = useChartOptions(
+        { tWidth },
+        (isLogsVolume && type === "stream") || false
+    );
 
     const [chartOptions, setChartOptions] = useState(chartOpts);
 
     const getInitialChartType = useMemo(() => {
         let localType = getTypeFromLocal();
-        if (isLogsVolume) {
+        if (isLogsVolume && type === "stream") {
             return "bar";
         } else {
             if (localType !== "") {
@@ -78,13 +87,13 @@ export default function QrynChart(props: any): any {
                 return "line";
             }
         }
-    }, [isLogsVolume]);
+    }, [isLogsVolume && type === "stream"]);
 
     const [chartType, setChartType] = useState(getInitialChartType);
 
     function plotChartData(data: any, type: any, element: any) {
         let barWidth = 0;
-        if (isLogsVolume) {
+        if (isLogsVolume && type === "stream") {
             barWidth = getBarWidth(getTimeSpan(data), tWidth);
         }
 
@@ -127,14 +136,14 @@ export default function QrynChart(props: any): any {
             JSON.parse(localStorage.getItem("labelsSelected") || "null") || [];
         if (lSelected?.length > 0) {
             let barWidth = 0;
-            if (isLogsVolume) {
+            if (isLogsVolume && type === "stream") {
                 barWidth = getBarWidth(getTimeSpan(data), tWidth);
             }
 
             const { lines, bars, points } = getSeriesFromChartType(
                 chartType,
                 barWidth,
-                isLogsVolume
+                isLogsVolume && type === "stream"
             );
             const ids = lSelected?.map((m: any) => m.id);
             const dataMapped = data?.map((series: any) => {
@@ -150,7 +159,7 @@ export default function QrynChart(props: any): any {
                 } else {
                     return {
                         ...series,
-                        stack: isLogsVolume,
+                        stack: isLogsVolume && type === "stream",
                         bars,
                         lines,
                         points,
@@ -243,7 +252,7 @@ export default function QrynChart(props: any): any {
                 } else {
                     return {
                         ...series,
-                        stack: isLogsVolume,
+                        stack: isLogsVolume && type === "stream",
                         bars,
                         lines,
                         points,
@@ -253,7 +262,7 @@ export default function QrynChart(props: any): any {
 
             const { timeformat, min, max } = formatDateRange(dataSelected);
             let barWidth = 0;
-            if (isLogsVolume) {
+            if (isLogsVolume && type === "stream") {
                 barWidth = getBarWidth(getTimeSpan(dataSelected), tWidth);
             }
 
@@ -273,7 +282,7 @@ export default function QrynChart(props: any): any {
         } else {
             const data = isSpliced ? chartData : allData;
             let barWidth = 0;
-            if (isLogsVolume) {
+            if (isLogsVolume && type === "stream") {
                 barWidth = getBarWidth(getTimeSpan(data), tWidth);
             }
 
@@ -301,7 +310,7 @@ export default function QrynChart(props: any): any {
                     series: getSeriesFromChartType(
                         chartType,
                         barWidth || 0,
-                        isLogsVolume
+                        isLogsVolume && type === "stream"
                     ),
                     xaxis: { timeformat, min, max },
                 })
@@ -335,7 +344,7 @@ export default function QrynChart(props: any): any {
 
         try {
             let barWidth = 0;
-            if (isLogsVolume) {
+            if (isLogsVolume && type === "stream") {
                 barWidth = getBarWidth(getTimeSpan(newData), tWidth);
             }
 
@@ -344,7 +353,7 @@ export default function QrynChart(props: any): any {
             let { bars, lines, points, stack } = getSeriesFromChartType(
                 chartType,
                 barWidth,
-                isLogsVolume
+                isLogsVolume && type === "stream"
             );
 
             let plot = $q.plot(
@@ -385,7 +394,7 @@ export default function QrynChart(props: any): any {
             chartRef,
             onLabelClick,
             labels,
-            isLogsVolume,
+            isLogsVolume: isLogsVolume && type === "stream",
         };
         const pointSet = new Set();
         matrixData.forEach((dataPoint: any) => {

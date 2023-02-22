@@ -44,17 +44,18 @@ export const useMatrixData = (
         ];
 
         if (data?.length > 0) {
+
             parsed = [...data]?.map((m) => {
                 let DataPoint:any =  {
                     data: formatTs(m?.values),
-                    label: formatLabel(m?.metric, isLogsVolume),
+                    label: formatLabel(m?.metric, isLogsVolume, data.length),
                     isVisible: true,
                     shadowSize: 0,
                     id: m.id,
                 }
 
                 if(isLogsVolume) {
-                    let color = getColorByLevel(formatLabel(m?.metric, isLogsVolume) || "");
+                    let color = getColorByLevel(formatLabel(m?.metric, isLogsVolume, data.length) || "");
                     DataPoint.color = color
                 }
 

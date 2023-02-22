@@ -76,7 +76,7 @@ export function DataViewItem(props: any) {
         };
         return <TraceView {...traceProps} />;
     }
-    if (actualQuery && type === "matrix" && streamData?.length > 0) {
+    if (actualQuery && type === "matrix" && streamData?.length > 0 ) {
         // return matrix type component
         const { limit }: any = actualQuery;
         const matrixProps = {

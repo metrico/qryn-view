@@ -197,10 +197,22 @@ export function setTypeToLocal(type: any) {
     localStorage.setItem(LOCAL_CHART_TYPE, type);
 }
 
-export function formatLabel(labels: any, isLogsVolume = false) {
+/**
+ * formatLabel formats the labels for charts
+ * @param labels 
+ * @param isLogsVolume 
+ * @param length 
+ * @returns 
+ */
+
+export function formatLabel(labels: any, isLogsVolume = false, length:number) {
     let labelResult = { ...labels };
+
     if (Object.keys(labels)?.length === 0) {
         labelResult = { level: "unknown" };
+        if(length === 1 && isLogsVolume) {
+            labelResult = {level: "logs"}
+        }
     }
 
     if (isLogsVolume && labelResult) {
@@ -244,9 +256,19 @@ export function showSeries(series: any, type: any, isLogsVolume = false) {
     };
 }
 
+/**
+ * 
+ * @param arr 
+ * @returns array of ids
+ */
 export function mapIds(arr: []) {
     return arr?.map((m: any) => m.id);
 }
+
+/**
+ * 
+ * @returns Labels selected from storage
+ */
 
 export function getLabelsSelected() {
     let labelSelected = [];
@@ -262,6 +284,12 @@ export function getLabelsSelected() {
     }
 }
 
+/**
+ * 
+ * @param label id
+ * @returns bool, label was selected
+ */
+
 export function isLAbelSelected({ label: { id } }: { label: any }) {
     let labelsSelected = getLabelsSelected();
     if (labelsSelected?.length > 0) {
@@ -269,7 +297,12 @@ export function isLAbelSelected({ label: { id } }: { label: any }) {
     }
     return false;
 }
-
+/**
+ * 
+ * @param data 
+ * @param type 
+ * @returns  
+ */
 export function getNewData(data: any, type: any) {
     const lSelected = getLabelsSelected();
 
@@ -289,6 +322,13 @@ export function getNewData(data: any, type: any) {
     }
 }
 
+/**
+ * 
+ * @param val 
+ * @param suffix 
+ * @returns 
+ */
+
 export function floatNum(val: number, suffix: string) {
     let num = 0;
     if (suffix === "M") {
@@ -304,6 +344,13 @@ export function floatNum(val: number, suffix: string) {
     }
     return 1;
 }
+
+/**
+ * 
+ * @param val 
+ * @param axis 
+ * @returns 
+ */
 
 export function yAxisTickFormatter(val: any, axis: any) {
     if (val > 999999) {
