@@ -8,7 +8,7 @@ import errorInterceptor from "./helpers/error.interceptor";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import DataSources from "./views/DataSources/DataSources";
-
+import { Notification } from "./qryn-ui/notifications";
 import { CookiesProvider } from "react-cookie";
 import ProtectedRoute from "./providers/ProtectedRoute";
 errorInterceptor(axios);
@@ -26,6 +26,7 @@ ReactDOM.render(
                             />
                     </Routes>
                 </BrowserRouter>
+                <Notification />
             </Provider>
         </CookiesProvider>
     </StrictMode>,

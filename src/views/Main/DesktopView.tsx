@@ -4,7 +4,6 @@ import Panel from "../../components/Panel/Panel";
 import StatusBar from "../../components/StatusBar";
 import QueryHistory from "../../plugins/queryhistory";
 import SettingsDialog from "../../plugins/settingsdialog/SettingsDialog";
-import { Notification } from "../../qryn-ui/notifications";
 import { MainContainer } from "./styled";
 
 /**
@@ -91,7 +90,6 @@ export function DesktopView({
 
                     {isSplit && <Panel name="right" />}
                 </div>
-                <Notification />
             </MainContainer>
 
             <SettingsDialog open={settingsDialogOpen} />
