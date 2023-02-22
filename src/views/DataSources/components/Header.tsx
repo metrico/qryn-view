@@ -26,7 +26,7 @@ export function Header(props: HeaderProps) {
     const backOne = () => {
         let isLocation = urlLocation?.length > 0;
         dispatch(setIsDatasourceSaved(false));
-        if (isLocation || buttonMessage === "Back") {
+        if ((isLocation || buttonMessage === "Back")&& title !== "DataSources") {
             navigate(-1);
         } else {
             navigate("/");
