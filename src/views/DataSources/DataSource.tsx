@@ -5,7 +5,6 @@ import { useCookies } from "react-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { createAlert } from "../../actions";
-import { Notification } from "../../qryn-ui/notifications";
 import { themes } from "../../theme/themes";
 import { Header } from "./components";
 import setDataSources from "./store/setDataSources";
@@ -31,6 +30,7 @@ export function DataSourceSetting(props: any) {
         },
     } = props;
 
+      // eslint-disable-next-line
     const [cookie, setCookie] = useCookies(["qryn-dev-cookie", "qryn-settings"]); // for testing cookies feature
 
     const dispatch = useDispatch();
@@ -113,7 +113,6 @@ export function DataSourceSetting(props: any) {
 
             <div className="ds-settings">
                 <Settings {...props} />
-                <Notification />
             </div>
         </div>
     );

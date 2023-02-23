@@ -1,8 +1,7 @@
-import { HistoryButtonStyled, ShowLogsBtn } from "../styled";
+import { HistoryButtonStyled} from "../styled";
 import { themes } from "../../../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import { useSelector } from "react-redux";
-import { Button } from "./Button.model";
 import { Store } from "../../../../store/store.model";
 
 const _themes = themes as any;

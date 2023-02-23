@@ -11,7 +11,7 @@ import {
     setStopTime,
     setTheme,
     setAutoTheme,
-    setTimeRangeLabel
+    setTimeRangeLabel,
 } from "../actions";
 
 import setFromTime from "../actions/setFromTime";
@@ -24,9 +24,8 @@ import { setUrlQueryParams } from "../actions/setUrlQueryParams";
 import { setSplitView } from "../components/StatusBar/components/SplitViewButton/setSplitView";
 // import { environment } from "../environment/env.dev";
 
-
-export const STRING_VALUES = ["step", "theme",  "time"];
-export const READ_ONLY_STRING_VALUES = ['label'];
+export const STRING_VALUES = ["step", "theme", "time"];
+export const READ_ONLY_STRING_VALUES = ["label"];
 export const ARRAY_VALUES = ["left", "right"];
 export const TIME_VALUES = ["start", "stop"];
 
@@ -38,21 +37,23 @@ export function UpdateStateFromQueryParams() {
     }, []);
 
     const dispatch = useDispatch();
-    const urlQueryParams = useSelector(({urlQueryParams}: any) => urlQueryParams);
-    const start = useSelector(({start}: any) => start);
-    const stop = useSelector(({stop}: any) => stop);
-    const label = useSelector(({label}: any) => label);
-    const from = useSelector(({from}: any) => from);
-    const to = useSelector(({to}: any) => to);
-    const step = useSelector(({step}: any) => step);
-    const isSubmit = useSelector(({isSubmit}: any) => isSubmit);
-    const isEmbed = useSelector(({isEmbed}: any) => isEmbed);
-    const time = useSelector(({time}: any) => time);
-    const left = useSelector(({left}: any) => left);
-    const right = useSelector(({right}: any) => right);
-    const theme = useSelector(({theme}: any) => theme);
-    const autoTheme = useSelector(({autoTheme}: any) => autoTheme);
-    const isSplit = useSelector(({isSplit}: any) => isSplit);
+    const urlQueryParams = useSelector(
+        ({ urlQueryParams }: any) => urlQueryParams
+    );
+    const start = useSelector(({ start }: any) => start);
+    const stop = useSelector(({ stop }: any) => stop);
+    const label = useSelector(({ label }: any) => label);
+    const from = useSelector(({ from }: any) => from);
+    const to = useSelector(({ to }: any) => to);
+    const step = useSelector(({ step }: any) => step);
+    const isSubmit = useSelector(({ isSubmit }: any) => isSubmit);
+    const isEmbed = useSelector(({ isEmbed }: any) => isEmbed);
+    const time = useSelector(({ time }: any) => time);
+    const left = useSelector(({ left }: any) => left);
+    const right = useSelector(({ right }: any) => right);
+    const theme = useSelector(({ theme }: any) => theme);
+    const autoTheme = useSelector(({ autoTheme }: any) => autoTheme);
+    const isSplit = useSelector(({ isSplit }: any) => isSplit);
     const [themeSet, setThemeSet] = useState(isLightTheme ? "light" : theme);
 
     useEffect(() => {
@@ -89,11 +90,24 @@ export function UpdateStateFromQueryParams() {
         left: setLeftPanel,
         right: setRightPanel,
         isSplit: setSplitView,
-        autoTheme: setAutoTheme
+        autoTheme: setAutoTheme,
     };
 
     const encodeTs = (ts: any) => {
         return ts?.getTime() + "000000";
+    };
+
+    const JSONTry = (val: any, emptyValue: any) => {
+        try {
+            let parsed = JSON.parse(val);
+            if (parsed && parsed !== undefined) {
+                return parsed;
+            } else {
+                return emptyValue;
+            }
+        } catch (e) {
+            return emptyValue;
+        }
     };
 
     const { hash } = useLocation();
@@ -115,7 +129,8 @@ export function UpdateStateFromQueryParams() {
 
                 Object.keys(startParams).forEach((param) => {
                     if (
-                        (STRING_VALUES.includes(param) || READ_ONLY_STRING_VALUES.includes(param)) &&
+                        (STRING_VALUES.includes(param) ||
+                            READ_ONLY_STRING_VALUES.includes(param)) &&
                         startParams[param] !== ""
                     ) {
                         dispatch(STORE_ACTIONS[param](startParams[param]));
@@ -135,19 +150,19 @@ export function UpdateStateFromQueryParams() {
                         dispatch(STORE_ACTIONS[param](paramDate));
                     } else if (BOOLEAN_VALUES.includes(param)) {
                         try {
-                            const val = JSON.parse(startParams[param]);
+                            const val = JSONTry(startParams[param], false);
                             dispatch(STORE_ACTIONS[param](val));
                         } catch (e) {
                             console.log(e);
                         }
                     } else if (ARRAY_VALUES.includes(param)) {
                         try {
-                        
-                            const parsed = JSON.parse(
-                                decodeURIComponent(startParams[param])
+                            const parsed = JSONTry(
+                                decodeURIComponent(startParams[param]),
+                                []
                             );
-                            
-                     dispatch(STORE_ACTIONS[param](parsed));
+
+                            dispatch(STORE_ACTIONS[param](parsed));
                         } catch (e) {
                             console.log(e);
                         }
@@ -168,7 +183,10 @@ export function UpdateStateFromQueryParams() {
                     urlFromHash.set(param, time_value.toString());
                 } else if (BOOLEAN_VALUES.includes(param)) {
                     try {
-                        urlFromHash.set(param, JSON.parse(STORE_KEYS[param]));
+                        urlFromHash.set(
+                            param,
+                            JSONTry(STORE_KEYS[param], false)
+                        );
                     } catch (e) {
                         console.log(e);
                     }
@@ -183,6 +201,7 @@ export function UpdateStateFromQueryParams() {
             });
             (window as any).location.hash = urlFromHash;
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -214,7 +233,7 @@ export function UpdateStateFromQueryParams() {
                     try {
                         paramsFromHash.set(
                             store_key,
-                            JSON.parse(STORE_KEYS[store_key])
+                            JSONTry(STORE_KEYS[store_key], false)
                         );
                     } catch (e) {
                         console.error(e);
@@ -227,8 +246,9 @@ export function UpdateStateFromQueryParams() {
                     paramsFromHash.set("right", parsed);
                 }
             });
-          
-            ;(window as any).location.hash = paramsFromHash;
+
+            (window as any).location.hash = paramsFromHash;
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [STORE_KEYS]);
 }

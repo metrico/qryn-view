@@ -32,14 +32,16 @@ export function useTraceServiceName({ id }: any) {
 
             apiRequest();
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return useMemo(() => {
         if (serviceNames?.data?.tagValues) {
-            return [{ name: "Select Service Name", value: "" }].concat(
+            return [{ name: "Select Service Name", value: "", label:"Select Service Name" }].concat(
                 serviceNames.data.tagValues.map((m) => ({
                     name: m,
                     value: m,
+                    label: m
                 }))
             );
         }

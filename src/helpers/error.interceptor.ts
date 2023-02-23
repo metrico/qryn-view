@@ -10,6 +10,11 @@ const errorInterceptor = (axiosInstance: any) => {
 
         (error: any) => {
 
+            store.dispatch(createAlert({
+                type: 'error',
+                message: error.message
+            }))
+
             if (error.response) {
                 const handler = errorHandler(error)
 

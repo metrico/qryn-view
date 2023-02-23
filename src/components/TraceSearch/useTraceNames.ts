@@ -38,17 +38,19 @@ export function useTraceNames({ id }: any) {
 
             apiRequest();
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return useMemo(() => {
         if (traceNames?.["data"]?.["tagValues"]) {
-            return [{ name: "Search Span Name", value: "" }].concat(
+            return [{ name: "Search Span Name", value: "" , label:"Search Span Name"}].concat(
                 traceNames["data"]["tagValues"].map((m) => ({
                     name: m,
                     value: m,
+                    label:m
                 }))
             );
         }
-        return [{ name: "", value: "" }];
+        return [{ name: "", value: "",label:"" }];
     }, [traceNames]);
 }

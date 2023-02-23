@@ -13,21 +13,28 @@ export default function UseTooltip(this: void, plot: any) {
     let previousPoint: any = null;
     $q("#tooltip").remove();
     previousPoint = null;
-
+    // let isLogsVolume:any = this.isLogsVolume
     $q(this).on("plothover", function (event: any, pos: any, item: any) {
+
         plot.unhighlight();
         if (item) {
             let plotData = plot.getData();
+              // eslint-disable-next-line
             const [plotTime, _] = item.datapoint;
             const selectedPlots = JSON.parse(
                 localStorage.getItem("labelsSelected") || "null"
             );
+            const getDataPointValue = (datapoint: any[]) => {
+                if (datapoint?.length === 2) {
+                    return datapoint[1];
+                } else return datapoint[1] - datapoint[2];
+            };
             const itemValue = isFloat(parseFloat(item.datapoint[1]))
-                ? parseFloat(item.datapoint[1]).toFixed(3)
-                : item.datapoint[1];
+                ? parseFloat(getDataPointValue(item.datapoint)).toFixed(3)
+                : getDataPointValue(item.datapoint);
 
             const isSelectedPlots = selectedPlots.length > 0;
-            const labelsList = [];
+            const labelsList:any = [];
             for (let i = 0; i < plotData.length; i++) {
                 const plotIsVisible = isSelectedPlots
                     ? isLAbelSelected(plotData[i])
@@ -39,14 +46,14 @@ export default function UseTooltip(this: void, plot: any) {
 
                 if (plotTimes.includes(plotTime) && plotIsVisible) {
                     const plotIndex = plotTimes.indexOf(plotTime);
-
+                      // eslint-disable-next-line
                     const [_, value] = plotPoints.find(
                         ([time, _]: [time: any, _: any]) => time === plotTime
                     );
                     labelsList.push({
                         color: plotData[i].color,
                         label: plotData[i].label,
-                        value: value,
+                        value:value,
                         plot,
                         plotIndex,
                         item,
@@ -102,7 +109,6 @@ function showTooltip(x: any, y: any, contents: any, length: any) {
     if (clientX > halfScreen) {
         posX -= length < 125 ? length * 6 + 15 : 505;
     }
-
     $q(`<div id="tooltip">` + contents + `</div>`)
         .css({
             position: "absolute",

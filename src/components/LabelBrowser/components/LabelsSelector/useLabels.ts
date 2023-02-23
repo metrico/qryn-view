@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState, useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { createAlert } from "../../../../actions";
+import { notificationTypes } from "../../../../qryn-ui/notifications/consts";
 
 function getTimeParsed(time: any) {
     return time.getTime() + "000000";
@@ -18,13 +20,16 @@ const getUrlFromType = (apiUrl: any, type: any, start: any, end: any) => {
     }
 };
 const getTimestamp = (time: any, type: any): any => {
-    return ({
-        metrics: getTimeSec(time),
-        logs: getTimeParsed(time),
-    } as any)[type];
-}
+    return (
+        {
+            metrics: getTimeSec(time),
+            logs: getTimeParsed(time),
+        } as any
+    )[type];
+};
 
 export default function useLabels(id: any, dataSourceURL = "") {
+    const dispatch = useDispatch();
     const { start, stop }: any = useSelector((store) => store);
     const dataSources = useSelector((store: any) => store.dataSources);
 
@@ -35,6 +40,7 @@ export default function useLabels(id: any, dataSourceURL = "") {
         }
 
         return current;
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, dataSources]);
 
     const [type, setType] = useState(currentDataSource.type || "");
@@ -55,6 +61,7 @@ export default function useLabels(id: any, dataSourceURL = "") {
 
     useEffect(() => {
         setUrl(getUrlFromType(currentDataSource.url, type, timeStart, timeEnd));
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [setUrl, type, currentDataSource]);
 
     const [response, setResponse] = useState([]);
@@ -97,7 +104,29 @@ export default function useLabels(id: any, dataSourceURL = "") {
             const apiRequest = async () => {
                 setLoading(true);
                 try {
-                    const req: any = await axios.get(url, labelHeaders);
+                    const req: any = await axios
+                        .get(url, labelHeaders)
+                        .then((data) => data)
+                        .catch((e) => {
+                            let errorMsg = "";
+                            if (e.response) {
+                                errorMsg =
+                                    "Error " + e.response.status + "at Labels ";
+                            } else if (e.request) {
+                                errorMsg = e.request;
+                            } else {
+                                errorMsg = e.message;
+                            }
+                            console.log("error requesting labels");
+                            console.log(e);
+
+                            dispatch(
+                                createAlert({
+                                    type: notificationTypes.error,
+                                    message: errorMsg,
+                                })
+                            );
+                        });
                     setResponse(req || []);
                 } catch (e) {
                     console.log("Error fetching labels");
@@ -107,10 +136,7 @@ export default function useLabels(id: any, dataSourceURL = "") {
             };
             apiRequest();
         }
-
-        // if(!id) {
-        //     return ()=> null
-        // }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url, currentDataSource]);
 
     return {

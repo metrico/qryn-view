@@ -1,4 +1,6 @@
 import axios from "axios";
+import { createAlert } from "../actions";
+import { notificationTypes } from "../qryn-ui/notifications/consts";
 import store from "../store/store";
 
 function getTimeParsed(time: Date) {
@@ -7,9 +9,9 @@ function getTimeParsed(time: Date) {
 
 const getUrlFromType = (
     apiUrl: string,
-    type: string, 
-    startNs: string, 
-    stopNs: string 
+    type: string,
+    startNs: string,
+    stopNs: string
 ) => {
     if (type === "metrics") {
         return `${apiUrl}/api/v1/labels`;
@@ -18,7 +20,13 @@ const getUrlFromType = (
     }
 };
 
-export const sendLabels = async (id: string, type: string, apiUrl: string, start: any, stop: any) => {
+export const sendLabels = async (
+    id: string,
+    type: string,
+    apiUrl: string,
+    start: any,
+    stop: any
+) => {
     const { dataSources } = store.getState();
 
     const actDataSource = dataSources.find((f: any) => f.id === id);
@@ -57,7 +65,7 @@ export const sendLabels = async (id: string, type: string, apiUrl: string, start
 
     labelHeaders.options = options;
 
-    if (type !=='flux' && type !== 'traces' && labelHeaders && apiUrl) {
+    if (type !== "flux" && type !== "traces" && labelHeaders && apiUrl) {
         const res = await axios
             .get(getUrlFromType(apiUrl, type, startNs, stopNs), labelHeaders)
             .then((response: any) => {
@@ -65,7 +73,7 @@ export const sendLabels = async (id: string, type: string, apiUrl: string, start
                     if (response?.data?.data?.length === 0) {
                         console.log("no labels found");
                     }
-                        
+
                     if (response?.data?.data?.length > 0) {
                         const labels = response?.data?.data
                             .sort()
@@ -81,12 +89,26 @@ export const sendLabels = async (id: string, type: string, apiUrl: string, start
                 }
             })
             .catch((e) => {
-                console.log("error from useLabels");
+                let errorMsg = "";
+                if (e.response) {
+                    errorMsg = "Error " + e.response.status + "at Labels ";
+                } else if (e.request) {
+                    errorMsg = e.request;
+                } else {
+                    errorMsg = e.message;
+                }
+                console.log("error requesting labels");
                 console.log(e);
+
+                store.dispatch(
+                    createAlert({
+                        type: notificationTypes.error,
+                        message: errorMsg,
+                    })
+                );
             });
 
         return res;
     }
-
-
+    return [];
 };

@@ -14,8 +14,6 @@
 
 import * as React from 'react';
 
-import CloseIcon from '@mui/icons-material/Close';
-
 import { TNil } from '../types/index';
 
 type Props = {
@@ -40,7 +38,7 @@ export default class UiFindInput extends React.PureComponent<Props> {
   };
 
   render() {
-    const { allowClear, inputProps, value } = this.props;
+    const { inputProps, value } = this.props;
 
     // const suffix = (
     //   <>

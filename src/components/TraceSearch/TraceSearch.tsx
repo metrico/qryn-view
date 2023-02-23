@@ -1,14 +1,18 @@
 // export default useTracesService(){
 
 import { css, cx } from "@emotion/css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, forwardRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import getData from "../../actions/getData";
 import { themes } from "../../theme/themes";
-import { Field, Select } from "../../views/DataSources/ui";
+import { Field /* Select */ } from "../../views/DataSources/ui";
 import { formatUrl } from "./tracesSearchUrl";
 import { useTraceNames } from "./useTraceNames";
 import { useTraceServiceName } from "./useTraceServiceName";
+import Select, { components } from "react-select";
+import { useTheme } from "../DataViews/components/QueryBuilder/hooks";
+import { cStyles } from "../DataViews/components/QueryBuilder/styles";
+import { selectTheme } from "../DataViews/components/QueryBuilder/helpers";
 
 const SearchColumn = css`
     display: flex;
@@ -21,7 +25,6 @@ const SearchRow = css`
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
-    max-width: 500px;
 `;
 
 const TraceButton = (theme: any) => css`
@@ -37,6 +40,8 @@ const TraceButton = (theme: any) => css`
     height: 30px;
     display: flex;
     align-items: center;
+    align-self: flex-end;
+    max-width: 200px;
     cursor: pointer;
     &:hover {
         background: ${theme.primaryLight};
@@ -44,6 +49,109 @@ const TraceButton = (theme: any) => css`
 `;
 
 // }
+
+export const TRACE_SEARCH_LABEL_WIDTH = 75;
+
+
+export const SelectOptionStyle = {
+    display: "flex",
+    alignItems: "center",
+    flex: 1,
+    width: "100%",
+};
+
+export const SingleValueStyle = {
+    display: "flex",
+    alignItems: "flex-end",
+    flex: 1,
+    width: "100%",
+};
+
+export function Placeholder(props: any) {
+    const { defaultValue, options } = props;
+
+    const defaultOption = useMemo(() => {
+        const found = options?.find((f: any) => f?.value === defaultValue);
+        return {
+            label: found?.label,
+        };
+    }, [defaultValue, options]);
+
+    return (
+        <div style={SingleValueStyle}>
+            <div>{defaultOption.label}</div>
+        </div>
+    );
+}
+
+export const DataSourceSelectOption = (props: any) => {
+    const { Option } = components;
+
+    const {
+        data: { label },
+    } = props;
+
+    return (
+        <Option {...props}>
+            <div style={SelectOptionStyle}>
+                <span style={{ fontSize: "12px" }}>{label}</span>
+            </div>
+        </Option>
+    );
+};
+
+export const DataSourceSelectSingleValue = (props: any) => {
+    const {
+        data: { label },
+    } = props;
+    return (
+        <div style={SingleValueStyle}>
+            <div>{label}</div>
+        </div>
+    );
+};
+
+export const SearchSelect = forwardRef((props: any, ref: any) => {
+    const { options, onSelectChange, label, labelWidth } = props;
+
+    const mainTheme = useTheme();
+
+    return (
+        <div
+            style={{
+                marginTop: "5px",
+                display: "flex",
+                alignItems: "center",
+                flex: 1,
+                whiteSpace: "nowrap",
+            }}
+        >
+            <label
+                style={{
+                    width: `${labelWidth}px`,
+                    fontSize: "12px",
+                    color: mainTheme.textColor,
+                    padding: "0px 10px",
+                }}
+            >
+                {label}
+            </label>
+
+            <Select
+                styles={cStyles(mainTheme, 100, true)}
+                placeholder={<Placeholder {...props} />}
+                options={options}
+                ref={ref}
+                components={{
+                    Option: DataSourceSelectOption,
+                    SingleValue: DataSourceSelectSingleValue,
+                }}
+                theme={(theme) => selectTheme(theme, mainTheme)}
+                onChange={onSelectChange}
+            />
+        </div>
+    );
+});
 
 export default function TracesSearch(props: any) {
     const {
@@ -59,12 +167,16 @@ export default function TracesSearch(props: any) {
     );
     const serviceNameOpts = useTraceServiceName({ id: dataSourceId });
     const traceNameOpts = useTraceNames({ id: dataSourceId });
-    const [searchValue, setSearchValue] = useState({ name: "", value: "" });
+    const [searchValue, setSearchValue] = useState({
+        name: "",
+        value: "",
+        label: "",
+    });
     const [spanValue, setSpanValue] = useState(
-        traceNameOpts[0] || { name: "", value: "" }
+        traceNameOpts[0] || { name: "", value: "", label: "" }
     );
 
-    const [buttonActive, setButtonActive] = useState(false);
+  
 
     const theme = useMemo(() => {
         return themes[storeTheme];
@@ -84,12 +196,7 @@ export default function TracesSearch(props: any) {
         if (serviceNameOpts.length > 0) {
             setUrlString(formatUrl(urlState));
         }
-
-        if (searchValue.value !== "") {
-            setButtonActive(true);
-        } else {
-            setButtonActive(false);
-        }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [urlState]);
 
     const emit = () => {
@@ -107,15 +214,15 @@ export default function TracesSearch(props: any) {
     };
 
     const onServiceChange = (e: any) => {
-        const value = e?.target?.value || "";
-        setSearchValue({ name: value, value: value });
+        const value = e?.value || "";
+        setSearchValue({ name: value, value: value, label: value });
         setUrlState((prev) => ({ ...prev, searchName: value }));
         onSearchChange(emit());
     };
 
     const onSpanChange = (e: any) => {
-        const value = e?.target?.value || "";
-        setSpanValue({ name: value, value: value });
+        const value = e?.value || "";
+        setSpanValue({ name: value, value: value, label: value });
         setUrlState((prev) => ({ ...prev, name: value }));
         onSearchChange(emit());
     };
@@ -147,14 +254,31 @@ export default function TracesSearch(props: any) {
     return (
         <div className={cx(SearchColumn)}>
             <div className={cx(SearchRow)}>
-                <Select
+                <SearchSelect
+                    {...props}
+                    defaultValue={""}
+                    label={"Service Name"}
+                    options={serviceNameOpts}
+                    onSelectChange={onServiceChange}
+                    labelWidth={TRACE_SEARCH_LABEL_WIDTH}
+                />
+
+                <SearchSelect
+                    {...props}
+                    defaultValue={""}
+                    label={"Span Name"}
+                    options={traceNameOpts}
+                    onSelectChange={onSpanChange}
+                    labelWidth={TRACE_SEARCH_LABEL_WIDTH}
+                />
+                {/* <Select
                     fullWidth={true}
                     label={"Service Name"}
                     placeHolder={"Select a Service"}
                     onChange={onServiceChange}
                     value={searchValue}
                     opts={serviceNameOpts}
-                    labelWidth={80}
+                    labelWidth={TRACE_SEARCH_LABEL_WIDTH}
                 />
 
                 <Select
@@ -164,22 +288,22 @@ export default function TracesSearch(props: any) {
                     onChange={onSpanChange}
                     value={spanValue}
                     opts={traceNameOpts}
-                    labelWidth={80}
-                />
+                    labelWidth={TRACE_SEARCH_LABEL_WIDTH}
+                /> */}
 
                 <Field
                     label={"Tags"}
                     placeholder={"http.status_code=200 error=true"}
                     onChange={(e: any) => onChange(e, "tags")}
                     value={urlState.tags}
-                    labelWidth={80}
+                    labelWidth={TRACE_SEARCH_LABEL_WIDTH}
                 />
                 <Field
                     label={"Limit"}
                     placeholder={"Set limit, default 20"}
                     onChange={(e: any) => onChange(e, "limit")}
                     value={urlState.limit}
-                    labelWidth={80}
+                    labelWidth={TRACE_SEARCH_LABEL_WIDTH}
                 />
 
                 <Field
@@ -187,14 +311,14 @@ export default function TracesSearch(props: any) {
                     placeholder={"e.g. 1.2s, 100ms"}
                     onChange={(e: any) => onChange(e, "minDuration")}
                     value={urlState.minDuration}
-                    labelWidth={80}
+                    labelWidth={TRACE_SEARCH_LABEL_WIDTH}
                 />
                 <Field
                     label={"Max Duration"}
                     placeholder={"e.g. 1.2s, 100ms"}
                     onChange={(e: any) => onChange(e, "maxDuration")}
                     value={urlState.maxDuration}
-                    labelWidth={80}
+                    labelWidth={TRACE_SEARCH_LABEL_WIDTH}
                 />
 
                 <button className={cx(TraceButton(theme))} onClick={onSubmit}>

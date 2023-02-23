@@ -70,6 +70,7 @@ function Row(props: any) {
         } else {
             return {};
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [text]);
 
     const rowColor = useMemo(() => getRowColor(tags), [tags]);

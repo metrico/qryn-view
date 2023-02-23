@@ -91,6 +91,7 @@ const info = "hsl(120, 100%, 25%)";
 const debug = "hsl(240, 100%, 50%)";
 const trace = "hsl(195, 53%, 79%)";
 const unknown = "hsl(0, 0%, 50%)";
+const buttonSecondaryBg = '#4a525c'
 
 const darkTheme:any = {
     ...defaultTheme,
@@ -100,6 +101,7 @@ const darkTheme:any = {
     textColor,
     primaryDark,
     primaryLight,
+    buttonSecondaryBg,
     widgetContainer,
     buttonDefault,
     buttonHover,

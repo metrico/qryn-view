@@ -1,19 +1,18 @@
-
-import { useMemo} from "react";
+import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import setIsDatasourceSaved from "../store/setIsDataSourceSaved";
 import { Button, QrynLogo } from "../ui";
 
-
 export interface HeaderProps {
     title: string;
-    datasource?: any
+    datasource?: any;
 }
 
 export function Header(props: HeaderProps) {
     const navigate = useNavigate();
+    const urlLocation = useSelector((store: any) => store.urlLocation);
     const dispatch = useDispatch();
     const { title } = props;
     const isDsSaved = useSelector((store: any) => store.isDsSaved);
@@ -25,8 +24,13 @@ export function Header(props: HeaderProps) {
     }, [isDsSaved]);
 
     const backOne = () => {
+        let isLocation = urlLocation?.length > 0;
         dispatch(setIsDatasourceSaved(false));
-        navigate(-1);
+        if ((isLocation || buttonMessage === "Back")&& title !== "DataSources") {
+            navigate(-1);
+        } else {
+            navigate("/");
+        }
     };
 
     return (
@@ -44,4 +48,3 @@ export function Header(props: HeaderProps) {
         </div>
     );
 }
-

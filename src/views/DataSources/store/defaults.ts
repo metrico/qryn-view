@@ -46,6 +46,7 @@ export const defaultLogsLinkedFields = [
         ds_id: "logs",
         name: "traceId",
         regex: "traceI[d|D]=(?<traceId>\\w+)",
+          // eslint-disable-next-line
         query: "${__value.raw}",
         urlLabel: "",
       //  url: "",
@@ -59,6 +60,7 @@ export const defaultLogsLinkedFields = [
         ds_id: "logs",
         name: "traceID",
         regex: 'traceI[d|D]=(?<traceId>\\w+)',
+          // eslint-disable-next-line
         query: "${__value.raw}",
         urlLabel: "",
        // url: "",

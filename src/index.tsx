@@ -1,4 +1,4 @@
-import React from "react";
+import {StrictMode} from "react";
 import ReactDOM from "react-dom";
 import "./scss/app.scss";
 import App from "./App";
@@ -8,12 +8,12 @@ import errorInterceptor from "./helpers/error.interceptor";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import DataSources from "./views/DataSources/DataSources";
-
+import { Notification } from "./qryn-ui/notifications";
 import { CookiesProvider } from "react-cookie";
 import ProtectedRoute from "./providers/ProtectedRoute";
 errorInterceptor(axios);
 ReactDOM.render(
-    <React.StrictMode>
+    <StrictMode>
         <CookiesProvider>
             <Provider store={store}>
                 <BrowserRouter>
@@ -26,8 +26,9 @@ ReactDOM.render(
                             />
                     </Routes>
                 </BrowserRouter>
+                <Notification />
             </Provider>
         </CookiesProvider>
-    </React.StrictMode>,
+    </StrictMode>,
     document.getElementById("root")
 );

@@ -1,22 +1,31 @@
 import { useMemo } from "react";
-import { useMatchHeight } from "./hooks";
+import { useLabelList } from "./hooks";
 import { LabelsContainer, ChartLabel, ColorLabel } from "./styled";
 
-export default function ChartLabelsList({ onLabelClick, labels }: any) {
-    const labelsSelected = JSON.parse(localStorage.getItem("labelsSelected") || 'null');
+export default function ChartLabelsList({
+    onLabelClick,
+    labels,
+}: {
+    onLabelClick: any;
+    labels: any;
+}) {
+    const labelsSelected = useLabelList();
 
-    const isLabelsSelected = useMemo(()=> labelsSelected?.length > 0, [labelsSelected]);
-    const matchHeight = useMatchHeight({ length: labels?.length || 0 });
+    const isLabelsSelected = useMemo(
+        () => labelsSelected?.length > 0,
+        [labelsSelected]
+    );
 
-    function setIsVisible(label: any) {
-        return labelsSelected?.some((f: any) => f.id === label.id);
+    function setIsVisible({ id }: { id: string }) {
+        return labelsSelected?.some((f: any) => f.id === id);
     }
     const handleLabelClick = (val: any) => {
         val.isVisible = val.isVisible ? false : true;
         onLabelClick(labels, val);
     };
+
     return (
-        <LabelsContainer divHeight={matchHeight}>
+        <LabelsContainer>
             {labels?.length &&
                 labels?.map((val: any, idx: any) => (
                     <ChartLabel

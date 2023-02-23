@@ -3,7 +3,7 @@ import { yAxisTickFormatter } from "./helpers";
 const APP_NAME = "qryn_view";
 export const LOCAL_CHART_TYPE = `${APP_NAME}_chart_type`;
 
-export const CHART_OPTIONS = {
+export const CHART_OPTIONS = (isLogsVolume = false) => ({
     xaxis: {
         show: true,
         mode: "time",
@@ -12,8 +12,8 @@ export const CHART_OPTIONS = {
         reserveSpace: false,
         shadowSize: 0,
     },
-    yaxis:{
-        tickFormatter:yAxisTickFormatter
+    yaxis: {
+        tickFormatter: yAxisTickFormatter,
     },
     grid: {
         show: true,
@@ -28,7 +28,7 @@ export const CHART_OPTIONS = {
         minBorderMargin: 0,
         labelMarginX: 0,
         labelMarginY: 0,
-        shadowSize:0,
+        shadowSize: 0,
         margin: { left: 5, right: 5 },
     },
     legend: {
@@ -42,11 +42,12 @@ export const CHART_OPTIONS = {
     },
 
     series: {
+        stack: isLogsVolume,
         lines: { show: true, lineWidth: 1.5, shadowSize: 0, zero: false },
         bars: {
             align: "center",
             show: false,
-            barWidth: 1000,
+            barWidth: 5000,
             shadowSize: 0,
             zero: false,
         },
@@ -60,21 +61,42 @@ export const CHART_OPTIONS = {
     selection: {
         mode: "x",
     },
-};
+});
+// pass the bar width
+// calculate here the span width
 
-export const CHART_BAR_SERIES = {
-    lines: { show: false, lineWidth: 1.5, shadowSize: 0 },
-    bars: { show: true, barWidth: 500, shadowSize: 0 },
-    points: { show: true, radius: .25, shadowSize: 0 },
-};
+export const CHART_BAR_SERIES = (barWidth=0, isLogsVolume = false) => ({
+    stack: isLogsVolume,
+    lines: {
+        show: false,
+        lineWidth: 1.5,
+        shadowSize: 0,
+        fill: isLogsVolume,
+    },
+    bars: {
+        show: true,
+        barWidth: barWidth !== 0 ? barWidth : 5000,
+        shadowSize: 0,
+    },
+    points: { show: true, radius: 0.25, shadowSize: 0 },
+});
 
-export const CHART_LINE_SERIES = {
-    lines: { show: true, lineWidth: 1,shadowSize: 0 },
-    bars: { show: false, barWidth: 100, shadowSize: 0 },
+export const CHART_LINE_SERIES = (isLogsVolume = false) => ({
+    stack: isLogsVolume,
+    lines: {
+        show: true,
+        lineWidth: 1,
+        shadowSize: 0,
+        stack: isLogsVolume,
+        fill: isLogsVolume,
+    },
+    bars: { show: false, barWidth: 0, shadowSize: 0 },
     points: { show: false, radius: 1, shadowSize: 0 },
-};
-export const CHART_POINT_SERIES = {
+});
+
+export const CHART_POINT_SERIES = (isLogsVolume = false) => ({
+    stack: isLogsVolume,
     lines: { show: false, lineWidth: 1.5, shadowSize: 0 },
-    bars: { show: false, barWidth: 100, shadowSize: 0 },
+    bars: { show: false, barWidth: 0, shadowSize: 0 },
     points: { show: true, radius: 2, shadowSize: 0 },
-};
+});

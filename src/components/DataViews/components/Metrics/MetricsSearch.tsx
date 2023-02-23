@@ -1,20 +1,20 @@
 import { ThemeProvider } from "@emotion/react";
-import {useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { themes } from "../../../../theme/themes";
 import { useValuesFromMetrics } from "./useValuesFromMetrics";
 import { MetricsLabelValueSelectors } from "../QueryBuilder/MetricsLabelValueSelector";
 import { InputSelect } from "../QueryBuilder/InputSelect";
 
-
 export default function MetricsSearch(props: any) {
     const {
-        handleMetricValueChange,
-        data: { dataSourceId, hasStats },
+        handleMetricValueChange, // goes to process AT query bar
+        data: { dataSourceId, dataSourceType, hasStats },
         searchButton,
         logsRateButton,
         statsSwitch,
     } = props;
+
     // get the options for metrics selector
     const metricsOpts = useValuesFromMetrics(dataSourceId);
 
@@ -22,9 +22,7 @@ export default function MetricsSearch(props: any) {
         metricsOpts[0] || { label: "", value: "" }
     );
 
-    const [labelFilters, setLabelFilters] = useState([] as any); // check label filters
     //  this one  should go upstairs and be stored as default value
-    
     const storeTheme = useSelector(
         (store: { theme: "light" | "dark" }) => store.theme
     );
@@ -44,24 +42,18 @@ export default function MetricsSearch(props: any) {
         handleMetricValueChange(e);
     };
     const onLabelValueChange = (e: any) => {
-        setLabelFilters((prev: any) => {
-            if (prev?.length > 0) {
-                if (prev?.some((s: any) => s.id === e.id)) {
-                    return prev.map((labelFilter: any) => {
-                        if (labelFilter.label === e.label) {
-                            return { ...e };
-                        }
-                        return labelFilter;
-                    });
-                }
-            }
-            return [e];
-        });
+
     };
 
     return (
         <ThemeProvider theme={mainTheme}>
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
+            <div
+                style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                }}
+            >
                 <div style={{ marginTop: "3px" }}>
                     <InputSelect
                         isMulti={false}
@@ -75,6 +67,7 @@ export default function MetricsSearch(props: any) {
                     />
                 </div>
                 <MetricsLabelValueSelectors
+                    type={dataSourceType}
                     onChange={onLabelValueChange}
                     dataSourceId={dataSourceId}
                     value={metricValue.value}

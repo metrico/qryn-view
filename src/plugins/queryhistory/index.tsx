@@ -415,6 +415,7 @@ function QueryHistoryTab({
     const [listDisplay, setListDisplay] = useState([]);
     useEffect(() => {
         setListDisplay(queryHistory);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -551,6 +552,7 @@ function LinksHistoryTab({
 
     useEffect(() => {
         setListDisplay(linksHistory);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     useEffect(() => {
         if (filtered.length > 0) {
@@ -621,6 +623,7 @@ function StarredHistoryTab({
     useEffect(() => {
         setQueryListDisplay(starredQueries);
         setLinksListDisplay(starredLinks);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

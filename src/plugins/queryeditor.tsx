@@ -11,7 +11,6 @@ import "prismjs/components/prism-sql";
 import { themes } from "../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import { useSelector } from "react-redux";
-
 const CustomEditor = styled(Editable)`
     flex: 1;
  //   height: 100%;
@@ -103,14 +102,14 @@ function Leaf({ attributes, children, leaf }: any) {
 
 export function getTokenLength(token: any) {
     if (typeof token === "string") {
-        return token.length;
+        return token?.length;
     }
 
-    if (typeof token.content === "string") {
-        return token.content.length;
+    if (typeof token?.content === "string") {
+        return token?.content.length;
     }
 
-    return token.content.reduce((l: any, t: any) => l + getTokenLength(t), 0);
+    return token?.content?.reduce((l: any, t: any) => l + getTokenLength(t), 0);
 }
 
 export default function QueryEditor({
@@ -142,7 +141,7 @@ export default function QueryEditor({
     const decorate = useCallback(
         ([node, path]: any) => {
             const ranges: any[] = [];
-            if (!Text.isText(node) || (node as any).length < 1) {
+            if (!Text.isText(node) || (node as any)?.length < 1) {
                 return ranges;
             }
             const tokens = Prism.tokenize(node.text, Prism.languages[language]);
@@ -169,16 +168,14 @@ export default function QueryEditor({
 
     useEffect(() => {
         setEditorValue(value);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         setEditorValue(value);
         editor.children = value;
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value, setEditorValue]);
-    // const onResize = (e, {size}) => {
-    //     console.log(size)
-    //     setHeight(size.height)
-    // };
 
     const _themes: any = themes;
 
@@ -194,25 +191,11 @@ export default function QueryEditor({
                     value={editorValue}
                     onChange={onQueryChange}
                 >
-                    {" "}
-                    {/* <ResizableBox
-                        height={height}
-                        width={width || 500}
-                        axis={"y"}
-                        onResize={onResize}
-                        lockAspectRatio={false}
-                        handleSize={[10, 10]}
-                        minWidth={width || 500}
-                        maxWidth={width || 500}
-                        minHeight={30}
-                        maxHeight={500}
-                        resizeHandles={["s"]}
-                        className={Resizable}
-                    > */}
+
                         <CustomEditor
                             decorate={decorate}
                             renderLeaf={renderLeaf}
-                            placeholder={defaultValue}
+                            placeholder={''}
                             onKeyDown={onKeyDown}
                             spellCheck="false"
                         />

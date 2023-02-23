@@ -6,6 +6,7 @@ import LogsView from "../views/LogsView";
 import { MatrixView } from "../views/MatrixView";
 import { VectorView } from "../views/VectorView";
 import { TraceView } from "./Traces/TraceView";
+
 export function DataViewItem(props: any) {
     // add a header for table view / json view
 
@@ -19,18 +20,17 @@ export function DataViewItem(props: any) {
     // get actual query from panel
     const actualQuery: any = useActualQuery({ panel, dataView });
     // get  actual query from panel
-
+    
     const [viewWidth, setViewWidth]: any = useState(0);
 
     useEffect(() => {
         if (viewRef?.current?.clientWidth) {
-            setViewWidth(viewRef.current.clientWidth);
+            setViewWidth(viewRef.current?.clientWidth);
         }
     }, [viewRef?.current?.clientWidth]);
 
     const [streamData, setStreamData] = useState(dataView.data); //
     const [tableData, setTableData] = useState(dataView.tableData || {});
-
     useEffect(() => {
         setStreamData(dataView.data);
     }, [dataView.data, setStreamData, isSplit]);
@@ -76,7 +76,7 @@ export function DataViewItem(props: any) {
         };
         return <TraceView {...traceProps} />;
     }
-    if (actualQuery && type === "matrix" && streamData.length > 0) {
+    if (actualQuery && type === "matrix" && streamData?.length > 0 ) {
         // return matrix type component
         const { limit }: any = actualQuery;
         const matrixProps = {
@@ -99,13 +99,15 @@ export function DataViewItem(props: any) {
         return <MatrixView {...matrixProps} />;
     }
 
-    if (actualQuery && type === "stream" && streamData.length > 0) {
+    if (actualQuery && type === "stream" && streamData?.length > 0) {
         const logsProps = {
             viewRef,
             panelSize,
             viewHeight,
+            viewWidth,
             setStreamClose,
             setMaxHeight,
+            logsVolumeData:dataView.logsVolumeData,
             setMinimize,
             actualQuery,
             total,
@@ -119,9 +121,14 @@ export function DataViewItem(props: any) {
         return <LogsView {...logsProps} />;
     }
 
-    if ((actualQuery && type === "vector" && streamData?.chartData?.length > 0) ||  (actualQuery && type === "vector"&& streamData?.tableData?.dataRows?.length > 0)) {
-        
-        
+    if (
+        (actualQuery &&
+            type === "vector" &&
+            streamData?.chartData?.length > 0) ||
+        (actualQuery &&
+            type === "vector" &&
+            streamData?.tableData?.dataRows?.length > 0)
+    ) {
         // return vector type (table) component
        const { limit }: any = actualQuery;
         const vectorProps = {
@@ -136,7 +143,7 @@ export function DataViewItem(props: any) {
             type,
             theight,
             streamData,
-           viewWidth,
+            viewWidth,
             limit,
             ...props,
         };

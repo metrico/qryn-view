@@ -2,8 +2,15 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { themes } from "../../../../../theme/themes";
 import { OPERATORS } from "../consts";
-import { multiType } from "../helpers";
-
+import { getTimeParsed, multiType } from "../helpers";
+import { AxiosResponse } from "axios";
+export interface LogsResponseData {
+    data: any;
+    status: any;
+}
+export interface LogsResponse extends AxiosResponse {
+    data: LogsResponseData;
+}
 
 export const useTheme = () => {
     const theme = useSelector(
@@ -27,7 +34,10 @@ export const useLabelOpts = (valuesOpts: any) => {
 
 export const useValueSelectOpts = (valuesOpts: any, labelValue: any) => {
     return useMemo(() => {
-        if (valuesOpts[labelValue.value]) {
+        if (
+            valuesOpts[labelValue.value] &&
+            Array.isArray(valuesOpts[labelValue.value])
+        ) {
             return valuesOpts[labelValue.value]?.map((val: any) => ({
                 label: val,
                 value: val,
@@ -48,9 +58,9 @@ export const useDefaultValue = (defaultValue: any, type: any, keyVal: any) => {
         }
 
         return { key: defaultValue, label: defaultValue };
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [defaultValue]);
 };
-
 
 export const useIsMulti = (type: any, keyVal: any) => {
     return useMemo(() => {
@@ -63,4 +73,44 @@ export const useIsMulti = (type: any, keyVal: any) => {
         }
         return false;
     }, [type, keyVal]);
+};
+
+export const useCurrentDataSource = (
+    id: string,
+    dataSources: any,
+    dataSourceURL: string
+) => {
+    return useMemo(() => {
+        const current = dataSources?.find((f: any) => f.id === id);
+        if (dataSourceURL !== "") {
+            current.url = dataSourceURL;
+        }
+
+        return current;
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id, dataSources]);
+};
+
+export const useTimeStart = (start: Date) => {
+    return useMemo(() => {
+        return getTimeParsed(start);
+    }, [start]);
+};
+
+export const useTimeEnd = (stop: Date) => {
+    return useMemo(() => {
+        return getTimeParsed(stop);
+    }, [stop]);
+};
+
+export const useLogsResponse = (response: LogsResponse) => {
+    return useMemo(() => {
+        if (response?.data?.data && Array.isArray(response?.data?.data)) {
+            return response.data.data?.map((val: string) => ({
+                label: val,
+                value: val,
+            }));
+        }
+        return [{ label: "", value: "" }];
+    }, [response]);
 };

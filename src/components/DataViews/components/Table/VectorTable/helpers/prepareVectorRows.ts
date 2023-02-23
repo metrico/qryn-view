@@ -11,8 +11,8 @@ export function prepareVectorRows(data:string) {
     const cols = prepareCols(data);
     try {
         let rows:any = [];
-        const dataLength = data.length;
-        const colsLength = cols.length;
+        const dataLength = data?.length;
+        const colsLength = cols?.length;
 
         for (let i = 0; i < dataLength; i++) {
             let dataRow:any = data[i];

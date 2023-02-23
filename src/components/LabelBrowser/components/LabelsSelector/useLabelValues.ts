@@ -6,13 +6,24 @@ function getTimeParsed(time: any) {
     return time.getTime() + "000000";
 }
 
-const getUrlType = (api: string, type: 'metrics' | 'logs', label: string, start: any, end: any) =>
+const getUrlType = (
+    api: string,
+    type: "metrics" | "logs",
+    label: string,
+    start: any,
+    end: any
+) =>
     ({
         metrics: `${api}/api/v1/label/${label}/values`,
         logs: `${api}/loki/api/v1/label/${label}/values?start=${start}&end=${end}`,
     }[type]);
 
-export default function useLabelValues(id: any, label: any, start: any, end: any) {
+export default function useLabelValues(
+    id: any,
+    label: any,
+    start: any,
+    end: any
+) {
     const dataSources = useSelector((store: any) => store.dataSources);
 
     const currentDataSource = useMemo(() => {
@@ -57,6 +68,7 @@ export default function useLabelValues(id: any, label: any, start: any, end: any
                 nanoEnd
             )
         );
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [label, setUrl, currentDataSource]);
 
     const headers = useState({
@@ -69,6 +81,7 @@ export default function useLabelValues(id: any, label: any, start: any, end: any
             method: "GET",
             headers: headers,
         }),
+          // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
 
@@ -77,7 +90,7 @@ export default function useLabelValues(id: any, label: any, start: any, end: any
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (currentDataSource.type !== "flux") {
+        if (currentDataSource.type !== "flux" && label !== "") {
             const apiRequest = async () => {
                 setLoading(true);
                 if (url && url !== "") {
@@ -94,7 +107,9 @@ export default function useLabelValues(id: any, label: any, start: any, end: any
 
             apiRequest();
         }
-    }, [options, url, currentDataSource]);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentDataSource, url, label]);
+
     return {
         response,
         controller: options.signal,
