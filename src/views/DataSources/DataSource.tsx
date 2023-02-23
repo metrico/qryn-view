@@ -30,6 +30,7 @@ export function DataSourceSetting(props: any) {
         },
     } = props;
 
+      // eslint-disable-next-line
     const [cookie, setCookie] = useCookies(["qryn-dev-cookie", "qryn-settings"]); // for testing cookies feature
 
     const dispatch = useDispatch();

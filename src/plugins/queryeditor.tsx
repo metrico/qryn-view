@@ -168,11 +168,13 @@ export default function QueryEditor({
 
     useEffect(() => {
         setEditorValue(value);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         setEditorValue(value);
         editor.children = value;
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value, setEditorValue]);
 
     const _themes: any = themes;

@@ -32,6 +32,7 @@ export default function useLogLabelValues(id: string, label: string) {
             setLoading(false)
         
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url, currentDataSource]);
 
  

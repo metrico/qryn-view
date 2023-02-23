@@ -40,6 +40,7 @@ export default function useLabels(id: any, dataSourceURL = "") {
         }
 
         return current;
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, dataSources]);
 
     const [type, setType] = useState(currentDataSource.type || "");
@@ -60,6 +61,7 @@ export default function useLabels(id: any, dataSourceURL = "") {
 
     useEffect(() => {
         setUrl(getUrlFromType(currentDataSource.url, type, timeStart, timeEnd));
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [setUrl, type, currentDataSource]);
 
     const [response, setResponse] = useState([]);
@@ -134,10 +136,7 @@ export default function useLabels(id: any, dataSourceURL = "") {
             };
             apiRequest();
         }
-
-        // if(!id) {
-        //     return ()=> null
-        // }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url, currentDataSource]);
 
     return {

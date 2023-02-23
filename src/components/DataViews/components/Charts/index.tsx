@@ -12,7 +12,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 //Packages
 import * as moment from "moment";
-import { format, getTime } from "date-fns";
+import { format } from "date-fns";
 //import   ReactFlot from "react-flot/temp";
 
 //Global
@@ -87,7 +87,8 @@ export default function QrynChart(props: any): any {
                 return "line";
             }
         }
-    }, [isLogsVolume && type === "stream"]);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLogsVolume]);
 
     const [chartType, setChartType] = useState(getInitialChartType);
 
@@ -329,12 +330,14 @@ export default function QrynChart(props: any): any {
         //setChartData(getDataParsed(isSpliced));
         setChartData(matrix);
         localStorage.setItem("labelsSelected", JSON.stringify([]));
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         setChartOptions(chartOptions);
         setElement(chartRef.current);
         drawChartFromData();
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [matrixData, isSpliced]);
 
     function drawChartFromData() {

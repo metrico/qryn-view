@@ -155,6 +155,7 @@ export default function QueryPreview(props: Props) {
 
     const renderLeaf = useCallback(
         (props) => <Leaf {...props} theme={theme} />,
+          // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
 
@@ -164,6 +165,7 @@ export default function QueryPreview(props: Props) {
             { type: "paragraph", children: [{ text: props.queryText }] },
         ]);
         editor.children = [{ text: props.queryText }];
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.queryText]);
 
 
@@ -171,6 +173,7 @@ export default function QueryPreview(props: Props) {
         (e) => {
             setInitialValue(e);
         },
+          // eslint-disable-next-line react-hooks/exhaustive-deps
         [initialValue]
     );
 

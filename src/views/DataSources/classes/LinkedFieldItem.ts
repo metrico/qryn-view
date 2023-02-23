@@ -18,6 +18,7 @@ export class LinkedFieldItem {
         this.ds_id = "logs";
         this.name = "traceID";
         this.regex = '^.*?"traceID" ="(w+)".*$/';
+          // eslint-disable-next-line
         this.query = "${__value.raw}";
         this.urlLabel = "";
         this.url = "";

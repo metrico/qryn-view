@@ -48,6 +48,7 @@ export default function Main() {
         } else {
             updateDataSourcesFromLocalUrl(dataSources, dispatch, navigate);
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

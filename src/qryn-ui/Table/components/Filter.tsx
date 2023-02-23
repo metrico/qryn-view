@@ -110,6 +110,7 @@ export function Filter<T extends RowData>({ column, table }: Props<T>) {
       typeof firstValue === 'number'
         ? []
         : Array.from(uniqueValues.keys()).sort(),
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     [uniqueValues]
   )
 

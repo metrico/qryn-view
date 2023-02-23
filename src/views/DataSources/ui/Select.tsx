@@ -40,6 +40,7 @@ export const Select = ({
             setInitialValue(selected);
             selectRef.current.value = selected;
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     return (

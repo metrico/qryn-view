@@ -56,6 +56,7 @@ export function useMetricsList(id: string, value: string) {
 
             apiRequest();
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataSource, timeParams.end, timeParams.start, valueFormatter]);
 
     return useMemo(() => {

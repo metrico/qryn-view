@@ -38,9 +38,9 @@ export interface OperationProps {
     labelFilter: LabelFilter;
     quantile: string | number
     kValue: number;
-    labels: [];
+    labels: any[];
     labelOpts: string[];
-    onExpChange: (expressions: []) => void;
+    onExpChange: (expressions: any[]) => void;
     setOperations: any;
     addBinary(index:number):void
 

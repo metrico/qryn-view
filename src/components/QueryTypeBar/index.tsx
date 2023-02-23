@@ -89,6 +89,7 @@ export default function QueryTypeBar(props:any) {
                 dispatch(panelAction(name, panel));
             }
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

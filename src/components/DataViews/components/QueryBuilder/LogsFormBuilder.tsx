@@ -1,6 +1,6 @@
 import { cx } from "@emotion/css";
 import { ThemeProvider, useTheme } from "@emotion/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useLogLabels from "./hooks/useLogLabels";
 import { FlexColumn } from "./styles";
 
@@ -48,26 +48,26 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
 
     const [builders, setBuilders] = useState<Builder[]>([initialBuilder]);
 
-    const [logsVolumeQuery, setLogsVolumeQuery] = useState("")
 
     const addBinaryOperation = useCallback(
         (idx: number) => {
             setBuilders((prev) => [...prev, { ...prev[idx], isBinary: true }]);
         },
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         [builders]
     );
 
 
     useEffect(()=>{
     if(builders[0].logsVolumeQuery !== '') {
-        setLogsVolumeQuery(builders[0].logsVolumeQuery)
         handleLogsVolumeChange(builders[0].logsVolumeQuery)
     }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[builders])
 
     useEffect(()=>{
         labelValueChange(finalQuery)
-        
+            // eslint-disable-next-line react-hooks/exhaustive-deps
     },[finalQuery])
 
     useEffect(() => {
@@ -110,6 +110,7 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
 
     useEffect(() => {
         setFinalQuery(finalQueryOperator(builders));
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [builders]);
 
     return (
@@ -122,7 +123,6 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
                     setBuilders={setBuilders}
                     builders={builders}
                     finalQuery={finalQuery}
-                    setLogsVolumeQuery={setLogsVolumeQuery}
                 />
                 <QueryPreview queryText={finalQuery} />
             </div>

@@ -42,6 +42,7 @@ export default function Panel(props: any) {
         if (panelQueries?.length > 0) {
             dispatch(panelDispatch(name, panelQueries));
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(()=>{

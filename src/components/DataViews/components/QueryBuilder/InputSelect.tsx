@@ -28,6 +28,7 @@ export const InputSelect = forwardRef((props: any, ref: any) => {
 
     useEffect(() => {
         updateSelectedOption(setSelectedOption, type, keyVal);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [labelsLength]);
 
     const onsSelectValueChange = (e: any) => {

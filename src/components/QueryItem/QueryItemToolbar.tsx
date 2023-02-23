@@ -40,6 +40,7 @@ export function QueryItemToolbar(props: any) {
 
     useEffect(() => {
         setExtValue(props.data.dataSourceId);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

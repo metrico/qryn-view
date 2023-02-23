@@ -80,8 +80,6 @@ export const OperationBodyStyles = (theme: any) => css`
     }
 `;
 
-type ranges = "$__interval" | "1m" | "5m" | "10m" | "1h" | "24h";
-
 type Props = {
     id: number;
     header: any;
@@ -99,9 +97,9 @@ type Props = {
     lineFilter: string;
     quantile: string | number;
     kValue: number;
-    labels: [];
+    labels: any[];
     labelOpts: string[];
-    onExpChange: (expressions: []) => void;
+    onExpChange: (expressions: any[]) => void;
     setOperations: any;
 };
 
@@ -171,6 +169,7 @@ export const RangeLabelsSelector = (props: any) => {
                 { name: "Select Label", value: "" },
             ]
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -210,6 +209,7 @@ export const JSONFormatBody = (props: any) => {
                 return m;
             });
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onExpRemove = (e: any, index: number) => {
@@ -290,6 +290,7 @@ export const PatternFormatBody = (props: Props) => {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [expression]
     );
 
@@ -308,7 +309,6 @@ export const UnwrapFormatBody: React.FC = (props: any) => {
     const { setOperations, id } = props;
     const theme = useTheme();
     const [labelValue, setLabelValue] = useState<string>("");
-    const [conversionFunction, setConversionFunction] = useState<string>("");
     const onLabelValueChange = useCallback(
         (e) => {
             setLabelValue(e.target.value);
@@ -324,25 +324,23 @@ export const UnwrapFormatBody: React.FC = (props: any) => {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [labelValue]
     );
 
-    const onConversionFunctionChange = useCallback(
-        (e) => {
-            setConversionFunction(e.target.value);
-            setOperations((prev: any) => {
-                const next = [...prev];
-                return next?.map((m: any) => {
-                    if (m.id === id) {
-                        m.conversion_function = e.target.value;
-                        return m;
-                    }
+    const onConversionFunctionChange = useCallback((e) => {
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.conversion_function = e.target.value;
                     return m;
-                });
+                }
+                return m;
             });
-        },
-        [conversionFunction]
-    );
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className={cx(OperationBodyStyles(theme))}>
@@ -381,6 +379,7 @@ export const RegexpFormatBody = (props: any) => {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [expression]
     );
 
@@ -416,6 +415,7 @@ export const LineFormatBody = (props: any) => {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [expression]
     );
 
@@ -454,10 +454,9 @@ export const RangeBody = (props: any) => {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [range]
     );
-
-
 
     return (
         <div className={cx(OperationBodyStyles(theme))}>
@@ -497,6 +496,7 @@ export const LabelRangeBody = (props: any) => {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [labels]
     );
 
@@ -519,6 +519,7 @@ export const LabelRangeBody = (props: any) => {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [labels]
     );
 
@@ -537,6 +538,7 @@ export const LabelRangeBody = (props: any) => {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [range]
     );
 
@@ -555,6 +557,7 @@ export const LabelRangeBody = (props: any) => {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [range]
     );
 
@@ -634,6 +637,7 @@ export const AggregationsBody = (props: any) => {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [labels]
     );
 
@@ -656,6 +660,7 @@ export const AggregationsBody = (props: any) => {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [labels]
     );
 
@@ -674,6 +679,7 @@ export const AggregationsBody = (props: any) => {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [kValue]
     );
 
@@ -751,7 +757,7 @@ export const LineFilterBody = (props: any) => {
                 });
             });
         },
-        [expression]
+        [id, setOperations]
     );
 
     return (
@@ -803,6 +809,7 @@ export const LabelFilterBody = (props: any) => {
                 return m;
             });
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [labelFilterState]);
 
     const onChange = useCallback(
@@ -813,7 +820,7 @@ export const LabelFilterBody = (props: any) => {
             }));
         },
 
-        [operatorOptions]
+        []
     );
     if (props.header !== "No Pipeline Errors") {
         return (
@@ -881,6 +888,7 @@ const BinaryOperationsBody = (props: any) => {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [binaryOperationState]
     );
 
@@ -913,7 +921,6 @@ const ranges = [
     "bytes_rate",
     "bytes_over_time",
     "absent_over_time",
-    
 ];
 
 const label_ranges = [
@@ -998,6 +1005,7 @@ export default function OperationContainer(props: Props) {
                 });
             });
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [opHeader]
     );
 
@@ -1035,7 +1043,3 @@ export default function OperationContainer(props: Props) {
     }
     return null;
 }
-
-// this should have
-// -- a header
-// a body

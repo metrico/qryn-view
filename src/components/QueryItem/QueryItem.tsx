@@ -43,8 +43,6 @@ export default function QueryItem(props: any) {
         dataSourceType,
         dataSourceId,
         direction,
-        isLogsVolume,
-        logsVolumeQuery,
         dataSourceURL,
     } = props.data;
     const dispatch = useDispatch();
@@ -60,11 +58,11 @@ export default function QueryItem(props: any) {
                 name?.slice(0, 1)?.toUpperCase() + "-" + String.fromCharCode(x)
         );
         return alphabet;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-        useEffect(() => {
-
-        if(dataView?.length < 1) {
+    useEffect(() => {
+        if (dataView?.length < 1) {
             dispatch(
                 getData(
                     dataSourceType,
@@ -80,11 +78,9 @@ export default function QueryItem(props: any) {
             );
         }
 
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
- 
-    
     function filterPanel(panel: any) {
         if (panel?.length > 1) {
             return panel?.filter((query: any) => query?.id !== props?.data?.id);
@@ -123,8 +119,7 @@ export default function QueryItem(props: any) {
         }
     };
 
-    const onDeleteQuery = ():void => {
-
+    const onDeleteQuery = (): void => {
         const filtered = filterPanel(panelSelected);
 
         const viewFiltered = filterPanel(dataView);
@@ -198,7 +193,7 @@ export default function QueryItem(props: any) {
                     onDeleteQuery={onDeleteQuery}
                     onAddQuery={onAddQuery}
                 />
-                {isQueryOpen[0] &&  <LabelBrowser {...props} />}
+                {isQueryOpen[0] && <LabelBrowser {...props} />}
             </QueryContainer>
         </ThemeProvider>
     );

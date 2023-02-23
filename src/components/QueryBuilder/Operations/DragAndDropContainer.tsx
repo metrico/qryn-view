@@ -66,12 +66,14 @@ export const OperationsContainer: FC<OperationsContainerProps> = (props: any) =>
                 ],
             })
         );
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const removeItem = useCallback((dragIndex: number) => {
         setOperations((prevCards: Item[]) =>
             update(prevCards, { $splice: [[dragIndex, 1]] })
         );
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const renderCard = useCallback((operation: Item, index: number) => {
@@ -95,6 +97,7 @@ export const OperationsContainer: FC<OperationsContainerProps> = (props: any) =>
                 removeItem={removeItem}
             />
         );
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

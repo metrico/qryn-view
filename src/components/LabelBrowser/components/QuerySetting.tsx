@@ -54,6 +54,7 @@ export const QuerySetting = (props:any) => {
                 }
             }
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     const getPanelQueryByID = (panel: any, queryId: any) => {
         return panel.find((query: any) => {

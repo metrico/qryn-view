@@ -19,6 +19,7 @@ export default function UseTooltip(this: void, plot: any) {
         plot.unhighlight();
         if (item) {
             let plotData = plot.getData();
+              // eslint-disable-next-line
             const [plotTime, _] = item.datapoint;
             const selectedPlots = JSON.parse(
                 localStorage.getItem("labelsSelected") || "null"
@@ -45,14 +46,14 @@ export default function UseTooltip(this: void, plot: any) {
 
                 if (plotTimes.includes(plotTime) && plotIsVisible) {
                     const plotIndex = plotTimes.indexOf(plotTime);
-
+                      // eslint-disable-next-line
                     const [_, value] = plotPoints.find(
                         ([time, _]: [time: any, _: any]) => time === plotTime
                     );
                     labelsList.push({
                         color: plotData[i].color,
                         label: plotData[i].label,
-                        value: value,
+                        value:value,
                         plot,
                         plotIndex,
                         item,

@@ -14,7 +14,6 @@ export function AuthFields(props: any) {
 
     const [activeFields, setActiveFields] = useState<any>([]);
     const [isEditing, setIsEditing] = useState(false);
-    const [saved, setSaved] = useState(false);
     const fields = useMemo(() => {
         return Object.entries(auth)
             ?.map(([name, field]: [name: any, field: any]) => ({

@@ -15,7 +15,7 @@ import {Label} from './types';
 export function MetricsLabelValueSelectors(props: any) {
 
 
-    const { dataSourceId, type, value, metricValueChange, onChange } = props;
+    const { dataSourceId,  value, metricValueChange, onChange } = props;
     const valuesOpts = useMetricsList(dataSourceId, value);
 
     const [labelValuesState, setLabelValuesState] = useState<Label[]>(
@@ -79,6 +79,7 @@ export function MetricsLabelValueSelectors(props: any) {
         const labValue = labelValueString || JSON.stringify("");
         const metricString = metricsToString(value, JSON.parse(labValue));
         metricValueChange(metricString); // pass the processing function from parent
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [labelValueString, value]);
 
     const resetLabelsState = (e: any) => {

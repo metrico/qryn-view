@@ -17,7 +17,7 @@ export function useCookiesAvailable(urlParams: any) {
         }
         return "";
     }, [urlParams, hasCookie]);
-
+      // eslint-disable-next-line
     const [cookie, _] = useCookies([cookieParam]);
 
     if (cookie[cookieParam] && cookie[cookieParam] !== "") {

@@ -1,4 +1,3 @@
-import setLabelValues from "../../../../../actions/setLabelValues";
 import {
     FormatOperators,
     RangeOperators,

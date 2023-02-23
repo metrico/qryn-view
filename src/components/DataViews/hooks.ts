@@ -44,6 +44,7 @@ export const useViewHeight = ({ type, actualQuery, total, dataView }: any) => {
             maxView = "fit-content";
         }
         return { regularCont, regularView, maxCont, maxView };
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [total, type, actualQuery?.tableView]);
 
     return viewHeight;
@@ -70,6 +71,7 @@ export const useTableHeight = ({ total, panelSize, dataView }: any) => {
         } else {
             return totalRows < 310 ? totalRows : 310;
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [panelSize]);
 
     return theight;

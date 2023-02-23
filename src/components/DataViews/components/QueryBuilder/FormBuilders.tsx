@@ -1,6 +1,6 @@
 /// it renders the label value selector and the operation functions
 import { Builder, FormBuilderProps } from "./types";
-import { FlexColumn, FlexWrap } from "./styles";
+import { FlexColumn} from "./styles";
 import { cx } from "@emotion/css";
 import { LabelValuesSelectors, OperationFunctions } from "./renderers";
 import { useTheme } from "./hooks";
@@ -66,6 +66,7 @@ export const BinaryOperationBar = (props: any) => {
             setValueMatch(e.target.value);
             onBinaryOptChange(e, name);
         },
+          // eslint-disable-next-line react-hooks/exhaustive-deps
         [valueMatch]
     );
     /// operator
@@ -74,6 +75,7 @@ export const BinaryOperationBar = (props: any) => {
             value: key,
             name: val,
         }));
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [binaryOperatorOpts]);
 
     const binaryVectorOpts = useMemo(() => {
@@ -81,6 +83,7 @@ export const BinaryOperationBar = (props: any) => {
             value: key,
             name: val,
         }));
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [binaryOperatorOpts]);
 
     return (
@@ -164,6 +167,7 @@ export const FormBuilder = (props: any) => {
         });
 
         setFinalQuery(query);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onClose = () => {

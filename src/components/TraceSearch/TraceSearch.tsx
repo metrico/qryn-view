@@ -88,7 +88,7 @@ export const DataSourceSelectOption = (props: any) => {
     const { Option } = components;
 
     const {
-        data: { label, icon },
+        data: { label },
     } = props;
 
     return (
@@ -102,7 +102,7 @@ export const DataSourceSelectOption = (props: any) => {
 
 export const DataSourceSelectSingleValue = (props: any) => {
     const {
-        data: { icon, label },
+        data: { label },
     } = props;
     return (
         <div style={SingleValueStyle}>
@@ -176,7 +176,7 @@ export default function TracesSearch(props: any) {
         traceNameOpts[0] || { name: "", value: "", label: "" }
     );
 
-    const [buttonActive, setButtonActive] = useState(false);
+  
 
     const theme = useMemo(() => {
         return themes[storeTheme];
@@ -196,12 +196,7 @@ export default function TracesSearch(props: any) {
         if (serviceNameOpts.length > 0) {
             setUrlString(formatUrl(urlState));
         }
-
-        if (searchValue.value !== "") {
-            setButtonActive(true);
-        } else {
-            setButtonActive(false);
-        }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [urlState]);
 
     const emit = () => {
@@ -219,7 +214,6 @@ export default function TracesSearch(props: any) {
     };
 
     const onServiceChange = (e: any) => {
-        console.log(e);
         const value = e?.value || "";
         setSearchValue({ name: value, value: value, label: value });
         setUrlState((prev) => ({ ...prev, searchName: value }));
@@ -227,7 +221,6 @@ export default function TracesSearch(props: any) {
     };
 
     const onSpanChange = (e: any) => {
-        console.log(e);
         const value = e?.value || "";
         setSpanValue({ name: value, value: value, label: value });
         setUrlState((prev) => ({ ...prev, name: value }));

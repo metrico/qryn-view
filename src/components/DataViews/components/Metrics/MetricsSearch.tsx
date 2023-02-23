@@ -22,7 +22,6 @@ export default function MetricsSearch(props: any) {
         metricsOpts[0] || { label: "", value: "" }
     );
 
-    const [labelFilters, setLabelFilters] = useState([] as any); // check label filters
     //  this one  should go upstairs and be stored as default value
     const storeTheme = useSelector(
         (store: { theme: "light" | "dark" }) => store.theme
@@ -43,19 +42,7 @@ export default function MetricsSearch(props: any) {
         handleMetricValueChange(e);
     };
     const onLabelValueChange = (e: any) => {
-        setLabelFilters((prev: any) => {
-            if (prev?.length > 0) {
-                if (prev?.some((s: any) => s.id === e.id)) {
-                    return prev.map((labelFilter: any) => {
-                        if (labelFilter.label === e.label) {
-                            return { ...e };
-                        }
-                        return labelFilter;
-                    });
-                }
-            }
-            return [e];
-        });
+
     };
 
     return (

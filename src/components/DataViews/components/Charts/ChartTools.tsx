@@ -1,5 +1,4 @@
 import { ThemeProvider } from "@emotion/react";
-import { useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { useTheme } from "../QueryBuilder/hooks";
 import HandleLimitButton from "./HandleLimitButton";

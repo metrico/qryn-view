@@ -30,7 +30,8 @@ export const LabelValue = (props: any) => {
         if (isValueSelected || data?.metric === value.name) {
             return selectedStyle;
         } else return {};
-    }, [isValueSelected, value.selected, data.metric, value.name]);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isValueSelected,  value.selected, data.metric, value.name]);
 
     useEffect(() => {
         setIsValueSelected(value.selected);
@@ -98,6 +99,7 @@ export default function ValuesList(props: any) {
         if (typeof values !== 'undefined') {
             setValsSelection(values)
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     },[panelQuery])
 
     const valuesFromProps = useMemo(() => {
@@ -112,6 +114,7 @@ export default function ValuesList(props: any) {
         }
 
         return actLabel?.values;
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.data.labels]);
 
     const resp = useMemo(() => {
@@ -134,6 +137,7 @@ export default function ValuesList(props: any) {
         } else {
             return [];
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [response]);
 
     const [valuesState, setValuesState] = useState(resp);
@@ -299,6 +303,7 @@ export default function ValuesList(props: any) {
                 setFilterValuesState((prev: any) => valuesState);
             }
         },
+          // eslint-disable-next-line react-hooks/exhaustive-deps
         [filterState]
     );
 

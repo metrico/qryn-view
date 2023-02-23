@@ -201,6 +201,7 @@ export function UpdateStateFromQueryParams() {
             });
             (window as any).location.hash = urlFromHash;
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -248,5 +249,6 @@ export function UpdateStateFromQueryParams() {
 
             (window as any).location.hash = paramsFromHash;
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [STORE_KEYS]);
 }

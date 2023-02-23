@@ -86,8 +86,7 @@ export default function Table(props: any) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
-    const [columnResizeMode, setColumnResizeMode] =
-        useState<ColumnResizeMode>("onChange");
+    const [columnResizeMode] = useState<ColumnResizeMode>("onChange");
 
     const table = useReactTable({
         data,
@@ -125,6 +124,7 @@ export default function Table(props: any) {
                 table.setSorting([{ id: "fullName", desc: false }]);
             }
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [table.getState().columnFilters[0]?.id]);
 
     return (

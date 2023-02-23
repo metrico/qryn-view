@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
 import { AxiosResponse } from "axios";
 import { getApiRequest, getUrlFromType } from "../helpers";
 import {
     useTimeStart,
     useTimeEnd,
     useCurrentDataSource,
-    useLogsResponse,
 } from "./";
 import { UseLogLabelsResponse } from "../types";
 export interface LogsResponseData {
@@ -44,6 +42,7 @@ export default function useLogLabels(
     useEffect(() => {
    
         getApiRequest(currentDataSource, url, setLoading, setResponse);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentDataSource]);
 
     //const logsResponse = useLogsResponse(response);

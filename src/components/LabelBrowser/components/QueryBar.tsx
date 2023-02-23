@@ -32,9 +32,6 @@ import ShowQuerySettingsButton from "./Buttons/ShowQuerySettingsButton";
 /**Helpers */
 import queryInit from "../helpers/queryInit";
 import onQueryValid from "../helpers/onQueryValid";
-import { decodeQuery, decodeExpr } from "../../../helpers/decodeQuery";
-/**Hooks */
-import { sendLabels } from "../../../hooks/useLabels";
 /**Components */
 import QueryTypeBar from "../../QueryTypeBar";
 import { QuerySetting } from "./QuerySetting";
@@ -111,7 +108,8 @@ export const QueryBar = (props: any) => {
     const [queryValid, setQueryValid] = useState<any>(false);
     const [queryValue, setQueryValue] = useState<any>(queryInit(data.expr));
     const [traceQueryType, setTraceQueryType] = useState<any>("traceId");
-    const [labels, setLabels] = useState<any>([]);
+    const [labels] = useState<any>([]);
+    // eslint-disable-next-line
     const [traceSearch, setTraceSearch] = useState<any>({});
     const [showStatsOpen, setShowStatsOpen] = useState<any>(
         isShowStats || false
@@ -141,6 +139,7 @@ export const QueryBar = (props: any) => {
             console.error(e);
             return exprQuery;
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataSourceId]);
 
     const actLocalDs = useMemo(() => {
@@ -221,6 +220,7 @@ export const QueryBar = (props: any) => {
                     currentDataSource?.url
                 )
             );
+              // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // force single view from small width
@@ -229,6 +229,7 @@ export const QueryBar = (props: any) => {
         if (isTabletOrMobile && isSplit) {
             dispatch(setSplitView(false));
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isTabletOrMobile]);
 
     // changes on changin dataSource Id
@@ -316,6 +317,7 @@ export const QueryBar = (props: any) => {
                 )
             );
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataSourceId, id]);
 
     // changes on changing exp
@@ -329,16 +331,19 @@ export const QueryBar = (props: any) => {
                 setLogsLevel(expr, true);
             }
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [expr]);
 
     useEffect(() => {
         setLogsLevel(queryInput, isLogsVolume);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryInput]);
 
     // handlers
 
     function setLogsLevel(queryInput: string, isLogsVolume: boolean) {
         if (isLogsVolume && queryInput !== "") {
+              // eslint-disable-next-line
             let pureLabels = queryInput.match(/[^{\}]+(?=})/g);
             if (Array.isArray(pureLabels) && pureLabels?.length > 0) {
                 let pureLabelsString = "{" + pureLabels?.join(",") + "}";

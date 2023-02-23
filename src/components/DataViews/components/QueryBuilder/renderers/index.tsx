@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, FC } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { OperationsContainer } from "../../../../QueryBuilder/Operations/DragAndDropContainer";
 import OperationSelector from "../../../../QueryBuilder/Operations/OperationSelector";
 import { InitialAddButton } from "../InitialAddButton";
@@ -109,6 +109,7 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
         const logsString = logsToString(JSON.parse(labValue));
         setLabelsString(logsString);
         setFinalQuery(logsString);
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [labelValueString]);
 
     // update builder state at label values change
@@ -128,6 +129,7 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
                 return builder;
             });
         });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [labelValuesState]);
 
     // here we should set the logs volume string
@@ -191,6 +193,7 @@ export const OperationFunctions = (props: any) => {
             let res = OperationsManager(labelValueString, operations);
             setFinalQuery(res);
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [operations, labelValueString]);
 
     // add new operation function
@@ -211,6 +214,7 @@ export const OperationFunctions = (props: any) => {
                 setOperatorByType(opType, initialOperator, prev)
             );
         },
+          // eslint-disable-next-line react-hooks/exhaustive-deps
         [operations, labelSeries, labelsString]
     );
 
@@ -225,6 +229,7 @@ export const OperationFunctions = (props: any) => {
                 return builder;
             });
         });
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [operations]);
 
     return (

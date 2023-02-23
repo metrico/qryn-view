@@ -68,6 +68,7 @@ export default function useLabelValues(
                 nanoEnd
             )
         );
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [label, setUrl, currentDataSource]);
 
     const headers = useState({
@@ -80,6 +81,7 @@ export default function useLabelValues(
             method: "GET",
             headers: headers,
         }),
+          // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
 
@@ -105,6 +107,7 @@ export default function useLabelValues(
 
             apiRequest();
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentDataSource, url, label]);
 
     return {

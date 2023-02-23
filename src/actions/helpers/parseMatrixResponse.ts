@@ -134,8 +134,6 @@ export function parseMatrixResponse(responseProps: QueryResult) {
 
         if (prevDV.some((dv: any) => dv.id === panelResult.id)) {
             let newPanel = [];
-
-            let prev = prevDV?.find((dv: any) => dv.id === panelResult.id);
             // if not previous stream type and no logsVolume active
             if (isLogsVolume) {
                 newPanel = [...prevDV];

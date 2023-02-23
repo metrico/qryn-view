@@ -63,7 +63,6 @@ export interface FormBuilderProps {
     builders: Builder[];
     finalQuery: string;
     setBuilders: Function;
-    setLogsVolumeQuery: Function;
     dataSourceId: string;
     logsResponse: any;
     addBinary(idx: number): void;
