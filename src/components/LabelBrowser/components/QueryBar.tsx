@@ -685,7 +685,7 @@ export const QueryBar = (props: any) => {
         let querySubmit = "";
         let customStep = 0;
         let isMatrix = false;
-        let matrixType = queryExpr.match(/\((?:[^]*?)*\)/);
+        let matrixType = queryExpr.match(/\((.*?)\)/);
         if (matrixType !== null) {
             isMatrix = true;
         }
