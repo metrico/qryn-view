@@ -11,15 +11,16 @@ const QueriesContainerStyled = styled.div`
 `;
 export default function QueriesContainer(props: any) {
     const { queries } = props;
-    const queriesLoad = useMemo(()=>queries,[queries])
+
+    const queriesLoad = useMemo(() => {
+        return queries;
+    }, [queries]);
     return (
         <QueriesContainerStyled>
             {queriesLoad &&
+                queriesLoad?.length > 0 &&
                 queriesLoad.map((query: any, idx: number) => (
-                    <QueryItem 
-                    {...props} 
-                    data={query} 
-                    key={idx} />
+                    <QueryItem {...props} data={query} key={idx} />
                 ))}
         </QueriesContainerStyled>
     );
