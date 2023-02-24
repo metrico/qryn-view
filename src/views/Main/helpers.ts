@@ -53,7 +53,7 @@ export function updateDataSourcesWithUrl(
 
     if (apiUrl === "") {
         urlApi = true;
-        apiUrl = url;
+        apiUrl = decodeURIComponent(url);
     }
 
     const dsCP = [...dataSources];
