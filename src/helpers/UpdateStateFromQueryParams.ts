@@ -162,7 +162,9 @@ export function UpdateStateFromQueryParams() {
                                 []
                             );
 
-                            dispatch(STORE_ACTIONS[param](parsed));
+                            if(parsed?.length > 0) {
+                                dispatch(STORE_ACTIONS[param](parsed));
+                            }
                         } catch (e) {
                             console.log(e);
                         }
