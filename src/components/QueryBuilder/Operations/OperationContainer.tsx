@@ -78,6 +78,20 @@ export const OperationBodyStyles = (theme: any) => css`
         cursor: pointer;
         font-size: 12px;
     }
+
+    .binary-operation-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: ${theme.widgetContainer};
+        border-radius: 3px;
+        padding: 6px;
+        .binary-operation-cont {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+    }
 `;
 
 type Props = {

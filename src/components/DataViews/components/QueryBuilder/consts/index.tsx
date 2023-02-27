@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { operatorsTypes, Label } from "../types";
+import { operatorsTypes, Label,Builder } from "../types";
 import {useMemo} from 'react'
 export const OPERATOR_OPTIONS = [
     { label: "=", value: "equals" },
@@ -32,3 +32,32 @@ export const useInitialOperation =() => useMemo(()=>({
     name: "none",
     header: <div>{"Container Header"}</div>,
 }),[]);
+
+export const initialBuilder: Builder = {
+    operations: [],
+    labelsState: [],
+    binaryValue: { binaryOpt: "divide", vectOpt: "on", vectValue: "" },
+    builderResult: "",
+    logsVolumeQuery:"",
+    isBinary: false,
+};
+
+export const binaryOperatorOpts: any = {
+    minus: "-",
+    plus: "+",
+    by: "*",
+    divide: "/",
+    exp: "^",
+    equals: "==",
+    not_equals: "!=",
+    modulo: "%",
+    more: "<",
+    less: ">",
+    less_equals: "<=",
+    more_equals: ">=",
+};
+
+export const binaryVectorOpt = {
+    on: "on",
+    ignoring: "ignoring",
+};

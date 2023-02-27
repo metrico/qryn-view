@@ -1,4 +1,12 @@
 import styled from "@emotion/styled";
+import {css} from '@emotion/css';
+
+export const FlexWrap = css`
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 3px;
+`;
+
 
 export const LogRowStyled = styled.div`
     color: ${({theme}: any) => theme.textColor};
@@ -46,3 +54,5 @@ export const RowsCont = styled.div`
     overflow-y: auto;
     height: calc(100% - 20px);
 `;
+
+

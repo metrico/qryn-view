@@ -1,15 +1,8 @@
 import { css, cx } from "@emotion/css";
 import { ThemeProvider } from "@emotion/react";
-
+import { FlexWrap } from "../styled";
 import { useTheme } from "../../QueryBuilder/hooks";
 import { LogsFormBuilder } from "../../QueryBuilder/LogsFormBuilder";
-
-export const FlexWrap = css`
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 3px;
-`;
-
 export default function LogsSearch(props: any) {
     const {
         handleLogValueChange,
@@ -21,7 +14,6 @@ export default function LogsSearch(props: any) {
     } = props;
 
     const handleLogChange = (e: string) => {
-        // this handles a string
         handleLogValueChange(e);
     };
 

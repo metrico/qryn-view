@@ -5,6 +5,7 @@ import {
     LineFilterOperators,
     LabelFilterOperators,
     BinaryOperations,
+    TimeFunctionOperators
 } from "../../../../QueryBuilder/Operations/builders";
 import { logsToString } from "../helpers";
 
@@ -32,7 +33,6 @@ const ranges = [
     "bytes_rate",
     "bytes_over_time",
     "absent_over_time",
-    
 ];
 
 // unwrapped expressions
@@ -46,7 +46,7 @@ const label_ranges = [
     "last_over_time",
     "stdvar_over_time",
     "stddev_over_time",
-    "quantile_over_time"
+    "quantile_over_time",
 ];
 
 const line_filters = [
@@ -84,8 +84,10 @@ const label_filters = [
     "label_filter_expression",
 ];
 
-const aggregations = ["sum", "min", "max", "avg", "stddev", "stdvar", "count"];
+const aggregations = ["sum", "min", "max", "avg", "stddev", "stdvar", "count", "count_values"];
 const aggregations_k = ["topk", "bottomk"];
+
+const time_functions = ["day_of_month", "day_of_week", "days_in_month"];
 
 const isSingleExpression = (expr: string) =>
     ["line_format", "regexp", "pattern"].includes(expr);
@@ -151,6 +153,8 @@ export const OperationsManager: OperationsManagerType = (
                         }
                     }
 
+
+
                     // json case, multiple expressions
                     if (operation.name === "json") {
                         // at json format we could have multiple expressions
@@ -174,7 +178,7 @@ export const OperationsManager: OperationsManagerType = (
                     // initialize with operation type
                     result = RangeOperators(operation.name)["range"];
                     result.setRange(operation.range || "$__interval");
-              
+
                     result = result.build(resultType);
                 }
 
@@ -183,8 +187,8 @@ export const OperationsManager: OperationsManagerType = (
                     result = RangeOperators(operation.name)["label_range"];
                     setRangeLabels(result, operation.labels);
                     result.updRange(operation.range || "$__interval");
-                    if(operation.name === 'quantile_over_time'){
-                        result.setQuantile(operation.quantile)
+                    if (operation.name === "quantile_over_time") {
+                        result.setQuantile(operation.quantile);
                     }
                     result = result.build(resultType);
                 }
@@ -225,6 +229,14 @@ export const OperationsManager: OperationsManagerType = (
                         operation?.labelFilter?.operator || "equals"
                     );
                     result.setValue(operation?.labelFilter?.value || "");
+
+                    result = result.build(resultType);
+                }
+
+                if( time_functions.includes(operation.name)) {
+                    
+                    const resultType = setResultType(result, logString);
+                    result = TimeFunctionOperators['time_function'](operation.name)
 
                     result = result.build(resultType);
                 }

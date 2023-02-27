@@ -168,6 +168,12 @@ export interface UnwrapBuilderProps extends CommonFormatProps {
     setUnwrapFmt(): void;
 }
 
+export interface TimeFunctionProps extends CommonFormatProps {
+    result:string;
+    setFn(initial:string):void;
+    build(initial:string):string;
+}
+
 // Functions
 
 export type JSONBuilderFn = () => JSONBuilderProps;
@@ -187,6 +193,8 @@ export type UnPackFn = () => UnPackBuilderProps;
 export type UnwrapFmtFn = () => UnwrapBuilderProps;
 
 export type LogFmtFn = () => LogFmtBuilderProps;
+
+export type TimeFunctionFn = (timeFunction:TimeFunction) => TimeFunctionProps; 
 
 export type LabelFilterFn = (labelFilter: string) => LabelFilterProps;
 
@@ -231,7 +239,7 @@ export type QuantileRangeOperator = "quantile_over_time";
 export type AggrType = "by" | "without";
 
 export type AggregationsOp = // normal aggregations
-    "sum" | "min" | "max" | "avg" | "stddev" | "stdvar" | "count";
+    "sum" | "min" | "max" | "avg" | "stddev" | "stdvar" | "count" | "count_values";
 
 export type BTKAggregationsOp = // topk / bottomk
     "bottomk" | "topk";
@@ -267,3 +275,5 @@ export type BinaryOperation =
     | "binary_operation_with_query";
 
     export type ConversionFn = 'duration' | 'duration_seconds' | 'bytes' | ''
+
+    export type TimeFunction = 'day_of_month'| 'day_of_week'| 'days_in_month';

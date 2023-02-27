@@ -14,12 +14,14 @@ import {
     LineFilterFn,
     LabelFilterFn,
     BinaryOperationFn,
+    TimeFunctionFn,
     AggregationsOp,
     BTKAggregationsOp,
     AggrType,
     LineFilter,
     LabelFilter,
     BinaryOperation,
+    TimeFunction
 } from "../types";
 
 export const JSONBuilder: JSONBuilderFn = () => ({
@@ -438,6 +440,17 @@ export const BinaryOperationBuilder: BinaryOperationFn = (
     },
 });
 
+export const TimeFunctionOperationBuilder: TimeFunctionFn = (timeFunction) => ({
+    result:"",
+    setFn(initial) {
+        this.result = `${timeFunction}(${initial})`
+    },
+    build(initial) {
+        this.setFn(initial)
+        return this.result
+    }
+})
+
 export const FormatOperators: any = {
     json: JSONBuilder,
     logfmt: LogFmtBuilder,
@@ -470,4 +483,8 @@ export const LabelFilterOperators: any = (labelfilter: LabelFilter) => ({
 
 export const BinaryOperations: any = (binaryOperation: BinaryOperation) => ({
     binary_operation: BinaryOperationBuilder(binaryOperation),
+});
+
+export const TimeFunctionOperators: any = (timeFunction: TimeFunction) => ({
+    time_function:TimeFunctionOperationBuilder(timeFunction),
 });

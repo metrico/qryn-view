@@ -1,6 +1,6 @@
 /// it renders the label value selector and the operation functions
 import { Builder, FormBuilderProps } from "./types";
-import { FlexColumn} from "./styles";
+import { FlexColumn } from "./styles";
 import { cx } from "@emotion/css";
 import { LabelValuesSelectors, OperationFunctions } from "./renderers";
 import { useTheme } from "./hooks";
@@ -10,6 +10,7 @@ import {
     OperationBodyStyles,
 } from "../../../QueryBuilder/Operations/OperationContainer";
 import { logsToString } from "./helpers";
+import { binaryOperatorOpts, binaryVectorOpt } from "./consts";
 
 // get the initial state from props
 export const FormBuilders = (props: FormBuilderProps) => {
@@ -38,25 +39,6 @@ export const FormBuilders = (props: FormBuilderProps) => {
 
 // return an array of builders
 
-const binaryOperatorOpts = {
-    minus: "-",
-    plus: "+",
-    by: "*",
-    divide: "/",
-    exp: "^",
-    equals: "==",
-    not_equals: "!=",
-    modulo: "%",
-    more: "<",
-    less: ">",
-    less_equals: "<=",
-    more_equals: ">=",
-};
-
-const binaryVectorOpt = {
-    on: "on",
-    ignoring: "ignoring",
-};
 export const BinaryOperationBar = (props: any) => {
     const { onBinaryClose, theme, onBinaryOptChange, binaryValue } = props;
     const [valueMatch, setValueMatch] = useState(binaryValue.vectValue || "");
@@ -66,7 +48,7 @@ export const BinaryOperationBar = (props: any) => {
             setValueMatch(e.target.value);
             onBinaryOptChange(e, name);
         },
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [valueMatch]
     );
     /// operator
@@ -75,7 +57,7 @@ export const BinaryOperationBar = (props: any) => {
             value: key,
             name: val,
         }));
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [binaryOperatorOpts]);
 
     const binaryVectorOpts = useMemo(() => {
@@ -83,29 +65,14 @@ export const BinaryOperationBar = (props: any) => {
             value: key,
             name: val,
         }));
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [binaryOperatorOpts]);
-
+    // make a component out of this
     return (
         <div>
             <div className={cx(OperationBodyStyles(theme))}>
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        background: theme.widgetContainer,
-                        borderRadius: "3px",
-                        padding: "6px",
-                    }}
-                >
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "6px",
-                        }}
-                    >
+                <div className="binary-operation-bar">
+                    <div className="binary-operation-cont">
                         <label>Operator</label>{" "}
                         <BinaryOperatorsSelector
                             initial={binaryValue.binaryOpt || "divide"}
@@ -167,7 +134,7 @@ export const FormBuilder = (props: any) => {
         });
 
         setFinalQuery(query);
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onClose = () => {
