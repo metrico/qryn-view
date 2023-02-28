@@ -5,7 +5,7 @@ import {
     LineFilterOperators,
     LabelFilterOperators,
     BinaryOperations,
-    TimeFunctionOperators
+    TimeFunctionOperators,
 } from "../../../../QueryBuilder/Operations/builders";
 import { logsToString } from "../helpers";
 
@@ -26,6 +26,7 @@ const formats = [
 ];
 const conversionFn = ["duration", "duration_seconds", "bytes", ""];
 const ranges = [
+    // logs range
     "rate",
     "rate_counter",
     "count_over_time",
@@ -33,6 +34,30 @@ const ranges = [
     "bytes_rate",
     "bytes_over_time",
     "absent_over_time",
+];
+
+const range_functions = [
+    // metrics range
+    "changes",
+    "rate",
+    "irate",
+    "increase",
+    "idelta",
+    "delta",
+    "holt winters",
+    "predict linear",
+    "quantile over time",
+    "deriv",
+    "resets",
+    "sum_over_time",
+    "avg_over_time",
+    "min_over_time",
+    "max_over_time",
+    "count_over_time",
+    "last_over_time",
+    "present_over_time",
+    "absent_over_time",
+    "stddev_over_time",
 ];
 
 // unwrapped expressions
@@ -79,12 +104,36 @@ const binary_operations = [
 // filter with expression
 
 const label_filters = [
-    "no_pipeline_errors",
+    "no_pipeline_errors", // this one has no input, only filters.
     "ip_label_filter_expression",
     "label_filter_expression",
 ];
 
-const aggregations = ["sum", "min", "max", "avg", "stddev", "stdvar", "count", "count_values"];
+const trigonometric_functions = [
+    "acos",
+    "acosh",
+    "asin",
+    "asinh",
+    "atan",
+    "atanh",
+    "cos",
+    "cosh",
+    "sin",
+    "sinh",
+    "tan",
+    "tanh",
+];
+
+const aggregations = [
+    "sum",
+    "min",
+    "max",
+    "avg",
+    "stddev",
+    "stdvar",
+    "count",
+    "count_values",
+];
 const aggregations_k = ["topk", "bottomk"];
 
 const time_functions = ["day_of_month", "day_of_week", "days_in_month"];
@@ -152,8 +201,6 @@ export const OperationsManager: OperationsManagerType = (
                             );
                         }
                     }
-
-
 
                     // json case, multiple expressions
                     if (operation.name === "json") {
@@ -233,10 +280,11 @@ export const OperationsManager: OperationsManagerType = (
                     result = result.build(resultType);
                 }
 
-                if( time_functions.includes(operation.name)) {
-                    
+                if (time_functions.includes(operation.name)) {
                     const resultType = setResultType(result, logString);
-                    result = TimeFunctionOperators['time_function'](operation.name)
+                    result = TimeFunctionOperators["time_function"](
+                        operation.name
+                    );
 
                     result = result.build(resultType);
                 }

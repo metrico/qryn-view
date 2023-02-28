@@ -15,13 +15,15 @@ import {
     LabelFilterFn,
     BinaryOperationFn,
     TimeFunctionFn,
+    TrigonometricFn,
     AggregationsOp,
     BTKAggregationsOp,
     AggrType,
     LineFilter,
     LabelFilter,
     BinaryOperation,
-    TimeFunction
+    TimeFunction,
+    Trigonometric,
 } from "../types";
 
 export const JSONBuilder: JSONBuilderFn = () => ({
@@ -178,9 +180,9 @@ export const RangeBuilder: RangeFn = (rangeType) => ({
     setRate() {
         this.result += ` [${this.range}])`;
     },
-  
+
     setFn(initial: string) {
-            this.result = `${rangeType}(${initial}`;
+        this.result = `${rangeType}(${initial}`;
     },
     build(initial: string) {
         this.setFn(initial);
@@ -441,16 +443,27 @@ export const BinaryOperationBuilder: BinaryOperationFn = (
 });
 
 export const TimeFunctionOperationBuilder: TimeFunctionFn = (timeFunction) => ({
-    result:"",
+    result: "",
     setFn(initial) {
-        this.result = `${timeFunction}(${initial})`
+        this.result = `${timeFunction}(${initial})`;
     },
     build(initial) {
-        this.setFn(initial)
-        return this.result
-    }
-})
-
+        this.setFn(initial);
+        return this.result;
+    },
+});
+export const TrigonometricFunctionOperationBuilder: TrigonometricFn = (
+    trigonometric
+) => ({
+    result: "",
+    setFn(initial) {
+        this.result = `${trigonometric}(${initial})`;
+    },
+    build(initial) {
+        this.setFn(initial);
+        return this.result;
+    },
+});
 export const FormatOperators: any = {
     json: JSONBuilder,
     logfmt: LogFmtBuilder,
@@ -486,5 +499,12 @@ export const BinaryOperations: any = (binaryOperation: BinaryOperation) => ({
 });
 
 export const TimeFunctionOperators: any = (timeFunction: TimeFunction) => ({
-    time_function:TimeFunctionOperationBuilder(timeFunction),
+    time_function: TimeFunctionOperationBuilder(timeFunction),
+});
+export const TrigonometricOperators: any = (
+    trigonometricOperation: Trigonometric
+) => ({
+    trigonometric: TrigonometricFunctionOperationBuilder(
+        trigonometricOperation
+    ),
 });

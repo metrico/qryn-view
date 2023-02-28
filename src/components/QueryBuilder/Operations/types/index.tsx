@@ -41,7 +41,7 @@ export interface LabelRangeProps {
     setFn(initial: string): void;
     updRange(range: string): void;
     setRange(): void;
-    setQuantile(quantile:string|number):void
+    setQuantile(quantile: string | number): void;
     addLabel(label: string): void;
     setLabels(): void;
     build(initial: string): string;
@@ -160,18 +160,24 @@ export interface UnPackBuilderProps extends CommonFormatProps {
     setUnPack(): string;
 }
 export interface UnwrapBuilderProps extends CommonFormatProps {
-    labelValue:string;
-    conversion_function: ConversionFn
-    setLabelValue(labelValue:string):void
-    setConversionFn(conversion_function:ConversionFn):void
-    setConversionFnString():void
+    labelValue: string;
+    conversion_function: ConversionFn;
+    setLabelValue(labelValue: string): void;
+    setConversionFn(conversion_function: ConversionFn): void;
+    setConversionFnString(): void;
     setUnwrapFmt(): void;
 }
 
 export interface TimeFunctionProps extends CommonFormatProps {
-    result:string;
-    setFn(initial:string):void;
-    build(initial:string):string;
+    result: string;
+    setFn(initial: string): void;
+    build(initial: string): string;
+}
+
+export interface TrigonometricBuilderProps extends CommonFormatProps {
+    result: string;
+    setFn(initial: string): void;
+    build(initial: string): string;
 }
 
 // Functions
@@ -194,7 +200,7 @@ export type UnwrapFmtFn = () => UnwrapBuilderProps;
 
 export type LogFmtFn = () => LogFmtBuilderProps;
 
-export type TimeFunctionFn = (timeFunction:TimeFunction) => TimeFunctionProps; 
+export type TimeFunctionFn = (timeFunction: TimeFunction) => TimeFunctionProps;
 
 export type LabelFilterFn = (labelFilter: string) => LabelFilterProps;
 
@@ -212,6 +218,10 @@ export type AggregationsBTKFn = (
 
 export type LineFilterFn = (linefilter: LineFilter) => LineFilterBuilderProps;
 
+export type TrigonometricFn = (
+    trigonometricOperation: Trigonometric
+) => TrigonometricBuilderProps;
+
 // Range types
 
 export type SimpleRangeOperator =
@@ -221,8 +231,7 @@ export type SimpleRangeOperator =
     | "sum_over_time"
     | "bytes_rate"
     | "bytes_over_time"
-    | "absent_over_time"
-    
+    | "absent_over_time";
 
 export type LabelRangeOperator =
     | "avg_over_time"
@@ -239,7 +248,15 @@ export type QuantileRangeOperator = "quantile_over_time";
 export type AggrType = "by" | "without";
 
 export type AggregationsOp = // normal aggregations
-    "sum" | "min" | "max" | "avg" | "stddev" | "stdvar" | "count" | "count_values";
+
+        | "sum"
+        | "min"
+        | "max"
+        | "avg"
+        | "stddev"
+        | "stdvar"
+        | "count"
+        | "count_values";
 
 export type BTKAggregationsOp = // topk / bottomk
     "bottomk" | "topk";
@@ -274,6 +291,20 @@ export type BinaryOperation =
     | "less_or_equal_to"
     | "binary_operation_with_query";
 
-    export type ConversionFn = 'duration' | 'duration_seconds' | 'bytes' | ''
+export type ConversionFn = "duration" | "duration_seconds" | "bytes" | "";
 
-    export type TimeFunction = 'day_of_month'| 'day_of_week'| 'days_in_month';
+export type TimeFunction = "day_of_month" | "day_of_week" | "days_in_month";
+
+export type Trigonometric =
+    | "acos"
+    | "acosh"
+    | "asin"
+    | "asinh"
+    | "atan"
+    | "atanh"
+    | "cos"
+    | "cosh"
+    | "sin"
+    | "sinh"
+    | "tan"
+    | "tanh";
