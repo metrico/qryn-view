@@ -56,13 +56,22 @@ export interface RangeBuilderProps {
     build(initial: string): string;
 }
 
+export interface RangeFunctionsBuilderProps {
+    result: string;
+    range: string;
+    setFn(initial: string): void;
+    setRange(range: string): void;
+    setRate(): void;
+    build(initial: string): string;
+}
+
 export interface LineFmtBuilderProps {
     result: string;
     expression: string;
     setLine(intial: string): void;
     setText(): void;
     setExpression(expression: string): void;
-    build(initial: string, expression: string): string;
+    build(initial: string): string;
 }
 
 export interface PatternFmtBuilderProps {
@@ -222,6 +231,10 @@ export type TrigonometricFn = (
     trigonometricOperation: Trigonometric
 ) => TrigonometricBuilderProps;
 
+export type RangeFunctionsFn = (
+    rangeFunction: RangeFunction
+) => RangeFunctionsBuilderProps;
+
 // Range types
 
 export type SimpleRangeOperator =
@@ -308,3 +321,25 @@ export type Trigonometric =
     | "sinh"
     | "tan"
     | "tanh";
+
+export type RangeFunction =
+    | "changes"
+    | "rate"
+    | "irate"
+    | "increase"
+    | "idelta"
+    | "delta"
+    | "holt winters"
+    | "predict linear"
+    | "quantile over time"
+    | "deriv"
+    | "resets"
+    | "sum_over_time"
+    | "avg_over_time"
+    | "min_over_time"
+    | "max_over_time"
+    | "count_over_time"
+    | "last_over_time"
+    | "present_over_time"
+    | "absent_over_time"
+    | "stddev_over_time";

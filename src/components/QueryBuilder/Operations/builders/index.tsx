@@ -24,6 +24,7 @@ import {
     BinaryOperation,
     TimeFunction,
     Trigonometric,
+    RangeFunctionsFn,
 } from "../types";
 
 export const JSONBuilder: JSONBuilderFn = () => ({
@@ -145,7 +146,7 @@ export const PatternFmtBuilder: PatternFmtFn = () => ({
     setText() {
         this.result += " `" + this.expression + "`";
     },
-    build(initial: string, expression: string) {
+    build(initial: string) {
         this.setPattern(initial);
         this.setText();
         return this.result;
@@ -164,7 +165,7 @@ export const LineFmtBuilder: LineFmtFn = () => ({
     setText() {
         this.result += " `" + this.expression + "`";
     },
-    build(initial: string, expression: string) {
+    build(initial: string) {
         this.setLine(initial);
         this.setText();
         return this.result;
@@ -190,7 +191,25 @@ export const RangeBuilder: RangeFn = (rangeType) => ({
         return this.result;
     },
 });
+export const RangeFunctionsBuilder: RangeFunctionsFn = (rangeType) => ({
+    result: "",
+    range: "",
+    setRange(range: string) {
+        this.range = range;
+    },
+    setRate() {
+        this.result += ` [${this.range}])`;
+    },
 
+    setFn(initial: string) {
+        this.result = `${rangeType}(${initial}`;
+    },
+    build(initial: string) {
+        this.setFn(initial);
+        this.setRate();
+        return this.result;
+    },
+});
 export const LabelRangeBuilder: LabelRangeFn = (rangeType) => ({
     result: "",
     range: "",
@@ -477,6 +496,10 @@ export const FormatOperators: any = {
 export const RangeOperators: any = (rangeType: any) => ({
     range: RangeBuilder(rangeType),
     label_range: LabelRangeBuilder(rangeType),
+});
+
+export const RangeFunctionsOperators: any = (rangeType: any) => ({
+    range_function: RangeFunctionsBuilder(rangeType),
 });
 
 export const AggregationOperators: any = (

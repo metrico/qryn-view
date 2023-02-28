@@ -1,11 +1,13 @@
 import {
     FormatOperators,
     RangeOperators,
+    RangeFunctionsOperators,
     AggregationOperators,
     LineFilterOperators,
     LabelFilterOperators,
     BinaryOperations,
     TimeFunctionOperators,
+    TrigonometricOperators,
 } from "../../../../QueryBuilder/Operations/builders";
 import { logsToString } from "../helpers";
 
@@ -226,6 +228,25 @@ export const OperationsManager: OperationsManagerType = (
                     result = RangeOperators(operation.name)["range"];
                     result.setRange(operation.range || "$__interval");
 
+                    result = result.build(resultType);
+                }
+
+                if (range_functions.includes(operation.name)) {
+                    const resultType = setResultType(result, logString);
+                    // initialize with operation type
+                    result = RangeFunctionsOperators(operation.name)[
+                        "range_function"
+                    ];
+                    result.setRange(operation.range || "$__interval");
+
+                    result = result.build(resultType);
+                }
+
+                if (trigonometric_functions.includes(operation.name)) {
+                    const resultType = setResultType(result, logString);
+                    result = TrigonometricOperators(operation.name)[
+                        "trigonometric"
+                    ];
                     result = result.build(resultType);
                 }
 
