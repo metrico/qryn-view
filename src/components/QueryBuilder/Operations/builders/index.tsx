@@ -194,6 +194,13 @@ export const RangeBuilder: RangeFn = (rangeType) => ({
 export const RangeFunctionsBuilder: RangeFunctionsFn = (rangeType) => ({
     result: "",
     range: "",
+    quantile: 0.5, 
+    labels:[],
+    labelsString:"",
+    setQuantile(quantile: number | string) {
+    this.quantile = quantile;
+    },
+    
     setRange(range: string) {
         this.range = range;
     },
@@ -524,6 +531,7 @@ export const BinaryOperations: any = (binaryOperation: BinaryOperation) => ({
 export const TimeFunctionOperators: any = (timeFunction: TimeFunction) => ({
     time_function: TimeFunctionOperationBuilder(timeFunction),
 });
+
 export const TrigonometricOperators: any = (
     trigonometricOperation: Trigonometric
 ) => ({
@@ -531,3 +539,4 @@ export const TrigonometricOperators: any = (
         trigonometricOperation
     ),
 });
+

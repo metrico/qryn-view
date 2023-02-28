@@ -59,6 +59,10 @@ export interface RangeBuilderProps {
 export interface RangeFunctionsBuilderProps {
     result: string;
     range: string;
+    quantile: string | number;
+    labels: any[];
+    labelsString: string;
+    setQuantile(quantile:string|number):void
     setFn(initial: string): void;
     setRange(range: string): void;
     setRate(): void;
