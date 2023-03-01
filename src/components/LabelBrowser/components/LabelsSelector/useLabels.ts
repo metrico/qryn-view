@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createAlert } from "../../../../actions";
 import { notificationTypes } from "../../../../qryn-ui/notifications/consts";
+import { getDsHeaders } from "../../../DataViews/components/QueryBuilder/helpers";
 
 function getTimeParsed(time: any) {
     return time.getTime() + "000000";
@@ -40,7 +41,7 @@ export default function useLabels(id: any, dataSourceURL = "") {
         }
 
         return current;
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, dataSources]);
 
     const [type, setType] = useState(currentDataSource.type || "");
@@ -61,7 +62,7 @@ export default function useLabels(id: any, dataSourceURL = "") {
 
     useEffect(() => {
         setUrl(getUrlFromType(currentDataSource.url, type, timeStart, timeEnd));
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [setUrl, type, currentDataSource]);
 
     const [response, setResponse] = useState([]);
@@ -73,9 +74,9 @@ export default function useLabels(id: any, dataSourceURL = "") {
             currentDataSource.url &&
             currentDataSource.url !== ""
         ) {
+            const extraheaders = getDsHeaders(currentDataSource);
             const options = {
                 method: "GET",
-                headers: { "Content-Type": "application/json" },
             };
 
             const basicAuth = currentDataSource?.auth?.basicAuth.value;
@@ -100,6 +101,10 @@ export default function useLabels(id: any, dataSourceURL = "") {
             }
 
             labelHeaders.options = options;
+            labelHeaders.headers = {
+                ...extraheaders,
+                "Content-Type": "application/json",
+            };
 
             const apiRequest = async () => {
                 setLoading(true);
@@ -136,7 +141,7 @@ export default function useLabels(id: any, dataSourceURL = "") {
             };
             apiRequest();
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url, currentDataSource]);
 
     return {

@@ -4,8 +4,6 @@ import { useSelector } from "react-redux";
 import { getHeaders } from "./helpers";
 import * as moment from "moment";
 export function useMetricsList(id: any, value: any) {
-
-    
     const dataSources = useSelector((store: any) => store.dataSources);
     const start = useSelector((store: any) => store.start);
     const stop = useSelector((store: any) => store.stop);
@@ -39,9 +37,9 @@ export function useMetricsList(id: any, value: any) {
         if (
             dataSource.type === "metrics" &&
             dataSource?.url &&
-            dataSource?.url !== ""&&
-            value && value !== ''
-
+            dataSource?.url !== "" &&
+            value &&
+            value !== ""
         ) {
             const metricsHeaders = getHeaders(dataSource);
 
@@ -86,4 +84,3 @@ export function useMetricsList(id: any, value: any) {
         return {};
     }, [metricNames]);
 }
-

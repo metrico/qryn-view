@@ -56,11 +56,28 @@ export function logsToString(labels: Label[]): string {
     return labelsBody;
 }
 
+export function getDsHeaders(dataSource: any) {
+    let headerObj = {};
+    if (dataSource?.headers?.length > 0) {
+        for (let header of dataSource.headers) {
+            const Obj = { [String(header["header"])]: header["value"] };
+            headerObj = { ...headerObj, ...Obj };
+        }
+    }
+    return headerObj;
+}
+
 export function getHeaders(dataSource: any) {
+    
+    let extraHeaders = getDsHeaders(dataSource)
+
     const options = {
+        
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+        headers: {...extraHeaders, "Content-Type": "application/json" },
     };
+
+    // get the extra headers in here
 
     const basicAuth = dataSource?.auth?.basicAuth.value;
 
@@ -82,6 +99,8 @@ export function getHeaders(dataSource: any) {
 
         reqHeaders.auth = auth;
     }
+
+    
 
     reqHeaders.options = options;
 
@@ -156,9 +175,15 @@ export const getValuesUrl = (
     end: any
 ) => `${api}/loki/api/v1/label/${label}/values?start=${start}&end=${end}`;
 
+
+
+
 export const getAuthAndOptions = (currentDataSource: any) => {
+
+
+    const extraheaders = getDsHeaders(currentDataSource)
     const options = {
-        headers: { "Content-Type": "application/json" },
+        headers: { ...extraheaders, "Content-Type": "application/json" },
     };
 
     const basicAuth = currentDataSource?.auth?.basicAuth.value;
@@ -194,6 +219,7 @@ export const apiRequest = async (
             ...options,
             auth: basicAuth,
         };
+      //  console.log(config, "CONFIG")
         const req: LogsResponse | any[] = await axios.get(url, config);
         if (req) {
             setResponse(req || []);

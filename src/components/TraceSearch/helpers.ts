@@ -1,7 +1,13 @@
+import { getDsHeaders } from "../DataViews/components/QueryBuilder/helpers";
+
 export function getHeaders(dataSource: any) {
     const options = {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+    };
+    const extraheaders = getDsHeaders(dataSource);
+    const headers = {
+        ...extraheaders,
+        "Content-Type": "application/json",
     };
 
     const basicAuth = dataSource?.auth?.basicAuth.value;
@@ -26,6 +32,7 @@ export function getHeaders(dataSource: any) {
     }
 
     reqHeaders.options = options;
+    reqHeaders.headers = headers;
 
     return reqHeaders;
 }
