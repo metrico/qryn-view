@@ -25,37 +25,6 @@ export default deepFreeze(
         menuEnabled: true,
       },
       linkPatterns: [],
-      menu: [
-        {
-          label: 'About Jaeger',
-          items: [
-            {
-              label: 'GitHub',
-              url: 'https://github.com/uber/jaeger',
-            },
-            {
-              label: 'Docs',
-              url: 'http://jaeger.readthedocs.io/en/latest/',
-            },
-            {
-              label: 'Twitter',
-              url: 'https://twitter.com/JaegerTracing',
-            },
-            {
-              label: 'Discussion Group',
-              url: 'https://groups.google.com/forum/#!forum/jaeger-tracing',
-            },
-            {
-              label: 'Gitter.im',
-              url: 'https://gitter.im/jaegertracing/Lobby',
-            },
-            {
-              label: 'Blog',
-              url: 'https://medium.com/jaegertracing/',
-            },
-          ],
-        },
-      ],
       search: {
         maxLookback: {
           label: '2 Days',
