@@ -11,16 +11,23 @@ export function getTimeParsed(time: Date) {
     return time.getTime() + "000000";
 }
 
+export function getDsHeaders(dataSource: any) {
+    let headerObj = {};
+    if (dataSource?.headers?.length > 0) {
+        for (let header of dataSource.headers) {
+            const Obj = { [String(header["header"])]: header["value"] };
+            headerObj = { ...headerObj, ...Obj };
+        }
+    }
+    return headerObj;
+}
 export function getHeaders(dataSource: any) {
+    let extraheaders = getDsHeaders(dataSource);
     const options = {
         method: METHOD,
-        headers: { "Content-Type": CONTENT_TYPE, Accept: ACCEPT },
     };
-
     const basicAuth = dataSource?.auth?.basicAuth.value;
-
     let reqHeaders: any = {};
-
     let auth: any = {};
 
     if (basicAuth) {
@@ -39,6 +46,11 @@ export function getHeaders(dataSource: any) {
     }
 
     reqHeaders.options = options;
+    reqHeaders.headers = {
+        ...extraheaders,
+        "Content-Type": CONTENT_TYPE,
+        Accept: ACCEPT,
+    };
 
     return reqHeaders;
 }
@@ -55,8 +67,9 @@ export const getSeriesUrl = (
     )}&start=${start}&end=${end}`;
 
 export const getAuthAndOptions = (currentDataSource: any) => {
+    const extraheaders = getDsHeaders(currentDataSource);
     const options = {
-        headers: { "Content-Type": "application/json" },
+        headers: { ...extraheaders, "Content-Type": "application/json" },
     };
 
     const basicAuth = currentDataSource?.auth?.basicAuth.value;
@@ -76,7 +89,11 @@ export const getAuthAndOptions = (currentDataSource: any) => {
         }
     }
 
-    return { basicAuth: auth, options };
+    return {
+        basicAuth: auth,
+        options,
+        headers: { ...extraheaders, "Content-Type": "application/json" },
+    };
 };
 
 export const apiRequest = async (
@@ -116,13 +133,5 @@ export async function getApiRequest(
     }
 }
 
-
-
-export const getLabelsFromData = (data:[]) => Array.from(
-    new Set(
-        data.map((m: any) => Object.keys(m))?.flat()
-    )
-);
-
-
-
+export const getLabelsFromData = (data: []) =>
+    Array.from(new Set(data.map((m: any) => Object.keys(m))?.flat()));

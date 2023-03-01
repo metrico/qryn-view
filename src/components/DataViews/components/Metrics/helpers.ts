@@ -1,7 +1,18 @@
+export function getDsHeaders(dataSource: any) {
+    let headerObj = {};
+    if (dataSource?.headers?.length > 0) {
+        for (let header of dataSource.headers) {
+            const Obj = { [String(header["header"])]: header["value"] };
+            headerObj = { ...headerObj, ...Obj };
+        }
+    }
+    return headerObj;
+}
+
 export function getHeaders(dataSource: any) {
+    let extraheaders = getDsHeaders(dataSource);
     const options = {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
     };
 
     const basicAuth = dataSource?.auth?.basicAuth.value;
@@ -26,6 +37,10 @@ export function getHeaders(dataSource: any) {
     }
 
     reqHeaders.options = options;
+    reqHeaders.headers = {
+        ...extraheaders,
+        "Content-Type": "application/json",
+    };
 
     return reqHeaders;
 }
