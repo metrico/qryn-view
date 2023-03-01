@@ -70,7 +70,7 @@ export default function QueryTypeBar(props:any) {
     );
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(hash.replace("#", ""));
+        const urlParams = new URLSearchParams(hash.replace(/#/, ""));
         const urlPanel:any = urlParams.get(name);
 
         const parsedPanel = JSON.parse(decodeURIComponent(urlPanel)||'[]');

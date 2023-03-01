@@ -32,7 +32,7 @@ export default function Panel(props: any) {
     const { hash } = useLocation();
 
     useEffect(() => {
-        const params = new URLSearchParams(hash.replace("#", ""));
+        const params = new URLSearchParams(hash.replace(/#/, ""));
         const panelUrlData = params.get(name);
         let panelQueries = [];
         if (panelUrlData) {

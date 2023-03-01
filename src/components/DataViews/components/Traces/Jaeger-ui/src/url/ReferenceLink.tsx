@@ -22,26 +22,4 @@ type ReferenceLinkProps = {
     //   createFocusSpanLink: (traceId: string, spanId: string) => LinkModel<Field>;
 };
 export default null
-// export default function ReferenceLink(props: ReferenceLinkProps) {
-//     const { reference, children /* createFocusSpanLink */ } = props;
 
-//     //   const link = createFocusSpanLink(reference.traceID, reference.spanID);
-
-//     return (
-//         <a
-//             href={link.href}
-//             target={link.target}
-//             rel="noopener noreferrer"
-//             onClick={
-//                 link.onClick
-//                     ? (event) => {
-//                           event.preventDefault();
-//                           link.onClick!(event);
-//                       }
-//                     : undefined
-//             }
-//         >
-//             {children}
-//         </a>
-//     );
-// }

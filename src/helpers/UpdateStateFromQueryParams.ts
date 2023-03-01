@@ -112,7 +112,7 @@ export function UpdateStateFromQueryParams() {
 
     const { hash } = useLocation();
     useEffect(() => {
-        const urlFromHash = new URLSearchParams(hash.replace("#", ""));
+        const urlFromHash = new URLSearchParams(hash.replace(/#/, ""));
         // !if there is some params set them first on UI
 
         if (hash.length > 0) {
@@ -208,7 +208,7 @@ export function UpdateStateFromQueryParams() {
 
     useEffect(() => {
         if (hash.length > 0) {
-            const paramsFromHash = new URLSearchParams(hash.replace("#", ""));
+            const paramsFromHash = new URLSearchParams(hash.replace(/#/, ""));
             let previousParams: any = {};
             for (let [key, value] of paramsFromHash.entries()) {
                 previousParams[key] = value;
