@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createAlert } from "../actions";
+import { getDsHeaders } from "../components/DataViews/components/QueryBuilder/helpers";
 import { notificationTypes } from "../qryn-ui/notifications/consts";
 import store from "../store/store";
 
@@ -54,16 +55,18 @@ export const sendLabels = async (
 
     const startNs = type === "metrics" ? start : getTimeParsed(start);
     const stopNs = type === "metrics" ? stop : getTimeParsed(stop);
+    const extraheaders = getDsHeaders(actDataSource);
     const headers = {
+        ...extraheaders,
         "Content-Type": "application/json",
     };
 
     const options = {
         method: "GET",
-        headers: headers,
     };
 
     labelHeaders.options = options;
+    labelHeaders.headers = headers;
 
     if (type !== "flux" && type !== "traces" && labelHeaders && apiUrl) {
         const res = await axios

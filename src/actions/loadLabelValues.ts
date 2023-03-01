@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getDsHeaders } from "../components/QueryBuilder/Operations/helpers";
 import store from "../store/store";
 import { errorHandler } from "./errorHandler";
 import { setApiError } from "./setApiError";
@@ -38,7 +39,10 @@ export default function loadLabelValues(
         labelHeaders.auth = auth;
     }
 
+    const extraheaders = getDsHeaders(actDataSource);
+
     const headers = {
+        ...extraheaders,
         "Content-Type": "application/json",
     };
 

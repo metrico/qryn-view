@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { getDsHeaders } from "../../components/QueryBuilder/Operations/helpers";
 import setDataSources from "../DataSources/store/setDataSources";
 import { setShowDataSourceSetting } from "./setShowDataSourceSetting";
 
@@ -90,9 +91,11 @@ export function updateDataSourcesWithUrl(
     dispatch(setDataSources(newDs));
 }
 
-export const getAxiosConf = () => {
+export const getAxiosConf = (datasource:any) => {
     let conf: any = {};
+    let extraheaders = getDsHeaders(datasource)
     const headers = {
+        ...extraheaders,
         "Content-Type": "application/json",
         Accept: "application/json",
     };
@@ -103,6 +106,7 @@ export const getAxiosConf = () => {
     };
 
     conf.options = options;
+    conf.headers = headers
     conf.validateStatus = (status: number) => {
         return (
             (status >= 200 && status < 400) || status === 404 || status === 500
@@ -138,11 +142,13 @@ type AuthParams = {
 
 export async function checkLocalAPI(
     url: string,
+    datasource:any,
     auth?: AuthParams,
-    isAuth?: boolean
+    isAuth?: boolean,
+    
 ) {
     let response: any = {};
-    let conf = getAxiosConf();
+    let conf = getAxiosConf(datasource);
     let isReady = false;
     let opts: any = { ...conf };
 
@@ -193,10 +199,10 @@ export async function updateDataSourcesFromLocalUrl(
     let dsReady = false;
     let isLocalReady = false;
     if (logsDs?.url !== "") {
-        dsReady = await checkLocalAPI(logsDs.url, auth, isBasicAuth); // add the auth in here
+        dsReady = await checkLocalAPI(logsDs.url,logsDs, auth, isBasicAuth); // add the auth in here
     }
     if (!dsReady) {
-        isLocalReady = await checkLocalAPI(location);
+        isLocalReady = await checkLocalAPI(location,logsDs);
 
         if (isLocalReady && !dsReady) {
             const dsCP = [...dataSources];

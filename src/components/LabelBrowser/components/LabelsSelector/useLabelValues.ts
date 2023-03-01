@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
+import { getDsHeaders } from "../../../QueryBuilder/Operations/helpers";
 
 function getTimeParsed(time: any) {
     return time.getTime() + "000000";
@@ -68,10 +69,11 @@ export default function useLabelValues(
                 nanoEnd
             )
         );
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [label, setUrl, currentDataSource]);
-
-    const headers = useState({
+    const extraheaders = getDsHeaders(currentDataSource);
+    const [headers] = useState({
+        ...extraheaders,
         "Content-Type": "application/json",
     });
 
@@ -79,13 +81,13 @@ export default function useLabelValues(
         () => ({
             signal: controller.signal,
             method: "GET",
-            headers: headers,
         }),
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
 
     labelHeaders.options = options;
+    labelHeaders.headers = headers;
     const [response, setResponse] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -107,7 +109,7 @@ export default function useLabelValues(
 
             apiRequest();
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentDataSource, url, label]);
 
     return {
