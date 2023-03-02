@@ -145,10 +145,11 @@ function parseQueryLabels(keyVal: any[], query: string, op: string) {
         ) {
             // values group from existing label
             let labelMod = parseLog.addValueToLabel(label, value, true); // use this one for !=
+            let labelEscaped = new RegExp(`${label}`);
             return parseLog
-                .splitLabels(query)
+                ?.splitLabels(query)
                 ?.join(",")
-                ?.replace(`${label}`, labelMod);
+                ?.replace(labelEscaped, labelMod);
         }
 
         if (
@@ -159,10 +160,11 @@ function parseQueryLabels(keyVal: any[], query: string, op: string) {
         ) {
             // filter value from existing values group from label
             const labelMod = parseLog.rmValueFromLabel(label, value);
+            let labelEscaped = new RegExp(`${label}`);
             return parseLog
-                .splitLabels(query)
-                .join(",")
-                .replace(`${label}`, labelMod);
+                ?.splitLabels(query)
+                ?.join(",")
+                ?.replace(labelEscaped, labelMod);
         }
 
         if (
@@ -205,10 +207,11 @@ function parseQueryLabels(keyVal: any[], query: string, op: string) {
         ) {
             // values group from existing label
             let labelMod = parseLog.addNonEqValueToLabel(label, value, true); // use this one for !=
+            let labelScaped = new RegExp(`${label}`)
             return parseLog
                 .splitLabels(query)
                 ?.join(",")
-                ?.replace(`${label}`, labelMod);
+                ?.replace(labelScaped, labelMod);
         }
         if (
             value !== null &&
@@ -218,10 +221,11 @@ function parseQueryLabels(keyVal: any[], query: string, op: string) {
         ) {
             // filter value from existing values group from label
             const labelMod = parseLog.rmNonEqValueFromLabel(label, value);
+            let labelScaped = new RegExp(`${label}`)
             return parseLog
                 .splitLabels(query)
                 .join(",")
-                .replace(`${label}`, labelMod);
+                .replace(labelScaped, labelMod);
         }
         if (
             label?.includes("!=") &&

@@ -13,7 +13,7 @@ import { useMediaQuery } from "react-responsive";
 
 export function getURlParams(params: any) {
 
-    const url = params.replace('#','')
+    const url = params.replace(/#/,'')
     const decoded = decodeURIComponent(url)
     const urlParams = new URLSearchParams(decoded)
     let panels = {left:'', right:''}

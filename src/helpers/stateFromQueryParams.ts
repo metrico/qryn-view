@@ -80,7 +80,7 @@ export default function stateFromQueryParams() {
     const { hash } = window.location;
     if (debug) console.log("🚧 LOGIC/FromQuery Hash", hash);
 
-    const urlFromHash = new URLSearchParams(hash.replace("#", ""));
+    const urlFromHash = new URLSearchParams(hash.replace(/#/, ""));
 
     if (debug) console.log("🚧 LOGIC/urlFromHash", urlFromHash, hash.length);
 

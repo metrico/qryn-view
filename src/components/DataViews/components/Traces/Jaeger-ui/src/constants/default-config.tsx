@@ -25,6 +25,8 @@ export default deepFreeze(
         menuEnabled: true,
       },
       linkPatterns: [],
+      menu: [
+      ],
       search: {
         maxLookback: {
           label: '2 Days',

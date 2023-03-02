@@ -29,7 +29,7 @@ export function decodeQuery(
                 values: [],
             };
             const valueObj: any = {
-                name: regexQuery[1]?.replaceAll('"', ""),
+                name: regexQuery[1]?.replaceAll(/"/, ""),
                 selected: true,
                 inverted: true,
             };
@@ -45,7 +45,7 @@ export function decodeQuery(
 
             values.forEach((value) => {
                 const valueObj = {
-                    name: value?.replaceAll('"', ""),
+                    name: value?.replaceAll(/"/, ""),
                     selected: true,
                     inverted: false,
                 };
@@ -60,7 +60,7 @@ export function decodeQuery(
                 values: [],
             };
             const valueObj = {
-                name: regexQuery[1]?.replaceAll('"', ""),
+                name: regexQuery[1]?.replaceAll(/"/, ""),
                 selected: true,
                 inverted: false,
             };
@@ -146,7 +146,7 @@ export function decodeExpr(expr: string) {
                 };
 
                 const valueObj: any = {
-                    name: regexQuery[1]?.replaceAll('"', ""),
+                    name: regexQuery[1]?.replaceAll(/"/, ""),
                     selected: true,
                     inverted: true,
                 };
@@ -163,7 +163,7 @@ export function decodeExpr(expr: string) {
 
                 values.forEach((value) => {
                     const valueObj: any = {
-                        name: value?.replaceAll('"', ""),
+                        name: value?.replaceAll(/"/, ""),
                         selected: true,
                         inverted: false,
                     };
@@ -180,7 +180,7 @@ export function decodeExpr(expr: string) {
                 };
 
                 const valueObj: any = {
-                    name: regexQuery[1]?.replaceAll('"', ""),
+                    name: regexQuery[1]?.replaceAll(/"/, ""),
                     selected: true,
                     inverted: false,
                 };

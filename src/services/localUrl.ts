@@ -45,7 +45,7 @@ const localUrl = () => {
 
         const { hash } = window.location;
         const origin = window.location.origin;
-        const urlParams = new URLSearchParams(hash.replace("#", ""));
+        const urlParams = new URLSearchParams(hash.replace(/#/, ""));
         let paramsData: any = {};
         urlParams.set("isSubmit", "true");
         for (let [key, value] of urlParams) {
