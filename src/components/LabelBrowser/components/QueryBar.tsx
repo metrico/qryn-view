@@ -364,7 +364,6 @@ export const QueryBar = (props: any) => {
         }
     };
 
-    // events
     const onMetricChange = (e: any) => {
         const query = [{ children: [{ text: e }] }];
         handleQueryChange(query);

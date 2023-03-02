@@ -8,7 +8,7 @@ import { MetricsFormBuilderProps, Builder } from "./types";
 import { FormBuilders } from "./FormBuilders";
 import QueryPreview from "./QueryPreview";
 import { useSelector } from "react-redux";
-import { initialBuilder,binaryOperatorOpts } from "./consts";
+import { initialMetricsBuilder,binaryOperatorOpts } from "./consts";
 
 
 export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
@@ -18,13 +18,15 @@ export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
 
     const { start, stop } = useSelector((store: any) => store);
 
+    // this one should be comming form selected metric
 
     const { logsResponse } = useLogLabels(dataSourceId, start, stop, dataSources); // pass here all data needed
 
     const [finalQuery, setFinalQuery] = useState("");
     const mainTheme = useTheme();
 
-    const [builders, setBuilders] = useState<Builder[]>([initialBuilder]);
+
+    const [builders, setBuilders] = useState<Builder[]>([initialMetricsBuilder]);
 
 
     const addBinaryOperation = useCallback(
@@ -52,7 +54,6 @@ export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
         });
     }, [logsResponse]);
 
-    // add logs to string and the logs volume
 
     const binaryToString = (builder: Builder) => {
         const { binaryValue } = builder;
@@ -88,6 +89,7 @@ export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
         <ThemeProvider theme={mainTheme}>
             <div className={cx(FlexColumn)}>
                 <FormBuilders
+                    type={'metrics_search'}
                     addBinary={addBinaryOperation}
                     dataSourceId={dataSourceId}
                     logsResponse={logsResponse}

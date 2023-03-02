@@ -1,17 +1,15 @@
 import { ThemeProvider } from "@emotion/react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useTheme } from "../QueryBuilder/hooks";
 import { useValuesFromMetrics } from "./useValuesFromMetrics";
-import { cx  } from '@emotion/css';
+import { cx } from "@emotion/css";
 import { MetricsFormBuilder } from "../QueryBuilder/MetricsFormBuilder";
-import { FlexWrap, MetricsButtonsContStyle, MetricsContStyle } from "../QueryBuilder/styles";
+import { FlexWrap } from "../QueryBuilder/styles";
 export default function MetricsSearch(props: any) {
+    
     const {
         handleMetricValueChange, // goes to process AT query bar
-        data: { dataSourceId, dataSourceType, hasStats },
-        searchButton,
-        logsRateButton,
-        statsSwitch,
+        data: { dataSourceId },
     } = props;
 
     const metricsOpts = useValuesFromMetrics(dataSourceId);
@@ -19,8 +17,10 @@ export default function MetricsSearch(props: any) {
     const [metricValue, setMetricValue] = useState(
         metricsOpts[0] || { label: "", value: "" }
     );
+
     const onMetricChange = (e: any) => {
         const { value } = e;
+
         setMetricValue((prev: any) => {
             return { value: value?.value, label: value?.value };
         });
@@ -29,9 +29,9 @@ export default function MetricsSearch(props: any) {
     const handleMetricChange = (e: any) => {
         handleMetricValueChange(e);
     };
-    const onLabelValueChange = (e: any) => {
 
-    };
+    const onLabelValueChange = (e: any) => {};
+
     /*
         return (
             <ThemeProvider theme={mainTheme}>{
@@ -66,19 +66,18 @@ export default function MetricsSearch(props: any) {
             </ThemeProvider>
         );
             */
+
     const theme = useTheme();
+
     return (
-
         <ThemeProvider theme={theme}>
-
             <div className={cx(FlexWrap)}>
-
-                <MetricsFormBuilder {...props} dataSourceId={dataSourceId} labelValueChange={handleMetricChange} />
-
+                <MetricsFormBuilder
+                    {...props}
+                    dataSourceId={dataSourceId}
+                    labelValueChange={handleMetricChange}
+                />
             </div>
-
         </ThemeProvider>
-
-    )
+    );
 }
-

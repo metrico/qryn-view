@@ -62,7 +62,7 @@ export interface RangeFunctionsBuilderProps {
     quantile: string | number;
     labels: any[];
     labelsString: string;
-    setQuantile(quantile:string|number):void
+    setQuantile(quantile: string | number): void;
     setFn(initial: string): void;
     setRange(range: string): void;
     setRate(): void;
@@ -193,6 +193,12 @@ export interface TrigonometricBuilderProps extends CommonFormatProps {
     build(initial: string): string;
 }
 
+export interface MetricFunctionBuilderProps extends CommonFormatProps {
+    result: string;
+    setFn(initial: string): void;
+    build(initial: string): string;
+}
+
 // Functions
 
 export type JSONBuilderFn = () => JSONBuilderProps;
@@ -239,6 +245,9 @@ export type RangeFunctionsFn = (
     rangeFunction: RangeFunction
 ) => RangeFunctionsBuilderProps;
 
+export type MetricFunctionFn = (
+    metricFunction: MetricFunction
+) => MetricFunctionBuilderProps;
 // Range types
 
 export type SimpleRangeOperator =
@@ -347,3 +356,36 @@ export type RangeFunction =
     | "present_over_time"
     | "absent_over_time"
     | "stddev_over_time";
+
+export type MetricFunction =
+    | "histogram_quantile"
+    | "label_replace"
+    | "ln"
+    | "absent"
+    | "ceil"
+    | "clamp"
+    | "clamp_max"
+    | "clamp_min"
+    | "deg"
+    | "exp"
+    | "floor"
+    | "group"
+    | "hour"
+    | "label_join"
+    | "log10"
+    | "log2"
+    | "minute"
+    | "pi"
+    | "quantile"
+    | "rad"
+    | "round"
+    | "scalar"
+    | "sgn"
+    | "sort"
+    | "sort_desc"
+    | "sqrt"
+    | "stddev"
+    | "time"
+    | "timestamp"
+    | "vector"
+    | "year";

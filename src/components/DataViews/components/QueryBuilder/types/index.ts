@@ -57,9 +57,11 @@ export interface Builder {
     logsVolumeQuery: string;
     builderResult: string;
     isBinary: boolean;
+    isMetrics?:boolean;
 }
 
 export interface FormBuilderProps {
+    type: 'metrics_search' | 'logs_search';
     builders: Builder[];
     finalQuery: string;
     setBuilders: Function;

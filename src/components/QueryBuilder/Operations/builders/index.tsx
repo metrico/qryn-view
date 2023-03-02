@@ -16,6 +16,7 @@ import {
     BinaryOperationFn,
     TimeFunctionFn,
     TrigonometricFn,
+    MetricFunctionFn,
     AggregationsOp,
     BTKAggregationsOp,
     AggrType,
@@ -24,6 +25,7 @@ import {
     BinaryOperation,
     TimeFunction,
     Trigonometric,
+    MetricFunction,
     RangeFunctionsFn,
 } from "../types";
 
@@ -490,6 +492,19 @@ export const TrigonometricFunctionOperationBuilder: TrigonometricFn = (
         return this.result;
     },
 });
+
+
+export const MetricFunctionsOperationBuilder: MetricFunctionFn = (metricFunction)=> ({
+result:"",
+setFn(initial){
+    this.result = `${metricFunction}()${initial}`;
+},
+build(initial){
+    this.setFn(initial);
+    return this.result;
+}
+})
+
 export const FormatOperators: any = {
     json: JSONBuilder,
     logfmt: LogFmtBuilder,
@@ -540,3 +555,8 @@ export const TrigonometricOperators: any = (
     ),
 });
 
+export const MetricFunctionOperators:any = (metricFunction:MetricFunction)=>({
+    metric_functions: MetricFunctionsOperationBuilder(
+        metricFunction
+    )
+})

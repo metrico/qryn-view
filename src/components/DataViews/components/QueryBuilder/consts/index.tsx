@@ -42,6 +42,16 @@ export const initialBuilder: Builder = {
     isBinary: false,
 };
 
+export const initialMetricsBuilder: Builder = {
+    operations: [],
+    labelsState: [],
+    binaryValue: { binaryOpt: "divide", vectOpt: "on", vectValue: "" },
+    builderResult: "",
+    logsVolumeQuery:"",
+    isBinary: false,
+    isMetrics:true,
+};
+
 export const binaryOperatorOpts: any = {
     minus: "-",
     plus: "+",

@@ -8,6 +8,7 @@ import {
     BinaryOperations,
     TimeFunctionOperators,
     TrigonometricOperators,
+    MetricFunctionOperators
 } from "../../../../QueryBuilder/Operations/builders";
 import { logsToString } from "../helpers";
 
@@ -140,6 +141,41 @@ const aggregations_k = ["topk", "bottomk"];
 
 const time_functions = ["day_of_month", "day_of_week", "days_in_month"];
 
+const metrics_functions = [
+    "histogram_quantile",
+    "label_replace",
+    "ln",
+    "absent",
+    "ceil",
+    "clamp",
+    "clamp_max",
+    "clamp_min",
+    "deg",
+    "exp",
+    "floor",
+    "group",
+    "hour",
+    "label_join",
+    "log10",
+    "log2",
+    "minute",
+    "pi",
+    "quantile",
+    "rad",
+    "round",
+    "scalar",
+    "sgn",
+    "sort",
+    "sort_desc",
+    "sqrt",
+    "stddev",
+    "time",
+    "timestamp",
+    "vector",
+    "year",
+];
+
+
 const isSingleExpression = (expr: string) =>
     ["line_format", "regexp", "pattern"].includes(expr);
 
@@ -239,6 +275,12 @@ export const OperationsManager: OperationsManagerType = (
                     ];
                     result.setRange(operation.range || "$__interval");
 
+                    result = result.build(resultType);
+                }
+
+                if(metrics_functions.includes(operation.name)){
+                    const resultType = setResultType(result, logString);
+                    result = MetricFunctionOperators(operation.name)['metric_functions'];
                     result = result.build(resultType);
                 }
 
