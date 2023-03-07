@@ -26,6 +26,8 @@ export interface OperationProps {
     index: number;
     body: any;
     rate: string;
+    prev_args:string;
+    after_args:string;
     moveItem: (dragIndex: number, hoverIndex: number) => void;
     removeItem: any;
     opType: string;

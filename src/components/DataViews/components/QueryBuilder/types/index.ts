@@ -28,6 +28,8 @@ export type operator =
 
 export interface Operation {
     id: number;
+    after_args:string;
+    prev_args:string;
     name: string;
     header: any;
     range: string;

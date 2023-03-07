@@ -138,6 +138,28 @@ export const RangesSelector = (props: any) => {
     );
 };
 
+export const QuantilesSelector = (props: any) => {
+    const { initial, onChange } = props;
+    const rangeOpts: any[] = useMemo(() => {
+        return ["0.25", "0.5", "0.75", "0.9", "0.99"]?.map((m: string) => ({
+            name: m,
+            value: m,
+        }));
+    }, []);
+
+    return (
+        <select defaultValue={initial} onChange={onChange}>
+            {rangeOpts.map(
+                (opt: { name: string; value: string }, key: number) => (
+                    <option key={key} value={opt.value}>
+                        {opt.name}
+                    </option>
+                )
+            )}
+        </select>
+    );
+};
+
 export const BinaryOperatorsSelector = (props: any) => {
     // intial:   divide
     const { initial, onChange, opts } = props;
@@ -444,6 +466,214 @@ export const LineFormatBody = (props: any) => {
     );
 };
 
+export const ClampBody = (props: any) => {
+    const { setOperations, id } = props;
+    const [minimum, setMinimum] = useState("1");
+    const [maximum, setMaximum] = useState("1");
+    const theme = useTheme();
+
+    const onMaxChange = (e:any) => {
+        setMaximum((prev:any)=>e.target.value)
+    }
+
+    const onMinChange = (e:any) => {
+        setMinimum((prev:any)=>e.target.value)
+    }
+ 
+
+    useEffect(() => {
+        let clapArr = [minimum, maximum];
+
+        let clapStr = clapArr.join(",");
+
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.after_args = "," + clapStr;
+                    return m;
+                }
+                return m;
+            });
+        });
+    }, [minimum, maximum]);
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <div>
+                <label>Minimum Scalar</label>
+                <input
+                    value={minimum}
+                    placeholder={"1"}
+                    onChange={onMinChange}
+                />
+            </div>
+            <div>
+                <label>Maximum Scalar</label>
+                <input
+                    value={maximum}
+                    placeholder={"1"}
+                    onChange={onMaxChange}
+                />
+            </div>
+        </div>
+    );
+};
+export const ClampMinBody = (props: any) => {
+    const { setOperations, id } = props;
+    const [minimum, setMinimum] = useState("1");
+
+    const theme = useTheme();
+    
+    const onMinChange = (e:any) => {
+        setMinimum((prev:any)=>e.target.value)
+    }
+    useEffect(() => {
+        let clapArr = [minimum];
+
+        let clapStr = clapArr.join(",");
+
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.after_args = "," + clapStr;
+                    return m;
+                }
+                return m;
+            });
+        });
+    }, [minimum]);
+
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <div>
+                <label>Minimum Scalar</label>
+                <input
+                    value={minimum}
+                    placeholder={"1"}
+                    onChange={onMinChange}
+                />
+            </div>
+        </div>
+    );
+};
+export const ClampMaxBody = (props: any) => {
+    const { setOperations, id } = props;
+    const [maximum, setMaximum] = useState("1");
+    const theme = useTheme();
+    const onMaxChange = (e:any) => {
+        setMaximum((prev:any)=>e.target.value)
+    }
+
+    useEffect(() => {
+        let clapArr = [maximum];
+
+        let clapStr = clapArr.join(",");
+
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.after_args = "," + clapStr;
+                    return m;
+                }
+                return m;
+            });
+        });
+    }, [maximum]);
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <div>
+                <label>Maximum Scalar</label>
+                <input
+                    value={maximum}
+                    placeholder={"1"}
+                    onChange={onMaxChange}
+                />
+            </div>
+        </div>
+    );
+};
+
+export const QuantileBody = (props: any) => {
+    const { setOperations, id } = props;
+    const [quantile,setQuantile] = useState("1");
+    const theme = useTheme();
+    const onQuantileChange = (e:any) => {
+        setQuantile((prev:any)=>e.target.value)
+    }
+
+    useEffect(() => {
+       
+
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.prev_args = quantile +", " 
+                    return m;
+                }
+                return m;
+            });
+        });
+    }, [quantile]);
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <div>
+                <label>Quantile</label>
+                <input
+                    value={quantile}
+                    placeholder={"1"}
+                    onChange={onQuantileChange}
+                />
+            </div>
+        </div>
+    );
+};
+
+export const RoundBody= (props: any) => {
+    const { setOperations, id } = props;
+    const [round ,setRound] = useState("1");
+    const theme = useTheme();
+    const onRoundChange = (e:any) => {
+        setRound((prev:any)=>e.target.value)
+    }
+
+    useEffect(() => {
+       
+
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.after_args = "," + round;
+                    return m;
+                }
+                return m;
+            });
+        });
+    }, [round]);
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <div>
+                <label>Nearest Scalar</label>
+                <input
+                    value={round}
+                    placeholder={"1"}
+                    onChange={onRoundChange}
+                />
+            </div>
+        </div>
+    );
+};
+
+
+
 export const DefaultFormatBody = (props: any) => {
     return <></>;
 };
@@ -475,6 +705,57 @@ export const RangeBody = (props: any) => {
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <RangesSelector onChange={onRangeChange} initial={range} />
+        </div>
+    );
+};
+
+export const HistogramQuantileBody = (props: any) => {
+    const { setOperations, id } = props;
+    const [quantile, setQuantile] = useState(props.quantile);
+
+    useEffect(() => {
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.prev_args = props.quantile + ",";
+                    return m;
+                }
+                return m;
+            });
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.quantile]);
+
+    const theme = useTheme();
+
+    const onQuantileChange = useCallback(
+        (e: any) => {
+            let val: string = e.target.value;
+            console.log(val);
+            setQuantile(val);
+            setOperations((prev: any) => {
+                const next = [...prev];
+                return next?.map((m: any) => {
+                    if (m.id === id) {
+                        m.quantile = val;
+                        //m.prev_args = val + ",";
+                        return m;
+                    }
+                    return m;
+                });
+            });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [quantile]
+    );
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <QuantilesSelector
+                onChange={onQuantileChange}
+                initial={props.quantile}
+            />
         </div>
     );
 };
@@ -973,6 +1254,31 @@ export const aggregationRenderer = (op: string, props: any) => {
     }
 };
 
+export const functionsRenderer = (op: string, props: any) => {
+    if (op === "histogram_quantile") {
+        return <HistogramQuantileBody {...props} />;
+    }
+    if (op === "clamp") {
+        return <ClampBody {...props} />;
+    }
+
+    if (op === "clamp_max") {
+        return <ClampMaxBody {...props} />;
+    }
+
+    if (op === "clamp_min") {
+        return <ClampMinBody {...props} />;
+    }
+    if ( op  === "quantile") {
+        return <QuantileBody {...props}/>;
+    }
+
+    if (op === "round"){
+        return <RoundBody {...props}/>;
+    }
+    return rangeRenderer(op, props);
+};
+
 export const opTypeSwitch = (opType: string, op: string, props: any) => {
     switch (opType) {
         case "formats":
@@ -987,6 +1293,8 @@ export const opTypeSwitch = (opType: string, op: string, props: any) => {
             return <LabelFilterBody {...props} />;
         case "binary_operations":
             return <BinaryOperationsBody {...props} />;
+        case "functions":
+            return functionsRenderer(op, props);
         default:
             return rangeRenderer(op, props);
     }

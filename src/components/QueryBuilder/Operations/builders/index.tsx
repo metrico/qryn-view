@@ -27,6 +27,7 @@ import {
     Trigonometric,
     MetricFunction,
     RangeFunctionsFn,
+    EditableFuncitonFn,
 } from "../types";
 
 export const JSONBuilder: JSONBuilderFn = () => ({
@@ -196,13 +197,13 @@ export const RangeBuilder: RangeFn = (rangeType) => ({
 export const RangeFunctionsBuilder: RangeFunctionsFn = (rangeType) => ({
     result: "",
     range: "",
-    quantile: 0.5, 
-    labels:[],
-    labelsString:"",
+    quantile: 0.5,
+    labels: [],
+    labelsString: "",
     setQuantile(quantile: number | string) {
-    this.quantile = quantile;
+        this.quantile = quantile;
     },
-    
+
     setRange(range: string) {
         this.range = range;
     },
@@ -224,7 +225,7 @@ export const LabelRangeBuilder: LabelRangeFn = (rangeType) => ({
     range: "",
     labels: [],
     labelsString: "",
-    quantile: 0.95,
+    quantile: 0.99,
     setFn(initial: string) {
         if (rangeType !== "quantile_over_time") {
             this.result = `${rangeType}(${initial}`;
@@ -493,17 +494,56 @@ export const TrigonometricFunctionOperationBuilder: TrigonometricFn = (
     },
 });
 
+export const MetricFunctionsOperationBuilder: MetricFunctionFn = (
+    metricFunction
+) => ({
+    result: "",
+    setFn(initial) {
+        this.result = `${metricFunction}(${initial})`;
+    },
+    build(initial) {
+        this.setFn(initial);
+        return this.result;
+    },
+});
 
-export const MetricFunctionsOperationBuilder: MetricFunctionFn = (metricFunction)=> ({
-result:"",
-setFn(initial){
-    this.result = `${metricFunction}(${initial})`;
-},
-build(initial){
-    this.setFn(initial);
-    return this.result;
-}
-})
+export const EditableFunctionsOperationBuilder: EditableFuncitonFn = (
+    metricFunction
+) => ({
+    result: "",
+    prev_args: "",
+    after_args: "",
+    setPrevArgs(prev_args: string) {
+        this.prev_args = prev_args;
+    },
+    setAfterArgs(after_args: string) {
+        this.after_args = after_args;
+    },
+    setFn(initial) {
+        console.log(this.prev_args)
+        this.result = `${metricFunction}(${this.prev_args}${initial}${this.after_args})`;
+    },
+    setEditableParams(operation: any) {
+        console.log(operation)
+        if (
+            typeof operation?.after_args === "string" &&
+            operation?.after_args !== ""
+        ) {
+            this.setAfterArgs(operation.after_args);
+        }
+
+        if (
+            typeof operation?.prev_args === "string" &&
+            operation?.prev_args !== ""
+        ) {
+            this.setPrevArgs(operation.prev_args);
+        }
+    },
+    build(initial) {
+        this.setFn(initial);
+        return this.result;
+    },
+});
 
 export const FormatOperators: any = {
     json: JSONBuilder,
@@ -555,8 +595,9 @@ export const TrigonometricOperators: any = (
     ),
 });
 
-export const MetricFunctionOperators:any = (metricFunction:MetricFunction)=>({
-    metric_functions: MetricFunctionsOperationBuilder(
-        metricFunction
-    )
-})
+export const MetricFunctionOperators: any = (
+    metricFunction: MetricFunction
+) => ({
+    metric_functions: MetricFunctionsOperationBuilder(metricFunction),
+    editable_functions: EditableFunctionsOperationBuilder(metricFunction),
+});

@@ -199,6 +199,17 @@ export interface MetricFunctionBuilderProps extends CommonFormatProps {
     build(initial: string): string;
 }
 
+export interface EditableFunctionBuilderProps extends CommonFormatProps {
+    result: string;
+    prev_args:string;
+    after_args:string;
+    setPrevArgs(operation:any):void 
+    setAfterArgs(operation:any):void 
+    setEditableParams(operation:any):void
+    setFn(initial: string): void;
+    build(initial: string): string;
+}
+
 // Functions
 
 export type JSONBuilderFn = () => JSONBuilderProps;
@@ -250,6 +261,12 @@ export type MetricFunctionFn = (
 ) => MetricFunctionBuilderProps;
 // Range types
 
+export type EditableFuncitonFn = (
+    metricFunction:MetricFunction
+) => EditableFunctionBuilderProps;
+// inject function .... add prev or after args
+// manage everything by component
+// inject only a string converted
 export type SimpleRangeOperator =
     | "rate"
     | "rate_counter"

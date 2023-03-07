@@ -8,7 +8,7 @@ import {
     BinaryOperations,
     TimeFunctionOperators,
     TrigonometricOperators,
-    MetricFunctionOperators
+    MetricFunctionOperators,
 } from "../../../../QueryBuilder/Operations/builders";
 import { logsToString } from "../helpers";
 
@@ -42,7 +42,7 @@ const ranges = [
 const range_functions = [
     // metrics range
     "changes",
-   // "rate_func",
+    // "rate_func",
     "irate",
     "increase",
     "idelta",
@@ -56,10 +56,10 @@ const range_functions = [
     "avg_over_time",
     "min_over_time",
     "max_over_time",
-   // "count_over_time",
+    // "count_over_time",
     "last_over_time",
     "present_over_time",
-   // "absent_over_time",
+    // "absent_over_time",
     "stddev_over_time",
 ];
 
@@ -142,27 +142,19 @@ const aggregations_k = ["topk", "bottomk"];
 const time_functions = ["day_of_month", "day_of_week", "days_in_month"];
 
 const metrics_functions = [
-    "histogram_quantile",
-    "label_replace",
     "ln",
     "absent",
     "ceil",
-    "clamp",
-    "clamp_max",
-    "clamp_min",
     "deg",
     "exp",
     "floor",
     "group",
     "hour",
-    "label_join",
     "log10",
     "log2",
     "minute",
     "pi",
-    "quantile",
     "rad",
-    "round",
     "scalar",
     "sgn",
     "sort",
@@ -175,6 +167,16 @@ const metrics_functions = [
     "year",
 ];
 
+const editable_funcs = [
+    "histogram_quantile",
+    "label_replace",
+    "clamp",
+    "clamp_max",
+    "clamp_min",
+    "label_join",
+    "quantile",
+    "round",
+];
 
 const isSingleExpression = (expr: string) =>
     ["line_format", "regexp", "pattern"].includes(expr);
@@ -193,14 +195,13 @@ const setExpressions = (result: any, expressions: string[]) => {
 };
 
 const setRangeLabels = (result: any, labels: string[]) => {
-    console.log(labels)
     if (Array.isArray(labels) && labels?.length > 0) {
         labels.forEach((label) => {
             result.addLabel(label);
         });
     }
 };
- 
+
 const setKeyVal = (result: any, kval: number) => {
     result.setKValue(kval);
 };
@@ -209,9 +210,7 @@ export const OperationsManager: OperationsManagerType = (
     initial: string,
     operations: any[]
 ) => {
-    // here enters only an object with: label, operator, values array (not metrics)
-    console.log(operations)
-    console.log(initial, "INSIDE OPERATIONS MANAGER")
+ 
     let result: any = "";
     if (initial && typeof initial === "string") {
         // it waits for raw labels (not the string itself )
@@ -282,9 +281,20 @@ export const OperationsManager: OperationsManagerType = (
                     result = result.build(resultType);
                 }
 
-                if(metrics_functions.includes(operation.name)){
+                if (metrics_functions.includes(operation.name)) {
                     const resultType = setResultType(result, logString);
-                    result = MetricFunctionOperators(operation.name)['metric_functions'];
+                    result = MetricFunctionOperators(operation.name)[
+                        "metric_functions"
+                    ];
+                    result = result.build(resultType);
+                }
+
+                if (editable_funcs.includes(operation.name)) {
+                    const resultType = setResultType(result, logString);
+                    result = MetricFunctionOperators(operation.name)[
+                        "editable_functions"
+                    ];
+                    result.setEditableParams(operation);
                     result = result.build(resultType);
                 }
 
@@ -309,7 +319,6 @@ export const OperationsManager: OperationsManagerType = (
 
                 if (aggregations.includes(operation.name)) {
                     const resultType = setResultType(result, logString);
-                    console.log(operation)
                     result = AggregationOperators(operation.name)["aggr"];
                     setRangeLabels(result, operation.labels);
                     result = result.build(resultType);
@@ -349,7 +358,9 @@ export const OperationsManager: OperationsManagerType = (
 
                 if (time_functions.includes(operation.name)) {
                     const resultType = setResultType(result, logString);
-                    result = TimeFunctionOperators(operation.name)?.["time_function"]
+                    result = TimeFunctionOperators(operation.name)?.[
+                        "time_function"
+                    ];
 
                     result = result.build(resultType);
                 }
@@ -375,3 +386,70 @@ export const OperationsManager: OperationsManagerType = (
     }
     return result;
 };
+
+// use operation => fields
+
+/**
+ * => name: histogram_quantile
+ *  fields: [ {
+ * name: quantile
+ * type: select
+ * => values: 0.25, 0.5, 0.75, 0.9, 0.99
+ * => pos: fn_args_before } => argument from function, then the rest
+ * => ]
+ * => name: label_replace
+ * fields: [
+ * {
+ * name: destination label
+ * type: label_selection (select)
+ * pos: fn_args_after
+ *
+ * },
+ * {
+ * name: replacement
+ * type: input
+ * default: "$1"
+ * pos: fn_args_after
+ *
+ * },
+ * {
+ * name: source label
+ * type: label_selection
+ * pos: fn_args_after
+ * },
+ * {
+ * name: regex
+ * type: input
+ * default: "(.*)"
+ * pos: fn_arg_after
+ * }
+ *
+ *
+ * }
+ *
+ *
+ *]
+ *
+ * clamp:
+ * minimum scalar Input default 1 after_args
+ * maximum scalar Input default 1 after_args
+ *
+ * clamp max
+ * maximum scalar Input default 1 after_args
+ *
+ * clamp min
+ * minimum scalar Input default 1 after_args
+ *
+ * Label Join
+ *     - Destination label [label]
+ *     - Separator [","]
+ *     - Source label [label]
+ *
+ * Quantile
+ *     - value [1] prev arg
+ *
+ * Round
+ *    - to nearest [1] after_arg
+ *
+ *
+ */
