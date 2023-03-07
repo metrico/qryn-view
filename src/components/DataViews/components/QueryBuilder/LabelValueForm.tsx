@@ -18,6 +18,7 @@ export const LabelValueForm = (props: any) => {
         onChange,
         labelValuesLength,
         id,
+        metric,
     } = props;
 
 
@@ -27,7 +28,6 @@ export const LabelValueForm = (props: any) => {
 
     const mainTheme = useTheme()
 
-   
     const [localKeyVal, setLocalKeyVal] = useState(keyVal);
 
     const [labelValue, setLabelValue] = useState(
@@ -50,26 +50,26 @@ export const LabelValueForm = (props: any) => {
         const prevKeyVal = JSON.parse(JSON.stringify(localKeyVal));
         const newKeyVal = {
             ...prevKeyVal,
+            metric,
             label: value?.label,
             value: value.value,
             id,
         };
         onChange(newKeyVal);
         setLocalKeyVal((prev: any) => {
-            return { ...prev, label: value?.value };
+            return { ...prev, label: value?.value, metric };
         });
     };
 
     const onValueChange = (e: any) => {
-        const { value, id } = e;
+        const { value, id} = e;
         let values: any = [];
-        let next = value !== null ? value : { label: "", value: "" };
+        let next = value !== null ? value : { label: "", value: "",metric };
         if (isMulti && Array.isArray(next)) {
             values = next?.map((e: any) => e.value);
         } else {
             values = [next.value];
         }
-
         const prevKeyVal = JSON.parse(JSON.stringify(localKeyVal));
         const newKeyVal = { ...prevKeyVal, values, id };
         onChange(newKeyVal);

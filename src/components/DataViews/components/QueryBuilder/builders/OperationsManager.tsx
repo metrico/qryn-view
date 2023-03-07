@@ -42,7 +42,7 @@ const ranges = [
 const range_functions = [
     // metrics range
     "changes",
-    "rate",
+   // "rate_func",
     "irate",
     "increase",
     "idelta",
@@ -52,14 +52,14 @@ const range_functions = [
     "quantile over time",
     "deriv",
     "resets",
-    "sum_over_time",
+    //"sum_over_time",
     "avg_over_time",
     "min_over_time",
     "max_over_time",
-    "count_over_time",
+   // "count_over_time",
     "last_over_time",
     "present_over_time",
-    "absent_over_time",
+   // "absent_over_time",
     "stddev_over_time",
 ];
 
@@ -193,13 +193,14 @@ const setExpressions = (result: any, expressions: string[]) => {
 };
 
 const setRangeLabels = (result: any, labels: string[]) => {
+    console.log(labels)
     if (Array.isArray(labels) && labels?.length > 0) {
         labels.forEach((label) => {
             result.addLabel(label);
         });
     }
 };
-
+ 
 const setKeyVal = (result: any, kval: number) => {
     result.setKValue(kval);
 };
@@ -208,6 +209,9 @@ export const OperationsManager: OperationsManagerType = (
     initial: string,
     operations: any[]
 ) => {
+    // here enters only an object with: label, operator, values array (not metrics)
+    console.log(operations)
+    console.log(initial, "INSIDE OPERATIONS MANAGER")
     let result: any = "";
     if (initial && typeof initial === "string") {
         // it waits for raw labels (not the string itself )
@@ -305,7 +309,7 @@ export const OperationsManager: OperationsManagerType = (
 
                 if (aggregations.includes(operation.name)) {
                     const resultType = setResultType(result, logString);
-
+                    console.log(operation)
                     result = AggregationOperators(operation.name)["aggr"];
                     setRangeLabels(result, operation.labels);
                     result = result.build(resultType);

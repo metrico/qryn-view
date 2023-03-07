@@ -12,7 +12,7 @@ import { initialMetricsBuilder,binaryOperatorOpts } from "./consts";
 
 
 export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
-    const { dataSourceId, labelValueChange, handleMetricsChange } = props;
+    const { dataSourceId, labelValueChange} = props;
 
     const dataSources = useSelector((store: any) => store.dataSources);
 
@@ -67,7 +67,6 @@ export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
 
     const finalQueryOperator = (builders: Builder[]) => {
         let finalQuery = "";
-
         builders.forEach((builder) => {
             if (!builder.isBinary) {
                 finalQuery += builder.builderResult;

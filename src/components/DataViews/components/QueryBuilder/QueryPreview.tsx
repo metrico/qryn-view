@@ -164,6 +164,7 @@ export default function QueryPreview(props: Props) {
         setInitialValue([
             { type: "paragraph", children: [{ text: props.queryText }] },
         ]);
+        console.log(props.queryText)
         editor.children = [{ text: props.queryText }];
           // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.queryText]);

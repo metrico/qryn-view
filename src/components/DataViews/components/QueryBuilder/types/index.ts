@@ -53,6 +53,7 @@ export interface BinaryValue {
 export interface Builder {
     operations: any[];
     labelsState: any[];
+    labelValuesState?: Label[]; 
     binaryValue: BinaryValue;
     logsVolumeQuery: string;
     builderResult: string;
@@ -72,6 +73,7 @@ export interface FormBuilderProps {
 
 export interface Label {
     id: string;
+    metric?:string;
     label: string;
     operator: operator;
     values: string[];

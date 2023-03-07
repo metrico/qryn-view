@@ -45,12 +45,13 @@ export function metricsToString(metric: string, labels: Label[]): string {
 
     return metricString;
 }
-
+// get here the 'metrics type'
 export function logsToString(labels: Label[]): string {
+    console.log(labels)
     let labelsBody = "";
-
-    if (labels?.length > 0) {
-        labelsBody = `{${labelsToString(labels)}}`;
+    if(Array.isArray(labels)&&labels?.length > 0) {
+      labelsBody+= labels[0].metric
+        labelsBody += `{${labelsToString(labels)}}`;
     }
 
     return labelsBody;
@@ -219,7 +220,6 @@ export const apiRequest = async (
             ...options,
             auth: basicAuth,
         };
-      //  console.log(config, "CONFIG")
         const req: LogsResponse | any[] = await axios.get(url, config);
         if (req) {
             setResponse(req || []);

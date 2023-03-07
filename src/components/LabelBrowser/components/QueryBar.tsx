@@ -1039,7 +1039,7 @@ export const QueryBarCont = (props: any) => {
             {buttonsHidden() && dataSourceType === "logs" && !isBuilder && (
                 <ShowLabelsButton {...props} />
             )}
-            {(dataSourceType !== "logs" || !isBuilder) && (
+            {(dataSourceType !== "logs" ||  !isBuilder ) && dataSourceType !== "metrics" && (
                 <QueryEditor
                     onQueryChange={handleQueryChange}
                     defaultValue={expr || ""}

@@ -4,12 +4,12 @@ import { FlexColumn, MetricsContStyle } from "./styles";
 import { cx } from "@emotion/css";
 import { LabelValuesSelectors, OperationFunctions } from "./renderers";
 import { useTheme } from "./hooks";
-import { useMemo, useCallback, useState } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import {
     BinaryOperatorsSelector,
     OperationBodyStyles,
 } from "../../../QueryBuilder/Operations/OperationContainer";
-import { logsToString } from "./helpers";
+import { labelsToString, logsToString } from "./helpers";
 import { binaryOperatorOpts, binaryVectorOpt } from "./consts";
 import { InputSelect } from "./InputSelect";
 import { useValuesFromMetrics } from "../Metrics/useValuesFromMetrics";
@@ -70,7 +70,6 @@ export const BinaryOperationBar = (props: any) => {
         }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [binaryOperatorOpts]);
-    
     return (
         <div>
             <div className={cx(OperationBodyStyles(theme))}>
@@ -110,13 +109,19 @@ export const FormBuilder = (props: any) => {
     const { builder, theme, idx, setBuilders, logsResponse, dataSourceId } =
         props;
 
-
-
     // const [logsVolumeQuery, setLogsVolumeQuery] = useState(builder.logsVolumeQuery)
 
     const [labelsString, setLabelsString] = useState(
         logsToString(builder.labelValuesState) || ""
     );
+    const labelValueMemo = useMemo(() => {
+        if (builder?.labelValuesState) {
+            let labelString = labelsToString(builder?.labelValuesState);
+            return "{" + labelString + "}" || "{}";
+        }
+        return {};
+    }, [builder.labelValuesState]);
+    console.log(labelValueMemo);
     const metricsOpts = useValuesFromMetrics(dataSourceId);
     const [metricValue, setMetricValue] = useState(
         metricsOpts[0] || { label: "", value: "" }
@@ -124,10 +129,12 @@ export const FormBuilder = (props: any) => {
 
     const [finalQuery, setFinalQuery] = useState(builder.builderResult || "");
 
-
     const [labelValueString, setLabelValueString] = useState(
         JSON.stringify(builder.labelValuesState) || ""
     );
+    useEffect(() => {
+        setLabelValueString(JSON.stringify(builder.labelValuesState));
+    }, [builder]);
     const onFinalQueryChange = useCallback((query: string) => {
         setBuilders((prev: any) => {
             const next = [...prev];
@@ -155,16 +162,23 @@ export const FormBuilder = (props: any) => {
         setMetricValue((prev: any) => {
             return { value: value?.value, label: value?.value };
         });
-
-
     };
     const handleMetricChange = (e: any) => {
-        //handleMetricValueChange(e);
-        console.log(e)
+        console.log(e);
     };
-    const onLabelValueChange = (e:any) => {
 
-    }
+    const handleMetricType = (
+        builder: any,
+        logLabels: any,
+        metricLabels: any
+    ) => {
+        if (builder.isMetrics) {
+            return metricLabels;
+        }
+        return logLabels;
+    };
+
+    const onLabelValueChange = (e: any) => {};
     const onBinaryOptionChange = (e: any, name: string) => {
         setBuilders((prev: any) => {
             const next = [...prev];
@@ -183,7 +197,6 @@ export const FormBuilder = (props: any) => {
         });
     };
 
-
     return (
         <div className={cx(FlexColumn)} key={idx}>
             {builder.isBinary && (
@@ -195,44 +208,57 @@ export const FormBuilder = (props: any) => {
                 />
             )}
             <div className={cx(MetricsContStyle)}>
-                {builder.isMetrics === true ?  (<>
-                    <MetricsSelector
-                        theme={theme}
-                        //metric={builder.metric}
-                        onMetricChange={onMetricChange}
-                        dataSourceId={dataSourceId}
-                    />
-                    <MetricsLabelValueSelectors
-                    onChange={onLabelValueChange}
-                    dataSourceId={dataSourceId}
-                    value={metricValue.value}
-                    metricValueChange={handleMetricChange}
-                />
-                </>
-                ):(
+                {builder.isMetrics === true ? (
+                    <>
+                        <MetricsSelector
+                            // metrics selector for Metrics
+                            theme={theme}
+                            onMetricChange={onMetricChange}
+                            dataSourceId={dataSourceId}
+                        />
+                        <MetricsLabelValueSelectors
+                            // label value selectors for metrics
+                            index={idx}
+                            onChange={onLabelValueChange} // this will be set
+                            dataSourceId={dataSourceId}
+                            value={metricValue.value}
+                            setBuilders={setBuilders}
+                            finalQuery={finalQuery}
+                            builder={builder}
+                            setFinalQuery={onFinalQueryChange}
+                            labelValueString={labelValueString}
+                            setLabelValueString={setLabelValueString}
+                            metricValueChange={handleMetricChange}
+                        />
+                    </>
+                ) : (
                     <LabelValuesSelectors
-                    {...builder}
-                    dataSourceId={dataSourceId}
-                    logsResponse={logsResponse}
-                    setLabelsString={setLabelsString}
-                    finalQuery={finalQuery}
-                    setFinalQuery={onFinalQueryChange}
-                    labelValueString={labelValueString}
-                    setLabelValueString={setLabelValueString}
-                    setBuilders={setBuilders}
-                    index={idx}
-                    theme={theme}
-                />
-
+                        //  Label value selector for logs
+                        {...builder}
+                        dataSourceId={dataSourceId}
+                        logsResponse={logsResponse}
+                        setLabelsString={setLabelsString}
+                        finalQuery={finalQuery}
+                        setFinalQuery={onFinalQueryChange}
+                        labelValueString={labelValueString}
+                        setLabelValueString={setLabelValueString}
+                        setBuilders={setBuilders}
+                        index={idx}
+                        theme={theme}
+                    />
                 )}
-    
             </div>
             <OperationFunctions
+                // Operations functions for metrics and logs
                 {...props}
                 {...builder}
                 setBuilders={setBuilders}
                 dataSourceId={dataSourceId}
-                labelsString={labelsString}
+                labelsString={handleMetricType(
+                    builder,
+                    labelsString,
+                    labelValueMemo
+                )}
                 labelValueString={labelValueString}
                 setFinalQuery={onFinalQueryChange}
                 finalQuery={finalQuery}
