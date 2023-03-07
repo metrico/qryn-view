@@ -189,26 +189,55 @@ export const OperationsOptions: any = {
         "IP Line Filter Expression",
         "IP Line Not Filter Expression",
     ],
-    "Trigonometric": [
-
-     "Acos"
-    , "Acosh"
-    , "Asin"
-    , "Asinh"
-    , "Atan"
-    , "Atanh"
-    , "Cos"
-    , "Cosh"
-    , "Sin"
-    , "Sinh"
-    , "Tan"
-    , "Tanh",
+    Trigonometric: [
+        "Acos",
+        "Acosh",
+        "Asin",
+        "Asinh",
+        "Atan",
+        "Atanh",
+        "Cos",
+        "Cosh",
+        "Sin",
+        "Sinh",
+        "Tan",
+        "Tanh",
     ],
-    "Time Functions":[
-        "Day Of Month", "Day Of Week", "Days In Month"
-    ]
-    
+    "Time Functions": ["Day Of Month", "Day Of Week", "Days In Month"],
 
+    Functions: [
+        "Histogram Quantile",
+        "Label Replace",
+        "Ln",
+        "absent",
+        "Ceil",
+        "Clamp",
+        "Clamp max",
+        "Clamp min",
+        "Deg",
+        "Exp",
+        "Floor",
+        "Group",
+        "Hour",
+        "Label join",
+        "Log10",
+        "Log2",
+        "Minute",
+        "Pi",
+        "Quantile",
+        "Rad",
+        "Round",
+        "Scalar",
+        "Sgn",
+        "Sort",
+        "Sort desc",
+        "Sqrt",
+        "Stddev",
+        "Time",
+        "Timestamp",
+        "Vector",
+        "Year",
+    ],
 };
 
 export type OperationOptions =
@@ -217,7 +246,10 @@ export type OperationOptions =
     | "Formats"
     | "Binary Operations"
     | "Label Filters"
-    | "Line Filters";
+    | "Line Filters"
+    | "Trigonometric"
+    | "Time Functions"
+    | "Functions";
 
 export function CustomSubMenu({ item }: any) {
     return (

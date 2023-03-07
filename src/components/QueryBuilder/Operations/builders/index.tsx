@@ -497,7 +497,7 @@ export const TrigonometricFunctionOperationBuilder: TrigonometricFn = (
 export const MetricFunctionsOperationBuilder: MetricFunctionFn = (metricFunction)=> ({
 result:"",
 setFn(initial){
-    this.result = `${metricFunction}()${initial}`;
+    this.result = `${metricFunction}(${initial})`;
 },
 build(initial){
     this.setFn(initial);
