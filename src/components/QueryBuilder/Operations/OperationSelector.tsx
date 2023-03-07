@@ -189,6 +189,26 @@ export const OperationsOptions: any = {
         "IP Line Filter Expression",
         "IP Line Not Filter Expression",
     ],
+    "Trigonometric": [
+
+     "Acos"
+    , "Acosh"
+    , "Asin"
+    , "Asinh"
+    , "Atan"
+    , "Atanh"
+    , "Cos"
+    , "Cosh"
+    , "Sin"
+    , "Sinh"
+    , "Tan"
+    , "Tanh",
+    ],
+    "Time Functions":[
+        "Day Of Month", "Day Of Week", "Days In Month"
+    ]
+    
+
 };
 
 export type OperationOptions =

@@ -349,9 +349,7 @@ export const OperationsManager: OperationsManagerType = (
 
                 if (time_functions.includes(operation.name)) {
                     const resultType = setResultType(result, logString);
-                    result = TimeFunctionOperators["time_function"](
-                        operation.name
-                    );
+                    result = TimeFunctionOperators(operation.name)?.["time_function"]
 
                     result = result.build(resultType);
                 }
