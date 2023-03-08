@@ -95,8 +95,8 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
     const onLabelChange = (e: any) => {
         const labelFound = labelValuesState?.some((f) => f.id === e.id);
         if (labelValuesState?.length === 1 && !labelFound) {
-            setLabelValuesState((prev) => [e]);
-            setLabelValueString((prev: any) => JSON.stringify([e])); // this is what waits
+            setLabelValuesState(() => [e]);
+            setLabelValueString(() => JSON.stringify([e])); 
         }
 
         const prevState = [...labelValuesState];
@@ -108,8 +108,8 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
         });
 
         if (labelFound) {
-            setLabelValuesState((_) => [...nextState]);
-            setLabelValueString((_: any) => JSON.stringify(nextState));
+            setLabelValuesState(() => [...nextState]);
+            setLabelValueString(() => JSON.stringify(nextState));
         }
     };
 
@@ -149,7 +149,7 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
      * resets the label values state to it's initial value
      */
     const resetLabelsState = () => {
-        setLabelValuesState((_) => [{...InitialLabelValueState}]);
+        setLabelValuesState(() => [{...InitialLabelValueState}]);
     };
 
     if (Array.isArray(labelValuesState)) {
@@ -196,21 +196,12 @@ export const OperationFunctions = (props: any) => {
         setBuilders,
         index,
     } = props;
-    // pass the labesString to check from useLabelSeries
-    console.log(labelsString, "LABELS STRING")
-    // here should come formatted as a labelsString without metric
     const { labelSeries } = useLabelSeries(dataSourceId, labelsString);
-
     const [operations, setOperations] = useState<any>(props.operations || []);
 
-    // update final query string with the current operation functions
     useEffect(() => {
         if (labelValueString !== "") {
-            // here should add the metrics stuff
-            // is metrics === true ? extract from labelValueString
-            console.log(labelValueString)
-            let res = OperationsManager(labelValueString, operations); // here gets modifyed, check if there are metrics
-            console.log("in here is the change to", res)
+            let res = OperationsManager(labelValueString, operations); 
             setFinalQuery(res);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

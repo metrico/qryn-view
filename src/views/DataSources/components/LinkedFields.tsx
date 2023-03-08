@@ -6,10 +6,10 @@ import { InputCont } from "../styles";
 import { LinkedField } from "./LinkedField";
 import { SectionHeader } from "./SectionHeader";
 
-export const LinkedFields = (props:any) => {
+export const LinkedFields = (props: any) => {
     const { linkedFields, name, id } = props;
 
-    const dataSources = useSelector((store:any) => store.dataSources);
+    const dataSources = useSelector((store: any) => store.dataSources);
 
     const dispatch = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
@@ -25,7 +25,7 @@ export const LinkedFields = (props:any) => {
 
         const prevDataSources = JSON.parse(JSON.stringify(dataSources));
 
-        const newDataSources = prevDataSources?.map((m:any) => {
+        const newDataSources = prevDataSources?.map((m: any) => {
             if (m.id === id) {
                 return {
                     ...m,
@@ -40,9 +40,9 @@ export const LinkedFields = (props:any) => {
     };
 
     const fieldEditing = () => {
-        setIsEditing((_) => true);
+        setIsEditing(() => true);
         setTimeout(() => {
-            setIsEditing((_) => false);
+            setIsEditing(() => false);
         }, 800);
     };
 
@@ -58,7 +58,7 @@ export const LinkedFields = (props:any) => {
                 />
 
                 <InputCont>
-                    {linkedFields?.map((val:any, key:any) => (
+                    {linkedFields?.map((val: any, key: any) => (
                         <LinkedField
                             key={key}
                             {...val}

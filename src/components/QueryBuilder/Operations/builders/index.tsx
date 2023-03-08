@@ -520,11 +520,9 @@ export const EditableFunctionsOperationBuilder: EditableFuncitonFn = (
         this.after_args = after_args;
     },
     setFn(initial) {
-        console.log(this.prev_args)
         this.result = `${metricFunction}(${this.prev_args}${initial}${this.after_args})`;
     },
     setEditableParams(operation: any) {
-        console.log(operation)
         if (
             typeof operation?.after_args === "string" &&
             operation?.after_args !== ""

@@ -45,7 +45,7 @@ export const Settings = (props: any) => {
     };
 
     const onChange = (e: any, name: any) => {
-        setIsEditing((_) => true);
+        setIsEditing(() => true);
         const value = e.target.value;
         // check here if name === url
         if (name === "url") {
@@ -69,7 +69,7 @@ export const Settings = (props: any) => {
                 localStorage.setItem("dataSources", JSON.stringify(newVal));
                 dispatch(setDataSources(newVal));
                 setTimeout(() => {
-                    setIsEditing((_) => false);
+                    setIsEditing(() => false);
                 }, 800);
             }
         }
@@ -78,7 +78,7 @@ export const Settings = (props: any) => {
         localStorage.setItem("dataSources", JSON.stringify(newVal));
         dispatch(setDataSources(newVal));
         setTimeout(() => {
-            setIsEditing((_) => false);
+            setIsEditing(() => false);
         }, 800);
     };
 

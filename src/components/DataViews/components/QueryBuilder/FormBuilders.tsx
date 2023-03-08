@@ -5,15 +5,14 @@ import { cx } from "@emotion/css";
 import { LabelValuesSelectors, OperationFunctions } from "./renderers";
 import { useTheme } from "./hooks";
 import { useMemo, useCallback, useState, useEffect } from "react";
-import {
-    BinaryOperatorsSelector,
-    OperationBodyStyles,
-} from "../../../QueryBuilder/Operations/OperationContainer";
+
 import { labelsToString, logsToString } from "./helpers";
 import { binaryOperatorOpts, binaryVectorOpt } from "./consts";
 import { InputSelect } from "./InputSelect";
 import { useValuesFromMetrics } from "../Metrics/useValuesFromMetrics";
 import { MetricsLabelValueSelectors } from "./MetricsLabelValueSelector";
+import { BinaryOperatorsSelector } from "../../../QueryBuilder/Operations/Components/selectors";
+import { OperationBodyStyles } from "../../../QueryBuilder/Operations/OperationStyles";
 
 // get the initial state from props
 export const FormBuilders = (props: FormBuilderProps) => {

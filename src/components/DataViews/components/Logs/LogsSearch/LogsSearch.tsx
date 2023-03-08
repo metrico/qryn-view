@@ -1,4 +1,4 @@
-import { css, cx } from "@emotion/css";
+import { cx } from "@emotion/css";
 import { ThemeProvider } from "@emotion/react";
 import { FlexWrap } from "../styled";
 import { useTheme } from "../../QueryBuilder/hooks";

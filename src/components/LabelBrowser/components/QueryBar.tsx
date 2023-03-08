@@ -745,12 +745,12 @@ export const QueryBar = (props: any) => {
     }
 
     function onTraceSearchChange(e: any) {
-        setTraceSearch((_: any) => e);
+        setTraceSearch(() => e);
     }
 
     function handleStatsOpen(e: any) {
         const value = e.target.checked;
-        setShowStatsOpen((_: any) => value);
+        setShowStatsOpen(() => value);
 
         const prevPanel = JSON.parse(JSON.stringify(panelData));
 
@@ -765,7 +765,7 @@ export const QueryBar = (props: any) => {
     }
 
     const switchTraceQueryType = (e: any) => {
-        setTraceQueryType((_: any) => e);
+        setTraceQueryType(() => e);
     };
 
     // renderers

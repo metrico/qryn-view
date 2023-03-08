@@ -79,8 +79,8 @@ export function MetricsLabelValueSelectors(props: any) {
     const onLabelChange = (e: any) => {
         const labelFound = labelValuesState?.some((f) => f.id === e.id);
         if (labelValuesState?.length === 1 && !labelFound) {
-            setLabelValuesState((_: any) => [e]);
-            setLabelValueString((_: any) => JSON.stringify([e]));
+            setLabelValuesState(() => [e]);
+            setLabelValueString(() => JSON.stringify([e]));
         }
 
         const prevState = [...labelValuesState];
@@ -92,8 +92,8 @@ export function MetricsLabelValueSelectors(props: any) {
         });
 
         if (labelFound) {
-            setLabelValuesState((_: any) => [...nextState]);
-            setLabelValueString((_: any) => JSON.stringify(nextState));
+            setLabelValuesState(() => [...nextState]);
+            setLabelValueString(() => JSON.stringify(nextState));
         }
         onChange(e);
     };
@@ -103,7 +103,7 @@ export function MetricsLabelValueSelectors(props: any) {
      * @param e
      * Resets the labels value state into initial value.
      */
-    const resetLabelsState = (e: any) => {
+    const resetLabelsState = () => {
         setLabelValuesState((prev) => [
             { ...InitialLabelValueState, metric: value },
         ]);

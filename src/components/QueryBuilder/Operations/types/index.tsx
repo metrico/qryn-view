@@ -201,11 +201,11 @@ export interface MetricFunctionBuilderProps extends CommonFormatProps {
 
 export interface EditableFunctionBuilderProps extends CommonFormatProps {
     result: string;
-    prev_args:string;
-    after_args:string;
-    setPrevArgs(operation:any):void 
-    setAfterArgs(operation:any):void 
-    setEditableParams(operation:any):void
+    prev_args: string;
+    after_args: string;
+    setPrevArgs(operation: any): void;
+    setAfterArgs(operation: any): void;
+    setEditableParams(operation: any): void;
     setFn(initial: string): void;
     build(initial: string): string;
 }
@@ -262,7 +262,7 @@ export type MetricFunctionFn = (
 // Range types
 
 export type EditableFuncitonFn = (
-    metricFunction:MetricFunction
+    metricFunction: MetricFunction
 ) => EditableFunctionBuilderProps;
 // inject function .... add prev or after args
 // manage everything by component
@@ -406,3 +406,32 @@ export type MetricFunction =
     | "timestamp"
     | "vector"
     | "year";
+
+export type OperationContainerProps = {
+    id: number;
+    header: any;
+    body: any;
+    rate: string;
+    removeItem: any;
+    index: number;
+    opType: string;
+    expressions: any[];
+    conversion_function: string;
+    labelValue: string;
+    filterText: string;
+    labelFilter: LabelFilter;
+    binaryOperation: BinaryOperation;
+    lineFilter: string;
+    quantile: string | number;
+    kValue: number;
+    labels: any[];
+    labelOpts: string[];
+    onExpChange: (expressions: any[]) => void;
+    setOperations: any;
+};
+
+export interface FilterState {
+    label: string;
+    operator: string;
+    value: string;
+}
