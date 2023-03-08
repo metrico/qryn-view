@@ -1,6 +1,11 @@
 import { cx, css } from "@emotion/css";
 import CloseIcon from "@mui/icons-material/Close";
-import { useCallback, useState, useMemo, useEffect } from "react";
+import {
+    useCallback,
+    useState,
+    useMemo,
+    useEffect,
+} from "react";
 import { useTheme } from "../../DataViews/components/QueryBuilder/hooks";
 import { OperationSelectorFromType } from "./OperationSelector";
 import { useLabelsFromProps } from "./hooks";
@@ -42,6 +47,16 @@ export const OperationBodyStyles = (theme: any) => css`
         display: flex;
         align-items: center;
         gap: 3px;
+        justify-content: space-between;
+    }
+    .col {
+        flex-direction:column
+    }
+    .end {
+        justify-content: flex-end;
+    }
+    .wrap {
+       display:table;
     }
     label {
         font-size: 12px;
@@ -54,6 +69,7 @@ export const OperationBodyStyles = (theme: any) => css`
         border: 1px solid ${theme.buttonBorder};
         border-radius: 3px;
         padding: 0px 6px;
+        max-width:100px;
         &.checkbox {
             font-size: 12px;
             height: 12px;
@@ -430,7 +446,6 @@ export const RegexpFormatBody = (props: any) => {
     );
 };
 // extract  label - values from JSON expression for later unwrap function
-
 export const LineFormatBody = (props: any) => {
     const { setOperations, id } = props;
     const [expression, setExpression] = useState("");
@@ -472,14 +487,13 @@ export const ClampBody = (props: any) => {
     const [maximum, setMaximum] = useState("1");
     const theme = useTheme();
 
-    const onMaxChange = (e:any) => {
-        setMaximum((prev:any)=>e.target.value)
-    }
+    const onMaxChange = (e: any) => {
+        setMaximum((prev: any) => e.target.value);
+    };
 
-    const onMinChange = (e:any) => {
-        setMinimum((prev:any)=>e.target.value)
-    }
- 
+    const onMinChange = (e: any) => {
+        setMinimum((prev: any) => e.target.value);
+    };
 
     useEffect(() => {
         let clapArr = [minimum, maximum];
@@ -496,11 +510,12 @@ export const ClampBody = (props: any) => {
                 return m;
             });
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [minimum, maximum]);
 
     return (
         <div className={cx(OperationBodyStyles(theme))}>
-            <div>
+            <div className="input-group">
                 <label>Minimum Scalar</label>
                 <input
                     value={minimum}
@@ -508,7 +523,7 @@ export const ClampBody = (props: any) => {
                     onChange={onMinChange}
                 />
             </div>
-            <div>
+            <div className="input-group">
                 <label>Maximum Scalar</label>
                 <input
                     value={maximum}
@@ -524,10 +539,10 @@ export const ClampMinBody = (props: any) => {
     const [minimum, setMinimum] = useState("1");
 
     const theme = useTheme();
-    
-    const onMinChange = (e:any) => {
-        setMinimum((prev:any)=>e.target.value)
-    }
+
+    const onMinChange = (e: any) => {
+        setMinimum((prev: any) => e.target.value);
+    };
     useEffect(() => {
         let clapArr = [minimum];
 
@@ -543,8 +558,8 @@ export const ClampMinBody = (props: any) => {
                 return m;
             });
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [minimum]);
-
 
     return (
         <div className={cx(OperationBodyStyles(theme))}>
@@ -563,9 +578,9 @@ export const ClampMaxBody = (props: any) => {
     const { setOperations, id } = props;
     const [maximum, setMaximum] = useState("1");
     const theme = useTheme();
-    const onMaxChange = (e:any) => {
-        setMaximum((prev:any)=>e.target.value)
-    }
+    const onMaxChange = (e: any) => {
+        setMaximum((prev: any) => e.target.value);
+    };
 
     useEffect(() => {
         let clapArr = [maximum];
@@ -582,6 +597,7 @@ export const ClampMaxBody = (props: any) => {
                 return m;
             });
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [maximum]);
 
     return (
@@ -600,25 +616,24 @@ export const ClampMaxBody = (props: any) => {
 
 export const QuantileBody = (props: any) => {
     const { setOperations, id } = props;
-    const [quantile,setQuantile] = useState("1");
+    const [quantile, setQuantile] = useState("1");
     const theme = useTheme();
-    const onQuantileChange = (e:any) => {
-        setQuantile((prev:any)=>e.target.value)
-    }
+    const onQuantileChange = (e: any) => {
+        setQuantile((prev: any) => e.target.value);
+    };
 
     useEffect(() => {
-       
-
         setOperations((prev: any) => {
             const next = [...prev];
             return next?.map((m: any) => {
                 if (m.id === id) {
-                    m.prev_args = quantile +", " 
+                    m.prev_args = quantile + ", ";
                     return m;
                 }
                 return m;
             });
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quantile]);
 
     return (
@@ -635,17 +650,15 @@ export const QuantileBody = (props: any) => {
     );
 };
 
-export const RoundBody= (props: any) => {
+export const RoundBody = (props: any) => {
     const { setOperations, id } = props;
-    const [round ,setRound] = useState("1");
+    const [round, setRound] = useState("1");
     const theme = useTheme();
-    const onRoundChange = (e:any) => {
-        setRound((prev:any)=>e.target.value)
-    }
+    const onRoundChange = (e: any) => {
+        setRound((prev: any) => e.target.value);
+    };
 
     useEffect(() => {
-       
-
         setOperations((prev: any) => {
             const next = [...prev];
             return next?.map((m: any) => {
@@ -656,6 +669,7 @@ export const RoundBody= (props: any) => {
                 return m;
             });
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [round]);
 
     return (
@@ -672,7 +686,91 @@ export const RoundBody= (props: any) => {
     );
 };
 
+export const LabelReplaceBody = (props: any) => {
+    const { setOperations, id } = props;
+    const [destinationLabel, setDestinationLabel] = useState<string>("");
+    const [replacement, setReplacement] = useState<string>("$1");
+    const [sourceLabel, setSourceLabel] = useState<string>("");
+    const [regex, setRegex] = useState<string>("(.*)");
 
+    const theme = useTheme();
+
+    const onDestinationLevelChange = (e: any) => {
+        setDestinationLabel(e.target.value);
+    };
+
+    const onReplacementChange = (e: any) => {
+        setReplacement(e.target.value);
+    };
+
+    const onSourceLabelChange = (e: any) => {
+        setSourceLabel(e.target.value);
+    };
+
+    const onRegexChange = (e: any) => {
+        setRegex(e.target.value);
+    };
+
+    useEffect(() => {
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.after_args =
+                        ', "' +
+                        destinationLabel +
+                        '", "' +
+                        replacement +
+                        '", "' +
+                        sourceLabel +
+                        '", "' +
+                        regex +
+                        '"';
+                    return m;
+                }
+                return m;
+            });
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [destinationLabel, replacement, sourceLabel, regex]);
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <div className="input-group">
+                <label>Destination Label</label>
+                <input
+                    value={destinationLabel}
+                    placeholder={destinationLabel}
+                    onChange={onDestinationLevelChange}
+                />
+            </div>
+            <div className="input-group">
+                <label>Replacement</label>
+                <input
+                    value={replacement}
+                    placeholder={replacement}
+                    onChange={onReplacementChange}
+                />
+            </div>
+            <div className="input-group">
+                <label>Source Label</label>
+                <input
+                    value={sourceLabel}
+                    placeholder={sourceLabel}
+                    onChange={onSourceLabelChange}
+                />
+            </div>
+            <div className="input-group">
+                <label>Regex</label>
+                <input
+                    value={regex}
+                    placeholder={regex}
+                    onChange={onRegexChange}
+                />
+            </div>
+        </div>
+    );
+};
 
 export const DefaultFormatBody = (props: any) => {
     return <></>;
@@ -756,6 +854,121 @@ export const HistogramQuantileBody = (props: any) => {
                 onChange={onQuantileChange}
                 initial={props.quantile}
             />
+        </div>
+    );
+};
+
+export const LabelJoinBody = (props: any) => {
+    const { setOperations, id } = props;
+    const labelsList = useLabelsFromProps(id, props);
+    const [destinationLabel, setDestinationLabel] = useState<string>("");
+    const [sourceLabelSelectors, setSourceLabelSelectors] = useState(
+        props.labels || [""]
+    );
+    const [separator, setSeparator] = useState<string>(",");
+
+    const theme = useTheme();
+  
+    const onSourceLabelAdd = (e: any) => {
+        setSourceLabelSelectors((prev:any) => [...prev, ""]);
+    };
+
+    const onDestinationLabelChange = (e: any) => {
+        setDestinationLabel(() => e.target.value);
+    };
+
+    const onSeparatorChange = (e: any) => {
+        setSeparator(() => e.target.value);
+    };
+
+    const onSourceLabelChange = (e: any, idx: number) => {
+        setSourceLabelSelectors((prev: any) => {
+            let n = [...prev];
+            n[idx] = e?.target?.value;
+            return n;
+        });
+    };
+
+    const onSourceLabelRemove = useCallback(
+        (e: any, index: number) => {
+            setSourceLabelSelectors((prev: any) => {
+                const next = [...prev];
+                return next?.filter((_, i) => i !== index);
+            });
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [sourceLabelSelectors]
+    );
+
+    const sourceLabelsRenderer = () => {
+        return sourceLabelSelectors?.map((exp: string, index: number) => (
+
+            <div key={index} className="input-group">
+                <label>Source Label</label>
+                <RangeLabelsSelector
+                    initial=""
+                    onChange={(e: any) => onSourceLabelChange(e, index)}
+                    className={"expression-input"}
+                    labels={labelsList}
+                />
+
+                <button onClick={(e) => onSourceLabelRemove(e, index)}>
+                    x
+                </button>{" "}
+            </div>
+        ));
+    };
+
+    useEffect(() => {
+
+        let sl = sourceLabelSelectors.join('"' + separator + '"');
+        setOperations((prev: any) => {
+            const next = [...prev];
+            return next?.map((m: any) => {
+                if (m.id === id) {
+                    m.after_args =
+                        ', "' +
+                        destinationLabel +
+                        '", "' +
+                        separator +
+                        '", "' +
+                        sl + "\"" ;
+
+                    return m;
+                }
+                return m;
+            });
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [destinationLabel, sourceLabelSelectors, separator]);
+
+    return (
+        <div className={cx(OperationBodyStyles(theme))}>
+            <div className="input-group">
+                <label>Destination Label</label>
+                <RangeLabelsSelector
+                    initial=""
+                    onChange={onDestinationLabelChange}
+                    className={"expression-input"}
+                    labels={labelsList}
+                />
+            </div>
+            <div className="input-group">
+                <label>Replacement</label>
+                <input
+                    value={separator}
+                    placeholder={separator}
+                    onChange={onSeparatorChange}
+                />
+            </div>
+            <div className="input-group col">
+           
+                {sourceLabelsRenderer()}
+                
+            </div>
+            <div className="input-group end">
+            <button onClick={onSourceLabelAdd}>+ Add Source Label</button>
+            </div>
         </div>
     );
 };
@@ -884,10 +1097,6 @@ export const LabelRangeBody = (props: any) => {
         </div>
     );
 };
-
-// change:
-// labels
-//
 
 export const AggregationsBody = (props: any) => {
     const { setOperations, id, aggrType } = props;
@@ -1269,12 +1478,19 @@ export const functionsRenderer = (op: string, props: any) => {
     if (op === "clamp_min") {
         return <ClampMinBody {...props} />;
     }
-    if ( op  === "quantile") {
-        return <QuantileBody {...props}/>;
+    if (op === "quantile") {
+        return <QuantileBody {...props} />;
     }
 
-    if (op === "round"){
-        return <RoundBody {...props}/>;
+    if (op === "round") {
+        return <RoundBody {...props} />;
+    }
+    if (op === "label_replace") {
+        return <LabelReplaceBody {...props} />;
+    }
+
+    if (op === "label_join") {
+        return <LabelJoinBody {...props} />;
     }
     return rangeRenderer(op, props);
 };
