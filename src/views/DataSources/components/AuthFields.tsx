@@ -60,26 +60,26 @@ export function AuthFields(props: any) {
     }, [fields, setActiveFields]);
 
     const onSelectChange = (e: any, name: any) => {
-        setIsEditing((_) => true);
+        setIsEditing(() => true);
         const value = e.target.value;
         onValueChange(value, name);
         setTimeout(() => {
-            setIsEditing((_) => false);
+            setIsEditing(() => false);
         }, 800);
     };
 
     const onSwitchChange = (e: any, name: any) => {
-        setIsEditing((_) => true);
+        setIsEditing(() => true);
         const value = e.target.checked;
 
         onValueChange(value, name);
         setTimeout(() => {
-            setIsEditing((_) => false);
+            setIsEditing(() => false);
         }, 800);
     };
 
     const onCertValueChange = (e: any, name: any, cert: any) => {
-        setIsEditing((_) => true);
+        setIsEditing(() => true);
         const value = e.target.value;
         const prevAuth = JSON.parse(JSON.stringify(auth));
 
@@ -110,7 +110,7 @@ export function AuthFields(props: any) {
         dispatch(setDataSources(newDataSources));
 
         setTimeout(() => {
-            setIsEditing((_) => false);
+            setIsEditing(() => false);
         }, 600);
     };
 

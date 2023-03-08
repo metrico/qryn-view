@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import memoizeOne from "memoize-one";
-import tinycolor from "tinycolor2";
 export const colors = [
     "#7db26c",
     "#eab839",
@@ -175,11 +174,7 @@ export function getFilteredColors(colorsHex: string[], theme: any) {
     // Only add colors that have a contrast ratio >= 3 for the current theme
     let filteredColors = [];
     for (const color of colorsHex) {
-        if (
-            tinycolor.readability(theme.tabBg, color) >= 3
-        ) {
             filteredColors.push(color);
-        }
     }
 
     return filteredColors;

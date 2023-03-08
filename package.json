@@ -74,8 +74,7 @@
     "slate": "^0.73.1",
     "slate-history": "^0.66.0",
     "slate-react": "^0.74.2",
-    "source-map-explorer": "^2.5.3",
-    "tinycolor2": "^1.4.2"
+    "source-map-explorer": "^2.5.3"
   },
   "scripts": {
     "webpack": "webpack",
@@ -90,7 +89,8 @@
     "https-start": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem react-scripts start",
     "build-old": "webpack --mode production",
     "webpack-build": "webpack --config webpack.config.prod.js --mode=production",
-    "build": "CI=false && react-scripts build",
+    "dev-build": "CI=false react-scripts build",
+    "build": "CI=false && GENERATE_SOURCEMAP=false react-scripts build",
     "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "eslintConfig": {
@@ -134,7 +134,6 @@
     "@types/prismjs": "^1.26.0",
     "@types/react-redux": "^7.1.24",
     "@types/react-resizable": "^3.0.3",
-    "@types/tinycolor2": "^1.4.3",
     "babel-loader": "^8.2.3",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-class-properties": "^6.24.1",

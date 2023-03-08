@@ -3,7 +3,6 @@ import type { FC } from "react";
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { useTheme } from "../../DataViews/components/QueryBuilder/hooks";
-import { BinaryOperation, LabelFilter } from "./DragAndDropContainer";
 import OperationContainer from "./OperationContainer";
 
 export const ItemTypes = {
@@ -26,6 +25,8 @@ export interface OperationProps {
     index: number;
     body: any;
     rate: string;
+    prev_args:string;
+    after_args:string;
     moveItem: (dragIndex: number, hoverIndex: number) => void;
     removeItem: any;
     opType: string;
@@ -34,8 +35,8 @@ export interface OperationProps {
     labelValue: string;
     filterText: string;
     lineFilter: string;
-    binaryOperation: BinaryOperation;
-    labelFilter: LabelFilter;
+    binaryOperation: any;
+    labelFilter: any;
     quantile: string | number
     kValue: number;
     labels: any[];
@@ -112,27 +113,18 @@ export const Operations: FC<OperationProps> = (props) => {
             const hoverClientX =
                 (clientOffset as XYCoord).x - hoverBoundingRect.left;
 
-            // Only perform the move when the mouse has crossed half of the items height
-            // When dragging downwards, only move when the cursor is below 50%
-            // When dragging upwards, only move when the cursor is above 50%
 
-            // Dragging downwards
             if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) {
                 return;
             }
 
-            // Dragging upwards
             if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) {
                 return;
             }
 
-            // Time to actually perform the action
+      
             moveItem(dragIndex, hoverIndex);
 
-            // Note: we're mutating the monitor item here!
-            // Generally it's better to avoid mutations,
-            // but it's good here for the sake of performance
-            // to avoid expensive index searches.
             item.index = hoverIndex;
         },
     });

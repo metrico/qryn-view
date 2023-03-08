@@ -364,7 +364,6 @@ export const QueryBar = (props: any) => {
         }
     };
 
-    // events
     const onMetricChange = (e: any) => {
         const query = [{ children: [{ text: e }] }];
         handleQueryChange(query);
@@ -746,12 +745,12 @@ export const QueryBar = (props: any) => {
     }
 
     function onTraceSearchChange(e: any) {
-        setTraceSearch((_: any) => e);
+        setTraceSearch(() => e);
     }
 
     function handleStatsOpen(e: any) {
         const value = e.target.checked;
-        setShowStatsOpen((_: any) => value);
+        setShowStatsOpen(() => value);
 
         const prevPanel = JSON.parse(JSON.stringify(panelData));
 
@@ -766,7 +765,7 @@ export const QueryBar = (props: any) => {
     }
 
     const switchTraceQueryType = (e: any) => {
-        setTraceQueryType((_: any) => e);
+        setTraceQueryType(() => e);
     };
 
     // renderers
@@ -1040,7 +1039,7 @@ export const QueryBarCont = (props: any) => {
             {buttonsHidden() && dataSourceType === "logs" && !isBuilder && (
                 <ShowLabelsButton {...props} />
             )}
-            {(dataSourceType !== "logs" || !isBuilder) && (
+            {(dataSourceType !== "logs" ||  !isBuilder ) && dataSourceType !== "metrics" && (
                 <QueryEditor
                     onQueryChange={handleQueryChange}
                     defaultValue={expr || ""}
