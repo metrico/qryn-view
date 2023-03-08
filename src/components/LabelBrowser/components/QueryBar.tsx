@@ -403,7 +403,8 @@ export const QueryBar = (props: any) => {
             const ratiointval = Math.round(
                 intval * Number(window.devicePixelRatio.toFixed(2))
             );
-            querySubmit = query.replace("[$__interval]", `[${ratiointval}s]`);
+
+            querySubmit = query.replace(/\[\$__interval\]/, `[${ratiointval}s]`);
             customStep = ratiointval;
         } else {
             querySubmit = query;
@@ -497,7 +498,7 @@ export const QueryBar = (props: any) => {
     };
 
     const saveQuery = (e = []) => {
-        const queryParams = new URLSearchParams(hash.replace("#", ""));
+        const queryParams = new URLSearchParams(hash.replace(/#/, ""));
         const multiline = e
             ?.map((text: any) => text.children[0].text)
             .join("\n");
@@ -703,7 +704,7 @@ export const QueryBar = (props: any) => {
                 intval * Number(window.devicePixelRatio.toFixed(2))
             );
             querySubmit = queryExpr.replace(
-                "[$__interval]",
+                /\[\$__interval\]/,
                 `[${ratiointval}s]`
             );
             customStep = ratiointval;

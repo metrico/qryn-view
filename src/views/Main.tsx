@@ -19,7 +19,7 @@ export default function Main() {
     const { hash } = useLocation();
     // get url params as object
     const paramsMemo = useMemo(() => {
-        return new URLSearchParams(hash.replace("#", ""));
+        return new URLSearchParams(hash.replace(/#/, ""));
     }, [hash]);
     //
     UpdateStateFromQueryParams();

@@ -87,7 +87,7 @@ export default function CopyLinkButton() {
     function copyLink(e: any) {
         e.preventDefault();
         setSubmitted();
-        const params = new URLSearchParams(hash.replace("#", ""));
+        const params = new URLSearchParams(hash.replace(/#/, ""));
         params.set("label", label);
         const locationWithLabel = new URL(window.location.href);
         locationWithLabel.hash = `#${params.toString()}`;

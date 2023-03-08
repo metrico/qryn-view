@@ -862,7 +862,7 @@ const QueryHistory = (props: any) => {
                 intval * (window as any).devicePixelRatio.toFixed(2)
             );
             querySubmit = queryInput.replace(
-                "[$__interval]",
+                /\[\$__interval\]/,
                 `[${ratiointval}s]`
             );
             customStep = ratiointval;
@@ -1019,7 +1019,7 @@ const QueryHistory = (props: any) => {
     function copyQuery(item: any, type = "query", isRelative = false) {
         const url = new URL(item);
         const { hash } = url;
-        const params = new URLSearchParams(hash.replace("#", ""));
+        const params = new URLSearchParams(hash.replace(/#/, ""));
         params.set("label", label);
         const locationWithLabel = new URL(window.location.href);
         locationWithLabel.hash = `#${params.toString()}`;
