@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import setIsDatasourceSaved from "../store/setIsDataSourceSaved";
 import { Button, QrynLogo } from "../ui";
-
+import DOMPurify from 'isomorphic-dompurify'
 export interface HeaderProps {
     title: string;
     datasource?: any;
@@ -40,7 +40,7 @@ export function Header(props: HeaderProps) {
                 <h1>{title}</h1>
             </div>
             <Button
-                value={buttonMessage}
+                value={DOMPurify.sanitize(buttonMessage)}
                 onClick={backOne}
                 editing={true}
                 primary={isDsSaved}

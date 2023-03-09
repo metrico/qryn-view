@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import setDataSources from "../store/setDataSources";
 import { Button, Field } from "../ui";
 import { themes } from "../../../components/DataViews/components/Traces/Jaeger-ui/src/theme/themes";
-
+import DOMPurify from 'isomorphic-dompurify'
 const InlineFlex = (theme: any) => css`
     display: flex;
     flex-direction: column;
@@ -129,7 +129,7 @@ export const DataSourcesFiller = (props: any) => {
             {oneForAll && (
                 <div className={cx(FieldsCont)}>
                     <Field
-                        value={url}
+                        value={DOMPurify.sanitize(url)}
                         label={"url"}
                         onChange={urlChange}
                         placeholder={"http://qryn.dev"}
@@ -137,13 +137,13 @@ export const DataSourcesFiller = (props: any) => {
                     {basicAuth && (
                         <>
                             <Field
-                                value={user}
+                                value={DOMPurify.sanitize(user)}
                                 label={"user"}
                                 onChange={userChange}
                                 placeholder={"default"}
                             />
                             <Field
-                                value={password}
+                                value={DOMPurify.sanitize(password)}
                                 label={"password"}
                                 onChange={passwordChange}
                                 type={"password"}
@@ -162,7 +162,7 @@ export const DataSourcesFiller = (props: any) => {
                             />{" "}
                         </div>
                         <Button
-                            value={submitMessage}
+                            value={DOMPurify.sanitize(submitMessage)}
                             onClick={onUseForAll}
                             editing={false}
                             primary={true}

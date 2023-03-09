@@ -4,7 +4,7 @@ import { Field, QrynSwitch, Select } from "../ui";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import setDataSources from "../store/setDataSources";
 import { useMemo } from "react";
-
+import DOMPurify from 'isomorphic-dompurify'
 export const LinkedField = (props:any) => {
     const {
         id,
@@ -95,19 +95,19 @@ export const LinkedField = (props:any) => {
         <LinkFieldsGroup>
             <InputCol>
                 <Field
-                    value={name}
+                    value={DOMPurify.sanitize(name)}
                     label={"Name"}
                     onChange={(e:any) => onChange(e, "name")}
                 />
 
                 <Field
-                    value={regex}
+                    value={DOMPurify.sanitize(regex)}
                     label={"Regex"}
                     onChange={(e:any) => onChange(e, "regex")}
                 />
 
                 <Field
-                    value={urlLabel}
+                    value={DOMPurify.sanitize(urlLabel)}
                     label={"URL Label"}
                     onChange={(e:any) => onChange(e, "urlLabel")}
                 />
@@ -123,29 +123,16 @@ export const LinkedField = (props:any) => {
                 />
             </InputCol>
 
-            {/* <InputCol>
-                <Field
-                    value={query}
-                    label={"Query"}
-                    onChange={(e) => onChange(e, "query")}
-                />
-
-                <Field
-                    value={url}
-                    label={"URL"}
-                    onChange={(e) => onChange(e, "url")}
-                />
-            </InputCol> */}
             <InputCol className="internal">
                 <QrynSwitch
-                    value={internalLink}
+                    value={DOMPurify.sanitize(internalLink)}
                     label={"Internal Link"}
                     onChange={(e:any) => onSwitchChange(e, "internalLink")}
                 />
 
                 <Select
                     label={""}
-                    value={linkType}
+                    value={DOMPurify.sanitize(linkType)}
                     opts={dataSourcesOpts}
                     selectType={"linkedField"}
                     onChange={(e:any) => onChange(e, "linkID")}

@@ -2,7 +2,7 @@ import { environment } from "../environment/env.dev";
 import setDebug from "./setDebug";
 import * as moment from "moment";
 import { nanoid } from "nanoid";
-
+import DOMPurify from 'isomorphic-dompurify';
 const BOOLEAN_VALUES = ["isSubmit", "isSplit", "autoTheme", "isEmbed"];
 export const initialUrlState = {
     query: "",
@@ -91,29 +91,29 @@ export default function stateFromQueryParams() {
         for (let [key, value] of urlFromHash.entries()) {
             if (debug) console.log("🚧 LOGIC/startParams/", key, value);
             if (key === "stop" || key === "start") {
-                const croppedTime = parseInt(value) / 1000000;
+                const croppedTime = parseInt(DOMPurify.sanitize(value)) / 1000000;
                 startParams[key] = new Date(
                     (moment as any)(croppedTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
                 );
             } else if (key === "left" || key === "right") {
-                let panel = decodeURIComponent(value)
+                let panel = decodeURIComponent(DOMPurify.sanitize(value))
                 if(typeof panel === 'string') {
-                    const parsedQuery = JSON.parse(decodeURIComponent(value)||"[]");
+                    const parsedQuery = JSON.parse(decodeURIComponent(DOMPurify.sanitize(value)||"[]"));
                     startParams[key] = parsedQuery;
                 }
            
             }  else if (BOOLEAN_VALUES.includes(key)) {
                 try {
-                    startParams[key] = JSON.parse(value || 'false');
+                    startParams[key] = JSON.parse(DOMPurify.sanitize(value || 'false'));
                 } catch(e) {
                     console.error(key);
                     startParams[key] = false;
                 }
             } else {
-                startParams[key] = value;
+                startParams[key] = DOMPurify.sanitize(value);
             }
             if (startParams.theme) {
-                localStorage.setItem("theme", JSON.stringify({ theme: startParams.theme, auto: !!startParams.autoTheme }));
+                localStorage.setItem("theme", DOMPurify.sanitize(JSON.stringify({ theme: startParams.theme, auto: !!startParams.autoTheme })));
             }
         }
 

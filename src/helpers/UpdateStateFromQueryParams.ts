@@ -2,7 +2,7 @@ import * as moment from "moment";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-
+import DOMPurify from 'isomorphic-dompurify';
 import {
     setIsSubmit,
     setQueryTime,
@@ -125,7 +125,7 @@ export function UpdateStateFromQueryParams() {
             if (Object.keys(startParams).length > 0) {
                 dispatch(setUrlQueryParams({ ...urlQueryParams, startParams }));
 
-                dispatch(setUrlLocation(hash));
+                dispatch(setUrlLocation(DOMPurify.sanitize(hash)));
 
                 Object.keys(startParams).forEach((param) => {
                     if (
@@ -133,9 +133,9 @@ export function UpdateStateFromQueryParams() {
                             READ_ONLY_STRING_VALUES.includes(param)) &&
                         startParams[param] !== ""
                     ) {
-                        dispatch(STORE_ACTIONS[param](startParams[param]));
+                        dispatch(STORE_ACTIONS[param](DOMPurify.sanitize(startParams[param])));
                     } else if (param === "theme") {
-                        dispatch(STORE_ACTIONS[param](themeSet));
+                        dispatch(STORE_ACTIONS[param](DOMPurify.sanitize(themeSet)));
                     } else if (
                         TIME_VALUES.includes(param) &&
                         startParams[param] !== ""
@@ -151,7 +151,7 @@ export function UpdateStateFromQueryParams() {
                     } else if (BOOLEAN_VALUES.includes(param)) {
                         try {
                             const val = JSONTry(startParams[param], false);
-                            dispatch(STORE_ACTIONS[param](val));
+                            dispatch(STORE_ACTIONS[param](DOMPurify.sanitize(val)));
                         } catch (e) {
                             console.log(e);
                         }
@@ -163,7 +163,7 @@ export function UpdateStateFromQueryParams() {
                             );
 
                             if(parsed?.length > 0) {
-                                dispatch(STORE_ACTIONS[param](parsed));
+                                dispatch(STORE_ACTIONS[param](DOMPurify.sanitize(parsed)));
                             }
                         } catch (e) {
                             console.log(e);
@@ -177,17 +177,17 @@ export function UpdateStateFromQueryParams() {
                 .concat(ARRAY_VALUES);
             allParams.forEach((param) => {
                 if (STRING_VALUES.includes(param)) {
-                    urlFromHash.set(param, STORE_KEYS[param]?.toString());
+                    urlFromHash.set(param, DOMPurify.sanitize(STORE_KEYS[param]?.toString()));
                 } else if (param === "theme") {
-                    urlFromHash.set(param, themeSet.toString());
+                    urlFromHash.set(param, DOMPurify.sanitize(themeSet.toString()));
                 } else if (TIME_VALUES.includes(param)) {
                     const time_value = STORE_KEYS[param]?.getTime() * 1000000;
-                    urlFromHash.set(param, time_value.toString());
+                    urlFromHash.set(param, DOMPurify.sanitize(time_value.toString()));
                 } else if (BOOLEAN_VALUES.includes(param)) {
                     try {
                         urlFromHash.set(
                             param,
-                            JSONTry(STORE_KEYS[param], false)
+                            DOMPurify.sanitize( JSONTry(STORE_KEYS[param], false))
                         );
                     } catch (e) {
                         console.log(e);
@@ -195,7 +195,7 @@ export function UpdateStateFromQueryParams() {
                 } else if (ARRAY_VALUES.includes(param)) {
                     try {
                         const encodedArray = JSON.stringify(STORE_KEYS[param]);
-                        urlFromHash.set(param, encodedArray);
+                        urlFromHash.set(param, DOMPurify.sanitize(encodedArray));
                     } catch (e) {
                         console.log(e);
                     }
@@ -218,7 +218,7 @@ export function UpdateStateFromQueryParams() {
                     STRING_VALUES.includes(store_key) &&
                     previousParams[store_key] !== STORE_KEYS[store_key]
                 ) {
-                    const updated = STORE_KEYS[store_key].toString().trim();
+                    const updated = DOMPurify.sanitize(STORE_KEYS[store_key].toString().trim());
 
                     paramsFromHash.set(store_key, updated);
                 } else if (
@@ -227,7 +227,7 @@ export function UpdateStateFromQueryParams() {
                         encodeTs(STORE_KEYS[store_key])
                 ) {
                     const encodedTs = encodeTs(STORE_KEYS[store_key]);
-                    paramsFromHash.set(store_key, encodedTs);
+                    paramsFromHash.set(store_key, DOMPurify.sanitize(encodedTs));
                 } else if (
                     BOOLEAN_VALUES.includes(store_key) &&
                     previousParams[store_key] !== STORE_KEYS[store_key]
@@ -235,17 +235,17 @@ export function UpdateStateFromQueryParams() {
                     try {
                         paramsFromHash.set(
                             store_key,
-                            JSONTry(STORE_KEYS[store_key], false)
+                            DOMPurify.sanitize(JSONTry(STORE_KEYS[store_key], false))
                         );
                     } catch (e) {
                         console.error(e);
                     }
                 } else if (store_key === "left") {
                     const parsed = JSON.stringify(left);
-                    paramsFromHash.set("left", parsed);
+                    paramsFromHash.set("left", DOMPurify.sanitize(parsed));
                 } else if (store_key === "right") {
                     const parsed = JSON.stringify(right);
-                    paramsFromHash.set("right", parsed);
+                    paramsFromHash.set("right", DOMPurify.sanitize(parsed));
                 }
             });
 

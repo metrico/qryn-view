@@ -1,5 +1,5 @@
 import { InputGroup, Label, Input } from "../styles";
-
+import DOMPurify from "isomorphic-dompurify";
 export const Field = (props: any) => {
     const { value, label, onChange, locked, type, placeholder, error, labelWidth} = props;
     return (
@@ -11,7 +11,7 @@ export const Field = (props: any) => {
                 error={error||false}
                 onChange={onChange}
                 type={type}
-                value={value}
+                value={DOMPurify.sanitize(value)}
                 placeholder={placeholder}
             />
         </InputGroup>

@@ -7,7 +7,7 @@ import { css, cx } from "@emotion/css";
 import { ThemeProvider } from "@emotion/react";
 
 import { useMediaQuery } from "react-responsive";
-
+import DOMPurify from "isomorphic-dompurify";
 /**Actions */
 import getData from "../../../actions/getData";
 import setQueryHistory from "../../../actions/setQueryHistory";
@@ -167,7 +167,7 @@ export const QueryBar = (props: any) => {
 
     useEffect(() => {
         setQueryInput(actLocalQuery.expr);
-        setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
+        setQueryValue([{ children: [{ text: DOMPurify.sanitize(actLocalQuery.expr) }] }]);
 
         setLogsLevel(actLocalQuery.expr, isLogsVolume);
 
@@ -236,7 +236,7 @@ export const QueryBar = (props: any) => {
 
     useEffect(() => {
         setQueryInput(actLocalQuery.expr);
-        setQueryValue([{ children: [{ text: actLocalQuery.expr }] }]);
+        setQueryValue([{ children: [{ text: DOMPurify.sanitize(actLocalQuery.expr) }] }]);
         if (isLogsVolume && logsVolumeQuery) {
             setLogsLevel(actLocalQuery.expr, isLogsVolume);
         }
@@ -325,7 +325,7 @@ export const QueryBar = (props: any) => {
     useEffect(() => {
         if (typeof expr === "string") {
             setQueryInput(expr);
-            setQueryValue([{ children: [{ text: expr }] }]);
+            setQueryValue([{ children: [{ text: DOMPurify.sanitize(expr) }] }]);
             saveQuery();
             if (isLogsVolume) {
                 setLogsLevel(expr, true);
@@ -346,7 +346,7 @@ export const QueryBar = (props: any) => {
               // eslint-disable-next-line
             let pureLabels = queryInput.match(/[^{\}]+(?=})/g);
             if (Array.isArray(pureLabels) && pureLabels?.length > 0) {
-                let pureLabelsString = "{" + pureLabels?.join(",") + "}";
+                let pureLabelsString = `{${pureLabels?.join(",")}}`;
                 let logsVolumeQuery = `sum by(level) (count_over_time(${pureLabelsString}[$__interval]))`;
                 onLogVolumeChange(logsVolumeQuery);
             }
@@ -365,12 +365,12 @@ export const QueryBar = (props: any) => {
     };
 
     const onMetricChange = (e: any) => {
-        const query = [{ children: [{ text: e }] }];
+        const query = [{ children: [{ text: DOMPurify.sanitize(e) }] }];
         handleQueryChange(query);
     };
 
     const onLogChange = (e: any) => {
-        const query = [{ children: [{ text: e }] }];
+        const query = [{ children: [{ text: DOMPurify.sanitize(e) }] }];
 
         // at this scope we should do the query change from the
         //  'use query' button
@@ -536,7 +536,7 @@ export const QueryBar = (props: any) => {
         const isEmptyQuery = queryInput.length === 0;
         let query = "";
         if (!isEmptyQuery) {
-            const isRate = queryInput.startsWith(`rate(`);
+            const isRate = queryInput.startsWith("rate(");
 
             if (dataSourceType === "metrics") {
                 if (isRate) {
@@ -552,7 +552,7 @@ export const QueryBar = (props: any) => {
                 if (!isRate) {
                     query = `rate(${queryInput}[$__interval])`;
                 } else {
-                    query = queryInput.replace(/\[\d+ms\]/, `[$__interval]`);
+                    query = queryInput.replace(/\[\d+ms\]/, "[$__interval]");
                 }
             }
         }
@@ -566,7 +566,7 @@ export const QueryBar = (props: any) => {
         if (!isEmptyQuery) {
             query = addQueryInterval(queryInput);
             setQueryInput(query);
-            setQueryValue([{ children: [{ text: query }] }]);
+            setQueryValue([{ children: [{ text: DOMPurify.sanitize(query) }] }]);
             setQueryValid(onQueryValid(query));
         }
 
@@ -690,7 +690,7 @@ export const QueryBar = (props: any) => {
             isMatrix = true;
         }
 
-        if (queryExpr.includes(`$__interval`)) {
+        if (queryExpr.includes("$__interval")) {
             isMatrix = true;
             const timeDiff = (stop.getTime() - start.getTime()) / 1000;
             const timeProportion = timeDiff / 30;
@@ -1042,7 +1042,7 @@ export const QueryBarCont = (props: any) => {
             {(dataSourceType !== "logs" ||  !isBuilder ) && dataSourceType !== "metrics" && (
                 <QueryEditor
                     onQueryChange={handleQueryChange}
-                    defaultValue={expr || ""}
+                    defaultValue={DOMPurify.sanitize(expr || "")}
                     value={queryValue} // queryValue should change and or update on datasource change
                     onKeyDown={handleInputKeyDown}
                 />

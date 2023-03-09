@@ -14,7 +14,7 @@
 
 import { uniq as _uniq } from 'lodash';
 import memoize from 'lru-memoize';
-
+import DOMPurify from "isomorphic-dompurify";
 import { TNil } from '../types';
 import { TraceSpan, TraceLink, TraceKeyValuePair, Trace } from '../types/trace';
 import { getConfigValue } from '../utils/config/get-config';
@@ -207,7 +207,7 @@ export function computeLinks(
         }
         // eslint-disable-next-line no-console
         console.warn(
-          `Skipping link pattern, missing parameter ${parameter} for key ${item.key} in ${type}.`,
+          DOMPurify.sanitize(`Skipping link pattern, missing parameter ${parameter} for key ${item.key} in ${type}.`),
           pattern.object
         );
         return false;

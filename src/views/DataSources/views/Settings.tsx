@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import DOMPurify from 'isomorphic-dompurify'
 import {
     DataSourceHeaders,
     LinkedFields,
@@ -95,13 +96,13 @@ export const Settings = (props: any) => {
             <InputCont>
                 <InputCol>
                     <Field
-                        value={name}
+                        value={DOMPurify.sanitize(name)}
                         label={"Name"}
                         onChange={(e: any) => onChange(e, "name")}
                     />
 
                     <Field
-                        value={url}
+                        value={DOMPurify.sanitize(url)}
                         label={"URL"}
                         error={fieldErrors.url || fieldErrors.protocol}
                         onChange={(e: any) => onChange(e, "url")}

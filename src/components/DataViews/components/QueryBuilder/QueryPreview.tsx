@@ -4,7 +4,7 @@ import Prism from "prismjs";
 import "prismjs/components/prism-sql";
 import { createEditor, Text } from "slate";
 import { withHistory } from "slate-history";
-
+import DOMPurify from "isomorphic-dompurify";
 import { Slate, Editable, withReact } from "slate-react";
 import { useTheme } from "./hooks";
 
@@ -121,7 +121,7 @@ export default function QueryPreview(props: Props) {
 
     const { queryText } = props;
     const [initialValue, setInitialValue] = useState([
-        { type: "paragraph", children: [{ text: queryText }] },
+        { type: "paragraph", children: [{ text: DOMPurify.sanitize(queryText) }] },
     ]);
     const [language] = useState("sql")
 
@@ -162,10 +162,10 @@ export default function QueryPreview(props: Props) {
     useEffect(() => {
         //   console.log(queryText)
         setInitialValue([
-            { type: "paragraph", children: [{ text: props.queryText }] },
+            { type: "paragraph", children: [{ text: DOMPurify.sanitize(props.queryText) }] },
         ]);
         console.log(props.queryText)
-        editor.children = [{ text: props.queryText }];
+        editor.children = [{ text: DOMPurify.sanitize(props.queryText) }];
           // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.queryText]);
 

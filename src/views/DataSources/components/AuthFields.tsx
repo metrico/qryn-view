@@ -5,6 +5,7 @@ import { InputCol, InputCont } from "../styles";
 import { QrynSwitch, Select, Field } from "../ui";
 import { TextAreaField } from "../ui/TextArea";
 import { SectionHeader } from "./SectionHeader";
+import DOMPurify from "isomorphic-dompurify";
 
 export function AuthFields(props: any) {
     const { auth, id } = props;
@@ -129,8 +130,8 @@ export function AuthFields(props: any) {
                             return (
                                 <Select
                                     key={key}
-                                    value={field.value}
-                                    name={field.name}
+                                    value={DOMPurify.sanitize(field.value)}
+                                    name={DOMPurify.sanitize(field.name)}
                                     onChange={(e: any) =>
                                         onSelectChange(e, field.name)
                                     }
@@ -145,7 +146,7 @@ export function AuthFields(props: any) {
                             return (
                                 <QrynSwitch
                                     label={field.label}
-                                    value={field.value}
+                                    value={DOMPurify.sanitize(field.value)}
                                     onChange={(e: any) =>
                                         onSwitchChange(e, field.name)
                                     }
@@ -185,7 +186,9 @@ export function AuthFields(props: any) {
                                                             type={
                                                                 cert.form_type
                                                             }
-                                                            value={cert.value}
+                                                            value={DOMPurify.sanitize(
+                                                                cert.value
+                                                            )}
                                                             label={cert.label}
                                                             placeholder={
                                                                 cert.placeholder
@@ -210,7 +213,9 @@ export function AuthFields(props: any) {
                                                                     val
                                                                 )
                                                             }
-                                                            value={cert.value}
+                                                            value={DOMPurify.sanitize(
+                                                                cert.value
+                                                            )}
                                                             label={cert.label}
                                                             placeholder={
                                                                 cert.placeholder

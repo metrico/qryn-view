@@ -7,7 +7,7 @@ import { cx } from "@emotion/css";
 import { useTheme } from "./hooks";
 import { InputSelect } from "./InputSelect";
 import useLogLabelValues from "./hooks/useLogLabelValues";
-
+import DOMPurify from 'isomorphic-dompurify'
 
 export const LogLabelValueForm = (props: any) => {
     const {
@@ -113,7 +113,7 @@ export const LogLabelValueForm = (props: any) => {
                     ref={optRef}
                     type={"label"}
                     isMulti={false}
-                    defaultValue={keyVal.label}
+                    defaultValue={DOMPurify.sanitize(keyVal.label)}
                     selectOpts={labelOpts}
                     mainTheme={mainTheme}
                     onChange={onLabelChange}
@@ -127,7 +127,7 @@ export const LogLabelValueForm = (props: any) => {
                     ref={operatorRef}
                     type={"operator"}
                     isMulti={false}
-                    defaultValue={keyVal.operator}
+                    defaultValue={DOMPurify.sanitize(keyVal.operator)}
                     selectOpts={OPERATOR_OPTIONS}
                     keyVal={keyVal}
                     mainTheme={mainTheme}
@@ -141,7 +141,7 @@ export const LogLabelValueForm = (props: any) => {
                         ref={valueRef}
                         type={"value"}
                         isMulti={isMulti}
-                        defaultValue={keyVal.values}
+                        defaultValue={DOMPurify.sanitize(keyVal.values)}
                         selectOpts={valueSelectOpts}
                         keyVal={keyVal}
                         mainTheme={mainTheme}

@@ -6,6 +6,7 @@ import setDataSources from "../store/setDataSources";
 import { InputCol, InputGroup } from "../styles";
 import { Field } from "../ui";
 import { SectionHeader } from "./SectionHeader";
+import DOMPurify from 'isomorphic-dompurify'
 
 export const DataSourceHeaders = (props: any) => {
     const dispatch = useDispatch();
@@ -104,14 +105,14 @@ export const DataSourceHeaders = (props: any) => {
                             <InputGroup>
                                 <Field
                                     label={"header"}
-                                    value={val.header}
+                                    value={DOMPurify.sanitize(val.header)}
                                     onChange={(e: any) =>
                                         onChange(e, val.id, "header")
                                     }
                                 />
                                 <Field
                                     label={"value"}
-                                    value={val.value}
+                                    value={DOMPurify.sanitize(val.value)}
                                     onChange={(e: any) =>
                                         onChange(e, val.id, "value")
                                     }

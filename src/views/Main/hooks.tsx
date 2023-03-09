@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useCookies } from "react-cookie";
-
+import DOMPurify from 'isomorphic-dompurify';
 // useCookiesAvailable:
 
 export function useCookiesAvailable(urlParams: any) {
@@ -13,7 +13,7 @@ export function useCookiesAvailable(urlParams: any) {
 
     const cookieParam = useMemo(() => {
         if (hasCookie) {
-            return urlParams.get("cookie");
+            return DOMPurify.sanitize(urlParams.get("cookie"));
         }
         return "";
     }, [urlParams, hasCookie]);
@@ -36,7 +36,7 @@ export function useUrlAvailable(urlParams: any) {
 
     const oneForAllParam = useMemo(() => {
         if (hasOneForAll) {
-            return urlParams.get("url");
+            return DOMPurify.sanitize(urlParams.get("url"));
         }
         return "";
     }, [urlParams, hasOneForAll]);

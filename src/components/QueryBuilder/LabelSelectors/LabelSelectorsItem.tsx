@@ -6,7 +6,6 @@ import useLabels from "../../LabelBrowser/components/LabelsSelector/useLabels";
 import useLabelValues from "../../LabelBrowser/components/LabelsSelector/useLabelValues";
 import NativeSelect from "../Forms/NativeSelect";
 import Select from "react-select";
-import { nanoid } from "nanoid";
 import { themes } from "../../../theme/themes";
 
 export const cStyles = {
@@ -61,34 +60,7 @@ export const OPERATORS = [
 export function OperatorSelect(props: any) {
     const [operator, setOperator] = useState("equals");
 
-    const theme = useSelector((store: any) => store.theme);
-
-    const mainTheme = useMemo(() => {
-        return (themes as any)[theme];
-    }, [theme]);
-
-    const selectStyles = useMemo(() => {
-        return {
-            option: (provided: any, state: any) => ({
-                ...provided,
-                borderBottom: "1px dotted pink",
-                color: state.isSelected ? "red" : "blue",
-                padding: 20,
-            }),
-            control: () => ({
-                // none of react-select's styles are passed to <Control />
-                width: 200,
-            }),
-            singleValue: (provided: any, state: any) => {
-                const opacity = state.isDisabled ? 0.5 : 1;
-                const transition = "opacity 300ms";
-
-                return { ...provided, opacity, transition };
-            },
-        };
-    }, [mainTheme]);
-
-    const [ops, setOps] = useState(OPERATORS);
+    const [ops] = useState(OPERATORS);
 
     const onChange = (e: any) => {
         setOperator(e.target.value);
@@ -123,7 +95,7 @@ export function LabelSelect(props: any) {
 
     useEffect(() => {
         if (response?.data?.data) {
-         //   setLabels((_) => response.data.data);
+            //   setLabels((_) => response.data.data);
             setLabel((_) => response?.data?.data[0]);
         }
     }, [response]);
@@ -144,18 +116,13 @@ export function LabelSelect(props: any) {
 
 export function ValueSelect(props: any) {
     const { data } = props;
-    const {  dataSourceId } = data;
+    const { dataSourceId } = data;
     const start = useSelector((state: any) => state.start);
     const stop = useSelector((state: any) => state.stop);
 
     const [values, setValues] = useState([]);
     const { label, operator } = props;
-    const { response, loading }: any = useLabelValues(
-        dataSourceId,
-        label,
-        start,
-        stop
-    );
+    const { response }: any = useLabelValues(dataSourceId, label, start, stop);
     const onChange = (e: any) => {
         props.onChange(e);
     };
@@ -170,7 +137,6 @@ export function ValueSelect(props: any) {
         if (operator === "equals" || operator === "notequals") return false;
         return true;
     }, [operator]);
-
 
     useEffect(() => {
         if (response?.data?.data) {
@@ -256,8 +222,16 @@ export default function LabelSelectorItem(props: any) {
                 operator={operator}
                 onChange={onValueChange}
             />
-            <DeleteForeverOutlinedIcon className={'opt-icon'} fontSize={'small'} onClick={onRemoveLabel} />
-            <AddIcon className={'opt-icon'} fontSize={'small'} onClick={onAddLabel} />
+            <DeleteForeverOutlinedIcon
+                className={"opt-icon"}
+                fontSize={"small"}
+                onClick={onRemoveLabel}
+            />
+            <AddIcon
+                className={"opt-icon"}
+                fontSize={"small"}
+                onClick={onAddLabel}
+            />
         </div>
     );
 }

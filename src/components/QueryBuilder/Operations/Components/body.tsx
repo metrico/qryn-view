@@ -1,11 +1,16 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useTheme } from "../../../DataViews/components/QueryBuilder/hooks";
-import {cx} from '@emotion/css'
+import { cx } from "@emotion/css";
 import { OperationContainerProps, FilterState } from "../types";
 import { OperationBodyStyles } from "../OperationStyles";
-import { RangesSelector, RangeLabelsSelector, ConversionFunctionSelector, QuantilesSelector } from "./selectors";
+import {
+    RangesSelector,
+    RangeLabelsSelector,
+    ConversionFunctionSelector,
+    QuantilesSelector,
+} from "./selectors";
 import { useLabelsFromProps } from "../hooks";
-
+import DOMPurify from "isomorphic-dompurify";
 
 export const JSONFormatBody = (props: any) => {
     const { setOperations, id } = props;
@@ -15,7 +20,7 @@ export const JSONFormatBody = (props: any) => {
     // here: add the expressions
 
     const onExpChange = useCallback((e, index) => {
-        setExpressions((prev:any) => {
+        setExpressions((prev: any) => {
             let n = [...prev];
             n[index] = e?.target?.value;
             return n;
@@ -73,7 +78,7 @@ export const JSONFormatBody = (props: any) => {
                     {" "}
                     <input
                         className={"expression-input"}
-                        value={exp}
+                        value={DOMPurify.sanitize(exp)}
                         onChange={(e: any) => onExpChange(e, index)}
                     />{" "}
                     <button onClick={(e) => onExpRemove(e, index)}>x</button>{" "}
@@ -119,7 +124,7 @@ export const PatternFormatBody = (props: OperationContainerProps) => {
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <input
-                value={expression}
+                value={DOMPurify.sanitize(expression)}
                 placeholder={"<pattern|expression>"}
                 onChange={onExpChange}
             />
@@ -167,7 +172,7 @@ export const UnwrapFormatBody: React.FC = (props: any) => {
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <input
-                value={labelValue}
+                value={DOMPurify.sanitize(labelValue)}
                 placeholder={"Unrap Label"}
                 onChange={onLabelValueChange}
             />
@@ -208,7 +213,7 @@ export const RegexpFormatBody = (props: any) => {
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <input
-                value={expression}
+                value={DOMPurify.sanitize(expression)}
                 placeholder={"<re>"}
                 onChange={onExpChange}
             />
@@ -243,7 +248,7 @@ export const LineFormatBody = (props: any) => {
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <input
-                value={expression}
+                value={DOMPurify.sanitize(expression)}
                 placeholder={"{{.status_code}}"}
                 onChange={onExpChange}
             />
@@ -288,7 +293,7 @@ export const ClampBody = (props: any) => {
             <div className="input-group">
                 <label>Minimum Scalar</label>
                 <input
-                    value={minimum}
+                    value={DOMPurify.sanitize(minimum)}
                     placeholder={"1"}
                     onChange={onMinChange}
                 />
@@ -296,7 +301,7 @@ export const ClampBody = (props: any) => {
             <div className="input-group">
                 <label>Maximum Scalar</label>
                 <input
-                    value={maximum}
+                    value={DOMPurify.sanitize(maximum)}
                     placeholder={"1"}
                     onChange={onMaxChange}
                 />
@@ -336,7 +341,7 @@ export const ClampMinBody = (props: any) => {
             <div>
                 <label>Minimum Scalar</label>
                 <input
-                    value={minimum}
+                    value={DOMPurify.sanitize(minimum)}
                     placeholder={"1"}
                     onChange={onMinChange}
                 />
@@ -375,7 +380,7 @@ export const ClampMaxBody = (props: any) => {
             <div>
                 <label>Maximum Scalar</label>
                 <input
-                    value={maximum}
+                    value={DOMPurify.sanitize(maximum)}
                     placeholder={"1"}
                     onChange={onMaxChange}
                 />
@@ -411,7 +416,7 @@ export const QuantileBody = (props: any) => {
             <div>
                 <label>Quantile</label>
                 <input
-                    value={quantile}
+                    value={DOMPurify.sanitize(quantile)}
                     placeholder={"1"}
                     onChange={onQuantileChange}
                 />
@@ -447,7 +452,7 @@ export const RoundBody = (props: any) => {
             <div>
                 <label>Nearest Scalar</label>
                 <input
-                    value={round}
+                    value={DOMPurify.sanitize(round)}
                     placeholder={"1"}
                     onChange={onRoundChange}
                 />
@@ -509,7 +514,7 @@ export const LabelReplaceBody = (props: any) => {
             <div className="input-group">
                 <label>Destination Label</label>
                 <input
-                    value={destinationLabel}
+                    value={DOMPurify.sanitize(destinationLabel)}
                     placeholder={destinationLabel}
                     onChange={onDestinationLevelChange}
                 />
@@ -517,7 +522,7 @@ export const LabelReplaceBody = (props: any) => {
             <div className="input-group">
                 <label>Replacement</label>
                 <input
-                    value={replacement}
+                    value={DOMPurify.sanitize(replacement)}
                     placeholder={replacement}
                     onChange={onReplacementChange}
                 />
@@ -525,7 +530,7 @@ export const LabelReplaceBody = (props: any) => {
             <div className="input-group">
                 <label>Source Label</label>
                 <input
-                    value={sourceLabel}
+                    value={DOMPurify.sanitize(sourceLabel)}
                     placeholder={sourceLabel}
                     onChange={onSourceLabelChange}
                 />
@@ -533,7 +538,7 @@ export const LabelReplaceBody = (props: any) => {
             <div className="input-group">
                 <label>Regex</label>
                 <input
-                    value={regex}
+                    value={DOMPurify.sanitize(regex)}
                     placeholder={regex}
                     onChange={onRegexChange}
                 />
@@ -586,7 +591,7 @@ export const HistogramQuantileBody = (props: any) => {
             const next = [...prev];
             return next?.map((m: any) => {
                 if (m.id === id) {
-                    m.prev_args = props.quantile + ",";
+                    m.prev_args = `${props.quantile},`;
                     return m;
                 }
                 return m;
@@ -635,9 +640,9 @@ export const LabelJoinBody = (props: any) => {
     const [separator, setSeparator] = useState<string>(",");
 
     const theme = useTheme();
-  
+
     const onSourceLabelAdd = (e: any) => {
-        setSourceLabelSelectors((prev:any) => [...prev, ""]);
+        setSourceLabelSelectors((prev: any) => [...prev, ""]);
     };
 
     const onDestinationLabelChange = (e: any) => {
@@ -669,7 +674,6 @@ export const LabelJoinBody = (props: any) => {
 
     const sourceLabelsRenderer = () => {
         return sourceLabelSelectors?.map((exp: string, index: number) => (
-
             <div key={index} className="input-group">
                 <label>Source Label</label>
                 <RangeLabelsSelector
@@ -678,7 +682,6 @@ export const LabelJoinBody = (props: any) => {
                     className={"expression-input"}
                     labels={labelsList}
                 />
-
                 <button onClick={(e) => onSourceLabelRemove(e, index)}>
                     x
                 </button>{" "}
@@ -687,7 +690,6 @@ export const LabelJoinBody = (props: any) => {
     };
 
     useEffect(() => {
-
         let sl = sourceLabelSelectors.join('"' + separator + '"');
         setOperations((prev: any) => {
             const next = [...prev];
@@ -699,7 +701,8 @@ export const LabelJoinBody = (props: any) => {
                         '", "' +
                         separator +
                         '", "' +
-                        sl + "\"" ;
+                        sl +
+                        '"';
 
                     return m;
                 }
@@ -723,18 +726,14 @@ export const LabelJoinBody = (props: any) => {
             <div className="input-group">
                 <label>Replacement</label>
                 <input
-                    value={separator}
+                    value={DOMPurify.sanitize(separator)}
                     placeholder={separator}
                     onChange={onSeparatorChange}
                 />
             </div>
-            <div className="input-group col">
-           
-                {sourceLabelsRenderer()}
-                
-            </div>
+            <div className="input-group col">{sourceLabelsRenderer()}</div>
             <div className="input-group end">
-            <button onClick={onSourceLabelAdd}>+ Add Source Label</button>
+                <button onClick={onSourceLabelAdd}>+ Add Source Label</button>
             </div>
         </div>
     );
@@ -857,7 +856,10 @@ export const LabelRangeBody = (props: any) => {
         <div className={cx(OperationBodyStyles(theme))}>
             {rangeLabelsRenderer()}
             {props.header === "Quantile Over Time" && (
-                <input onChange={onQuantileChange} value={quantile} />
+                <input
+                    onChange={onQuantileChange}
+                    value={DOMPurify.sanitize(quantile)}
+                />
             )}
             <button onClick={onLabelAdd}>Add Label</button>
             <RangesSelector onChange={onRangeChange} initial={range} />
@@ -978,7 +980,8 @@ export const AggregationsBody = (props: any) => {
         <div className={cx(OperationBodyStyles(theme))}>
             {isKValue(aggrType) && (
                 <input
-                    value={kValue}
+                    type={"number"}
+                    value={DOMPurify.sanitize(String(kValue))}
                     placeholder={"<pattern|expression>"}
                     onChange={onKValueChange}
                 />
@@ -1041,7 +1044,7 @@ export const LabelFilterBody = (props: any) => {
         return (
             <div className={cx(OperationBodyStyles(theme))}>
                 <input
-                    value={labelFilterState.label}
+                    value={DOMPurify.sanitize(labelFilterState.label)}
                     placeholder={"Text Filter"}
                     onChange={(e) => onChange(e, "label")}
                 />
@@ -1052,7 +1055,10 @@ export const LabelFilterBody = (props: any) => {
                 >
                     {operatorOptions.map(
                         (opt: { name: string; value: string }, key: number) => (
-                            <option key={key} value={opt.value}>
+                            <option
+                                key={key}
+                                value={DOMPurify.sanitize(opt.value)}
+                            >
                                 {opt.name}
                             </option>
                         )
@@ -1060,7 +1066,7 @@ export const LabelFilterBody = (props: any) => {
                 </select>
 
                 <input
-                    value={labelFilterState.value}
+                    value={DOMPurify.sanitize(labelFilterState.value)}
                     placeholder={"Text Filter"}
                     onChange={(e) => onChange(e, "value")}
                 />
@@ -1110,7 +1116,7 @@ export const BinaryOperationsBody = (props: any) => {
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <input
-                value={binaryOperationState.value}
+                value={DOMPurify.sanitize(binaryOperationState.value)}
                 placeholder={"Value"}
                 onChange={(e) => onChange(e, "value")}
             />
@@ -1120,14 +1126,13 @@ export const BinaryOperationsBody = (props: any) => {
                     type={"checkbox"}
                     className={"checkbox"}
                     checked={binaryOperationState.bool || false}
-                    value={"Boolean"}
+                    value={DOMPurify.sanitize("Boolean")}
                     onChange={(e) => onChange(e, "bool")}
                 />
             </div>
         </div>
     );
 };
-
 
 export const LineFilterBody = (props: any) => {
     const { setOperations, id } = props;
@@ -1155,7 +1160,7 @@ export const LineFilterBody = (props: any) => {
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <input
-                value={expression}
+                value={DOMPurify.sanitize(expression)}
                 placeholder={"Text Filter"}
                 onChange={onExpChange}
             />

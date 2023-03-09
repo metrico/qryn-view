@@ -1,6 +1,6 @@
 import { css, cx } from "@emotion/css";
 import { useState, useEffect, InputHTMLAttributes, ChangeEvent } from "react";
-
+import DOMPurify from "isomorphic-dompurify";
 export const page_select = (theme: any) => css`
     color: ${theme.textColor};
     background: ${theme.inputBg};
@@ -47,7 +47,7 @@ export const DebouncedInput: React.FC<Props> = ({
         <input
             {...props}
             className={cx(page_select(theme))}
-            value={value}
+            value={DOMPurify.sanitize(String(value))}
             onChange={handleInputChange}
         />
     );

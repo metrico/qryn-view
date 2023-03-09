@@ -1,5 +1,5 @@
 import { cx, css } from "@emotion/css";
-
+import DOMPurify from 'isomorphic-dompurify'
 import { useEffect, useMemo, useRef, useState } from "react";
 import { InputGroup, Label } from "../styles";
 
@@ -50,13 +50,13 @@ export const Select = ({
                 ref={selectRef}
                 className={cx(FlexOne(fullWidth))}
                 disabled={locked}
-                defaultValue={initialValue}
+                defaultValue={DOMPurify.sanitize(initialValue)}
                 onChange={(e) => onChange(e, name)}
             >
                 {formattedSelect?.map((field: any, key: number) => (
                     <option
                         key={key}
-                        value={field.value}
+                        value={DOMPurify.sanitize(field.value)}
                     >
                         {field.name}
                     </option>

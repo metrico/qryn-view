@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { css } from "@emotion/css";
-
+import DOMPurify from 'isomorphic-dompurify';
 import {
     format,
     differenceInCalendarMonths,
@@ -203,7 +203,7 @@ export const PickerNav = (props:any) => {
                             <Grid container direction={"row"} wrap={"nowrap"}>
                                 <Month
                                     {...commonProps}
-                                    value={firstMonth}
+                                    value={DOMPurify.sanitize(firstMonth)}
                                     setValue={setFirstMonth}
                                     navState={[true, canNavigateCloser]}
                                     marker={MARKERS.FIRST_MONTH}
@@ -211,7 +211,7 @@ export const PickerNav = (props:any) => {
                                 <div className={"divider"} />
                                 <Month
                                     {...commonProps}
-                                    value={secondMonth}
+                                    value={DOMPurify.sanitize(secondMonth)}
                                     setValue={setSecondMonth}
                                     navState={[canNavigateCloser, true]}
                                     marker={MARKERS.SECOND_MONTH}
@@ -230,7 +230,7 @@ export const PickerNav = (props:any) => {
                                     {startCalendar && (
                                         <Month
                                             {...commonProps}
-                                            value={firstMonth}
+                                            value={DOMPurify.sanitize(firstMonth)}
                                             setValue={setFirstMonth}
                                             navState={[true, canNavigateCloser]}
                                             marker={MARKERS.FIRST_MONTH}
@@ -240,7 +240,7 @@ export const PickerNav = (props:any) => {
                                     {stopCalendar && (
                                         <Month
                                             {...commonProps}
-                                            value={secondMonth}
+                                            value={DOMPurify.sanitize(secondMonth)}
                                             setValue={setSecondMonth}
                                             navState={[canNavigateCloser, true]}
                                             marker={MARKERS.SECOND_MONTH}
@@ -347,7 +347,7 @@ export const PickerNav = (props:any) => {
                                             {startCalendar && (
                                                 <Month
                                                     {...commonProps}
-                                                    value={firstMonth}
+                                                    value={DOMPurify.sanitize(firstMonth)}
                                                     setValue={setFirstMonth}
                                                     navState={[
                                                         true,
@@ -360,7 +360,7 @@ export const PickerNav = (props:any) => {
                                             {stopCalendar && (
                                                 <Month
                                                     {...commonProps}
-                                                    value={secondMonth}
+                                                    value={DOMPurify.sanitize(secondMonth)}
                                                     setValue={setSecondMonth}
                                                     navState={[
                                                         canNavigateCloser,

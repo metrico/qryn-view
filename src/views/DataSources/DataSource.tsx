@@ -11,7 +11,7 @@ import setDataSources from "./store/setDataSources";
 import { Container } from "./styles/Container";
 import { Button, Icon } from "./ui";
 import { Settings } from "./views";
-
+import DOMPurify from 'isomorphic-dompurify';
 const HeaderRow = css`
     display: flex;
     align-items: center;
@@ -41,7 +41,7 @@ export function DataSourceSetting(props: any) {
 
         const newDs = prevDs?.map((m: any) => ({
             ...m,
-            url,
+            url: DOMPurify.sanitize(url),
             auth: {
                 ...m.auth,
                 basicAuth: { ...m.auth.basicAuth, value: basicAuth.value },
@@ -49,10 +49,10 @@ export function DataSourceSetting(props: any) {
                     ...m.auth.fields,
                     basicAuth: [...m.auth.fields.basicAuth]?.map((ba) => {
                         if (ba.name === "user") {
-                            return { ...ba, value: user.value };
+                            return { ...ba, value: DOMPurify.sanitize(user.value) };
                         }
                         if (ba.name === "password") {
-                            return { ...ba, value: password.value };
+                            return { ...ba, value: DOMPurify.sanitize(password.value) };
                         }
                         return ba;
                     }),
@@ -79,7 +79,7 @@ export function DataSourceSetting(props: any) {
         const parsedDs = JSON.stringify({ url });
         try {
             setCookie(
-                `qryn-settings`,
+                "qryn-settings",
                 `${btoa(user.value)}:${btoa(password.value)}@${btoa(parsedDs)}`,
                 { path: "/" }
             );
@@ -95,7 +95,7 @@ export function DataSourceSetting(props: any) {
                 <div style={{ display: "flex", alignItems: "center" }}>
                     <Button
                         title={"Set Cookie with name: qryn-settings"}
-                        value={"Save Cookie"}
+                        value={DOMPurify.sanitize("Save Cookie")}
                         onClick={addCookie}
                         primary={true}
                     />
@@ -104,7 +104,7 @@ export function DataSourceSetting(props: any) {
                         title={
                             "Use same URL and Basic Auth for all Data Sources"
                         }
-                        value={"Use For All"}
+                        value={DOMPurify.sanitize("Use For All")}
                         onClick={useForAll}
                         primary={true}
                     />
@@ -121,12 +121,12 @@ export function DataSourceSetting(props: any) {
 export const DataSourceSettingHeader = (props: any) => {
     const { icon, name, type, url } = props;
     return (
-        <div className="ds-item">
+        <div className={"ds-item"}>
             <Icon icon={icon} />
-            <div className="ds-text">
-                <div className="ds-type">{name}</div>
+            <div className={"ds-text"}>
+                <div className={"ds-type"}>{name}</div>
                 <small>
-                    {type} | {url}
+                    {DOMPurify.sanitize(type)} | {DOMPurify.sanitize(url)}
                 </small>
             </div>
         </div>
@@ -148,12 +148,12 @@ export function DataSource() {
     return (
         <ThemeProvider theme={_themes[theme]}>
             <Container>
-                <div className="body-cont">
+                <div className={"body-cont"}>
                     <Header
-                        title="DataSource Settings"
+                        title={"DataSource Settings"}
                         datasource={datasource}
                     />
-                    <div className="datasource-body">
+                    <div className={"datasource-body"}>
                         <DataSourceSetting {...datasource} />
                     </div>
                 </div>

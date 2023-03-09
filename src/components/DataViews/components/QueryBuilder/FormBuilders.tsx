@@ -2,6 +2,7 @@
 import { Builder, FormBuilderProps } from "./types";
 import { FlexColumn, MetricsContStyle } from "./styles";
 import { cx } from "@emotion/css";
+import DOMPurify from 'isomorphic-dompurify';
 import { LabelValuesSelectors, OperationFunctions } from "./renderers";
 import { useTheme } from "./hooks";
 import { useMemo, useCallback, useState, useEffect } from "react";
@@ -91,7 +92,7 @@ export const BinaryOperationBar = (props: any) => {
                             opts={binaryVectorOpts}
                         />
                         <input
-                            value={valueMatch}
+                            value={DOMPurify.sanitize(valueMatch)}
                             onChange={(e: any) =>
                                 onValueMatchChange(e, "vectValue")
                             }
@@ -116,7 +117,7 @@ export const FormBuilder = (props: any) => {
     const labelValueMemo = useMemo(() => {
         if (builder?.labelValuesState) {
             let labelString = labelsToString(builder?.labelValuesState);
-            return "{" + labelString + "}" || "{}";
+            return `{${labelString}}` || "{}";
         }
         return {};
     }, [builder.labelValuesState]);
@@ -201,7 +202,7 @@ export const FormBuilder = (props: any) => {
             {builder.isBinary && (
                 <BinaryOperationBar
                     theme={theme}
-                    binaryValue={builder.binaryValue}
+                    binaryValue={DOMPurify.sanitize(builder.binaryValue)}
                     onBinaryOptChange={onBinaryOptionChange}
                     onBinaryClose={onClose}
                 />
@@ -220,7 +221,7 @@ export const FormBuilder = (props: any) => {
                             index={idx}
                             onChange={onLabelValueChange} // this will be set
                             dataSourceId={dataSourceId}
-                            value={metricValue.value}
+                            value={DOMPurify.sanitize(metricValue.value)}
                             setBuilders={setBuilders}
                             finalQuery={finalQuery}
                             builder={builder}
@@ -278,7 +279,7 @@ export const MetricsSelector = (props: MetricSelectorProps) => {
         <InputSelect
             isMulti={false}
             type={"metric"}
-            defaultValue={"Select Metric..."}
+            defaultValue={DOMPurify.sanitize("Select Metric...")}
             selectOpts={metricsOpts}
             mainTheme={theme}
             onChange={onMetricChange}

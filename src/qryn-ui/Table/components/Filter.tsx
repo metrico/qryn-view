@@ -2,7 +2,7 @@ import { Column, RowData, Table } from '@tanstack/react-table'
 import {Fragment, useMemo, FC} from 'react'
 import { useTheme } from '../../../components/DataViews/components/QueryBuilder/hooks'
 import DebouncedInput from './DebouncedInput'
-
+import DOMPurify from 'isomorphic-dompurify'
 type NumberInputProps = {
   columnFilterValue: [number, number]
   getFacetedMinMaxValues: () => [number, number] | undefined
@@ -75,13 +75,13 @@ const TextInput: FC<TextInputProps> = ({
     <Fragment>
       <datalist id={dataListId}>
         {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-          <option value={value} key={value} />
+          <option value={DOMPurify.sanitize(value)} key={value} />
         ))}
       </datalist>
       <DebouncedInput
         theme={theme}
         type="text"
-        value={columnFilterValue ?? ''}
+        value={DOMPurify.sanitize(columnFilterValue ?? '')}
         onChange={value => setFilterValue(value)}
         placeholder={`Search... (${columnSize})`}
         className="w-36 border shadow rounded"
@@ -123,7 +123,7 @@ export function Filter<T extends RowData>({ column, table }: Props<T>) {
   ) : (
     <TextInput
       columnId={column.id}
-      columnFilterValue={columnFilterValue as string}
+      columnFilterValue={DOMPurify.sanitize(columnFilterValue as string)}
       columnSize={uniqueValues.size}
       setFilterValue={column.setFilterValue}
       sortedUniqueValues={sortedUniqueValues}

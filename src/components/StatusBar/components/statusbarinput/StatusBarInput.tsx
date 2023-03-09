@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { ThemeProvider } from "@emotion/react";
-
+import DOMPurify from "isomorphic-dompurify";
 import { useTheme } from "../../../DataViews/components/QueryBuilder/hooks";
 export function StatusBarInput(props: any) {
     const theme = useTheme();
@@ -15,7 +15,7 @@ export function StatusBarInput(props: any) {
                 <span className="label">{label}</span>
                 <input
                     className={type}
-                    value={value}
+                    value={DOMPurify.sanitize(value)}
                     onChange={handleStatusInputChange}
                 />
             </div>
