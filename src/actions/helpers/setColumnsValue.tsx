@@ -84,7 +84,7 @@ function traceRequest(data: any, value: any) {
             browserOpen: false,
             labels: [],
             values: [],
-            direction: "forward",
+            direction: "backwards",
         };
 
         dispatch(setRightPanel([newRight]));
@@ -96,7 +96,7 @@ function traceRequest(data: any, value: any) {
                 panelCP.limit || 100,
                 "right",
                 newRight.id,
-                "forward",
+                "backwards",
                 data.dataSourceId, // datasourceid
                 data.url
             )

@@ -63,7 +63,7 @@ export default function getData(
     limit: number,
     panel: string,
     id: string,
-    direction: QueryDirection = "forward",
+    direction: QueryDirection = "backwards",
     dataSourceId = "",
     url = "",
     customStep = 0,
