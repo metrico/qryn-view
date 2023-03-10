@@ -151,7 +151,7 @@ export function UpdateStateFromQueryParams() {
                     } else if (BOOLEAN_VALUES.includes(param)) {
                         try {
                             const val = JSONTry(startParams[param], false);
-                            dispatch(STORE_ACTIONS[param](DOMPurify.sanitize(val)));
+                            dispatch(STORE_ACTIONS[param](val));
                         } catch (e) {
                             console.log(e);
                         }
@@ -163,7 +163,7 @@ export function UpdateStateFromQueryParams() {
                             );
 
                             if(parsed?.length > 0) {
-                                dispatch(STORE_ACTIONS[param](DOMPurify.sanitize(parsed)));
+                                dispatch(STORE_ACTIONS[param](parsed));
                             }
                         } catch (e) {
                             console.log(e);
@@ -187,7 +187,7 @@ export function UpdateStateFromQueryParams() {
                     try {
                         urlFromHash.set(
                             param,
-                            DOMPurify.sanitize( JSONTry(STORE_KEYS[param], false))
+                            JSONTry(STORE_KEYS[param], false)
                         );
                     } catch (e) {
                         console.log(e);
@@ -195,7 +195,7 @@ export function UpdateStateFromQueryParams() {
                 } else if (ARRAY_VALUES.includes(param)) {
                     try {
                         const encodedArray = JSON.stringify(STORE_KEYS[param]);
-                        urlFromHash.set(param, DOMPurify.sanitize(encodedArray));
+                        urlFromHash.set(param, encodedArray);
                     } catch (e) {
                         console.log(e);
                     }
@@ -235,7 +235,7 @@ export function UpdateStateFromQueryParams() {
                     try {
                         paramsFromHash.set(
                             store_key,
-                            DOMPurify.sanitize(JSONTry(STORE_KEYS[store_key], false))
+                            JSONTry(STORE_KEYS[store_key], false)
                         );
                     } catch (e) {
                         console.error(e);

@@ -11,6 +11,7 @@ import store from "./store/store";
 import { Notification } from "./qryn-ui/notifications";
 import { CookiesProvider } from "react-cookie";
 import ProtectedRoute from "./providers/ProtectedRoute";
+import ScreenLoader from "./views/ScreenLoader";
 const AppRoute = lazy(()=> import("./App"))
 const DataSourcesRoute = lazy(()=> import("./views/DataSources/DataSources"))
 errorInterceptor(axios);
@@ -19,7 +20,7 @@ ReactDOM.render(
         <CookiesProvider>
             <Provider store={store}>
                 <BrowserRouter>
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={<ScreenLoader/>}>
                     <Routes>
                         <Route path="/" element={<AppRoute />} />
                         <Route path="/search" element={<AppRoute />} />
