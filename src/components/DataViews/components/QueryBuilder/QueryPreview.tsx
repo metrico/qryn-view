@@ -160,11 +160,9 @@ export default function QueryPreview(props: Props) {
     );
 
     useEffect(() => {
-        //   console.log(queryText)
         setInitialValue([
             { type: "paragraph", children: [{ text: DOMPurify.sanitize(props.queryText) }] },
         ]);
-        console.log(props.queryText)
         editor.children = [{ text: DOMPurify.sanitize(props.queryText) }];
           // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.queryText]);

@@ -24,7 +24,7 @@ export default function Main() {
     }, [hash]);
     //
     UpdateStateFromQueryParams();
-    
+  
     const { cookiesAvailable, cookieAuth } = useCookiesAvailable(paramsMemo);
     const { urlAvailable, url } = useUrlAvailable(paramsMemo);
     useEffect(() => {

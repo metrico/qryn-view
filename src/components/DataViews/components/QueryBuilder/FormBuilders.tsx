@@ -121,7 +121,6 @@ export const FormBuilder = (props: any) => {
         }
         return {};
     }, [builder.labelValuesState]);
-    console.log(labelValueMemo);
     const metricsOpts = useValuesFromMetrics(dataSourceId);
     const [metricValue, setMetricValue] = useState(
         metricsOpts[0] || { label: "", value: "" }

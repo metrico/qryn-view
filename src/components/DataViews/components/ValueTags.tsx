@@ -104,7 +104,6 @@ export class Panel {
 
 export default function ValueTags(props: any) {
     const { tags, actQuery, dataSourceData, linkedFieldTags } = props;
-    //console.log(dataSourceData);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
     //  const dataSources = useSelector((store: any) => store.dataSources);
     const theme = useSelector((store: any) => store.theme);

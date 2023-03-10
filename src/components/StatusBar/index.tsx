@@ -3,15 +3,13 @@ import { StatusBarSelectors } from "./components/statusbarselectors/StatusBarSel
 import Logo from "./assets/qryn-logo.png";
 import { StatusBarCont, StatusCont } from "./styled";
 import ClokiMenu from "../../plugins/settingsmenu/Menu";
-import { useSelector } from "react-redux";
-import { themes } from "../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
+import { useTheme } from "../DataViews/components/QueryBuilder/hooks";
 
 export default function StatusBar() {
-    const _themes: any = themes;
-    const theme = useSelector(({ theme }: any) => theme)
+    const theme = useTheme();
     return (
-        <ThemeProvider theme={_themes[theme]}>
+        <ThemeProvider theme={theme}>
             <StatusBarCont>
                 <div className="logo-section">
                     <img
@@ -19,7 +17,16 @@ export default function StatusBar() {
                         alt="Qryn View"
                         height="24px"
                         className="logo"
-                    />
+                    />{" "}
+                    <p
+                        style={{
+                            color: theme.textColor,
+                            fontSize: "10px",
+                            marginLeft: "5px",
+                        }}
+                    >
+                        v{process.env.REACT_APP_VERSION}
+                    </p>
                     <ApiSelector />
                 </div>
 

@@ -87,11 +87,11 @@
     "eject": "react-scripts eject",
     "start": "npx webpack-dev-server",
     "rs-start": "react-scripts start",
-    "https-start": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem react-scripts start",
+    "https-start": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem REACT_APP_VERSION=$npm_package_version react-scripts start",
     "build-old": "webpack --mode production",
     "webpack-build": "webpack --config webpack.config.prod.js --mode=production",
     "dev-build": "CI=false react-scripts build",
-    "build": "CI=false && GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "CI=false && REACT_APP_VERSION=$npm_package_version GENERATE_SOURCEMAP=false react-scripts build",
     "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "eslintConfig": {
