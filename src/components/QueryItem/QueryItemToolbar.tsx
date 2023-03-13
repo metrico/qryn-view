@@ -8,20 +8,22 @@ import {
     QueryItemToolbarStyled,
     ShowQueryButton,
 } from "./style";
+
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useEffect, useMemo, useState } from "react";
 import { QueryId } from "./QueryId";
 import { DataSourceSelect } from "./DataSourceSelect";
+import SplitViewButton from "../StatusBar/components/SplitViewButton";
 export function QueryItemToolbar(props: any) {
     const dispatch = useDispatch();
     // update panel on id change
     const {
-        data: { expr },
+        data: { expr, open },
     } = props;
 
     const panel = useSelector((store: any) => store[props.name]);
     const isEmbed = useSelector((store: any) => store.isEmbed);
-
+    const isSplit = useSelector((store:any)=> store.isSplit);
     const dataSources = useSelector((store: any) => store.dataSources);
 
     const [extValue, setExtValue] = useState(props.data.dataSourceId);
@@ -40,7 +42,7 @@ export function QueryItemToolbar(props: any) {
 
     useEffect(() => {
         setExtValue(props.data.dataSourceId);
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -169,6 +171,11 @@ export function QueryItemToolbar(props: any) {
             </div>
             {!isEmbed && (
                 <div className="query-tools">
+                     <SplitViewButton
+                     isSplit={isSplit}
+                     open={open}
+                     side={props.name} />
+
                     <DataSourceSelect
                         extValue={extValue}
                         value={dataSourceValue}

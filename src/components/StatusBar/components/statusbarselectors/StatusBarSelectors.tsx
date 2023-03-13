@@ -46,7 +46,6 @@ export function StatusBarSelectors() {
         <ThemeProvider theme={theme}>
             <div className={cx(StatusOptions)}>
                 <div className={cx(StatusSelectors)}>
-                    {!isTabletOrMobile && <SplitViewButton />}
 
                     <CopyLinkButton />
                 </div>

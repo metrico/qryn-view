@@ -47,7 +47,6 @@ export function metricsToString(metric: string, labels: Label[]): string {
 }
 // get here the 'metrics type'
 export function logsToString(labels: Label[]): string {
-    console.log(labels)
     let labelsBody = "";
     if(Array.isArray(labels)&&labels?.length > 0) {
       labelsBody+= labels[0].metric

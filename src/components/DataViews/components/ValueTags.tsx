@@ -149,6 +149,7 @@ export default function ValueTags(props: any) {
                 values: [],
                 direction: "forward",
                 loading: false,
+                open:true,
             };
             // debugger;
             dispatch(

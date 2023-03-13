@@ -46,20 +46,22 @@ function Row(props: any) {
 
     const linkedFieldTags: any = useMemo(() => {
         if (dataSourceData?.linkedFields?.length > 0) {
-            const mapped: any = dataSourceData.linkedFields.map((linked: any) => {
-                const { id, regex, name, internalLink } = linked;
-                const newGex = new RegExp(regex, "i");
-                const matched = text.match(newGex);
-                if (matched?.length > 0) {
-                    return {
-                        name,
-                        internalLink,
-                        id,
-                        tagGroups: matched.groups,
-                    };
+            const mapped: any = dataSourceData.linkedFields.map(
+                (linked: any) => {
+                    const { id, regex, name, internalLink } = linked;
+                    const newGex = new RegExp(regex, "i");
+                    const matched = text.match(newGex);
+                    if (matched?.length > 0) {
+                        return {
+                            name,
+                            internalLink,
+                            id,
+                            tagGroups: matched.groups,
+                        };
+                    }
+                    return {};
                 }
-                return {};
-            });
+            );
 
             let linked: any = { tags: {}, fields: [] };
             for (let tag of mapped) {
@@ -70,7 +72,7 @@ function Row(props: any) {
         } else {
             return {};
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [text]);
 
     const rowColor = useMemo(() => getRowColor(tags), [tags]);
@@ -116,10 +118,9 @@ function Row(props: any) {
 
 function Logs(props: any) {
     const { items, toggleItemActive, actQuery, dataSourceId } = props;
-
+    const { splitted } = actQuery;
     const itemData = createItemData(items, toggleItemActive);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
-    const isSplit = useSelector((store: any) => store.isSplit);
 
     const dataSourceData = useSelector(({ dataSources }: any) =>
         dataSources?.find((f: any) => f.id === dataSourceId)
@@ -148,7 +149,7 @@ function Logs(props: any) {
                 key={key}
                 index={key}
                 log={log}
-                isSplit={isSplit}
+                isSplit={splitted}
                 isMobile={isTabletOrMobile}
                 toggleItemActive={toggleItemActive}
             />

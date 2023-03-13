@@ -81,6 +81,7 @@ export const QueryBar = (props: any) => {
         dataSourceType,
         direction,
         dataSourceId,
+        splitted
         //  dataSourceURL,
     } = data;
     const {
@@ -93,6 +94,7 @@ export const QueryBar = (props: any) => {
             logsVolumeQuery,
         },
     } = props;
+
     const { hash } = useLocation();
     const dispatch = useDispatch();
     const saveUrl = localUrl();
@@ -278,20 +280,22 @@ export const QueryBar = (props: any) => {
         }
 
         let { isMatrix } = getIntvalData(actLocalQuery?.expr);
+        if(actLocalQuery.expr !== "" && actLocalQuery.expr?.length > 6) {
+            dispatch(
+                getData(
+                    dataSourceType,
+                    actLocalQuery?.expr,
+                    queryType,
+                    limit,
+                    name,
+                    id,
+                    direction,
+                    dataSourceId,
+                    currentDataSource?.url
+                )
+            );
+        }
 
-        dispatch(
-            getData(
-                dataSourceType,
-                actLocalQuery?.expr,
-                queryType,
-                limit,
-                name,
-                id,
-                direction,
-                dataSourceId,
-                currentDataSource?.url
-            )
-        );
 
         // setLogsLevel(queryInput, isLogsVolume);
         if (
@@ -634,7 +638,7 @@ export const QueryBar = (props: any) => {
 
         let { querySubmit, customStep, isMatrix } = getIntvalData(queryExpr);
 
-        if (isSearch && querySubmit !== "") {
+        if (isSearch && querySubmit !== "" && querySubmit?.length > 6) {
             dispatch(
                 getData(
                     dataSourceType,
@@ -871,7 +875,7 @@ export const QueryBar = (props: any) => {
                     dataSourceType !== "traces" && (
                         <MobileTopQueryMenuCont
                             {...props}
-                            isSplit={isSplit}
+                            isSplit={splitted}
                             dataSourceType={dataSourceType}
                             showQuerySettings={showQuerySettings}
                             queryHistory={queryHistory}
@@ -895,7 +899,7 @@ export const QueryBar = (props: any) => {
                     />,
                     <QueryBarCont
                         {...props}
-                        isSplit={isSplit}
+                        isSplit={splitted}
                         isBuilder={isBuilder}
                         dataSourceType={dataSourceType}
                         handleQueryChange={handleQueryChange}
@@ -988,14 +992,14 @@ export const QueryBar = (props: any) => {
 
                 {inlineQueryOptionsRenderer(
                     dataSourceType,
-                    isSplit,
+                    splitted,
                     isTabletOrMobile,
                     <QueryTypeBar {...props} />
                 )}
 
                 {querySettingRenderer(
                     isTabletOrMobile,
-                    isSplit,
+                    splitted,
                     dataSourceType,
                     <QuerySetting
                         {...props}

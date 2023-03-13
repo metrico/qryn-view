@@ -34,6 +34,7 @@ export const initialUrlState = {
             labels: [], // name: selected:
             values: [], // label name selected
             response: {}, // the target should be just the last one
+            open:true,
         },
     ],
 
@@ -59,6 +60,7 @@ export const initialUrlState = {
             labels: [], // name: selected:
             values: [], // label name selected
             response: {}, // the target should be just the last one
+            open:false
         },
     ],
 

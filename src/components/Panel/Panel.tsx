@@ -16,20 +16,21 @@ const PanelCont: any = styled.div`
 `;
 // Panel should have injected data
 export default function Panel(props: any) {
+
     const ref: any = useRef(null);
     const [width, setWidth] = useState(0);
 
     const dispatch = useDispatch();
     const { name } = props;
-
+    const isSplit = useSelector((store:any)=> store.isSplit)
     const panelDispatch = (name: string, data: any) => {
         if (name === "left") return setLeftPanel(data);
         return setRightPanel(data);
     };
 
     const panel = useSelector((store: any) => store[name]);
-    const isSplit = useSelector((store: any) => store.isSplit);
     const { hash } = useLocation();
+
 
     useEffect(() => {
         const params = new URLSearchParams(hash.replace(/#/, ""));
@@ -44,6 +45,8 @@ export default function Panel(props: any) {
         }
           // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+
 
     useEffect(()=>{
         if (typeof ref.current.clientWidth === 'number'){
@@ -62,12 +65,16 @@ export default function Panel(props: any) {
     }, []);
     // CHECK ALSO THAT DATAVIEWS IS AN ARRAY
 
-    return (
-        <>
-            <PanelCont isSplit={isSplit} ref={ref}>
-                <QueriesContainer {...props} width={width} queries={panel} />
-                <DataViews {...props} />
-            </PanelCont>
-        </>
-    );
+    
+        return (
+            <>
+                <PanelCont isSplit={isSplit} ref={ref}>
+                    <QueriesContainer {...props} width={width} queries={panel} />
+                    <DataViews {...props} splitted={isSplit}/>
+                </PanelCont>
+            </>
+        );
+    
+
+
 }

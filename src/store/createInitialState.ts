@@ -184,7 +184,8 @@ export default function initialState() {
                 labels: [], // name: selected:
                 values: [], // label name selected
                 direction: "backwards",
-                loading:false
+                loading:false,
+                open:true,
             },
         ],
 
@@ -211,6 +212,7 @@ export default function initialState() {
                 values: [], // label name selected
                 direction: "backwards",
                 loading: false,
+                open:false
             },
         ],
 

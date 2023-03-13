@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@emotion/react";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import Panel from "../../components/Panel/Panel";
 import StatusBar from "../../components/StatusBar";
 import QueryHistory from "../../plugins/queryhistory";
@@ -30,6 +31,8 @@ export function DesktopView({
     const [widthLeftPercent, setWidthLeftPercent] = useState(0);
     const [widthRightPercent, setWidthRightercent] = useState(0);
     const [minWidth, setMinWidth] = useState(0);
+    const [leftOpen, setLeftOpen] = useState(false);
+    const [rightOpen, setRightOpen] = useState(false);
     const refTotal: any = useRef(null);
     useEffect(() => {
         const widthTotal = refTotal.current.clientWidth;
@@ -81,15 +84,27 @@ export function DesktopView({
         isSplit,
     ]);
 
+    const left = useSelector((store: any) => store.left);
+    const right = useSelector((store: any) => store.right);
+    useEffect(() => {
+        setLeftOpen(left[0].open);
+        setRightOpen(right[0].open);
+        //eslint-disable-next-line
+    }, [left[0].open, right[0].open]);
+
+    const panelsRenderer = (leftOpen: boolean, rightOpen: boolean) => {
+        return (
+            <div className="panels-container" ref={refTotal}>
+                {leftOpen === true && <Panel name="left" />}
+                {rightOpen === true && <Panel name="right" />}
+            </div>
+        );
+    };
     return (
         <ThemeProvider theme={theme}>
             <MainContainer>
                 {!isEmbed && <StatusBar />}
-                <div className="panels-container" ref={refTotal}>
-                    <Panel name="left" />
-
-                    {isSplit && <Panel name="right" />}
-                </div>
+                {panelsRenderer(leftOpen, rightOpen)}
             </MainContainer>
 
             <SettingsDialog open={settingsDialogOpen} />

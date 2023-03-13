@@ -163,7 +163,7 @@ export const FormBuilder = (props: any) => {
         });
     };
     const handleMetricChange = (e: any) => {
-        console.log(e);
+       // console.log(e);
     };
 
     const handleMetricType = (
