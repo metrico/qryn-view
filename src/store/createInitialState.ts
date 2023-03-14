@@ -107,10 +107,12 @@ export default function initialState() {
             linkedFieldsSettings,
         };
     };
-    const getDatasourceURL = (id:string) => {
-        const localDatasources = JSON.parse(localStorage.getItem('dataSources')||'')
-        return(localDatasources?.find((f:any) => f.id === 'id'))
-    }
+    const getDatasourceURL = (id: string) => {
+        const localDatasources = JSON.parse(
+            localStorage.getItem("dataSources") || ""
+        );
+        return localDatasources?.find((f: any) => f.id === "id");
+    };
 
     const urlState: URLState = stateFromQueryParams() || initialUrlState;
     const historyService = localService().historyStore();
@@ -168,24 +170,35 @@ export default function initialState() {
                 panel: "left",
                 queryType: "range",
                 dataSourceType: "logs",
-                dataSourceId:'cHI2SqPzH_kxYRXj',
-                dataSourceURL:getDatasourceURL('cHI2SqPzH_kxYRXj'),
+                dataSourceId: "cHI2SqPzH_kxYRXj",
+                dataSourceURL: getDatasourceURL("cHI2SqPzH_kxYRXj"),
                 limit: 100,
                 step: 100,
                 tableView: false,
                 chartView: false,
                 isShowTs: true,
                 isBuilder: false,
-                hasStats:false,
-                statsData:{},
+                hasStats: false,
+                statsData: {},
                 browserOpen: false,
                 isLogsVolume: false,
                 expr: "",
                 labels: [], // name: selected:
                 values: [], // label name selected
                 direction: "backwards",
-                loading:false,
-                open:true,
+                loading: false,
+                open: true,
+                start: new Date(
+                    moment(Date.now())
+                        .subtract(5, "minutes")
+                        .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+                ),
+                time: "", // for instant queries
+                stop: new Date(
+                    moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+                ),
+                label:"", // range label
+                pickerOpen:false, // range picker
             },
         ],
 
@@ -197,8 +210,8 @@ export default function initialState() {
                 panel: "right",
                 queryType: "range",
                 dataSourceType: "traces",
-                dataSourceId:"32D16h5uYBqUUzhD",
-                dataSourceURL:getDatasourceURL("32D16h5uYBqUUzhD"),
+                dataSourceId: "32D16h5uYBqUUzhD",
+                dataSourceURL: getDatasourceURL("32D16h5uYBqUUzhD"),
                 limit: 100,
                 step: 100,
                 tableView: false,
@@ -212,7 +225,18 @@ export default function initialState() {
                 values: [], // label name selected
                 direction: "backwards",
                 loading: false,
-                open:false
+                open: false,
+                start: new Date(
+                    moment(Date.now())
+                        .subtract(5, "minutes")
+                        .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+                ),
+                time: "", // for instant queries
+                stop: new Date(
+                    moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+                ),
+                label:"", // range label
+                pickerOpen:false // range picker
             },
         ],
 

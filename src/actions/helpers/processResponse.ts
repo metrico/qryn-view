@@ -23,9 +23,9 @@ export const resetTraceData = (
     panel: string,
     id: string,
     direction: QueryDirection,
-    queryType: QueryType,
+    queryType: QueryType
 ) => {
-    const { time } = getTimeParams(type);
+    const { time } = getTimeParams(type, id, panel);
     const { debugMode } = store.getState();
 
     const resultQuery: TracesResult = {
@@ -53,7 +53,7 @@ export async function processResponse(
     queryType: QueryType,
     isLogsVolume?: boolean
 ) {
-    const { time } = getTimeParams(type);
+    const { time } = getTimeParams(type, id, panel);
     const { debugMode } = store.getState();
     if (type === "traces") {
         if (

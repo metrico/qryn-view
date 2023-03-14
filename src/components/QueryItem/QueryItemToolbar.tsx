@@ -14,16 +14,17 @@ import { useEffect, useMemo, useState } from "react";
 import { QueryId } from "./QueryId";
 import { DataSourceSelect } from "./DataSourceSelect";
 import SplitViewButton from "../StatusBar/components/SplitViewButton";
+import { DateRangePicker } from "../StatusBar/components/daterangepicker";
 export function QueryItemToolbar(props: any) {
     const dispatch = useDispatch();
     // update panel on id change
     const {
-        data: { expr, open },
+        data: { expr, open, id, start, stop, label, pickerOpen },
     } = props;
 
     const panel = useSelector((store: any) => store[props.name]);
     const isEmbed = useSelector((store: any) => store.isEmbed);
-    const isSplit = useSelector((store:any)=> store.isSplit);
+    const isSplit = useSelector((store: any) => store.isSplit);
     const dataSources = useSelector((store: any) => store.dataSources);
 
     const [extValue, setExtValue] = useState(props.data.dataSourceId);
@@ -147,6 +148,48 @@ export function QueryItemToolbar(props: any) {
 
         dispatch(panelAction(props.name, panelCP));
     };
+
+    const onStopChange = (e: any) => {
+        const cPanel = [...panel];
+        cPanel.forEach((panel) => {
+            if (panel.id === props.data.id) {
+                panel.stop = e;
+            }
+        });
+
+        dispatch(panelAction(props.name, cPanel));
+    };
+    const onStartChange = (e: any) => {
+        const cPanel = [...panel];
+        cPanel.forEach((panel) => {
+            if (panel.id === props.data.id) {
+                panel.start = e;
+            }
+        });
+
+        dispatch(panelAction(props.name, cPanel));
+    };
+    const onLabelChange = (e: any) => {
+        const cPanel = [...panel];
+        cPanel.forEach((panel) => {
+            if (panel.id === props.data.id) {
+                panel.label = e;
+            }
+        });
+
+        dispatch(panelAction(props.name, cPanel));
+    };
+
+    const onPickerOpen = (e: any) => {
+        const cPanel = [...panel];
+        cPanel.forEach((panel) => {
+            if (panel.id === props.data.id) {
+                panel.pickerOpen = e;
+            }
+        });
+
+        dispatch(panelAction(props.name, cPanel));
+    };
     return (
         <QueryItemToolbarStyled>
             <div className="query-title">
@@ -171,10 +214,22 @@ export function QueryItemToolbar(props: any) {
             </div>
             {!isEmbed && (
                 <div className="query-tools">
-                     <SplitViewButton
-                     isSplit={isSplit}
-                     open={open}
-                     side={props.name} />
+                    <DateRangePicker
+                        id={id}
+                        onStopChange={onStopChange}
+                        onStartChange={onStartChange}
+                        onLabelChange={onLabelChange}
+                        onPickerOpen={onPickerOpen}
+                        startTs={start}
+                        stopTs={stop}
+                        label={label}
+                        pickerOpen={pickerOpen}
+                    />
+                    <SplitViewButton
+                        isSplit={isSplit}
+                        open={open}
+                        side={props.name}
+                    />
 
                     <DataSourceSelect
                         extValue={extValue}

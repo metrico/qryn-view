@@ -158,7 +158,9 @@ export default function getData(
         dsSettings.url || "",
         queryType,
         url,
-        customStep
+        customStep,
+        id,
+        panel
     );
 
     const endpoint = getEndpoint(type, queryType, params);

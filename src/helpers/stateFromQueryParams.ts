@@ -1,9 +1,10 @@
 import { environment } from "../environment/env.dev";
 import setDebug from "./setDebug";
-import * as moment from "moment";
+import moment from "moment";
 import { nanoid } from "nanoid";
 import DOMPurify from 'isomorphic-dompurify';
 const BOOLEAN_VALUES = ["isSubmit", "isSplit", "autoTheme", "isEmbed"];
+
 export const initialUrlState = {
     query: "",
     queryType: "range",
@@ -35,6 +36,17 @@ export const initialUrlState = {
             values: [], // label name selected
             response: {}, // the target should be just the last one
             open:true,
+            start: new Date(
+                moment(Date.now())
+                    .subtract(5, "minutes")
+                    .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+            ),
+            time: "", // for instant queries
+            stop: new Date(
+                moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+            ),
+            label:"",
+            pickerOpen:false, // time picker
         },
     ],
 
@@ -60,7 +72,18 @@ export const initialUrlState = {
             labels: [], // name: selected:
             values: [], // label name selected
             response: {}, // the target should be just the last one
-            open:false
+            open:false,
+            start: new Date(
+                moment(Date.now())
+                    .subtract(5, "minutes")
+                    .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+            ),
+            time: "", // for instant queries
+            stop: new Date(
+                moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
+            ),
+            label:"",
+            pickerOpen:false, // time picker
         },
     ],
 
