@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLeftPanel } from "../../actions/setLeftPanel";
 import { setRightPanel } from "../../actions/setRightPanel";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import SyncIcon from "@mui/icons-material/Sync";
 import {
     CloseQuery,
     OpenQuery,
@@ -15,12 +16,16 @@ import { QueryId } from "./QueryId";
 import { DataSourceSelect } from "./DataSourceSelect";
 import SplitViewButton from "../StatusBar/components/SplitViewButton";
 import { DateRangePicker } from "../StatusBar/components/daterangepicker";
+import { Tooltip } from "@mui/material";
 export function QueryItemToolbar(props: any) {
     const dispatch = useDispatch();
     // update panel on id change
     const {
         data: { expr, open, id, start, stop, label, pickerOpen },
     } = props;
+
+    const left = useSelector((store: any) => store.left);
+    const right = useSelector((store: any) => store.right);
 
     const panel = useSelector((store: any) => store[props.name]);
     const isEmbed = useSelector((store: any) => store.isEmbed);
@@ -190,6 +195,24 @@ export function QueryItemToolbar(props: any) {
 
         dispatch(panelAction(props.name, cPanel));
     };
+    // update ranges of all queries from a panel
+    const updateRanges = (panels: any[], name: string) => {
+        panels.forEach((query: any) => {
+            query.start = start;
+            query.stop = stop;
+            query.label = label;
+        });
+        dispatch(panelAction(name, panels));
+    };
+
+    // sync time ranges at all queries
+    const onSyncTimeRanges = () => {
+        const lCopy = [...left];
+        const rCopy = [...right];
+        updateRanges(lCopy, "left");
+        updateRanges(rCopy, "right");
+    };
+
     return (
         <QueryItemToolbarStyled>
             <div className="query-title">
@@ -225,6 +248,17 @@ export function QueryItemToolbar(props: any) {
                         label={label}
                         pickerOpen={pickerOpen}
                     />
+                    <Tooltip title={'Sync Time Ranges'}>
+                    <SyncIcon
+                        style={{
+                            fontSize: "15px",
+                            cursor: "pointer",
+                            padding: "3px",
+                            marginLeft: "10px",
+                        }}
+                        onClick={onSyncTimeRanges}
+                    />
+                    </Tooltip>
                     <SplitViewButton
                         isSplit={isSplit}
                         open={open}

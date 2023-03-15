@@ -36,15 +36,9 @@ export const initialUrlState = {
             values: [], // label name selected
             response: {}, // the target should be just the last one
             open:true,
-            start: new Date(
-                moment(Date.now())
-                    .subtract(5, "minutes")
-                    .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-            ),
+             start: new Date(Date.now() - 5 * 60000),
             time: "", // for instant queries
-            stop: new Date(
-                moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-            ),
+            stop: new Date(Date.now()),
             label:"",
             pickerOpen:false, // time picker
         },
@@ -73,15 +67,9 @@ export const initialUrlState = {
             values: [], // label name selected
             response: {}, // the target should be just the last one
             open:false,
-            start: new Date(
-                moment(Date.now())
-                    .subtract(5, "minutes")
-                    .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-            ),
+            start: new Date(Date.now() - 5 * 60000),
             time: "", // for instant queries
-            stop: new Date(
-                moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-            ),
+            stop: new Date(Date.now()),
             label:"",
             pickerOpen:false, // time picker
         },

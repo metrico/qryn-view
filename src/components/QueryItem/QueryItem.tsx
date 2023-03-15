@@ -178,7 +178,6 @@ export default function QueryItem(props: any) {
         };
 
         const panelData = setNewPanelData(panelSelected);
-
         dispatch(panelAction(name, panelData));
     };
 

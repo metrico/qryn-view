@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { useMemo } from "react";
 import QueryItem from "./QueryItem";
 
 const QueriesContainerStyled = styled.div`

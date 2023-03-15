@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { css } from "@emotion/css";
-import DOMPurify from "isomorphic-dompurify";
 import {
     format,
     differenceInCalendarMonths,

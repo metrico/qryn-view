@@ -130,17 +130,9 @@ export default function initialState() {
         vectorData: {},
         loading: false,
         queryResolution: 1,
-        start:
-            urlState.start ||
-            new Date(
-                moment(Date.now())
-                    .subtract(5, "minutes")
-                    .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-            ),
-        time: urlState.time || "", // for instant queries
-        stop:
-            urlState.stop ||
-            new Date(moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
+        start: new Date(Date.now() - 5 * 60000),
+        time: urlState.time || "", // for instant queries        
+        stop: new Date(Date.now()),
         from: urlState.from || null,
         to: urlState.to || null,
         label: urlState.label,
@@ -188,17 +180,11 @@ export default function initialState() {
                 direction: "backwards",
                 loading: false,
                 open: true,
-                start: new Date(
-                    moment(Date.now())
-                        .subtract(5, "minutes")
-                        .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-                ),
+                start: new Date(Date.now() - 5 * 60000),
                 time: "", // for instant queries
-                stop: new Date(
-                    moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-                ),
-                label:"", // range label
-                pickerOpen:false, // range picker
+                stop: new Date(Date.now()),
+                label: "", // range label
+                pickerOpen: false, // range picker
             },
         ],
 
@@ -226,17 +212,11 @@ export default function initialState() {
                 direction: "backwards",
                 loading: false,
                 open: false,
-                start: new Date(
-                    moment(Date.now())
-                        .subtract(5, "minutes")
-                        .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-                ),
+                start: new Date(Date.now() - 5 * 60000),
                 time: "", // for instant queries
-                stop: new Date(
-                    moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-                ),
-                label:"", // range label
-                pickerOpen:false // range picker
+                stop: new Date(Date.now()),
+                label: "", // range label
+                pickerOpen: false, // range picker
             },
         ],
 
@@ -260,7 +240,7 @@ export default function initialState() {
         isSplit: false,
         showDataSourceSetting: true,
     };
-    
+
     const debug = state.debugMode;
     if (debug) console.log("🚧 LOGIC/ INITIAL STATE ::: ", state);
 
