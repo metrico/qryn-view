@@ -10,35 +10,34 @@ import { useTheme } from "./hooks";
 
 interface Props {
     queryText: string;
+    searchButton: any;
+    logsRateButton?: any;
+    queryInput?: any;
 }
 
 const QueryPreviewContainer = (theme: any) => css`
-padding:10px;
-display:flex;
-flex:1;
-align-items:center;
-border-bottom: 1px solid ${theme.buttonBorder};
-background: ${theme.widgetContainer};
-label  {
-    
-    font-size : 12px;
-    color: ${theme.textColor};
-  
-    padding: 4px 10px;
-}
-`
+    padding: 8px;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    border-bottom: 1px solid ${theme.buttonBorder};
+    background: ${theme.widgetContainer};
+    label {
+        font-size: 11px;
+        color: ${theme.textColor};
+
+        padding: 4px 10px;
+    }
+`;
 
 const CustomEditor = (theme: any) => css`
     flex: 1;
-    //   height: 100%;
     background: ${theme.inputBg};
-   // border: 1px solid ${theme.buttonBorder};
     color: ${theme.textColor};
-    padding: 4px 8px;
+    padding: 3px 6px;
     font-size: 1em;
     font-family: monospace;
     margin: 0px 5px;
-    // margin-bottom: 20px;
     border-radius: 3px;
     line-height: 1.5;
     line-break: anywhere;
@@ -119,11 +118,15 @@ export function getTokenLength(token: any) {
 export default function QueryPreview(props: Props) {
     const theme = useTheme();
 
-    const { queryText } = props;
+    const { queryText, searchButton, logsRateButton, queryInput } = props;
     const [initialValue, setInitialValue] = useState([
-        { type: "paragraph", children: [{ text: DOMPurify.sanitize(queryText) }] },
+        {
+            type: "paragraph",
+            children: [{ text: DOMPurify.sanitize(queryText) }],
+        },
     ]);
-    const [language] = useState("sql")
+
+    const [language] = useState("sql");
 
     const decorate = useCallback(
         ([node, path]: any) => {
@@ -151,49 +154,63 @@ export default function QueryPreview(props: Props) {
         [language]
     );
 
-
-
     const renderLeaf = useCallback(
         (props) => <Leaf {...props} theme={theme} />,
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
 
     useEffect(() => {
         setInitialValue([
-            { type: "paragraph", children: [{ text: DOMPurify.sanitize(props.queryText) }] },
+            {
+                type: "paragraph",
+                children: [{ text: DOMPurify.sanitize(props.queryText) }],
+            },
         ]);
         editor.children = [{ text: DOMPurify.sanitize(props.queryText) }];
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.queryText]);
-
 
     const onChange = useCallback(
         (e) => {
             setInitialValue(e);
         },
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [initialValue]
     );
+
+    useEffect(() => {
+        if (initialValue !== queryInput && queryInput !== "") {
+            setInitialValue([
+                {
+                    type: "paragraph",
+                    children: [{ text: DOMPurify.sanitize(queryInput) }],
+                },
+            ]);
+            editor.children = [{ text: DOMPurify.sanitize(queryInput) }];
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [queryInput]);
 
     const editor = useMemo(
         () => withHistory(withReact(createEditor() as any)),
         []
     );
 
-    return (<div className={cx(QueryPreviewContainer(theme))}>
-        <label>Raw Query</label>
-        <Slate editor={editor} value={initialValue} onChange={onChange}>
-            <Editable
-                renderLeaf={renderLeaf}
-                decorate={decorate}
-                className={cx(CustomEditor(theme))}
-                readOnly
-                placeholder={queryText}
-            />
-        </Slate>
-
-    </div>
-
+    return (
+        <div className={cx(QueryPreviewContainer(theme))}>
+            <label>Raw Query</label>
+            <Slate editor={editor} value={initialValue} onChange={onChange}>
+                <Editable
+                    renderLeaf={renderLeaf}
+                    decorate={decorate}
+                    className={cx(CustomEditor(theme))}
+                    readOnly
+                    placeholder={queryText}
+                />
+            </Slate>
+            {searchButton}
+            {logsRateButton}
+        </div>
     );
 }

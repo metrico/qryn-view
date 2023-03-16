@@ -8,40 +8,43 @@ import { MetricsFormBuilderProps, Builder } from "./types";
 import { FormBuilders } from "./FormBuilders";
 import QueryPreview from "./QueryPreview";
 import { useSelector } from "react-redux";
-import { initialMetricsBuilder,binaryOperatorOpts } from "./consts";
-
+import { initialMetricsBuilder, binaryOperatorOpts } from "./consts";
 
 export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
-    const { dataSourceId, labelValueChange} = props;
-
+    const { dataSourceId, labelValueChange, searchButton, logsRateButton, queryInput } = props;
+    
     const dataSources = useSelector((store: any) => store.dataSources);
 
     const { start, stop } = useSelector((store: any) => store);
 
     // this one should be comming form selected metric
 
-    const { logsResponse } = useLogLabels(dataSourceId, start, stop, dataSources); // pass here all data needed
+    const { logsResponse } = useLogLabels(
+        dataSourceId,
+        start,
+        stop,
+        dataSources
+    ); // pass here all data needed
 
     const [finalQuery, setFinalQuery] = useState("");
     const mainTheme = useTheme();
 
-
-    const [builders, setBuilders] = useState<Builder[]>([initialMetricsBuilder]);
-
+    const [builders, setBuilders] = useState<Builder[]>([
+        initialMetricsBuilder,
+    ]);
 
     const addBinaryOperation = useCallback(
         (idx: number) => {
             setBuilders((prev) => [...prev, { ...prev[idx], isBinary: true }]);
         },
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [builders]
     );
 
-
-    useEffect(()=>{
-        labelValueChange(finalQuery)
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[finalQuery])
+    useEffect(() => {
+        labelValueChange(finalQuery);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [finalQuery]);
 
     useEffect(() => {
         setBuilders((prev) => {
@@ -49,11 +52,9 @@ export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
             return next.map((builder: Builder) => ({
                 ...builder,
                 logsResponse,
-
             }));
         });
     }, [logsResponse]);
-
 
     const binaryToString = (builder: Builder) => {
         const { binaryValue } = builder;
@@ -79,25 +80,31 @@ export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
         return finalQuery;
     };
 
+    // send a 'logs query' to the builders
+
     useEffect(() => {
         setFinalQuery(finalQueryOperator(builders));
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [builders]);
 
     return (
         <ThemeProvider theme={mainTheme}>
             <div className={cx(FlexColumn)}>
                 <FormBuilders
-                    type={'metrics_search'}
+                    type={"metrics_search"}
                     addBinary={addBinaryOperation}
                     dataSourceId={dataSourceId}
                     logsResponse={logsResponse}
                     setBuilders={setBuilders}
                     builders={builders}
                     finalQuery={finalQuery}
-                    
                 />
-                <QueryPreview queryText={finalQuery} />
+                <QueryPreview
+                    queryText={finalQuery}
+                    searchButton={searchButton}
+                    logsRateButton={logsRateButton}
+                    queryInput={queryInput}
+                />
             </div>
         </ThemeProvider>
     );

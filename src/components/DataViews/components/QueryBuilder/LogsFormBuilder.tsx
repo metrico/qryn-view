@@ -25,7 +25,7 @@ export const initialMetricsBuilder: Builder = {
     builderResult: "",
     logsVolumeQuery: "",
     isBinary: false,
-    isMetrics:true,
+    isMetrics: true,
 };
 
 const binaryOperatorOpts: any = {
@@ -44,7 +44,13 @@ const binaryOperatorOpts: any = {
 };
 
 export function LogsFormBuilder(props: LogsFormBuilderProps) {
-    const { dataSourceId, labelValueChange, handleLogsVolumeChange } = props;
+
+    const {
+        dataSourceId,
+        labelValueChange,
+        handleLogsVolumeChange,
+        searchButton,
+    } = props;
 
     const dataSources = useSelector((store: any) => store.dataSources);
 
@@ -55,7 +61,7 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
         start,
         stop,
         dataSources
-    ); 
+    );
 
     const [finalQuery, setFinalQuery] = useState("");
     const mainTheme = useTheme();
@@ -136,7 +142,11 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
                     builders={builders}
                     finalQuery={finalQuery}
                 />
-                <QueryPreview queryText={finalQuery} />
+                <QueryPreview
+                    queryText={finalQuery}
+                    searchButton={searchButton}
+                
+                />
             </div>
         </ThemeProvider>
     );

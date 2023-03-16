@@ -63,11 +63,12 @@ const menuButtonStyles = (theme: any) => css`
     color: ${theme.textColor};
     border: 1px solid ${theme.buttonBorder};
     border-radius: 3px;
-    padding: 4px 8px;
+    padding: 6px;
     display: flex;
     align-items: center;
     cursor: pointer;
-    margin-left: 4px;
+    margin-top:4px;
+    margin: 3px;
 `;
 
 const menuOpening = css`

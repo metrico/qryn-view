@@ -144,11 +144,15 @@ export interface LogsFormBuilderProps {
     dataSourceId: string;
     labelValueChange(labelValue: string): void;
     handleLogsVolumeChange(logsVolumeQuery: string): void;
+    searchButton:any;
 }
 
 export interface MetricsFormBuilderProps {
     dataSourceId: string;
     labelValueChange(labelValue:string):void 
     handleMetricsChange(metric:string):void
+    searchButton:any;
+    logsRateButton:any;
+    queryInput?:any;
 
 }

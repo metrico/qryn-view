@@ -566,7 +566,7 @@ export const QueryBar = (props: any) => {
         e.preventDefault();
         const isEmptyQuery = queryInput.length === 0;
         let query = "";
-
+        // check how to update back the query preview
         if (!isEmptyQuery) {
             query = addQueryInterval(queryInput);
             setQueryInput(query);
@@ -917,6 +917,7 @@ export const QueryBar = (props: any) => {
                     />,
                     <MetricsSearch
                         {...props}
+                        queryInput={queryInput}
                         searchButton={
                             <ShowLogsButton
                                 disabled={!queryValid}

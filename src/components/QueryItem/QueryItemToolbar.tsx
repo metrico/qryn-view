@@ -17,6 +17,7 @@ import { DataSourceSelect } from "./DataSourceSelect";
 import SplitViewButton from "../StatusBar/components/SplitViewButton";
 import { DateRangePicker } from "../StatusBar/components/daterangepicker";
 import { Tooltip } from "@mui/material";
+import { useMediaQuery } from "react-responsive";
 export function QueryItemToolbar(props: any) {
     const dispatch = useDispatch();
     // update panel on id change
@@ -31,7 +32,7 @@ export function QueryItemToolbar(props: any) {
     const isEmbed = useSelector((store: any) => store.isEmbed);
     const isSplit = useSelector((store: any) => store.isSplit);
     const dataSources = useSelector((store: any) => store.dataSources);
-
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
     const [extValue, setExtValue] = useState(props.data.dataSourceId);
 
     const dataSourceOptions = useMemo(() => {
@@ -248,22 +249,24 @@ export function QueryItemToolbar(props: any) {
                         label={label}
                         pickerOpen={pickerOpen}
                     />
-                    <Tooltip title={'Sync Time Ranges'}>
-                    <SyncIcon
-                        style={{
-                            fontSize: "15px",
-                            cursor: "pointer",
-                            padding: "3px",
-                            marginLeft: "10px",
-                        }}
-                        onClick={onSyncTimeRanges}
-                    />
+                    <Tooltip title={"Sync Time Ranges"}>
+                        <SyncIcon
+                            style={{
+                                fontSize: "15px",
+                                cursor: "pointer",
+                                padding: "3px",
+                                marginLeft: "10px",
+                            }}
+                            onClick={onSyncTimeRanges}
+                        />
                     </Tooltip>
-                    <SplitViewButton
-                        isSplit={isSplit}
-                        open={open}
-                        side={props.name}
-                    />
+                    {!isTabletOrMobile && (
+                        <SplitViewButton
+                            isSplit={isSplit}
+                            open={open}
+                            side={props.name}
+                        />
+                    )}
 
                     <DataSourceSelect
                         extValue={extValue}

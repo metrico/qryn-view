@@ -13,8 +13,8 @@ import { useTheme } from "../DataViews/components/QueryBuilder/hooks";
 
 const QueryTypeCont = styled.div`
     display: flex;
-    padding: 4px;
-    background: ${(props: any) => props.theme.widgetContainer};
+    padding: 4px 0px;
+   // background: ${(props: any) => props.theme.widgetContainer};
     color: ${(props: any) => props.color};
     height: 26px;
 `;
@@ -35,6 +35,14 @@ export const DIRECTION_SWITCH_OPTIONS = [
     { value: "backwards", label: "Backwards" },
 ];
 
+
+// Bar with switches: 
+// query type
+// timestamp
+// query builder
+// direction
+// query limit
+// logs volume
 export default function QueryTypeBar(props: any) {
     const dispatch = useDispatch();
     const { name, data } = props;
@@ -220,15 +228,6 @@ export default function QueryTypeBar(props: any) {
                 )}
                 {responseType !== "vector" && (
                     <>
-                        {/* <InputGroup>
-                            <SettingLabel>Table View</SettingLabel>
-                            <Switch
-                                checked={isTableViewSet}
-                                size={"small"}
-                                onChange={handleTableViewSwitch}
-                                inputProps={{ "aria-label": "controlled" }}
-                            />
-                        </InputGroup> */}
                         <InputGroup>
                             <SettingLabel>Timestamp</SettingLabel>
                             <Switch

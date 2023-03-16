@@ -9,8 +9,7 @@ const ValuesListStyled = styled.div`
         flex-wrap: wrap;
         flex: 1;
         flex-direction: column;
-        font-size: 13px;
-        margin: 5px 0px;
+        font-size: 12px;
         border-radius: 4px;
         transition: 0.02s all;
         .valuelist-title {
@@ -71,7 +70,7 @@ const ValuesListStyled = styled.div`
             border: 1px solid ${({theme}: any) => theme.buttonBorder};
 
             margin: 2px;
-            padding: 3px 6px;
+            padding: 2px 7px;
             border-radius: 3px;
             line-height: 1.5;
             font-size: 12px;

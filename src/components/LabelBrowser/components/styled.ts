@@ -47,10 +47,8 @@ export const ShowLabelsBtn: any = styled(BtnSmall)`
 
 export const QueryBarContainer: any = styled.div`
     display: flex;
-    padding: 6px;
-    margin-top: 5px;
+    padding: 0px 4px;
     margin-left: 0px;
-    background: ${({ theme }: any) => theme.widgetContainer};
     flex-wrap: wrap;
     border-radius: 3px;
 `;

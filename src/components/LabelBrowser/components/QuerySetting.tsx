@@ -20,6 +20,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import QueryLimit from "../../QueryTypeBar/components/QueryLimit";
 import { DialogStyles } from "../../../plugins/settingsdialog/SettingsDialog";
+// Query setting dialog menu
 export const QuerySetting = (props:any) => {
     const dispatch = useDispatch();
     const responseType = useSelector((store:any) => store.responseType);

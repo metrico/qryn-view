@@ -38,6 +38,7 @@ import { Tooltip } from "@mui/material";
 import TimeLabel from "./components/TimeLabel";
 import { DatePickerButton } from "../../styled";
 import { useTheme } from "../../../DataViews/components/QueryBuilder/hooks";
+import { useMediaQuery } from "react-responsive";
 
 export const timeDateRangeFromLocal = (item: string) => {
     try {
@@ -119,7 +120,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
         pickerOpen,
         onPickerOpen,
     } = props;
-
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
     const theme = useTheme();
     const initialDateRange = () => {
         try {
@@ -334,44 +335,51 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
     };
     return (
         <div style={{ display: "flex" }}>
-            <DatePickerButton
-                onClick={() => {
-                    adjustTimeRange("backward");
-                }}
-                attachedside={"r"}
-                emptySide={"l"}
-                className={"date-time-selector"}
-            >
-                <KeyboardArrowLeft />
-            </DatePickerButton>
-            <DatePickerButton
-                onClick={handleClick}
-                attachedside={"both"}
-                size={"small"}
-                className={"date-time-selector"}
-                aria-controls={open ? "backward-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-            >
-                <KeyboardArrowDownOutlinedIcon />
-            </DatePickerButton>
-            <CustomMenu
-                id={"backward-menu"}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                qryntheme={theme}
-            >
-                {timeAdjustmentOptions.map((option) => (
-                    <MenuItem
-                        key={`${option} l`}
-                        sx={{ "&.MuiMenuItem-root": { fontSize: 12 } }}
-                        onClick={(e) => handleClose(e, "backward", option)}
+            {!isTabletOrMobile && (
+                <>
+                    <DatePickerButton
+                        onClick={() => {
+                            adjustTimeRange("backward");
+                        }}
+                        attachedside={"r"}
+                        emptySide={"l"}
+                        className={"date-time-selector"}
                     >
-                        {option}
-                    </MenuItem>
-                ))}
-            </CustomMenu>
+                        <KeyboardArrowLeft />
+                    </DatePickerButton>
+                    <DatePickerButton
+                        onClick={handleClick}
+                        attachedside={"both"}
+                        size={"small"}
+                        className={"date-time-selector"}
+                        aria-controls={open ? "backward-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                    >
+                        <KeyboardArrowDownOutlinedIcon />
+                    </DatePickerButton>
+                    <CustomMenu
+                        id={"backward-menu"}
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        qryntheme={theme}
+                    >
+                        {timeAdjustmentOptions.map((option) => (
+                            <MenuItem
+                                key={`${option} l`}
+                                sx={{ "&.MuiMenuItem-root": { fontSize: 12 } }}
+                                onClick={(e) =>
+                                    handleClose(e, "backward", option)
+                                }
+                            >
+                                {option}
+                            </MenuItem>
+                        ))}
+                    </CustomMenu>
+                </>
+            )}
+
             <Tooltip title={label ? <TimeLabel dateRange={dateRange} /> : ""}>
                 <DatePickerButton
                     onClick={openButtonHandler}
@@ -401,44 +409,54 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                     </span>
                 </DatePickerButton>
             </Tooltip>
-            <DatePickerButton
-                onClick={handleClickRight}
-                id={`forward-button-${id}`}
-                size={"small"}
-                className={"date-time-selector"}
-                aria-controls={openRight ? `forward-menu${id}` : undefined}
-                aria-haspopup="true"
-                aria-expanded={openRight ? "true" : undefined}
-            >
-                <KeyboardArrowDownOutlinedIcon />
-            </DatePickerButton>
 
-            <CustomMenu
-                id={`forward-menu-${id}`}
-                anchorEl={anchorElRight}
-                open={openRight}
-                onClose={handleClose}
-                qryntheme={theme}
-            >
-                {timeAdjustmentOptions.map((option) => (
-                    <MenuItem
-                        key={`${option} r`}
-                        sx={{ "&.MuiMenuItem-root": { fontSize: 12 } }}
-                        onClick={(e) => handleClose(e, "forward", option)}
+            {!isTabletOrMobile && (
+                <>
+                    <DatePickerButton
+                        onClick={handleClickRight}
+                        id={`forward-button-${id}`}
+                        size={"small"}
+                        className={"date-time-selector"}
+                        aria-controls={
+                            openRight ? `forward-menu${id}` : undefined
+                        }
+                        aria-haspopup="true"
+                        aria-expanded={openRight ? "true" : undefined}
                     >
-                        {option}
-                    </MenuItem>
-                ))}
-            </CustomMenu>
-            <DatePickerButton
-                onClick={() => {
-                    adjustTimeRange("forward");
-                }}
-                attachedside={"l"}
-                className={"date-time-selector"}
-            >
-                <KeyboardArrowRight />
-            </DatePickerButton>
+                        <KeyboardArrowDownOutlinedIcon />
+                    </DatePickerButton>
+
+                    <CustomMenu
+                        id={`forward-menu-${id}`}
+                        anchorEl={anchorElRight}
+                        open={openRight}
+                        onClose={handleClose}
+                        qryntheme={theme}
+                    >
+                        {timeAdjustmentOptions.map((option) => (
+                            <MenuItem
+                                key={`${option} r`}
+                                sx={{ "&.MuiMenuItem-root": { fontSize: 12 } }}
+                                onClick={(e) =>
+                                    handleClose(e, "forward", option)
+                                }
+                            >
+                                {option}
+                            </MenuItem>
+                        ))}
+                    </CustomMenu>
+                    <DatePickerButton
+                        onClick={() => {
+                            adjustTimeRange("forward");
+                        }}
+                        attachedside={"l"}
+                        className={"date-time-selector"}
+                    >
+                        <KeyboardArrowRight />
+                    </DatePickerButton>
+                </>
+            )}
+
             {pickerOpen ? (
                 <div tabIndex={0} ref={ref}>
                     <ThemeProvider theme={theme}>

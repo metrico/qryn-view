@@ -16,7 +16,8 @@ const Label = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 11px;
+    white-space: nowrap;
     padding: 0px 10px;
 `;
 

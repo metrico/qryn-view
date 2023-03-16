@@ -5,7 +5,6 @@ const QueriesContainerStyled = styled.div`
     background: ${({ theme }: { theme: any }) => `${theme.mainBgColor}`};
     border: 1px solid ${({ theme }: { theme: any }) => `${theme.buttonBorder}`};
     border-radius: 3px;
-    padding: 6px;
     margin: 6px;
 `;
 export default function QueriesContainer(props: any) {

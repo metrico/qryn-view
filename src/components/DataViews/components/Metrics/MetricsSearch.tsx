@@ -9,6 +9,7 @@ export default function MetricsSearch(props: any) {
         data: { dataSourceId, hasStats },
         searchButton,
         statsSwitch,
+        logsRateButton,
     } = props;
 
     const handleMetricChange = (e: any) => {
@@ -20,16 +21,23 @@ export default function MetricsSearch(props: any) {
     return (
         <ThemeProvider theme={theme}>
             <div className={cx(FlexWrap)}>
+
                 <MetricsFormBuilder
                     {...props}
                     dataSourceId={dataSourceId}
                     labelValueChange={handleMetricChange}
+                    searchButton={searchButton}
+                    logsRateButton={logsRateButton}
+                    
                 />
+                {/* {searchButton} */}
+                {/* {logsRateButton} */}
             </div>
-            <div style={{ display: "flex", margin: "10px 0px" }}>
-                {searchButton}
-                {hasStats && statsSwitch}
-            </div>
+            {hasStats && (
+                <div style={{ display: "flex", margin: "10px 0px" }}>
+                    {statsSwitch}
+                </div>
+            )}
         </ThemeProvider>
     );
 }
