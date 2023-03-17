@@ -145,6 +145,7 @@ export interface LogsFormBuilderProps {
     labelValueChange(labelValue: string): void;
     handleLogsVolumeChange(logsVolumeQuery: string): void;
     searchButton:any;
+    queryInput?:any;
 }
 
 export interface MetricsFormBuilderProps {

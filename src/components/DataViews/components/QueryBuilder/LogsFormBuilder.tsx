@@ -43,6 +43,11 @@ const binaryOperatorOpts: any = {
     more_equals: ">=",
 };
 
+/**
+ * 
+ * @param props 
+ * @returns The Logs Form Builder
+ */
 export function LogsFormBuilder(props: LogsFormBuilderProps) {
 
     const {
@@ -50,6 +55,7 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
         labelValueChange,
         handleLogsVolumeChange,
         searchButton,
+        queryInput
     } = props;
 
     const dataSources = useSelector((store: any) => store.dataSources);
@@ -109,7 +115,7 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
         }
         return ` ${binaryOperatorOpts[binaryOpt]} ${vectString}`;
     };
-
+   
     const finalQueryOperator = (builders: Builder[]) => {
         let finalQuery = "";
 
@@ -145,6 +151,7 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
                 <QueryPreview
                     queryText={finalQuery}
                     searchButton={searchButton}
+                    queryInput={queryInput}
                 
                 />
             </div>

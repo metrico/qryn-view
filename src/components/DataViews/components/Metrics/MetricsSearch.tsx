@@ -3,6 +3,14 @@ import { useTheme } from "../QueryBuilder/hooks";
 import { cx } from "@emotion/css";
 import { MetricsFormBuilder } from "../QueryBuilder/MetricsFormBuilder";
 import { FlexWrap } from "../QueryBuilder/styles";
+
+
+
+/**
+ * 
+ * @param props 
+ * @returns The metrics search component
+ */
 export default function MetricsSearch(props: any) {
     const {
         handleMetricValueChange, // goes to process AT query bar
@@ -21,17 +29,13 @@ export default function MetricsSearch(props: any) {
     return (
         <ThemeProvider theme={theme}>
             <div className={cx(FlexWrap)}>
-
                 <MetricsFormBuilder
                     {...props}
                     dataSourceId={dataSourceId}
                     labelValueChange={handleMetricChange}
                     searchButton={searchButton}
                     logsRateButton={logsRateButton}
-                    
                 />
-                {/* {searchButton} */}
-                {/* {logsRateButton} */}
             </div>
             {hasStats && (
                 <div style={{ display: "flex", margin: "10px 0px" }}>

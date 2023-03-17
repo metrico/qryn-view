@@ -72,6 +72,12 @@ const maxWidth = css`
     max-width: 100%;
 `;
 
+
+/**
+ * 
+ * @param props 
+ * @returns The Main Query bar component
+ */
 export const QueryBar = (props: any) => {
     const { data, name, width } = props;
     const {
@@ -81,7 +87,7 @@ export const QueryBar = (props: any) => {
         dataSourceType,
         direction,
         dataSourceId,
-        splitted
+        splitted,
         //  dataSourceURL,
     } = data;
     const {
@@ -141,7 +147,7 @@ export const QueryBar = (props: any) => {
             console.error(e);
             return exprQuery;
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataSourceId]);
 
     const actLocalDs = useMemo(() => {
@@ -169,7 +175,9 @@ export const QueryBar = (props: any) => {
 
     useEffect(() => {
         setQueryInput(actLocalQuery.expr);
-        setQueryValue([{ children: [{ text: DOMPurify.sanitize(actLocalQuery.expr) }] }]);
+        setQueryValue([
+            { children: [{ text: DOMPurify.sanitize(actLocalQuery.expr) }] },
+        ]);
 
         setLogsLevel(actLocalQuery.expr, isLogsVolume);
 
@@ -222,7 +230,7 @@ export const QueryBar = (props: any) => {
                     currentDataSource?.url
                 )
             );
-              // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // force single view from small width
@@ -231,14 +239,16 @@ export const QueryBar = (props: any) => {
         if (isTabletOrMobile && isSplit) {
             dispatch(setSplitView(false));
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isTabletOrMobile]);
 
     // changes on changin dataSource Id
 
     useEffect(() => {
         setQueryInput(actLocalQuery.expr);
-        setQueryValue([{ children: [{ text: DOMPurify.sanitize(actLocalQuery.expr) }] }]);
+        setQueryValue([
+            { children: [{ text: DOMPurify.sanitize(actLocalQuery.expr) }] },
+        ]);
         if (isLogsVolume && logsVolumeQuery) {
             setLogsLevel(actLocalQuery.expr, isLogsVolume);
         }
@@ -280,7 +290,7 @@ export const QueryBar = (props: any) => {
         }
 
         let { isMatrix } = getIntvalData(actLocalQuery?.expr);
-        if(actLocalQuery.expr !== "" && actLocalQuery.expr?.length > 6) {
+        if (actLocalQuery.expr !== "" && actLocalQuery.expr?.length > 6) {
             dispatch(
                 getData(
                     dataSourceType,
@@ -295,7 +305,6 @@ export const QueryBar = (props: any) => {
                 )
             );
         }
-
 
         // setLogsLevel(queryInput, isLogsVolume);
         if (
@@ -321,7 +330,7 @@ export const QueryBar = (props: any) => {
                 )
             );
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataSourceId, id]);
 
     // changes on changing exp
@@ -335,19 +344,19 @@ export const QueryBar = (props: any) => {
                 setLogsLevel(expr, true);
             }
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [expr]);
 
     useEffect(() => {
         setLogsLevel(queryInput, isLogsVolume);
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryInput]);
 
     // handlers
 
     function setLogsLevel(queryInput: string, isLogsVolume: boolean) {
         if (isLogsVolume && queryInput !== "") {
-              // eslint-disable-next-line
+            // eslint-disable-next-line
             let pureLabels = queryInput.match(/[^{\}]+(?=})/g);
             if (Array.isArray(pureLabels) && pureLabels?.length > 0) {
                 let pureLabelsString = `{${pureLabels?.join(",")}}`;
@@ -407,7 +416,10 @@ export const QueryBar = (props: any) => {
                 intval * Number(window.devicePixelRatio.toFixed(2))
             );
 
-            querySubmit = query.replace(/\[\$__interval\]/, `[${ratiointval}s]`);
+            querySubmit = query.replace(
+                /\[\$__interval\]/,
+                `[${ratiointval}s]`
+            );
             customStep = ratiointval;
         } else {
             querySubmit = query;
@@ -501,21 +513,23 @@ export const QueryBar = (props: any) => {
     };
 
     const saveQuery = (e = []) => {
-        const queryParams = new URLSearchParams(hash.replace(/#/, ""));
-        const multiline = e
-            ?.map((text: any) => text.children[0].text)
-            .join("\n");
-        const panel = [...panelQuery];
-        panel.forEach((query) => {
-            if (query.id === id) {
-                if (multiline) {
-                    query.expr = multiline;
+        if (e?.length > 0) {
+            const queryParams = new URLSearchParams(hash.replace(/#/, ""));
+            const multiline = e
+                ?.map((text: any) => text.children[0].text)
+                .join("\n");
+            const panel = [...panelQuery];
+            panel.forEach((query) => {
+                if (query.id === id) {
+                    if (multiline) {
+                        query.expr = multiline;
+                    }
                 }
-            }
-        });
-        dispatch(panelAction(name, panel));
-        queryParams.set(name, JSON.stringify(panel));
-        setLocalStorage();
+            });
+            dispatch(panelAction(name, panel));
+            queryParams.set(name, JSON.stringify(panel));
+            setLocalStorage();
+        }
     };
 
     const saveLogsVolumeQuery = (logsVolume: {
@@ -570,7 +584,9 @@ export const QueryBar = (props: any) => {
         if (!isEmptyQuery) {
             query = addQueryInterval(queryInput);
             setQueryInput(query);
-            setQueryValue([{ children: [{ text: DOMPurify.sanitize(query) }] }]);
+            setQueryValue([
+                { children: [{ text: DOMPurify.sanitize(query) }] },
+            ]);
             setQueryValid(onQueryValid(query));
         }
 
@@ -950,6 +966,7 @@ export const QueryBar = (props: any) => {
                     />,
                     <LogsSearch
                         {...props}
+                        queryInput={queryInput}
                         isBuilder={isBuilder}
                         searchButton={
                             <ShowLogsButton
@@ -1044,14 +1061,15 @@ export const QueryBarCont = (props: any) => {
             {buttonsHidden() && dataSourceType === "logs" && !isBuilder && (
                 <ShowLabelsButton {...props} />
             )}
-            {(dataSourceType !== "logs" ||  !isBuilder ) && dataSourceType !== "metrics" && (
-                <QueryEditor
-                    onQueryChange={handleQueryChange}
-                    defaultValue={DOMPurify.sanitize(expr || "")}
-                    value={queryValue} // queryValue should change and or update on datasource change
-                    onKeyDown={handleInputKeyDown}
-                />
-            )}
+            {(dataSourceType !== "logs" || !isBuilder) &&
+                dataSourceType !== "metrics" && (
+                    <QueryEditor
+                        onQueryChange={handleQueryChange}
+                        defaultValue={DOMPurify.sanitize(expr || "")}
+                        value={queryValue} // queryValue should change and or update on datasource change
+                        onKeyDown={handleInputKeyDown}
+                    />
+                )}
 
             {buttonsHidden() && dataSourceType === "logs" && !isBuilder && (
                 <>
