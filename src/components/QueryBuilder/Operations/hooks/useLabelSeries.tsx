@@ -24,7 +24,7 @@ export const useLabelSeries: UseLabelSeriesFn = (
     const url = useSeriesUrl(currentDataSource.url, label, timeStart, timeEnd);
 
     useEffect(() => {
-        if (label !== "")
+        if (label !== "" && label !== "{}")
             getApiRequest(currentDataSource, url, setLoading, setRes);
     }, [url, currentDataSource, setLoading, setRes, label]);
 

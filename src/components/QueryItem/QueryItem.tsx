@@ -62,7 +62,7 @@ export default function QueryItem(props: any) {
     }, []);
 
     useEffect(() => {
-        if (dataView?.length < 1) {
+        if (dataView?.length < 1 && expr?.length > 6) {
             dispatch(
                 getData(
                     dataSourceType,
