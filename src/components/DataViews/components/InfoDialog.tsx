@@ -1,9 +1,8 @@
 import { ThemeProvider } from "@emotion/react";
 import { Dialog } from "@mui/material";
-import { useSelector } from "react-redux";
-import { themes } from "../../../theme/themes";
 import { InfoContent } from "./InfoContent";
 import { DialogStyles } from "../../../plugins/settingsdialog/SettingsDialog";
+import { useTheme } from "./QueryBuilder/hooks";
 export function InfoDialog({
     expr,
     idRef,
@@ -14,14 +13,18 @@ export function InfoDialog({
     onClose,
     open,
 }: any) {
-    const theme = useSelector((store: any) => store.theme);
+    const theme = useTheme();
     return (
-        <ThemeProvider theme={(themes as any)[theme]}>
-            <Dialog open={open} onClose={onClose} PaperProps={{
-            classes: {
-                root: DialogStyles
-            }
-          }}>
+        <ThemeProvider theme={theme}>
+            <Dialog
+                open={open}
+                onClose={onClose}
+                PaperProps={{
+                    classes: {
+                        root: DialogStyles,
+                    },
+                }}
+            >
                 <InfoContent
                     expr={expr}
                     idRef={idRef}

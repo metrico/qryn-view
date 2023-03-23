@@ -16,17 +16,14 @@ import {
 
 import { CustomMenu } from "../daterangepicker";
 import { useState } from "react";
-import { themes } from "../../../../theme/themes";
 import { useLocation } from "react-router-dom";
-import { useTheme } from "../../../DataViews/components/QueryBuilder/hooks";
 import { storedUrl } from ".";
+import { useTheme } from "../../../../theme";
 
 export default function CopyLinkButton() {
     const LINK_COPIED = "Link Copied To Clipboard";
     const theme = useTheme();
     const dispatch = useDispatch();
-    const storeTheme = useSelector((store: any) => store.theme);
-    const qrynTheme = (themes as any)[storeTheme];
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [isRelative, setIsRelative] = useState(false);
@@ -183,7 +180,7 @@ export default function CopyLinkButton() {
                                         <Typography
                                             style={{
                                                 fontSize: "12px",
-                                                color: qrynTheme.textColor,
+                                                color: theme.textColor,
                                             }}
                                         >
                                             Relative time

@@ -1,6 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
 import { setSplitView } from "../../../StatusBar/components/SplitViewButton/setSplitView";
-import { themes } from "../../../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import { setRightPanel } from "../../../../actions/setRightPanel";
 import getData from "../../../../actions/getData";
@@ -8,6 +7,7 @@ import { useMediaQuery } from "react-responsive";
 import { LinkButtonWithTraces } from "./LinkButtonWithTraces";
 import { ValueTagsStyled } from "./styled";
 import { FilterButtons } from "./FilterButtons";
+import { useTheme } from "../../../../theme";
 
 /**
  *
@@ -23,7 +23,7 @@ export default function ValueTags(props: any) {
     const { tags, actQuery, dataSourceData, linkedFieldTags } = props;
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
     //  const dataSources = useSelector((store: any) => store.dataSources);
-    const theme = useSelector((store: any) => store.theme);
+    const theme = useTheme();
     const isEmbed = useSelector((store: any) => store.isEmbed);
     const dispatch = useDispatch();
     const rightPanel = useSelector((store: any) => store.right);
@@ -88,7 +88,7 @@ export default function ValueTags(props: any) {
         }
     };
     return (
-        <ThemeProvider theme={(themes as any)[theme]}>
+        <ThemeProvider theme={theme}>
             {Object.entries(tags).map(([label, value], k) => (
                 <ValueTagsStyled key={k}>
                     <div className={"value-tags"} key={k}>

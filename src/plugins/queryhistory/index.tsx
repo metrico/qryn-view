@@ -29,7 +29,7 @@ import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import { Typography } from "@mui/material";
-import DOMPurify from 'isomorphic-dompurify';
+import DOMPurify from "isomorphic-dompurify";
 import localUrl from "../../services/localUrl";
 
 import setLinksHistory from "../../actions/setLinksHistory";
@@ -59,10 +59,10 @@ import {
 import AlertDialog from "./components/AlertDialog";
 import EmptyHistoryDisplay from "./components/EmptyHistoryDisplay";
 import CloseButton from "./components/CloseButton";
-import { themes } from "../../theme/themes";
 import { notificationTypes } from "../../qryn-ui/notifications/consts";
 
 import { CustomMenu } from "../../components/StatusBar/components/daterangepicker";
+import { useTheme } from "../../components/DataViews/components/QueryBuilder/hooks";
 
 function QueryHistoryTabs(props: any) {
     const {
@@ -261,8 +261,7 @@ function HistoryLinkTools(props: any) {
         handleSubmit,
         label,
     }: any = props;
-    const storeTheme = useSelector((store: any) => store.theme);
-    const qrynTheme = (themes as any)[storeTheme];
+    const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [isRelative, setIsRelative] = useState(false);
@@ -321,7 +320,7 @@ function HistoryLinkTools(props: any) {
                             anchorEl={anchorEl}
                             open={open}
                             onClose={handleClose}
-                            qryntheme={qrynTheme}
+                            qryntheme={theme}
                             size={"small"}
                         >
                             <MenuItem
@@ -357,7 +356,7 @@ function HistoryLinkTools(props: any) {
                                             <Typography
                                                 style={{
                                                     fontSize: "12px",
-                                                    color: qrynTheme.textColor,
+                                                    color: theme.textColor,
                                                 }}
                                             >
                                                 Relative time
@@ -791,7 +790,7 @@ const QueryHistory = (props: any) => {
     const queryHistory = useSelector((store: any) => store.queryHistory);
     const linksHistory = useSelector((store: any) => store.linksHistory);
     const historyOpen = useSelector((store: any) => store.historyOpen);
-    const theme = useSelector((store: any) => store.theme);
+    const theme = useTheme();
 
     const [starredItems, setStarredItems] = useState([]);
     const [filtered, setFiltered] = useState([]);
@@ -1050,16 +1049,16 @@ const QueryHistory = (props: any) => {
             );
         }
     }
-    const _themes: any = themes;
+
     return (
-        <ThemeProvider theme={_themes[theme]}>
+        <ThemeProvider theme={theme}>
             {historyOpen && (
                 <StyledDrawer
                     anchor={"bottom"}
                     style={{ maxHeight: "250px" }}
                     open={historyOpen}
                     variant={"persistent"}
-                    theme={_themes[theme]}
+                    theme={theme}
                 >
                     <QueryHistoryTabs
                         historyTabHeader={

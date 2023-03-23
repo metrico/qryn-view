@@ -2,9 +2,8 @@
 
 import { css, cx } from "@emotion/css";
 import { useEffect, useMemo, useState, forwardRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import getData from "../../actions/getData";
-import { themes } from "../../theme/themes";
 import { Field /* Select */ } from "../../views/DataSources/ui";
 import { formatUrl } from "./tracesSearchUrl";
 import { useTraceNames } from "./useTraceNames";
@@ -13,7 +12,7 @@ import Select, { components } from "react-select";
 import { useTheme } from "../DataViews/components/QueryBuilder/hooks";
 import { cStyles } from "../DataViews/components/QueryBuilder/styles";
 import { selectTheme } from "../DataViews/components/QueryBuilder/helpers";
-import DOMPurify from 'isomorphic-dompurify';
+import DOMPurify from "isomorphic-dompurify";
 const SearchColumn = css`
     display: flex;
     flex-direction: column;
@@ -51,7 +50,6 @@ const TraceButton = (theme: any) => css`
 // }
 
 export const TRACE_SEARCH_LABEL_WIDTH = 75;
-
 
 export const SelectOptionStyle = {
     display: "flex",
@@ -161,10 +159,6 @@ export default function TracesSearch(props: any) {
     } = props;
 
     const dispatch = useDispatch();
-
-    const storeTheme = useSelector(
-        (store: { theme: "dark" | "light" }) => store.theme
-    );
     const serviceNameOpts = useTraceServiceName({ id: dataSourceId });
     const traceNameOpts = useTraceNames({ id: dataSourceId });
     const [searchValue, setSearchValue] = useState({
@@ -176,11 +170,7 @@ export default function TracesSearch(props: any) {
         traceNameOpts[0] || { name: "", value: "", label: "" }
     );
 
-  
-
-    const theme = useMemo(() => {
-        return themes[storeTheme];
-    }, [storeTheme]);
+    const theme = useTheme();
     const [urlState, setUrlState] = useState({
         searchName: searchValue.value || "",
         name: spanValue.value || "",
@@ -196,7 +186,7 @@ export default function TracesSearch(props: any) {
         if (serviceNameOpts.length > 0) {
             setUrlString(formatUrl(urlState));
         }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [urlState]);
 
     const emit = () => {

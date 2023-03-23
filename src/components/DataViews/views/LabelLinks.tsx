@@ -1,8 +1,7 @@
 import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
-import { themes } from "../../../theme/themes";
+import { useTheme } from "../../../theme";
+
 const PageContainer = styled.div`
     background: ${({ theme }: any) => theme.viewBg};
     p {
@@ -11,11 +10,7 @@ const PageContainer = styled.div`
 `;
 
 export default function LabelLinks() {
-    const themeState = useSelector(({ theme }: any) => theme);
-
-    const theme = useMemo(() => {
-        return (themes as any)[themeState];
-    }, [themeState]);
+    const theme = useTheme();
     return (
         <ThemeProvider theme={theme}>
             <PageContainer>

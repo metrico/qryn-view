@@ -1,12 +1,11 @@
 import { ThemeProvider } from "@emotion/react";
 import { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
-import { themes } from "../../../../theme/themes";
 import LabelsList from "./LabelsList";
 import ValuesSelector from "./ValuesSelector";
 import useLabels from "./useLabels";
 import ValuesListStyled from "./ValuesListStyled";
 import labelHelpers from "./helpers";
+import { useTheme } from "../../../../theme";
 
 export default function LabelsSelector(props: any) {
     const { data } = props;
@@ -18,7 +17,7 @@ export default function LabelsSelector(props: any) {
     const [labelsResponse, setLabelsResponse]: any = useState([]);
     const [labelsSelected, setLabelsSelected]: any = useState([]);
 
-    const { theme }: any = useSelector((store) => store);
+    const theme = useTheme();
 
     const { response, loading }: any = useLabels(dataSourceId); //  set URL from props
 
@@ -55,7 +54,7 @@ export default function LabelsSelector(props: any) {
     // set labels state from memoized and formatted labels
 
     useEffect(() => {
-        if(labels) {
+        if (labels) {
             setLabelsState(labels);
         }
     }, [labels]);
@@ -103,9 +102,8 @@ export default function LabelsSelector(props: any) {
         setLabelsSelected((prev: any) => updateLabelSelected(prev, e));
     };
     if (data) {
-        const _themes: any = themes;
         return (
-            <ThemeProvider theme={_themes[theme]}>
+            <ThemeProvider theme={theme}>
                 <ValuesListStyled>
                     <div className="valuesList">
                         <div className={"valuelist-title"}>

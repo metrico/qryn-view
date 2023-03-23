@@ -1,10 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 
-import {
-
-    TracePageHeader,
-    TraceTimelineViewer,
-} from "./Jaeger-ui/src";
+import { TracePageHeader, TraceTimelineViewer } from "./Jaeger-ui/src";
 import { useDetailState } from "./useDetailState";
 import { useViewRange } from "./useViewRange";
 import { useChildrenState } from "./useChildrenState";
@@ -12,9 +8,8 @@ import { useHoverIndentGuide } from "./useHoverIntentGuide";
 import { mapSpanFields, mapTracesResponse } from "./mapTracesResponse";
 import { ViewHeader } from "../ViewHeader";
 import { ViewStyled } from "./styled";
-import { themes } from "../../../../theme/themes";
-import { useSelector } from "react-redux";
 import { ThemeProvider } from "@emotion/react";
+import { useTheme } from "../../../../theme";
 
 function noop() /* : {} */ {
     return {};
@@ -39,12 +34,8 @@ export function TraceView(props: any) {
     const tracePropMapped = useMemo(() => {
         return mapTracesResponse(data)[0];
     }, [data]);
-    const storeTheme = useSelector(
-        (store: { theme: "dark" | "light" }) => store.theme
-    );
-    const theme = useMemo(() => {
-        return themes[storeTheme];
-    }, [storeTheme]);
+
+    const theme = useTheme();
     const spanFieldsMapped = useMemo(() => {
         if (tracePropMapped?.spans?.length > 0) {
             const fields = mapSpanFields(tracePropMapped.spans);

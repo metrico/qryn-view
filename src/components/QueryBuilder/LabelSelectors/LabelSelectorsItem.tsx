@@ -6,7 +6,7 @@ import useLabels from "../../LabelBrowser/components/LabelsSelector/useLabels";
 import useLabelValues from "../../LabelBrowser/components/LabelsSelector/useLabelValues";
 import NativeSelect from "../Forms/NativeSelect";
 import Select from "react-select";
-import { themes } from "../../../theme/themes";
+import { useTheme } from "../../../theme";
 
 export const cStyles = {
     menu: (base: any) => ({
@@ -82,11 +82,12 @@ export function LabelSelect(props: any) {
     const { data } = props;
     const { dataSourceId } = data;
     const { loading, response }: any = useLabels(dataSourceId);
-    const [labels, setLabels] = useState([]);
+    const [labels] = useState([]);
     const [label, setLabel] = useState("");
 
     useEffect(() => {
         props.onChange(label);
+        //eslint-disable-next-line
     }, [label]);
 
     const onChange = (e: any) => {
@@ -95,7 +96,6 @@ export function LabelSelect(props: any) {
 
     useEffect(() => {
         if (response?.data?.data) {
-            //   setLabels((_) => response.data.data);
             setLabel((_) => response?.data?.data[0]);
         }
     }, [response]);
@@ -126,13 +126,7 @@ export function ValueSelect(props: any) {
     const onChange = (e: any) => {
         props.onChange(e);
     };
-
-    const theme = useSelector((store: any) => store.theme);
-
-    const mainTheme = useMemo(() => {
-        return (themes as any)[theme];
-    }, [theme]);
-
+    const mainTheme = useTheme();
     const isMultiple = useMemo(() => {
         if (operator === "equals" || operator === "notequals") return false;
         return true;

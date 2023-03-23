@@ -1,15 +1,17 @@
-import { HistoryButtonStyled} from "../styled";
-import { themes } from "../../../../theme/themes";
+import { HistoryButtonStyled } from "../styled";
 import { ThemeProvider } from "@emotion/react";
-import { useSelector } from "react-redux";
-import { Store } from "../../../../store/store.model";
+import { useTheme } from "../../../../theme";
 
-const _themes = themes as any;
-export default function ShowLogsRateButton({ isDisabled, onClick, isMobile, alterText }: any) {
+export default function ShowLogsRateButton({
+    isDisabled,
+    onClick,
+    isMobile,
+    alterText,
+}: any) {
     const SHOW_LOGS_RATE = "Show Logs Rate";
-    const theme = useSelector((store: Store) => store.theme);
+    const theme = useTheme();
     return (
-        <ThemeProvider theme={_themes[theme]}>
+        <ThemeProvider theme={theme}>
             <HistoryButtonStyled
                 disabled={isDisabled}
                 type="submit"

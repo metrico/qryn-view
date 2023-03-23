@@ -1,16 +1,11 @@
-import setIsEmptyView from "../setIsEmptyView";
-import setMatrixData from "../setMatrixData";
 import { QueryResult } from "../types";
 import { addNanoId } from "./addNanoId";
-import { getAsyncResponse } from "./parseResponse";
-import { setTableData } from "../setTableData";
 import moment from "moment";
 import { sortBy } from "lodash";
 import { setLeftDataView } from "../setLeftDataView";
 import { setRightDataView } from "../setRightDataView";
 import store from "../../store/store";
 import { ColumnDef } from "@tanstack/react-table";
-import { setVectorData } from "../setVectorData";
 import { prepareVectorRows } from "./prepareVectorRows";
 import { setColumnsData } from "./setColumnsData";
 import { prepareFluxCols } from "./prepareCols";
@@ -67,11 +62,7 @@ export function getFluxTableRows(data: any[]) {
 }
 
 export function formattedWhiteSpaceCell(info: any) {
-    return (
-        <span title={info.getValue()}>
-            {info.getValue()}
-        </span>
-    );
+    return <span title={info.getValue()}>{info.getValue()}</span>;
 }
 
 export function getFluxTableResult(data: any[]) {
@@ -123,7 +114,7 @@ function setDataView(panel: string) {
     }
 }
 function getTableData(responseProps: QueryResult) {
-    const { result, dispatch, panel, id, type } = responseProps;
+    const { result, panel, id, type } = responseProps;
     const data = {
         panel,
         id,
@@ -156,7 +147,6 @@ function getTableData(responseProps: QueryResult) {
     };
 
     if (columnsData?.length > 0 && dataRows?.length > 0) {
-        dispatch(setVectorData(vectorTableData || {}));
         return vectorTableData;
     }
 }
@@ -168,18 +158,9 @@ export function parseFluxResponse(responseProps: QueryResult) {
     // get current dataview and update action
     const dataView = setDataView(panel);
 
-    dispatch(setTableData(tableResult));
     try {
         const idResult = addNanoId(result);
 
-        getAsyncResponse(dispatch(setMatrixData(idResult || []))).then(() => {
-            if (idResult.length === 0) {
-                if (debugMode)
-                    console.log("🚧 getData / getting no data from Flux");
-                dispatch(setIsEmptyView(true));
-            }
-            dispatch(setIsEmptyView(false));
-        });
         const tableData = getTableData(responseProps);
         // get table total as chart total is less that table total rows
 

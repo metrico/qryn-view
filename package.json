@@ -75,7 +75,8 @@
     "slate": "^0.73.1",
     "slate-history": "^0.66.0",
     "slate-react": "^0.74.2",
-    "source-map-explorer": "^2.5.3"
+    "source-map-explorer": "^2.5.3",
+    "uuid": "^9.0.0"
   },
   "scripts": {
     "webpack": "webpack",

@@ -27,7 +27,6 @@ export function QueryItemToolbar(props: any) {
 
     const left = useSelector((store: any) => store.left);
     const right = useSelector((store: any) => store.right);
-
     const panel = useSelector((store: any) => store[props.name]);
     const isEmbed = useSelector((store: any) => store.isEmbed);
     const isSplit = useSelector((store: any) => store.isSplit);
