@@ -9,6 +9,12 @@ import { useMemo, useState, SyntheticEvent } from "react";
 
 import { localTabsState } from "../helpers";
 import QrynChart from "../components/Charts";
+// import { plugins } from "../../../plugins";
+
+// PLuginsManager.register('container', Component )
+// API
+// styles
+// index.tsx xxxPlugin
 
 export default function LogsView(props: any) {
     const {
@@ -27,13 +33,16 @@ export default function LogsView(props: any) {
         streamData,
         logsVolumeData,
     } = props;
+    /// actualQuery has all data available from query
     const { isLogsVolume } = actualQuery;
     const { limit } = actualQuery;
+
+    // will pass actualQuery ! 
 
     const [tabsState, setTabsState] = useState<number>(
         localTabsState(actualQuery)[actualQuery.id] || 0
     );
-
+    console.log(actualQuery)
     const rawData = useMemo(() => {
         return JSON.parse(JSON.stringify(props?.dataView?.raw)) || [];
     }, [props?.dataView?.raw]);
@@ -46,7 +55,8 @@ export default function LogsView(props: any) {
         }
         return "tomorrow";
     }, [theme]);
-
+   
+    
     const onTabChange = (
         e: SyntheticEvent<Element, Event>,
         value: number | string | boolean
@@ -71,6 +81,8 @@ export default function LogsView(props: any) {
                 type={type}
                 {...props}
             />
+            {/* pass an id for the array */}
+            {/* { plugins(actualQuery)?.map((pl,id) => <pl >} */}
 
             {isLogsVolume && logsVolumeData?.length > 0  && viewWidth > 0 && (
                 <div>
