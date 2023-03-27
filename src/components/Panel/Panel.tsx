@@ -16,7 +16,7 @@ const PanelCont: any = styled.div`
 `;
 // Panel should have injected data
 export default function Panel(props: any) {
-
+    console.log(props)
     const ref: any = useRef(null);
     const [width, setWidth] = useState(0);
 
@@ -49,7 +49,7 @@ export default function Panel(props: any) {
 
 
     useEffect(()=>{
-        if (typeof ref.current.clientWidth === 'number'){
+        if (typeof ref?.current?.clientWidth === 'number'){
             setWidth(ref.current.clientWidth)
         }
     },[ref?.current?.clientWidth])

@@ -1,11 +1,9 @@
 import LabelBrowser from "../LabelBrowser";
-import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
 import { ThemeProvider } from "@emotion/react";
 import { themes } from "../../theme/themes";
 import { useSelector, useDispatch } from "react-redux";
 import { nanoid } from "nanoid";
-
 import { setLeftPanel } from "../../actions/setLeftPanel";
 import { setRightPanel } from "../../actions/setRightPanel";
 import getData from "../../actions/getData";
@@ -13,8 +11,6 @@ import { setRightDataView } from "../../actions/setRightDataView";
 import { setLeftDataView } from "../../actions/setLeftDataView";
 import { setSplitView } from "../StatusBar/components/SplitViewButton/setSplitView";
 import { QueryItemToolbar } from "./QueryItemToolbar";
-
-const QueryContainer = styled.div``;
 
 const panelAction = (panel: any, data: any) => {
     if (panel === "left") {
@@ -51,6 +47,7 @@ export default function QueryItem(props: any) {
     const panelSelected = useSelector((store: any) => store[name]);
     const isQueryOpen = useState(true);
 
+    
     const idRefs = useMemo(() => {
         const alpha = Array.from(Array(26)).map((e, i) => i + 65);
         const alphabet = alpha.map(
@@ -185,7 +182,7 @@ export default function QueryItem(props: any) {
 
     return (
         <ThemeProvider theme={_themes[theme]}>
-            <QueryContainer>
+            <div>
                 <QueryItemToolbar
                     {...props}
                     isQueryOpen={isQueryOpen}
@@ -193,7 +190,7 @@ export default function QueryItem(props: any) {
                     onAddQuery={onAddQuery}
                 />
                 {isQueryOpen[0] && <LabelBrowser {...props} />}
-            </QueryContainer>
+            </div>
         </ThemeProvider>
     );
 }

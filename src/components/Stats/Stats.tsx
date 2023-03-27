@@ -1,6 +1,6 @@
 import { css, cx } from "@emotion/css";
 import { useMemo } from "react";
-import { useTheme } from "../QueryBuilder/hooks";
+import { useTheme } from "../../theme";
 
 const StatsCont = (theme: any) => css`
     color: ${theme.textColor};

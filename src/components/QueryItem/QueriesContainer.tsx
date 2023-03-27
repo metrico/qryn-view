@@ -7,7 +7,9 @@ const QueriesContainerStyled = styled.div`
     border-radius: 3px;
     margin: 6px;
 `;
+
 export default function QueriesContainer(props: any) {
+
     const { queries } = props;
 
     if (queries && Array.isArray(queries) && queries?.length > 0) {
@@ -19,5 +21,7 @@ export default function QueriesContainer(props: any) {
             </QueriesContainerStyled>
         );
     }
+
     return null;
 }
+

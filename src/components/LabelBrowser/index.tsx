@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import { Stats } from "../DataViews/components/Stats/Stats";
+import { Stats } from "../Stats/Stats";
 import { QueryBar } from "./components/QueryBar";
 import { ValuesList } from "./components/ValuesList";
 
