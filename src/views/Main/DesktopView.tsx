@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@emotion/react";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import Panel from "../../components/Panel/Panel";
+import Panel from "../../sections/Panel";
 import StatusBar from "../../components/StatusBar";
 import QueryHistory from "../../plugins/queryhistory";
 import SettingsDialog from "../../plugins/settingsdialog/SettingsDialog";

@@ -13,11 +13,12 @@ import {
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useEffect, useMemo, useState } from "react";
 import { QueryId } from "./QueryId";
-import { DataSourceSelect } from "./DataSourceSelect";
+import { DataSourceSelect } from "./DataSourceSelect/DataSourceSelect";
 import SplitViewButton from "../StatusBar/components/SplitViewButton";
 import { DateRangePicker } from "../StatusBar/components/daterangepicker";
 import { Tooltip } from "@mui/material";
 import { useMediaQuery } from "react-responsive";
+import PluginRenderer from "../../plugins/PluginsRenderer";
 export function QueryItemToolbar(props: any) {
     const dispatch = useDispatch();
     // update panel on id change
@@ -266,6 +267,7 @@ export function QueryItemToolbar(props: any) {
                             side={props.name}
                         />
                     )}
+                    <PluginRenderer section={'Query Toolbar'} localProps={props} />
 
                     <DataSourceSelect
                         extValue={extValue}

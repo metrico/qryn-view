@@ -1,6 +1,7 @@
 import { ThemeProvider } from "@emotion/react";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import PluginRenderer from "../../plugins/PluginsRenderer";
 import { DataViewItem } from "./components/DataViewItem";
 import { useTheme } from "./components/QueryBuilder/hooks";
 import { DataviewsContainer } from "./styled";
@@ -24,6 +25,7 @@ export default function DataViews(props: any) {
         return (
             <ThemeProvider theme={theme}>
                 <DataviewsContainer>
+                    <PluginRenderer section={"Data Views"} localProps={props} />
                     {viewsMemo?.map((dv: any, index: any) => (
                         <DataViewItem
                             key={index}

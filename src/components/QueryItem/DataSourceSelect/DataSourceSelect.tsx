@@ -1,5 +1,6 @@
 import { useMemo, useRef, useEffect } from "react";
-import { IconSelect } from "./components/DataSourceSelectOption";
+import { IconSelect } from "./DataSourceSelectOption";
+
 
 
 interface Props {

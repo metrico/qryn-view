@@ -1,10 +1,12 @@
 import { forwardRef, useMemo } from "react";
 import Select, { components } from "react-select";
 import { Icon } from "../../../views/DataSources/ui";
+
 //import { InfoContent } from "../../DataViews/components/InfoContent";
 import { selectTheme } from "../../DataViews/components/QueryBuilder/helpers";
 import { useTheme } from "../../DataViews/components/QueryBuilder/hooks";
 import { cStyles } from "../../DataViews/components/QueryBuilder/styles";
+
 
 export const SelectIconStyle = {
     height: "18px",

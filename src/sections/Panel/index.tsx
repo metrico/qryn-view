@@ -2,10 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import DataViews from "../../components/DataViews";
-import  Queries from "../Queries";
+import Queries from "../Queries";
 import { panelDispatch } from "./helpers";
 import { PanelCont } from "./styles";
-
+import PluginRenderer from "../../plugins/PluginsRenderer";
 interface PanelProps {
     name: string;
 }
@@ -63,6 +63,10 @@ const Panel = (props: PanelProps) => {
         <>
             <PanelCont isSplit={isSplit} ref={ref}>
                 <Queries {...props} width={width} queries={panel} />
+                <PluginRenderer
+                    section={"Panel"}
+                    localProps={{ props, panel, width }}
+                />
                 <DataViews {...props} splitted={isSplit} />
             </PanelCont>
         </>

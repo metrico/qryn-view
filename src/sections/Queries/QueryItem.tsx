@@ -1,6 +1,9 @@
 import { ThemeProvider } from "@emotion/react";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import LabelBrowser from "../../components/LabelBrowser";
+import { QueryItemToolbar } from "../../components/QueryItem/QueryItemToolbar";
+import PluginRenderer from "../../plugins/PluginsRenderer";
 import { useTheme } from "../../theme";
 import { setSplitView } from "../actions";
 
@@ -14,8 +17,6 @@ import {
     setStoredQuery,
 } from "./helpers";
 import { useIdRefs } from "./hooks";
-import LabelBrowser from "./LabelBrowser";
-import QueryItemToolbar from "./QueryItemToolbar";
 
 const QueryItem = (props: any) => {
     const { name, data } = props;
@@ -78,7 +79,11 @@ const QueryItem = (props: any) => {
                     onDeleteQuery={onDeleteQuery}
                     onAddQuery={onAddQuery}
                 />
+
                 {isQueryOpen[0] && <LabelBrowser {...props} />}
+
+                <PluginRenderer section={"Query Item"} localProps={props} />
+
             </div>
         </ThemeProvider>
     );
