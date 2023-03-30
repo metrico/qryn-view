@@ -1,35 +1,43 @@
-import { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import LogsList from "./LogsList";
 
-import { Switch, Tooltip } from "@mui/material";
 import getLogsSeries from "./getLogsSeries";
+import LogsCounter from "./LogsCounter";
+import useDataSources from "./useDataSources";
+import HeaderSection from "./HeaderSection";
+import { useTheme } from "../../theme";
+import { css, cx } from "@emotion/css";
 
-const useDataSources = () => {
-    let dataSources = useSelector((store: any) => store.dataSources);
+const LabelsStyle = (theme: any) => ({
+    display: "flex",
+    color: theme.textColor,
+    background: theme.inputBg,
+    fontFamily: "monospace",
+    fontSize: "12px",
+    padding: "8px",
+    margin: "10px",
+    borderRadius:"3px"
+});
 
-    const dsSelect = useMemo(() => {
-        return dataSources?.reduce((a: any, b: any) => {
-            return { ...a, [b.name]: b };
-        }, {});
-    }, [dataSources]);
+const RaggixContainer = (theme: any) => css`
+    border: 1px solid ${theme.buttonBorder};
+    margin: 10px;
+    border-radius: 3px;
+`;
 
-    return dsSelect;
-};
-
-
-
-const Raggix = (props: any) => {
+const Raggix = () => {
+    const theme = useTheme();
     const ds = useDataSources();
-
- 
-
     const [logs, setLogs] = useState<any>("");
     const [isRecurrent, setIsRecurrent] = useState(false);
-    const [index, setIndex] = useState(0)
-    const [open, setOpen] = useState(false)
-
+    const [index, setIndex] = useState(0);
+    const [open, setOpen] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [recurrentValue, setRecurrentValue] = useState(30000);
     const [actTimestamp, setActTimestamp] = useState(Date.now());
+    const [rangeValue, setRangeValue] = useState(5000);
 
+    const [labelString, setLabelString] = useState("");
     const handleRecurrent = (e: any) => {
         setIsRecurrent(() => e.target.checked);
     };
@@ -37,147 +45,86 @@ const Raggix = (props: any) => {
         setLogs(() => []);
     };
 
-    const openLog = (e:any) => {
-     console.log(e)
-     setIndex(()=>e)
-    }
+    const openLog = (e: any) => {
+        setIndex(() => e);
+    };
+    const showLabels = (e: any) => {
+        setLabelString(() => e);
+    };
+    const openLogs = (e: any) => {
+        setOpen(() => e.target.checked);
+    };
 
-    const openLogs = (e:any) =>{
+    const launchLogs = (e: any) => {
+        const end = Date.now();
+        const start = end - rangeValue;
+        const host = ds?.Logs?.url;
+        let res = getLogsSeries(start, end, host, setLoading);
+        res.then((data) => {
+            setLogs(() => data);
+        });
+    };
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActTimestamp(Date.now());
+        }, recurrentValue);
 
-        setOpen(()=>e.target.checked)
-    }
+        return () => clearInterval(interval);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
-        // const interval = setInterval(() => {
-        //   setActTimestamp(Date.now());
-        // }, 30000);
-
-        // return () => clearInterval(interval);
-
-        if (isRecurrent) {
+        if (isRecurrent && actTimestamp) {
             // do worker stuff
             const end = Date.now();
-            const start = end - 5000;
+            const start = end - rangeValue;
             const host = ds?.Logs?.url;
-            let res = getLogsSeries(start, end, host);
+            let res = getLogsSeries(start, end, host, setLoading);
             res.then((data) => {
-                setLogs((prev:any) =>{ 
-                if(prev?.length > 0 && data?.length > 0) {
-                    let cp = [...prev]
-                   return  [...cp, data] 
-                }
-
-                    return data
-                 });
+                setLogs(data);
             });
         }
-    }, [isRecurrent]);
-
-    // const logsData = async (start: any, end: any, url: string) => {
-    //     console.log("loading data...");
-    //     let result = await logsWorker(start, end, url);
-    //     return result;
-    // };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isRecurrent, actTimestamp]);
 
     return (
-        <div>
-            <p>QRYN Raggix</p>
-            <label>recurrent: </label>{" "}
-            <Switch
-                checked={isRecurrent}
-                size={"small"}
-                onChange={handleRecurrent}
-                inputProps={{ "aria-label": "controlled" }}
-            />{" "}
-            <button onClick={handleReset}>reset</button>
-            {/* {logs} */}
-
-            <label>Open Logs: </label>{" "}
-            <Switch
-                checked={open}
-                size={"small"}
-                onChange={openLogs}
-                inputProps={{ "aria-label": "controlled" }}
-            />
-
+        <div className={cx(RaggixContainer(theme))}>
+            <div>
+                <HeaderSection
+                    theme={theme}
+                    loading={loading}
+                    isRecurrent={isRecurrent}
+                    open={open}
+                    openLogs={openLogs}
+                    handleRecurrent={handleRecurrent}
+                    handleReset={handleReset}
+                    launchLogs={launchLogs}
+                    rangeValue={rangeValue}
+                    setRangeValue={setRangeValue}
+                    setRecurrentValue={setRecurrentValue}
+                    recurrentValue={recurrentValue}
+                />
+                <div style={LabelsStyle(theme)}>{labelString}</div>
+            </div>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
-                {logs &&
-                    logs?.map((log: any, idx: number) => (
-                        <div key={idx}>
-                            <LogItem log={log} openLog={openLog} index={idx} />
-                        </div>
-                    ))}
-
+                <LogsCounter
+                    theme={theme}
+                    showLabels={showLabels}
+                    loading={loading}
+                    logs={logs}
+                    openLog={openLog}
+                />
             </div>
             <div>
-            {open && logs?.length > 0 && (
-                    <LogsList logs={logs[index]}/>
-                )}
-
+                <LogsList
+                    theme={theme}
+                    open={open}
+                    loading={loading}
+                    logs={logs[index]}
+                />
             </div>
         </div>
     );
 };
-
-
-const levelColors: any = {
-    error: "red",
-    info: "green",
-    information: "green",
-    warn: "purple",
-    warning: "purple",
-    debug: "blue",
-};
-
-export const LogItem = (props: any) => {
-    const {openLog, index} = props
-    console.log(props.log);
-    const level = useMemo(() => {
-        if(props?.log?.stream?.level) {
-            const keys = Object.keys(props.log.stream);
-            if (keys.includes("level")) {
-                return levelColors[props.log.stream.level|| "info"];
-            }
-        }
-
-        return "";
-    }, [props.log.stream]);
-
-    console.log(level);
-    return (
-        <Tooltip title={JSON.stringify(props.log.stream)}>
-            <div
-                onClick={()=>openLog(index)}
-                style={{
-                    height: "20px",
-                    width: "20px",
-                    background: level || "gray",
-                    margin: "3px",
-                    borderRadius: "3px",
-                }}
-            >
-
-          
-
-            </div>
-        </Tooltip>
-    );
-};
-
-export const LogsList = (props:any) =>{ 
-    const {logs} = props 
-    console.log(logs)
-
-    return (
-        <div>
-            {logs?.values?.length > 0  && logs?.values?.map((log:any,idx:any)=>{
-                const [ts,text] = log
-                return<div style={{fontSize:'12px',fontFamily:"monospace",display:'flex'}} key={idx}>
-                  <span style={{margin:'2px'}}>{ts}</span> <span style={{margin:'2px'}}>{text}</span>
-                </div>
-            })}
-        </div>
-    )
-}
 
 export default Raggix;

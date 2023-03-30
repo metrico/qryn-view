@@ -44,6 +44,7 @@ const darkgrey = {
 };
 
 const turquoise = {
+    tq1: "hsl(181, 98%, 21%);",
     tq100: "hsl(180, 62%, 28%)",
     tq200: "hsl(180, 62%, 33%)", // button
     tq300: "hsl(180, 62%, 44%)", // button hover
@@ -67,6 +68,7 @@ const textPrimaryAccent = orange.or100;
 const inputBg = black.b15;
 const primaryDark = turquoise.tq200;
 const primaryLight = turquoise.tq300;
+const primaryBorder = turquoise.tq1;
 const widgetContainer = black.b400;
 const secondaryWidgetContainer = black.b300;
 const widgetTitle = darkgrey.dg90;
@@ -100,6 +102,7 @@ const darkTheme:any = {
     textColor,
     primaryDark,
     primaryLight,
+    primaryBorder,
     widgetContainer,
     buttonDefault,
     buttonHover,

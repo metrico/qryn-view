@@ -29,10 +29,7 @@ const getLogQueries = async (
     try {
         for (let item of logLabels) {
             /* Filter Metric labels out */
-            if (filterValues.includes(item)) {
-                continue;
-            }
-            if (item !== "") {
+            if (item !== "" && !filterValues.includes(item)) {
                 let values: any = await request(labelValuesUrl(item));
                 for (let val of values?.data) {
                     logQueries.push(`{${item}="${val}"}`);
@@ -51,6 +48,7 @@ const getLogs = async (logQueries: any[], logRequest: Function) => {
     try {
         for (let query of logQueries) {
             let logs: any = await request(logRequest(query));
+
             if (logs?.data?.result?.length <= 0) {
                 continue;
             }
@@ -60,12 +58,17 @@ const getLogs = async (logQueries: any[], logRequest: Function) => {
 
         return res;
     } catch (e) {
-        console.log(e);
         return res;
     }
 };
 
-const getLogsSeries = async (start: number, end: number, host: string) => {
+const getLogsSeries = async (
+    start: number,
+    end: number,
+    host: string,
+    setLoading: Function
+) => {
+    setLoading(() => true);
     let filterValues = [
         "__name__",
         "le",
@@ -76,7 +79,6 @@ const getLogsSeries = async (start: number, end: number, host: string) => {
         "span_name",
         "status_code",
     ];
-
     let labelsUrl = `${host}/loki/api/v1/labels?start=${start * 1000000}&end=${
         end * 1000000
     }`;
@@ -108,6 +110,8 @@ const getLogsSeries = async (start: number, end: number, host: string) => {
     if (logQueries.length > 0) {
         result = await getLogs(logQueries, logRequest);
     }
+
+    setLoading(() => false);
 
     return result;
 };

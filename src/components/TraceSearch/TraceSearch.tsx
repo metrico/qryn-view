@@ -28,7 +28,7 @@ const SearchRow = css`
 
 const TraceButton = (theme: any) => css`
     background: ${theme.primaryDark};
-    border: 1px solid ${theme.buttonBorder};
+    border: 1px solid ${theme.primaryBorder};
     border-radius: 3px;
     color: ${theme.buttonText};
     margin-left: 5px;

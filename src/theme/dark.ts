@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material";
-const defaultTheme = createTheme()
+const defaultTheme = createTheme();
 
 const black = {
     b10: "hsla(0, 0%, 7%, 0.404)",
@@ -44,6 +44,7 @@ const darkgrey = {
 };
 
 const turquoise = {
+    tq1: "hsl(181, 98%, 21%);",
     tq100: "hsl(180, 62%, 28%)",
     tq200: "hsl(180, 62%, 33%)", // button
     tq300: "hsl(180, 62%, 44%)", // button hover
@@ -67,6 +68,7 @@ const textPrimaryAccent = orange.or100;
 const inputBg = black.b15;
 const primaryDark = turquoise.tq200;
 const primaryLight = turquoise.tq300;
+const primaryBorder = turquoise.tq1;
 const widgetContainer = black.b400;
 const secondaryWidgetContainer = black.b300;
 const widgetTitle = darkgrey.dg90;
@@ -80,8 +82,8 @@ const inputTextFocus = orange.or100;
 const highlitedButton = orange.or100;
 const inputLabelColor = lightgrey.lg400;
 const inputLabelBg = black.b10;
-const chartBg = '#111';
-const historyRow = '#6c6b6b38';
+const chartBg = "#111";
+const historyRow = "#6c6b6b38";
 const viewBg = black.b300;
 const scrollbarThumb = "hsla(0, 0%, 48%, 0.5)";
 const critical = "hsl(300, 100%, 25%)";
@@ -91,9 +93,9 @@ const info = "hsl(120, 100%, 25%)";
 const debug = "hsl(240, 100%, 50%)";
 const trace = "hsl(195, 53%, 79%)";
 const unknown = "hsl(0, 0%, 50%)";
-const buttonSecondaryBg = '#4a525c'
+const buttonSecondaryBg = "#4a525c";
 
-const darkTheme:any = {
+const darkTheme: any = {
     ...defaultTheme,
     black,
     white,
@@ -101,6 +103,7 @@ const darkTheme:any = {
     textColor,
     primaryDark,
     primaryLight,
+    primaryBorder,
     buttonSecondaryBg,
     widgetContainer,
     buttonDefault,
@@ -138,7 +141,5 @@ const darkTheme:any = {
     widgetTitle,
     widgetTitleBorder,
     highlitedButton,
-
-  
 };
 export default darkTheme;
