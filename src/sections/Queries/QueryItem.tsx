@@ -26,7 +26,6 @@ const QueryItem = (props: any) => {
     const panelSelected = useSelector((store: any) => store[name]);
     const isQueryOpen = useState(true);
     const idRefs = useIdRefs(name);
-
     const theme = useTheme();
 
     const onAddQuery = () => {
@@ -81,9 +80,10 @@ const QueryItem = (props: any) => {
                 />
 
                 {isQueryOpen[0] && <LabelBrowser {...props} />}
-
-                <PluginRenderer section={"Query Item"} localProps={props} />
-
+                {(data.dataSourceType === "metrics" ||
+                    data.dataSourceType === "logs") && (
+                    <PluginRenderer section={"Query Item"} localProps={props} />
+                )}
             </div>
         </ThemeProvider>
     );

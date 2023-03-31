@@ -5,6 +5,14 @@ import { useMemo } from "react";
 
 const HeaderSectionStyles = (theme: any) => css`
     color: ${theme.textColor};
+    .raggix-options {
+        display: flex;
+        align-items: center;
+    }
+    .raggix-buttons {
+        display: flex;
+        align-items: center;
+    }
     .title {
         display: flex;
         align-items: center;
@@ -19,8 +27,9 @@ const HeaderSectionStyles = (theme: any) => css`
     }
     .content {
         display: flex;
-        padding-top:10px;
+        padding-top: 10px;
         align-items: center;
+        justify-content: space-between;
     }
     select {
         height: 26px;
@@ -142,56 +151,62 @@ const HeaderSection: React.FC<HeaderProps> = (props) => {
 
     return (
         <div className={cx(HeaderSectionStyles(theme))}>
-            <p className={"title"}>
+            <div className={"title"}>
                 {" "}
                 <span>Raggix Lookup</span>
                 {loading && <Loader />}
-            </p>
+            </div>
             <div className={"content"}>
-                {" "}
-                {/* {logs} */}
-                <label>Logs Preview </label>{" "}
-                <Switch
-                    checked={open}
-                    size={"small"}
-                    onChange={openLogs}
-                    inputProps={{ "aria-label": "controlled" }}
-                />
-                <button onClick={handleReset}>Reset</button>
-                <button onClick={launchLogs} title={"Launch Raggix Lookup"}>
-                    Launch
-                    <PlayArrowOutlinedIcon fontSize="small" />
-                </button>
-                <label>Range:</label>
-                <select defaultValue={rangeValue} onChange={handleSelectChange}>
-                    {rangeOpts?.map(({ label, value }, key) => (
-                        <option key={key} value={value}>
-                            {label}
-                        </option>
-                    ))}
-                </select>
-                <label>Recurrent: </label>{" "}
-                <Switch
-                    checked={isRecurrent}
-                    size={"small"}
-                    onChange={handleRecurrent}
-                    inputProps={{ "aria-label": "controlled" }}
-                />
-                {isRecurrent && (
-                    <>
-                        <label>Launch Every: </label>
-                        <select
-                            defaultValue={recurrentValue}
-                            onChange={handleRecurrentChange}
-                        >
-                            {periodicOpts?.map(({ label, value }, key) => (
-                                <option key={key} value={value}>
-                                    {label}
-                                </option>
-                            ))}
-                        </select>
-                    </>
-                )}
+                <div className="raggix-options">
+                    <label>Logs Preview </label>{" "}
+                    <Switch
+                        checked={open}
+                        size={"small"}
+                        onChange={openLogs}
+                        inputProps={{ "aria-label": "controlled" }}
+                    />
+                    <label>Range:</label>
+                    <select
+                        defaultValue={rangeValue}
+                        onChange={handleSelectChange}
+                    >
+                        {rangeOpts?.map(({ label, value }, key) => (
+                            <option key={key} value={value}>
+                                {label}
+                            </option>
+                        ))}
+                    </select>
+                    <label>Recurrent: </label>{" "}
+                    <Switch
+                        checked={isRecurrent}
+                        size={"small"}
+                        onChange={handleRecurrent}
+                        inputProps={{ "aria-label": "controlled" }}
+                    />
+                    {isRecurrent && (
+                        <>
+                            <label>Launch Every: </label>
+                            <select
+                                defaultValue={recurrentValue}
+                                onChange={handleRecurrentChange}
+                            >
+                                {periodicOpts?.map(({ label, value }, key) => (
+                                    <option key={key} value={value}>
+                                        {label}
+                                    </option>
+                                ))}
+                            </select>
+                        </>
+                    )}
+                </div>
+
+                <div className="raggix-buttons">
+                    <button onClick={handleReset}>Reset</button>
+                    <button onClick={launchLogs} title={"Launch Raggix Lookup"}>
+                        Launch
+                        <PlayArrowOutlinedIcon fontSize="small" />
+                    </button>
+                </div>
             </div>
         </div>
     );

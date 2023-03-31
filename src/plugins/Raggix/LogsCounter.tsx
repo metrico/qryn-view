@@ -1,15 +1,16 @@
-import {css, cx } from "@emotion/css";
+import { css, cx } from "@emotion/css";
 import LogItem from "./LogItem";
 
-const LogsCounterStyles = (theme:any) => css`
-    margin:0px 10px;
-    display:flex;
-`
+const LogsCounterStyles = (theme: any) => css`
+    margin: 0px 10px;
+    display: flex;
+    flex-wrap: wrap;
+`;
 
 type Props = {
     loading: boolean;
     logs: any[];
-    theme:any;
+    theme: any;
     openLog: Function;
     showLabels: (e: any) => void;
 };

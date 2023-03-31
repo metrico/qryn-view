@@ -1,43 +1,78 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import LogsList from "./LogsList";
-
-import getLogsSeries from "./getLogsSeries";
 import LogsCounter from "./LogsCounter";
 import useDataSources from "./useDataSources";
 import HeaderSection from "./HeaderSection";
 import { useTheme } from "../../theme";
 import { css, cx } from "@emotion/css";
+import getLookupSeries from "./getLookupSeries";
 
-const LabelsStyle = (theme: any) => ({
-    display: "flex",
-    color: theme.textColor,
-    background: theme.inputBg,
-    fontFamily: "monospace",
-    fontSize: "12px",
-    padding: "8px",
-    margin: "10px",
-    borderRadius:"3px"
-});
-
+const QueryPreviewStyles = (theme: any) => css`
+    display: flex;
+    color: ${theme.textColor};
+    background: ${theme.inputBg};
+    font-family: monospace;
+    font-size: 12px;
+    padding: 8px;
+    margin: 10px;
+    border-radius: 3px;
+    flex-wrap: wrap;
+    white-space: pre-wrap;
+    max-width: 100%;
+`;
 const RaggixContainer = (theme: any) => css`
     border: 1px solid ${theme.buttonBorder};
     margin: 10px;
     border-radius: 3px;
 `;
 
-const Raggix = () => {
+export const useDataSourceConfig = (ds: any) => {
+    return useMemo(() => {
+        const { auth } = ds;
+        let headers = ds.headers?.map((k: any) => ({ [k.header]: k.value }));
+
+        const options = {
+            method: auth.method.value,
+            headers,
+        };
+        const config: any = { options };
+        const hasBasicAuth = auth.basicAuth.value;
+
+        if (hasBasicAuth) {
+            const {
+                fields: {
+                    basicAuth: [us, pw],
+                },
+            } = auth;
+            const username = us.value;
+            const password = pw.value;
+            config.auth = { username, password };
+        }
+
+        return config;
+    }, [ds]);
+};
+
+const Raggix = (props: any) => {
+    const {
+        localProps: {
+            data: { dataSourceType },
+        },
+    } = props;
+
     const theme = useTheme();
-    const ds = useDataSources();
-    const [logs, setLogs] = useState<any>("");
-    const [isRecurrent, setIsRecurrent] = useState(false);
+    const ds = useDataSources(dataSourceType);
+    const config = useDataSourceConfig(ds);
     const [index, setIndex] = useState(0);
     const [open, setOpen] = useState(true);
+    const [logs, setLogs] = useState<any>("");
     const [loading, setLoading] = useState(false);
+    const [rangeValue, setRangeValue] = useState(5000);
+    const [labelString, setLabelString] = useState("");
+    const [isRecurrent, setIsRecurrent] = useState(false);
     const [recurrentValue, setRecurrentValue] = useState(30000);
     const [actTimestamp, setActTimestamp] = useState(Date.now());
-    const [rangeValue, setRangeValue] = useState(5000);
 
-    const [labelString, setLabelString] = useState("");
     const handleRecurrent = (e: any) => {
         setIsRecurrent(() => e.target.checked);
     };
@@ -58,12 +93,21 @@ const Raggix = () => {
     const launchLogs = (e: any) => {
         const end = Date.now();
         const start = end - rangeValue;
-        const host = ds?.Logs?.url;
-        let res = getLogsSeries(start, end, host, setLoading);
+        const host = ds?.url;
+        let res = getLookupSeries(
+            start,
+            end,
+            host,
+            setLoading,
+            dataSourceType,
+            config
+        );
+
         res.then((data) => {
             setLogs(() => data);
         });
     };
+
     useEffect(() => {
         const interval = setInterval(() => {
             setActTimestamp(Date.now());
@@ -78,8 +122,15 @@ const Raggix = () => {
             // do worker stuff
             const end = Date.now();
             const start = end - rangeValue;
-            const host = ds?.Logs?.url;
-            let res = getLogsSeries(start, end, host, setLoading);
+            const host = ds?.url;
+            let res = getLookupSeries(
+                start,
+                end,
+                host,
+                setLoading,
+                dataSourceType,
+                config
+            );
             res.then((data) => {
                 setLogs(data);
             });
@@ -104,7 +155,9 @@ const Raggix = () => {
                     setRecurrentValue={setRecurrentValue}
                     recurrentValue={recurrentValue}
                 />
-                <div style={LabelsStyle(theme)}>{labelString}</div>
+                <div className={cx(QueryPreviewStyles(theme))}>
+                    {labelString}
+                </div>
             </div>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
                 <LogsCounter
@@ -116,12 +169,14 @@ const Raggix = () => {
                 />
             </div>
             <div>
-                <LogsList
-                    theme={theme}
-                    open={open}
-                    loading={loading}
-                    logs={logs[index]}
-                />
+                {logs && (
+                    <LogsList
+                        theme={theme}
+                        open={open}
+                        loading={loading}
+                        logs={logs[index]}
+                    />
+                )}
             </div>
         </div>
     );
