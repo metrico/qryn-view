@@ -6,11 +6,13 @@ import HeaderSection from "./HeaderSection";
 import { useTheme } from "../../theme";
 import { css, cx } from "@emotion/css";
 import getLookupSeries from "./getLookupSeries";
+import updateQuery from "./updateQuery";
+import { useSelector } from "react-redux";
+export const UpdateQueryStringFromPanel = (panel: string, id: string) => {};
 
 const QueryPreviewStyles = (theme: any) => css`
     display: flex;
     color: ${theme.textColor};
-    background: ${theme.inputBg};
     font-family: monospace;
     font-size: 12px;
     padding: 8px;
@@ -19,23 +21,52 @@ const QueryPreviewStyles = (theme: any) => css`
     flex-wrap: wrap;
     white-space: pre-wrap;
     max-width: 100%;
+    button {
+        border: 1px solid ${theme.primaryBorder};
+        border-radius: 3px;
+        padding: 4px 8px;
+        background: ${theme.primaryDark};
+        color: ${theme.buttonText};
+        margin: 0px 3px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        height: 30px;
+        font-size: 12px;
+        &:hover {
+            background: ${theme.primaryLight};
+        }
+    }
+    code {
+        padding-left: 3px;
+        border: 1px solid ${theme.buttonBorder};
+        flex: 1;
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        background: ${theme.inputBg};
+    }
 `;
 const RaggixContainer = (theme: any) => css`
     border: 1px solid ${theme.buttonBorder};
+    border-radius: 3px;
     margin: 10px;
     border-radius: 3px;
 `;
 
+export const updateQueryFromPanel = (query: string) => {};
+
 export const useDataSourceConfig = (ds: any) => {
     return useMemo(() => {
         const { auth } = ds;
-        let headers = ds.headers?.map((k: any) => ({ [k.header]: k.value }));
+        let headersMap = ds.headers?.map((k: any) => ({ [k.header]: k.value }));
+        let headers: any = {};
 
-        const options = {
-            method: auth.method.value,
-            headers,
-        };
-        const config: any = { options };
+        for (let header of headersMap) {
+            let entries: any = Object.entries(header)[0];
+            headers[entries[0]] = entries[1];
+        }
+        const config: any = { headers };
         const hasBasicAuth = auth.basicAuth.value;
 
         if (hasBasicAuth) {
@@ -54,6 +85,10 @@ export const useDataSourceConfig = (ds: any) => {
 };
 
 const Raggix = (props: any) => {
+    const { data } = props.localProps;
+    const { name, id } = data;
+    const panel = useSelector((store: any) => store[data?.panel]);
+
     const {
         localProps: {
             data: { dataSourceType },
@@ -72,24 +107,46 @@ const Raggix = (props: any) => {
     const [isRecurrent, setIsRecurrent] = useState(false);
     const [recurrentValue, setRecurrentValue] = useState(30000);
     const [actTimestamp, setActTimestamp] = useState(Date.now());
+    const convertLabelToString = (labels: string) => {
+        const labelsParsed = JSON.parse(labels);
+        let entries = Object.entries(labelsParsed);
+
+        let labelsConverted = entries
+            .map(([key, val]) => {
+                return `${key}="${val}"`;
+            })
+            .join(", ");
+        let result = `{${labelsConverted}}`;
+
+        return result;
+    };
 
     const handleRecurrent = (e: any) => {
         setIsRecurrent(() => e.target.checked);
     };
     const handleReset = () => {
         setLogs(() => []);
+        setLabelString(() => "");
     };
 
     const openLog = (e: any) => {
         setIndex(() => e);
     };
+
     const showLabels = (e: any) => {
-        setLabelString(() => e);
+        const converted = convertLabelToString(e);
+        setLabelString(() => converted);
     };
     const openLogs = (e: any) => {
         setOpen(() => e.target.checked);
     };
+    // update query sending query from button
 
+    const handleQueryRequest = (e: any) => {
+        if (labelString?.length > 0 && panel) {
+            updateQuery(name, id, "expr", labelString, panel);
+        }
+    };
     const launchLogs = (e: any) => {
         const end = Date.now();
         const start = end - rangeValue;
@@ -155,9 +212,12 @@ const Raggix = (props: any) => {
                     setRecurrentValue={setRecurrentValue}
                     recurrentValue={recurrentValue}
                 />
-                <div className={cx(QueryPreviewStyles(theme))}>
-                    {labelString}
-                </div>
+                {labelString !== "" && (
+                    <div className={cx(QueryPreviewStyles(theme))}>
+                        <button onClick={handleQueryRequest}>Send Query</button>{" "}
+                        <code>{labelString}</code>
+                    </div>
+                )}
             </div>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
                 <LogsCounter

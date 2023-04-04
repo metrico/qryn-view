@@ -81,7 +81,7 @@ const QueryItem = (props: any) => {
 
                 {isQueryOpen[0] && <LabelBrowser {...props} />}
                 {(data.dataSourceType === "metrics" ||
-                    data.dataSourceType === "logs") && (
+                    data.dataSourceType === "logs" || data.dataSourceType === "traces") && (
                     <PluginRenderer section={"Query Item"} localProps={props} />
                 )}
             </div>

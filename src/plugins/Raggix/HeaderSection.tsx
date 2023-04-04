@@ -13,21 +13,27 @@ const HeaderSectionStyles = (theme: any) => css`
         display: flex;
         align-items: center;
     }
-    .title {
+    .raggix-name {
         display: flex;
         align-items: center;
+    }
+    .title {
+        display: flex;
+        align-items: center; 
         font-weight: bold;
         font-family: monospace;
         font-size: 10px;
         letter-spacing: 1px;
         color: ${theme.textColor};
         background: ${theme.inputBg};
-        padding: 10px;
+        padding: 6px;
         border-radius: 3px 3px 0px 0px;
+        border-bottom: 1px solid ${theme.buttonBorder};
+        justify-content: space-between;
     }
     .content {
         display: flex;
-        padding-top: 10px;
+        padding: 6px;
         align-items: center;
         justify-content: space-between;
     }
@@ -121,6 +127,8 @@ const HeaderSection: React.FC<HeaderProps> = (props) => {
             ["10s", 10000],
             ["20s", 20000],
             ["30s", 30000],
+            ["5m", 300000],
+            ["10m", 600000]
         ].map(([label, value]) => {
             return { label, value };
         });
@@ -138,23 +146,32 @@ const HeaderSection: React.FC<HeaderProps> = (props) => {
     }, []);
 
     const handleSelectChange = (e: any) => {
-        if (e?.target?.selected) {
-            setRangeValue(() => e.target.selected);
+        if (e?.target?.value) {
+            setRangeValue(() => parseInt(e.target.value));
         }
     };
 
     const handleRecurrentChange = (e: any) => {
-        if (e?.target?.selected) {
-            setRecurrentValue(() => e.target.selected);
+        if (e?.target?.value) {
+            setRecurrentValue(() => parseInt(e.target.value));
         }
     };
 
     return (
         <div className={cx(HeaderSectionStyles(theme))}>
             <div className={"title"}>
+                <div className="raggix-name">
                 {" "}
                 <span>Raggix Lookup</span>
                 {loading && <Loader />}
+                </div>
+                <div className="raggix-buttons">
+                    <button onClick={handleReset}>Reset</button>
+                    <button onClick={launchLogs} title={"Launch Raggix Lookup"}>
+                        Launch
+                        <PlayArrowOutlinedIcon fontSize="small" />
+                    </button>
+                </div>
             </div>
             <div className={"content"}>
                 <div className="raggix-options">
@@ -200,13 +217,7 @@ const HeaderSection: React.FC<HeaderProps> = (props) => {
                     )}
                 </div>
 
-                <div className="raggix-buttons">
-                    <button onClick={handleReset}>Reset</button>
-                    <button onClick={launchLogs} title={"Launch Raggix Lookup"}>
-                        Launch
-                        <PlayArrowOutlinedIcon fontSize="small" />
-                    </button>
-                </div>
+            
             </div>
         </div>
     );

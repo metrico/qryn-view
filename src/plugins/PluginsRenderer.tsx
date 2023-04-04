@@ -8,21 +8,32 @@ interface PluginRendererProps {
 
 const PluginRenderer: React.FC<PluginRendererProps> = (props) => {
     const { section, localProps } = props;
-    return (
-        <>
-            {PluginManager.getPlugins(section)?.map(
-                (
-                    Plugin: React.FC<PluginRendererProps["localProps"]>,
-                    idx: number
-                ) => {
-                    return (
-                        <div key={idx}>
-                            <Plugin localProps={localProps} />
-                        </div>
-                    );
-                }
-            )}
-        </>
+    return ( 
+        <div className="renderer-content">
+            {PluginManager.getPlugins(section)?.length > 0 &&
+                PluginManager.getPlugins(section)?.map(
+                    ( 
+                        {
+                            name,
+                            Component,
+                        }: {
+                            name: string;
+                            Component: React.FC<
+                                PluginRendererProps["localProps"]
+                            >;
+                        },
+                        idx: number
+                    ) => {
+                        return (
+                            <Component
+                                key={idx}
+                                localProps={localProps}
+                                name={name}
+                            />
+                        );
+                    }
+                )}
+        </div>
     );
 };
 

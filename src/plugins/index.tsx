@@ -1,14 +1,20 @@
-import { lazy } from "react";
+import Clock from "./Clock";
 import { PluginManager } from "./PluginManagerFactory";
+import Raggix from "./Raggix";
 
 // load the imported plugins
-export const Clock = lazy(()=> import("./Clock"));
-export const Raggix = lazy(()=> import("./Raggix"));
+export const clock = {
+    name: "Clock",
+    Component: Clock,
+};
+
+export const raggix = {
+    name:'Raggix',
+    Component: Raggix
+}
 
 
-PluginManager.registerPlugin(Clock, "Status Bar")
-PluginManager.registerPlugin(Raggix, "Query Item")
+PluginManager.registerPlugin(clock, "Status Bar");
+PluginManager.registerPlugin(raggix, "Query Item");
 
-
-export default PluginManager
-
+export default PluginManager;

@@ -1,5 +1,6 @@
 import getMetricsSeries from "./getMetricsSeries";
 import getLogsSeries from "./getLogsSeries";
+import getTracesSeries from "./getTracesSeries";
 
 const getLookupSeries = async (
     start: number,
@@ -14,6 +15,8 @@ const getLookupSeries = async (
             return await getLogsSeries(start, end, host, setLoading, config);
         case "metrics":
             return await getMetricsSeries(host, start, end, config, setLoading);
+        case "traces":
+                return await getTracesSeries(host, start, end, config, setLoading);
         default:
             return await getLogsSeries(start, end, host, setLoading, config);
     }
