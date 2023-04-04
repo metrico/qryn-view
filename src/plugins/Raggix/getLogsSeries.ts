@@ -1,5 +1,20 @@
 import axios from "axios";
 
+
+export const formatLogsString = (log: any) => {
+    let entries = Object.entries(log);
+
+    let labelsConverted = entries
+        .map(([key, val]) => {
+            return `${key}="${val}"`;
+        })
+        .join(", ");
+    let result = `{${labelsConverted}}`;
+
+    return result;
+
+}
+
 const getLabels = async (labelsUrl: string, config: any) => {
     try {
         let labelsData: any = await axios.get(labelsUrl, config);
@@ -77,13 +92,11 @@ const getLogsSeries = async (
         "span_name",
         "status_code",
     ];
-    let labelsUrl = `${host}/loki/api/v1/labels?start=${start * 1000000}&end=${
-        end * 1000000
-    }`;
+    let labelsUrl = `${host}/loki/api/v1/labels?start=${start * 1000000}&end=${end * 1000000
+        }`;
 
     let labelValuesUrl = (label: string) =>
-        `${host}/loki/api/v1/label/${label}/values?start=${
-            start * 1000000
+        `${host}/loki/api/v1/label/${label}/values?start=${start * 1000000
         }&end=${end * 1000000}`;
 
     let logRequest = (query: string) =>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const urlState = (
+export const urlState = (
     searchValue: string,
     spanValue: string,
     min: number,
@@ -13,6 +13,11 @@ const urlState = (
     maxDuration: Math.round(min / 1000),
     limit: 10,
 });
+
+export const formatTracesString = (log: any) => {
+    return JSON.stringify(log);
+}
+
 
 export function formatUrl(state: any) {
     const { searchName, name, minDuration, maxDuration, tags, limit } = state;
@@ -176,4 +181,6 @@ const getTracesSeries = async (
     return result;
 };
 
+// here we should return a response and the suggestions for the select 
+//
 export default getTracesSeries;

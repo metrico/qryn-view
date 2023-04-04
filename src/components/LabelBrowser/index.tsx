@@ -7,6 +7,7 @@ import { ValuesList } from "./components/ValuesList";
 export default function LabelBrowser(props: any) {
     const {
         data: { dataSourceType, isShowStats, isBuilder },
+        launchQuery,
     } = props;
     const isEmbed = useSelector((store:any) => store.isEmbed);
 
@@ -16,7 +17,7 @@ export default function LabelBrowser(props: any) {
  
     return (
         <div style={{ margin: "3px 0px" }}>
-            <QueryBar {...props} className={"query-bar-placeholder"} />
+            <QueryBar launchQuery={launchQuery} {...props} className={"query-bar-placeholder"} />
 
             {!isEmbed && dataSourceType === "logs"&& !isBuilder && <ValuesList {...props} />}
             {isShowStats && isLabelBrowser && <Stats {...props} />}

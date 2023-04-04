@@ -6,8 +6,12 @@ import HeaderSection from "./HeaderSection";
 import { useTheme } from "../../theme";
 import { css, cx } from "@emotion/css";
 import getLookupSeries from "./getLookupSeries";
-import updateQuery from "./updateQuery";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { formatMetricString } from "./getMetricsSeries";
+import { formatLogsString } from "./getLogsSeries";
+import getData from "../../actions/getData";
+import { formatTracesString, formatUrl, urlState } from "./getTracesSeries";
+
 export const UpdateQueryStringFromPanel = (panel: string, id: string) => {};
 
 const QueryPreviewStyles = (theme: any) => css`
@@ -16,6 +20,7 @@ const QueryPreviewStyles = (theme: any) => css`
     font-family: monospace;
     font-size: 12px;
     padding: 8px;
+    padding-left: 0px;
     margin: 10px;
     border-radius: 3px;
     flex-wrap: wrap;
@@ -85,16 +90,19 @@ export const useDataSourceConfig = (ds: any) => {
 };
 
 const Raggix = (props: any) => {
-    const { data } = props.localProps;
-    const { name, id } = data;
+    const { setLaunchQuery } = props.localProps;
+    const { data } = props?.localProps?.props;
+    const { panel: name, id, dataSourceId } = data;
     const panel = useSelector((store: any) => store[data?.panel]);
 
     const {
         localProps: {
-            data: { dataSourceType },
+            props: {
+                data: { dataSourceType },
+            },
         },
     } = props;
-
+    const dispatch = useDispatch();
     const theme = useTheme();
     const ds = useDataSources(dataSourceType);
     const config = useDataSourceConfig(ds);
@@ -107,18 +115,20 @@ const Raggix = (props: any) => {
     const [isRecurrent, setIsRecurrent] = useState(false);
     const [recurrentValue, setRecurrentValue] = useState(30000);
     const [actTimestamp, setActTimestamp] = useState(Date.now());
+
     const convertLabelToString = (labels: string) => {
         const labelsParsed = JSON.parse(labels);
-        let entries = Object.entries(labelsParsed);
+        switch (dataSourceType) {
+            case "logs":
+                return formatLogsString(labelsParsed);
+            case "metrics":
+                return formatMetricString(labelsParsed);
+            case "traces":
+                return formatTracesString(labelsParsed);
 
-        let labelsConverted = entries
-            .map(([key, val]) => {
-                return `${key}="${val}"`;
-            })
-            .join(", ");
-        let result = `{${labelsConverted}}`;
-
-        return result;
+            default:
+                return formatLogsString(labelsParsed);
+        }
     };
 
     const handleRecurrent = (e: any) => {
@@ -142,12 +152,32 @@ const Raggix = (props: any) => {
     };
     // update query sending query from button
 
-    const handleQueryRequest = (e: any) => {
+    const handleQueryRequest = () => {
         if (labelString?.length > 0 && panel) {
-            updateQuery(name, id, "expr", labelString, panel);
+            if (dataSourceType === "traces") {
+                let search = JSON.parse(labelString);
+                const host = ds?.url;
+                let uState = urlState(search.Service, search.Name, 0, 0);
+                let urlString = formatUrl(uState);
+                dispatch(
+                    getData(
+                        dataSourceType,
+                        "",
+                        "trace-search",
+                        20,
+                        name,
+                        id,
+                        "forward",
+                        dataSourceId,
+                        `${host}/api/${urlString}`
+                    )
+                );
+            } else {
+                setLaunchQuery(labelString);
+            }
         }
     };
-    const launchLogs = (e: any) => {
+    const launchLogs = () => {
         const end = Date.now();
         const start = end - rangeValue;
         const host = ds?.url;

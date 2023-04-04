@@ -133,6 +133,8 @@ export const QueryBar = (props: any) => {
         return dataSources?.find((f: any) => f.id === dataSourceId);
     };
 
+
+
     useEffect(() => {
         setQueryInput(actLocalQuery.expr);
         setQueryValue([
@@ -306,6 +308,25 @@ export const QueryBar = (props: any) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [expr]);
+
+    useEffect(()=>{
+        console.log(props.launchQuery, "LaunchQuery")
+        if(typeof props.launchQuery === "string") {
+            setQueryInput(props.launchQuery);
+            setQueryValue([
+                { children: [{ text: DOMPurify.sanitize(props.launchQuery) }] },
+            ]);
+            saveQuery();
+            if (isLogsVolume) {
+                setLogsLevel(props.launchQuery, true);
+            }
+    
+        }
+
+       // setLogsLevel(launchQuery, isLogsVolume);
+
+
+    },[props.launchQuery])
 
     useEffect(() => {
         setLogsLevel(queryInput, isLogsVolume);

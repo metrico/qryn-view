@@ -21,6 +21,7 @@ import { useIdRefs } from "./hooks";
 const QueryItem = (props: any) => {
     const { name, data } = props;
     const { id } = data;
+    const [launchQuery, setLaunchQuery] = useState("");
     const dispatch = useDispatch();
     const dataView = useSelector((store: any) => store[`${name}DataView`]);
     const panelSelected = useSelector((store: any) => store[name]);
@@ -79,10 +80,13 @@ const QueryItem = (props: any) => {
                     onAddQuery={onAddQuery}
                 />
 
-                {isQueryOpen[0] && <LabelBrowser {...props} />}
+                {isQueryOpen[0] && (
+                    <LabelBrowser {...props} launchQuery={launchQuery} />
+                )}
                 {(data.dataSourceType === "metrics" ||
-                    data.dataSourceType === "logs" || data.dataSourceType === "traces") && (
-                    <PluginRenderer section={"Query Item"} localProps={props} />
+                    data.dataSourceType === "logs" ||
+                    data.dataSourceType === "traces") && (
+                    <PluginRenderer section={"Query Item"} localProps={{props,setLaunchQuery}}  />
                 )}
             </div>
         </ThemeProvider>

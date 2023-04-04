@@ -6,7 +6,6 @@ const getMetricsLabels = async (
     end: number,
     options: any
 ) => {
-    console.log(host);
     /* Get all labels */
     let metricLabels: any = [];
     let labelsData = await axios.get(
@@ -23,6 +22,26 @@ const getMetricsLabels = async (
     return metricLabels;
 };
 
+export const formatMetricString = (metric: any) => {
+    let keys: any = Object.entries(metric);
+    let prev: string = "";
+    let str: any = "";
+    let strArr: any = [];
+    for (let [key, val] of keys) {
+        if (key !== "__name__") {
+            strArr.push(` ${key}="${val}"`)
+        }
+    }
+
+    let labels: any = ""
+    if (metric["__name__"]) {
+        labels = strArr.join(",");
+        prev = metric["__name__"]
+    }
+    str = `${prev}{${labels}}`;
+    return str
+}
+
 const getMetricsResults = async (
     host: string,
     metricQueries: any[],
@@ -33,17 +52,16 @@ const getMetricsResults = async (
     let result: any = [];
     for (let query of metricQueries) {
         let logs = await axios.get(
-            `${host}/loki/api/v1/query_range?query=${query}&start=${
-                start * 1000000
-            }&end=${end * 1000000}`,
+            `${host}/loki/api/v1/query_range?query=${query}&start=${start * 1000000
+            }&end=${end * 1000000}&limit=10`,
             options
         );
         if (logs?.data?.data?.result?.length > 0) {
             result = result.concat(logs?.data?.data?.result);
         }
     }
-    return result;
-};
+    return result; 
+}
 
 const getMetricsSeries = async (
     host: string,
