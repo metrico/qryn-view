@@ -1,20 +1,39 @@
+import { nanoid } from "nanoid";
 import Clock from "./Clock";
 import { PluginManager } from "./PluginManagerFactory";
 import Raggix from "./Raggix";
 
+
+
 // load the imported plugins
 export const clock = {
     name: "Clock",
+    section:"Status Bar",
+    id: nanoid(),
     Component: Clock,
+    active:true,
 };
 
 export const raggix = {
     name:'Raggix',
-    Component: Raggix
+    section: "Query Item",
+    id: nanoid(),
+    Component: Raggix,
+    active:true,
 }
 
+let plugins = [
+    clock,
+    raggix 
+]
 
-PluginManager.registerPlugin(clock, "Status Bar");
-PluginManager.registerPlugin(raggix, "Query Item");
+
+function registerPlugins() {
+    plugins.forEach((plugin:any) => {
+            PluginManager.registerPlugin(plugin) 
+    })
+}
+
+registerPlugins()
 
 export default PluginManager;

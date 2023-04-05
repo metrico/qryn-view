@@ -1,3 +1,7 @@
+import store from "../store/store";
+import { setPlugins } from "./actions";
+
+
 export interface ILocation {
     parent: string;
     children: string[];
@@ -26,29 +30,47 @@ export const locations: ILocations = {
         parent: "Panel",
         children: ["Data View Header", "View"],
     },
+    "Query Item" :{
+            parent: "Queries",
+            children:[]
+    }
 };
 
-
 export function PluginManagerFactory(locations: ILocations) {
-    const plugins: any = {};
+    const plugins: any = store.getState().plugins || {};
+   // const dispatch = store.dispatch
 
     // add plugin to a specific location
-    function registerPlugin(plugin: any, location: string) {
-        if (!plugins[location]) {
-            plugins[location] = [];
+    function registerPlugin(plugin: any) {
+        if (!plugins[plugin.section]) {
+            plugins[plugin.section] = [];
         }
-        plugins[location].push(plugin);
+
+        plugins[plugin.section].push(plugin);
+
+        store.dispatch(setPlugins(plugins))
+
+        localStorage.setItem("plugins", JSON.stringify(plugins));
     }
     function registerPluginGlobally(plugin: any) {
         for (let location in locations) {
             if (location !== "Main") {
-                registerPlugin(plugin, location);
+                registerPlugin(plugin);
             }
         }
     }
+
     function getPlugins(location: string) {
-        return plugins[location] || [];
+        const unique = plugins?.[location]?.filter(
+            (obj: any, index: number) =>
+                plugins[location]?.findIndex(
+                    (item: any) => item.name === obj.name
+                ) === index
+        );
+
+        return unique || [];
     }
+
     function getAllPlugins() {
         const allPlugins: any[] = [];
 
@@ -59,6 +81,7 @@ export function PluginManagerFactory(locations: ILocations) {
         }
         return allPlugins;
     }
+
     return {
         registerPlugin,
         registerPluginGlobally,
@@ -67,4 +90,6 @@ export function PluginManagerFactory(locations: ILocations) {
     };
 }
 
-export const PluginManager = PluginManagerFactory(locations)
+export const PluginManager = PluginManagerFactory(locations);
+
+// add an id for each plugin

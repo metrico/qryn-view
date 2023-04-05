@@ -62,8 +62,19 @@ const HeaderSectionStyles = (theme: any) => css`
         display: flex;
         align-items: center;
         height: 30px;
-        &:hover {
+        &:hover { 
             background: ${theme.primaryLight};
+        }
+        &.toggle-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            color:${theme.textColor};
+            border:none;
+            font-size:14px;
+            width: 16px;
+            height: 16px;
         }
     }
 `;
@@ -97,11 +108,13 @@ type HeaderProps = {
     launchLogs: (e: any) => void;
     setRangeValue: (e: any) => void;
     setRecurrentValue: (e: any) => void;
+    handleToggleRaggix: () => void;
     recurrentValue: number;
     isRecurrent: boolean;
     open: boolean;
     rangeValue: number;
     loading: boolean;
+    raggixOpen:boolean;
     theme: any;
 };
 
@@ -119,6 +132,8 @@ const HeaderSection: React.FC<HeaderProps> = (props) => {
         setRangeValue,
         setRecurrentValue,
         recurrentValue,
+        handleToggleRaggix,
+        raggixOpen
     } = props;
 
     const rangeOpts = useMemo(() => {
@@ -161,7 +176,7 @@ const HeaderSection: React.FC<HeaderProps> = (props) => {
         <div className={cx(HeaderSectionStyles(theme))}>
             <div className={"title"}>
                 <div className="raggix-name">
-                {" "}
+                <button className="toggle-button" onClick={handleToggleRaggix}>{ raggixOpen ? "-" : "+"}</button>
                 <span>Raggix Lookup</span>
                 {loading && <Loader />}
                 </div>

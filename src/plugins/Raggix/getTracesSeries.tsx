@@ -3,14 +3,14 @@ import axios from "axios";
 export const urlState = (
     searchValue: string,
     spanValue: string,
-    min: number,
-    max: number
+    start: number,
+    end: number
 ) => ({
     searchName: searchValue || "",
     name: spanValue || "",
     tags: "",
-    minDuration: Math.round(max / 1000),
-    maxDuration: Math.round(min / 1000),
+    minDuration: Math.round(end / 1000),
+    maxDuration: Math.round(start / 1000),
     limit: 10,
 });
 

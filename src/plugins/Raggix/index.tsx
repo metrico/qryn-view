@@ -111,6 +111,7 @@ const Raggix = (props: any) => {
     const [logs, setLogs] = useState<any>("");
     const [loading, setLoading] = useState(false);
     const [rangeValue, setRangeValue] = useState(5000);
+    const [raggixOpen,setRaggixOpen] = useState(true)
     const [labelString, setLabelString] = useState("");
     const [isRecurrent, setIsRecurrent] = useState(false);
     const [recurrentValue, setRecurrentValue] = useState(30000);
@@ -134,6 +135,7 @@ const Raggix = (props: any) => {
     const handleRecurrent = (e: any) => {
         setIsRecurrent(() => e.target.checked);
     };
+
     const handleReset = () => {
         setLogs(() => []);
         setLabelString(() => "");
@@ -143,13 +145,19 @@ const Raggix = (props: any) => {
         setIndex(() => e);
     };
 
-    const showLabels = (e: any) => {
+    const showLabels = (e: any) => { 
         const converted = convertLabelToString(e);
         setLabelString(() => converted);
     };
+
     const openLogs = (e: any) => {
         setOpen(() => e.target.checked);
     };
+
+    const handleToggleRaggix = () => { 
+        setRaggixOpen((prev:boolean)=>!prev)
+    }
+
     // update query sending query from button
 
     const handleQueryRequest = () => {
@@ -177,6 +185,7 @@ const Raggix = (props: any) => {
             }
         }
     };
+
     const launchLogs = () => {
         const end = Date.now();
         const start = end - rangeValue;
@@ -227,47 +236,54 @@ const Raggix = (props: any) => {
 
     return (
         <div className={cx(RaggixContainer(theme))}>
-            <div>
-                <HeaderSection
-                    theme={theme}
-                    loading={loading}
-                    isRecurrent={isRecurrent}
-                    open={open}
-                    openLogs={openLogs}
-                    handleRecurrent={handleRecurrent}
-                    handleReset={handleReset}
-                    launchLogs={launchLogs}
-                    rangeValue={rangeValue}
-                    setRangeValue={setRangeValue}
-                    setRecurrentValue={setRecurrentValue}
-                    recurrentValue={recurrentValue}
-                />
-                {labelString !== "" && (
-                    <div className={cx(QueryPreviewStyles(theme))}>
-                        <button onClick={handleQueryRequest}>Send Query</button>{" "}
-                        <code>{labelString}</code>
-                    </div>
-                )}
-            </div>
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
-                <LogsCounter
-                    theme={theme}
-                    showLabels={showLabels}
-                    loading={loading}
-                    logs={logs}
-                    openLog={openLog}
-                />
-            </div>
-            <div>
-                {logs && (
-                    <LogsList
-                        theme={theme}
-                        open={open}
-                        loading={loading}
-                        logs={logs[index]}
-                    />
-                )}
-            </div>
+        
+            <HeaderSection
+                theme={theme}
+                loading={loading}
+                isRecurrent={isRecurrent}
+                open={open}
+                openLogs={openLogs}
+                handleRecurrent={handleRecurrent}
+                handleReset={handleReset}
+                launchLogs={launchLogs}
+                rangeValue={rangeValue}
+                setRangeValue={setRangeValue}
+                setRecurrentValue={setRecurrentValue}
+                recurrentValue={recurrentValue}
+                handleToggleRaggix={handleToggleRaggix}
+                raggixOpen={raggixOpen}
+            />
+            
+            { raggixOpen && (
+          <div>
+          {labelString !== "" && (
+              <div className={cx(QueryPreviewStyles(theme))}>
+                  <button onClick={handleQueryRequest}>Send Query</button>{" "}
+                  <code>{labelString}</code>
+              </div>
+          )}
+          <div style={{ display: "flex", flexWrap: "wrap" }}>
+              <LogsCounter
+                  theme={theme}
+                  showLabels={showLabels}
+                  loading={loading}
+                  logs={logs}
+                  openLog={openLog}
+              />
+          </div>
+          <div>
+              {logs && (
+                  <LogsList
+                      theme={theme}
+                      open={open}
+                      loading={loading}
+                      logs={logs[index]}
+                  />
+              )}
+          </div>
+      </div>
+            )}
+  
         </div>
     );
 };
