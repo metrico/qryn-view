@@ -5,6 +5,9 @@
 
 # Qryn View
 
+![Raggix preview](https://user-images.githubusercontent.com/30432825/230057490-d3734042-d836-465a-89b0-9785d45a119e.png)
+
+
 
 # Qryn Raggix
 
