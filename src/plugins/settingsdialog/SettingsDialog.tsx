@@ -17,19 +17,23 @@ import {
     SettingsInputContainer,
     SettingLabel,
     SettingLabelSection,
+    SectionCont,
+    SwitchesCont,
     EmbedArea,
 } from "./styled";
 
 import setDebugMode from "../../actions/setDebugMode";
-import { css } from "@emotion/css";
+import { css, cx } from "@emotion/css";
 import { LocalPluginsManagement } from "../PluginManagerFactory";
-//import { PluginManager } from "../PluginManagerFactory";
 
 export const DialogStyles = css`
     background-color: transparent !important;
 `;
-
-// let plugins = PluginManager.getAllPlugins()
+export const InlineSwitch = css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`;
 
 type PluginSwitchProps = {
     name: string;
@@ -55,13 +59,7 @@ export const PluginSwitch: React.FC<PluginSwitchProps> = (props) => {
     };
 
     return (
-        <div
-            style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-            }}
-        >
+        <div className={cx(InlineSwitch)}>
             <SettingLabel>
                 {name}
                 <Tooltip title={description}>
@@ -83,6 +81,26 @@ export const PluginSwitch: React.FC<PluginSwitchProps> = (props) => {
     );
 };
 
+export const PluginSwitchesCont: React.FC<{
+    components: any[];
+    section: string;
+}> = ({ components, section }) => {
+    return (
+        <SectionCont>
+            {components?.length > 0 &&
+                components?.map((component: any, k: number) => (
+                    <PluginSwitch
+                        key={k}
+                        name={component.name}
+                        active={component.active}
+                        section={section}
+                        description={component.description}
+                    />
+                ))}
+        </SectionCont>
+    );
+};
+
 export const PluginsSwitches = () => {
     const pl = LocalPluginsManagement();
     const [local] = useState(pl.getAll());
@@ -91,12 +109,10 @@ export const PluginsSwitches = () => {
             return Object.entries(local);
         }
         return [];
-
-        //  return pl.getAll()
     }, [local]);
 
     return (
-        <div style={{ marginTop: "6px" }}>
+        <SwitchesCont>
             <InputGroup>
                 {plugins?.length > 0 &&
                     plugins?.map(
@@ -105,27 +121,15 @@ export const PluginsSwitches = () => {
                                 <SettingLabelSection>
                                     {section}
                                 </SettingLabelSection>
-                                <div>
-                                    {components?.length > 0 &&
-                                        components?.map(
-                                            (component: any, k: number) => (
-                                                <PluginSwitch
-                                                    key={k}
-                                                    name={component.name}
-                                                    active={component.active}
-                                                    section={section}
-                                                    description={
-                                                        component.description
-                                                    }
-                                                />
-                                            )
-                                        )}
-                                </div>
+                                <PluginSwitchesCont
+                                    components={components}
+                                    section={section}
+                                />
                             </div>
                         )
                     )}
             </InputGroup>
-        </div>
+        </SwitchesCont>
     );
 };
 
@@ -255,7 +259,7 @@ export default function SettingsDialog({ open, onClose }: any) {
                             onChange={handleEmbedChange}
                         ></EmbedArea>
                     </InputGroup>
-                    <SettingLabel>Plugins: </SettingLabel>
+                    <SettingLabel>Plugins </SettingLabel>
                     <PluginsSwitches />
                 </SettingsInputContainer>
             </SettingCont>
