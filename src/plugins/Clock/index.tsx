@@ -1,6 +1,9 @@
 import { css, cx } from '@emotion/css';
+import { nanoid } from 'nanoid';
 import React, { useState, useEffect } from 'react';
+import { Plugin } from '../types';
 import { useTheme } from '../../theme';
+
 
 const ClockStyles = (theme:any) => css`
     color:${theme.textColor};
@@ -31,4 +34,13 @@ const theme = useTheme()
   );
 };
 
-export default Clock;
+ const clockPlugin:Plugin  = {
+  name: "Clock",
+  section:"Status Bar",
+  id: nanoid(),
+  Component: Clock,
+  description:"A simple clock with date / time",
+  active:true,
+};
+
+export default clockPlugin

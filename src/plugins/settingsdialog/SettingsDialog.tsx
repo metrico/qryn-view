@@ -5,7 +5,7 @@ import { setTheme, setAutoTheme } from "../../actions";
 
 import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen";
 
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/Info";
@@ -16,11 +16,13 @@ import {
     SettingCloseBtn,
     SettingsInputContainer,
     SettingLabel,
+    SettingLabelSection,
     EmbedArea,
 } from "./styled";
 
 import setDebugMode from "../../actions/setDebugMode";
 import { css } from "@emotion/css";
+import { LocalPluginsManagement } from "../PluginManagerFactory";
 //import { PluginManager } from "../PluginManagerFactory";
 
 export const DialogStyles = css`
@@ -29,19 +31,104 @@ export const DialogStyles = css`
 
 // let plugins = PluginManager.getAllPlugins()
 
-export default function SettingsDialog({ open, onClose }: any) {
-    // console.log(plugins)
-    const plugins = useMemo(() => {
-        let pl = "{}";
-        try {
-            pl = localStorage.getItem("plugins") || "{}";
-            return JSON.parse(pl);
-        } catch (e) {
-            return JSON.parse("pl");
+type PluginSwitchProps = {
+    name: string;
+    active: boolean;
+    section: string;
+    description: string;
+};
+
+export const PluginSwitch: React.FC<PluginSwitchProps> = (props) => {
+    const { name, active, section, description } = props;
+
+    const pl = LocalPluginsManagement();
+
+    const [isActive, setIsActive] = useState(active);
+
+    const handlePluginSwitch = (
+        section: string,
+        name: string,
+        active: boolean
+    ) => {
+        setIsActive(() => !active);
+        pl.togglePlugin(section, name, !active);
+    };
+
+    return (
+        <div
+            style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+            }}
+        >
+            <SettingLabel>
+                {name}
+                <Tooltip title={description}>
+                    <InfoIcon
+                        style={{ marginLeft: "1px" }}
+                        fontSize={"inherit"}
+                    />
+                </Tooltip>
+            </SettingLabel>
+            <Switch
+                size={"small"}
+                checked={isActive}
+                onChange={(e) => handlePluginSwitch(section, name, isActive)}
+                inputProps={{
+                    "aria-label": "controlled",
+                }}
+            />
+        </div>
+    );
+};
+
+export const PluginsSwitches = () => {
+    const pl = LocalPluginsManagement();
+    const [local] = useState(pl.getAll());
+    const plugins: any = useMemo(() => {
+        if (Object.keys(local)?.length > 0) {
+            return Object.entries(local);
         }
-    }, []);
-    // console.log(plugins)
-    console.log(plugins)
+        return [];
+
+        //  return pl.getAll()
+    }, [local]);
+
+    return (
+        <div style={{ marginTop: "6px" }}>
+            <InputGroup>
+                {plugins?.length > 0 &&
+                    plugins?.map(
+                        ([section, components]: any, index: number) => (
+                            <div style={{ marginTop: "4px" }} key={index}>
+                                <SettingLabelSection>
+                                    {section}
+                                </SettingLabelSection>
+                                <div>
+                                    {components?.length > 0 &&
+                                        components?.map(
+                                            (component: any, k: number) => (
+                                                <PluginSwitch
+                                                    name={component.name}
+                                                    active={component.active}
+                                                    section={section}
+                                                    description={
+                                                        component.description
+                                                    }
+                                                />
+                                            )
+                                        )}
+                                </div>
+                            </div>
+                        )
+                    )}
+            </InputGroup>
+        </div>
+    );
+};
+
+export default function SettingsDialog({ open, onClose }: any) {
     const dispatch = useDispatch();
     const theme = useSelector((store: any) => store.theme);
     const autoTheme = useSelector((store: any) => store.autoTheme);
@@ -134,12 +221,14 @@ export default function SettingsDialog({ open, onClose }: any) {
                             disabled={autoThemeLocal}
                             inputProps={{ "aria-label": "controlled" }}
                         />
-                        <Tooltip title="Theme determined by your system preferenes">
-                            <SettingLabel>
-                                Automatic theme detection{" "}
-                                <InfoIcon fontSize={"inherit"} />{" "}
-                            </SettingLabel>
-                        </Tooltip>
+
+                        <SettingLabel>
+                            Automatic theme detection{" "}
+                            <Tooltip title="Theme determined by your system preferenes">
+                                <InfoIcon fontSize={"inherit"} />
+                            </Tooltip>
+                        </SettingLabel>
+
                         <Switch
                             size={"small"}
                             checked={autoThemeLocal}
@@ -165,9 +254,8 @@ export default function SettingsDialog({ open, onClose }: any) {
                             onChange={handleEmbedChange}
                         ></EmbedArea>
                     </InputGroup>
-                    <InputGroup>
-                        <SettingLabel>Plugins:</SettingLabel>
-                    </InputGroup>
+                    <SettingLabel>Plugins: </SettingLabel>
+                    <PluginsSwitches />
                 </SettingsInputContainer>
             </SettingCont>
         </Dialog>

@@ -1,6 +1,6 @@
 import store from "../store/store";
 import { setPlugins } from "./actions";
-
+import {Plugin} from './types'
 export interface ILocation {
     parent: string;
     children: string[];
@@ -191,4 +191,11 @@ export function PluginManagerFactory(locations: ILocations) {
 
 export const PluginManager = PluginManagerFactory(locations);
 
-// add an id for each plugin
+
+export function initPlugins(plugins:Plugin[]) {
+    plugins.forEach((plugin:any) => {
+            PluginManager.registerPlugin(plugin) 
+    })
+}
+
+

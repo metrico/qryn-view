@@ -55,6 +55,15 @@ export const SettingLabel: any = styled.label`
     margin-left: 10px;
 `;
 
+export const SettingLabelSection : any = styled.label`
+display:flex;
+font-size: 12px;
+margin-left: 10px;
+color: ${({ theme }: any) => theme.inputLabelColor};
+border-bottom: 1px solid ${({ theme }: any) => theme.buttonBorder};
+padding:2px;
+margin-bottom:2px;
+`
 export const SettingHeader: any = styled.div`
     display: flex;
     justify-content: space-between;
