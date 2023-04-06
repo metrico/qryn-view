@@ -15,7 +15,7 @@ const CustomEditor = styled(Editable)`
     border: 1px solid ${({ theme }: any) => theme.buttonBorder};
     color: ${({ theme }: any) => theme.textColor};
     padding: 4px 8px;
-    font-size: 1em;
+    font-size: 12px;
     font-family: monospace;
     margin: 0px 5px;
     border-radius: 3px;

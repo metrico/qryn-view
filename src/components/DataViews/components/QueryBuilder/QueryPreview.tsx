@@ -35,7 +35,7 @@ const CustomEditor = (theme: any) => css`
     background: ${theme.inputBg};
     color: ${theme.textColor};
     padding: 3px 6px;
-    font-size: 1em;
+    font-size: 12px;
     font-family: monospace;
     margin: 0px 5px;
     border-radius: 3px;

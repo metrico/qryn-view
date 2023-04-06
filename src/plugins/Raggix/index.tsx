@@ -21,7 +21,6 @@ const QueryPreviewStyles = (theme: any) => css`
     color: ${theme.textColor};
     font-family: monospace;
     font-size: 12px;
-    padding: 8px;
     padding-left: 0px;
     margin: 10px;
     border-radius: 3px;
@@ -45,13 +44,14 @@ const QueryPreviewStyles = (theme: any) => css`
         }
     }
     code {
-        padding-left: 3px;
+        padding-left: 8px;
         border: 1px solid ${theme.buttonBorder};
         flex: 1;
         border-radius: 3px;
         display: flex;
         align-items: center;
         background: ${theme.inputBg};
+        font-size:12px;
     }
 `;
 const RaggixContainer = (theme: any) => css`
@@ -91,7 +91,7 @@ export const useDataSourceConfig = (ds: any) => {
     }, [ds]);
 };
 
-const Raggix:React.FC = (props: any) => {
+const Raggix: React.FC = (props: any) => {
     const { setLaunchQuery } = props.localProps;
     const { data } = props?.localProps?.props;
     const { panel: name, id, dataSourceId } = data;
@@ -114,7 +114,7 @@ const Raggix:React.FC = (props: any) => {
     const [loading, setLoading] = useState(false);
     const [rangeValue, setRangeValue] = useState(5000);
     const [raggixOpen, setRaggixOpen] = useState(true);
-    const [labelString, setLabelString] = useState("");
+    const [labelString, setLabelString] = useState("Click on 'Launch' button to start start Raggix Lookup");
     const [isRecurrent, setIsRecurrent] = useState(false);
     const [recurrentValue, setRecurrentValue] = useState(30000);
     const [actTimestamp, setActTimestamp] = useState(Date.now());
@@ -257,14 +257,11 @@ const Raggix:React.FC = (props: any) => {
 
             {raggixOpen && (
                 <div>
-                    {labelString !== "" && (
-                        <div className={cx(QueryPreviewStyles(theme))}>
-                            <button onClick={handleQueryRequest}>
-                                Send Query
-                            </button>{" "}
-                            <code>{labelString}</code>
-                        </div>
-                    )}
+                    <div className={cx(QueryPreviewStyles(theme))}>
+                        <button onClick={handleQueryRequest}>Send Query</button>{" "}
+                        <code>{labelString}</code>
+                    </div>
+
                     <div style={{ display: "flex", flexWrap: "wrap" }}>
                         <LogsCounter
                             theme={theme}
@@ -295,7 +292,8 @@ const raggixPlugin: Plugin = {
     section: "Query Item",
     id: nanoid(),
     Component: Raggix,
-    description: "Qryn Raggix displays potential requests as squares on the screen.",
+    description:
+        "Qryn Raggix displays potential requests as squares on the screen.",
     active: true,
 };
 

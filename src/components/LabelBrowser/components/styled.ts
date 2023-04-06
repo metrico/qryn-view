@@ -47,7 +47,7 @@ export const ShowLabelsBtn: any = styled(BtnSmall)`
 
 export const QueryBarContainer: any = styled.div`
     display: flex;
-    padding: 0px 4px;
+    padding: 4px 8px;
     margin-left: 0px;
     flex-wrap: wrap;
     border-radius: 3px;

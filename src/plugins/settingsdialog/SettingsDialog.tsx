@@ -110,6 +110,7 @@ export const PluginsSwitches = () => {
                                         components?.map(
                                             (component: any, k: number) => (
                                                 <PluginSwitch
+                                                    key={k}
                                                     name={component.name}
                                                     active={component.active}
                                                     section={section}

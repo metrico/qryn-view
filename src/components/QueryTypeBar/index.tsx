@@ -14,7 +14,7 @@ import PluginRenderer from "../../plugins/PluginsRenderer";
 
 const QueryTypeCont = styled.div`
     display: flex;
-    padding: 4px 0px;
+    padding: 4px 8px;
    // background: ${(props: any) => props.theme.widgetContainer};
     color: ${(props: any) => props.color};
     height: 26px;
