@@ -114,7 +114,7 @@ const Raggix: React.FC = (props: any) => {
     const [loading, setLoading] = useState(false);
     const [rangeValue, setRangeValue] = useState(5000);
     const [raggixOpen, setRaggixOpen] = useState(true);
-    const [labelString, setLabelString] = useState("Click on 'Launch' button to start start Raggix Lookup");
+    const [labelString, setLabelString] = useState("Click on 'Launch' button to start Raggix Lookup");
     const [isRecurrent, setIsRecurrent] = useState(false);
     const [recurrentValue, setRecurrentValue] = useState(30000);
     const [actTimestamp, setActTimestamp] = useState(Date.now());
