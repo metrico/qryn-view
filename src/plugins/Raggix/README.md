@@ -9,7 +9,7 @@
 
 
 
-# Qryn Raggix
+### Qryn Raggix
 
 Qryn Raggix  is a feature that provides suggestions for potential requests that have results. This feature allows users to preview and select from a list of potential queries and provides logs and additional options for customizing and scheduling queries.
 
@@ -47,7 +47,6 @@ _Activate recurrent previews_
 1. Select the range of requests to display for previews using the select option provided.
 2. Switch on the "recurrent requests" feature to schedule automatic queries. Select the frequency and time range for the recurring query.
 
-We hope you find Qryn Raggix useful and efficient for your Qryn queries.
 
 ---
 
