@@ -310,7 +310,6 @@ export const QueryBar = (props: any) => {
     }, [expr]);
 
     useEffect(()=>{
-        console.log(props.launchQuery, "LaunchQuery")
         if(typeof props.launchQuery === "string") {
             setQueryInput(props.launchQuery);
             setQueryValue([
