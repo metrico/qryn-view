@@ -1,9 +1,6 @@
-import clockPlugin from "./Clock";
 import { initPlugins, PluginManager } from "./PluginManagerFactory";
+import clockPlugin from "./Clock";
 import raggixPlugin from "./Raggix";
-
-
-// load the imported plugins
 
 let plugins = [
     clockPlugin,

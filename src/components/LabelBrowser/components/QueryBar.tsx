@@ -99,7 +99,6 @@ export const QueryBar = (props: any) => {
             logsVolumeQuery,
         },
     } = props;
-    //    console.log(launchQuery)
     const { hash } = useLocation();
     const dispatch = useDispatch();
     const saveUrl = localUrl();
