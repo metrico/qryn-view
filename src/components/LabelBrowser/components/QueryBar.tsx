@@ -72,10 +72,9 @@ const maxWidth = css`
     max-width: 100%;
 `;
 
-
 /**
- * 
- * @param props 
+ *
+ * @param props
  * @returns The Main Query bar component
  */
 export const QueryBar = (props: any) => {
@@ -100,7 +99,7 @@ export const QueryBar = (props: any) => {
             logsVolumeQuery,
         },
     } = props;
-//    console.log(launchQuery)
+    //    console.log(launchQuery)
     const { hash } = useLocation();
     const dispatch = useDispatch();
     const saveUrl = localUrl();
@@ -347,10 +346,12 @@ export const QueryBar = (props: any) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [expr]);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (typeof launchQuery === "string") {
             setQueryInput(launchQuery);
-            setQueryValue([{ children: [{ text: DOMPurify.sanitize(launchQuery) }] }]);
+            setQueryValue([
+                { children: [{ text: DOMPurify.sanitize(launchQuery) }] },
+            ]);
             saveQuery();
             if (isLogsVolume) {
                 setLogsLevel(launchQuery, true);
@@ -358,9 +359,6 @@ export const QueryBar = (props: any) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [launchQuery]);
-
-   
-
 
     useEffect(() => {
         setLogsLevel(queryInput, isLogsVolume);
@@ -665,6 +663,13 @@ export const QueryBar = (props: any) => {
         );
         const panel = [...panelQuery];
 
+        if (dataSourceType === "logs") {
+            panel.forEach((query: any) => {
+                if (query.id === id) {
+                    query.browserOpen = false;
+                }
+            });
+        }
         dispatch(panelAction(name, panel));
 
         let { querySubmit, customStep, isMatrix } = getIntvalData(queryExpr);

@@ -51,7 +51,7 @@ const QueryPreviewStyles = (theme: any) => css`
         display: flex;
         align-items: center;
         background: ${theme.inputBg};
-        font-size:12px;
+        font-size: 12px;
     }
 `;
 const RaggixContainer = (theme: any) => css`
@@ -114,7 +114,9 @@ const Raggix: React.FC = (props: any) => {
     const [loading, setLoading] = useState(false);
     const [rangeValue, setRangeValue] = useState(5000);
     const [raggixOpen, setRaggixOpen] = useState(true);
-    const [labelString, setLabelString] = useState("Click on 'Launch' button to start Raggix Lookup");
+    const [labelString, setLabelString] = useState(
+        "Click on 'Launch' button to start Raggix Lookup"
+    );
     const [isRecurrent, setIsRecurrent] = useState(false);
     const [recurrentValue, setRecurrentValue] = useState(30000);
     const [actTimestamp, setActTimestamp] = useState(Date.now());
@@ -294,7 +296,7 @@ const raggixPlugin: Plugin = {
     Component: Raggix,
     description:
         "Qryn Raggix displays potential requests as squares on the screen.",
-    active: true,
+    active: false,
 };
 
 export default raggixPlugin;

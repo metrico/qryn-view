@@ -82,6 +82,7 @@ function traceRequest(data: any, value: any) {
             isBuilder: false,
             isLogsVolume:false,
             browserOpen: false,
+            open:true,
             labels: [],
             values: [],
             direction: "backwards",

@@ -197,6 +197,7 @@ export default function TracesSearch(props: any) {
             limit: urlState.limit,
             name,
             id,
+            open: true,
             direction: "forward",
             dataSourceId,
             url: `${dataSourceURL}/api/${urlString}`,

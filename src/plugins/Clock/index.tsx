@@ -40,7 +40,7 @@ const theme = useTheme()
   id: nanoid(),
   Component: Clock,
   description:"A simple clock with date / time",
-  active:true,
+  active:false,
 };
 
 export default clockPlugin
