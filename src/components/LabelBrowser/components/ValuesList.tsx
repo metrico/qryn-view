@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import styled from "@emotion/styled";
 import { ThemeProvider } from "@emotion/react";
 import LabelsSelector from "./LabelsSelector";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "../../../theme";
 
 const ErrorContainer = styled.div`
@@ -39,24 +39,13 @@ export const LabelsFetchError = () => {
 
 export const ValuesList: any = (props: any) => {
     const theme = useTheme();
-    const { name }: any = props;
-    const { id }: any = props.data;
-    const panelQuery = useSelector((store: any) => store[name]);
-    const browserOpen = useMemo(() => {
-        let isOpen = false;
-        const actQuery = panelQuery.find((f: any) => f.id === id);
-        isOpen = actQuery["browserOpen"];
-        return isOpen;
-    }, [panelQuery, id]);
+    const { browserOpen }: any = props.data;
 
     const [open, setOpen] = useState(browserOpen);
 
     useEffect(() => {
-        let isOpen = false;
-        const actQuery = panelQuery.find((f: any) => f.id === id);
-        isOpen = actQuery["browserOpen"];
-        setOpen(isOpen);
-    }, [panelQuery, id]);
+        setOpen(browserOpen);
+    }, [browserOpen]);
 
     return (
         open && (

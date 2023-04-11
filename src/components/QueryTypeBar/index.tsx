@@ -10,10 +10,11 @@ import { useLocation } from "react-router-dom";
 import { setLeftPanel } from "../../actions/setLeftPanel";
 import { setRightPanel } from "../../actions/setRightPanel";
 import { useTheme } from "../DataViews/components/QueryBuilder/hooks";
+import PluginRenderer from "../../plugins/PluginsRenderer";
 
 const QueryTypeCont = styled.div`
     display: flex;
-    padding: 4px 0px;
+    padding: 4px 8px;
    // background: ${(props: any) => props.theme.widgetContainer};
     color: ${(props: any) => props.color};
     height: 26px;
@@ -202,6 +203,7 @@ export default function QueryTypeBar(props: any) {
     return (
         <ThemeProvider theme={theme}>
             <QueryTypeCont>
+                <PluginRenderer section={"Query Options"} localProps={props}/>
                 <QueryTypeSwitch
                     label={"Query Type"}
                     options={SWITCH_OPTIONS}

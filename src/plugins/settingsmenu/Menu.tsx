@@ -101,6 +101,9 @@ export default function ClokiMenu() {
                     />{" "}
                     Query Settings
                 </MenuItem>
+
+
+                
                 {showDs && (
                     <Link
                         to="datasources"

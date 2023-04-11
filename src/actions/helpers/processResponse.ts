@@ -40,6 +40,7 @@ export const resetTraceData = (
         id,
         ts: Date.now(),
         queryType,
+        open:true
     };
     parseResponse(resultQuery);
 };
@@ -69,6 +70,7 @@ export async function processResponse(
                 dsType: type,
                 type,
                 panel,
+                open:true,
                 id,
                 ts: Date.now(),
                 queryType,
@@ -86,6 +88,7 @@ export async function processResponse(
                 type,
                 dsType: type,
                 panel,
+                open:true,
                 id,
                 ts: Date.now(),
                 queryType,
@@ -106,6 +109,7 @@ export async function processResponse(
                     dsType: type,
                     type,
                     panel,
+                    open:true,
                     id,
                     ts: Date.now(),
                     direction,
@@ -124,6 +128,7 @@ export async function processResponse(
             debugMode,
             queryType,
             dispatch,
+            open:true,
             type: "streams",
             dsType: type,
             panel,
@@ -160,6 +165,7 @@ export async function processResponse(
                     ...m,
                     hasStats: statsInfo?.hasStats || false,
                     statsData: statsInfo?.statsData || {},
+                    open:true,
                 };
             }
             return m;
@@ -177,6 +183,7 @@ export async function processResponse(
             dispatch,
             type: rtype,
             dsType: type,
+            open:true,
             panel,
             id,
             ts: Date.now(),

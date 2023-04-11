@@ -219,7 +219,7 @@ export default function initialState() {
                 pickerOpen: false, // range picker
             },
         ],
-
+        plugins:{},
         leftDataView: [],
         rightDataView: [],
         dataSources: settingsState()["hasDsSettings"]

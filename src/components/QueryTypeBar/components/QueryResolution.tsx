@@ -7,7 +7,6 @@ import { DEFAULT_RESOLUTION, RESOLUTION_OPTIONS } from "../helpers";
 const Label = styled.div`
     color: ${({theme}: any) => theme.textColor};
     background: ${({theme}: any) => theme.buttonInactive};
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -17,7 +16,6 @@ const Label = styled.div`
 
 const ResSelect = styled.select`
     cursor: pointer;
-
     position: relative;
     font-size: 14px;
     color: ${({theme}: any) => theme.textColor};

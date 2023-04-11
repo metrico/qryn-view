@@ -47,7 +47,7 @@ export const ShowLabelsBtn: any = styled(BtnSmall)`
 
 export const QueryBarContainer: any = styled.div`
     display: flex;
-    padding: 0px 4px;
+    padding: 4px 8px;
     margin-left: 0px;
     flex-wrap: wrap;
     border-radius: 3px;
@@ -56,7 +56,7 @@ export const ShowLogsBtn: any = styled(BtnSmall, {
     shouldForwardProp: prop => isPropValid(prop) && prop !== 'loading'
 })`
     background: ${(props) => props.loading ? '#44bcd8' : props.theme.primaryDark};
-    border: 1px solid ${(props) => props.theme.buttonBorder};
+    border: 1px solid ${(props) => props.theme.primaryBorder};
     color: ${(props) => props.theme.buttonText};
     margin-left: 5px;
     transition: 0.25s all;
@@ -150,6 +150,7 @@ export const SettingInput: any = styled(InputSmall)`
 `;
 export const SettingButton: any = styled(BtnSmall)`
     background: ${({ theme }: any) => theme.primaryDark};
+    border: 1px solid ${(props:any)=>props.theme.primaryBorder};
     color: ${({ theme }: any) => theme.buttonText};
     height: 30px;
     &:hover {
