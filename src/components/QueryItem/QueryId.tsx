@@ -11,7 +11,7 @@ export const QueryTitleStyles = (theme: any) => css`
     font-size: 12px;
     text-overflow: ellipsis;
     overflow: hidden;
-    width: 150px;
+    max-width: 100px;
     color: ${theme.textColor};
     background: transparent;
     border: none;

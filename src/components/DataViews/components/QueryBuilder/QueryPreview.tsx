@@ -19,7 +19,8 @@ const QueryPreviewContainer = (theme: any) => css`
     padding: 8px;
     display: flex;
     flex: 1;
-    align-items: center;
+
+    flex-direction: column;
     border-bottom: 1px solid ${theme.buttonBorder};
     background: ${theme.widgetContainer};
     label {
@@ -27,6 +28,20 @@ const QueryPreviewContainer = (theme: any) => css`
         color: ${theme.textColor};
 
         padding: 4px 10px;
+    }
+    .action-buttons {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        margin-top: 8px;
+        justify-content:flex-end;
+    }
+    @media (min-width: 420px) {
+        flex-direction: row;
+        align-items: center;
+        &.action-buttons {
+            margin-top: 0px;
+        }
     }
 `;
 
@@ -42,6 +57,9 @@ const CustomEditor = (theme: any) => css`
     line-height: 1.5;
     line-break: anywhere;
     overflow-y: scroll;
+    @media (max-width: 420px) {
+      margin:0px;
+    }
 `;
 function Leaf({ attributes, children, leaf, theme }: any) {
     return (
@@ -209,8 +227,10 @@ export default function QueryPreview(props: Props) {
                     placeholder={queryText}
                 />
             </Slate>
-            {searchButton}
-            {logsRateButton}
+            <div className="action-buttons">
+                {logsRateButton}
+                {searchButton}
+            </div>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-
+import { css, cx } from "@emotion/css";
 import {
     addMonths,
     isSameDay,
@@ -39,6 +39,32 @@ import TimeLabel from "./components/TimeLabel";
 import { DatePickerButton } from "../../styled";
 import { useTheme } from "../../../DataViews/components/QueryBuilder/hooks";
 import { useMediaQuery } from "react-responsive";
+
+export const DTStyles = css`
+    svg {
+        font-size: 1.15em;
+        margin: 0px 2px;
+    }
+    .tooltip {
+        background-color: red;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+    }
+
+    @media screen and (max-width: 1200px) {
+        font-size: 1em;
+        padding: 8px;
+        color: #ddd;
+        line-height: 1.5;
+        svg {
+            margin-right: 0;
+        }
+        span {
+            display: none;
+        }
+    }
+`;
 
 export const timeDateRangeFromLocal = (item: string) => {
     try {
@@ -343,7 +369,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                         }}
                         attachedside={"r"}
                         emptySide={"l"}
-                        className={"date-time-selector"}
+                        className={cx(DTStyles)}
                     >
                         <KeyboardArrowLeft />
                     </DatePickerButton>
@@ -351,7 +377,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                         onClick={handleClick}
                         attachedside={"both"}
                         size={"small"}
-                        className={"date-time-selector"}
+                        className={cx(DTStyles)}
                         aria-controls={open ? "backward-menu" : undefined}
                         aria-haspopup="true"
                         aria-expanded={open ? "true" : undefined}
@@ -383,7 +409,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
             <Tooltip title={label ? <TimeLabel dateRange={dateRange} /> : ""}>
                 <DatePickerButton
                     onClick={openButtonHandler}
-                    className={"date-time-selector"}
+                    className={cx(DTStyles)}
                     attachedside={"both"}
                 >
                     <AccessTimeOutlinedIcon />
@@ -416,7 +442,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                         onClick={handleClickRight}
                         id={`forward-button-${id}`}
                         size={"small"}
-                        className={"date-time-selector"}
+                        className={cx(DTStyles)}
                         aria-controls={
                             openRight ? `forward-menu${id}` : undefined
                         }
@@ -450,7 +476,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                             adjustTimeRange("forward");
                         }}
                         attachedside={"l"}
-                        className={"date-time-selector"}
+                        className={cx(DTStyles)}
                     >
                         <KeyboardArrowRight />
                     </DatePickerButton>

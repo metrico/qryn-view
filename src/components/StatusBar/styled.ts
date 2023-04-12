@@ -123,14 +123,9 @@ export const DatePickerButton: any = styled(BtnSmall)`
     background: ${(props: any) => props.theme.buttonDefault};
     border: 1px solid ${(props: any) => props.theme.buttonBorder};
     color: ${(props: any) => props.theme.textColor};
-    border-top-left-radius: ${(props: any) => props.attachedSide === 'l' || props.attachedSide === 'both' ? '0 !important' : ''};
-    border-top-right-radius: ${(props: any) => props.attachedSide === 'r' || props.attachedSide === 'both' ? '0 !important' : ''};
-    border-bottom-left-radius: ${(props: any) => props.attachedSide === 'l' || props.attachedSide === 'both' ? '0 !important' : ''};
-    border-bottom-right-radius: ${(props: any) => props.attachedSide === 'r' || props.attachedSide === 'both' ? '0 !important' : ''};
-    border-right: ${(props: any) => props.attachedSide === 'r' || props.attachedSide === 'both' ? 'unset' : ''};
+    border-radius: 3px;
     height: 26px;
-    margin-left: ${(props: any) => props.emptySide === 'l' || props.emptySide === 'both' ? '10px' : props.attachedSide === 'l' || props.attachedSide === 'both' ? "0px !important" : ''};
-    margin-right: ${(props: any) => props.emptySide === 'r' || props.emptySide === 'both' ? '10px' : props.attachedSide === 'r' || props.attachedSide === 'both' ? "0px !important" : ''};
+    margin:0px 1px;
     padding: ${(props: any) => props.size === 'small' ? '3px 5px' : ''};
     span {
         margin-left: 5px;
