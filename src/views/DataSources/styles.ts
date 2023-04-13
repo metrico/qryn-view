@@ -231,7 +231,7 @@ export const DsButtonStyled: any = styled(BtnSmall)`
         cursor: not-allowed;
         color: ${({ theme }: any) => theme.textColor};
     }
-    @media screen and (max-width: 864px) {
+    @media screen and (max-width: 1070px) {
         display: flex;
 
         margin: 0;

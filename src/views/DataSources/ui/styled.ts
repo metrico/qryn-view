@@ -23,7 +23,7 @@ export const DsButtonStyled = styled(BtnSmall)`
         cursor: not-allowed;
         color: ${({theme}: any) => theme.textColor};
     }
-    @media screen and (max-width: 864px) {
+    @media screen and (max-width: 1070px) {
         display: ${(props: any) => props.isMobile ? "flex" : "none"};
 
         margin: 0;

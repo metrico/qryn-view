@@ -146,7 +146,7 @@ export function AuthFields(props: any) {
                             return (
                                 <QrynSwitch
                                     label={field.label}
-                                    value={DOMPurify.sanitize(field.value)}
+                                    value={field.value}
                                     onChange={(e: any) =>
                                         onSwitchChange(e, field.name)
                                     }

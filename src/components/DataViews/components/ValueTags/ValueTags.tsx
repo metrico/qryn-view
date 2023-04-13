@@ -21,7 +21,7 @@ import { useTheme } from "../../../../theme";
 
 export default function ValueTags(props: any) {
     const { tags, actQuery, dataSourceData, linkedFieldTags } = props;
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
     //  const dataSources = useSelector((store: any) => store.dataSources);
     const theme = useTheme();
     const isEmbed = useSelector((store: any) => store.isEmbed);

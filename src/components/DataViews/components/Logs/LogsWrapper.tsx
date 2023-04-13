@@ -16,7 +16,7 @@ export function LogsWrapper(props: ILogsProps) {
     const { items, toggleItemActive, actQuery, dataSourceId } = props;
     const { splitted } = actQuery;
     const itemData = createItemData(items, toggleItemActive);
-    const isMobile = useMediaQuery({ query: "(max-width: 914px)" });
+    const isMobile = useMediaQuery({ query: "(max-width: 1013px)" });
     const dataSourceData = useSelector(({ dataSources }: any) =>
         dataSources?.find((f: any) => f.id === dataSourceId)
     );

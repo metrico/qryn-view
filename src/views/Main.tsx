@@ -64,7 +64,7 @@ export default function Main() {
         );
     }, [cookiesAvailable]);
 
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
     const isAutoDark = useMediaQuery({ query: "(prefers-color-scheme: dark)" });
     const dispatch = useDispatch();
     const isSplit = useSelector((store: any) => store.isSplit);

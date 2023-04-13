@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import DOMPurify from 'isomorphic-dompurify'
+import DOMPurify from "isomorphic-dompurify";
 import {
     DataSourceHeaders,
     LinkedFields,
@@ -23,10 +23,15 @@ export const Settings = (props: any) => {
         protocol: false,
     });
     const onFieldChange = (prop: any, value: any) => {
+        let val = value;
+        if (prop === "url") {
+            const strippedValue = value.replace(/\/$/, "");
+            val = strippedValue;
+        }
         const arrayClone = JSON.parse(JSON.stringify(state));
         arrayClone.forEach((field: any) => {
             if (field.id === id) {
-                field[prop] = value;
+                field[prop] = val;
             }
         });
 

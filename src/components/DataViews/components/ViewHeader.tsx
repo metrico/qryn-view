@@ -12,7 +12,7 @@ import { useTheme } from "./QueryBuilder/hooks";
 
 export function ViewHeader(props: any) {
     const { fixedSize } = props || { fixedSize: false };
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
     const [open, setOpen] = useState(false);
     const [viewOpen, setViewOpen] = useState(true);
 

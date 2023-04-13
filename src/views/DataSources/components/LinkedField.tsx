@@ -84,7 +84,7 @@ export const LinkedField = (props:any) => {
 
     const onSwitchChange = (e:any, name:any) => {
         fieldEditing()
-        const value = e.target.checked;
+        const value = Boolean(e.target.checked);
 
         const newVal = onLinkedFieldChange(name, value);
         localStorage.setItem("dataSources", JSON.stringify(newVal));
@@ -125,7 +125,7 @@ export const LinkedField = (props:any) => {
 
             <InputCol className="internal">
                 <QrynSwitch
-                    value={DOMPurify.sanitize(internalLink)}
+                    value={internalLink}
                     label={"Internal Link"}
                     onChange={(e:any) => onSwitchChange(e, "internalLink")}
                 />

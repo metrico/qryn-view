@@ -66,7 +66,9 @@ export const DataSourcesFiller = (props: any) => {
     const theme = useTheme();
 
     const urlChange = (e: any) => {
-        setUrl(() => e.target.value);
+           const value = e?.target?.value || "";
+    const strippedValue = value.replace(/\/$/, '');
+        setUrl(() => strippedValue);
     };
     const userChange = (e: any) => {
         setUser(() => e.target.value);

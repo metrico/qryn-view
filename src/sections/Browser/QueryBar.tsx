@@ -69,7 +69,7 @@ export const QueryBar = (props: any) => {
     );
     const isSplit = useSelector((store: any) => store.isSplit);
     const panelQuery = useSelector((store: any) => store[name]);
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 864px)" });
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1070px)" });
     const [queryInput, setQueryInput] = useState<any>(data.expr);
     const [queryValid, setQueryValid] = useState<any>(false);
     const [queryValue, setQueryValue] = useState<any>(queryInit(data.expr));

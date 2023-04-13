@@ -51,7 +51,7 @@ function traceRequest(data: any, value: any) {
     const actPanel = store.getState()[data.panel];
     const rightPanel = store.getState()["right"];
 
-    const isTabletOrMobile = window.innerWidth <= 914
+    const isTabletOrMobile = window.innerWidth <= 1013
     const actQuery = actPanel.find((f: any) => f.id === data.id);
 
     if (data.panel === "left" && !isTabletOrMobile) {

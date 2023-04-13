@@ -2,11 +2,11 @@ import { queryBuilderWithLabels } from "../../../LabelBrowser/helpers/querybuild
 
 /**
  * Checks for existing key/value pair
- * @param exp 
- * @param op 
- * @param k 
- * @param v 
- * @returns 
+ * @param exp
+ * @param op
+ * @param k
+ * @param v
+ * @returns
  */
 function alreadyExists(exp: any, op: any, k: any, v: any) {
     return exp.includes(`${k}${op}"${v}"`);
@@ -14,12 +14,12 @@ function alreadyExists(exp: any, op: any, k: any, v: any) {
 
 /**
  * adds Label into query preview
- * @param e 
- * @param key 
- * @param value 
- * @param isExcluded 
- * @param queryObj 
- * @returns 
+ * @param e
+ * @param key
+ * @param value
+ * @param isExcluded
+ * @param queryObj
+ * @returns
  */
 export async function addLabel(
     e: any,
@@ -28,7 +28,6 @@ export async function addLabel(
     isExcluded = false,
     queryObj: any
 ) {
-
     e.preventDefault();
     e.stopPropagation();
     const { expr, panel, id, dataSourceType } = queryObj;
@@ -52,13 +51,13 @@ export async function addLabel(
 
 /**
  * Gets Linked Filed Tags fields
- * @param linkedFieldTags 
- * @returns 
+ * @param linkedFieldTags
+ * @returns
  */
 export function getLinkedFieldTagsFileds(linkedFieldTags: any) {
     return (
         linkedFieldTags?.fields
-            .map((m: any) => {
+            ?.map((m: any) => {
                 if (m?.tagGroups) {
                     const tagEntries = Object.entries(m?.tagGroups);
                     const entriesMapped = tagEntries?.map(([key, val]) => ({

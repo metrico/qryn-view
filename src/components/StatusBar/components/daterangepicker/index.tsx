@@ -39,6 +39,7 @@ import TimeLabel from "./components/TimeLabel";
 import { DatePickerButton } from "../../styled";
 import { useTheme } from "../../../DataViews/components/QueryBuilder/hooks";
 import { useMediaQuery } from "react-responsive";
+import { useSelector } from "react-redux";
 
 export const DTStyles = css`
     svg {
@@ -146,7 +147,8 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
         pickerOpen,
         onPickerOpen,
     } = props;
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
+    const isSplit = useSelector((store:any)=> store.isSplit);
     const theme = useTheme();
     const initialDateRange = () => {
         try {
@@ -359,9 +361,11 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
             adjustTimeRange(direction, option);
         }
     };
+
+    console.log(dateRange,label)
     return (
         <div style={{ display: "flex" }}>
-            {!isTabletOrMobile && (
+            {(!isTabletOrMobile || !isSplit) && (
                 <>
                     <DatePickerButton
                         onClick={() => {
@@ -436,7 +440,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                 </DatePickerButton>
             </Tooltip>
 
-            {!isTabletOrMobile && (
+            {(!isTabletOrMobile || !isSplit) && (
                 <>
                     <DatePickerButton
                         onClick={handleClickRight}

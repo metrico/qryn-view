@@ -20,7 +20,7 @@ export const HistoryButtonStyled: any = styled(BtnSmall)`
     span {
         margin-left: 5px;
     }
-    @media screen and (max-width: 864px) {
+    @media screen and (max-width: 1070px) {
         display: flex;
     }
 `;
@@ -37,7 +37,7 @@ export const ShowLabelsBtn: any = styled(BtnSmall)`
     &:hover {
         background: ${({ theme }: any) => theme.buttonHover};
     }
-    @media screen and (max-width: 864px) {
+    @media screen and (max-width: 1070px) {
         display: ${({ isMobile }: { isMobile: boolean }) =>
             isMobile ? "flex" : "none"};
 
@@ -74,7 +74,7 @@ export const ShowLogsBtn: any = styled(BtnSmall, {
         cursor: not-allowed;
         color: ${(props: any) => props.theme.textColor};
     }
-    @media screen and (max-width: 864px) {
+    @media screen and (max-width: 1070px) {
         display: flex;
 
         margin: 0;
@@ -101,7 +101,7 @@ export const MobileTopQueryMenu: any = styled.div`
         props.isSplit || props.dataSourceType === "flux" ? "flex" : "none"};
     flex-wrap: wrap;
 
-    @media screen and (max-width: 864px) {
+    @media screen and (max-width: 1070px) {
         display: flex;
     }
 `;

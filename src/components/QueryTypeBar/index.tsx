@@ -44,6 +44,7 @@ export const DIRECTION_SWITCH_OPTIONS = [
 // direction
 // query limit
 // logs volume
+
 export default function QueryTypeBar(props: any) {
     const dispatch = useDispatch();
     const { name, data } = props;

@@ -32,7 +32,7 @@ export function QueryItemToolbar(props: any) {
     const isEmbed = useSelector((store: any) => store.isEmbed);
     const isSplit = useSelector((store: any) => store.isSplit);
     const dataSources = useSelector((store: any) => store.dataSources);
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
     const [extValue, setExtValue] = useState(props.data.dataSourceId);
 
     const dataSourceOptions = useMemo(() => {

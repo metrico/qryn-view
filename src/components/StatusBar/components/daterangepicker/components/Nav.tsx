@@ -111,8 +111,8 @@ export const PickerNav = (props: any) => {
     const [editedEndDate, setEditedEndDate] = useState(dateRange.dateEnd);
     const [relativeOpen, setRelativeOpen] = useState(true);
     const [rangeLabel] = useState(dateRange.label);
-    const isBigScreen = useMediaQuery({ query: "(min-width: 914px)" });
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+    const isBigScreen = useMediaQuery({ query: "(min-width: 1013px)" });
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
     const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
     const isSplit = useSelector((store: any) => store.isSplit);
     const [startCalendar, setStartCalendar] = useState(false);

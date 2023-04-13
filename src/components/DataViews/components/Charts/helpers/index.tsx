@@ -104,7 +104,7 @@ export function getTimeSpan(data: any): TimeSpan {
     const last = tsArray[tsArray.length - 1];
     const timeDiff = last - first;
 
-    const timeSpan = timeDiff / 1000 / 86400;
+    const timeSpan = timeDiff / 1000 / 107000;
 
     return {
         first,
