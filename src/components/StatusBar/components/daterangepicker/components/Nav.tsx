@@ -103,6 +103,11 @@ export const PickerNav = (props: any) => {
     } = props;
     const theme = useTheme();
     const [calendarOpen, setCalendarOpen] = useState(false);
+    const defaultRange = {
+        label: "Last 5 minutes",
+        dateStart: new Date(Date.now()-5 * 60000),
+        dateEnd: new Date(Date.now())
+    }
     const canNavigateCloser =
         differenceInCalendarMonths(secondMonth, firstMonth) >= 2;
     const commonProps = { dateRange, minDate, maxDate, helpers, handlers };
@@ -110,7 +115,7 @@ export const PickerNav = (props: any) => {
     const [editedStartDate, setEditedStartDate] = useState(dateRange.dateStart);
     const [editedEndDate, setEditedEndDate] = useState(dateRange.dateEnd);
     const [relativeOpen, setRelativeOpen] = useState(true);
-    const [rangeLabel] = useState(dateRange.label);
+    const [rangeLabel] = useState(dateRange.label) || defaultRange.label;
     const isBigScreen = useMediaQuery({ query: "(min-width: 1013px)" });
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
     const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });

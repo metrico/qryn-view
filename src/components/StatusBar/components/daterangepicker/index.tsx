@@ -150,9 +150,19 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
     const isSplit = useSelector((store:any)=> store.isSplit);
     const theme = useTheme();
+    const defaultRange = {
+        label: 'Last 5 minutes',
+        dateStart: new Date(Date.now()-5 * 60000),
+        dateEnd: new Date(Date.now())
+    }
     const initialDateRange = () => {
         try {
             const ls = timeDateRangeFromLocal(DATE_TIME_RANGE);
+
+            if(!ls) {
+                return defaultRange
+            }
+           
             if (ls?.label !== "" && typeof ls.label !== "undefined") {
                 const range: any = findRangeByLabel(ls?.label);
                 ls.dateStart = range.dateStart;
