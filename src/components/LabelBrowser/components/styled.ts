@@ -95,8 +95,7 @@ export const ShowSettingsBtn: any = styled(BtnSmall)`
 `;
 
 export const MobileTopQueryMenu: any = styled.div`
-    display: ${(props:any) =>
-        props.isSplit || props.dataSourceType === "flux" ? "flex" : "none"};
+    display: flex;
     flex-wrap: wrap;
 
     @media screen and (max-width: 1070px) {

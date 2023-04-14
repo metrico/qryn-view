@@ -267,7 +267,10 @@ export function QueryItemToolbar(props: any) {
                             side={props.name}
                         />
                     )}
-                    <PluginRenderer section={'Query Toolbar'} localProps={props} />
+                    <PluginRenderer
+                        section={"Query Toolbar"}
+                        localProps={props}
+                    />
 
                     <DataSourceSelect
                         extValue={extValue}

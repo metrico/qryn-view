@@ -201,6 +201,9 @@ export const QueryBar = (props: any) => {
         if (isTabletOrMobile && isSplit) {
             dispatch(setSplitView(false));
         }
+        if(!isTabletOrMobile && isSplit) {
+            dispatch(setSplitView(true))
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isTabletOrMobile]);
 
@@ -788,7 +791,7 @@ export const QueryBar = (props: any) => {
         const isFullView = !isMobile && !isSplit;
         const isMetrics = type === "metrics" || type === "logs";
 
-        if (isFullView && isMetrics) {
+        if (isFullView && isMetrics && !isSplit) {
             return typeBar;
         }
         return null;
@@ -875,8 +878,8 @@ export const QueryBar = (props: any) => {
     return (
         <div className={cx(maxWidth)} id={id}>
             <ThemeProvider theme={theme}>
-                {dataSourceType !== "metrics" &&
-                    dataSourceType !== "traces" && (
+                { (dataSourceType !== "metrics" &&
+                    dataSourceType !== "traces") && (
                         <MobileTopQueryMenuCont
                             {...props}
                             isSplit={splitted}

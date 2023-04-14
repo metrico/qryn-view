@@ -108,7 +108,6 @@ export const QueryBar = (props: any) => {
         (store: any) => store
     );
     const isSplit = useSelector((store: any) => store.isSplit);
-    console.log(isSplit);
     const panelQuery = useSelector((store: any) => store[name]);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1070px)" });
     const [queryInput, setQueryInput] = useState<any>(data.expr);
@@ -908,7 +907,8 @@ export const QueryBar = (props: any) => {
         <div className={cx(maxWidth)} id={id}>
             <ThemeProvider theme={theme}>
                 {dataSourceType !== "metrics" &&
-                    dataSourceType !== "traces" && (
+                    dataSourceType !== "traces" &&
+                    (isTabletOrMobile || isSplit) && (
                         <MobileTopQueryMenuCont
                             {...props}
                             isSplit={splitted}
@@ -916,6 +916,7 @@ export const QueryBar = (props: any) => {
                             showQuerySettings={showQuerySettings}
                             queryHistory={queryHistory}
                             handleHistoryClick={handleHistoryClick}
+                            isTabletOrMobile={isTabletOrMobile}
                             queryValid={queryValid}
                             onSubmit={onSubmit}
                             onSubmitRate={onSubmitRate}
@@ -1028,12 +1029,13 @@ export const QueryBar = (props: any) => {
                     />
                 )}
 
-                {!isSplit && inlineQueryOptionsRenderer(
-                    dataSourceType,
-                    splitted,
-                    isTabletOrMobile,
-                    <QueryTypeBar {...props} />
-                )}
+                {!isSplit &&
+                    inlineQueryOptionsRenderer(
+                        dataSourceType,
+                        splitted,
+                        isTabletOrMobile,
+                        <QueryTypeBar {...props} />
+                    )}
 
                 {querySettingRenderer(
                     isTabletOrMobile,
@@ -1072,7 +1074,7 @@ export const QueryBarCont = (props: any) => {
         loading,
     } = props;
     const buttonsHidden = () =>
-        !isSplit &&
+        isSplit &&
         !isTabletOrMobile &&
         dataSourceType !== "flux" &&
         dataSourceType !== "traces";
@@ -1188,7 +1190,7 @@ export const MobileTopQueryMenuCont = (props: any) => {
         }
     };
     return (
-        <MobileTopQueryMenu isSplit={isSplit} dataSourceType={dataSourceType}>
+        <MobileTopQueryMenu>
             {withLabels(dataSourceType)}
 
             <HistoryButton

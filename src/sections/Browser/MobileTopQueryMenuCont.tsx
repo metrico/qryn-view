@@ -71,7 +71,6 @@ export const MobileTopQueryMenuCont = (props: any) => {
     return (
         <MobileTopQueryMenu isSplit={isSplit} dataSourceType={dataSourceType}>
             {withLabels(dataSourceType)}
-
             <HistoryButton
                 queryLength={queryHistory?.length}
                 handleHistoryClick={handleHistoryClick}

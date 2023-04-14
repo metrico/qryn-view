@@ -372,10 +372,9 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
         }
     };
 
-    console.log(dateRange,label)
     return (
         <div style={{ display: "flex" }}>
-            {(!isTabletOrMobile || !isSplit) && (
+            {(!isTabletOrMobile && !isSplit) && (
                 <>
                     <DatePickerButton
                         onClick={() => {
@@ -450,7 +449,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                 </DatePickerButton>
             </Tooltip>
 
-            {(!isTabletOrMobile || !isSplit) && (
+            {(!isTabletOrMobile && !isSplit) && (
                 <>
                     <DatePickerButton
                         onClick={handleClickRight}
