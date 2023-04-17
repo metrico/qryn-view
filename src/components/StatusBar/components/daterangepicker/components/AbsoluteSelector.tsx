@@ -24,6 +24,10 @@ const SelectorsContainer: any = styled.div`
         .input-group {
             display: flex;
             margin-bottom: 20px;
+            input {
+                background:${(props:any)=> props.theme.inputBg};
+                color:${(props:any)=> props.theme.textColor};
+            }
             .date-time-ranged {
                 font-size: 14px;
                 width: 170px;
