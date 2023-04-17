@@ -1058,7 +1058,6 @@ export const QueryBar = (props: any) => {
 
 export const QueryBarCont = (props: any) => {
     const {
-        isSplit,
         isTabletOrMobile,
         isBuilder,
         dataSourceType,
@@ -1073,14 +1072,14 @@ export const QueryBarCont = (props: any) => {
         onSubmitRate,
         loading,
     } = props;
+    const isSplit = useSelector((store:any)=> store.isSplit)
+    const dType = (type: string) => dataSourceType === type;
     const buttonsHidden = () =>
-        isSplit &&
-        !isTabletOrMobile &&
-        dataSourceType !== "flux" &&
-        dataSourceType !== "traces";
+        !isSplit && dataSourceType !== "flux" && dataSourceType !== "traces";
+
     return (
         <QueryBarContainer>
-            {buttonsHidden() && dataSourceType === "logs" && !isBuilder && (
+            {!isTabletOrMobile && !isSplit && !isBuilder && dType("logs") && (
                 <ShowLabelsButton {...props} />
             )}
             {(dataSourceType !== "logs" || !isBuilder) &&
@@ -1116,7 +1115,7 @@ export const QueryBarCont = (props: any) => {
             )}
             {dataSourceType === "traces" &&
                 dataSourceType === "metrics" &&
-                isSplit && (
+                 (
                     <>
                         <ShowLogsButton
                             disabled={!queryValid}
@@ -1125,7 +1124,7 @@ export const QueryBarCont = (props: any) => {
                             loading={loading || false}
                         />
                     </>
-                )}
+                )} 
         </QueryBarContainer>
     );
 };
