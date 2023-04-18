@@ -93,6 +93,7 @@ export function updateDataSourcesWithUrl(
 
 export const getAxiosConf = (datasource: any) => {
     let conf: any = {};
+    let cors = datasource?.cors || false
     let extraheaders = getDsHeaders(datasource);
     const headers = {
         ...extraheaders,
@@ -100,11 +101,13 @@ export const getAxiosConf = (datasource: any) => {
         Accept: "application/json",
     };
 
-    const options = {
+    const options:any = {
         method: "GET",
         headers: headers,
     };
-
+    if(cors === true ) {
+        options.mode = 'cors'
+    }
     conf.options = options;
     conf.headers = headers;
     conf.validateStatus = (status: number) => {

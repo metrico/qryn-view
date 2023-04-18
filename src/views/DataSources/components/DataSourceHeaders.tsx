@@ -3,17 +3,35 @@ import { nanoid } from "nanoid";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import setDataSources from "../store/setDataSources";
-import { InputCol, InputGroup } from "../styles";
+import { InputCol, InputGroup, Label } from "../styles";
 import { Field } from "../ui";
 import { SectionHeader } from "./SectionHeader";
-import DOMPurify from 'isomorphic-dompurify'
+import DOMPurify from "isomorphic-dompurify";
+import { Switch } from "@mui/material";
 
 export const DataSourceHeaders = (props: any) => {
     const dispatch = useDispatch();
 
     const dataSources = useSelector((store: any) => store.dataSources);
     const [editing, setEditing] = useState(false);
+
     const { headers, id } = props;
+    const [cors, setCors] = useState(props?.cors || false);
+
+    const onCorsChange = (e: any) => {
+        const value = e.target.checked;
+
+        const newDataSources = dataSources.map((ds: any) => {
+            if (ds.id === id) {
+                ds.cors = value;
+            }
+            return ds;
+        });
+        setCors(() => value);
+        localStorage.setItem("dataSources", JSON.stringify(newDataSources));
+        dispatch(setDataSources(newDataSources));
+    };
+
     const onChange = (e: any, headerId: any, name: any) => {
         setEditing(() => true);
         const value = e.target.value; // identify value changed
@@ -99,6 +117,14 @@ export const DataSourceHeaders = (props: any) => {
                         isEditing={editing}
                         onClickAdd={onAdd}
                     />
+                    <InputCol>
+                        <Label>Use CORS</Label>{" "}
+                        <Switch
+                            size={"small"}
+                            checked={cors}
+                            onChange={onCorsChange}
+                        />
+                    </InputCol>
 
                     {headers?.map((val: any, key: any) => (
                         <InputCol key={key}>

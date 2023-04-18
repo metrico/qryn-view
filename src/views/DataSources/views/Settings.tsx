@@ -13,7 +13,7 @@ import { DataSourceSettingsCont, InputCont, InputCol } from "../styles";
 import { Field } from "../ui";
 
 export const Settings = (props: any) => {
-    const { headers, id, linkedFields, name, url }: any = props;
+    const { headers, id, linkedFields, name, url, cors }: any = props;
 
     const dispatch = useDispatch();
 
@@ -117,7 +117,7 @@ export const Settings = (props: any) => {
 
             <AuthFields {...props} />
 
-            <DataSourceHeaders headers={headers} id={id} />
+            <DataSourceHeaders cors={cors} headers={headers} id={id} />
 
             <LinkedFields {...props} linkedFields={linkedFields} />
         </DataSourceSettingsCont>

@@ -63,6 +63,7 @@ export function DataSourceSetting(props: any) {
         // uncomment for testing cookies feature
 
         localStorage.setItem("dataSources", JSON.stringify(newDs));
+        
         dispatch(setDataSources(newDs));
         dispatch(
             createAlert({
