@@ -1,14 +1,14 @@
 import { nanoid } from "nanoid";
 import { Plugin } from "../types";
 import { useTheme } from "../../theme";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { cx, css } from "@emotion/css";
-// import testJSON from "./test.json";
-// const api = (apiUrl: string) => ({
-//     get: () => `${apiUrl}/reports/loki`,
-//     post: () => `${apiUrl}/reports/loki`,
-//     delete: (id: any) => `${apiUrl}/reports/loki?id=${id}`,
-// });
+import axios from "axios";
+import useDataSources from "./useDataSources";
+import useDataSourceConfig from "./useDataSourceConfig";
+import InfoIcon from "@mui/icons-material/Info";
+import { Switch } from "@mui/material";
+
 
 export const AggregationsResponseStyles = (theme: any) => css`
     display: flex;
@@ -22,8 +22,8 @@ export const AggregationsResponseStyles = (theme: any) => css`
         justify-content: space-between;
         p {
             display: flex;
-            font-size:14px;
-           
+            font-size: 14px;
+
             flex: 1;
         }
         .res-name {
@@ -43,7 +43,7 @@ export const AggregationsResponseStyles = (theme: any) => css`
         line-height: 1.5;
         display: flex;
         flex-direction: column;
-        height: 200px;
+        max-height: 500px;
         overflow: hidden;
         overflow-y: scroll;
         code {
@@ -55,42 +55,75 @@ export const AggregationsResponseStyles = (theme: any) => css`
             flex: 1;
             padding: 8px 0px;
             border-bottom: 1px solid ${theme.buttonBorder};
+
             .res-name {
                 flex: 3;
-                p{
-                    margin-bottom:10px;
-                
+                cursor: pointer;
+                &:hover {
+                    background: ${theme.widgetContainer};
                 }
-                .log{
-                        margin-bottom:4px;
-                    }
+                p {
+                    margin-bottom: 10px;
+                }
+                .log {
+                    margin-bottom: 4px;
+                }
             }
             .res-done {
                 flex: 1;
                 width: 100px;
+                progress {
+                    background: ${theme.inputBg};
+                    border-radius: 3px;
+                    width: 50%;
+                    height: 12px;
+
+                    border: 1px solid ${theme.buttonBorder};
+                }
+                progress::-webkit-progress-bar {
+                    background-color: ${theme.inputBg};
+                    border-radius: 3px;
+                }
+                progress::-webkit-progress-value {
+                    background-color: ${theme.widgetContainer};
+                    border-radius: 3px;
+                }
+                progress::-moz-progress-bar {
+                    background-color: ${theme.widgetContainer};
+                    border-radius: 3px;
+                }
             }
             .res-actions {
                 flex: 0.5;
                 display: flex;
-               
-                
             }
             .cancel-button {
-                border-radius:3px;
-                display:flex;
-                align-items:center;
-                border:1px solid ${theme.buttonBorder};
+                border-radius: 3px;
+                display: flex;
+                align-items: center;
+                border: 1px solid ${theme.buttonBorder};
                 color: ${theme.textColor};
                 background: ${theme.buttonDefault};
 
-                height:21px;
-                font-size:12px;
-                cursor:pointer;
+                height: 21px;
+                font-size: 12px;
+                cursor: pointer;
             }
         }
     }
 `;
-
+export const apiGet = async (apiUrl: string, config: any) => {
+    let res = {};
+    axios
+        .get(`${apiUrl}/reports/loki`, config)
+        .then((data) => {
+            res = data;
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    return res;
+};
 export const AggregationLabelsStyle = (theme: any) => css`
     border: 1px solid ${theme.buttonBorder};
     border-radius: 3px;
@@ -106,6 +139,11 @@ export const AggregationLabelsStyle = (theme: any) => css`
         margin-bottom: 10px;
         padding-bottom: 10px;
         border-bottom: 1px solid ${theme.buttonBorder};
+        cursor: pointer;
+        padding: 4px;
+        &:hover {
+            background: ${theme.widgetContainer};
+        }
     }
     .aggr-sign {
         padding: 10px;
@@ -113,8 +151,17 @@ export const AggregationLabelsStyle = (theme: any) => css`
         border-radius: 3px;
         font-size: 12px;
         color: ${theme.textColor};
+        width: fit-content;
+        display: flex;
+        flex-direction: column;
+        transition: 0.25s all;
+        background: ${theme.widgetContainer};
+        cursor: pointer;
         p {
             line-height: 1.5;
+        }
+        &:hover {
+            background: ${theme.inputBg};
         }
     }
     .subtitle {
@@ -123,7 +170,7 @@ export const AggregationLabelsStyle = (theme: any) => css`
     }
     .input-group {
         display: flex;
-        flex: 1;
+        // flex: 1;
         align-items: center;
         margin: 8px 0px;
         input {
@@ -150,7 +197,10 @@ export const AggregationLabelsStyle = (theme: any) => css`
             display: flex;
             padding: 4px;
             padding-right: 8px;
-            width: 100px;
+            //width: 100px;
+            &.switch {
+                padding-right: 3px;
+            }
         }
     }
 
@@ -217,6 +267,11 @@ export const AggregationLabelsStyle = (theme: any) => css`
             }
         }
     }
+    .action-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
     .go-button {
         margin: 10px;
         color: ${theme.buttonText};
@@ -226,6 +281,7 @@ export const AggregationLabelsStyle = (theme: any) => css`
         padding: 3px;
         width: 70px;
         align-self: flex-end;
+        cursor: pointer;
     }
 `;
 
@@ -251,6 +307,13 @@ export type AggregationLabelProps = {
  * @param props [ onLabelChange, onLabelRemove, label ]
  * @returns
  */
+
+function formatPercentage(num: number) {
+    if (num === 100) {
+        return num;
+    }
+    return num.toFixed(2);
+}
 export const AggregationLabelItem: React.FC<AggregationLabelProps> = (
     props
 ) => {
@@ -307,7 +370,6 @@ export const AggregationLabels: React.FC<AggregationLabelsProps> = (
     props: any
 ) => {
     const { labels, onLabelsChange } = props;
-    //console.log(labels);
     const onLabelAdd = () => {
         let newLabel: AggregationLabel = {
             id: nanoid(),
@@ -316,13 +378,11 @@ export const AggregationLabels: React.FC<AggregationLabelsProps> = (
         };
 
         let newLabels = [...labels, newLabel];
-        console.log(newLabels);
         onLabelsChange(newLabels);
     };
 
     const onLabelRemove = (e: any) => {
         let { id } = e;
-        console.log(id);
         if (labels?.some((s: any) => s.id === id)) {
             let filtered = labels?.filter((f: any) => f.id !== id);
             onLabelsChange(filtered);
@@ -396,11 +456,17 @@ export const getParamsValueArray = (value: string): any[] => {
 };
 
 const AggregationResponse = (props: any) => {
-    //const {response} = props
+    const { res, onDelete } = props;
     const theme = useTheme();
-    let res:any = [] //testJSON;
 
-    console.log(res);
+    const sorted = useMemo(() => {
+        if (res?.length > 0) {
+            return res?.sort((a: any, b: any) => b.id - a.id);
+        }
+        return [];
+    }, [res]);
+
+    // let res: any = []; //testJSON;
     return (
         <div className={cx(AggregationsResponseStyles(theme))}>
             <div className="response-column-headers">
@@ -409,52 +475,136 @@ const AggregationResponse = (props: any) => {
                 <p className="res-actions">Actions</p>
             </div>
             <div className="response-entries">
-                {res?.length > 0 && res?.map((k: any, v: number) => (
-                    <div className="entry-row" key={v}>
-                        <div className="res-name">
-                            <p>
-                                Query: <code>{k.parameters.query}</code>
-                            </p>
-                            <p>
-                                By: {k.parameters.params[0].name} [
-                                {k?.logs?.length} values]
-                            </p>
-                            <p>Logs:</p>
-                            {k.logs?.length > 0 &&
-                                k.logs.map((log: string, idx: number) => (
-                                    <p key={idx} className={"log"}>
-                                        {log}
-                                    </p>
-                                ))}
-                        </div>
-                        <div className="res-done">{k.done}%</div>
+                {sorted?.length > 0 &&
+                    sorted?.map((k: any, v: number) => (
+                        <div className="entry-row" key={v}>
+                            <AggrLogLine entry={k} />
+                            <div className="res-done">
+                                <span>{formatPercentage(k.done)}%</span>{" "}
+                                <progress value={k.done} max={100} />
+                            </div>
 
-                        <div className="res-actions">
-                            <button className="cancel-button">Cancel</button>
+                            <div className="res-actions">
+                                <button
+                                    className="cancel-button"
+                                    onClick={(e) => onDelete(e, k.id)}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
             </div>
         </div>
     );
 };
 
-// add date range picker in here
-const Aggregations: React.FC = (props: any) => {
-    // default from : Date.now() - ((15 * 60) * 1000)
-    // default to: Date.now()
-    console.log(props); // we can't use props since it's is outside the panel in here.
-    // perhaps we should add it inside query
+export const AggrLogLine = (props: any) => {
+    const { entry } = props;
 
+    const [showDetail, setShowDetail] = useState(false);
+
+    const onShowDetail = () => {
+        setShowDetail((prev) => !prev);
+    };
+
+    return (
+        <div className="res-name" onClick={onShowDetail}>
+            <p>
+                Query: <code>{entry?.parameters.query}</code>
+            </p>
+            {showDetail && (
+                <>
+                    <p>
+                        By: {entry?.parameters.params[0].name} [
+                        {entry?.parameters?.params[0]?.values?.length} values]
+                    </p>
+                    {entry?.parameters?.add_labels && (
+                        <>
+                        <p>Labels:</p>
+                        <p>{JSON.stringify(entry?.parameters?.add_labels)}</p> 
+                        
+                        </>
+                    )}
+                    <p>Logs:</p>
+                    {entry?.logs?.length > 0 &&
+                        entry?.logs.map((log: string, idx: number) => (
+                            <p key={idx} className={"log"}>
+                                {log}
+                            </p>
+                        ))}
+                </>
+            )}
+        </div>
+    );
+};
+
+export async function getAggregations(
+    apiUrl: string,
+    config: any,
+    setAggrResponse: Function,
+    setLoading: Function
+) {
+    setLoading(() => true);
+    await axios
+        .get(`${apiUrl}/reports/loki`, config)
+        .then((data) => {
+            if (data?.data?.length > 0) {
+                setAggrResponse(() => data.data);
+                setLoading(() => false);
+            }
+            setLoading(() => false);
+        })
+        .catch((e) => {
+            console.log("Error on getting aggregations data", e);
+            setLoading(() => false);
+        });
+}
+
+export async function deleteAggregation(
+    apiUrl: string,
+    config: any,
+    id: number,
+    setLoading: Function
+) {
+    setLoading(() => true);
+    await axios
+        .delete(`${apiUrl}/reports/loki?id=${id}`, config)
+        .then((data) => {
+            setLoading(() => false);
+        })
+        .catch((e) => {
+            console.log("Error on deleting aggregations data", e);
+            setLoading(() => false);
+        });
+}
+
+export async function postAggregations(apiUrl: string, config: any, data: any) {
+    let res: any = {};
+    await axios
+        .post(`${apiUrl}/reports/loki`, data, config)
+        ?.then((data) => {
+            res = data;
+        })
+        .catch((e) => {
+            console.log("Error on submitting aggregations", e);
+            res.error = e;
+        });
+}
+
+const Aggregations: React.FC = (props: any) => {
     const {
         localProps: {
             props: { data },
         },
     } = props;
-    const { start, stop } = data;
-    console.log(data);
+    const { start, stop, dataSourceType } = data;
 
     const theme = useTheme();
+
+    const ds = useDataSources(dataSourceType);
+    const { url } = ds;
+    const config = useDataSourceConfig(ds);
 
     const [query, setQuery] = useState("");
     const [labels, setLabels] = useState([]);
@@ -462,12 +612,15 @@ const Aggregations: React.FC = (props: any) => {
     const [paramsValuesString, setParamsValuesString] = useState("");
     const [paramsValues, setParamsValues] = useState<any>([]); // we should format this ones
     const [requestData, setRequestData] = useState({});
+    const [aggrResponse, setAggrResponse] = useState([]);
     const [labelsFormatted, setLabelsFormatted] = useState({});
     const [fromMs, setFromMs] = useState(Date.parse(start));
     const [toMs, setToMs] = useState(Date.parse(stop));
+    const [loading, setLoading] = useState(false);
+    const [actTimestamp, setActTimestamp] = useState(Date.now());
+    const [autoRefresh, setAutoRefresh] = useState(false);
+    const [showForms, setShowForms] = useState(true);
 
-    console.log(fromMs, toMs);
-    console.log(formatLabels(labels));
 
     useEffect(() => {
         setLabelsFormatted(formatLabels(labels));
@@ -491,8 +644,8 @@ const Aggregations: React.FC = (props: any) => {
                 },
             ],
         };
-        console.log(newRequest);
-    }, [labelsFormatted, fromMs, toMs, paramsName, paramsValues]);
+        setRequestData(newRequest);
+    }, [labelsFormatted, fromMs, toMs, paramsName, paramsValues, query]);
 
     const onQueryChange = (e: any) => {
         let value = e.target.value;
@@ -516,73 +669,176 @@ const Aggregations: React.FC = (props: any) => {
         setParamsValuesString(() => value);
 
         let paramsValueArray = getParamsValueArray(value);
-        console.log(paramsValueArray);
         setParamsValues(() => paramsValueArray);
     };
 
-    const onSubmit = () => {
-        console.log("submitted");
+    const onSubmit = async () => {
+        await postAggregations(url, config, requestData).then(() => {
+            getAggregations(url, config, setAggrResponse, setLoading);
+        });
     };
+
+    const onDelete = async (e: any, id: number) => {
+        await deleteAggregation(url, config, id, setLoading).then(() => {
+            getAggregations(url, config, setAggrResponse, setLoading);
+        });
+    };
+
+    const onRefresh = async () => {
+        await getAggregations(url, config, setAggrResponse, setLoading);
+    };
+
+    const onAutoRefresh = (e: any) => {
+        const val = e?.target?.checked;
+        setAutoRefresh(() => val);
+    };
+
+    const onShowForms = () => {
+        setShowForms((prev) => !prev);
+    };
+
+    // auto refresh data :
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActTimestamp(Date.now());
+        }, 5000);
+
+        return () => clearInterval(interval);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (autoRefresh && actTimestamp) {
+            getAggregations(url, config, setAggrResponse, setLoading);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [autoRefresh, actTimestamp]);
 
     let param = `{{.parameter}}`;
 
     return (
         <div className={cx(AggregationLabelsStyle(theme))}>
-            <p className="aggr-title">Aggregations</p>
-            <div className="subtitle">Dispatch Downsample Report</div>
-            <div className="aggr-sign">
-                Specify a query to downsample to match with time range.
-            </div>
-            <div className="input-group">
-                <label>Query</label>
-                <input onChange={onQueryChange} value={query} />
-            </div>
-            <div className="subtitle">Output Metric</div>
-            <div className="aggr-sign">
-                <p>
-                    {" "}
-                    - Add Label __name__ with value 'sampled_*' prefix to easily
-                    find newly created metric points.
-                </p>
-                <p>
-                    {" "}
-                    - Add other labels, to more easily distinguish the new
-                    metric Use `{param}` to create dynamic label values
-                </p>
-            </div>
-            <AggregationLabels
-                labels={labels}
-                onLabelsChange={onLabelsChange}
-            />
-            <div className="subtitle">Select Query Parameters</div>
-            <div className="aggr-sign">
-                Use parameter name to replace the chosen {param} inside your
-                query and labels. Enter each value on a new line.
-            </div>
-            <div className="input-group">
-                <label>Parameter Name</label>
-                <input
-                    name="paramsName"
-                    onChange={onParamsNameChange}
-                    value={paramsName}
-                />
+            <p
+                className="aggr-title"
+                onClick={onShowForms}
+                title={`Click to ${showForms ? "hide" : "show"} settings`}
+            >
+                Aggregations{" "}
+            </p>
+            {showForms && (
+                <>
+                    <TitleInfo
+                        theme={theme}
+                        title={"Dispatch Downsample Report"}
+                    >
+                        Specify a query to downsample to match with time range.
+                    </TitleInfo>
+
+                    <div className="input-group">
+                        <label>Query</label>
+                        <input onChange={onQueryChange} value={query} />
+                    </div>
+                    <TitleInfo theme={theme} title={" Output Metric"}>
+                        <p>
+                            {" "}
+                            - Add Label __name__ with value 'sampled_*' prefix
+                            to easily find newly created metric points.
+                        </p>
+                        <p>
+                            {" "}
+                            - Add other labels, to more easily distinguish the
+                            new metric Use `{param}` to create dynamic label
+                            values
+                        </p>
+                    </TitleInfo>
+
+                    <AggregationLabels
+                        labels={labels}
+                        onLabelsChange={onLabelsChange}
+                    />
+                    <TitleInfo theme={theme} title={"Select Query Parameters"}>
+                        Use parameter name to replace the chosen {param} inside
+                        your query and labels. Enter each value on a new line.
+                    </TitleInfo>
+                    <div className="input-group">
+                        <label>Parameter Name</label>
+                        <input
+                            onChange={onParamsNameChange}
+                            value={paramsName}
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <label>Parameter Value</label>
+                        <textarea
+                            onChange={onParamsValueChange}
+                            value={paramsValuesString}
+                        />
+                    </div>
+                </>
+            )}
+
+            <div className="action-buttons">
+                <div className="input-group">
+                    <label className="switch">Auto Refresh</label>
+                    <Switch
+                        checked={autoRefresh}
+                        size={"small"}
+                        onChange={onAutoRefresh}
+                    />
+                </div>
+
+                {aggrResponse?.length > 0 && (
+                    <button className={"go-button"} onClick={onRefresh}>
+                        Refresh
+                    </button>
+                )}
+                <button className={"go-button"} onClick={onSubmit}>
+                    Go!
+                </button>
             </div>
 
-            <div className="input-group">
-                <label>Parameter Value</label>
-                <textarea
-                    name="query"
-                    onChange={onParamsValueChange}
-                    value={paramsValuesString}
-                />
-            </div>
-
-            <button className={"go-button"} onClick={onSubmit}>
-                Go!
-            </button>
-
-            <AggregationResponse />
+            {!loading && aggrResponse?.length > 0 && (
+                <AggregationResponse res={aggrResponse} onDelete={onDelete} />
+            )}
         </div>
+    );
+};
+
+export type TitleInfoProps = {
+    title: string;
+    children?: React.ReactNode;
+    theme: any;
+};
+export const TitleInfo: React.FC<TitleInfoProps> = (props) => {
+    const { title, children, theme } = props;
+
+    const [open, setOpen] = useState(false);
+    const onInfoOpen = () => {
+        setOpen((prev) => !prev);
+    };
+
+    return (
+        <>
+            <div className="subtitle">
+                {title}{" "}
+                <InfoIcon
+                    fontSize={"inherit"}
+                    style={{ color: theme.primaryDark, cursor: "pointer" }}
+                    onClick={onInfoOpen}
+                />
+            </div>
+            {open && (
+                <div
+                    className="aggr-sign"
+                    title="Click to close"
+                    onClick={onInfoOpen}
+                >
+                    {children}
+                </div>
+            )}
+        </>
     );
 };
 
@@ -596,11 +852,3 @@ const aggregationsPlugin: Plugin = {
 };
 
 export default aggregationsPlugin;
-
-// For displaying:
-// SHOW COLUMNS :
-// NAME DONE ACTIONS
-
-// map report to send on post request
-// map the get request
-// usage of delete action
