@@ -10,6 +10,7 @@ import { DataSourcesFiller } from "./components/DataSourcesFiller";
 import { setTheme } from "../../actions";
 import { useMediaQuery } from "react-responsive";
 import { useTheme } from "../../components/DataViews/components/QueryBuilder/hooks";
+import { PluginsSwitches } from "../../plugins/settingsdialog/SettingsDialog";
 
 export function getURlParams(params: any) {
     const url = params.replace(/#/, "");
@@ -45,12 +46,19 @@ export default function DataSources() {
                 <div className="cont">
                     <Header title={"DataSources"} />
                     <List />
-                    <div
-                        style={{
-                            height: "40px",
-                        }}
-                    >
-                        <DataSourcesFiller />
+
+                    <div style={{ display: "flex", flex: 1 }}>
+                        <div className="plugins-cont">
+                            <p className="title">Plugins</p>
+                            <PluginsSwitches border="false" />
+                        </div>
+                        <div
+                            style={{
+                                height: "40px",
+                            }}
+                        >
+                            <DataSourcesFiller />
+                        </div>
                     </div>
                 </div>
             </PageContainer>

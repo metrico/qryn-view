@@ -12,27 +12,23 @@ const InlineFlex = (theme: any) => css`
     flex: 1;
     flex-wrap: wrap;
     width: 400px;
-    margin-top: 5px;
-    margin-left: 10px;
     border: 1px solid ${theme.buttonBorder};
     padding: 5px;
-    border-radius: 4px;
+    border-radius: 3px;
+    margin-right:10px;
 `;
 
 const oneForAllStyle = css`
     display: flex;
     padding: 4px 12px;
-    // border: 1px solid lightgray;
     font-size: 14px;
     border-radius: 4px;
-    margin-left: 12px;
     white-space: nowrap;
     align-items: center;
     justify-content: space-between;
 `;
 
 const FieldsCont = css`
-    //width: 200px;
     margin: 5px;
 `;
 

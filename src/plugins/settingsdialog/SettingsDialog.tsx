@@ -101,7 +101,8 @@ export const PluginSwitchesCont: React.FC<{
     );
 };
 
-export const PluginsSwitches = () => {
+export const PluginsSwitches = (props:any) => {
+    const {border} = props || false
     const pl = LocalPluginsManagement();
     const [local] = useState(pl.getAll());
     const plugins: any = useMemo(() => {
@@ -112,7 +113,7 @@ export const PluginsSwitches = () => {
     }, [local]);
 
     return (
-        <SwitchesCont>
+        <SwitchesCont border={border}>
             <InputGroup>
                 {plugins?.length > 0 &&
                     plugins?.map(
@@ -259,8 +260,6 @@ export default function SettingsDialog({ open, onClose }: any) {
                             onChange={handleEmbedChange}
                         ></EmbedArea>
                     </InputGroup>
-                    <SettingLabel>Plugins </SettingLabel>
-                    <PluginsSwitches />
                 </SettingsInputContainer>
             </SettingCont>
         </Dialog>

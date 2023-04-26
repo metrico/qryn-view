@@ -9,10 +9,11 @@ export const InputGroup = styled.div`
     margin-bottom: 20px;
 `;
 
-export const SwitchesCont = styled.div`
+export const SwitchesCont: any = styled.div`
     margin-top: 4px;
     border-radius: 3px;
-    border: 1px solid ${({ theme }: any) => theme.buttonBorder};
+    border: ${({ border, theme }: any) =>
+        border === true ? `1px solid ${theme.buttonBorder}` : `none`};
     padding: 4px;
 `;
 export const InlineGroup = styled.div`
@@ -102,7 +103,7 @@ export const EmbedArea: any = styled.textarea`
     margin: 5px 0px;
     height: 150px;
     width: 250px;
-    font-size:10px;
+    font-size: 10px;
     padding: 5px 8px;
     border: 1px solid ${({ theme }: any) => theme.buttonBorder};
     border-radius: 3px;

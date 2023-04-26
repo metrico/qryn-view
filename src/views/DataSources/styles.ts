@@ -87,6 +87,20 @@ export const PageContainer: any = styled.div`
             background: ${({ theme }: any) => theme.viewBg};
         }
     }
+    .plugins-cont {
+        display: flex;
+        flex: 1;
+        margin: 0px 10px;
+        flex-direction: column;
+        padding: 10px 20px;
+        border: 1px solid ${({ theme }: any) => theme.buttonBorder};
+        border-radius: 3px;
+        height:fit-content;
+        .title {
+            font-size: 14px;
+            padding: 10px 0px;
+        }
+    }
 `;
 
 export const Label: any = styled.div`
