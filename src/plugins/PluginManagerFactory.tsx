@@ -1,6 +1,8 @@
+import { useState, useMemo } from "react";
 import store from "../store/store";
 import { setPlugins } from "./actions";
-import {Plugin} from './types'
+import { Plugin } from "./types";
+
 export interface ILocation {
     parent: string;
     children: string[];
@@ -108,6 +110,41 @@ export function LocalPluginsManagement() {
     };
 }
 
+export function useLocalPlugins() {
+    const pl = LocalPluginsManagement();
+    const [local] = useState(pl.getAll());
+    const plugins: any = useMemo(() => {
+        if (Object.keys(local)?.length > 0) {
+            return Object.entries(local);
+        }
+        return [];
+    }, [local]);
+
+    return plugins;
+}
+
+export function useActiveTabs(section: any) {
+    const plugins: any = useLocalPlugins();
+    const activeTabs = useMemo(() => {
+        if (plugins?.some((s: any) => s[0] === section)) {
+            let queryItemPlugins = plugins?.filter(
+                ([el]: [el: string]) => el === section
+            )[0][1];
+            // return queryItemPlugins
+            return queryItemPlugins?.filter((f: any) => f.active);
+        }
+        return [];
+    }, [plugins]);
+
+
+
+    const isActiveTabs = useMemo(() => {
+        return activeTabs?.length > 0;
+    }, activeTabs);
+
+    return { activeTabs, isActiveTabs };
+}
+
 export function PluginManagerFactory(locations: ILocations) {
     const plugins: any = {};
     const lp = LocalPluginsManagement();
@@ -165,6 +202,19 @@ export function PluginManagerFactory(locations: ILocations) {
         return active || [];
     }
 
+    function getPlugin(location: string, name: string) {
+        const unique = plugins?.[location]
+            ?.filter(
+                (obj: any, index: number) =>
+                    plugins[location]?.findIndex(
+                        (item: any) => item.name === obj.name
+                    ) === index
+            )
+           let found=unique?.find((f: any) => f?.name === name);
+console.log(found,"FOUND")
+        return found || {};
+    }
+
     function togglePlugin(location: string, name: string, active: boolean) {
         lp.togglePlugin(location, name, active);
     }
@@ -185,17 +235,15 @@ export function PluginManagerFactory(locations: ILocations) {
         registerPluginGlobally,
         getAllPlugins,
         getPlugins,
+        getPlugin,
         togglePlugin,
     };
 }
 
 export const PluginManager = PluginManagerFactory(locations);
 
-
-export function initPlugins(plugins:Plugin[]) {
-    plugins.forEach((plugin:any) => {
-            PluginManager.registerPlugin(plugin) 
-    })
+export function initPlugins(plugins: Plugin[]) {
+    plugins.forEach((plugin: any) => {
+        PluginManager.registerPlugin(plugin);
+    });
 }
-
-

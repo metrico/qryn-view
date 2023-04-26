@@ -1,9 +1,11 @@
 import { ThemeProvider } from "@emotion/react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import LabelBrowser from "../../components/LabelBrowser";
-import { QueryItemToolbar } from "../../components/QueryItem/QueryItemToolbar";
-import PluginRenderer from "../../plugins/PluginsRenderer";
+import { QueryItemContainer } from "../../components/QueryItem/QueryItemContainer";
+import { useActiveTabs } from "../../plugins/PluginManagerFactory";
+import SinglePlugin from "../../plugins/SinglePlugin";
+
 import { useTheme } from "../../theme";
 import { setSplitView } from "../actions";
 
@@ -18,6 +20,28 @@ import {
 } from "./helpers";
 import { useIdRefs } from "./hooks";
 
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && <>{children}</>}
+        </div>
+    );
+}
+
 const QueryItem = (props: any) => {
     const { name, data } = props;
     const { id } = data;
@@ -28,6 +52,7 @@ const QueryItem = (props: any) => {
     const isQueryOpen = useState(true);
     const idRefs = useIdRefs(name);
     const theme = useTheme();
+    const [tabsValue, setTabsValue] = useState(0);
 
     const onAddQuery = () => {
         const panelData = setNewPanelData(panelSelected, data, idRefs);
@@ -70,25 +95,60 @@ const QueryItem = (props: any) => {
         }
     };
 
+    const onTabChange = (e: React.SyntheticEvent, tabValue: number) => {
+        setTabsValue(() => tabValue);
+    };
+    const { activeTabs, isActiveTabs } = useActiveTabs(`Query Item`);
+
     return (
         <ThemeProvider theme={theme}>
-            <div>
-                <QueryItemToolbar
-                    {...props}
-                    isQueryOpen={isQueryOpen}
-                    onDeleteQuery={onDeleteQuery}
-                    onAddQuery={onAddQuery}
-                />
-
-                {isQueryOpen[0] && (
-                    <LabelBrowser {...props} launchQuery={launchQuery} />
+            <QueryItemContainer
+                {...props}
+                isQueryOpen={isQueryOpen}
+                onDeleteQuery={onDeleteQuery}
+                onAddQuery={onAddQuery}
+                onTabChange={onTabChange}
+                tabsValue={tabsValue}
+                isTabs={isActiveTabs}
+                activeTabs={activeTabs}
+            >
+                {isActiveTabs ? (
+                    <div>
+                        <TabPanel value={tabsValue} index={0}>
+                            {isQueryOpen[0] && (
+                                <LabelBrowser
+                                    {...props}
+                                    launchQuery={launchQuery}
+                                />
+                            )}
+                        </TabPanel>
+                        {activeTabs?.map((tab: any, i: number) => {
+                            return (
+                                <TabPanel
+                                    value={tabsValue}
+                                    key={i}
+                                    index={i + 1}
+                                >
+                                    <SinglePlugin
+                                        name={tab.name}
+                                        section={"Query Item"}
+                                        localProps={{ props, setLaunchQuery }}
+                                    />
+                                </TabPanel>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <>
+                        {isQueryOpen[0] && (
+                            <LabelBrowser
+                                {...props}
+                                launchQuery={launchQuery}
+                            />
+                        )}
+                    </>
                 )}
-                {(data.dataSourceType === "metrics" ||
-                    data.dataSourceType === "logs" ||
-                    data.dataSourceType === "traces") && (
-                    <PluginRenderer section={"Query Item"} localProps={{props,setLaunchQuery}}  />
-                )}
-            </div>
+            </QueryItemContainer>
         </ThemeProvider>
     );
 };

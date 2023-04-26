@@ -20,7 +20,7 @@ export const QueryTitleStyles = (theme: any) => css`
 
 export function QueryId(props: any) {
     const [isEditing, setIsEditing] = useState(false);
-    const [idText, setIdText] = useState(props.data.idRef);
+    const [idText, setIdText] = useState(props.idRef);
 
     const theme = useTheme();
     function onIdTextChange(e: any) {

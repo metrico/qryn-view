@@ -3,12 +3,11 @@ import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDown
 import styled from "@emotion/styled";
 
 
-export const QueryItemToolbarStyled = styled.div`
+export const QueryItemContainerStyled = styled.div`
     background: ${({ theme }: any) => `${theme.secondaryWidgetContainer}`};
     color: ${({ theme }: any) => `${theme.textColor}`};
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction:column;
     border-radius: 3px;
     margin-bottom: 3px;
     padding:5px;
@@ -16,9 +15,15 @@ export const QueryItemToolbarStyled = styled.div`
         display: flex;
         align-items: center;
     }
+    .query-tools-cont {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+    }
     .query-tools {
         display: flex;
         align-items: center;
+        
     }
     .query-id {
         font-size: 13px;

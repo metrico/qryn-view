@@ -6,7 +6,7 @@ import SyncIcon from "@mui/icons-material/Sync";
 import {
     CloseQuery,
     OpenQuery,
-    QueryItemToolbarStyled,
+    QueryItemContainerStyled,
     ShowQueryButton,
 } from "./style";
 
@@ -19,12 +19,18 @@ import { DateRangePicker } from "../StatusBar/components/daterangepicker";
 import { Tooltip } from "@mui/material";
 import { useMediaQuery } from "react-responsive";
 import PluginRenderer from "../../plugins/PluginsRenderer";
-export function QueryItemToolbar(props: any) {
+import { StyledTabs, StyledTab } from "./StyledTabs";
+
+export function QueryItemContainer(props: any) {
     const dispatch = useDispatch();
     // update panel on id change
+    const { onTabChange, tabsValue, isTabs, activeTabs } = props;
+    const { children } = props;
     const {
-        data: { expr, open, id, start, stop, label, pickerOpen },
+        data: { expr, open, id, start, stop, label, pickerOpen, idRef },
+        isQueryOpen,
     } = props;
+    console.log(props);
 
     const left = useSelector((store: any) => store.left);
     const right = useSelector((store: any) => store.right);
@@ -215,89 +221,140 @@ export function QueryItemToolbar(props: any) {
     };
 
     return (
-        <QueryItemToolbarStyled>
-            <div className="query-title">
-                {!isEmbed && (
-                    <ShowQueryButton
-                        onClick={() => {
-                            props.isQueryOpen[1](
-                                props.isQueryOpen[0] ? false : true
-                            );
-                        }}
-                    >
-                        {props.isQueryOpen[0] ? <OpenQuery /> : <CloseQuery />}
-                    </ShowQueryButton>
-                )}
-
-                <QueryId onIdRefUpdate={onIdRefUpdate} {...props} />
-                {isEmbed && (
-                    <p style={{ marginLeft: "20px", fontFamily: "monospace" }}>
-                        {expr}
-                    </p>
-                )}
-            </div>
-            {!isEmbed && (
-                <div className="query-tools">
-                    <DateRangePicker
-                        id={id}
-                        onStopChange={onStopChange}
-                        onStartChange={onStartChange}
-                        onLabelChange={onLabelChange}
-                        onPickerOpen={onPickerOpen}
-                        startTs={start}
-                        stopTs={stop}
-                        label={label}
-                        pickerOpen={pickerOpen}
+        <QueryItemContainerStyled>
+            <div className="query-tools-cont">
+                <div>
+                    <QueryTitle
+                        isEmbed={isEmbed}
+                        idRef={idRef}
+                        expr={expr}
+                        onIdRefUpdate={onIdRefUpdate}
+                        isQueryOpen={isQueryOpen}
                     />
-                    <Tooltip title={"Sync Time Ranges"}>
-                        <SyncIcon
+
+                    {isTabs && (
+                        <div>
+                            <StyledTabs
+                                value={tabsValue}
+                                onChange={onTabChange}
+                            >
+                                <StyledTab label="Search" />
+                                {activeTabs?.length > 0 &&
+                                    activeTabs?.map(
+                                        (tab: any, index: number) => (
+                                            <StyledTab
+                                                key={index}
+                                                label={tab.name}
+                                            />
+                                        )
+                                    )}
+                            </StyledTabs>
+                        </div>
+                    )}
+                </div>
+
+                {!isEmbed && (
+                    <div className="query-tools">
+                        <DateRangePicker
+                            id={id}
+                            onStopChange={onStopChange}
+                            onStartChange={onStartChange}
+                            onLabelChange={onLabelChange}
+                            onPickerOpen={onPickerOpen}
+                            startTs={start}
+                            stopTs={stop}
+                            label={label}
+                            pickerOpen={pickerOpen}
+                        />
+                        <Tooltip title={"Sync Time Ranges"}>
+                            <SyncIcon
+                                style={{
+                                    fontSize: "15px",
+                                    cursor: "pointer",
+                                    padding: "3px",
+                                    marginLeft: "10px",
+                                }}
+                                onClick={onSyncTimeRanges}
+                            />
+                        </Tooltip>
+                        {!isTabletOrMobile && (
+                            <SplitViewButton
+                                isSplit={isSplit}
+                                open={open}
+                                side={props.name}
+                            />
+                        )}
+                        <PluginRenderer
+                            section={"Query Toolbar"}
+                            localProps={props}
+                        />
+
+                        <DataSourceSelect
+                            extValue={extValue}
+                            value={dataSourceValue}
+                            onChange={onDataSourceChange}
+                            opts={dataSourceOptions}
+                            label={""}
+                        />
+                        <AddOutlinedIcon
                             style={{
                                 fontSize: "15px",
                                 cursor: "pointer",
                                 padding: "3px",
                                 marginLeft: "10px",
                             }}
-                            onClick={onSyncTimeRanges}
+                            onClick={props.onAddQuery}
                         />
-                    </Tooltip>
-                    {!isTabletOrMobile && (
-                        <SplitViewButton
-                            isSplit={isSplit}
-                            open={open}
-                            side={props.name}
+                        <DeleteOutlineIcon
+                            style={{
+                                fontSize: "15px",
+                                cursor: "pointer",
+                                padding: "3px",
+                            }}
+                            onClick={props.onDeleteQuery}
                         />
-                    )}
-                    <PluginRenderer
-                        section={"Query Toolbar"}
-                        localProps={props}
-                    />
+                    </div>
+                )}
+            </div>
 
-                    <DataSourceSelect
-                        extValue={extValue}
-                        value={dataSourceValue}
-                        onChange={onDataSourceChange}
-                        opts={dataSourceOptions}
-                        label={""}
-                    />
-                    <AddOutlinedIcon
-                        style={{
-                            fontSize: "15px",
-                            cursor: "pointer",
-                            padding: "3px",
-                            marginLeft: "10px",
-                        }}
-                        onClick={props.onAddQuery}
-                    />
-                    <DeleteOutlineIcon
-                        style={{
-                            fontSize: "15px",
-                            cursor: "pointer",
-                            padding: "3px",
-                        }}
-                        onClick={props.onDeleteQuery}
-                    />
-                </div>
-            )}
-        </QueryItemToolbarStyled>
+            {/* add a flag in here for when we will have tabs */}
+
+            {/* here we need the children container // the tabs */}
+            {children}
+        </QueryItemContainerStyled>
     );
 }
+// add the tabs on  here and the space for children.
+
+export type QueryTitleProps = {
+    isEmbed: boolean;
+    onIdRefUpdate: Function;
+    expr: string;
+    isQueryOpen: any;
+    idRef: string;
+};
+
+export const QueryTitle: React.FC<QueryTitleProps> = (props) => {
+    const { isEmbed, expr, isQueryOpen } = props;
+
+    return (
+        <div className="query-title">
+            {!isEmbed && (
+                <ShowQueryButton
+                    onClick={() => {
+                        isQueryOpen[1](isQueryOpen[0] ? false : true);
+                    }}
+                >
+                    {isQueryOpen[0] ? <OpenQuery /> : <CloseQuery />}
+                </ShowQueryButton>
+            )}
+
+            <QueryId {...props} />
+            {isEmbed && (
+                <p style={{ marginLeft: "20px", fontFamily: "monospace" }}>
+                    {expr}
+                </p>
+            )}
+        </div>
+    );
+};

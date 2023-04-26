@@ -291,7 +291,7 @@ const Raggix: React.FC = (props: any) => {
 
 const raggixPlugin: Plugin = {
     name: "Raggix",
-    section: "Query Item",
+    section: `Query Item`,
     id: nanoid(),
     Component: Raggix,
     description:
