@@ -19,16 +19,26 @@ export const QueryItemContainerStyled = styled.div`
         display:flex;
         align-items:center;
         justify-content:space-between;
+        flex-wrap:wrap;
     }
     .query-tools {
         display: flex;
         align-items: center;
+        flex-wrap:wrap;
+        justify-content:space-between;
+        flex:1;
+        gap:2px;
+        margin-top:4px;
         
     }
     .query-id {
         font-size: 13px;
         font-weight: bold;
         margin-left: 5px;
+    }
+    .query-title-tabs {
+        display:flex;
+        align-items:center;
     }
 `;
 

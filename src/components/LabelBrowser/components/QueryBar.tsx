@@ -1092,7 +1092,7 @@ export const QueryBarCont = (props: any) => {
                     />
                 )}
 
-            {buttonsHidden() && dataSourceType === "logs" && !isBuilder && (
+            {buttonsHidden() && dataSourceType === "logs" && !isBuilder && !isTabletOrMobile && (
                 <>
                     <HistoryButton
                         queryLength={queryHistory.length}

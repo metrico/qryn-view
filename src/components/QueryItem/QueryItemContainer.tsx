@@ -20,6 +20,19 @@ import { Tooltip } from "@mui/material";
 import { useMediaQuery } from "react-responsive";
 import PluginRenderer from "../../plugins/PluginsRenderer";
 import { StyledTabs, StyledTab } from "./StyledTabs";
+import { css, cx } from "@emotion/css";
+import { useTheme } from "../../theme";
+
+export const StyledTabsCont = (theme: any) => css`
+    background: ${theme.WidgetBg};
+    .MuiTabs-root {
+        height: 20px !important;
+        min-height: 20px;
+    }
+    .MuiButtonBase-root {
+        min-height: 0;
+    }
+`;
 
 export function QueryItemContainer(props: any) {
     const dispatch = useDispatch();
@@ -32,6 +45,7 @@ export function QueryItemContainer(props: any) {
     } = props;
     console.log(props);
 
+    const theme = useTheme();
     const left = useSelector((store: any) => store.left);
     const right = useSelector((store: any) => store.right);
     const panel = useSelector((store: any) => store[props.name]);
@@ -223,7 +237,7 @@ export function QueryItemContainer(props: any) {
     return (
         <QueryItemContainerStyled>
             <div className="query-tools-cont">
-                <div>
+                <div className="query-title-tabs">
                     <QueryTitle
                         isEmbed={isEmbed}
                         idRef={idRef}
@@ -233,7 +247,7 @@ export function QueryItemContainer(props: any) {
                     />
 
                     {isTabs && (
-                        <div>
+                        <div className={cx(StyledTabsCont(theme))}>
                             <StyledTabs
                                 value={tabsValue}
                                 onChange={onTabChange}
@@ -255,64 +269,75 @@ export function QueryItemContainer(props: any) {
 
                 {!isEmbed && (
                     <div className="query-tools">
-                        <DateRangePicker
-                            id={id}
-                            onStopChange={onStopChange}
-                            onStartChange={onStartChange}
-                            onLabelChange={onLabelChange}
-                            onPickerOpen={onPickerOpen}
-                            startTs={start}
-                            stopTs={stop}
-                            label={label}
-                            pickerOpen={pickerOpen}
-                        />
-                        <Tooltip title={"Sync Time Ranges"}>
-                            <SyncIcon
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            {!isTabletOrMobile && (
+                                <SplitViewButton
+                                    isSplit={isSplit}
+                                    open={open}
+                                    side={props.name}
+                                />
+                            )}
+                        </div>
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifySelf: "flex-end",
+                            }}
+                        >
+                            <PluginRenderer
+                                section={"Query Toolbar"}
+                                localProps={props}
+                            />
+                            <DateRangePicker
+                                id={id}
+                                onStopChange={onStopChange}
+                                onStartChange={onStartChange}
+                                onLabelChange={onLabelChange}
+                                onPickerOpen={onPickerOpen}
+                                startTs={start}
+                                stopTs={stop}
+                                label={label}
+                                pickerOpen={pickerOpen}
+                            />
+
+                            <Tooltip title={"Sync Time Ranges"}>
+                                <SyncIcon
+                                    style={{
+                                        fontSize: "15px",
+                                        cursor: "pointer",
+                                        padding: "3px",
+                                        marginLeft: "10px",
+                                    }}
+                                    onClick={onSyncTimeRanges}
+                                />
+                            </Tooltip>
+
+                            <DataSourceSelect
+                                extValue={extValue}
+                                value={dataSourceValue}
+                                onChange={onDataSourceChange}
+                                opts={dataSourceOptions}
+                                label={""}
+                            />
+                            <AddOutlinedIcon
                                 style={{
                                     fontSize: "15px",
                                     cursor: "pointer",
                                     padding: "3px",
                                     marginLeft: "10px",
                                 }}
-                                onClick={onSyncTimeRanges}
+                                onClick={props.onAddQuery}
                             />
-                        </Tooltip>
-                        {!isTabletOrMobile && (
-                            <SplitViewButton
-                                isSplit={isSplit}
-                                open={open}
-                                side={props.name}
+                            <DeleteOutlineIcon
+                                style={{
+                                    fontSize: "15px",
+                                    cursor: "pointer",
+                                    padding: "3px",
+                                }}
+                                onClick={props.onDeleteQuery}
                             />
-                        )}
-                        <PluginRenderer
-                            section={"Query Toolbar"}
-                            localProps={props}
-                        />
-
-                        <DataSourceSelect
-                            extValue={extValue}
-                            value={dataSourceValue}
-                            onChange={onDataSourceChange}
-                            opts={dataSourceOptions}
-                            label={""}
-                        />
-                        <AddOutlinedIcon
-                            style={{
-                                fontSize: "15px",
-                                cursor: "pointer",
-                                padding: "3px",
-                                marginLeft: "10px",
-                            }}
-                            onClick={props.onAddQuery}
-                        />
-                        <DeleteOutlineIcon
-                            style={{
-                                fontSize: "15px",
-                                cursor: "pointer",
-                                padding: "3px",
-                            }}
-                            onClick={props.onDeleteQuery}
-                        />
+                        </div>
                     </div>
                 )}
             </div>
