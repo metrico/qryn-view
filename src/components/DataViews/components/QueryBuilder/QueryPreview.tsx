@@ -19,7 +19,7 @@ const QueryPreviewContainer = (theme: any) => css`
     padding: 8px;
     display: flex;
     flex: 1;
-
+    gap:4px;
     flex-direction: column;
     border-bottom: 1px solid ${theme.buttonBorder};
     background: ${theme.widgetContainer};
@@ -33,8 +33,8 @@ const QueryPreviewContainer = (theme: any) => css`
         display: flex;
         align-items: center;
         flex-direction: row;
-        margin-top: 8px;
         justify-content:flex-end;
+        gap:2px;
     }
     @media (min-width: 420px) {
         flex-direction: row;

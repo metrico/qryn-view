@@ -174,7 +174,7 @@ export async function checkLocalAPI(
             isReady = true;
         }
     }
-    return true;
+    return isReady;
 }
 
 export async function updateDataSourcesFromLocalUrl(

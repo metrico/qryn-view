@@ -269,15 +269,9 @@ export function QueryItemContainer(props: any) {
 
                 {!isEmbed && (
                     <div className="query-tools">
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            {!isTabletOrMobile && (
-                                <SplitViewButton
-                                    isSplit={isSplit}
-                                    open={open}
-                                    side={props.name}
-                                />
-                            )}
-                        </div>
+                        <div
+                            style={{ display: "flex", alignItems: "center" }}
+                        ></div>
                         <div
                             style={{
                                 display: "flex",
@@ -289,6 +283,13 @@ export function QueryItemContainer(props: any) {
                                 section={"Query Toolbar"}
                                 localProps={props}
                             />
+                            {!isTabletOrMobile && (
+                                <SplitViewButton
+                                    isSplit={isSplit}
+                                    open={open}
+                                    side={props.name}
+                                />
+                            )}
                             <DateRangePicker
                                 id={id}
                                 onStopChange={onStopChange}
