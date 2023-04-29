@@ -226,7 +226,7 @@ const nameDetailExpanded = css`
 `;
 const svcName = css`
     padding: 0 0.25rem 0 0.5rem;
-    font-size: 1.05em;
+    12px;
 `;
 const svcNameChildrenCollapsed = css`
     font-weight: bold;

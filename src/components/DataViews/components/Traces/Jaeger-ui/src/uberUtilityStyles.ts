@@ -19,6 +19,9 @@ export const ubMy1 = css`
 
 export const ubM0 = css`
   margin: 0;
+  font-size:12px;
+  font-weight:bold;
+  font-family:monospace;
 `;
 
 export const ubPx2 = css`

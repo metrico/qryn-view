@@ -117,7 +117,6 @@ export const ViewHeaderStyled = styled.div`
       margin: 0px 3px;
       .exp {
         font-family: monospace;
-        font-weight: bold;
       }
     }
   }

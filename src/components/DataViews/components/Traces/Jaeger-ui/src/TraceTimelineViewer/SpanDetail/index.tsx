@@ -42,7 +42,6 @@ const Header = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    align-items: center;
     gap: 0 1rem;
     margin-bottom: 0.25rem;
 `;

@@ -4,7 +4,6 @@ import { useState } from "react";
 import QueryTypeSwitch from "../QueryTypeBar/components/QueryTypeSwitch";
 
 const QueryTraceSwitch = css`
-    margin-top: 10px;
     display: flex;
     height:30px;
 `;

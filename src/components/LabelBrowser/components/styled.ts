@@ -62,6 +62,7 @@ export const ShowLogsBtn: any = styled(BtnSmall, {
     transition: 0.25s all;
     justify-content: center;
     height: 28px;
+    margin:0px 4px;
     &:hover {
         background: ${(props) => props.theme.primaryLight};
     }
