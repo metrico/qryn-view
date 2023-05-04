@@ -95,6 +95,7 @@ export const ShowSettingsBtn: any = styled(BtnSmall)`
 export const MobileTopQueryMenu: any = styled.div`
     display: flex;
     flex-wrap: wrap;
+    margin-bottom:4px;
     @media screen and (max-width: 1070px) {
         display: flex;
         gap: 2px;

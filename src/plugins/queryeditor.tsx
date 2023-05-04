@@ -22,7 +22,6 @@ const CustomEditor = styled(Editable)`
     line-height: 1.5;
     line-break: anywhere;
     overflow-y: scroll;
-    margin-top:4px;
 `;
 
 const QueryBar = styled.div`

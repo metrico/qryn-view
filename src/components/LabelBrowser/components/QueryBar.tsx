@@ -862,6 +862,7 @@ export const QueryBar = (props: any) => {
                             alignItems: "center",
                             justifyContent: "space-between",
                             paddingRight: "15px",
+                            marginBottom:"4px"
                         }}
                     >
                         <TracesSwitch
