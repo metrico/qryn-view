@@ -3,6 +3,7 @@ import { ThemeProvider } from "@emotion/react";
 import { FlexWrap } from "../styled";
 import { useTheme } from "../../QueryBuilder/hooks";
 import { LogsFormBuilder } from "../../QueryBuilder/LogsFormBuilder";
+import { useSelector } from "react-redux";
 export default function LogsSearch(props: any) {
     
     const {
@@ -18,6 +19,8 @@ export default function LogsSearch(props: any) {
 
     const theme = useTheme();
 
+    const isSplit = useSelector((store:any)=>store.isSplit)
+
     return (
         <ThemeProvider theme={theme}>
             <div className={cx(FlexWrap)}>
@@ -28,7 +31,7 @@ export default function LogsSearch(props: any) {
                     searchButton={searchButton}
                 />
             </div>
-            {hasStats && (
+            {hasStats && isSplit && (
                 <div style={{ display: "flex", margin: "10px 0px" }}>
                     {statsSwitch}
                 </div>

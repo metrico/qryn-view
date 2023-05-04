@@ -1206,7 +1206,7 @@ export const MobileTopQueryMenuCont = (props: any) => {
                 />
             )}
 
-            {dataSourceType === "logs" && hasStats && (
+            {dataSourceType === "logs" && hasStats && isSplit && (
                 <div className="options-input">
                     <SettingLabel>Show Stats</SettingLabel>
                     <Switch

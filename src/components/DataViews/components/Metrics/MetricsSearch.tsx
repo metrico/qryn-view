@@ -3,6 +3,7 @@ import { useTheme } from "../QueryBuilder/hooks";
 import { cx } from "@emotion/css";
 import { MetricsFormBuilder } from "../QueryBuilder/MetricsFormBuilder";
 import { FlexWrap } from "../QueryBuilder/styles";
+import { useSelector } from "react-redux";
 
 
 
@@ -26,6 +27,8 @@ export default function MetricsSearch(props: any) {
 
     const theme = useTheme();
 
+    const isSplit = useSelector((store:any)=>store.isSplit)
+
     return (
         <ThemeProvider theme={theme}>
             <div className={cx(FlexWrap)}>
@@ -37,7 +40,7 @@ export default function MetricsSearch(props: any) {
                     logsRateButton={logsRateButton}
                 />
             </div>
-            {hasStats && (
+            {hasStats && isSplit && (
                 <div style={{ display: "flex", margin: "10px 0px" }}>
                     {statsSwitch}
                 </div>
