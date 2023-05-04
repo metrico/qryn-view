@@ -11,7 +11,6 @@ interface SinglePluginProps {
 
 const SinglePlugin: React.FC<SinglePluginProps> = (props) => {
     const {section, localProps, name} = props 
-console.log(PluginManager.getPlugin(section,name))
     const renderPlugin = ( name: any, Component:React.FC<SinglePluginProps["localProps"]>) => {
      
         return <Component localProps={localProps} section={section} name={name}/>

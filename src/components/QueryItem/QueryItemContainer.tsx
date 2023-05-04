@@ -43,7 +43,6 @@ export function QueryItemContainer(props: any) {
         data: { expr, open, id, start, stop, label, pickerOpen, idRef },
         isQueryOpen,
     } = props;
-    console.log(props);
 
     const theme = useTheme();
     const left = useSelector((store: any) => store.left);

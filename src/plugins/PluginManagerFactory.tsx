@@ -211,7 +211,6 @@ export function PluginManagerFactory(locations: ILocations) {
                     ) === index
             )
            let found=unique?.find((f: any) => f?.name === name);
-console.log(found,"FOUND")
         return found || {};
     }
 
