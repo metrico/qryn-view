@@ -6,6 +6,8 @@ import ClokiMenu from "../../plugins/settingsmenu/Menu";
 import { ThemeProvider } from "@emotion/react";
 import { useTheme } from "../DataViews/components/QueryBuilder/hooks";
 import PluginRenderer from "../../plugins/PluginsRenderer";
+import { useMemo } from "react";
+import { useLocation } from "react-router-dom";
 
 export const VersionStyle = (theme: any) => ({
     color: theme.textColor,
@@ -19,8 +21,20 @@ export interface PluginProps {
     name?: string;
 }
 export default function StatusBar() {
-    
+    const { hash } = useLocation();
     const theme = useTheme();
+
+    const hasDSSettings = useMemo(() => {
+        const urlParams = new URLSearchParams(hash.replace(/#/, ""));
+
+        let hasUrl = urlParams.has("url");
+        let hasCookie = urlParams.has("cookie");
+
+        if (hasUrl && hasCookie) {
+            return true;
+        }
+        return false;
+    }, [hash]);
 
     return (
         <ThemeProvider theme={theme}>
@@ -35,7 +49,7 @@ export default function StatusBar() {
                     <p style={VersionStyle(theme)}>
                         {process.env.REACT_APP_VERSION}
                     </p>
-                    <ApiSelector />
+                    {!hasDSSettings && <ApiSelector />}
                 </div>
 
                 <StatusCont>
