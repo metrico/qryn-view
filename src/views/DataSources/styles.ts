@@ -3,14 +3,9 @@ import { BtnSmall } from "../../theme/styles/Button";
 
 export const PageContainer: any = styled.div`
     overflow-x: hidden;
-    margin: 0px;
-    padding: 0px;
-    left: 0;
-    top: 0;
     border-radius: 3px;
     background: ${({ theme }: any) => theme.viewBg};
     color: ${({ theme }: any) => theme.textColor};
-    position: absolute;
     width: 100%;
     height: 100%;
     overflow-y: auto;

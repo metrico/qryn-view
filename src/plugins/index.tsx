@@ -1,11 +1,11 @@
 import { initPlugins, PluginManager } from "./PluginManagerFactory";
 import clockPlugin from "./Clock";
-import raggixPlugin from "./Raggix";
+//import raggixPlugin from "./Raggix";
 import aggregationPlugin from "./Aggregation"
 
 let plugins = [
     clockPlugin,
-    raggixPlugin,
+   // raggixPlugin,
     aggregationPlugin
     
 ]

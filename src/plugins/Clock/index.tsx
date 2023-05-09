@@ -40,6 +40,7 @@ const clockPlugin: Plugin = {
     Component: Clock,
     description: "A simple clock with date / time",
     active: false,
+    roles:['admin','user','guest']
 };
 
 export default clockPlugin;

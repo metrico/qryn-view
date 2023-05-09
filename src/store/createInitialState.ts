@@ -152,6 +152,7 @@ export default function initialState() {
         apiUrl: urlState.apiUrl || environment.apiUrl || "",
         isSubmit: urlState.isSubmit || false,
         isEmbed: urlState.isEmbed || false,
+        userType:'admin',
         // dont mention queries // its obvious
 
         left: urlState["left"] || [

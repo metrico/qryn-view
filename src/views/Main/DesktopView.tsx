@@ -100,10 +100,10 @@ export function DesktopView({
             </div>
         );
     };
+
     return (
         <ThemeProvider theme={theme}>
             <MainContainer>
-                {!isEmbed && <StatusBar />}
                 {panelsRenderer(leftOpen, rightOpen)}
             </MainContainer>
 

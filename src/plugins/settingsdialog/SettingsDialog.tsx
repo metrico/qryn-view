@@ -25,6 +25,8 @@ import {
 import setDebugMode from "../../actions/setDebugMode";
 import { css, cx } from "@emotion/css";
 import { LocalPluginsManagement } from "../PluginManagerFactory";
+import { ThemeProvider } from "@emotion/react";
+import { useTheme } from "../../theme";
 
 export const DialogStyles = css`
     background-color: transparent !important;
@@ -60,7 +62,7 @@ export const PluginSwitch: React.FC<PluginSwitchProps> = (props) => {
 
     return (
         <div className={cx(InlineSwitch)}>
-            <SettingLabel>
+            <SettingLabel>useTheme
                 {name}
                 <Tooltip title={description}>
                     <InfoIcon
@@ -139,7 +141,7 @@ export default function SettingsDialog({ open, onClose }: any) {
     const theme = useSelector((store: any) => store.theme);
     const autoTheme = useSelector((store: any) => store.autoTheme);
     const debugMode = useSelector((store: any) => store.debugMode);
-
+    const themeC = useTheme()
     const [embedEdited, setEmbedEdited] = useState(
         getEmbed(window.location.href)
     );
@@ -199,6 +201,7 @@ export default function SettingsDialog({ open, onClose }: any) {
     }
 
     return (
+        <ThemeProvider theme={themeC}>
         <Dialog
             open={open}
             onClose={handleClose}
@@ -263,5 +266,5 @@ export default function SettingsDialog({ open, onClose }: any) {
                 </SettingsInputContainer>
             </SettingCont>
         </Dialog>
-    );
+        </ThemeProvider> );
 }

@@ -297,6 +297,7 @@ const raggixPlugin: Plugin = {
     description:
         "Qryn Raggix displays potential requests as squares on the screen.",
     active: false,
+    roles:['admin']
 };
 
 export default raggixPlugin;

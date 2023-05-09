@@ -99,11 +99,16 @@ const reducer = (state: any, action: any) => {
         case "SET_DATA_SOURCES":
             return { ...state, dataSources: action.dataSources };
         case "SET_IS_DATASOURCE_SAVED":
-            return {...state, isDsSaved: action.isDsSaved};
+            return { ...state, isDsSaved: action.isDsSaved };
         case "SHOW_DATA_SOURCE_SETTING":
-            return {...state, showDataSourceSetting: action.showDataSourceSetting}
+            return {
+                ...state,
+                showDataSourceSetting: action.showDataSourceSetting,
+            };
         case "SET_PLUGINS":
-            return {...state, plugins: action.setPlugins}
+            return { ...state, plugins: action.setPlugins };
+        case "SET_USER_TYPE":
+            return { ...state, userType: action.userType };
         default:
             return { ...state };
     }
