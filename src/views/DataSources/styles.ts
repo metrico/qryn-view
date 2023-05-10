@@ -49,7 +49,6 @@ export const PageContainer: any = styled.div`
 
     .ds-item {
         padding: 10px;
-        background: ${({ theme }: any) => theme.viewBg};
         //    margin-bottom: 10px;
         border-radius: 3px 3px 0px 0px;
         padding-bottom: 14px;

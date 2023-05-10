@@ -3,7 +3,7 @@ import { css, cx } from "@emotion/css";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import PluginRenderer from "../../plugins/PluginsRenderer";
-import ClokiMenu from "../../plugins/settingsmenu/Menu";
+import MainMenu from "../../plugins/settingsmenu/MainMenu";
 import { useTheme } from "../../theme";
 import Logo from "./assets/qryn-logo.png";
 
@@ -54,7 +54,9 @@ const MainStatusBar: React.FC = () => {
                 <p className="path"> {"/"} {renderPath(location.pathname)}</p>
             </div>
             <PluginRenderer section={"Status Bar"} localProps={theme} />
-            <ClokiMenu />
+          
+            <MainMenu/>
+            
         </div>
     );
 };

@@ -28,9 +28,17 @@ export function updateDataSourcesWithUrl(
         let cookieDsData = "";
         if (dsData && dsData !== "") {
             try {
-                let [urlDsData, userType] = dsData.split("&&");
-                urlDsData = atob(urlDsData);
-                urlDsData = JSON.parse(urlDsData);
+                let userType = "";
+                let ut = dsData.split("&&");
+                if (ut[1] && typeof ut[1] === "string" && ut[1] !== "") {
+                    userType = ut[1];
+                } else {
+                    userType = "admin";
+                }
+
+                // urlDsData = atob(urlDsData);
+                // urlDsData = JSON.parse(urlDsData);
+
                 if (
                     userType &&
                     typeof userType === "string" &&
