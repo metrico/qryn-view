@@ -12,14 +12,18 @@ import { useTheme } from "../../theme";
 import { useDispatch, useSelector } from "react-redux";
 import setSettingsDialogOpen from "../../actions/setSettingsDialogOpen";
 import { Link } from "react-router-dom";
-import MenuIcon from "@mui/icons-material/Menu";
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import StorageIcon from '@mui/icons-material/Storage';
 import CopyButton from "./CopyButton/CopyButton";
+import Avatar from "react-avatar";
 export default function MainMenu() {
     const showDs = useSelector((store: any) => store.showDataSourceSetting);
+    const currentUser = useSelector((store:any) => store.currentUser);
     const userType = useSelector((store: any) => store.userType);
     const dispatch = useDispatch();
+    
     const theme = useTheme();
+    
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -53,7 +57,8 @@ export default function MainMenu() {
                         aria-haspopup="true"
                         aria-expanded={open ? "true" : undefined}
                     >
-                       <MenuIcon style={{ height: "16px", width: "16px" }} />
+                        <Avatar name={currentUser.name} size={"30px"} round={"3px"} />
+                       {/* <MenuIcon style={{ height: "16px", width: "16px" }} /> */}
                     </IconButton>
                 </Tooltip>
             </Box>
@@ -130,6 +135,13 @@ export default function MainMenu() {
                         Plugins
                     </MenuItem>
                 </Link>
+
+                <Link to="/users">
+                        <MenuItem className={'item'}>
+                            <PersonOutlineOutlinedIcon  className="icon"/>
+                            Users
+                        </MenuItem>
+                    </Link>
 
                 {showDs && userType === "admin" && (
                     <Link to="datasources">

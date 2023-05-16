@@ -109,10 +109,11 @@ const reducer = (state: any, action: any) => {
             return { ...state, plugins: action.setPlugins };
         case "SET_USER_TYPE":
             return { ...state, userType: action.userType };
+        case "SET_CURRENT_USER":
+            return {...state, currentUser:action.currentUser};
         default:
             return { ...state };
     }
 };
 
 export default reducer;
-

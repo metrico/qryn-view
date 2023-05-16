@@ -153,6 +153,7 @@ export default function initialState() {
         isSubmit: urlState.isSubmit || false,
         isEmbed: urlState.isEmbed || false,
         userType:'admin',
+        currentUser: {name:'Qryn Admin', role:'admin', id:"OoH8zZt71U70W01LcgAQs"},
         // dont mention queries // its obvious
 
         left: urlState["left"] || [

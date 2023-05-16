@@ -16,7 +16,7 @@ const AppRoute = lazy(() => import("./App"));
 const DataSourcesRoute = lazy(() => import("./views/DataSources/DataSources"));
 const MainRoute = lazy(() => import("./views/Main"));
 const PluginsRoute = lazy(() => import("./plugins/Plugins"));
-
+const UserRoles = lazy(()=> import("./views/User/UserRoles"))
 errorInterceptor(axios);
 ReactDOM.render(
     <StrictMode>
@@ -35,6 +35,10 @@ ReactDOM.render(
                                 <Route
                                     path="/plugins"
                                     element={<PluginsRoute />}
+                                />
+                                   <Route
+                                    path="/users"
+                                    element={<UserRoles />}
                                 />
 
                                 <Route
