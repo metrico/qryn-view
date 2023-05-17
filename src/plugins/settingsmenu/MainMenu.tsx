@@ -19,7 +19,7 @@ import Avatar from "react-avatar";
 export default function MainMenu() {
     const showDs = useSelector((store: any) => store.showDataSourceSetting);
     const currentUser = useSelector((store:any) => store.currentUser);
-    const userType = useSelector((store: any) => store.userType);
+    const userType = useSelector((store: any) => store.currentUser.role);
     const dispatch = useDispatch();
     
     const theme = useTheme();

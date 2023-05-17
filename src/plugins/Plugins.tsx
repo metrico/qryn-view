@@ -155,7 +155,7 @@ export const PluginCards: React.FC<{
     section: string;
 }> = ({ components, section }) => {
 
-    const userType = useSelector((store:any)=>store.userType)
+    const userType = useSelector((store:any)=>store.currentUser.role)
 
     const filteredList = useMemo(()=>{
         return components?.filter((f:any)=> f.roles.includes(userType))
@@ -181,7 +181,7 @@ export const PluginCards: React.FC<{
 
 export default function Plugins() {
     const theme = useTheme();
-    const userType = useSelector((store:any)=>store.userType)
+    const userType = useSelector((store:any)=>store.currentUser.role)
 
     console.log(userType)
 

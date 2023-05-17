@@ -1,7 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { getDsHeaders } from "../../components/QueryBuilder/Operations/helpers";
 import setDataSources from "../DataSources/store/setDataSources";
-import { setUserType } from "./actions";
 import { setShowDataSourceSetting } from "./setShowDataSourceSetting";
 
 // updateDataSources:
@@ -28,24 +27,6 @@ export function updateDataSourcesWithUrl(
         let cookieDsData = "";
         if (dsData && dsData !== "") {
             try {
-                let userType = "";
-                let ut = dsData.split("&&");
-                if (ut[1] && typeof ut[1] === "string" && ut[1] !== "") {
-                    userType = ut[1];
-                } else {
-                    userType = "admin";
-                }
-
-                // urlDsData = atob(urlDsData);
-                // urlDsData = JSON.parse(urlDsData);
-
-                if (
-                    userType &&
-                    typeof userType === "string" &&
-                    userType !== ""
-                ) {
-                    dispatch(setUserType(userType));
-                }
                 if (typeof cookieDsData === "object" && cookieDsData["url"]) {
                     apiUrl = cookieDsData["url"];
                     haveUrl = true;

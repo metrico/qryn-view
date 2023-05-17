@@ -32,7 +32,10 @@ export default function Main() {
 
     UpdateStateFromQueryParams();
   
-    const { cookiesAvailable, cookieAuth } = useCookiesAvailable(paramsMemo);
+    const { cookiesAvailable, cookieAuth, cookieUser } = useCookiesAvailable(paramsMemo);
+
+    
+
     const { urlAvailable, url } = useUrlAvailable(paramsMemo);
     useEffect(() => {
         const onlyCookie = cookiesAvailable && !urlAvailable;
