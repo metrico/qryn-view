@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 export default function ProtectedRoute({ children }: { children: any }) {
-    const userType = useSelector((store:any)=> store.userType)
+    const userType = useSelector((store:any)=> store.currentUser.role)
     const cookieMemo = useMemo(() => {
         let cookie = false;
         let url = "";
@@ -23,7 +23,7 @@ export default function ProtectedRoute({ children }: { children: any }) {
         return { cookie, url };
     }, []);
 
-    if (cookieMemo.cookie || userType !== 'admin') {
+    if (cookieMemo.cookie || (userType !== 'admin' || userType !== 'superAdmin')) {
         return <Navigate to={"/"} />;
     }
     return children;

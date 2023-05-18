@@ -10,8 +10,6 @@ import { setCurrentUser } from "../User/actions";
 
 
 export function useCookiesAvailable(urlParams: any) {
-
-    const dispatch = useDispatch()
     let cookieAuth = "";
     let cookiesAvailable = false;
 

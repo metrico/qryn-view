@@ -1,5 +1,5 @@
 import { css, cx } from "@emotion/css";
-import React, { useMemo, useState } from "react"; // this page should have the 'plugins' list with title, image and description
+import React, { useMemo, useState, useEffect } from "react"; // this page should have the 'plugins' list with title, image and description
 import { useTheme } from "../theme";
 import ExtensionOutlinedIcon from "@mui/icons-material/ExtensionOutlined";
 import { LocalPluginsManagement } from "./PluginManagerFactory";
@@ -32,12 +32,12 @@ const PluginPageStyles = (theme: any) => css`
     flex: 1;
     height: 100%;
     overflow: hidden;
-    max-width:1440px;
-    align-self:center;
+    max-width: 1440px;
+    align-self: center;
     .plugin-section {
-        padding:4px;
-        font-size:14px;
-        color:${theme.textColor};
+        padding: 4px;
+        font-size: 14px;
+        color: ${theme.textColor};
     }
 `;
 
@@ -55,29 +55,31 @@ const PluginCardStyles = (theme: any) => css`
     height: fit-content;
 
     .image {
-   display:flex;
-   align-items:center;
+        display: flex;
+        align-items: center;
     }
 
     .title {
         font-size: 16px;
         padding: 4px;
         align-self: flex-start;
-        display:flex;
-        align-items:center;
-        width:100%;
-        .plugin-name{flex:1;
-        margin-left:10px;}
+        display: flex;
+        align-items: center;
+        width: 100%;
+        .plugin-name {
+            flex: 1;
+            margin-left: 10px;
+        }
         .switch {
             display: flex;
             align-items: center;
-            justify-self:end;
+            justify-self: end;
         }
     }
     .text {
         font-size: 12px;
         padding: 4px;
-        line-height:1.5;
+        line-height: 1.5;
     }
     .icon {
         font-size: 60px;
@@ -85,21 +87,23 @@ const PluginCardStyles = (theme: any) => css`
     }
 `;
 
-
 export const PluginCard: React.FC<PluginCardProps> = (props) => {
     const { theme, name, description, section, active } = props;
     return (
         <>
             <div className={cx(PluginCardStyles(theme))}>
-            
                 <div className="title">
-                <div className="image">
-                    <ExtensionOutlinedIcon className={"icon"} />
-                </div>
-                  <div className={'plugin-name'}> {name}</div>
+                    <div className="image">
+                        <ExtensionOutlinedIcon className={"icon"} />
+                    </div>
+                    <div className={"plugin-name"}> {name}</div>
 
                     <div className="switch">
-                        <PluginSwitch active={active} name={name} section={section} />
+                        <PluginSwitch
+                            active={active}
+                            name={name}
+                            section={section}
+                        />
                     </div>
                 </div>
                 <div className="text">{description}</div>
@@ -154,18 +158,29 @@ export const PluginCards: React.FC<{
     components: any[];
     section: string;
 }> = ({ components, section }) => {
+    const userType = useSelector((store: any) => store.currentUser.role);
 
-    const userType = useSelector((store:any)=>store.currentUser.role)
+    const compList = useMemo(() => {
+        return components?.filter((f: any) => f.roles.includes(userType));
+    }, [userType, components]);
 
-    const filteredList = useMemo(()=>{
-        return components?.filter((f:any)=> f.roles.includes(userType))
-    },[userType,components])
+    const [filteredComponentList, setFilteredComponentList] =
+        useState(compList);
+
+    useEffect(() => {
+        if (userType && components) {
+            let newComp = components?.filter((f: any) =>
+                f.roles.includes(userType)
+            );
+            setFilteredComponentList(newComp);
+        }
+    }, [userType, components]);
 
     const theme = useTheme();
     return (
         <div>
-            {filteredList?.length > 0 &&
-                filteredList?.map((component: any, k: number) => (
+            {filteredComponentList?.length > 0 &&
+                filteredComponentList?.map((component: any, k: number) => (
                     <PluginCard
                         theme={theme}
                         key={k}
@@ -181,13 +196,8 @@ export const PluginCards: React.FC<{
 
 export default function Plugins() {
     const theme = useTheme();
-    const userType = useSelector((store:any)=>store.currentUser.role)
-
-    console.log(userType)
-
     const pl = LocalPluginsManagement();
     const [local] = useState(pl.getAll());
-    console.log(local)
     const plugins: any = useMemo(() => {
         if (Object.keys(local)?.length > 0) {
             return Object.entries(local);
@@ -200,7 +210,7 @@ export default function Plugins() {
             {plugins?.length > 0 &&
                 plugins?.map(([section, components]: any, index: number) => (
                     <div style={{ marginTop: "4px" }} key={index}>
-                        <div className={'plugin-section'}>{section}</div>
+                       
                         <PluginCards
                             components={components}
                             section={section}

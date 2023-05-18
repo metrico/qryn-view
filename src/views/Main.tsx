@@ -15,6 +15,7 @@ import {
 
 import { css, cx } from "@emotion/css";
 import { useTheme } from "../theme";
+import { setCurrentUser } from "./User/actions";
 
 const MainStyles = (theme: any) => css`
     background: ${theme.widgetContainer};
@@ -34,9 +35,8 @@ export default function Main() {
   
     const { cookiesAvailable, cookieAuth, cookieUser } = useCookiesAvailable(paramsMemo);
 
-    
-
     const { urlAvailable, url } = useUrlAvailable(paramsMemo);
+
     useEffect(() => {
         const onlyCookie = cookiesAvailable && !urlAvailable;
         const onlyUrl = !cookiesAvailable && urlAvailable;
@@ -62,6 +62,19 @@ export default function Main() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(()=>{
+  
+        if(cookieUser && typeof cookieUser === 'string') {
+            try {
+                dispatch(setCurrentUser(JSON.parse(cookieUser)))
+
+            } catch(e) {
+                console.log(e)
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[cookieUser])
 
     useEffect(() => {
         const urlSetting = {
@@ -96,6 +109,7 @@ export default function Main() {
             );
         }
     }, [isAutoDark, autoTheme, dispatch]);
+    
     const viewRenderer = (
         isTabletOrMobile: boolean,
         isSplit: boolean,
