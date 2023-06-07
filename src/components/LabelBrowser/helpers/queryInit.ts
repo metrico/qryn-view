@@ -2,7 +2,7 @@ import DOMPurify from "isomorphic-dompurify";
 export default function queryInit(query: any) {
     return (
         query.split(/[  ]+/).map((m: any) => ({
-            type: "paragraph",
+            
             children: [
                 {
                     text: DOMPurify.sanitize(m),
@@ -10,7 +10,7 @@ export default function queryInit(query: any) {
             ],
         })) || [
             {
-                type: "paragraph",
+                
                 children: [
                     {
                         text: DOMPurify.sanitize("Enter a cLoki Query"),

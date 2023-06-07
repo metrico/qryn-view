@@ -32,6 +32,7 @@ import ShowQuerySettingsButton from "./Buttons/ShowQuerySettingsButton";
 /**Helpers */
 import queryInit from "../helpers/queryInit";
 import onQueryValid from "../helpers/onQueryValid";
+import { QueryLocalService } from "./LabelsSelector/helpers";
 /**Components */
 import QueryTypeBar from "../../QueryTypeBar";
 import { QuerySetting } from "./QuerySetting";
@@ -87,7 +88,6 @@ export const QueryBar = (props: any) => {
         direction,
         dataSourceId,
         splitted,
-        //  dataSourceURL,
     } = data;
     const {
         data: {
@@ -99,6 +99,10 @@ export const QueryBar = (props: any) => {
             logsVolumeQuery,
         },
     } = props;
+
+    const { getLocalQueryItem, getLocalDataSources, setLocalQueryData } =
+        QueryLocalService;
+
     const { hash } = useLocation();
     const dispatch = useDispatch();
     const saveUrl = localUrl();
@@ -121,77 +125,38 @@ export const QueryBar = (props: any) => {
         isShowStats || false
     );
     const [open, setOpen] = useState<any>(false);
-    // const [currentDataSource,setCurrentDatasource] = useState({})
     const dataSources = useSelector((store: any) => store.dataSources);
     const panelData = useSelector((store: any) => store[name]);
-    const actLocalQuery = useMemo(() => {
-        let exprQuery = { expr: "", dataSourceId, queryId: id };
-        try {
-            const localData =
-                JSON.parse(localStorage.getItem("queryData") || "[]") || [];
-            if (localData && localData?.length > 0) {
-                const fromLocal = localData?.find(
-                    (f: any) =>
-                        f.dataSourceId === dataSourceId && f.queryId === id
-                );
-                if (fromLocal) {
-                    exprQuery = { ...fromLocal };
-                }
-                return exprQuery;
-            } else {
-                return exprQuery;
-            }
-        } catch (e) {
-            console.error(e);
-            return exprQuery;
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dataSourceId]);
 
-    const actLocalDs = useMemo(() => {
-        try {
-            const localData = JSON.parse(
-                localStorage.getItem("dataSources") || "[]"
-            );
-            return localData?.find((f: any) => f.id === dataSourceId);
-        } catch (e) {
-            return {};
-        }
-    }, [dataSourceId]);
-    const expr = useMemo(() => {
-        return data.expr;
-    }, [data.expr]);
     const initialDefault = useMemo(() => {
         return defaultDataSources.find((f) => f.id === dataSourceId);
     }, [dataSourceId]);
-
-    // on init
 
     const findCurrentDataSource = (dataSources: any, id: string) => {
         return dataSources?.find((f: any) => f.id === dataSourceId);
     };
 
     useEffect(() => {
-        setQueryInput(actLocalQuery.expr);
-        setQueryValue([
-            { children: [{ text: DOMPurify.sanitize(actLocalQuery.expr) }] },
-        ]);
+        const { expr } = getLocalQueryItem(dataSourceId, id) || "";
+        const localDataSource = getLocalDataSources(dataSourceId);
 
-        setLogsLevel(actLocalQuery.expr, isLogsVolume);
+        setQueryInput(expr);
+        setQueryValue([{ children: [{ text: expr }] }]);
+
+        setLogsLevel(expr, isLogsVolume);
 
         const dataSource: any = findCurrentDataSource(dataSources, id);
 
         let currentDataSource: any = {};
 
         if (
-            actLocalDs &&
-            actLocalDs?.url !== initialDefault &&
-            actLocalDs?.url !== ""
+            localDataSource &&
+            localDataSource?.url !== initialDefault &&
+            localDataSource?.url !== ""
         ) {
-            currentDataSource = { ...actLocalDs };
+            currentDataSource = { ...localDataSource };
 
             const panelCP = [...panelData];
-
             panelCP.forEach((query) => {
                 if (query.id === id) {
                     query.dataSourceId = currentDataSource.id;
@@ -234,6 +199,13 @@ export const QueryBar = (props: any) => {
     // force single view from small width
 
     useEffect(() => {
+        setQueryInput(data.expr);
+        setQueryValue([
+            { children: [{ text: DOMPurify.sanitize(data.expr) }] },
+        ]);
+    }, [data.expr]);
+
+    useEffect(() => {
         if (isTabletOrMobile && isSplit) {
             dispatch(setSplitView(false));
         }
@@ -243,12 +215,13 @@ export const QueryBar = (props: any) => {
     // changes on changin dataSource Id
 
     useEffect(() => {
-        setQueryInput(actLocalQuery.expr);
-        setQueryValue([
-            { children: [{ text: DOMPurify.sanitize(actLocalQuery.expr) }] },
-        ]);
+        let { expr } = getLocalQueryItem(dataSourceId, id) || "";
+        let actLocalDs = getLocalDataSources(dataSourceId);
+        setQueryInput(expr);
+        setQueryValue([{ children: [{ text: DOMPurify.sanitize(expr) }] }]);
+
         if (isLogsVolume && logsVolumeQuery) {
-            setLogsLevel(actLocalQuery.expr, isLogsVolume);
+            setLogsLevel(expr, isLogsVolume);
         }
         const dataSource: any = dataSources?.find(
             (f: any) => f.id === dataSourceId
@@ -287,12 +260,12 @@ export const QueryBar = (props: any) => {
             currentDataSource = { ...dataSource };
         }
 
-        let { isMatrix } = getIntvalData(actLocalQuery?.expr);
-        if (actLocalQuery.expr !== "" && actLocalQuery.expr?.length > 6) {
+        let { isMatrix } = getIntvalData(expr);
+        if (expr !== "" && expr?.length > 6) {
             dispatch(
                 getData(
                     dataSourceType,
-                    actLocalQuery?.expr,
+                    expr,
                     queryType,
                     limit,
                     name,
@@ -331,22 +304,22 @@ export const QueryBar = (props: any) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataSourceId, id]);
 
-    // changes on changing exp
-
     useEffect(() => {
-        if (typeof expr === "string") {
-            setQueryInput(expr);
-            setQueryValue([{ children: [{ text: DOMPurify.sanitize(expr) }] }]);
+        if (typeof queryInput === "string") {
+            setQueryInput(queryInput);
+            setQueryValue([
+                { children: [{ text: DOMPurify.sanitize(queryInput) }] },
+            ]);
             saveQuery();
             if (isLogsVolume) {
-                setLogsLevel(expr, true);
+                setLogsLevel(queryInput, true);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [expr]);
+    }, [queryInput]);
 
     useEffect(() => {
-        if (typeof launchQuery === "string") {
+        if (typeof launchQuery === "string" && launchQuery !== "") {
             setQueryInput(launchQuery);
             setQueryValue([
                 { children: [{ text: DOMPurify.sanitize(launchQuery) }] },
@@ -473,55 +446,15 @@ export const QueryBar = (props: any) => {
 
                 updateLinksHistory();
 
-                setLocalStorage();
+                setLocalQueryData(queryInput, id, dataSourceId);
             } catch (e) {
                 console.error(e);
             }
         } else {
             dispatch(setIsEmptyView(true));
 
-            console.log("Please make a log query", expr);
+            console.log("Please make a log query", queryInput);
         }
-    };
-    const getLocalStorage = () => {
-        try {
-            const prevQuery = JSON.parse(
-                localStorage.getItem("queryData") || "[]"
-            );
-            return prevQuery;
-        } catch (e) {
-            return [];
-        }
-    };
-    const setLocalStorage = () => {
-        const queryData = {
-            expr,
-            queryId: id,
-            dataSourceId: dataSourceId,
-        };
-
-        const prevData = getLocalStorage();
-        let newData = [];
-
-        if (
-            prevData &&
-            prevData.length > 0 &&
-            Array.isArray(prevData) &&
-            prevData.some(
-                (s) => s.dataSourceId === dataSourceId && s.queryId === id
-            )
-        ) {
-            newData = prevData.map((m) => {
-                if (m.queryId === id && m.dataSourceId === dataSourceId) {
-                    return { ...queryData };
-                } else {
-                    return m;
-                }
-            });
-        } else {
-            newData = [...prevData, queryData];
-        }
-        localStorage.setItem("queryData", JSON.stringify(newData));
     };
 
     const saveQuery = (e = []) => {
@@ -540,7 +473,7 @@ export const QueryBar = (props: any) => {
             });
             dispatch(panelAction(name, panel));
             queryParams.set(name, JSON.stringify(panel));
-            setLocalStorage();
+            setLocalQueryData(queryInput, id, dataSourceId);
         }
     };
 
@@ -862,7 +795,7 @@ export const QueryBar = (props: any) => {
                             alignItems: "center",
                             justifyContent: "space-between",
                             paddingRight: "15px",
-                            marginBottom:"4px"
+                            marginBottom: "4px",
                         }}
                     >
                         <TracesSwitch
@@ -941,7 +874,7 @@ export const QueryBar = (props: any) => {
                         isBuilder={isBuilder}
                         dataSourceType={dataSourceType}
                         handleQueryChange={handleQueryChange}
-                        expr={expr}
+                        expr={queryInput}
                         queryValue={queryValue}
                         handleInputKeyDown={handleInputKeyDown}
                         queryHistory={queryHistory}
@@ -1073,7 +1006,7 @@ export const QueryBarCont = (props: any) => {
         onSubmitRate,
         loading,
     } = props;
-    const isSplit = useSelector((store:any)=> store.isSplit)
+    const isSplit = useSelector((store: any) => store.isSplit);
     const dType = (type: string) => dataSourceType === type;
     const buttonsHidden = () =>
         !isSplit && dataSourceType !== "flux" && dataSourceType !== "traces";
@@ -1093,19 +1026,32 @@ export const QueryBarCont = (props: any) => {
                     />
                 )}
 
-            {buttonsHidden() && dataSourceType === "logs" && !isBuilder && !isTabletOrMobile && (
-                <>
-                    <HistoryButton
-                        queryLength={queryHistory.length}
-                        handleHistoryClick={handleHistoryClick}
-                    />
-                    {dataSourceType === "logs" && !isBuilder && (
-                        <ShowLogsRateButton
-                            disabled={!queryValid}
-                            onClick={onSubmitRate}
-                            isMobile={false}
+            {buttonsHidden() &&
+                dataSourceType === "logs" &&
+                !isBuilder &&
+                !isTabletOrMobile && (
+                    <>
+                        <HistoryButton
+                            queryLength={queryHistory.length}
+                            handleHistoryClick={handleHistoryClick}
                         />
-                    )}
+                        {dataSourceType === "logs" && !isBuilder && (
+                            <ShowLogsRateButton
+                                disabled={!queryValid}
+                                onClick={onSubmitRate}
+                                isMobile={false}
+                            />
+                        )}
+                        <ShowLogsButton
+                            disabled={!queryValid}
+                            onClick={onSubmit}
+                            isMobile={false}
+                            loading={loading || false}
+                        />
+                    </>
+                )}
+            {dataSourceType === "traces" && dataSourceType === "metrics" && (
+                <>
                     <ShowLogsButton
                         disabled={!queryValid}
                         onClick={onSubmit}
@@ -1114,18 +1060,6 @@ export const QueryBarCont = (props: any) => {
                     />
                 </>
             )}
-            {dataSourceType === "traces" &&
-                dataSourceType === "metrics" &&
-                 (
-                    <>
-                        <ShowLogsButton
-                            disabled={!queryValid}
-                            onClick={onSubmit}
-                            isMobile={false}
-                            loading={loading || false}
-                        />
-                    </>
-                )} 
         </QueryBarContainer>
     );
 };

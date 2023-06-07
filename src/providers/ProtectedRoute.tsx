@@ -23,7 +23,7 @@ export default function ProtectedRoute({ children }: { children: any }) {
         return { cookie, url };
     }, []);
 
-    if (cookieMemo.cookie || (userType !== 'admin' || userType !== 'superAdmin')) {
+    if (cookieMemo.cookie || (userType !== 'admin' && userType !== 'superAdmin')) {
         return <Navigate to={"/"} />;
     }
     return children;

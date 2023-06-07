@@ -9,7 +9,8 @@ import { useTheme } from "../../../../theme";
 
 export default function LabelsSelector(props: any) {
     const { data } = props;
-    const { dataSourceId } = data;
+    
+    const { dataSourceId, labels:propsLabels, start:startTs, stop:stopTs } = data;
 
     //const dataSourceURL = useSelector((store)=> store.dataSources.find(f => f.id === dataSourceId))
 
@@ -18,19 +19,19 @@ export default function LabelsSelector(props: any) {
     const [labelsSelected, setLabelsSelected]: any = useState([]);
 
     const theme = useTheme();
-
-    const { response, loading }: any = useLabels(dataSourceId); //  set URL from props
+    
+    const { response, loading }: any = useLabels(dataSourceId,"",startTs,stopTs); //  set URL from props
 
     // get previously selected labels
 
     const labelsFromProps = useMemo(() => {
-        if (data?.labels?.length > 0) {
-            return data?.labels.map(({ name, selected }: any) => ({
+        if (propsLabels?.length > 0) {
+            return propsLabels.map(({ name, selected }: any) => ({
                 name,
                 selected,
             }));
         } else return [];
-    }, [data?.labels]);
+    }, [propsLabels]);
 
     // get response from useLabels hook
 
