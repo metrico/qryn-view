@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import isPropValid from "@emotion/is-prop-valid";
-
 import HistoryIcon from "@mui/icons-material/History";
 import { BtnSmall as btnSmall } from "../../../theme/styles/Button";
 import { InputSmall } from "../../../theme/styles/Input";
+
 const BtnSmall = btnSmall as any;
 export const HistoryIconStyled: any = styled(HistoryIcon)`
     height: 18px;
@@ -56,13 +56,13 @@ export const ShowLogsBtn: any = styled(BtnSmall, {
     shouldForwardProp: (prop) => isPropValid(prop) && prop !== "loading",
 })`
     background: ${(props) =>
-    props.loading ? "#44bcd8" : props.theme.primaryDark};
+        props.loading ? "#44bcd8" : props.theme.primaryDark};
     border: 1px solid ${(props) => props.theme.primaryBorder};
     color: ${(props) => props.theme.buttonText};
     transition: 0.25s all;
     justify-content: center;
     height: 28px;
-    margin:0px 4px;
+    margin: 0px 4px;
     &:hover {
         background: ${(props) => props.theme.primaryLight};
     }
@@ -95,7 +95,7 @@ export const ShowSettingsBtn: any = styled(BtnSmall)`
 export const MobileTopQueryMenu: any = styled.div`
     display: flex;
     flex-wrap: wrap;
-    margin-bottom:4px;
+    margin-bottom: 4px;
     @media screen and (max-width: 1070px) {
         display: flex;
         gap: 2px;
@@ -109,7 +109,7 @@ export const InputGroup: any = styled.div`
     justify-content: space-between;
     margin-bottom: 20px;
     margin-right: 10px;
-    margin:2px;
+    margin: 2px;
 `;
 export const InlineGroup: any = styled.div`
     display: flex;

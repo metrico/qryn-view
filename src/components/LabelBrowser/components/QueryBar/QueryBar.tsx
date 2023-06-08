@@ -9,46 +9,45 @@ import { ThemeProvider } from "@emotion/react";
 import { useMediaQuery } from "react-responsive";
 import DOMPurify from "isomorphic-dompurify";
 /**Actions */
-import getData from "../../../actions/getData";
-import setQueryHistory from "../../../actions/setQueryHistory";
-import setHistoryOpen from "../../../actions/setHistoryOpen";
-import setLinksHistory from "../../../actions/setLinksHistory";
-import setIsEmptyView from "../../../actions/setIsEmptyView";
-import { setLeftPanel } from "../../../actions/setLeftPanel";
-import { setRightPanel } from "../../../actions/setRightPanel";
+import getData from "../../../../actions/getData";
+import setQueryHistory from "../../../../actions/setQueryHistory";
+import setHistoryOpen from "../../../../actions/setHistoryOpen";
+import setLinksHistory from "../../../../actions/setLinksHistory";
+import setIsEmptyView from "../../../../actions/setIsEmptyView";
+import { setLeftPanel } from "../../../../actions/setLeftPanel";
+import { setRightPanel } from "../../../../actions/setRightPanel";
 
 /**Services */
-import localService from "../../../services/localService";
-import localUrl from "../../../services/localUrl";
-/**Plugins */
-import QueryEditor from "../../../plugins/queryeditor";
-import { MobileTopQueryMenu, QueryBarContainer } from "./styled";
+import localService from "../../../../services/localService";
+import localUrl from "../../../../services/localUrl";
+
 /**Buttons */
-import HistoryButton from "./Buttons/HistoryButton";
-import ShowLabelsButton from "./Buttons/ShowLabelsButton";
-import ShowLogsButton from "./Buttons/ShowLogsButton";
-import ShowLogsRateButton from "./Buttons/ShowLogsRateButton";
-import ShowQuerySettingsButton from "./Buttons/ShowQuerySettingsButton";
+import ShowLogsButton from "../Buttons/ShowLogsButton";
+import ShowLogsRateButton from "../Buttons/ShowLogsRateButton";
+
 /**Helpers */
-import queryInit from "../helpers/queryInit";
-import onQueryValid from "../helpers/onQueryValid";
-import { QueryLocalService } from "./LabelsSelector/helpers";
+import queryInit from "../../helpers/queryInit";
+import onQueryValid from "../../helpers/onQueryValid";
+import { QueryLocalService } from "../LabelsSelector/helpers";
 /**Components */
-import QueryTypeBar from "../../QueryTypeBar";
-import { QuerySetting } from "./QuerySetting";
+import QueryTypeBar from "../../../QueryTypeBar";
+import QuerySetting from "../QuerySetting";
+import MobileQueryMenuCont from "./MobileQueryBarCont";
+import QueryBarCont from "./QueryBarCont";
 /**Theme */
 
-import setDataSources from "../../../views/DataSources/store/setDataSources";
-import { defaultDataSources } from "../../../views/DataSources/store/defaults";
-import TracesSearch from "../../TraceSearch/TraceSearch";
-import TracesSwitch from "../../TraceSearch/TracesSwitch";
-import { setSplitView } from "../../StatusBar/components/SplitViewButton/setSplitView";
+import setDataSources from "../../../../views/DataSources/store/setDataSources";
+import { defaultDataSources } from "../../../../views/DataSources/store/defaults";
+import TracesSearch from "../../../TraceSearch/TraceSearch";
+import TracesSwitch from "../../../TraceSearch/TracesSwitch";
+import { setSplitView } from "../../../StatusBar/components/SplitViewButton/setSplitView";
 
 import { Switch } from "@mui/material";
-import { SettingLabel } from "./styled";
-import MetricsSearch from "../../DataViews/components/Metrics/MetricsSearch";
-import LogsSearch from "../../DataViews/components/Logs/LogsSearch/LogsSearch";
-import { useTheme } from "../../DataViews/components/QueryBuilder/hooks";
+import { SettingLabel } from "../styled";
+import MetricsSearch from "../../../DataViews/components/Metrics/MetricsSearch";
+import LogsSearch from "../../../DataViews/components/Logs/LogsSearch/LogsSearch";
+import { useTheme } from "../../../DataViews/components/QueryBuilder/hooks";
+
 export function panelAction(name: any, value: any) {
     if (name === "left") {
         return setLeftPanel(value);
@@ -78,7 +77,16 @@ const maxWidth = css`
  * @param props
  * @returns The Main Query bar component
  */
-export const QueryBar = (props: any) => {
+
+type QueryBarProps = {
+    data: any;
+    queries: any;
+    name: string;
+    width: number;
+    launchQuery: string;
+};
+
+const QueryBar: React.FC<QueryBarProps> = (props) => {
     const { data, name, width, launchQuery } = props;
     const {
         queryType,
@@ -155,7 +163,7 @@ export const QueryBar = (props: any) => {
             localDataSource?.url !== ""
         ) {
             currentDataSource = { ...localDataSource };
-
+            // update datasources inside panel from local if there is datasources from local
             const panelCP = [...panelData];
             panelCP.forEach((query) => {
                 if (query.id === id) {
@@ -709,11 +717,11 @@ export const QueryBar = (props: any) => {
     function handleHistoryClick(e: any) {
         dispatch(setHistoryOpen(!historyOpen));
     }
-    function showQuerySettings() {
+    function onShowQuerySettings() {
         setOpen(open ? false : true);
     }
     function onClose() {
-        showQuerySettings();
+        onShowQuerySettings();
     }
 
     function onTraceSearchChange(e: any) {
@@ -843,11 +851,11 @@ export const QueryBar = (props: any) => {
                 {dataSourceType !== "metrics" &&
                     dataSourceType !== "traces" &&
                     (isTabletOrMobile || isSplit) && (
-                        <MobileTopQueryMenuCont
+                        <MobileQueryMenuCont
                             {...props}
                             isSplit={splitted}
                             dataSourceType={dataSourceType}
-                            showQuerySettings={showQuerySettings}
+                            onShowQuerySettings={onShowQuerySettings}
                             queryHistory={queryHistory}
                             handleHistoryClick={handleHistoryClick}
                             isTabletOrMobile={isTabletOrMobile}
@@ -988,188 +996,4 @@ export const QueryBar = (props: any) => {
     );
 };
 
-// query bar container (full view)
-
-export const QueryBarCont = (props: any) => {
-    const {
-        isTabletOrMobile,
-        isBuilder,
-        dataSourceType,
-        handleQueryChange,
-        expr,
-        queryValue,
-        handleInputKeyDown,
-        queryHistory,
-        handleHistoryClick,
-        queryValid,
-        onSubmit,
-        onSubmitRate,
-        loading,
-    } = props;
-    const isSplit = useSelector((store: any) => store.isSplit);
-    const dType = (type: string) => dataSourceType === type;
-    const buttonsHidden = () =>
-        !isSplit && dataSourceType !== "flux" && dataSourceType !== "traces";
-
-    return (
-        <QueryBarContainer>
-            {!isTabletOrMobile && !isSplit && !isBuilder && dType("logs") && (
-                <ShowLabelsButton {...props} />
-            )}
-            {(dataSourceType !== "logs" || !isBuilder) &&
-                dataSourceType !== "metrics" && (
-                    <QueryEditor
-                        onQueryChange={handleQueryChange}
-                        defaultValue={DOMPurify.sanitize(expr || "")}
-                        value={queryValue} // queryValue should change and or update on datasource change
-                        onKeyDown={handleInputKeyDown}
-                    />
-                )}
-
-            {buttonsHidden() &&
-                dataSourceType === "logs" &&
-                !isBuilder &&
-                !isTabletOrMobile && (
-                    <>
-                        <HistoryButton
-                            queryLength={queryHistory.length}
-                            handleHistoryClick={handleHistoryClick}
-                        />
-                        {dataSourceType === "logs" && !isBuilder && (
-                            <ShowLogsRateButton
-                                disabled={!queryValid}
-                                onClick={onSubmitRate}
-                                isMobile={false}
-                            />
-                        )}
-                        <ShowLogsButton
-                            disabled={!queryValid}
-                            onClick={onSubmit}
-                            isMobile={false}
-                            loading={loading || false}
-                        />
-                    </>
-                )}
-            {dataSourceType === "traces" && dataSourceType === "metrics" && (
-                <>
-                    <ShowLogsButton
-                        disabled={!queryValid}
-                        onClick={onSubmit}
-                        isMobile={false}
-                        loading={loading || false}
-                    />
-                </>
-            )}
-        </QueryBarContainer>
-    );
-};
-
-// mobile top query view (mobile view or splitted view)
-export const MobileTopQueryMenuCont = (props: any) => {
-    const dispatch = useDispatch();
-    const {
-        isSplit,
-        showQuerySettings,
-        queryHistory,
-        handleHistoryClick,
-        queryValid,
-        onSubmit,
-        onSubmitRate,
-        data,
-        name,
-        loading,
-        hasStats,
-        showStatsOpen,
-        handleStatsOpen,
-    } = props;
-    const { id, dataSourceType } = data;
-    const [isChartViewSet, setIsChartViewSet] = useState(props.data.chartView);
-
-    useEffect(() => {
-        setIsChartViewSet(props.data.chartView);
-    }, [setIsChartViewSet, props.data.chartView]);
-
-    const panelQuery = useSelector((store: any) => store[name]);
-
-    const withLabels = (type: any) => {
-        if (type !== "flux" && type !== "metrics" && type !== "traces") {
-            return (
-                <>
-                    <ShowLabelsButton {...props} isMobile={true} />
-                    <ShowQuerySettingsButton
-                        {...props}
-                        isSplit={isSplit}
-                        isMobile={true}
-                        onClick={showQuerySettings}
-                    />
-                </>
-            );
-        }
-        return null;
-    };
-    const getPanelQueryByID = (panel: any, queryId: any) => {
-        return panel.find((query: any) => {
-            return query.id === queryId;
-        });
-    };
-    const handleChartViewSwitch = () => {
-        // modify table view switch value
-        const panel = [...panelQuery];
-
-        const query = getPanelQueryByID(panel, id);
-        if (typeof query !== "undefined") {
-            query.chartView = !isChartViewSet;
-
-            dispatch(panelAction(name, panel));
-        }
-    };
-    return (
-        <MobileTopQueryMenu>
-            {withLabels(dataSourceType)}
-
-            <HistoryButton
-                queryLength={queryHistory?.length}
-                handleHistoryClick={handleHistoryClick}
-                isMobile={true}
-            />
-            {dataSourceType === "logs" && (
-                <ShowLogsRateButton
-                    disabled={!queryValid}
-                    onClick={onSubmitRate}
-                    isMobile={false}
-                />
-            )}
-
-            {dataSourceType === "logs" && hasStats && isSplit && (
-                <div className="options-input">
-                    <SettingLabel>Show Stats</SettingLabel>
-                    <Switch
-                        checked={showStatsOpen}
-                        size={"small"}
-                        onChange={handleStatsOpen}
-                        inputProps={{ "aria-label": "controlled-switch" }}
-                    />
-                </div>
-            )}
-
-            <ShowLogsButton
-                disabled={!queryValid}
-                onClick={onSubmit}
-                isMobile={true}
-                loading={loading || false}
-            />
-
-            {dataSourceType === "flux" && (
-                <div className="options-input">
-                    <SettingLabel>Chart View</SettingLabel>
-                    <Switch
-                        checked={isChartViewSet}
-                        size={"small"}
-                        onChange={handleChartViewSwitch}
-                        inputProps={{ "aria-label": "controlled" }}
-                    />
-                </div>
-            )}
-        </MobileTopQueryMenu>
-    );
-};
+export default QueryBar;
