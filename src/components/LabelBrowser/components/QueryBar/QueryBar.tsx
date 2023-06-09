@@ -220,7 +220,6 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isTabletOrMobile]);
 
-    // changes on changin dataSource Id
 
     useEffect(() => {
         let { expr } = getLocalQueryItem(dataSourceId, id) || "";
@@ -345,7 +344,6 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryInput]);
 
-    // handlers
 
     function setLogsLevel(queryInput: string, isLogsVolume: boolean) {
         if (isLogsVolume && queryInput !== "") {
@@ -377,9 +375,6 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
     const onLogChange = (e: any) => {
         const query = [{ children: [{ text: DOMPurify.sanitize(e) }] }];
-
-        // at this scope we should do the query change from the
-        //  'use query' button
 
         handleQueryChange(query);
     };
@@ -449,7 +444,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
                     setLogsLevel(queryInput, isLogsVolume);
                 }
 
-                // Decode query to translate into labels selection
+
                 decodeQueryAndUpdatePanel(queryInput, true);
 
                 updateLinksHistory();

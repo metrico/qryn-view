@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "@emotion/styled";
 
 
@@ -17,24 +17,28 @@ export const EmptyLabels = (props: any) => {
 
 function LabelItem(props: any) {
 
-    const { selected, label, type } = props;
+    const { label, type } = props;
 
-    const isSelected = useMemo(() => selected, [selected]);
+    const [selected, setSelected] = useState(props.selected)
+
+    useEffect(()=>{
+       setSelected(props.selected)
+    },[props.selected])
 
     const selectedStyle = useMemo(() => {
-        if (isSelected)
+        if (selected)
             return {
                 borderColor: "#11abab",
                 color: "#11abab",
             };
         else return {};
-    }, [isSelected]);
+    }, [selected]);
     return (
         <small
             className={type}
             style={selectedStyle}
             onClick={(e) => props.onClick(label)}
-        >
+        > 
             {label}
         </small>
     );
@@ -49,8 +53,9 @@ export default function LabelsList(props: any) {
     const onClick = (e: any) => {
         if (e === "Select Metric") {
             props.onLabelSelected("__name__");
+        } else {
+            props.onLabelSelected(e);
         }
-        props.onLabelSelected(e);
     };
 
     const lsList = useMemo(() => {

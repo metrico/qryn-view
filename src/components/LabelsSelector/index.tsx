@@ -7,12 +7,9 @@ import ValuesListStyled from "./ValuesListStyled";
 import labelHelpers from "./helpers";
 import { useTheme } from "../../theme";
 
-
 export default function LabelsSelector(props: any) {
     const { data } = props;
     const { dataSourceId } = data;
-
-    //const dataSourceURL = useSelector((store)=> store.dataSources.find(f => f.id === dataSourceId))
 
     const { JSONClone, updateLabel, updateLabelSelected } = labelHelpers;
     const [labelsResponse, setLabelsResponse]: any = useState([]);
@@ -20,9 +17,7 @@ export default function LabelsSelector(props: any) {
 
     const theme = useTheme();
 
-    const { response, loading }: any = useLabels(dataSourceId); //  set URL from props
-
-    // get previously selected labels
+    const { response, loading }: any = useLabels(dataSourceId);
 
     const labelsFromProps = useMemo(() => {
         if (data?.labels?.length > 0) {
@@ -33,15 +28,11 @@ export default function LabelsSelector(props: any) {
         } else return [];
     }, [data?.labels]);
 
-    // get response from useLabels hook
-
     useEffect(() => {
         if (response?.data?.data) {
             setLabelsResponse(response?.data?.data);
         }
     }, [response, setLabelsResponse]);
-
-    // memoize and format labels response
 
     const labels = useMemo(() => {
         if (labelsResponse?.length > 0) {
@@ -52,8 +43,6 @@ export default function LabelsSelector(props: any) {
         }
     }, [labelsResponse]);
 
-    // set labels state from memoized and formatted labels
-
     useEffect(() => {
         if (labels) {
             setLabelsState(labels);
@@ -62,11 +51,7 @@ export default function LabelsSelector(props: any) {
 
     const [labelsState, setLabelsState] = useState(labels);
 
-    // memoize currently selected labels
-
     const selected = useMemo(() => labelsSelected, [labelsSelected]);
-
-    // match labels from query state with new labels from request to API
 
     useEffect(() => {
         if (labels && labelsFromProps) {

@@ -1,28 +1,50 @@
 import { ThemeProvider } from "@emotion/react";
-import { useEffect, useMemo, useState } from "react";
+import {
+    /*useCallback,*/ useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import LabelsList from "./LabelsList";
 import ValuesSelector from "./ValuesSelector";
 import useLabels from "./useLabels";
 import ValuesListStyled from "./ValuesListStyled";
 import labelHelpers from "./helpers";
 import { useTheme } from "../../../../theme";
+import { useDispatch } from "react-redux";
+import { setLeftPanel } from "../../../../actions/setLeftPanel";
+import { setRightPanel } from "../../../../actions/setRightPanel";
+
+const panelAction = (side: "left" | "right", data: any) => {
+    if (side === "left") {
+        return setLeftPanel(data);
+    }
+    return setRightPanel(data);
+};
 
 export default function LabelsSelector(props: any) {
-    const { data } = props;
-    
-    const { dataSourceId, labels:propsLabels, start:startTs, stop:stopTs } = data;
+    const { data, name, queries } = props;
+    const dispatch = useDispatch();
+    const {
+        dataSourceId,
+        labels: propsLabels,
+        start: startTs,
+        stop: stopTs,
+        id,
+    } = data;
 
-    //const dataSourceURL = useSelector((store)=> store.dataSources.find(f => f.id === dataSourceId))
-
-    const { JSONClone, updateLabel, updateLabelSelected } = labelHelpers;
+    const { JSONClone, /* updateLabel, */ updateLabelSelected } = labelHelpers;
     const [labelsResponse, setLabelsResponse]: any = useState([]);
     const [labelsSelected, setLabelsSelected]: any = useState([]);
 
     const theme = useTheme();
-    
-    const { response, loading }: any = useLabels(dataSourceId,"",startTs,stopTs); //  set URL from props
 
-    // get previously selected labels
+    const { response, loading }: any = useLabels(
+        dataSourceId,
+        "",
+        startTs,
+        stopTs
+    ); //  set URL from props
 
     const labelsFromProps = useMemo(() => {
         if (propsLabels?.length > 0) {
@@ -33,8 +55,6 @@ export default function LabelsSelector(props: any) {
         } else return [];
     }, [propsLabels]);
 
-    // get response from useLabels hook
-
     useEffect(() => {
         if (response?.data?.data) {
             setLabelsResponse(response?.data?.data);
@@ -43,7 +63,7 @@ export default function LabelsSelector(props: any) {
 
     // memoize and format labels response
 
-    const labels = useMemo(() => {
+    const labelsFromResponse = useMemo(() => {
         if (labelsResponse?.length > 0) {
             return labelsResponse?.map((label: any) => ({
                 name: label,
@@ -55,12 +75,12 @@ export default function LabelsSelector(props: any) {
     // set labels state from memoized and formatted labels
 
     useEffect(() => {
-        if (labels) {
-            setLabelsState(labels);
+        if (labelsFromResponse) {
+            setLabelsState(labelsFromResponse);
         }
-    }, [labels]);
+    }, [labelsFromResponse]);
 
-    const [labelsState, setLabelsState] = useState(labels);
+    const [labelsState, setLabelsState] = useState(labelsFromResponse);
 
     // memoize currently selected labels
 
@@ -69,8 +89,8 @@ export default function LabelsSelector(props: any) {
     // match labels from query state with new labels from request to API
 
     useEffect(() => {
-        if (labels && labelsFromProps) {
-            let clonedLabels = JSONClone(labels);
+        if (labelsFromResponse && labelsFromProps) {
+            let clonedLabels = JSONClone(labelsFromResponse);
             let modLabels: any[] = [];
 
             clonedLabels.forEach((label: any) => {
@@ -93,15 +113,62 @@ export default function LabelsSelector(props: any) {
 
             setLabelsState(modLabels);
         }
-    }, [labelsFromProps, labels, setLabelsState, JSONClone]);
+    }, [labelsFromProps, labelsFromResponse, setLabelsState, JSONClone]);
 
-    const onLabelSelected = (e: any) => {
-        setLabelsState((prev: any) => {
-            return updateLabel(prev, e);
+    const updateLabels = (prev: any, e: any) => {
+        let newL: any = [];
+
+        for (let label of prev) {
+            if (label.name === e) {
+                newL.push({
+                    ...label,
+                    selected: label.selected ? false : true,
+                });
+            } else {
+                newL.push(label);
+            }
+        }
+
+        return newL;
+    };
+
+    const updateLabelsFromProps = (labelsState: any, propsLbl: any) => {
+        const labelsCp = [...propsLbl];
+        const labelsFiltered = labelsCp.filter((f: any) => {
+            if (
+                labelsState?.some(
+                    ({ name, selected }: any) => name === f.name && !selected
+                )
+            ) {
+                return false;
+            }
+            return true;
         });
 
-        setLabelsSelected((prev: any) => updateLabelSelected(prev, e));
+        const queriesCp = [...queries];
+        let mapped = queriesCp?.map((qr: any) => {
+            if (qr.id === id) {
+                return { ...qr, labels: labelsFiltered };
+            }
+            return qr;
+        });
+
+        dispatch(panelAction(name, mapped));
     };
+
+    const onLabelSelected = useCallback(
+        (e: any) => {
+            let labelsStateUpd = updateLabels(labelsState, e);
+            let selUpdated = updateLabelSelected(labelsSelected, e);
+            updateLabelsFromProps(labelsStateUpd, propsLabels);
+            setLabelsState(labelsStateUpd);
+            setLabelsSelected(selUpdated);
+           
+        },
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+        [labelsState, labelsSelected, propsLabels]
+    );
+
     if (data) {
         return (
             <ThemeProvider theme={theme}>

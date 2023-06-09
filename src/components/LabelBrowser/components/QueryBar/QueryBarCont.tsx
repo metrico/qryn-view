@@ -51,7 +51,6 @@ const QueryBarCont: React.FC<QueryBarContProps> = (props) => {
         loading,
     } = props;
     const isSplit = useSelector((store: any) => store.isSplit);
-    
     const dType = (type: string) => dataSourceType === type;
 
     const buttonsHidden = () =>
