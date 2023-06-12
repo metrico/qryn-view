@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import useLabelValues from "./useLabelValues";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { decodeQuery } from "../../../../components/LabelBrowser/helpers/querybuilder";
 import { nanoid } from "nanoid";
 import { setLeftPanel } from "../../../../actions/setLeftPanel";
@@ -118,10 +118,9 @@ type ValuesListProps = {
 
 const ValuesList: React.FC<ValuesListProps> = (props) => {
     const dispatch = useDispatch();
-    const { name, data, labelsSelected, label } = props;
-    const { dataSourceId, start, stop } = data;
 
-    const panelQuery = useSelector((store: any) => store[name]); // we can get this just by props, no needed
+    const { name, data, labelsSelected, label, queries } = props;
+    const { dataSourceId, start, stop } = data;
 
     const [filterState, setFilterState] = useState("");
 
@@ -157,7 +156,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [panelQuery]);
+    }, [queries]);
 
     const valuesFromProps = useMemo(() => {
         if (props?.data?.labels?.length < 1) {
@@ -176,9 +175,8 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
 
     const resp = useMemo(() => {
         if (response?.data?.data?.length > 0) {
-            const panel = panelQuery.find((panel: any) => panel.id === data.id);
 
-            const label = panel?.labels?.find(
+            const label = data?.labels?.find(
                 (label: any) => label.name === label
             );
 
@@ -245,7 +243,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
             "value"
         );
 
-        const panel = [...panelQuery];
+        const panel = [...queries];
         panel.forEach((query) => {
             if (query.id === props.data.id) {
                 query.expr = newQuery;
@@ -345,7 +343,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
             }
         });
 
-        const panel = [...panelQuery];
+        const panel = [...queries];
 
         panel.forEach((query) => {
             if (query.id === props.data.id) {
@@ -398,7 +396,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
                             {...props}
                             key={key}
                             value={value}
-                            actPanel={panelQuery}
+                            actPanel={queries}
                             onValueClick={onValueClick}
                         />
                     ))}

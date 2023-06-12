@@ -33,7 +33,7 @@ export default function LabelsSelector(props: any) {
         id,
     } = data;
 
-    const { JSONClone, /* updateLabel, */ updateLabelSelected } = labelHelpers;
+    const { updateLabelSelected } = labelHelpers;
     const [labelsResponse, setLabelsResponse]: any = useState([]);
     const [labelsSelected, setLabelsSelected]: any = useState([]);
 
@@ -84,36 +84,28 @@ export default function LabelsSelector(props: any) {
 
     // memoize currently selected labels
 
-    const selected = useMemo(() => labelsSelected, [labelsSelected]);
-
     // match labels from query state with new labels from request to API
 
     useEffect(() => {
         if (labelsFromResponse && labelsFromProps) {
-            let clonedLabels = JSONClone(labelsFromResponse);
-            let modLabels: any[] = [];
+            let clonedLabels = JSON.parse(JSON.stringify(labelsFromResponse));
 
-            clonedLabels.forEach((label: any) => {
-                if (labelsFromProps.some((s: any) => s.name === label.name)) {
-                    const labelFound = labelsFromProps.find(
-                        (f: any) => f.name === label.name
-                    );
-
-                    modLabels.push({ ...labelFound });
-                } else {
-                    modLabels.push(label);
-                }
+            const modLabels: any[] = clonedLabels.map((label: any) => {
+                const foundLabel = labelsFromProps.find(
+                    (f: any) => f.name === label.name
+                );
+                return foundLabel ? { ...foundLabel } : label;
             });
 
-            let lSelected: any = modLabels
-                .filter((f) => f.selected === true)
-                .map((m) => m.name);
+            const selectedLabels: any[] = modLabels
+                .filter((label: any) => label.selected)
+                .map((label: any) => label.name);
 
-            setLabelsSelected(lSelected);
+            setLabelsSelected(selectedLabels);
 
             setLabelsState(modLabels);
         }
-    }, [labelsFromProps, labelsFromResponse, setLabelsState, JSONClone]);
+    }, [labelsFromProps, labelsFromResponse, setLabelsState]);
 
     const updateLabels = (prev: any, e: any) => {
         let newL: any = [];
@@ -132,40 +124,39 @@ export default function LabelsSelector(props: any) {
         return newL;
     };
 
-    const updateLabelsFromProps = (labelsState: any, propsLbl: any) => {
+    const updateLabelsFromProps = (
+        labelsState: any,
+        propsLbl: any,
+        e: string
+    ) => {
         const labelsCp = [...propsLbl];
-        const labelsFiltered = labelsCp.filter((f: any) => {
-            if (
-                labelsState?.some(
-                    ({ name, selected }: any) => name === f.name && !selected
-                )
-            ) {
-                return false;
-            }
-            return true;
+
+        const newLabels = propsLbl?.filter((filterLabel: any) => {
+            const found = labelsState?.find(
+                (f: any) => f.name === filterLabel.name
+            );
+            return found?.selected;
         });
 
-        const queriesCp = [...queries];
-        let mapped = queriesCp?.map((qr: any) => {
-            if (qr.id === id) {
-                return { ...qr, labels: labelsFiltered };
-            }
-            return qr;
-        });
+        if (labelsCp?.length > 0 && propsLbl?.some((s: any) => s.name === e)) {
+            const queriesCp = [...queries];
+            const mapped = queriesCp?.map((qr) => {
+                return qr.id === id ? { ...qr, labels: newLabels } : qr;
+            });
 
-        dispatch(panelAction(name, mapped));
+            dispatch(panelAction(name, mapped));
+        }
     };
 
     const onLabelSelected = useCallback(
         (e: any) => {
             let labelsStateUpd = updateLabels(labelsState, e);
             let selUpdated = updateLabelSelected(labelsSelected, e);
-            updateLabelsFromProps(labelsStateUpd, propsLabels);
+            updateLabelsFromProps(labelsStateUpd, propsLabels, e);
             setLabelsState(labelsStateUpd);
             setLabelsSelected(selUpdated);
-           
         },
-         // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [labelsState, labelsSelected, propsLabels]
     );
 
@@ -184,7 +175,10 @@ export default function LabelsSelector(props: any) {
                             )}
                         </div>
 
-                        <ValuesSelector {...props} labelsSelected={selected} />
+                        <ValuesSelector
+                            {...props}
+                            labelsSelected={labelsSelected}
+                        />
                     </div>
                 </ValuesListStyled>
             </ThemeProvider>
