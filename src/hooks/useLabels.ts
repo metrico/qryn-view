@@ -79,7 +79,7 @@ export const sendLabels = async (
 
                     if (response?.data?.data?.length > 0) {
                         const labels = response?.data?.data
-                            .sort()
+                            
                             .map((label: any) => ({
                                 name: label,
                                 selected: false,
