@@ -807,7 +807,6 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
                             value="traceId"
                             onChange={switchTraceQueryType}
                         />
-                        {traceQueryType === "traceId" && showResultButton}
                     </div>
                     {traceQueryType === "traceId" && querySearch}
                     {traceQueryType === "search" && traceSearch}

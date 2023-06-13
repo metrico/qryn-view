@@ -125,7 +125,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
     const [filterState, setFilterState] = useState("");
 
     // get values hook
-    const { response, loading }: any = useLabelValues(
+    const { response: labelValuesResponse, loading }: any = useLabelValues(
         dataSourceId,
         label,
         new Date(start),
@@ -174,20 +174,22 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
     }, [props.data.labels]);
 
     const resp = useMemo(() => {
-        if (response?.data?.data?.length > 0) {
+       
 
-            const label = data?.labels?.find(
-                (label: any) => label.name === label
+        if (labelValuesResponse?.data?.data?.length > 0) {
+            const labelFromResponse = data?.labels?.find(
+                (l: any) => l.name === label
             );
-
-            const values = label?.values;
-            const valuesMap = new Map();
+    
+            const values = labelFromResponse?.values;
+            const valuesMap = new Map(); 
 
             values?.forEach((value: any) => {
-                valuesMap.set(value.name, value);
+                valuesMap.set(value.name, {...value,label});
             });
+   
 
-            return response?.data?.data?.map((val: any) => ({
+            return labelValuesResponse?.data?.data?.map((val: any) => ({
                 label,
                 name: val,
                 selected: valuesMap.get(val)?.selected || false,
@@ -199,7 +201,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
             return [];
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [response]);
+    }, [labelValuesResponse]);
 
     const [valuesState, setValuesState] = useState(resp);
     const [filterValuesState, setFilterValuesState] = useState(valuesState);
