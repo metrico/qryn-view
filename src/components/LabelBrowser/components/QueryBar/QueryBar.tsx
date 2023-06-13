@@ -214,12 +214,16 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
     }, [data.expr]);
 
     useEffect(() => {
+        let queryText = queryValue[0].children[0].text;
+        setQueryInput(queryText);
+    }, [queryValue]);
+
+    useEffect(() => {
         if (isTabletOrMobile && isSplit) {
             dispatch(setSplitView(false));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isTabletOrMobile]);
-
 
     useEffect(() => {
         let { expr } = getLocalQueryItem(dataSourceId, id) || "";
@@ -344,7 +348,6 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryInput]);
 
-
     function setLogsLevel(queryInput: string, isLogsVolume: boolean) {
         if (isLogsVolume && queryInput !== "") {
             // eslint-disable-next-line
@@ -443,7 +446,6 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
                 if (isLogsVolume && !logsVolumeQuery) {
                     setLogsLevel(queryInput, isLogsVolume);
                 }
-
 
                 decodeQueryAndUpdatePanel(queryInput, true);
 
