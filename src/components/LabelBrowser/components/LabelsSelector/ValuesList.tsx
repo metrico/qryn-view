@@ -120,12 +120,11 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
     const dispatch = useDispatch();
 
     const { name, data, labelsSelected, label, queries } = props;
-    const { dataSourceId, start, stop } = data;
+    const { dataSourceId, start, stop, labels: propsLabels } = data;
 
     const [filterState, setFilterState] = useState("");
 
-    // get values hook
-    const { response, loading }: any = useLabelValues(
+    const { response: labelValuesResponse, loading }: any = useLabelValues(
         dataSourceId,
         label,
         new Date(start),
@@ -174,20 +173,18 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
     }, [props.data.labels]);
 
     const resp = useMemo(() => {
-        if (response?.data?.data?.length > 0) {
-
-            const label = data?.labels?.find(
-                (label: any) => label.name === label
+        if (labelValuesResponse?.data?.data?.length > 0) {
+            const labelFromResponse = data?.labels?.find(
+                (l: any) => l.name === label
             );
 
-            const values = label?.values;
+            const values = labelFromResponse?.values;
             const valuesMap = new Map();
 
             values?.forEach((value: any) => {
-                valuesMap.set(value.name, value);
+                valuesMap.set(value.name, { ...value, label });
             });
-
-            return response?.data?.data?.map((val: any) => ({
+            return labelValuesResponse?.data?.data?.map((val: any) => ({
                 label,
                 name: val,
                 selected: valuesMap.get(val)?.selected || false,
@@ -199,7 +196,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
             return [];
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [response]);
+    }, [labelValuesResponse]);
 
     const [valuesState, setValuesState] = useState(resp);
     const [filterValuesState, setFilterValuesState] = useState(valuesState);
@@ -264,32 +261,26 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
         }
     };
 
-    const onValueClick = (val: any, isAll = false) => {
+    const onValueClick = (val: any) => {
         let initialValues: any = [];
-        if (isAll) {
-            setValsSelection([]);
-        }
         if (valsSelection.length > 0) {
             initialValues = onValueFilter(val, valsSelection);
             if (val.type === "metrics") {
                 setValuesState((prev: any) => {
                     const found = prev.some((s: any) => s.id === val.id);
-
+                    let prevCp = [...prev];
                     if (found) {
-                        return prev.map((m: any) => {
-                            if (m.id === val.id) {
-                                return { ...m, selected: false };
-                            }
-                            return { ...m, selected: true };
+                        return prevCp?.map((m: any) => {
+                            return m.id === val.id
+                                ? { ...m, selected: false }
+                                : { ...m, selected: true };
                         });
                     }
                 });
             }
-        } else if (!isAll) {
-            initialValues = [...initialValues, { ...val }];
         }
 
-        let propsLabels = JSONClone(props.data.labels) || [];
+        initialValues = [...initialValues, { ...val }];
 
         let labelsMod: any = [];
 
@@ -306,18 +297,18 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
             ];
         } else {
             if (propsLabels.some((s: any) => s.name === label)) {
-                for (let LCP of propsLabels) {
-                    if (LCP.name === label) {
-                        LCP = {
+                for (let propsLabel of propsLabels) {
+                    if (propsLabel.name === label) {
+                        propsLabel = {
                             name: label,
                             selected:
                                 labelsSelected.includes(label) &&
                                 initialValues.length > 0,
                             values: [...initialValues],
                         };
-                        labelsMod.push(LCP);
+                        labelsMod.push(propsLabel);
                     } else {
-                        labelsMod.push(LCP);
+                        labelsMod.push(propsLabel);
                     }
                 }
             } else {
@@ -336,8 +327,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
 
         const finalLabels = labelsSelected?.map((m: any) => {
             if (labelsMod.some((s: any) => s.name === m)) {
-                let found = labelsMod.find((f: any) => f.name === m);
-                return found;
+                return labelsMod.find((f: any) => f.name === m);
             } else {
                 return { name: m, selected: true, values: [] };
             }
@@ -360,13 +350,13 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
             setFilterState((prev) => value);
 
             if (e !== "") {
-                setFilterValuesState((prev: any) =>
+                setFilterValuesState(() =>
                     valuesState.filter((f: any) =>
                         f.name.toLowerCase().includes(value.toLowerCase())
                     )
                 );
             } else {
-                setFilterValuesState((prev: any) => valuesState);
+                setFilterValuesState(() => valuesState);
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -391,7 +381,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
                     </LoaderCont>
                 )}
                 {valuesState?.length > 0 &&
-                    filterValuesState?.map((value: any, key: any) => (
+                    filterValuesState?.map((value: any, key: number) => (
                         <LabelValue
                             {...props}
                             key={key}
