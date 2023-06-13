@@ -148,7 +148,7 @@ const UserRolesStyles = (theme: any) => css`
             display: flex;
             align-items: center;
             gap: 4px;
-            width:80px;
+            width: 80px;
             button {
                 display: flex;
                 align-items: center;
@@ -158,14 +158,13 @@ const UserRolesStyles = (theme: any) => css`
                 border-radius: 3px;
                 cursor: pointer;
                 color: ${theme.textColor};
-                max-width:25px;
+                max-width: 25px;
                 &:hover {
                     background: ${theme.mainBgColor};
                 }
                 .cookie-icon {
                     font-size: 15px;
                     color: ${theme.textColor};
-                    
                 }
             }
         }

@@ -1,9 +1,8 @@
-import { User } from "./UserRoles"
+import { User } from "./UserRoles";
 
-export const setCurrentUser = (currentUser:User) => (dispatch:Function) => {
+export const setCurrentUser = (currentUser: User) => (dispatch: Function) => {
     return dispatch({
-        type:"SET_CURRENT_USER",
-        currentUser
-
-    })
-}
+        type: "SET_CURRENT_USER",
+        currentUser,
+    });
+};
