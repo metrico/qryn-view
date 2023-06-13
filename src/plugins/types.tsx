@@ -7,4 +7,5 @@ export interface Plugin {
     Component: React.FC;
     description:string;
     active:boolean;
+    roles: string[]
 }

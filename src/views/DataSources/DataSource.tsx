@@ -32,7 +32,6 @@ export function DataSourceSetting(props: any) {
 
       // eslint-disable-next-line
     const [cookie, setCookie] = useCookies(["qryn-dev-cookie", "qryn-settings"]); // for testing cookies feature
-
     const dispatch = useDispatch();
     const dataSources = useSelector((store: any) => store.dataSources);
     const useForAll = () => {
@@ -81,7 +80,7 @@ export function DataSourceSetting(props: any) {
         try {
             setCookie(
                 "qryn-settings",
-                `${btoa(user.value)}:${btoa(password.value)}@${btoa(parsedDs)}`,
+                `${btoa(user.value)}:${btoa(password.value)}@${btoa(parsedDs)}&&${btoa('admin')}`,
                 { path: "/" }
             );
         } catch (e) {

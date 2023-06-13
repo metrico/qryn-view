@@ -90,7 +90,6 @@ export default function useLabelValues(
     labelHeaders.headers = headers;
     const [response, setResponse] = useState([]);
     const [loading, setLoading] = useState(false);
-
     useEffect(() => {
         if (currentDataSource.type !== "flux" && label !== "") {
             const apiRequest = async () => {

@@ -847,6 +847,7 @@ const aggregationsPlugin: Plugin = {
     section: "Query Item",
     id: nanoid(),
     Component: Aggregations,
+    roles:["admin","superAdmin"],
     description: "QRYN Reader Aggregation Reports ",
     active: false,
 };

@@ -15,7 +15,7 @@ const InlineFlex = (theme: any) => css`
     border: 1px solid ${theme.buttonBorder};
     padding: 5px;
     border-radius: 3px;
-    margin-right:10px;
+    margin-left:10px;
 `;
 
 const oneForAllStyle = css`

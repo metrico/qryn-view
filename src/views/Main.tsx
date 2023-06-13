@@ -1,19 +1,27 @@
 import { useDispatch, useSelector } from "react-redux";
-import DOMPurify from 'isomorphic-dompurify';
-import { themes } from "../theme/themes";
+import DOMPurify from "isomorphic-dompurify";
 import { UpdateStateFromQueryParams } from "../helpers/UpdateStateFromQueryParams";
 import { useMediaQuery } from "react-responsive";
 import { setTheme } from "../actions";
-import { useMemo, useEffect} from "react";
+import { useMemo, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { MobileView } from "./Main/MobileView";
 import { DesktopView } from "./Main/DesktopView";
 import { useCookiesAvailable, useUrlAvailable } from "./Main/hooks";
-import { updateDataSourcesWithUrl, updateDataSourcesFromLocalUrl } from "./Main/helpers";
+import {
+    updateDataSourcesWithUrl,
+    updateDataSourcesFromLocalUrl,
+} from "./Main/helpers";
+
+import { css, cx } from "@emotion/css";
+import { useTheme } from "../theme";
+import { setCurrentUser } from "./User/actions";
+
+const MainStyles = (theme: any) => css`
+    background: ${theme.widgetContainer};
+`;
 
 export default function Main() {
-
-
     const navigate = useNavigate();
     const dataSources = useSelector((store: any) => store.dataSources);
     // get hash from current location
@@ -22,11 +30,13 @@ export default function Main() {
     const paramsMemo = useMemo(() => {
         return new URLSearchParams(hash.replace(/#/, ""));
     }, [hash]);
-    //
+
     UpdateStateFromQueryParams();
   
-    const { cookiesAvailable, cookieAuth } = useCookiesAvailable(paramsMemo);
+    const { cookiesAvailable, cookieAuth, cookieUser } = useCookiesAvailable(paramsMemo);
+
     const { urlAvailable, url } = useUrlAvailable(paramsMemo);
+
     useEffect(() => {
         const onlyCookie = cookiesAvailable && !urlAvailable;
         const onlyUrl = !cookiesAvailable && urlAvailable;
@@ -46,11 +56,25 @@ export default function Main() {
                 cookiesAvailable,
                 dataSources
             );
+
         } else {
             updateDataSourcesFromLocalUrl(dataSources, dispatch, navigate);
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(()=>{
+  
+        if(cookieUser && typeof cookieUser === 'string') {
+            try {
+                dispatch(setCurrentUser(JSON.parse(cookieUser)))
+
+            } catch(e) {
+                console.log(e)
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[cookieUser])
 
     useEffect(() => {
         const urlSetting = {
@@ -69,12 +93,11 @@ export default function Main() {
     const dispatch = useDispatch();
     const isSplit = useSelector((store: any) => store.isSplit);
     const isEmbed = useSelector((store: any) => store.isEmbed);
-    const theme = useSelector((store: any) => store.theme);
+    const theme = useTheme();
     const autoTheme = useSelector((store: any) => store.autoTheme);
     const settingsDialogOpen = useSelector(
         (store: any) => store.settingsDialogOpen
     );
-    const themeMemo = useMemo(() => (themes as any)[theme], [theme]);
 
     useEffect(() => {
         if (autoTheme) {
@@ -86,24 +109,43 @@ export default function Main() {
             );
         }
     }, [isAutoDark, autoTheme, dispatch]);
-    if (!isTabletOrMobile) {
-        // desktop view
-        return (
-            <DesktopView
-                isEmbed={isEmbed}
-                isSplit={isSplit}
-                theme={themeMemo}
-                settingsDialogOpen={settingsDialogOpen}
-            />
-        );
-    } else {
-        // mobile view
-        return (
-            <MobileView
-                isEmbed={isEmbed}
-                theme={themeMemo}
-                settingsDialogOpen={settingsDialogOpen}
-            />
-        );
-    }
+    
+    const viewRenderer = (
+        isTabletOrMobile: boolean,
+        isSplit: boolean,
+        isEmbed: boolean,
+        settingsDialogOpen: boolean
+    ) => {
+        if (!isTabletOrMobile) {
+            // desktop view
+            return (
+                <DesktopView
+                    isEmbed={isEmbed}
+                    isSplit={isSplit}
+                    theme={theme}
+                    settingsDialogOpen={settingsDialogOpen}
+                />
+            );
+        } else {
+            // mobile view
+            return (
+                <MobileView
+                    isEmbed={isEmbed}
+                    theme={theme}
+                    settingsDialogOpen={settingsDialogOpen}
+                />
+            );
+        }
+    };
+
+    return (
+        <div className={cx(MainStyles(theme))}>
+            {viewRenderer(
+                isTabletOrMobile,
+                isEmbed,
+                isSplit,
+                settingsDialogOpen
+            )}
+        </div>
+    );
 }

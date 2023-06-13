@@ -27,8 +27,6 @@ export function updateDataSourcesWithUrl(
         let cookieDsData = "";
         if (dsData && dsData !== "") {
             try {
-                cookieDsData = atob(dsData);
-                cookieDsData = JSON.parse(cookieDsData);
                 if (typeof cookieDsData === "object" && cookieDsData["url"]) {
                     apiUrl = cookieDsData["url"];
                     haveUrl = true;
@@ -93,7 +91,7 @@ export function updateDataSourcesWithUrl(
 
 export const getAxiosConf = (datasource: any) => {
     let conf: any = {};
-    let cors = datasource?.cors || false
+    let cors = datasource?.cors || false;
     let extraheaders = getDsHeaders(datasource);
     const headers = {
         ...extraheaders,
@@ -101,12 +99,12 @@ export const getAxiosConf = (datasource: any) => {
         Accept: "application/json",
     };
 
-    const options:any = {
+    const options: any = {
         method: "GET",
         headers: headers,
     };
-    if(cors === true ) {
-        options.mode = 'cors'
+    if (cors === true) {
+        options.mode = "cors";
     }
     conf.options = options;
     conf.headers = headers;

@@ -134,12 +134,14 @@ export function useActiveTabs(section: any) {
             return queryItemPlugins?.filter((f: any) => f.active);
         }
         return [];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [plugins]);
 
 
 
     const isActiveTabs = useMemo(() => {
         return activeTabs?.length > 0;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, activeTabs);
 
     return { activeTabs, isActiveTabs };

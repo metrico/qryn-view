@@ -281,7 +281,6 @@ export function queryBuilder(
     const preTags = actualQuery.split("{")[0];
     let postTags = "";
 
-  
     if (hasPipe) {
         postTags = actualQuery.split("}")[1];
         const json = /[|json]/;
@@ -363,6 +362,6 @@ export function queryBuilderWithLabels(
                 query.expr = queryStr;
             }
         });
-        dispatch(setRightPanel(rightC));
+     dispatch(setRightPanel(rightC));
     }
 }

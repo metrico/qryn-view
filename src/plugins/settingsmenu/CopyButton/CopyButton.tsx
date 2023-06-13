@@ -6,7 +6,8 @@ import setLinksHistory from "../../../actions/setLinksHistory";
 import { MenuItem } from "@mui/material";
 import { notificationTypes } from "../../../qryn-ui/notifications/consts";
 
-export default function CopyButton() {
+export default function CopyButton(props:any) {
+    const{c} = props
     const dispatch = useDispatch();
     const saveUrl = localUrl();
     const LINK_COPIED = "Link Copied To Clipboard";
@@ -68,9 +69,9 @@ export default function CopyButton() {
         }, 200);
     }
     return (
-        <MenuItem onClick={shareLink} disabled={false}>
+        <MenuItem onClick={shareLink} disabled={false} style={{fontSize:'12px'}}>
             {" "}
-            <ContentCopyIcon fontSize={"small"} />
+            <ContentCopyIcon fontSize={"small"} className={c} />
             <span>{"Copy Link"}</span>
         </MenuItem>
     );
