@@ -107,10 +107,12 @@ export default function initialState() {
             linkedFieldsSettings,
         };
     };
-    const getDatasourceURL = (id:string) => {
-        const localDatasources = JSON.parse(localStorage.getItem('dataSources')||'')
-        return(localDatasources?.find((f:any) => f.id === 'id'))
-    }
+    const getDatasourceURL = (id: string) => {
+        const localDatasources = JSON.parse(
+            localStorage.getItem("dataSources") || ""
+        );
+        return localDatasources?.find((f: any) => f.id === "id");
+    };
 
     const urlState: URLState = stateFromQueryParams() || initialUrlState;
     const historyService = localService().historyStore();
@@ -128,17 +130,9 @@ export default function initialState() {
         vectorData: {},
         loading: false,
         queryResolution: 1,
-        start:
-            urlState.start ||
-            new Date(
-                moment(Date.now())
-                    .subtract(5, "minutes")
-                    .format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-            ),
-        time: urlState.time || "", // for instant queries
-        stop:
-            urlState.stop ||
-            new Date(moment(Date.now()).format("YYYY-MM-DDTHH:mm:ss.SSSZ")),
+        start: new Date(Date.now() - 5 * 60000),
+        time: urlState.time || "", // for instant queries        
+        stop: new Date(Date.now()),
         from: urlState.from || null,
         to: urlState.to || null,
         label: urlState.label,
@@ -158,6 +152,8 @@ export default function initialState() {
         apiUrl: urlState.apiUrl || environment.apiUrl || "",
         isSubmit: urlState.isSubmit || false,
         isEmbed: urlState.isEmbed || false,
+        userType:'admin',
+        currentUser: {name:'Qryn Admin', role:'admin', id:"OoH8zZt71U70W01LcgAQs", selected:true},
         // dont mention queries // its obvious
 
         left: urlState["left"] || [
@@ -168,23 +164,29 @@ export default function initialState() {
                 panel: "left",
                 queryType: "range",
                 dataSourceType: "logs",
-                dataSourceId:'cHI2SqPzH_kxYRXj',
-                dataSourceURL:getDatasourceURL('cHI2SqPzH_kxYRXj'),
+                dataSourceId: "cHI2SqPzH_kxYRXj",
+                dataSourceURL: getDatasourceURL("cHI2SqPzH_kxYRXj"),
                 limit: 100,
                 step: 100,
                 tableView: false,
                 chartView: false,
                 isShowTs: true,
                 isBuilder: false,
-                hasStats:false,
-                statsData:{},
+                hasStats: false,
+                statsData: {},
                 browserOpen: false,
                 isLogsVolume: false,
                 expr: "",
                 labels: [], // name: selected:
                 values: [], // label name selected
-                direction: "forward",
-                loading:false
+                direction: "backwards",
+                loading: false,
+                open: true,
+                start: new Date(Date.now() - 5 * 60000),
+                time: "", // for instant queries
+                stop: new Date(Date.now()),
+                label: "", // range label
+                pickerOpen: false, // range picker
             },
         ],
 
@@ -196,8 +198,8 @@ export default function initialState() {
                 panel: "right",
                 queryType: "range",
                 dataSourceType: "traces",
-                dataSourceId:"32D16h5uYBqUUzhD",
-                dataSourceURL:getDatasourceURL("32D16h5uYBqUUzhD"),
+                dataSourceId: "32D16h5uYBqUUzhD",
+                dataSourceURL: getDatasourceURL("32D16h5uYBqUUzhD"),
                 limit: 100,
                 step: 100,
                 tableView: false,
@@ -209,11 +211,17 @@ export default function initialState() {
                 expr: "",
                 labels: [], // name: selected:
                 values: [], // label name selected
-                direction: "forward",
+                direction: "backwards",
                 loading: false,
+                open: false,
+                start: new Date(Date.now() - 5 * 60000),
+                time: "", // for instant queries
+                stop: new Date(Date.now()),
+                label: "", // range label
+                pickerOpen: false, // range picker
             },
         ],
-
+        plugins:{},
         leftDataView: [],
         rightDataView: [],
         dataSources: settingsState()["hasDsSettings"]
@@ -234,7 +242,7 @@ export default function initialState() {
         isSplit: false,
         showDataSourceSetting: true,
     };
-    
+
     const debug = state.debugMode;
     if (debug) console.log("🚧 LOGIC/ INITIAL STATE ::: ", state);
 

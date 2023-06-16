@@ -10,15 +10,16 @@ import { useLocation } from "react-router-dom";
 import { setLeftPanel } from "../../actions/setLeftPanel";
 import { setRightPanel } from "../../actions/setRightPanel";
 import { useTheme } from "../DataViews/components/QueryBuilder/hooks";
+import PluginRenderer from "../../plugins/PluginsRenderer";
 
 const QueryTypeCont = styled.div`
     display: flex;
-    padding: 4px;
-    background: ${(props:any) => props.theme.widgetContainer};
-    color: ${(props:any) => props.color};
+    padding: 4px 8px;
+   // background: ${(props: any) => props.theme.widgetContainer};
+    color: ${(props: any) => props.color};
     height: 26px;
 `;
-export function panelAction(name:any, value:any) {
+export function panelAction(name: any, value: any) {
     if (name === "left") {
         return setLeftPanel(value);
     }
@@ -35,14 +36,23 @@ export const DIRECTION_SWITCH_OPTIONS = [
     { value: "backwards", label: "Backwards" },
 ];
 
-export default function QueryTypeBar(props:any) {
+
+// Bar with switches: 
+// query type
+// timestamp
+// query builder
+// direction
+// query limit
+// logs volume
+
+export default function QueryTypeBar(props: any) {
     const dispatch = useDispatch();
     const { name, data } = props;
 
-  const theme = useTheme()
-    const panelQuery = useSelector((store:any) => store[name]);
+    const theme = useTheme();
+    const panelQuery = useSelector((store: any) => store[name]);
 
-    const responseType = useSelector((store:any) => store.responseType);
+    const responseType = useSelector((store: any) => store.responseType);
 
     const { hash } = useLocation();
     const {
@@ -62,7 +72,9 @@ export default function QueryTypeBar(props:any) {
     const [isTableViewSet, setIsTableViewSet] = useState(tableView);
     const [isShowTsSet, setIsShowTsSet] = useState(isShowTs || false);
     const [isBuilderSet, setIsBuilderSet] = useState(isBuilder || false);
-    const [isLogsVolumeSet, setIsLogsVolumeSet] = useState( isLogsVolume || false);
+    const [isLogsVolumeSet, setIsLogsVolumeSet] = useState(
+        isLogsVolume || false
+    );
     const [isShowStatsSet, setIsShowStatsSet] = useState(isShowStats || false);
     const [queryTypeSwitch, setQueryTypeSwitch] = useState(queryType);
     const [directionSwitch, setDirectionSwitch] = useState(
@@ -71,12 +83,12 @@ export default function QueryTypeBar(props:any) {
 
     useEffect(() => {
         const urlParams = new URLSearchParams(hash.replace(/#/, ""));
-        const urlPanel:any = urlParams.get(name);
+        const urlPanel: any = urlParams.get(name);
 
-        const parsedPanel = JSON.parse(decodeURIComponent(urlPanel)||'[]');
+        const parsedPanel = JSON.parse(decodeURIComponent(urlPanel) || "[]");
 
         if (parsedPanel?.length > 0) {
-            const queryMD = parsedPanel.find((f:any) => f.idRef === idRef);
+            const queryMD = parsedPanel.find((f: any) => f.idRef === idRef);
 
             if (queryMD) {
                 const panel = [...panelQuery];
@@ -89,7 +101,7 @@ export default function QueryTypeBar(props:any) {
                 dispatch(panelAction(name, panel));
             }
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -103,11 +115,11 @@ export default function QueryTypeBar(props:any) {
         setIsBuilderSet(props.data.isBuilder);
     }, [setIsBuilderSet, props.data.isBuilder]);
 
-    useEffect(()=>{
+    useEffect(() => {
         setIsLogsVolumeSet(props.data.isLogsVolume);
-    },[setIsLogsVolumeSet, props.data.isLogsVolume])
+    }, [setIsLogsVolumeSet, props.data.isLogsVolume]);
 
-    function onSwitchChange(e:any) {
+    function onSwitchChange(e: any) {
         // modify query type switch value
         const panel = [...panelQuery];
         panel.forEach((query) => {
@@ -119,7 +131,7 @@ export default function QueryTypeBar(props:any) {
         setQueryTypeSwitch(e);
     }
 
-    function onDirectionSwitchChange(e:any) {
+    function onDirectionSwitchChange(e: any) {
         // modify query type switch value
         const panel = [...panelQuery];
         panel.forEach((query) => {
@@ -168,18 +180,18 @@ export default function QueryTypeBar(props:any) {
 
     function handleLogsVolumeSwitch() {
         const panel = [...panelQuery];
-        panel.forEach((query)=> {
-            if(query.id === id) {
-                query.isLogsVolume = isLogsVolumeSet ? false : true
+        panel.forEach((query) => {
+            if (query.id === id) {
+                query.isLogsVolume = isLogsVolumeSet ? false : true;
             }
-        })
+        });
 
         dispatch(panelAction(name, panel));
     }
 
-    function handleStatsInfoSwitch(e:any) {
+    function handleStatsInfoSwitch(e: any) {
         const value = e.target.checked;
-        setIsShowStatsSet((_:any) => value);
+        setIsShowStatsSet(() => value);
         const panel = [...panelQuery];
         panel.forEach((query) => {
             if (query.id === id) {
@@ -192,6 +204,7 @@ export default function QueryTypeBar(props:any) {
     return (
         <ThemeProvider theme={theme}>
             <QueryTypeCont>
+                <PluginRenderer section={"Query Options"} localProps={props}/>
                 <QueryTypeSwitch
                     label={"Query Type"}
                     options={SWITCH_OPTIONS}
@@ -218,15 +231,6 @@ export default function QueryTypeBar(props:any) {
                 )}
                 {responseType !== "vector" && (
                     <>
-                        {/* <InputGroup>
-                            <SettingLabel>Table View</SettingLabel>
-                            <Switch
-                                checked={isTableViewSet}
-                                size={"small"}
-                                onChange={handleTableViewSwitch}
-                                inputProps={{ "aria-label": "controlled" }}
-                            />
-                        </InputGroup> */}
                         <InputGroup>
                             <SettingLabel>Timestamp</SettingLabel>
                             <Switch

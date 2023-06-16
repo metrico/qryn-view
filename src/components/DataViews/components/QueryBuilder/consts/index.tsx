@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
-import { operatorsTypes, Label } from "../types";
-import {useMemo} from 'react'
+import { operatorsTypes, Label, Builder } from "../types";
+import { useMemo } from "react";
 export const OPERATOR_OPTIONS = [
     { label: "=", value: "equals" },
     { label: "=~", value: "regexequals" },
@@ -15,10 +15,10 @@ export const OPERATORS: operatorsTypes | any = {
     regexexclude: "!~",
 };
 
-export const InitialLabelValueState: Label[] = [
-    { label: "", operator: "equals", values: [], id: nanoid() },
-];
+export const InitialLabelValueState: Label = 
+    { label: "", operator: "equals", values: [],metric:"",  id: nanoid() };
 export const NewLabel: Label = {
+    metric: "",
     label: "",
     operator: "equals",
     values: [],
@@ -27,8 +27,58 @@ export const NewLabel: Label = {
 
 export const EmptyOption = { label: "", value: "" };
 
-export const useInitialOperation =() => useMemo(()=>({
-    id: 0,
-    name: "none",
-    header: <div>{"Container Header"}</div>,
-}),[]);
+export const useInitialOperation = () =>
+    useMemo(
+        () => ({
+            id: 0,
+            name: "none",
+            header: <div>{"Container Header"}</div>,
+        }),
+        []
+    );
+
+export const initialBuilder: Builder = {
+    operations: [],
+    labelsState: [],
+    binaryValue: { binaryOpt: "divide", vectOpt: "on", vectValue: "" },
+    builderResult: "",
+    logsVolumeQuery: "",
+    isBinary: false,
+};
+
+export const initialMetricsBuilder: Builder = {
+    operations: [],
+    labelsState: [],
+    binaryValue: { binaryOpt: "divide", vectOpt: "on", vectValue: "" },
+    labelValuesState: [{
+        metric: "",
+        label:"",
+        operator: "equals",
+        values: [],
+        id: nanoid(),
+    }],
+    builderResult: "",
+    logsVolumeQuery: "",
+    isBinary: false,
+    isMetrics: true,
+};
+
+export const binaryOperatorOpts: any = {
+    minus: "-",
+    plus: "+",
+    by: "*",
+    divide: "/",
+    exp: "^",
+    equals: "==",
+    not_equals: "!=",
+    modulo: "%",
+    more: "<",
+    less: ">",
+    less_equals: "<=",
+    more_equals: ">=",
+};
+
+export const binaryVectorOpt = {
+    on: "on",
+    ignoring: "ignoring",
+};

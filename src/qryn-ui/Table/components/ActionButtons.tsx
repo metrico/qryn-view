@@ -5,6 +5,7 @@ import FastForwardOutlinedIcon from "@mui/icons-material/FastForwardOutlined";
 import FastRewindOutlinedIcon from "@mui/icons-material/FastRewindOutlined";
 import SkipNextOutlinedIcon from "@mui/icons-material/SkipNextOutlined";
 import SkipPreviousOutlinedIcon from "@mui/icons-material/SkipPreviousOutlined";
+import DOMPurify from 'isomorphic-dompurify'
 type Props<T extends RowData> = {
     getSelectedRowModel: () => RowModel<T>;
     hasNextPage: boolean;
@@ -157,13 +158,13 @@ export function ActionButtons<T extends RowData>({
                 </span>
                 <select
                     className={cx(page_select(theme))}
-                    value={pageSize}
+                    value={DOMPurify.sanitize(String(pageSize))}
                     onChange={(e) => {
                         setPageSize(Number(e.target.value));
                     }}
                 >
                     {[10, 20, 30, 40, 50].map((pageSize) => (
-                        <option key={pageSize} value={pageSize}>
+                        <option key={pageSize} value={DOMPurify.sanitize(String(pageSize))}>
                             Show {pageSize} Rows
                         </option>
                     ))}
@@ -174,7 +175,7 @@ export function ActionButtons<T extends RowData>({
                 </div>
             </div>
 
-            <div className="flex items-center gap-2"></div>
+            <div className={"flex items-center gap-2"}></div>
         </>
     );
 }

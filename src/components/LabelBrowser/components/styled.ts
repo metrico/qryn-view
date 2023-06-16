@@ -1,10 +1,9 @@
-
 import styled from "@emotion/styled";
-import isPropValid from '@emotion/is-prop-valid'
-
+import isPropValid from "@emotion/is-prop-valid";
 import HistoryIcon from "@mui/icons-material/History";
 import { BtnSmall as btnSmall } from "../../../theme/styles/Button";
 import { InputSmall } from "../../../theme/styles/Input";
+
 const BtnSmall = btnSmall as any;
 export const HistoryIconStyled: any = styled(HistoryIcon)`
     height: 18px;
@@ -21,8 +20,9 @@ export const HistoryButtonStyled: any = styled(BtnSmall)`
     span {
         margin-left: 5px;
     }
-    @media screen and (max-width: 864px) {
+    @media screen and (max-width: 1070px) {
         display: flex;
+        gap: 2px;
     }
 `;
 
@@ -38,34 +38,31 @@ export const ShowLabelsBtn: any = styled(BtnSmall)`
     &:hover {
         background: ${({ theme }: any) => theme.buttonHover};
     }
-    @media screen and (max-width: 864px) {
+    @media screen and (max-width: 1070px) {
         display: ${({ isMobile }) => (isMobile ? "flex" : "none")};
-
         margin: 0;
+        gap: 2px;
     }
 `;
 
 export const QueryBarContainer: any = styled.div`
     display: flex;
-    padding: 6px;
-    margin-top: 5px;
     margin-left: 0px;
-    background: ${({ theme }: any) => theme.widgetContainer};
     flex-wrap: wrap;
     border-radius: 3px;
+    gap: 2px;
 `;
 export const ShowLogsBtn: any = styled(BtnSmall, {
-    shouldForwardProp: prop => isPropValid(prop) && prop !== 'loading'
+    shouldForwardProp: (prop) => isPropValid(prop) && prop !== "loading",
 })`
-    background: ${(props) => props.loading ? '#44bcd8' : props.theme.primaryDark};
-    border: 1px solid ${(props) => props.theme.buttonBorder};
+    background: ${(props) =>
+        props.loading ? "#44bcd8" : props.theme.primaryDark};
+    border: 1px solid ${(props) => props.theme.primaryBorder};
     color: ${(props) => props.theme.buttonText};
-    margin-left: 5px;
     transition: 0.25s all;
     justify-content: center;
-    padding: 3px 12px;
-    
     height: 28px;
+    margin: 0px 4px;
     &:hover {
         background: ${(props) => props.theme.primaryLight};
     }
@@ -75,11 +72,10 @@ export const ShowLogsBtn: any = styled(BtnSmall, {
         cursor: not-allowed;
         color: ${(props) => props.theme.textColor};
     }
-    @media screen and (max-width: 864px) {
+    @media screen and (max-width: 1070px) {
         display: flex;
-
         margin: 0;
-        margin-left: 5px;
+        gap: 2px;
     }
 `;
 
@@ -97,12 +93,12 @@ export const ShowSettingsBtn: any = styled(BtnSmall)`
 `;
 
 export const MobileTopQueryMenu: any = styled.div`
-    display: ${(props:any) =>
-        props.isSplit || props.dataSourceType === "flux" ? "flex" : "none"};
+    display: flex;
     flex-wrap: wrap;
-
-    @media screen and (max-width: 864px) {
+    margin-bottom: 4px;
+    @media screen and (max-width: 1070px) {
         display: flex;
+        gap: 2px;
     }
 `;
 
@@ -113,17 +109,17 @@ export const InputGroup: any = styled.div`
     justify-content: space-between;
     margin-bottom: 20px;
     margin-right: 10px;
+    margin: 2px;
 `;
 export const InlineGroup: any = styled.div`
     display: flex;
     align-items: center;
 `;
 
-export const SettingCont: any = styled.div<{theme:any}>`
+export const SettingCont: any = styled.div<{ theme: any }>`
     display: flex;
     flex: 1;
     flex-direction: column;
-
     background: ${({ theme }) => theme.widgetContainer};
 `;
 
@@ -152,6 +148,7 @@ export const SettingInput: any = styled(InputSmall)`
 `;
 export const SettingButton: any = styled(BtnSmall)`
     background: ${({ theme }: any) => theme.primaryDark};
+    border: 1px solid ${(props: any) => props.theme.primaryBorder};
     color: ${({ theme }: any) => theme.buttonText};
     height: 30px;
     &:hover {

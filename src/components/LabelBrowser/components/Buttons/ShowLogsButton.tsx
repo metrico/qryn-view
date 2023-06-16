@@ -1,21 +1,13 @@
 import { ShowLogsBtn } from "../styled";
-import { themes } from "../../../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
-import { useSelector } from "react-redux";
-import { Store } from "../../../../store/store.model";
-const _themes = themes as any;
-export default function ShowLogsButton(props:any) {
-    const {
-        isDisabled,
-        onClick,
-        isMobile,
-        alterText,
-        loading = false,
-    } = props
+import { useTheme } from "../../../../theme";
+
+export default function ShowLogsButton(props: any) {
+    const { isDisabled, onClick, isMobile, alterText, loading = false } = props;
     const SHOW_LOGS = "Show Results";
-    const theme = useSelector((store: Store) => store.theme);
+    const theme = useTheme();
     return (
-        <ThemeProvider theme={_themes[theme]}>
+        <ThemeProvider theme={theme}>
             <ShowLogsBtn
                 disabled={isDisabled}
                 type="submit"

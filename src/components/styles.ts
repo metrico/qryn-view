@@ -44,7 +44,8 @@ export const SettingsInputContainer = styled.div`
 
 
 export const SettingLabel = styled.label`
-    font-size: 12px;
+    font-size: 11px;
+    white-space: nowrap;
     color: ${({ theme }: any) => theme.textColor};
     margin-left: 10px;
 `;

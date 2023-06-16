@@ -5,6 +5,7 @@ import { InputCol, InputCont } from "../styles";
 import { QrynSwitch, Select, Field } from "../ui";
 import { TextAreaField } from "../ui/TextArea";
 import { SectionHeader } from "./SectionHeader";
+import DOMPurify from "isomorphic-dompurify";
 
 export function AuthFields(props: any) {
     const { auth, id } = props;
@@ -60,26 +61,26 @@ export function AuthFields(props: any) {
     }, [fields, setActiveFields]);
 
     const onSelectChange = (e: any, name: any) => {
-        setIsEditing((_) => true);
+        setIsEditing(() => true);
         const value = e.target.value;
         onValueChange(value, name);
         setTimeout(() => {
-            setIsEditing((_) => false);
+            setIsEditing(() => false);
         }, 800);
     };
 
     const onSwitchChange = (e: any, name: any) => {
-        setIsEditing((_) => true);
+        setIsEditing(() => true);
         const value = e.target.checked;
 
         onValueChange(value, name);
         setTimeout(() => {
-            setIsEditing((_) => false);
+            setIsEditing(() => false);
         }, 800);
     };
 
     const onCertValueChange = (e: any, name: any, cert: any) => {
-        setIsEditing((_) => true);
+        setIsEditing(() => true);
         const value = e.target.value;
         const prevAuth = JSON.parse(JSON.stringify(auth));
 
@@ -110,7 +111,7 @@ export function AuthFields(props: any) {
         dispatch(setDataSources(newDataSources));
 
         setTimeout(() => {
-            setIsEditing((_) => false);
+            setIsEditing(() => false);
         }, 600);
     };
 
@@ -129,8 +130,8 @@ export function AuthFields(props: any) {
                             return (
                                 <Select
                                     key={key}
-                                    value={field.value}
-                                    name={field.name}
+                                    value={DOMPurify.sanitize(field.value)}
+                                    name={DOMPurify.sanitize(field.name)}
                                     onChange={(e: any) =>
                                         onSelectChange(e, field.name)
                                     }
@@ -185,7 +186,9 @@ export function AuthFields(props: any) {
                                                             type={
                                                                 cert.form_type
                                                             }
-                                                            value={cert.value}
+                                                            value={DOMPurify.sanitize(
+                                                                cert.value
+                                                            )}
                                                             label={cert.label}
                                                             placeholder={
                                                                 cert.placeholder
@@ -210,7 +213,9 @@ export function AuthFields(props: any) {
                                                                     val
                                                                 )
                                                             }
-                                                            value={cert.value}
+                                                            value={DOMPurify.sanitize(
+                                                                cert.value
+                                                            )}
                                                             label={cert.label}
                                                             placeholder={
                                                                 cert.placeholder

@@ -1,9 +1,5 @@
-import setIsEmptyView from "../setIsEmptyView";
-import setMatrixData from "../setMatrixData";
 import { QueryResult } from "../types";
 import { addNanoId } from "./addNanoId";
-import { getAsyncResponse } from "./parseResponse";
-import { setTableData } from "../setTableData";
 import moment from "moment";
 import { sortBy } from "lodash";
 import { setLeftDataView } from "../setLeftDataView";
@@ -103,19 +99,8 @@ export function parseMatrixResponse(responseProps: QueryResult) {
     const tableResult = getMatrixTableResult(result);
     // get current dataview and update action
     const dataView = setDataView(panel);
-
-    dispatch(setTableData(tableResult));
     try {
         const idResult = addNanoId(result);
-
-        getAsyncResponse(dispatch(setMatrixData(idResult || []))).then(() => {
-            if (idResult.length === 0) {
-                if (debugMode)
-                    console.log("🚧 getData / getting no data from matrix");
-                dispatch(setIsEmptyView(true));
-            }
-            dispatch(setIsEmptyView(false));
-        });
         // get table total as chart total is less that table total rows
         const panelResult = {
             id,

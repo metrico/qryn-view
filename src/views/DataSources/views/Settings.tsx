@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import DOMPurify from "isomorphic-dompurify";
 import {
     DataSourceHeaders,
     LinkedFields,
@@ -12,7 +13,7 @@ import { DataSourceSettingsCont, InputCont, InputCol } from "../styles";
 import { Field } from "../ui";
 
 export const Settings = (props: any) => {
-    const { headers, id, linkedFields, name, url }: any = props;
+    const { headers, id, linkedFields, name, url, cors }: any = props;
 
     const dispatch = useDispatch();
 
@@ -22,10 +23,15 @@ export const Settings = (props: any) => {
         protocol: false,
     });
     const onFieldChange = (prop: any, value: any) => {
+        let val = value;
+        if (prop === "url") {
+            const strippedValue = value.replace(/\/$/, "");
+            val = strippedValue;
+        }
         const arrayClone = JSON.parse(JSON.stringify(state));
         arrayClone.forEach((field: any) => {
             if (field.id === id) {
-                field[prop] = value;
+                field[prop] = val;
             }
         });
 
@@ -45,7 +51,7 @@ export const Settings = (props: any) => {
     };
 
     const onChange = (e: any, name: any) => {
-        setIsEditing((_) => true);
+        setIsEditing(() => true);
         const value = e.target.value;
         // check here if name === url
         if (name === "url") {
@@ -69,7 +75,7 @@ export const Settings = (props: any) => {
                 localStorage.setItem("dataSources", JSON.stringify(newVal));
                 dispatch(setDataSources(newVal));
                 setTimeout(() => {
-                    setIsEditing((_) => false);
+                    setIsEditing(() => false);
                 }, 800);
             }
         }
@@ -78,7 +84,7 @@ export const Settings = (props: any) => {
         localStorage.setItem("dataSources", JSON.stringify(newVal));
         dispatch(setDataSources(newVal));
         setTimeout(() => {
-            setIsEditing((_) => false);
+            setIsEditing(() => false);
         }, 800);
     };
 
@@ -95,13 +101,13 @@ export const Settings = (props: any) => {
             <InputCont>
                 <InputCol>
                     <Field
-                        value={name}
+                        value={DOMPurify.sanitize(name)}
                         label={"Name"}
                         onChange={(e: any) => onChange(e, "name")}
                     />
 
                     <Field
-                        value={url}
+                        value={DOMPurify.sanitize(url)}
                         label={"URL"}
                         error={fieldErrors.url || fieldErrors.protocol}
                         onChange={(e: any) => onChange(e, "url")}
@@ -111,7 +117,7 @@ export const Settings = (props: any) => {
 
             <AuthFields {...props} />
 
-            <DataSourceHeaders headers={headers} id={id} />
+            <DataSourceHeaders cors={cors} headers={headers} id={id} />
 
             <LinkedFields {...props} linkedFields={linkedFields} />
         </DataSourceSettingsCont>

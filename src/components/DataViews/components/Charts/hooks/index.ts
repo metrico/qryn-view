@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { themes } from "../../../../../theme/themes";
 import { CHART_OPTIONS } from "../consts";
 import { getLabelsFromLocal } from "../helpers";
-
 import { formatTs, formatLabel } from "../helpers";
 
 export const TAGS_LEVEL: any = {

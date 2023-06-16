@@ -211,7 +211,7 @@ export const SubmitButton: any = styled(HistoryButton)`
         display: flex;
         font-size: 12px;
     }
-    @media screen and (max-width: 864px) {
+    @media screen and (max-width: 1070px) {
         .open-icon {
             display: flex;
         }
@@ -322,7 +322,7 @@ export const LinkParams: any = styled.div`
             }
         }
     }
-    @media screen and (max-width: 864px) {
+    @media screen and (max-width: 1070px) {
         .inline-params {
             display: none;
         }

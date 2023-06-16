@@ -2,8 +2,7 @@ import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { themes } from "../../../theme/themes";
+import { useTheme } from "../../../theme";
 import LabelSelectorItem from "./LabelSelectorsItem";
 
 interface Theme {
@@ -32,10 +31,6 @@ const LabelsCont = styled.div`
     }
 `;
 
-interface RootState {
-    theme: "light" | "dark";
-}
-
 interface LabelState {
     id: string;
     label: string;
@@ -44,13 +39,13 @@ interface LabelState {
 }
 
 export default function LabelSelectors(props: any) {
+    const theme = useTheme();
+
     const [labelGroups, setLabelGroups] = useState<LabelState[]>([
         { id: nanoid(), label: "", op: "equals", value: "" },
     ]);
 
     useEffect(() => {}, [labelGroups]);
-
-    const theme = useSelector((store: RootState) => store.theme);
 
     const onSelectorChange = (label: LabelState) => {
         const prevLabelsCp = [...labelGroups];
@@ -85,8 +80,8 @@ export default function LabelSelectors(props: any) {
     };
 
     return (
-        <ThemeProvider theme={themes[theme]}>
-            <LabelsCont theme={themes[theme]}>
+        <ThemeProvider theme={theme}>
+            <LabelsCont theme={theme}>
                 <div className="label">Labels</div>
                 <div className="label-groups">
                     {labelGroups.map((item, index) => (

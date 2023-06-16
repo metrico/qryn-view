@@ -1,5 +1,5 @@
-import { useState, useEffect} from "react";
-
+import { useState, useEffect, useMemo } from "react";
+import { css, cx } from "@emotion/css";
 import {
     addMonths,
     isSameDay,
@@ -27,13 +27,6 @@ import {
 } from "./utils";
 import { DATE_TIME_RANGE, MARKERS } from "./consts";
 import { ThemeProvider } from "@emotion/react";
-import {
-    setRangeOpen,
-    setStartTime,
-    setTimeRangeLabel,
-    setStopTime,
-} from "../../../../actions";
-import { useSelector, useDispatch } from "react-redux";
 import useOutsideRef from "./hooks/useOutsideRef";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
@@ -45,6 +38,34 @@ import { Tooltip } from "@mui/material";
 import TimeLabel from "./components/TimeLabel";
 import { DatePickerButton } from "../../styled";
 import { useTheme } from "../../../DataViews/components/QueryBuilder/hooks";
+import { useMediaQuery } from "react-responsive";
+import { useSelector } from "react-redux";
+
+export const DTStyles = css`
+    svg {
+        font-size: 1.15em;
+        margin: 0px 2px;
+    }
+    .tooltip {
+        background-color: red;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+    }
+
+    @media screen and (max-width: 1200px) {
+        font-size: 1em;
+        padding: 8px;
+        color: #ddd;
+        line-height: 1.5;
+        svg {
+            margin-right: 0;
+        }
+        span {
+            display: none;
+        }
+    }
+`;
 
 export const timeDateRangeFromLocal = (item: string) => {
     try {
@@ -68,7 +89,7 @@ export const CustomMenu = (props: any) => {
             elevation={0}
             anchorOrigin={{
                 vertical: "bottom",
-                horizontal: "right",
+                horizontal: "left",
             }}
             PaperProps={{
                 sx: {
@@ -77,8 +98,8 @@ export const CustomMenu = (props: any) => {
                 },
             }}
             transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
+                vertical: "bottom",
+                horizontal: "left",
             }}
             {...props}
         />
@@ -96,17 +117,52 @@ const timeAdjustmentOptions = [
     "12h",
     "24h",
 ];
-export function DateRangePickerMain(props: any) {
+
+export type DateRangePickerProps = {
+    id: string;
+    startTs?: any;
+    stopTs?: any;
+    pickerOpen: boolean;
+    label?: string;
+    onStartChange(e: any): void;
+    onStopChange(e: any): void;
+    onLabelChange(e: any): void;
+    onPickerOpen(e: any): void;
+    minDate?: any;
+    maxDate?: any;
+};
+
+export function DateRangePickerMain(props: DateRangePickerProps) {
     const today = Date.now();
-    const { isOpen, minDate, maxDate } = props;
-
-    const startTs = useSelector((store: any) => store.start);
-    const stopTs = useSelector((store: any) => store.stop);
-
+    const {
+        id,
+        minDate,
+        maxDate,
+        startTs,
+        stopTs,
+        label,
+        onLabelChange,
+        onStartChange,
+        onStopChange,
+        pickerOpen,
+        onPickerOpen,
+    } = props;
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
+    const isSplit = useSelector((store:any)=> store.isSplit);
     const theme = useTheme();
+    const defaultRange = {
+        label: 'Last 5 minutes',
+        dateStart: new Date(Date.now()-5 * 60000),
+        dateEnd: new Date(Date.now())
+    }
     const initialDateRange = () => {
         try {
             const ls = timeDateRangeFromLocal(DATE_TIME_RANGE);
+
+            if(!ls) {
+                return defaultRange
+            }
+           
             if (ls?.label !== "" && typeof ls.label !== "undefined") {
                 const range: any = findRangeByLabel(ls?.label);
                 ls.dateStart = range.dateStart;
@@ -139,19 +195,15 @@ export function DateRangePickerMain(props: any) {
     const [secondMonth, setSecondMonth] = useState(
         initialSecondMonth || addMonths(firstMonth, 1)
     );
-    const [timeLabel, setTimeLabel] = useState("");
-    const dispatch = useDispatch();
 
-    const rangeOpen = useSelector((store: any) => store.rangeOpen);
-    const range = useSelector((store: any) => ({
-        dateStart: store.start,
-        dateEnd: store.stop,
-        label: store.label,
-    }));
+    const range = useMemo(() => {
+        return { dateStart: startTs, dateEnd: stopTs, label: label };
+    }, [startTs, stopTs, label]);
 
     useEffect(() => {
-        setTimeLabel(range.label);
-    }, [range]);
+        onLabelChange(range.label);
+        //eslint-disable-next-line
+    }, [range.label]);
 
     const { dateStart, dateEnd } = dateRange;
 
@@ -193,7 +245,8 @@ export function DateRangePickerMain(props: any) {
             onChange(newRange);
             saveDateRange(newRange);
             setDateRange(newRange);
-            dispatch(setTimeRangeLabel(""));
+
+            onLabelChange("");
             onClose();
         } else {
             setDateRange({ dateStart: day, dateEnd: undefined });
@@ -220,8 +273,7 @@ export function DateRangePickerMain(props: any) {
     };
     const onClose = (e: any = null) => {
         e?.preventDefault();
-        dispatch(setRangeOpen(false));
-        isOpen(e);
+        onPickerOpen(false);
     };
 
     const inHoverRange = (day: any) => {
@@ -252,17 +304,17 @@ export function DateRangePickerMain(props: any) {
         const isStart = isDate(dateStart);
         const isEnd = isDate(dateEnd);
         const isLabel = typeof label !== "undefined";
-        if (isStart) dispatch(setStartTime(dateStart));
-        if (isEnd) dispatch(setStopTime(dateEnd));
-        if (isLabel) dispatch(setTimeRangeLabel(label));
+        if (isStart) onStartChange(dateStart); //dispatch(setStartTime(dateStart));
+        if (isEnd) onStopChange(dateEnd); //dispatch(setStopTime(dateEnd));
+        if (isLabel) onLabelChange(label); //dispatch(setTimeRangeLabel(label));
     }
 
     const openButtonHandler = (e: any) => {
         e.preventDefault();
-        if (rangeOpen === true) {
+        if (pickerOpen === true) {
             onClose(e);
         } else {
-            dispatch(setRangeOpen(true));
+            onPickerOpen(true); // dispatch(setRangeOpen(true));
         }
     };
     const adjustTimeRange = (direction: any, adjustment: any = "range") => {
@@ -319,59 +371,65 @@ export function DateRangePickerMain(props: any) {
             adjustTimeRange(direction, option);
         }
     };
+
     return (
         <div style={{ display: "flex" }}>
-            <DatePickerButton
-                onClick={() => {
-                    adjustTimeRange("backward");
-                }}
-                attachedside={"r"}
-                emptySide={"l"}
-                className={"date-time-selector"}
-            >
-                <KeyboardArrowLeft />
-            </DatePickerButton>
-            <DatePickerButton
-                onClick={handleClick}
-                attachedside={"both"}
-                size={"small"}
-                className={"date-time-selector"}
-                aria-controls={open ? "backward-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-            >
-                <KeyboardArrowDownOutlinedIcon />
-            </DatePickerButton>
-            <CustomMenu
-                id={"backward-menu"}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                qryntheme={theme}
-            >
-                {timeAdjustmentOptions.map((option) => (
-                    <MenuItem
-                        key={`${option} l`}
-                        sx={{ "&.MuiMenuItem-root": { fontSize: 12 } }}
-                        onClick={(e) => handleClose(e, "backward", option)}
+            {(!isTabletOrMobile && !isSplit) && (
+                <>
+                    <DatePickerButton
+                        onClick={() => {
+                            adjustTimeRange("backward");
+                        }}
+                        attachedside={"r"}
+                        emptySide={"l"}
+                        className={cx(DTStyles)}
                     >
-                        {option}
-                    </MenuItem>
-                ))}
-            </CustomMenu>
-            <Tooltip
-                title={timeLabel ? <TimeLabel dateRange={dateRange} /> : ""}
-            >
+                        <KeyboardArrowLeft />
+                    </DatePickerButton>
+                    <DatePickerButton
+                        onClick={handleClick}
+                        attachedside={"both"}
+                        size={"small"}
+                        className={cx(DTStyles)}
+                        aria-controls={open ? "backward-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                    >
+                        <KeyboardArrowDownOutlinedIcon />
+                    </DatePickerButton>
+                    <CustomMenu
+                        id={"backward-menu"}
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        qryntheme={theme}
+                    >
+                        {timeAdjustmentOptions.map((option) => (
+                            <MenuItem
+                                key={`${option} l`}
+                                sx={{ "&.MuiMenuItem-root": { fontSize: 12 } }}
+                                onClick={(e) =>
+                                    handleClose(e, "backward", option)
+                                }
+                            >
+                                {option}
+                            </MenuItem>
+                        ))}
+                    </CustomMenu>
+                </>
+            )}
+
+            <Tooltip title={label ? <TimeLabel dateRange={dateRange} /> : ""}>
                 <DatePickerButton
                     onClick={openButtonHandler}
-                    className={"date-time-selector"}
+                    className={cx(DTStyles)}
                     attachedside={"both"}
                 >
                     <AccessTimeOutlinedIcon />
 
                     <span>
-                        {timeLabel
-                            ? timeLabel
+                        {label
+                            ? label
                             : (isValid(dateRange.dateStart)
                                   ? format(
                                         dateRange.dateStart,
@@ -390,45 +448,55 @@ export function DateRangePickerMain(props: any) {
                     </span>
                 </DatePickerButton>
             </Tooltip>
-            <DatePickerButton
-                onClick={handleClickRight}
-                attachedside={"both"}
-                size={"small"}
-                className={"date-time-selector"}
-                aria-controls={openRight ? "forward-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={openRight ? "true" : undefined}
-            >
-                <KeyboardArrowDownOutlinedIcon />
-            </DatePickerButton>
 
-            <CustomMenu
-                id="forward-menu"
-                anchorEl={anchorElRight}
-                open={openRight}
-                onClose={handleClose}
-                qryntheme={theme}
-            >
-                {timeAdjustmentOptions.map((option) => (
-                    <MenuItem
-                        key={`${option} r`}
-                        sx={{ "&.MuiMenuItem-root": { fontSize: 12 } }}
-                        onClick={(e) => handleClose(e, "forward", option)}
+            {(!isTabletOrMobile && !isSplit) && (
+                <>
+                    <DatePickerButton
+                        onClick={handleClickRight}
+                        id={`forward-button-${id}`}
+                        size={"small"}
+                        className={cx(DTStyles)}
+                        aria-controls={
+                            openRight ? `forward-menu${id}` : undefined
+                        }
+                        aria-haspopup="true"
+                        aria-expanded={openRight ? "true" : undefined}
                     >
-                        {option}
-                    </MenuItem>
-                ))}
-            </CustomMenu>
-            <DatePickerButton
-                onClick={() => {
-                    adjustTimeRange("forward");
-                }}
-                attachedside={"l"}
-                className={"date-time-selector"}
-            >
-                <KeyboardArrowRight />
-            </DatePickerButton>
-            {rangeOpen ? (
+                        <KeyboardArrowDownOutlinedIcon />
+                    </DatePickerButton>
+
+                    <CustomMenu
+                        id={`forward-menu-${id}`}
+                        anchorEl={anchorElRight}
+                        open={openRight}
+                        onClose={handleClose}
+                        qryntheme={theme}
+                    >
+                        {timeAdjustmentOptions.map((option) => (
+                            <MenuItem
+                                key={`${option} r`}
+                                sx={{ "&.MuiMenuItem-root": { fontSize: 12 } }}
+                                onClick={(e) =>
+                                    handleClose(e, "forward", option)
+                                }
+                            >
+                                {option}
+                            </MenuItem>
+                        ))}
+                    </CustomMenu>
+                    <DatePickerButton
+                        onClick={() => {
+                            adjustTimeRange("forward");
+                        }}
+                        attachedside={"l"}
+                        className={cx(DTStyles)}
+                    >
+                        <KeyboardArrowRight />
+                    </DatePickerButton>
+                </>
+            )}
+
+            {pickerOpen ? (
                 <div tabIndex={0} ref={ref}>
                     <ThemeProvider theme={theme}>
                         <PickerNav
@@ -452,5 +520,3 @@ export function DateRangePickerMain(props: any) {
     );
 }
 export const DateRangePicker = DateRangePickerMain;
-
-//shouldnt be at same div!!

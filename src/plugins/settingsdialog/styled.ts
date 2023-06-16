@@ -8,17 +8,26 @@ export const InputGroup = styled.div`
     flex-direction: column;
     margin-bottom: 20px;
 `;
+
+export const SwitchesCont: any = styled.div`
+    margin-top: 4px;
+    border-radius: 3px;
+    border: ${({ border, theme }: any) =>
+        border === true ? `1px solid ${theme.buttonBorder}` : `none`};
+    padding: 4px;
+`;
 export const InlineGroup = styled.div`
     display: flex;
     align-items: center;
+`;
+export const SectionCont = styled.div`
+    padding-bottom: 4px;
 `;
 
 export const SettingCont = styled.div`
     display: flex;
     flex: 1;
     flex-direction: column;
-
-  
     background: ${({ theme }: any) => theme.widgetContainer};
 `;
 
@@ -55,6 +64,22 @@ export const SettingLabel: any = styled.label`
     margin-left: 10px;
 `;
 
+export const SettingLabelHeader: any = styled.label`
+    font-size: 12px;
+    color: ${({ theme }: any) => theme.inputLabelColor};
+    background: ${({ theme }: any) => theme.primaryLight};
+    margin-left: 10px;
+`;
+
+export const SettingLabelSection: any = styled.label`
+    display: flex;
+    font-size: 12px;
+    color: ${({ theme }: any) => theme.textColor};
+    background: ${({ theme }: any) => theme.inputBg};
+    padding: 4px;
+    margin-bottom: 2px;
+    border-radius: 3px;
+`;
 export const SettingHeader: any = styled.div`
     display: flex;
     justify-content: space-between;
@@ -75,10 +100,12 @@ export const SettingCloseBtn: any = styled(BtnSmall)`
 export const EmbedArea: any = styled.textarea`
     display: flex;
     flex: 1;
-    margin: 5px;
+    margin: 5px 0px;
     height: 150px;
+    width: 250px;
+    font-size: 10px;
     padding: 5px 8px;
-    border: 1px solid ${({theme}: any) => theme.buttonBorder};
+    border: 1px solid ${({ theme }: any) => theme.buttonBorder};
     border-radius: 3px;
     background: ${({ theme }: any) => theme.inputBg};
     color: ${({ theme }: any) => theme.textColor};

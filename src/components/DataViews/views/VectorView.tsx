@@ -7,7 +7,7 @@ import { TabsList, Tab, TabPanel, ViewStyled } from "./styled";
 import ReactJSON from "react-json-view";
 import { useSelector } from "react-redux";
 import { localTabsState } from "../helpers";
-
+import DOMPurify from "isomorphic-dompurify";
 export const VectorView = (props: any) => {
     const {
         viewRef,
@@ -52,7 +52,7 @@ export const VectorView = (props: any) => {
         };
         localStorage.setItem("tabsState", JSON.stringify(newState));
         if (typeof value === "number") {
-            setTabsState((_: any) => value);
+            setTabsState(() => value);
         }
     };
 
@@ -82,7 +82,7 @@ export const VectorView = (props: any) => {
                     <div
                         className="view-content"
                         ref={parentRef}
-                        id={actualQuery?.id + "-view"}
+                        id={DOMPurify.sanitize(`${actualQuery?.id}-view`)}
                     >
                         <VectorTable
                             {...props}

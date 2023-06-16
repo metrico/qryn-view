@@ -9,27 +9,39 @@ import { useMetricsList } from "./hooks/useMetricsList";
 import { InitialAddButton } from "./InitialAddButton";
 import { LabelValueForm } from "./LabelValueForm";
 import { FlexWrap } from "./styles";
-import {Label} from './types';
+import { Label } from "./types";
 
 // here inject the label selector
 export function MetricsLabelValueSelectors(props: any) {
-
-
-    const { dataSourceId,  value, metricValueChange, onChange } = props;
+    const {
+        dataSourceId,
+        value,
+        metricValueChange,
+        onChange,
+        setBuilders,
+        index,
+        setFinalQuery,
+        labelValueString,
+        setLabelValueString,
+    } = props;
     const valuesOpts = useMetricsList(dataSourceId, value);
 
-    const [labelValuesState, setLabelValuesState] = useState<Label[]>(
-        InitialLabelValueState
+    const [labelValuesState, setLabelValuesState] = useState<Label[]>( // here should add the initial metric
+        props.labelValuesState || [{ ...InitialLabelValueState, metric: value }]
     );
 
-    const [labelValueString, setLabelValueString] = useState("");
+    // const [labelValueString, setLabelValueString] = useState("");
 
     const mainTheme = useTheme();
 
     const labelOpts = useLabelOpts(valuesOpts);
 
+    /**
+     *
+     * @param id
+     * onRemove removes a label - value pair selector from array by ID
+     */
     const onRemove = (id: any) => {
-
         setLabelValuesState((prev: Label[]) => {
             const prevValue = JSON.parse(JSON.stringify(prev)) || [];
             const newState = prevValue?.filter((f: any) => f.id !== id);
@@ -46,21 +58,32 @@ export function MetricsLabelValueSelectors(props: any) {
         });
     };
 
-    const onAdd = (e: any) => {
+    /**
+     *
+     * onAdd adds a new label - value pair into array of label - values
+     */
+    const onAdd = () => {
         setLabelValuesState((prev: Label[]) => {
-            return [...prev, {...NewLabel,id:nanoid()}];
+            return [...prev, { ...NewLabel, metric: value, id: nanoid() }];
         });
     };
 
+    /**
+     *
+     * @param e
+     * onLabelChange
+     * - updates the state of the label-values Array
+     * - updates the state of the label -values String
+     * - sends event to onChange
+     */
     const onLabelChange = (e: any) => {
         const labelFound = labelValuesState?.some((f) => f.id === e.id);
         if (labelValuesState?.length === 1 && !labelFound) {
-            setLabelValuesState((prev) => [e]);
-            setLabelValueString((prev) => JSON.stringify([e]));
+            setLabelValuesState(() => [e]);
+            setLabelValueString(() => JSON.stringify([e]));
         }
 
         const prevState = [...labelValuesState];
-
         const nextState = prevState?.map((m) => {
             if (m.id === e.id) {
                 return { ...e };
@@ -69,23 +92,54 @@ export function MetricsLabelValueSelectors(props: any) {
         });
 
         if (labelFound) {
-            setLabelValuesState((_) => [...nextState]);
-            setLabelValueString((_) => JSON.stringify(nextState));
+            setLabelValuesState(() => [...nextState]);
+            setLabelValueString(() => JSON.stringify(nextState));
         }
         onChange(e);
     };
 
-    useEffect(() => {
-        const labValue = labelValueString || JSON.stringify("");
-        const metricString = metricsToString(value, JSON.parse(labValue));
-        metricValueChange(metricString); // pass the processing function from parent
-          // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [labelValueString, value]);
-
-    const resetLabelsState = (e: any) => {
-        setLabelValuesState((prev) => InitialLabelValueState);
+    /**
+     *
+     * @param e
+     * Resets the labels value state into initial value.
+     */
+    const resetLabelsState = () => {
+        setLabelValuesState((prev) => [
+            { ...InitialLabelValueState, metric: value },
+        ]);
     };
 
+    useEffect(() => {
+        // this useEffect sends the metricsString to the metricValueChange event.
+        const labValue = labelValueString || JSON.stringify("");
+        const metricString = metricsToString(value, JSON.parse(labValue));
+
+        metricValueChange(metricString);
+        setFinalQuery(metricString);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [labelValueString, value]);
+
+    useEffect(() => {
+        setBuilders((prev: any[]) => {
+            const next = [...prev];
+            return next.map((builder) => {
+                if (next.indexOf(builder) === index) {
+                    return {
+                        ...builder,
+                        labelValuesState: [...labelValuesState],
+                        // convert here the value into a logsVolumeQuery
+                    };
+                }
+                return builder;
+            });
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [labelValuesState]);
+
+    /**
+     *
+     * @returns the initial add label - value button
+     */
     const initialButtonRenderer = () => {
         if (labelValuesState?.length < 1) {
             return (
@@ -107,6 +161,7 @@ export function MetricsLabelValueSelectors(props: any) {
                             id={keyval.id}
                             idx={key}
                             key={key}
+                            metric={value}
                             keyVal={keyval}
                             labelOpts={labelOpts}
                             valuesOpts={valuesOpts}

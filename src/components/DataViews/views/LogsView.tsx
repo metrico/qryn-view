@@ -33,7 +33,6 @@ export default function LogsView(props: any) {
     const [tabsState, setTabsState] = useState<number>(
         localTabsState(actualQuery)[actualQuery.id] || 0
     );
-
     const rawData = useMemo(() => {
         return JSON.parse(JSON.stringify(props?.dataView?.raw)) || [];
     }, [props?.dataView?.raw]);
@@ -46,7 +45,6 @@ export default function LogsView(props: any) {
         }
         return "tomorrow";
     }, [theme]);
-
     const onTabChange = (
         e: SyntheticEvent<Element, Event>,
         value: number | string | boolean
@@ -57,7 +55,7 @@ export default function LogsView(props: any) {
         };
         localStorage.setItem("tabsState", JSON.stringify(newState));
         if (typeof value === "number") {
-            setTabsState((_: any) => value);
+            setTabsState(() => value);
         }
     };
     return (

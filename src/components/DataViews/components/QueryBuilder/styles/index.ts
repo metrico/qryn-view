@@ -1,15 +1,14 @@
 import { css } from "@emotion/css";
 
-export const cStyles = (theme: any, minWidth: number,flexOne?:boolean) => ({
+export const cStyles = (theme: any, minWidth: number, flexOne?: boolean) => ({
     container: (base: any) => ({
         ...base,
-        flex:flexOne ? 1 : ''
+        flex: flexOne ? 1 : "",
     }),
     menu: (base: any) => ({
         ...base,
         fontSize: "12px",
         color: theme.textColor,
-       
     }),
     control: (base: any) => ({
         ...base,
@@ -18,11 +17,10 @@ export const cStyles = (theme: any, minWidth: number,flexOne?:boolean) => ({
         minHeight: 28,
         boxShadow: "none",
         color: theme.textColor,
-        border:`1px solid ${theme.buttonBorder}`,
+        border: `1px solid ${theme.buttonBorder}`,
         // marginTop: "5px",
         minWidth,
-        flex: flexOne ? 1 : '' 
-
+        flex: flexOne ? 1 : "",
     }),
     input: (base: any) => ({
         ...base,
@@ -58,7 +56,7 @@ export const cStyles = (theme: any, minWidth: number,flexOne?:boolean) => ({
     valueContainer: (base: any) => ({
         ...base,
         display: "flex",
-        flex: flexOne ? 1 : '' 
+        flex: flexOne ? 1 : "",
     }),
 });
 
@@ -66,9 +64,6 @@ export const LabelValueContStyles = css`
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin-left: 3px;
-    margin-top: 3px;
-    margin-right: 3px;
     gap: 3px;
 `;
 export const FlexCenter = css`
@@ -114,11 +109,21 @@ export const AddIconStyle = (theme: any) => css`
 export const FlexWrap = css`
     display: flex;
     flex-wrap: wrap;
-    margin:5px;
+    gap: 4px;
+    margin: 0px 0px;
 `;
 
 export const FlexColumn = css`
-display:flex;
-flex-direction: column;
-flex:1;
-`
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+`;
+export const MetricsContStyle = css`
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+`;
+export const MetricsButtonsContStyle = css`
+    display: flex;
+    margin: 10px 0px;
+`;

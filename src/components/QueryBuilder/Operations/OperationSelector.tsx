@@ -63,11 +63,12 @@ const menuButtonStyles = (theme: any) => css`
     color: ${theme.textColor};
     border: 1px solid ${theme.buttonBorder};
     border-radius: 3px;
-    padding: 4px 8px;
+    padding: 6px;
     display: flex;
     align-items: center;
     cursor: pointer;
-    margin-left: 4px;
+    margin-top:4px;
+    margin: 3px;
 `;
 
 const menuOpening = css`
@@ -189,6 +190,55 @@ export const OperationsOptions: any = {
         "IP Line Filter Expression",
         "IP Line Not Filter Expression",
     ],
+    Trigonometric: [
+        "Acos",
+        "Acosh",
+        "Asin",
+        "Asinh",
+        "Atan",
+        "Atanh",
+        "Cos",
+        "Cosh",
+        "Sin",
+        "Sinh",
+        "Tan",
+        "Tanh",
+    ],
+    "Time Functions": ["Day Of Month", "Day Of Week", "Days In Month"],
+
+    Functions: [
+        "Histogram Quantile",
+        "Label Replace",
+        "Ln",
+        "absent",
+        "Ceil",
+        "Clamp",
+        "Clamp max",
+        "Clamp min",
+        "Deg",
+        "Exp",
+        "Floor",
+        "Group",
+        "Hour",
+        "Label join",
+        "Log10",
+        "Log2",
+        "Minute",
+        "Pi",
+        "Quantile",
+        "Rad",
+        "Round",
+        "Scalar",
+        "Sgn",
+        "Sort",
+        "Sort desc",
+        "Sqrt",
+        "Stddev",
+        "Time",
+        "Timestamp",
+        "Vector",
+        "Year",
+    ],
 };
 
 export type OperationOptions =
@@ -197,7 +247,10 @@ export type OperationOptions =
     | "Formats"
     | "Binary Operations"
     | "Label Filters"
-    | "Line Filters";
+    | "Line Filters"
+    | "Trigonometric"
+    | "Time Functions"
+    | "Functions";
 
 export function CustomSubMenu({ item }: any) {
     return (

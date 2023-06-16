@@ -1,6 +1,6 @@
 import { InputGroup, TextArea } from "../styles";
 import { Label } from "../styles";
-
+import DOMPurify from 'isomorphic-dompurify'
 export function TextAreaField(props: any) {
     const { value, label, onChange, placeholder } = props;
     return (
@@ -10,7 +10,7 @@ export function TextAreaField(props: any) {
                 className="ds-input"
                 onChange={onChange}
                 placeholder={placeholder}
-                value={value}
+                value={DOMPurify.sanitize(value)}
             />
         </InputGroup>
     );

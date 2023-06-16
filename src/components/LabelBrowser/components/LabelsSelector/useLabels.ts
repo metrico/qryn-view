@@ -29,9 +29,13 @@ const getTimestamp = (time: any, type: any): any => {
     )[type];
 };
 
-export default function useLabels(id: any, dataSourceURL = "") {
+
+export default function useLabels(id:string, dataSourceURL = "", startTs?:string , stopTs?:string ) {
     const dispatch = useDispatch();
-    const { start, stop }: any = useSelector((store) => store);
+
+    const start = startTs || new Date(Date.now() + 30000) 
+    const stop = stopTs || new Date(Date.now())
+
     const dataSources = useSelector((store: any) => store.dataSources);
 
     const currentDataSource = useMemo(() => {
@@ -52,9 +56,9 @@ export default function useLabels(id: any, dataSourceURL = "") {
 
     let timeStart: any;
     let timeEnd: any;
-
-    timeStart = getTimestamp(start, type);
-    timeEnd = getTimestamp(stop, type);
+    
+    timeStart = getTimestamp(new Date(start), type);
+    timeEnd = getTimestamp(new Date(stop), type);
 
     const [url, setUrl] = useState(
         getUrlFromType(currentDataSource.url, type, timeStart, timeEnd)

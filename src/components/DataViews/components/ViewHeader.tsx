@@ -1,23 +1,23 @@
 import { ThemeProvider } from "@emotion/react";
 import { Tooltip } from "@mui/material";
 import { useState, useMemo, useCallback } from "react";
-import { useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { ViewLabel } from "./ViewLabel";
-import { themes } from "../../../theme/themes";
 import { HeadLabelsCont, LabelChip, ViewHeaderStyled } from "../styled";
 import InfoIcon from "@mui/icons-material/Info";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { InfoDialog } from "./InfoDialog";
+import { useTheme } from "./QueryBuilder/hooks";
 
 export function ViewHeader(props: any) {
     const { fixedSize } = props || { fixedSize: false };
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
     const [open, setOpen] = useState(false);
     const [viewOpen, setViewOpen] = useState(true);
 
-    const theme = useSelector((store: any) => store.theme);
+    const theme = useTheme();
+
     const { actualQuery, dataView, type, total, setMinimize, setMaxHeight } =
         props;
 
@@ -87,7 +87,7 @@ export function ViewHeader(props: any) {
     if (actualQuery) {
         const { idRef, expr, limit, queryType } = actualQuery;
         return (
-            <ThemeProvider theme={(themes as any)[theme]}>
+            <ThemeProvider theme={theme}>
                 <ViewHeaderStyled>
                     <div className="view-header-info">
                         <span>

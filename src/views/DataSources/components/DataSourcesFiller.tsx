@@ -1,38 +1,34 @@
 import { Switch } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { css, cx } from "@emotion/css";
 import { useDispatch, useSelector } from "react-redux";
 import setDataSources from "../store/setDataSources";
 import { Button, Field } from "../ui";
-import { themes } from "../../../components/DataViews/components/Traces/Jaeger-ui/src/theme/themes";
-
-const InlineFlex = (theme:any) => css`
+import DOMPurify from "isomorphic-dompurify";
+import { useTheme } from "../../../components/DataViews/components/QueryBuilder/hooks";
+const InlineFlex = (theme: any) => css`
     display: flex;
     flex-direction: column;
     flex: 1;
     flex-wrap: wrap;
     width: 400px;
-    margin-top: 5px;
-    margin-left: 10px;
     border: 1px solid ${theme.buttonBorder};
     padding: 5px;
-    border-radius: 4px;
+    border-radius: 3px;
+    margin-left:10px;
 `;
 
 const oneForAllStyle = css`
     display: flex;
     padding: 4px 12px;
-    // border: 1px solid lightgray;
     font-size: 14px;
     border-radius: 4px;
-    margin-left: 12px;
     white-space: nowrap;
     align-items: center;
     justify-content: space-between;
 `;
 
 const FieldsCont = css`
-    //width: 200px;
     margin: 5px;
 `;
 
@@ -63,30 +59,26 @@ export const DataSourcesFiller = (props: any) => {
     const dataSources = useSelector((store: any) => store.dataSources);
     const dispatch = useDispatch();
     const submitMessage = "Save";
-
-    const storeTheme = useSelector((store:{theme:'light'|'dark'})=> store.theme)
-
-    const theme = useMemo (()=>{
-        return themes[storeTheme]
-
-    },[storeTheme])
+    const theme = useTheme();
 
     const urlChange = (e: any) => {
-        setUrl((_) => e.target.value);
+           const value = e?.target?.value || "";
+    const strippedValue = value.replace(/\/$/, '');
+        setUrl(() => strippedValue);
     };
     const userChange = (e: any) => {
-        setUser((_) => e.target.value);
+        setUser(() => e.target.value);
     };
     const passwordChange = (e: any) => {
-        setPassword((_) => e.target.value);
+        setPassword(() => e.target.value);
     };
 
     const onSwitchChange = (e: any) => {
-        setOneForAll((_) => e.target.checked);
+        setOneForAll(() => e.target.checked);
     };
 
     const onBasicAuthChange = (e: any) => {
-        setBasicAuth((_) => e.target.checked);
+        setBasicAuth(() => e.target.checked);
     };
 
     const onUseForAll = (e: any) => {
@@ -128,7 +120,7 @@ export const DataSourcesFiller = (props: any) => {
             {oneForAll && (
                 <div className={cx(FieldsCont)}>
                     <Field
-                        value={url}
+                        value={DOMPurify.sanitize(url)}
                         label={"url"}
                         onChange={urlChange}
                         placeholder={"http://qryn.dev"}
@@ -136,13 +128,13 @@ export const DataSourcesFiller = (props: any) => {
                     {basicAuth && (
                         <>
                             <Field
-                                value={user}
+                                value={DOMPurify.sanitize(user)}
                                 label={"user"}
                                 onChange={userChange}
                                 placeholder={"default"}
                             />
                             <Field
-                                value={password}
+                                value={DOMPurify.sanitize(password)}
                                 label={"password"}
                                 onChange={passwordChange}
                                 type={"password"}
@@ -161,7 +153,7 @@ export const DataSourcesFiller = (props: any) => {
                             />{" "}
                         </div>
                         <Button
-                            value={submitMessage}
+                            value={DOMPurify.sanitize(submitMessage)}
                             onClick={onUseForAll}
                             editing={false}
                             primary={true}

@@ -63,7 +63,7 @@ export default function getData(
     limit: number,
     panel: string,
     id: string,
-    direction: QueryDirection = "forward",
+    direction: QueryDirection = "backwards",
     dataSourceId = "",
     url = "",
     customStep = 0,
@@ -158,7 +158,9 @@ export default function getData(
         dsSettings.url || "",
         queryType,
         url,
-        customStep
+        customStep,
+        id,
+        panel
     );
 
     const endpoint = getEndpoint(type, queryType, params);

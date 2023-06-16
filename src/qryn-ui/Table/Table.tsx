@@ -12,7 +12,7 @@ import {
     useReactTable,
     ColumnResizeMode,
 } from "@tanstack/react-table";
-
+import DOMPurify from 'isomorphic-dompurify';
 import { useState, useEffect, useReducer } from "react";
 import {
     defaultColumn,
@@ -27,6 +27,8 @@ import CustomTable from "./components/CustomTable";
 import { useSkipper } from "./hooks/useSkipper";
 import { ThemeProvider } from "@emotion/react";
 import { useTheme } from "../../components/DataViews/components/QueryBuilder/hooks";
+
+
 
 const Styles = styled.div<{ theme: any }>`
     padding: 5px;
@@ -183,7 +185,7 @@ export default function Table(props: any) {
                         <DebouncedInput
                             theme={theme}
                             style={{ fontSize: "12px", padding: "3px 8px" }}
-                            value={globalFilter ?? ""}
+                            value={DOMPurify.sanitize(globalFilter ?? "")}
                             onChange={(value) => setGlobalFilter(String(value))}
                             placeholder="Search all columns..."
                         />

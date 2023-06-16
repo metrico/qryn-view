@@ -1,15 +1,17 @@
 import { ShowSettingsBtn } from "../styled";
-import { themes } from "../../../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
-import { useSelector } from "react-redux";
+import { useTheme } from "../../../../theme";
 
-export default function ShowQuerySettingsButton({ disabled, onClick, isMobile }: any) {
+export default function ShowQuerySettingsButton({
+    disabled,
+    onClick,
+    isMobile,
+}: any) {
     const SHOW_SETTINGS = "Options";
-    const theme = useSelector((store: any) => store.theme);
-    const _themes: any = themes;
+    const theme = useTheme();
 
     return (
-        <ThemeProvider theme={_themes[theme]}>
+        <ThemeProvider theme={theme}>
             <ShowSettingsBtn
                 disabled={disabled}
                 type="submit"

@@ -1,7 +1,5 @@
 import { findRangeByLabel } from "../../components/StatusBar/components/daterangepicker/utils";
 import store from "../../store/store";
-import { setStartTime } from "../setStartTime";
-import { setStopTime } from "../setStopTime";
 import { getTimeParsed, getTimeSec } from "./timeParser";
 
 const getPrevTime = (lastTime: number) => {
@@ -32,21 +30,19 @@ const getRangeByLabel = (rl: string, type?: string) => {
         dateEnd,
     };
 };
-export default function getTimeParams(type: string) {
-    // actual params from store
-    // get by type
-    const {
-        start: startTs,
-        stop: stopTs,
-        label: rangeLabel,
-        time: lsTime,
-        from,
-        to,
-    } = store.getState();
+export default function getTimeParams(type: string, id: string, panel: string) {
+    const { time: lsTime, from, to } = store.getState();
+
+    const queries = store.getState()[panel];
+
+    const queryFound = queries?.find((f: any) => f.id === id);
+
+    const startTs = queryFound.start;
+    const stopTs = queryFound.stop;
 
     const prevInstantTime = getPrevTime(lsTime);
 
-    const rl: string = rangeLabel;
+    const rl: string = queryFound.label;
 
     const _start = startTs;
     const _stop = stopTs;
@@ -54,7 +50,7 @@ export default function getTimeParams(type: string) {
     let parsedStart = 0,
         parsedStop = 0;
     if (findRangeByLabel(rl)) {
-        const { pStart, pStop, dateStart, dateEnd } = getRangeByLabel(rl, type);
+        const { pStart, pStop } = getRangeByLabel(rl, type);
 
         if (type === "traces") {
             parsedStart = Math.round(pStart / 1000000000);
@@ -63,9 +59,6 @@ export default function getTimeParams(type: string) {
             parsedStart = pStart;
             parsedStop = pStop;
         }
-
-        store.dispatch(setStartTime(dateStart));
-        store.dispatch(setStopTime(dateEnd));
     } else {
         // get time sec if its metrics type
         if (type === "metrics") {

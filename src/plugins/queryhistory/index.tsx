@@ -29,7 +29,7 @@ import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import { Typography } from "@mui/material";
-
+import DOMPurify from "isomorphic-dompurify";
 import localUrl from "../../services/localUrl";
 
 import setLinksHistory from "../../actions/setLinksHistory";
@@ -59,10 +59,10 @@ import {
 import AlertDialog from "./components/AlertDialog";
 import EmptyHistoryDisplay from "./components/EmptyHistoryDisplay";
 import CloseButton from "./components/CloseButton";
-import { themes } from "../../theme/themes";
 import { notificationTypes } from "../../qryn-ui/notifications/consts";
 
 import { CustomMenu } from "../../components/StatusBar/components/daterangepicker";
+import { useTheme } from "../../components/DataViews/components/QueryBuilder/hooks";
 
 function QueryHistoryTabs(props: any) {
     const {
@@ -180,10 +180,13 @@ function HistoryLinkParams({
                     }}
                 >
                     {" "}
-                    <Tooltip title={fromDate + " - " + toDate}>
+                    <Tooltip title={`${fromDate} - ${toDate}`}>
                         <AccessTimeIcon
-                        
-                            style={{ marginRight: "3px", height:'14px', width:'14px' }}
+                            style={{
+                                marginRight: "3px",
+                                height: "14px",
+                                width: "14px",
+                            }}
                         />
                     </Tooltip>{" "}
                     <TimeSpan>
@@ -258,8 +261,7 @@ function HistoryLinkTools(props: any) {
         handleSubmit,
         label,
     }: any = props;
-    const storeTheme = useSelector((store: any) => store.theme);
-    const qrynTheme = (themes as any)[storeTheme];
+    const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const [isRelative, setIsRelative] = useState(false);
@@ -282,7 +284,7 @@ function HistoryLinkTools(props: any) {
                 display: "flex",
                 flexDirection: onOpen ? "column-reverse" : "row",
                 justifyContent: "space-between",
-                alignItems:'center'
+                alignItems: "center",
             }}
         >
             <>
@@ -318,7 +320,7 @@ function HistoryLinkTools(props: any) {
                             anchorEl={anchorEl}
                             open={open}
                             onClose={handleClose}
-                            qryntheme={qrynTheme}
+                            qryntheme={theme}
                             size={"small"}
                         >
                             <MenuItem
@@ -354,7 +356,7 @@ function HistoryLinkTools(props: any) {
                                             <Typography
                                                 style={{
                                                     fontSize: "12px",
-                                                    color: qrynTheme.textColor,
+                                                    color: theme.textColor,
                                                 }}
                                             >
                                                 Relative time
@@ -415,7 +417,7 @@ function QueryHistoryTab({
     const [listDisplay, setListDisplay] = useState([]);
     useEffect(() => {
         setListDisplay(queryHistory);
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -450,8 +452,8 @@ function QueryHistoryTab({
                                 color: "#666",
                                 paddingRight: "10px",
                                 width: "10px",
-                                display:"flex",
-                                alignItems:"center"
+                                display: "flex",
+                                alignItems: "center",
                             }}
                         >
                             {listDisplay.length - index}
@@ -463,7 +465,7 @@ function QueryHistoryTab({
                             {format(item.timestamp, "yyyy/MM/dd HH:mm:ss")}
                         </span>
 
-                        <div style={{ display: "flex", alignItems:'center' }}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                             <Tooltip title={"Copy Query to Clipboard"}>
                                 <HistoryButton
                                     onClick={() => copyQuery(item.data)}
@@ -552,7 +554,7 @@ function LinksHistoryTab({
 
     useEffect(() => {
         setListDisplay(linksHistory);
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     useEffect(() => {
         if (filtered.length > 0) {
@@ -573,8 +575,8 @@ function LinksHistoryTab({
                                 paddingRight: "10px",
                                 color: "#666",
                                 width: "10px",
-                                display:'flex',
-                                alignItems:'center'
+                                display: "flex",
+                                alignItems: "center",
                             }}
                         >
                             {listDisplay?.length - index}
@@ -623,7 +625,7 @@ function StarredHistoryTab({
     useEffect(() => {
         setQueryListDisplay(starredQueries);
         setLinksListDisplay(starredLinks);
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -718,9 +720,9 @@ function QueryHistoryTabHeader({
                 <TabHistorySearchIcon />
                 <FilterInput
                     type="text"
-                    value={value}
+                    value={DOMPurify.sanitize(value)}
                     onChange={handleValueChange}
-                    placeholder={"Search " + searchQueriesText}
+                    placeholder={`Search ${searchQueriesText}`}
                 />{" "}
                 <span style={{ margin: "0px 4px" }}>
                     Total: {queryHistory.length}
@@ -788,7 +790,7 @@ const QueryHistory = (props: any) => {
     const queryHistory = useSelector((store: any) => store.queryHistory);
     const linksHistory = useSelector((store: any) => store.linksHistory);
     const historyOpen = useSelector((store: any) => store.historyOpen);
-    const theme = useSelector((store: any) => store.theme);
+    const theme = useTheme();
 
     const [starredItems, setStarredItems] = useState([]);
     const [filtered, setFiltered] = useState([]);
@@ -849,7 +851,7 @@ const QueryHistory = (props: any) => {
 
         let customStep = 0;
 
-        if (queryInput.includes(`$__interval`)) {
+        if (queryInput.includes("$__interval")) {
             const timeDiff = (stop.getTime() - start.getTime()) / 1000;
 
             const timeProportion: number = timeDiff / 30;
@@ -959,25 +961,6 @@ const QueryHistory = (props: any) => {
         }
     }
 
-    // function copyQuery(item) {
-    //     const query = JSON.parse(item)["queryInput"];
-
-    //     navigator.clipboard.writeText(query).then(
-    //         function () {
-    //             if (item.length > 0) {
-    //                 dispatch(
-    //                     createAlert({
-    //                         message: "Query copied succesfully",
-    //                         type: notificationTypes.success,
-    //                     })
-    //                 );
-    //             }
-    //         },
-    //         function (err) {
-    //             console.err("error on copy", err);
-    //         }
-    //     );
-    // }
     function alertSuccess() {
         dispatch(
             createAlert({
@@ -1066,16 +1049,16 @@ const QueryHistory = (props: any) => {
             );
         }
     }
-    const _themes: any = themes;
+
     return (
-        <ThemeProvider theme={_themes[theme]}>
+        <ThemeProvider theme={theme}>
             {historyOpen && (
                 <StyledDrawer
                     anchor={"bottom"}
                     style={{ maxHeight: "250px" }}
                     open={historyOpen}
                     variant={"persistent"}
-                    theme={_themes[theme]}
+                    theme={theme}
                 >
                     <QueryHistoryTabs
                         historyTabHeader={

@@ -12,7 +12,7 @@ export function decodeQuery(
         return;
     }
     const queryArr = query
-        .match(/[^{\}]+(?=})/g)
+        .match(/[^{}]+(?=})/g)
         ?.map((m) => m.split(","))
         ?.flat();
 
@@ -127,7 +127,7 @@ export function decodeExpr(expr: string) {
 
     if (expr.length > 7) {
         const exprArr = expr
-            ?.match(/[^{\}]+(?=})/g)
+            ?.match(/[^{}]+(?=})/g)
             ?.map((m) => m.split(","))
             ?.flat();
 

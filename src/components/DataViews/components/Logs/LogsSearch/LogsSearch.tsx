@@ -1,47 +1,41 @@
-import { css, cx } from "@emotion/css";
+import { cx } from "@emotion/css";
 import { ThemeProvider } from "@emotion/react";
-
+import { FlexWrap } from "../styled";
 import { useTheme } from "../../QueryBuilder/hooks";
 import { LogsFormBuilder } from "../../QueryBuilder/LogsFormBuilder";
-
-export const FlexWrap = css`
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 3px;
-`;
-
+import { useSelector } from "react-redux";
 export default function LogsSearch(props: any) {
+    
     const {
         handleLogValueChange,
         data: { dataSourceId, hasStats },
         searchButton,
-        logsRateButton,
         statsSwitch,
-        isBuilder,
     } = props;
 
     const handleLogChange = (e: string) => {
-        // this handles a string
         handleLogValueChange(e);
     };
 
     const theme = useTheme();
 
+    const isSplit = useSelector((store:any)=>store.isSplit)
+
     return (
         <ThemeProvider theme={theme}>
             <div className={cx(FlexWrap)}>
-                <LogsFormBuilder 
+                <LogsFormBuilder
                     {...props}
                     dataSourceId={dataSourceId}
                     labelValueChange={handleLogChange}
+                    searchButton={searchButton}
                 />
             </div>
-
-            <div style={{ display: "flex", margin: "10px 0px" }}>
-                {searchButton}
-                {!isBuilder && logsRateButton}
-                {hasStats && statsSwitch}
-            </div>
+            {hasStats && isSplit && (
+                <div style={{ display: "flex", margin: "10px 0px" }}>
+                    {statsSwitch}
+                </div>
+            )}
         </ThemeProvider>
     );
 }

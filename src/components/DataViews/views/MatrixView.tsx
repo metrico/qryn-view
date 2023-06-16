@@ -52,7 +52,7 @@ export const MatrixView = (props: any) => {
         };
         localStorage.setItem("tabsState", JSON.stringify(newState));
         if (typeof value === "number") {
-            setTabsState((_: any) => value);
+            setTabsState(() => value);
         }
     };
 

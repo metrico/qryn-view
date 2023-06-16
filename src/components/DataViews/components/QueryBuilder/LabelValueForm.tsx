@@ -1,12 +1,12 @@
 import { useMemo, useRef, useState } from "react";
-import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
+import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import DOMPurify from "isomorphic-dompurify";
 import { OPERATOR_OPTIONS } from "./consts";
-import {  LabelValueContStyles, FlexCenter, IconStyle } from "./styles";
+import { LabelValueContStyles, FlexCenter, IconStyle } from "./styles";
 import { cx } from "@emotion/css";
 import { useTheme, useValueSelectOpts } from "./hooks";
 import { InputSelect } from "./InputSelect";
-
 
 export const LabelValueForm = (props: any) => {
     const {
@@ -18,16 +18,15 @@ export const LabelValueForm = (props: any) => {
         onChange,
         labelValuesLength,
         id,
+        metric,
     } = props;
-
 
     const optRef = useRef<any>(null);
     const operatorRef = useRef<any>(null);
     const valueRef = useRef<any>(null);
 
-    const mainTheme = useTheme()
+    const mainTheme = useTheme();
 
-   
     const [localKeyVal, setLocalKeyVal] = useState(keyVal);
 
     const [labelValue, setLabelValue] = useState(
@@ -43,33 +42,33 @@ export const LabelValueForm = (props: any) => {
     const onLabelChange = (e: any) => {
         const { value, id } = e;
 
-        setLabelValue((_: any) => ({
+        setLabelValue(() => ({
             value: value?.value,
             label: value?.value,
         }));
         const prevKeyVal = JSON.parse(JSON.stringify(localKeyVal));
         const newKeyVal = {
             ...prevKeyVal,
+            metric,
             label: value?.label,
             value: value.value,
             id,
         };
         onChange(newKeyVal);
         setLocalKeyVal((prev: any) => {
-            return { ...prev, label: value?.value };
+            return { ...prev, label: value?.value, metric };
         });
     };
 
     const onValueChange = (e: any) => {
         const { value, id } = e;
         let values: any = [];
-        let next = value !== null ? value : { label: "", value: "" };
+        let next = value !== null ? value : { label: "", value: "", metric };
         if (isMulti && Array.isArray(next)) {
             values = next?.map((e: any) => e.value);
         } else {
             values = [next.value];
         }
-
         const prevKeyVal = JSON.parse(JSON.stringify(localKeyVal));
         const newKeyVal = { ...prevKeyVal, values, id };
         onChange(newKeyVal);
@@ -81,7 +80,7 @@ export const LabelValueForm = (props: any) => {
         const prevKeyVal = JSON.parse(JSON.stringify(localKeyVal));
         const newKeyVal = { ...prevKeyVal, operator: value?.value, id };
         onChange(newKeyVal);
-        setOperatorValue((_: any) => {
+        setOperatorValue(() => {
             return { ...value };
         });
         setLocalKeyVal((prev: any) => ({ ...prev, operator: value?.value }));
@@ -103,15 +102,14 @@ export const LabelValueForm = (props: any) => {
         return false;
     }, [operatorValue.value]);
 
-
-    if(labelValuesLength > 0) {
-       return (
+    if (labelValuesLength > 0) {
+        return (
             <div id={id} className={cx(LabelValueContStyles)}>
                 <InputSelect
                     ref={optRef}
                     type={"label"}
                     isMulti={false}
-                    defaultValue={keyVal.label}
+                    defaultValue={DOMPurify.sanitize(keyVal.label)}
                     selectOpts={labelOpts}
                     mainTheme={mainTheme}
                     onChange={onLabelChange}
@@ -125,7 +123,7 @@ export const LabelValueForm = (props: any) => {
                     ref={operatorRef}
                     type={"operator"}
                     isMulti={false}
-                    defaultValue={keyVal.operator}
+                    defaultValue={DOMPurify.sanitize(keyVal.operator)}
                     selectOpts={OPERATOR_OPTIONS}
                     keyVal={keyVal}
                     mainTheme={mainTheme}
@@ -139,7 +137,7 @@ export const LabelValueForm = (props: any) => {
                         ref={valueRef}
                         type={"value"}
                         isMulti={isMulti}
-                        defaultValue={keyVal.values}
+                        defaultValue={DOMPurify.sanitize(keyVal.values)}
                         selectOpts={valueSelectOpts}
                         keyVal={keyVal}
                         mainTheme={mainTheme}
@@ -150,12 +148,12 @@ export const LabelValueForm = (props: any) => {
                     />
                     <RemoveOutlinedIcon
                         className={cx(IconStyle(mainTheme))}
-                        style={{height:'14px', width:'14px'}}
+                        style={{ height: "14px", width: "14px" }}
                         onClick={cleanAndRemove}
                     />
                     <AddOutlinedIcon
                         className={cx(IconStyle(mainTheme))}
-                        style={{height:'14px', width:'14px'}}
+                        style={{ height: "14px", width: "14px" }}
                         onClick={labelAdd}
                     />
                 </div>
@@ -163,7 +161,5 @@ export const LabelValueForm = (props: any) => {
         );
     }
 
-    return null
+    return null;
 };
-
-

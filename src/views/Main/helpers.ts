@@ -27,8 +27,6 @@ export function updateDataSourcesWithUrl(
         let cookieDsData = "";
         if (dsData && dsData !== "") {
             try {
-                cookieDsData = atob(dsData);
-                cookieDsData = JSON.parse(cookieDsData);
                 if (typeof cookieDsData === "object" && cookieDsData["url"]) {
                     apiUrl = cookieDsData["url"];
                     haveUrl = true;
@@ -91,22 +89,25 @@ export function updateDataSourcesWithUrl(
     dispatch(setDataSources(newDs));
 }
 
-export const getAxiosConf = (datasource:any) => {
+export const getAxiosConf = (datasource: any) => {
     let conf: any = {};
-    let extraheaders = getDsHeaders(datasource)
+    let cors = datasource?.cors || false;
+    let extraheaders = getDsHeaders(datasource);
     const headers = {
         ...extraheaders,
         "Content-Type": "application/json",
         Accept: "application/json",
     };
 
-    const options = {
+    const options: any = {
         method: "GET",
         headers: headers,
     };
-
+    if (cors === true) {
+        options.mode = "cors";
+    }
     conf.options = options;
-    conf.headers = headers
+    conf.headers = headers;
     conf.validateStatus = (status: number) => {
         return (
             (status >= 200 && status < 400) || status === 404 || status === 500
@@ -142,10 +143,9 @@ type AuthParams = {
 
 export async function checkLocalAPI(
     url: string,
-    datasource:any,
+    datasource: any,
     auth?: AuthParams,
-    isAuth?: boolean,
-    
+    isAuth?: boolean
 ) {
     let response: any = {};
     let conf = getAxiosConf(datasource);
@@ -199,10 +199,10 @@ export async function updateDataSourcesFromLocalUrl(
     let dsReady = false;
     let isLocalReady = false;
     if (logsDs?.url !== "") {
-        dsReady = await checkLocalAPI(logsDs.url,logsDs, auth, isBasicAuth); // add the auth in here
+        dsReady = await checkLocalAPI(logsDs.url, logsDs, auth, isBasicAuth); // add the auth in here
     }
     if (!dsReady) {
-        isLocalReady = await checkLocalAPI(location,logsDs);
+        isLocalReady = await checkLocalAPI(location, logsDs);
 
         if (isLocalReady && !dsReady) {
             const dsCP = [...dataSources];

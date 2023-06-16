@@ -1,36 +1,29 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/css";
-import React, { useCallback, useState, useMemo, useEffect, useRef } from "react";
-
+import { useCallback, useState, useMemo, useEffect, useRef } from "react";
 import { createEditor, Text } from "slate";
 import { Slate, Editable, withReact } from "slate-react";
 import { withHistory } from "slate-history";
 import Prism from "prismjs";
 import "prismjs/components/prism-promql";
 import "prismjs/components/prism-sql";
-import { themes } from "../theme/themes";
 import { ThemeProvider } from "@emotion/react";
-import { useSelector } from "react-redux";
+import { useTheme } from "../theme";
 const CustomEditor = styled(Editable)`
     flex: 1;
- //   height: 100%;
-    background: ${({theme}: any) => theme.inputBg};
-    border: 1px solid ${({theme}: any) => theme.buttonBorder};
-    color: ${({theme}: any) => theme.textColor};
+    background: ${({ theme }: any) => theme.inputBg};
+    border: 1px solid ${({ theme }: any) => theme.buttonBorder};
+    color: ${({ theme }: any) => theme.textColor};
     padding: 4px 8px;
-    font-size: 1em;
+    font-size: 12px;
     font-family: monospace;
     margin: 0px 5px;
-   // margin-bottom: 20px;
     border-radius: 3px;
     line-height: 1.5;
     line-break: anywhere;
     overflow-y: scroll;
 `;
-// const Resizable = css`
-//     margin-bottom: 10px;
-//     width: 100%;
-// `;
+
 const QueryBar = styled.div`
     display: flex;
     align-items: center;
@@ -39,8 +32,7 @@ const QueryBar = styled.div`
 `;
 
 function Leaf({ attributes, children, leaf }: any) {
-    const theme = useSelector((store: any) => store.theme);
-    const _themes: any = themes;
+    const theme = useTheme();
     return (
         <span
             {...attributes}
@@ -53,7 +45,7 @@ function Leaf({ attributes, children, leaf }: any) {
                 `}
                 ${(leaf.operator || leaf.url) &&
                 css`
-                    color: ${_themes[theme].textOff};
+                    color: ${theme.textOff};
                 `}
         ${leaf.keyword &&
                 css`
@@ -118,24 +110,16 @@ export default function QueryEditor({
     onKeyDown,
     defaultValue,
     isSplit,
-    // wrapperRef
-}: any) {
-    const theme = useSelector((store: any) => store.theme);
+}: // wrapperRef
+any) {
 
+    const theme = useTheme();
     const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
-    // const [height, setHeight] = useState(0);
-    // const [width, setWidth] = useState(0);
-    const editor = useMemo(() => withHistory(withReact(createEditor() as any)), []);
-    const ref = useRef(null);    
-
-    // useEffect(()=> {
-    //     setHeight(30)
-    // },[setHeight])
-    // useEffect(()=> {
-    //     setWidth(wrapperRef)
-    // },[width, setWidth, isSplit, wrapperRef])
-    // Keep track of state for the value of the editor.
-
+    const editor = useMemo(
+        () => withHistory(withReact(createEditor() as any)),
+        []
+    );
+    const ref = useRef(null);
     const [language] = useState("sql");
 
     const decorate = useCallback(
@@ -168,38 +152,30 @@ export default function QueryEditor({
 
     useEffect(() => {
         setEditorValue(value);
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         setEditorValue(value);
         editor.children = value;
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value, setEditorValue]);
 
-    const _themes: any = themes;
-
     return (
-        <ThemeProvider theme={_themes[theme]}>
+        <ThemeProvider theme={theme}>
             <QueryBar ref={ref}>
-                {/* <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-            <option value={"sql"}>{"SQL"}</option>
-            <option value={"promql"}>{"promQL"}</option>
-        </select> */}
                 <Slate
                     editor={editor}
                     value={editorValue}
                     onChange={onQueryChange}
                 >
-
-                        <CustomEditor
-                            decorate={decorate}
-                            renderLeaf={renderLeaf}
-                            placeholder={''}
-                            onKeyDown={onKeyDown}
-                            spellCheck="false"
-                        />
-                    {/* </ResizableBox> */}
+                    <CustomEditor
+                        decorate={decorate}
+                        renderLeaf={renderLeaf}
+                        placeholder={""}
+                        onKeyDown={onKeyDown}
+                        spellCheck="false"
+                    />
                 </Slate>
             </QueryBar>
         </ThemeProvider>

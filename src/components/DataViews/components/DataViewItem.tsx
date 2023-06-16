@@ -8,12 +8,11 @@ import { VectorView } from "../views/VectorView";
 import { TraceView } from "./Traces/TraceView";
 
 export function DataViewItem(props: any) {
-    // add a header for table view / json view
 
-    const { dataView, name }: any = props;
+    const { dataView, name}: any = props;
     const { type, total, loading }: any = dataView;
+    const isSplit = useSelector((store:any)=>store.isSplit)
     const viewRef: any = useRef(null);
-    const isSplit: any = useSelector((store: any) => store.isSplit);
     const panel = useSelector((store: any) => store[name]);
     // panelSize: min , regular, max
     const [panelSize, setPanelSize]: any = useState("max");

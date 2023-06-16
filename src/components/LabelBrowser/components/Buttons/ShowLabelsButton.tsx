@@ -1,7 +1,6 @@
 import { ShowLabelsBtn } from "../styled";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { themes } from "../../../../theme/themes";
 import { ThemeProvider } from "@emotion/react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
@@ -9,6 +8,7 @@ import { setLeftPanel } from "../../../../actions/setLeftPanel";
 import { setRightPanel } from "../../../../actions/setRightPanel";
 import { css, cx } from "@emotion/css";
 import { Tooltip } from "@mui/material";
+import { useTheme } from "../../../../theme";
 
 export function panelAction(name: string, value: any) {
     if (name === "left") {
@@ -27,7 +27,7 @@ export default function ShowLabelsButton(props: any) {
     const { name } = props;
     const { id, browserOpen } = props.data;
     const open = useMemo(() => browserOpen, [browserOpen]);
-    const theme = useSelector((store: any) => store.theme);
+    const theme = useTheme();
     const labels = useSelector((store: any) => store.labels);
     const panelQuery = useSelector((store: any) => store[name]);
 
@@ -61,12 +61,9 @@ export default function ShowLabelsButton(props: any) {
         return <KeyboardArrowRightIcon className={cx(ArrowIcon)} />;
     };
 
-    const _themes: any = themes;    
-
     return (
-        <ThemeProvider theme={_themes[theme]}>
-            <Tooltip 
-                title={labelsTitle(labels)}>
+        <ThemeProvider theme={theme}>
+            <Tooltip title={labelsTitle(labels)}>
                 <ShowLabelsBtn
                     onClick={handleBrowserOpen}
                     browserActive={isBrowserOpen}

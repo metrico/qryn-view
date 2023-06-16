@@ -24,6 +24,7 @@ const TimelineCollapserStyles = css`
     align-items: center;
     display: flex;
     flex: none;
+    gap:2px;
     justify-content: center;
     margin-right: 0.5rem;
 `;

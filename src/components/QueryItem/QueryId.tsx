@@ -1,15 +1,28 @@
-import { useMemo, useState } from "react";
-import { useSelector } from "react-redux";
-import { themes } from "../../theme/themes";
+import { useState } from "react";
+
+import DOMPurify from "isomorphic-dompurify";
+import { css, cx } from "@emotion/css";
+import { Tooltip } from "@mui/material";
+import { useTheme } from "../DataViews/components/QueryBuilder/hooks";
+
+export const QueryTitleStyles = (theme: any) => css`
+    margin-left: 20px;
+    font-family: monospace;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100px;
+    color: ${theme.textColor};
+    background: transparent;
+    border: none;
+    outline: none;
+`;
 
 export function QueryId(props: any) {
     const [isEditing, setIsEditing] = useState(false);
-    const [idText, setIdText] = useState(props.data.idRef);
-    const storeTheme = useSelector(({ theme }: any) => theme);
-    const theme = useMemo(() => {
-        const _themes: any = themes
-        return _themes[storeTheme];
-    }, [storeTheme]);
+    const [idText, setIdText] = useState(props.idRef);
+
+    const theme = useTheme();
     function onIdTextChange(e: any) {
         e.preventDefault();
         const txt = e.target.value;
@@ -31,27 +44,30 @@ export function QueryId(props: any) {
     if (isEditing === true) {
         return (
             <>
-                <input
-                    style={{
-                        background: "transparent",
-                        border: "none",
-                        outline: "none",
-                        color: theme.textColor,
-                    }}
-                    value={idText}
-                    placeholder={idText}
-                    onChange={onIdTextChange}
-                    onKeyDown={handleKeydown}
-                    onBlur={closeInput}
-                />
+                <Tooltip title={idText}>
+                    <input
+                        className={cx(QueryTitleStyles(theme))}
+                        value={DOMPurify.sanitize(idText)}
+                        placeholder={idText}
+                        onChange={onIdTextChange}
+                        onKeyDown={handleKeydown}
+                        onBlur={closeInput}
+                    />
+                </Tooltip>
             </>
         );
     } else {
         return (
             <>
-                <p className="query-id" onClick={(e) => setIsEditing(true)}>
-                    {idText}
-                </p>
+                {" "}
+                <Tooltip title={idText}>
+                    <p
+                        className={cx(QueryTitleStyles(theme))}
+                        onClick={(e) => setIsEditing(true)}
+                    >
+                        {idText}
+                    </p>
+                </Tooltip>
             </>
         );
     }

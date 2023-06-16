@@ -3,14 +3,9 @@ import { BtnSmall } from "../../theme/styles/Button";
 
 export const PageContainer: any = styled.div`
     overflow-x: hidden;
-    margin: 0px;
-    padding: 0px;
-    left: 0;
-    top: 0;
     border-radius: 3px;
     background: ${({ theme }: any) => theme.viewBg};
     color: ${({ theme }: any) => theme.textColor};
-    position: absolute;
     width: 100%;
     height: 100%;
     overflow-y: auto;
@@ -54,7 +49,6 @@ export const PageContainer: any = styled.div`
 
     .ds-item {
         padding: 10px;
-        background: ${({ theme }: any) => theme.viewBg};
         //    margin-bottom: 10px;
         border-radius: 3px 3px 0px 0px;
         padding-bottom: 14px;
@@ -85,6 +79,20 @@ export const PageContainer: any = styled.div`
         }
         .ds-settings {
             background: ${({ theme }: any) => theme.viewBg};
+        }
+    }
+    .plugins-cont {
+        display: flex;
+        flex: 1;
+        margin: 0px 10px;
+        flex-direction: column;
+        padding: 10px 20px;
+        border: 1px solid ${({ theme }: any) => theme.buttonBorder};
+        border-radius: 3px;
+        height:fit-content;
+        .title {
+            font-size: 14px;
+            padding: 10px 0px;
         }
     }
 `;
@@ -231,7 +239,7 @@ export const DsButtonStyled: any = styled(BtnSmall)`
         cursor: not-allowed;
         color: ${({ theme }: any) => theme.textColor};
     }
-    @media screen and (max-width: 864px) {
+    @media screen and (max-width: 1070px) {
         display: flex;
 
         margin: 0;

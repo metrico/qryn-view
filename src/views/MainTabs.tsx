@@ -2,9 +2,9 @@ import TabUnstyled, { tabUnstyledClasses } from "@mui/base/TabUnstyled";
 import TabsListUnstyled from "@mui/base/TabsListUnstyled";
 import TabPanelUnstyled from "@mui/base/TabPanelUnstyled";
 import { buttonUnstyledClasses } from "@mui/base/ButtonUnstyled";
-import Panel from "../components/Panel/Panel";
 import styled from "@emotion/styled";
 import TabsUnstyled from "@mui/base/TabsUnstyled";
+import Panel from "../sections/Panel";
 
 export const TabsContainer = styled(TabsUnstyled)`
     background: ${({theme}: any) => theme.inputBg};

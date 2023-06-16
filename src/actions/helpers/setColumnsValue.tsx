@@ -51,7 +51,7 @@ function traceRequest(data: any, value: any) {
     const actPanel = store.getState()[data.panel];
     const rightPanel = store.getState()["right"];
 
-    const isTabletOrMobile = window.innerWidth <= 914
+    const isTabletOrMobile = window.innerWidth <= 1013
     const actQuery = actPanel.find((f: any) => f.id === data.id);
 
     if (data.panel === "left" && !isTabletOrMobile) {
@@ -82,9 +82,10 @@ function traceRequest(data: any, value: any) {
             isBuilder: false,
             isLogsVolume:false,
             browserOpen: false,
+            open:true,
             labels: [],
             values: [],
-            direction: "forward",
+            direction: "backwards",
         };
 
         dispatch(setRightPanel([newRight]));
@@ -96,7 +97,7 @@ function traceRequest(data: any, value: any) {
                 panelCP.limit || 100,
                 "right",
                 newRight.id,
-                "forward",
+                "backwards",
                 data.dataSourceId, // datasourceid
                 data.url
             )

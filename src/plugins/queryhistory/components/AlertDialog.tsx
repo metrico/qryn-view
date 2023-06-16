@@ -13,23 +13,23 @@ import {
     Tooltip,
 } from "@mui/material";
 import { ThemeProvider } from "@mui/styles";
-import { useSelector } from "react-redux";
-import { themes } from "../../../theme/themes";
 import styled from "@emotion/styled";
 import { DialogStyles } from "../../settingsdialog/SettingsDialog";
+import { useTheme } from "../../../components/DataViews/components/QueryBuilder/hooks";
 const AlertCont = styled.div`
-    background: ${({theme}: any) => theme.widgetContainer};
+    background: ${({ theme }: any) => theme.widgetContainer};
     #alert-dialog-title {
-        color: ${({theme}: any) => theme.textColor};
+        color: ${({ theme }: any) => theme.textColor};
     }
     #alert-dialog-description {
-        color: ${({theme}: any) => theme.textOff};
+        color: ${({ theme }: any) => theme.textOff};
         font-weight: normal;
     }
 `;
 export default function AlertDialog({ clearHistory, dialogType }: any) {
     const [open, setOpen] = useState(false);
-    const theme = useSelector((store: any) => store.theme);
+
+    const theme = useTheme();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -42,9 +42,8 @@ export default function AlertDialog({ clearHistory, dialogType }: any) {
         clearHistory();
         setOpen(false);
     }
-    const _themes: any = themes;
     return (
-        <ThemeProvider theme={_themes[theme]}>
+        <ThemeProvider theme={theme}>
             <div>
                 <Tooltip title={"Clear Query History"}>
                     <ClearHistoryButton onClick={handleClickOpen}>
@@ -58,9 +57,9 @@ export default function AlertDialog({ clearHistory, dialogType }: any) {
                     aria-describedby="alert-dialog-description"
                     PaperProps={{
                         classes: {
-                            root: DialogStyles
-                        }
-                      }}
+                            root: DialogStyles,
+                        },
+                    }}
                 >
                     <AlertCont>
                         <DialogTitle id="alert-dialog-title">

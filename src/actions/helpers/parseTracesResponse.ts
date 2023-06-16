@@ -32,6 +32,7 @@ export async function parseTracesResponse(props: TracesResult) {
                 data: result,
                 raw,
                 labels: [],
+                open:true,
                 total: result?.resourceSpans?.length,
             };
 

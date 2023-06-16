@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
 import styled from "@emotion/styled";
 import { ThemeProvider } from "@emotion/react";
-import { themes } from "../../../theme/themes";
 import LabelsSelector from "./LabelsSelector";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { useTheme } from "../../../theme";
 
 const ErrorContainer = styled.div`
     padding: 20px;
@@ -22,10 +22,10 @@ const LabelErrorStyled = styled.div`
 
 export const LabelsFetchError = () => {
     const labelError = useSelector((store: any) => store.apiErrors);
-    const theme = useSelector((store: any) => store.theme);
+    const theme = useTheme();
 
     return (
-        <ThemeProvider theme={(themes as any)[theme]}>
+        <ThemeProvider theme={theme}>
             <ErrorContainer>
                 {labelError !== "" && (
                     <LabelErrorStyled>
@@ -38,29 +38,18 @@ export const LabelsFetchError = () => {
 };
 
 export const ValuesList: any = (props: any) => {
-    const theme = useSelector((store: any) => store.theme);
-    const { name }: any = props;
-    const { id }: any = props.data;
-    const panelQuery = useSelector((store: any) => store[name]);
-    const browserOpen = useMemo(() => {
-        let isOpen = false;
-        const actQuery = panelQuery.find((f: any) => f.id === id);
-        isOpen = actQuery["browserOpen"];
-        return isOpen;
-    }, [panelQuery, id]);
+    const theme = useTheme();
+    const { browserOpen }: any = props.data;
 
     const [open, setOpen] = useState(browserOpen);
 
     useEffect(() => {
-        let isOpen = false;
-        const actQuery = panelQuery.find((f: any) => f.id === id);
-        isOpen = actQuery["browserOpen"];
-        setOpen(isOpen);
-    }, [panelQuery,id]);
+        setOpen(browserOpen);
+    }, [browserOpen]);
 
     return (
         open && (
-            <ThemeProvider theme={(themes as any)[theme]}>
+            <ThemeProvider theme={theme}>
                 <LabelsSelector {...props} />
             </ThemeProvider>
         )

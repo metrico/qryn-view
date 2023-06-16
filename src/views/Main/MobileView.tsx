@@ -1,8 +1,5 @@
 import { ThemeProvider } from "@emotion/react";
-import StatusBar from "../../components/StatusBar";
 import QueryHistory from "../../plugins/queryhistory";
-import SettingsDialog from "../../plugins/settingsdialog/SettingsDialog";
-import { Notification } from "../../qryn-ui/notifications";
 import MainTabs from "../MainTabs";
 import { MainContainer } from "./styled";
 
@@ -18,17 +15,13 @@ export interface Props {
     settingsDialogOpen: boolean;
 }
 
-export function MobileView({ theme, isEmbed, settingsDialogOpen }: Props) {
+export function MobileView({ theme }: Props) {
     return (
         <ThemeProvider theme={theme}>
-            {!isEmbed && <StatusBar />}
-
             <MainContainer>
                 <MainTabs />
             </MainContainer>
 
-            <Notification />
-            <SettingsDialog open={settingsDialogOpen} />
             <QueryHistory />
         </ThemeProvider>
     );

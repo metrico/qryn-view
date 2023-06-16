@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { css } from "@emotion/css";
-
 import {
     format,
     differenceInCalendarMonths,
@@ -15,7 +14,7 @@ import {
 import Month from "./Month";
 import Ranges from "./Ranges";
 import { DATE_TIME_RANGE, MARKERS } from "../consts";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     setStartTime,
     setStopTime,
@@ -31,7 +30,7 @@ import { useTheme } from "../../../../DataViews/components/QueryBuilder/hooks";
 const PickerTypeButton = styled.button`
     padding: 10px;
     border-radius: 3px;
-    color: ${({ theme }:{theme:any}) => theme.textPrimaryAccent};
+    color: ${({ theme }: { theme: any }) => theme.textPrimaryAccent};
     font-size: 1em;
     border: none;
     background: none;
@@ -51,6 +50,7 @@ const PickerTypeButton = styled.button`
 `;
 
 const StyledNav = styled.div`
+    position: absolute;
     .header {
         padding: 10px;
         justify-content: space-between;
@@ -66,14 +66,14 @@ const StyledNav = styled.div`
         margin-bottom: 20;
     }
     .container {
-        position: absolute;
+        position: relative;
         z-index: 1000;
-        top: 45px;
-        right: 0;
+        right: 75%; // this should be 100% by default
+        top: 30px;
         display: flex;
         flex-direction: column;
         overflow-y: auto;
-        background: ${({ theme }:{theme:any}) => theme.mainBgColor};
+        background: ${({ theme }: { theme: any }) => theme.mainBgColor};
     }
     .applyButton {
         color: white;
@@ -87,7 +87,7 @@ const StyledNav = styled.div`
 `;
 
 // open month only at
-export const PickerNav = (props:any) => {
+export const PickerNav = (props: any) => {
     const {
         ranges,
         dateRange,
@@ -101,8 +101,13 @@ export const PickerNav = (props:any) => {
         helpers,
         handlers,
     } = props;
-    const theme = useTheme()
+    const theme = useTheme();
     const [calendarOpen, setCalendarOpen] = useState(false);
+    const defaultRange = {
+        label: "Last 5 minutes",
+        dateStart: new Date(Date.now()-5 * 60000),
+        dateEnd: new Date(Date.now())
+    }
     const canNavigateCloser =
         differenceInCalendarMonths(secondMonth, firstMonth) >= 2;
     const commonProps = { dateRange, minDate, maxDate, helpers, handlers };
@@ -110,22 +115,22 @@ export const PickerNav = (props:any) => {
     const [editedStartDate, setEditedStartDate] = useState(dateRange.dateStart);
     const [editedEndDate, setEditedEndDate] = useState(dateRange.dateEnd);
     const [relativeOpen, setRelativeOpen] = useState(true);
-    const [rangeLabel] = useState(dateRange.label);
-    const isBigScreen = useMediaQuery({ query: "(min-width: 914px)" });
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 914px)" });
+    const [rangeLabel] = useState(dateRange.label) || defaultRange.label;
+    const isBigScreen = useMediaQuery({ query: "(min-width: 1013px)" });
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
     const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
+    const isSplit = useSelector((store: any) => store.isSplit);
     const [startCalendar, setStartCalendar] = useState(false);
     const [stopCalendar, setStopCalendar] = useState(false);
 
-
     useEffect(() => {
         if (rangeLabel) {
-            const newRange:any = findRangeByLabel(rangeLabel);
+            const newRange: any = findRangeByLabel(rangeLabel);
             setEditedStartDate(newRange.dateStart);
             setEditedEndDate(newRange.dateEnd);
         }
     }, [setEditedEndDate, setEditedStartDate, rangeLabel]);
-    const handleStopInputChange = (event:any, isBlur:any) => {
+    const handleStopInputChange = (event: any, isBlur: any) => {
         event.preventDefault();
         const value = new Date(event.target.value);
         if (isBlur && isValid(value)) {
@@ -134,7 +139,7 @@ export const PickerNav = (props:any) => {
             setEditedEndDate(event.target.value);
         }
     };
-    const handleStartInputChange = (event:any, isBlur:any) => {
+    const handleStartInputChange = (event: any, isBlur: any) => {
         event.preventDefault();
         const value = new Date(event.target.value);
         if (isBlur && isValid(value)) {
@@ -144,7 +149,7 @@ export const PickerNav = (props:any) => {
         }
     };
 
-    const onTimeRangeSet = (e:any) => {
+    const onTimeRangeSet = (e: any) => {
         e.preventDefault();
         const startDate = new Date(editedStartDate);
         const endDate = new Date(editedEndDate);
@@ -175,7 +180,7 @@ export const PickerNav = (props:any) => {
         }
     };
 
-    const saveDateRange = (range:any) => {
+    const saveDateRange = (range: any) => {
         localStorage.setItem(DATE_TIME_RANGE, JSON.stringify(range));
     };
     const getEditedStartDate = () => {
@@ -221,7 +226,8 @@ export const PickerNav = (props:any) => {
                         {calendarOpen &&
                             !isBigScreen &&
                             !isPortrait &&
-                            !relativeOpen && (
+                            !relativeOpen &&
+                            !isSplit && (
                                 <Grid
                                     container
                                     direction={"row"}

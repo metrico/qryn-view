@@ -8,6 +8,7 @@ export type Endpoint = {
 };
 
 export type QueryResult = {
+    browserOpen?:boolean;
     result: Array<any>;
     time?: number;
     debugMode?: boolean;
@@ -22,6 +23,7 @@ export type QueryResult = {
     hasStats?: boolean;
     statsData?:any;
     raw?:any;
+    open?:boolean;
     isLogsVolume?:boolean
 
 };
@@ -33,6 +35,7 @@ export type TracesResultType = {
 }
 
 export type TracesResult = {
+    browserOpen?:boolean;
     result: TracesResultType;
     time?: number;
     debugMode?: boolean;
@@ -44,6 +47,7 @@ export type TracesResult = {
     ts: number;
     queryType?:QueryType;
     raw?:any;
+    open?:boolean;
 };
 
 export type Message = {

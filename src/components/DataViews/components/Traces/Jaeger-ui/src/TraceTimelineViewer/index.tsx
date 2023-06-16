@@ -63,6 +63,8 @@ const TraceTimelineViewer = styled.div<{theme:any}>`
 
     & .json-markup-string {
         color: ${({theme})=>theme.textColor};
+        font-size:12px;
+        font-family:monospace;
     }
 
     & .json-markup-null {

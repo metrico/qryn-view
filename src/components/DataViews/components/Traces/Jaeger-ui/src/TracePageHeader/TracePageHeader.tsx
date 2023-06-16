@@ -97,11 +97,11 @@ const TracePageHeaderDetailToggleExpanded = css`
 const TracePageHeaderTitle = (color: string) => css`
     color: ${color};
     flex: 1;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     line-height: 1em;
     margin: 0 0 0 0.5em;
-    padding: 0.75em;
+    padding:10px 0px;
 `;
 const TracePageHeaderTitleCollapsible = css`
     margin-left: 0;

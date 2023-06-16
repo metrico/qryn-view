@@ -1,16 +1,15 @@
 import { ThemeProvider } from "@emotion/react";
 import { Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { HistoryButtonStyled, HistoryIconStyled } from "../styled";
-import { themes } from "../../../../theme/themes";
+import { useTheme } from "../../../../theme";
 export default function HistoryButton({
     queryLength,
     handleHistoryClick,
     isMobile,
 }: any) {
     const [buttonState, setButtonState] = useState(false);
-    const theme = useSelector((store: any) => store.theme);
+    const theme = useTheme();
     useEffect(() => {
         if (queryLength > 0) {
             setButtonState(true);
@@ -18,20 +17,16 @@ export default function HistoryButton({
             setButtonState(false);
         }
     }, [queryLength]);
-    const _themes: any = themes;
+
     return (
-        <ThemeProvider theme={_themes[theme]}>
+        <ThemeProvider theme={theme}>
             <Tooltip title={"Query History (" + queryLength + ")"}>
                 <HistoryButtonStyled
                     isMobile={isMobile}
                     onClick={handleHistoryClick}
                 >
                     <HistoryIconStyled
-                        color={
-                            buttonState
-                                ? _themes[theme].textColor
-                                : _themes[theme].textOff
-                        }
+                        color={buttonState ? theme.textColor : theme.textOff}
                     />
                     {isMobile && <span>History</span>}
                 </HistoryButtonStyled>
