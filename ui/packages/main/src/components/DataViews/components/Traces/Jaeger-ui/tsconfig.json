@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "baseUrl": ".",
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": false,
+    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": true,
+  },
+  "exclude": ["dist", "node_modules"],
+//   "extends": "/tsconfig.json",
+  "include": [
+    "src/**/*.ts*",
+    "typings",
+    "../../public/app/types/jquery/*.ts",
+    "../../public/app/types/*.d.ts"
+  ]
+}

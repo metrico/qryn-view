@@ -1,0 +1,139 @@
+.log-view {
+    background: #1a1a1a;
+    margin: 6px 8px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: relative;
+    flex: 1;
+    border-radius: 3px;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
+    &::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background: $grey-light;
+    }
+    .logs-box {
+        display: flex;
+        min-height: min-content;
+        flex-direction: column;
+    }
+    .line {
+        padding: 0.3rem;
+        color: white;
+        font-size: 13px;
+        cursor: pointer;
+        margin-bottom: 4px;
+        padding-left: 0.5rem;
+        margin-left: 0.25rem;
+        transition: 0.2s all;
+        &:hover {
+            background: black;
+        }
+        p {
+            display: inline-block;
+        }
+        img {
+            height: 16px;
+            width: auto;
+            padding: 0 3px;
+        }
+        .timestamp {
+            position: relative;
+            color: $dirty-white;
+            margin-right: 0.25rem;
+        }
+    }
+    .load-all {
+        width: 100%;
+    }
+
+    .progress {
+        position: absolute;
+        top: 50px;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+}
+
+.value-tags-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(128, 128, 128, 0.466);
+    border-radius: 4px;
+    padding: 4px;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    .value-tags {
+        font-family: monospace;
+        font-size: 12px;
+        display: flex;
+        margin: 2px;
+        padding: 2px;
+        flex: 1;
+        justify-content: space-between;
+
+        span {
+            display: flex;
+            flex: 1;
+            line-height: 20px;
+            margin-left: 6px;
+        }
+
+        .icon {
+            margin-right: 4px;
+            flex: 0;
+        }
+    }
+}
+
+.log-line {
+    font-size: 0.95em;
+    font-family: monospace;
+    color: #ddd;
+}
+
+.critical {
+    border-left: 4px solid $loglevel-critical;
+}
+
+.error {
+    border-left: 4px solid $loglevel-error;
+}
+.warning {
+    border-left: 4px solid $loglevel-warning;
+}
+.info {
+    border-left: 4px solid $loglevel-info;
+}
+.debug {
+    border-left: 4px solid $loglevel-debug;
+}
+.trace {
+    border-left: 4px solid $loglevel-trace;
+}
+.unknown {
+    border-left: 4px solid $loglevel-unknown;
+}
+.floatTip {
+    background: #262626;
+    color: #d1d1d1;
+    font-size: 10px !important;
+    font-family: monospace;
+    padding: 12px 8px;
+    border-radius: 3px;
+}
+
+.labelsActive {
+    display: flex;
+}
+
+.labelsInactive {
+    display: none;
+}
