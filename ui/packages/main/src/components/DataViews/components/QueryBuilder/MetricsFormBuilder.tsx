@@ -6,7 +6,7 @@ import { FlexColumn } from "./styles";
 
 import { MetricsFormBuilderProps, Builder } from "./types";
 import { FormBuilders } from "./FormBuilders";
-import QueryPreview from "./QueryPreview";
+import QueryPreview from "@ui/plugins/QueryPreview";
 import { useSelector } from "react-redux";
 import { initialMetricsBuilder, binaryOperatorOpts } from "./consts";
 

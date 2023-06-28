@@ -218,7 +218,7 @@ export default function QueryPreview(props: Props) {
     return (
         <div className={cx(QueryPreviewContainer(theme))}>
             <label>Raw Query</label>
-            <Slate editor={editor} initialValue={initialValue} onChange={onChange}>
+            <Slate editor={editor} value={initialValue} onChange={onChange}>
                 <Editable
                     renderLeaf={renderLeaf}
                     decorate={decorate}

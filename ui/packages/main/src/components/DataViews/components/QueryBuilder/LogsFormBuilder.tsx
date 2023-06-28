@@ -6,7 +6,7 @@ import { FlexColumn } from "./styles";
 
 import { LogsFormBuilderProps, Builder } from "./types";
 import { FormBuilders } from "./FormBuilders";
-import QueryPreview from "./QueryPreview";
+import QueryPreview from "@ui/plugins/QueryPreview";
 import { useSelector } from "react-redux";
 
 const initialBuilder: Builder = {
