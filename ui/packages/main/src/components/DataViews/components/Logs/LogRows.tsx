@@ -1,47 +1,44 @@
-import { PureComponent} from "react";
+import { useState, useEffect } from "react";
 import { LogsWrapper } from "./LogsWrapper";
 import { RowsCont } from "./styled";
 
 /**
  * Returns the logs rows
  * @props {messages, actualQuery}
- * 
+ *
  */
-export class LogRows extends PureComponent {
-    constructor(props: any) {
-        super(props);
-        const { messages } = props || [];
 
-        this.state = {
-            messages,
-        };
-    }
+export const LogRows = (props: any) => {
+    const { actualQuery }: any = props;
+    const { dataSourceId }: any = actualQuery;
+    const [messages, setMessages] = useState(props.messages);
 
-    toggleItemActive = (index: any) =>
-        this.setState((prevState: any) => {
-            const message = prevState.messages[index];
-            const messages = prevState.messages.concat();
+    const toggleItemActive = (index: any) => {
+        setMessages((prevState: any) => {
+            const message = prevState[index];
+            const messages = prevState.concat();
             messages[index] = {
                 ...message,
                 showLabels: !message.showLabels,
             };
-            return { messages };
-        });
 
-    render() {
-        const { actualQuery }: any = this.props;
-        const { dataSourceId }: any = actualQuery;
-        const { messages }: any = this.state;
-        return (
-            <RowsCont>
-                <LogsWrapper
-                    {...this.props}
-                    dataSourceId={dataSourceId}
-                    actQuery={actualQuery}
-                    items={messages}
-                    toggleItemActive={this.toggleItemActive}
-                />
-            </RowsCont>
-        );
-    }
-}
+            return messages;
+        });
+    };
+
+    useEffect(() => {
+        setMessages(props.messages);
+    }, [props.messages]);
+
+    return (
+        <RowsCont>
+            <LogsWrapper
+                {...props}
+                dataSourceId={dataSourceId}
+                actQuery={actualQuery}
+                items={messages}
+                toggleItemActive={toggleItemActive}
+            />
+        </RowsCont>
+    );
+};

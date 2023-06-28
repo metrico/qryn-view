@@ -24,6 +24,7 @@ export const VectorView = (props: any) => {
         viewWidth,
         limit,
     } = props;
+    const { loading } = actualQuery;
     const theme = useSelector((store: any) => store.theme);
     const jsonTheme = useMemo(() => {
         if (theme === "light") {
@@ -84,31 +85,37 @@ export const VectorView = (props: any) => {
                         ref={parentRef}
                         id={DOMPurify.sanitize(`${actualQuery?.id}-view`)}
                     >
-                        <VectorTable
-                            {...props}
-                            height={theight}
-                            data={streamData.tableData}
-                            actualQuery={actualQuery}
-                        />
+                        {!loading && (
+                            <VectorTable
+                                {...props}
+                                height={theight}
+                                data={streamData.tableData}
+                                actualQuery={actualQuery}
+                            />
+                        )}
                     </div>
                 </TabPanel>
                 <TabPanel value={1}>
                     <div className="view-content">
                         <div style={{ padding: "20px" }}>
-                            <ReactJson theme={jsonTheme} src={rawData} />
+                            {!loading && (
+                                <ReactJson theme={jsonTheme} src={rawData} />
+                            )}
                         </div>
                     </div>
                 </TabPanel>
                 {streamData?.chartData && (
                     <TabPanel value={2}>
                         <div className="view-content">
-                            <QrynChart
-                                {...props}
-                                tWidth={viewWidth}
-                                chartLimit={limit}
-                                matrixData={streamData.chartData}
-                                actualQuery={actualQuery}
-                            />
+                            {!loading && (
+                                <QrynChart
+                                    {...props}
+                                    tWidth={viewWidth}
+                                    chartLimit={limit}
+                                    matrixData={streamData.chartData}
+                                    actualQuery={actualQuery}
+                                />
+                            )}
                         </div>
                     </TabPanel>
                 )}

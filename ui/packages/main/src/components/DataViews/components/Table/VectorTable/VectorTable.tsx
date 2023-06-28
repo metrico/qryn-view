@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Table from "@ui/qrynui/Table/Table";
 import { TableStyles } from "./styles";
 export const VectorTable = (props: any) => {
@@ -10,12 +10,21 @@ export const VectorTable = (props: any) => {
         width,
     } = props;
 
-    const cols = useMemo(() => columnsData, [columnsData]);
-    const data = useMemo(() => dataRows, [dataRows]);
+    const [cols, setCols] =  useState(columnsData)
+    const [data, setData] = useState(dataRows);
+
+    useEffect(() => {
+        setCols(columnsData);
+    }, [columnsData]);
+
+    useEffect(() => {
+        setData(dataRows);
+    }, [dataRows]);
+
     return (
         <TableStyles>
             {columnsData && dataRows && (
-                <Table 
+                <Table
                     actQuery={actualQuery}
                     columns={cols}
                     width={width}

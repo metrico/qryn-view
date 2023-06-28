@@ -2,9 +2,9 @@ import { css, cx } from "@emotion/css";
 import { useState, useEffect, InputHTMLAttributes, ChangeEvent } from "react";
 import DOMPurify from "isomorphic-dompurify";
 export const page_select = (theme: any) => css`
-    color: ${theme.textColor};
-    background: ${theme.inputBg};
-    border: 1px solid ${theme.buttonBorder};
+    color: ${theme.contrast};
+    background: ${theme.deep};
+    border: 1px solid ${theme.accentNeutral};
     border-radius: 3px;
     padding: 3px 8px;
     font-size: 12px;
@@ -40,7 +40,7 @@ export const DebouncedInput: React.FC<Props> = ({
         }, debounce);
 
         return () => clearTimeout(timeout);
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     return (

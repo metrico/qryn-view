@@ -1,4 +1,4 @@
-import { useMemo, useState, SyntheticEvent } from "react";
+import { useMemo, useState, SyntheticEvent, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { TabsUnstyled } from "@mui/base";
 import { VectorTable } from "../components/Table/VectorTable/VectorTable";
@@ -27,12 +27,15 @@ const LogsView: React.FunctionComponent<any> = (props: any) => {
         streamData,
         logsVolumeData,
     } = props;
-    const { isLogsVolume } = actualQuery;
+    const { isLogsVolume, loading } = actualQuery;
     const { limit } = actualQuery;
 
     const [tabsState, setTabsState] = useState<number>(
         localTabsState(actualQuery)[actualQuery.id] || 0
     );
+
+    const [actStreamData, setActStreamData] = useState(props.streamData);
+
     const rawData = useMemo(() => {
         return JSON.parse(JSON.stringify(props?.dataView?.raw)) || [];
     }, [props?.dataView?.raw]);
@@ -45,6 +48,7 @@ const LogsView: React.FunctionComponent<any> = (props: any) => {
         }
         return "tomorrow";
     }, [theme]);
+
     const onTabChange = (
         e: SyntheticEvent<Element, Event>,
         value: number | string | boolean
@@ -53,11 +57,19 @@ const LogsView: React.FunctionComponent<any> = (props: any) => {
             ...localTabsState(actualQuery),
             [actualQuery.id]: value,
         };
+
         localStorage.setItem("tabsState", JSON.stringify(newState));
         if (typeof value === "number") {
             setTabsState(() => value);
         }
     };
+
+    useEffect(() => {
+        if (!loading) {
+            setActStreamData(props.streamData);
+        }
+    }, [props.streamData]);
+
     return (
         <ViewStyled ref={viewRef} size={panelSize} vheight={viewHeight}>
             <ViewHeader
@@ -72,13 +84,15 @@ const LogsView: React.FunctionComponent<any> = (props: any) => {
 
             {isLogsVolume && logsVolumeData?.length > 0 && viewWidth > 0 && (
                 <div>
-                    <QrynChart
-                        {...props}
-                        tWidth={viewWidth}
-                        chartLimit={limit}
-                        matrixData={logsVolumeData}
-                        actualQuery={actualQuery}
-                    />
+                    {!loading && (
+                        <QrynChart
+                            {...props}
+                            tWidth={viewWidth}
+                            chartLimit={limit}
+                            matrixData={logsVolumeData}
+                            actualQuery={actualQuery}
+                        />
+                    )}
                 </div>
             )}
 
@@ -95,28 +109,34 @@ const LogsView: React.FunctionComponent<any> = (props: any) => {
                 </TabsList>
                 <TabPanel value={0}>
                     <div className="view-content">
-                        <LogRows
-                            {...props}
-                            onClose={setStreamClose}
-                            messages={streamData}
-                            actualQuery={actualQuery}
-                        />
+                        {!loading && (
+                            <LogRows
+                                {...props}
+                                onClose={setStreamClose}
+                                messages={actStreamData}
+                                actualQuery={actualQuery}
+                            />
+                        )}
                     </div>
                 </TabPanel>
                 <TabPanel value={1}>
                     <div className="view-content">
-                        <VectorTable
-                            {...props}
-                            height={theight}
-                            data={tableData}
-                            actualQuery={actualQuery}
-                        />
+                        {!loading && (
+                            <VectorTable
+                                {...props}
+                                height={theight}
+                                data={tableData}
+                                actualQuery={actualQuery}
+                            />
+                        )}
                     </div>
                 </TabPanel>
                 <TabPanel value={2}>
                     <div className="view-content">
                         <div style={{ padding: "20px" }}>
-                            <ReactJson theme={jsonTheme} src={rawData} />
+                            {!loading && (
+                                <ReactJson theme={jsonTheme} src={rawData} />
+                            )}
                         </div>
                     </div>
                 </TabPanel>

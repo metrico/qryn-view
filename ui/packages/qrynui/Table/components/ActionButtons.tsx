@@ -1,11 +1,11 @@
 import { css, cx } from "@emotion/css";
 import { RowData, RowModel } from "@tanstack/react-table";
-import useTheme from '@ui/theme/useTheme';
+import useTheme from "@ui/theme/useTheme";
 import FastForwardOutlinedIcon from "@mui/icons-material/FastForwardOutlined";
 import FastRewindOutlinedIcon from "@mui/icons-material/FastRewindOutlined";
 import SkipNextOutlinedIcon from "@mui/icons-material/SkipNextOutlined";
 import SkipPreviousOutlinedIcon from "@mui/icons-material/SkipPreviousOutlined";
-import DOMPurify from 'isomorphic-dompurify'
+import DOMPurify from "isomorphic-dompurify";
 type Props<T extends RowData> = {
     getSelectedRowModel: () => RowModel<T>;
     hasNextPage: boolean;
@@ -37,7 +37,7 @@ export const input_round_border = (theme: any) => css`
     border-radius: 3px;
     outline: none;
     border: 1px solid ${theme.accentNeutral};
-    background: ${theme.inputBg};
+    background: ${theme.deep};
     color: ${theme.contrast};
     padding: 3px 8px;
     margin: 2px;
@@ -47,7 +47,7 @@ export const input_round_border = (theme: any) => css`
 export const page_select = (theme: any) => css`
     color: ${theme.contrast};
     border: 1px solid ${theme.accentNeutral};
-    background: ${theme.inputBg};
+    background: ${theme.deep};
     padding: 3px 8px 2px 8px;
     border-radius: 3px;
     cursor: pointer;
@@ -64,7 +64,7 @@ export const pagination_button = (theme: any) => css`
     align-items: center;
     border: 1px solid ${theme.accentNeutral};
     color: ${theme.contrast};
-    background: ${theme.buttonDefault};
+    background: ${theme.neutral};
     cursor: pointer;
 `;
 
@@ -147,7 +147,7 @@ export function ActionButtons<T extends RowData>({
                     <input
                         type="number"
                         defaultValue={pageIndex + 1}
-                        onChange={(e:any) => {
+                        onChange={(e: any) => {
                             const page = e.target.value
                                 ? Number(e.target.value) - 1
                                 : 0;
@@ -159,12 +159,15 @@ export function ActionButtons<T extends RowData>({
                 <select
                     className={cx(page_select(theme))}
                     value={DOMPurify.sanitize(String(pageSize))}
-                    onChange={(e:any) => {
+                    onChange={(e: any) => {
                         setPageSize(Number(e.target.value));
                     }}
                 >
                     {[10, 20, 30, 40, 50].map((pageSize) => (
-                        <option key={pageSize} value={DOMPurify.sanitize(String(pageSize))}>
+                        <option
+                            key={pageSize}
+                            value={DOMPurify.sanitize(String(pageSize))}
+                        >
                             Show {pageSize} Rows
                         </option>
                     ))}

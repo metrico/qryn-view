@@ -6,7 +6,7 @@ import { TabsList, Tab, TabPanel, ViewStyled } from "./styled";
 
 import ReactJson from "@microlink/react-json-view";
 import { useSelector } from "react-redux";
-import { useMemo, useState, SyntheticEvent } from "react";
+import { useMemo, useState, SyntheticEvent, useEffect } from "react";
 import { localTabsState } from "../helpers";
 
 export const MatrixView = (props: any) => {
@@ -26,7 +26,10 @@ export const MatrixView = (props: any) => {
         limit,
         streamData,
     } = props;
+    const { loading } = actualQuery;
     const theme = useSelector((store: any) => store.theme);
+
+    const [actStreamData, setActStreamData] = useState([]);
     const jsonTheme = useMemo(() => {
         if (theme === "light") {
             return "rjv-default";
@@ -56,6 +59,12 @@ export const MatrixView = (props: any) => {
         }
     };
 
+    useEffect(() => {
+        if (!loading && streamData?.[0]?.metric) {
+            setActStreamData(streamData);
+        }
+    }, [streamData]);
+
     return (
         <ViewStyled ref={viewRef} size={panelSize} vheight={viewHeight}>
             <ViewHeader
@@ -80,29 +89,35 @@ export const MatrixView = (props: any) => {
                 </TabsList>
                 <TabPanel value={0}>
                     <div className="view-content" style={{ height: "100%" }}>
-                        <QrynChart
-                            {...props}
-                            tWidth={viewWidth}
-                            chartLimit={limit}
-                            matrixData={streamData}
-                            actualQuery={actualQuery}
-                        />
+                        {!loading && actStreamData?.[0]?.metric && (
+                            <QrynChart
+                                {...props}
+                                tWidth={viewWidth}
+                                chartLimit={limit}
+                                matrixData={actStreamData}
+                                actualQuery={actualQuery}
+                            />
+                        )}
                     </div>
                 </TabPanel>
                 <TabPanel value={1}>
                     <div className={"view-content"}>
-                        <VectorTable
-                            {...props}
-                            height={theight}
-                            data={tableData}
-                            actualQuery={actualQuery}
-                        />
+                        {!loading && (
+                            <VectorTable
+                                {...props}
+                                height={theight}
+                                data={tableData}
+                                actualQuery={actualQuery}
+                            />
+                        )}
                     </div>
                 </TabPanel>
                 <TabPanel value={2}>
                     <div className="view-content">
                         <div style={{ padding: "20px" }}>
-                            <ReactJson theme={jsonTheme} src={rawData} />
+                            {!loading && (
+                                <ReactJson theme={jsonTheme} src={rawData} />
+                            )}
                         </div>
                     </div>
                 </TabPanel>

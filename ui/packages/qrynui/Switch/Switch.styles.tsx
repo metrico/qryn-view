@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 
 const Label = styled.div`
-    color: ${(props: any) => props.theme.textColor};
-    background: ${(props: any) => props.theme.buttonInactive};
+    color: ${(props: any) => props.theme.contrast};
+    background: ${(props: any) => props.theme.accentNeutral};
     display: flex;
     align-items: center;
     justify-content: center;
@@ -10,14 +10,13 @@ const Label = styled.div`
     padding: 0px 8px;
 `;
 const SwitchCont = styled.div`
-  
     display: flex;
     align-items: center;
     font-size: 12px;
-    background-color: ${(props: any) => props.theme.buttonInactive};
+    background-color: ${(props: any) => props.theme.accentNeutral};
 
-    border: 1px solid ${(props: any) => props.theme.buttonBorder};
-    color: ${(props: any) => props.theme.textColor};
+    border: 1px solid ${(props: any) => props.theme.accentNeutral};
+    color: ${(props: any) => props.theme.contrast};
     border-radius: 3px;
     margin-right: 10px;
 `;
@@ -27,16 +26,14 @@ const SwitchBtn: any = styled.div`
     display: flex;
     align-items: center;
     background: ${(props: any) =>
-        props.selected
-            ? props.theme.buttonDefault
-            : props.theme.buttonInactive};
+        props.selected ? props.theme.neutral : props.theme.accentNeutral};
     border-left: ${(props: any) =>
         props.position === "last"
-            ? `1px solid ${props.theme.buttonBorder}`
+            ? `1px solid ${props.theme.accentNeutral}`
             : "none"};
     border-right: ${(props: any) =>
         props.position === "first"
-            ? `1px solid ${props.theme.buttonBorder}`
+            ? `1px solid ${props.theme.accentNeutral}`
             : "none"};
     border-radius: ${({ position }: any) =>
         position === "first"
@@ -56,4 +53,4 @@ export const styles = {
     Label,
     SwitchCont,
     SwitchBtn,
-}
+};

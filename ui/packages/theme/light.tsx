@@ -5,7 +5,7 @@ const defaultTheme = createTheme();
 
 export const light: QrynColors = {
     background: colors.white.w100, //       hsl(0, 0%, 10%) background background background
-    shadow: colors.white.w300, //           hsl(0, 0%, 16%) shadow shadow shadow shadow inputlabelbg
+    shadow: colors.white.w200, //           hsl(0, 0%, 16%) shadow shadow shadow shadow inputlabelbg
     // items background
     activeBg: colors.white.w100, //         hsl(0, 0%, 4%) activeBg activeBg
 
@@ -18,7 +18,7 @@ export const light: QrynColors = {
     // text
     accent: colors.orange.or100, //         hsl(39, 100%, 50%) accent
     // input bg, negative space
-    deep: colors.black.b15, //              hsl(0, 0%, 7%) deep
+    deep: colors.white.w100, //              hsl(0, 0%, 7%) deep
     ultraDeep: "#fff", //          #111111 ultraDeep
     // primary (colored)
     primary: colors.turquoise.tq200, //     hsl(180, 62%, 28%) primary primary

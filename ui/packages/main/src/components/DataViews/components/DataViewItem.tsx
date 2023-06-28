@@ -6,6 +6,8 @@ import LogsView from "../views/LogsView";
 import { MatrixView } from "../views/MatrixView";
 import { VectorView } from "../views/VectorView";
 import { TraceView } from "./Traces/TraceView";
+import { flushSync } from "react-dom";
+
 
 export function DataViewItem(props: any) {
 
@@ -31,7 +33,10 @@ export function DataViewItem(props: any) {
     const [streamData, setStreamData] = useState(dataView.data); //
     const [tableData, setTableData] = useState(dataView.tableData || {});
     useEffect(() => {
-        setStreamData(dataView.data);
+       
+            setStreamData(dataView.data);
+   
+        
     }, [dataView.data, setStreamData, isSplit]);
 
     useEffect(() => {
@@ -54,6 +59,10 @@ export function DataViewItem(props: any) {
     const theight = useTableHeight({ total, panelSize, dataView });
 
     const viewHeight = useViewHeight({ type, actualQuery, total, dataView });
+
+
+  
+
 
     if (type === "traces") {
         const traceProps = {
