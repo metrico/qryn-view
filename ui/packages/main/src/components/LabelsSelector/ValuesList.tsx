@@ -60,7 +60,8 @@ export default function ValuesList(props: any) {
 
 
     const { dataSourceId } = data;
-    const { start, stop }: any = useSelector((store) => store);
+    const start = useSelector ((store:any)=> store.start)
+    const stop = useSelector ((store:any)=> store.stop)
     const panelQuery = useSelector((store: any) => store[name]);
 
     const [filterState, setFilterState] = useState("");

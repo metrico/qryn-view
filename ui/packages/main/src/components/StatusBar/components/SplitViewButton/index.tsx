@@ -41,12 +41,9 @@ export function openPanel(
 }
 
 export default function SplitViewButton(props: any) {
-    // close button will go into queryitemtoolbar
+
     const { side, isSplit } = props;
-    // see which one is open
-    // set open to false
     const panel = useSelector((store: any) => store[side]);
-    //const { left, right } = useSelector((store: any) => store);
     const left = useSelector((store: any) => store.left);
     const right = useSelector((store: any) => store.right);
     const dispatch: any = useDispatch();

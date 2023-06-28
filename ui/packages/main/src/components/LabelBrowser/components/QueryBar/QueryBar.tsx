@@ -116,9 +116,11 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
     const saveUrl = localUrl();
     const historyService = localService().historyStore();
     const theme = useTheme();
-    const { historyOpen, isEmbed, queryHistory, start, stop } = useSelector(
-        (store: any) => store
-    );
+    const historyOpen = useSelector((store:any) => store.historyOpen)
+    const isEmbed = useSelector((store:any) => store.isEmbed)
+    const queryHistory = useSelector((store:any) => store.queryHistory)
+    const start = useSelector((store:any) => store.start)
+    const stop = useSelector((store:any) => store.stop)
     const isSplit = useSelector((store: any) => store.isSplit);
     const panelQuery = useSelector((store: any) => store[name]);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1070px)" });

@@ -59,8 +59,8 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
     } = props;
 
     const dataSources = useSelector((store: any) => store.dataSources);
-
-    const { start, stop } = useSelector((store: any) => store);
+    const start = useSelector ((store:any)=> store.start)
+    const stop = useSelector ((store:any)=> store.stop)
 
     const { logsResponse } = useLogLabels(
         dataSourceId,

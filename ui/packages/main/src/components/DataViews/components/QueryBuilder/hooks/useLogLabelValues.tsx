@@ -5,7 +5,8 @@ import { getApiRequest, getValuesUrl } from "../helpers";
 
 export default function useLogLabelValues(id: string, label: string) {
   
-    const { start, stop } = useSelector((store: any) => store);
+    const start = useSelector ((store:any)=> store.start)
+    const stop = useSelector ((store:any)=> store.stop)
     const dataSources = useSelector((store: any) => store.dataSources);
     const [loading, setLoading] = useState(false);
     const [response, setResponse] = useState<LogsResponse | any>([]);

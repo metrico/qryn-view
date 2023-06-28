@@ -1,4 +1,4 @@
-import {store} from "@ui/store";
+import store from "@ui/store/store";
 
 export const removeAlert = ( index: any) => (dispatch: Function) => {
     let notifications = store.getState().notifications

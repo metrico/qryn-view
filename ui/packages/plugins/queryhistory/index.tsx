@@ -798,8 +798,8 @@ const QueryHistory = (props: any) => {
     const [linksStarredFiltered, setLinksStarredFiltered] = useState([]);
     const [starredFiltered, setStarredFiltered] = useState([]);
     const [linksStarredItems, setLinksStarredItems] = useState(false);
-
-    const { start, stop }: any = useSelector((store: any) => store);
+    const start = useSelector ((store:any)=> store.start)
+    const stop = useSelector ((store:any)=> store.stop)
     const label = useSelector(({ label }: any) => label);
 
     function handleDelete(id: any) {

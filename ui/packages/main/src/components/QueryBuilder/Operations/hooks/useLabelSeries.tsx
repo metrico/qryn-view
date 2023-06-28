@@ -14,7 +14,8 @@ export const useLabelSeries: UseLabelSeriesFn = (
     dataSourceId: string,
     label: string
 ) => {
-    const { start, stop } = useSelector((store: any) => store);
+    const start = useSelector ((store:any)=> store.start)
+    const stop = useSelector ((store:any)=> store.stop)
     const dataSources = useSelector((store: any) => store.dataSources);
     const [res, setRes] = useState<any>({});
     const [loading, setLoading] = useState(false);

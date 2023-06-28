@@ -14,8 +14,8 @@ export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
     const { dataSourceId, labelValueChange, searchButton, logsRateButton, queryInput } = props;
     
     const dataSources = useSelector((store: any) => store.dataSources);
-
-    const { start, stop } = useSelector((store: any) => store);
+    const start = useSelector ((store:any)=> store.start)
+    const stop = useSelector ((store:any)=> store.stop)
 
     // this one should be comming form selected metric
 

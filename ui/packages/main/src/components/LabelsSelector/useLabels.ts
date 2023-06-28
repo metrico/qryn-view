@@ -31,7 +31,8 @@ const getTimestamp = (time: any, type: any): any => {
 
 export default function useLabels(id: any, dataSourceURL = "") {
     const dispatch: any = useDispatch();
-    const { start, stop }: any = useSelector((store) => store);
+    const start = useSelector ((store:any)=> store.start)
+    const stop = useSelector ((store:any)=> store.stop)
     const dataSources = useSelector((store: any) => store.dataSources);
 
     const currentDataSource = useMemo(() => {

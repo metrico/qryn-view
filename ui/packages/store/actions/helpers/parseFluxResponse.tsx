@@ -4,7 +4,7 @@ import moment from "moment";
 import { sortBy } from "lodash";
 import { setLeftDataView } from "../setLeftDataView";
 import { setRightDataView } from "../setRightDataView";
-import {store} from "@ui/store";
+import store from "@ui/store/store";
 import { ColumnDef } from "@tanstack/react-table";
 import { prepareVectorRows } from "./prepareVectorRows";
 import { setColumnsData } from "./setColumnsData";

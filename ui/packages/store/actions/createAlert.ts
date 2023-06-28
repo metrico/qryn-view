@@ -1,4 +1,4 @@
-import {store} from "@ui/store";
+import store from "@ui/store/store";
 
 export const createAlert = (action: any) => (dispatch: any) => {
     const notifications = store.getState().notifications

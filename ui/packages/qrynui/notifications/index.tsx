@@ -5,7 +5,7 @@ import { Alert } from "@mui/material";
 import { removeAlert } from "@ui/store/actions";
 
 export function Notification() {
-    const { notifications }: {notifications: any[]} = useSelector((state) => state) as any;
+    const notifications = useSelector((store:any) => store.notifications);
     const dispatch: any = useDispatch();
     const handleClose = (index: any) => {
         dispatch(removeAlert(index));
