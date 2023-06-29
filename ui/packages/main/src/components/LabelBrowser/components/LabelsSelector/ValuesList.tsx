@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import useLabelValues from "./useLabelValues";
 import { useDispatch } from "react-redux";
-import { decodeQuery } from "@ui/main/src/components/LabelBrowser/helpers/querybuilder";
+import { decodeQuery } from "@ui/main/components/LabelBrowser/helpers/querybuilder";
 import { nanoid } from "nanoid";
 import { setLeftPanel } from "@ui/store/actions/setLeftPanel";
 import { setRightPanel } from "@ui/store/actions/setRightPanel";

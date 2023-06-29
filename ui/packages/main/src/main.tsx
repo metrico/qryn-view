@@ -14,6 +14,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 import  ScreenLoader  from '@ui/views/ScreenLoader'
 
+
 import store from '@ui/store/store'
 import { Provider } from 'react-redux'
 import ProtectedRoute from './providers/ProtectedRoute'
@@ -22,11 +23,11 @@ const AppRoute = lazy(()=> import('./App'))
 
 const DataSourcesRoute = lazy(()=> import ('@ui/views/DataSources/DataSources'))
 
-const MainRoute = lazy(()=> import ("@ui/views/Main"))
+const MainRoute = lazy(()=> import ("../views/Main"))
 
-const PluginsRoute = lazy(() => import("@ui/plugins/Plugins"));
+const PluginsRoute = lazy(() => import("../plugins/Plugins"));
 
-const UserRoles = lazy(()=> import("@ui/views/User/UserRoles"))
+const UserRoles = lazy(()=> import("../views/User/UserRoles"))
 
 errorInterceptor(axios);
 
