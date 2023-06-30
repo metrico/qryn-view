@@ -1,9 +1,9 @@
-import { TabsUnstyled } from "@mui/base";
+import { Tabs } from "@mui/base";
 import { useMemo, useRef, useState, SyntheticEvent } from "react";
 import QrynChart from "../components/Charts";
 import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
-import { TabsList, Tab, TabPanel, ViewStyled } from "./styled";
+import { TabsListq, Tabq, TabPanelq, ViewStyled } from "./styled";
 import ReactJson from "@microlink/react-json-view";
 import { useSelector } from "react-redux";
 import { localTabsState } from "../helpers";
@@ -68,18 +68,18 @@ export const VectorView = (props: any) => {
                 type={type}
                 {...props}
             />
-            <TabsUnstyled
+            <Tabs
                 defaultValue={localTabsState(actualQuery)[actualQuery.id] || 0}
                 value={tabsState}
                 onChange={onTabChange}
             >
-                <TabsList panelsize={props.panelSize}>
-                    <Tab>Table</Tab>
+                <TabsListq panelsize={props.panelSize}>
+                    <Tabq>Table</Tabq>
 
-                    <Tab>Raw</Tab>
-                    {streamData?.chartData && <Tab>Chart</Tab>}
-                </TabsList>
-                <TabPanel value={0}>
+                    <Tabq>Raw</Tabq>
+                    {streamData?.chartData && <Tabq>Chart</Tabq>}
+                </TabsListq>
+                <TabPanelq value={0}>
                     <div
                         className="view-content"
                         ref={parentRef}
@@ -94,8 +94,8 @@ export const VectorView = (props: any) => {
                             />
                         )}
                     </div>
-                </TabPanel>
-                <TabPanel value={1}>
+                </TabPanelq>
+                <TabPanelq value={1}>
                     <div className="view-content">
                         <div style={{ padding: "20px" }}>
                             {!loading && (
@@ -103,9 +103,9 @@ export const VectorView = (props: any) => {
                             )}
                         </div>
                     </div>
-                </TabPanel>
+                </TabPanelq>
                 {streamData?.chartData && (
-                    <TabPanel value={2}>
+                    <TabPanelq value={2}>
                         <div className="view-content">
                             {!loading && (
                                 <QrynChart
@@ -117,9 +117,9 @@ export const VectorView = (props: any) => {
                                 />
                             )}
                         </div>
-                    </TabPanel>
+                    </TabPanelq>
                 )}
-            </TabsUnstyled>
+            </Tabs>
         </ViewStyled>
     );
 };

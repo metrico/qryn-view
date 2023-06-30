@@ -1,15 +1,15 @@
 import styled from "@emotion/styled";
-import { buttonUnstyledClasses } from "@mui/base/ButtonUnstyled";
-import TabUnstyled, { tabUnstyledClasses } from "@mui/base/TabUnstyled";
+import { buttonClasses } from "@mui/base/Button";
+import TabUnstyled, { tabClasses } from "@mui/base/Tab";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
 import HistoryIcon from "@mui/icons-material/History";
 import SearchIcon from "@mui/icons-material/Search";
-import TabsListUnstyled from "@mui/base/TabsListUnstyled";
-import TabPanelUnstyled from "@mui/base/TabPanelUnstyled";
+import TabsListUnstyled from "@mui/base/TabsList";
+import TabPanelUnstyled from "@mui/base/TabPanel";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import LinkIcon from "@mui/icons-material/Link";
 import { Drawer } from "@mui/material";
-import { TabsUnstyled } from "@mui/base";
+import { Tabs } from "@mui/base";
 
 import { DatePickerButton } from "@ui/main/components/StatusBar/styled";
 export const StyledDrawer: any = styled((props: any) => (
@@ -25,7 +25,7 @@ export const StyledDrawer: any = styled((props: any) => (
     },
 }));
 
-export const TabsContainer: any = styled(TabsUnstyled)`
+export const TabsContainer: any = styled(Tabs)`
     height: "320px";
     background: ${({theme}: any) => theme.deep};
 `;
@@ -57,11 +57,11 @@ export const Tab: any = styled(TabUnstyled)`
         outline-offset: 2px;
     }
 
-    &.${tabUnstyledClasses.selected} {
+    &.${tabClasses.selected} {
         border-bottom: 1px solid ${({ theme }: any) => theme.primary};
     }
 
-    &.${buttonUnstyledClasses.disabled} {
+    &.${buttonClasses.disabled} {
         opacity: 0.5;
         cursor: not-allowed;
     }

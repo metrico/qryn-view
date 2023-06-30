@@ -21,7 +21,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 import LinkIcon from "@mui/icons-material/Link";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import TabsUnstyled from "@mui/base/TabsUnstyled";
+import Tabs from "@mui/base/Tabs";
 
 import LaunchIcon from "@mui/icons-material/Launch";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -643,7 +643,7 @@ function StarredHistoryTab({
     }, [starredQueries, starredLinks]);
 
     return (
-        <TabsUnstyled defaultValue={0}>
+        <Tabs defaultValue={0}>
             <TabsList>
                 <Tab>Queries</Tab>
                 <Tab>Links</Tab>
@@ -686,7 +686,7 @@ function StarredHistoryTab({
                     label={label}
                 />
             </TabPanel>
-        </TabsUnstyled>
+        </Tabs>
     );
 }
 

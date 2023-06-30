@@ -2,25 +2,23 @@ import DOMPurify from "isomorphic-dompurify";
 import { setLeftPanel, setRightPanel } from "./actions";
 
 export default function queryInit(query: any) {
-    return (
-        query.split(/[  ]+/).map((m: any) => ({
+    return query.split(/[  ]+/).map((m: any) => ({
+        type: "paragraph",
+        children: [
+            {
+                text: DOMPurify.sanitize(m),
+            },
+        ],
+    })) || [
+        {
             type: "paragraph",
             children: [
                 {
-                    text: DOMPurify.sanitize(m),
+                    text: DOMPurify.sanitize("Enter a cLoki Query"),
                 },
             ],
-        })) || [
-            {
-                type: "paragraph",
-                children: [
-                    {
-                        text: DOMPurify.sanitize("Enter a cLoki Query"),
-                    },
-                ],
-            },
-        ]
-    );
+        },
+    ];
 }
 
 export function onQueryValid(query: any) {

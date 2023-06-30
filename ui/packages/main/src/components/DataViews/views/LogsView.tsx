@@ -1,9 +1,9 @@
 import { useMemo, useState, SyntheticEvent, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { TabsUnstyled } from "@mui/base";
+import { Tabs } from "@mui/base";
 import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
-import { TabsList, Tab, TabPanel, ViewStyled } from "./styled";
+import { TabsListq, Tabq, TabPanelq, ViewStyled } from "./styled";
 import { localTabsState } from "../helpers";
 import QrynChart from "../components/Charts";
 import { LogRows } from "../components/Logs/LogRows";
@@ -96,18 +96,18 @@ const LogsView: React.FunctionComponent<any> = (props: any) => {
                 </div>
             )}
 
-            <TabsUnstyled
+            <Tabs
                 defaultValue={localTabsState(actualQuery)[actualQuery.id] || 0}
                 value={tabsState}
                 onChange={onTabChange}
             >
-                <TabsList panelsize={props.panelSize}>
-                    <Tab>Logs</Tab>
-                    {tableData && <Tab>Table</Tab>}
+                <TabsListq panelsize={props.panelSize}>
+                    <Tabq>Logs</Tabq>
+                    {tableData && <Tabq>Table</Tabq>}
 
-                    <Tab>Raw</Tab>
-                </TabsList>
-                <TabPanel value={0}>
+                    <Tabq>Raw</Tabq>
+                </TabsListq>
+                <TabPanelq value={0}>
                     <div className="view-content">
                         {!loading && (
                             <LogRows
@@ -118,8 +118,8 @@ const LogsView: React.FunctionComponent<any> = (props: any) => {
                             />
                         )}
                     </div>
-                </TabPanel>
-                <TabPanel value={1}>
+                </TabPanelq>
+                <TabPanelq value={1}>
                     <div className="view-content">
                         {!loading && (
                             <VectorTable
@@ -130,8 +130,8 @@ const LogsView: React.FunctionComponent<any> = (props: any) => {
                             />
                         )}
                     </div>
-                </TabPanel>
-                <TabPanel value={2}>
+                </TabPanelq>
+                <TabPanelq value={2}>
                     <div className="view-content">
                         <div style={{ padding: "20px" }}>
                             {!loading && (
@@ -139,8 +139,8 @@ const LogsView: React.FunctionComponent<any> = (props: any) => {
                             )}
                         </div>
                     </div>
-                </TabPanel>
-            </TabsUnstyled>
+                </TabPanelq>
+            </Tabs>
         </ViewStyled>
     );
 };

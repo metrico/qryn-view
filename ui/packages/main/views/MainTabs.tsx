@@ -1,16 +1,18 @@
-import TabUnstyled, { tabUnstyledClasses } from "@mui/base/TabUnstyled";
-import TabsListUnstyled from "@mui/base/TabsListUnstyled";
-import TabPanelUnstyled from "@mui/base/TabPanelUnstyled";
-import { buttonUnstyledClasses } from "@mui/base/ButtonUnstyled";
+import Tab, { tabClasses } from "@mui/base/Tab";
+import TabsList  from "@mui/base/TabsList";
+import TabPanel from "@mui/base/TabPanel";
+import { buttonClasses } from "@mui/base/Button";
 import styled from "@emotion/styled";
-import TabsUnstyled from "@mui/base/TabsUnstyled";
+import Tabs from "@mui/base/Tabs";
 import Panel from "../sections/Panel";
 
-export const TabsContainer = styled(TabsUnstyled)`
+export const TabsContainer = styled(Tabs)`
     background: ${({theme}: any) => theme.deep};
 `;
 
-export const Tab = styled(TabUnstyled)`
+
+
+export const Tabq = styled(Tab)`
     color: ${({theme}: any) => theme.contrast};
     background: ${({theme}: any) => theme.neutral};
     border: 1px solid ${({theme}: any) => theme.accentNeutral};
@@ -38,11 +40,11 @@ export const Tab = styled(TabUnstyled)`
         outline-offset: 2px;
     }
 
-    &.${tabUnstyledClasses.selected} {
+    &.${tabClasses.selected} {
         border-bottom: 1px solid ${({ theme }: any) => theme.primary};
     }
 
-    &.${buttonUnstyledClasses.disabled} {
+    &.${buttonClasses.disabled} {
         opacity: 0.5;
         cursor: not-allowed;
     }
@@ -64,13 +66,13 @@ export const TabHeaderContainer = styled.div`
     background: ${({theme}: any) => theme.shadow};
     height: 37px;
 `;
-export const TabPanel = styled(TabPanelUnstyled)`
+export const TabPanelq = styled(TabPanel)`
     width: 100%;
     background: ${({ theme }: any) => theme.shadow};
     height: inherit;
 `;
 
-export const TabsList = styled(TabsListUnstyled)`
+export const TabsListq = styled(TabsList)`
     min-width: 320px;
     background: ${({ theme }: any) => theme.shadow};
     border-bottom: 4px solid ${({ theme }: any) => theme.bgNeutral};
