@@ -94,8 +94,8 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1
       isomorphic-dompurify:
-        specifier: ^1.6.0
-        version: 1.6.0
+        specifier: ^1.7.0
+        version: 1.7.0
       javascript-time-ago:
         specifier: ^2.5.9
         version: 2.5.9
@@ -162,9 +162,6 @@ importers:
       redux:
         specifier: ^4.2.1
         version: 4.2.1
-      redux-devtools-extension:
-        specifier: ^2.13.9
-        version: 2.13.9(redux@4.2.1)
       redux-thunk:
         specifier: ^2.4.2
         version: 2.4.2(redux@4.2.1)
@@ -1990,10 +1987,10 @@ packages:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
     dev: false
 
-  /cross-fetch@3.1.6:
-    resolution: {integrity: sha512-riRvo06crlE8HiqOwIpQhxwdOk4fOeR7FVM/wXoxchFEqMNUjvbs3bfo4OTgMEMHzppd4DxFBDbyySj8Cv781g==}
+  /cross-fetch@3.1.8:
+    resolution: {integrity: sha512-cvA+JwZoU0Xq+h6WkMvAUqPEYy92Obet6UdKLfW60qn99ftItKjB5T+BkyWOFWe2pUyfQ+IJHmpOTznqk1M6Kg==}
     dependencies:
-      node-fetch: 2.6.11
+      node-fetch: 2.6.12
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -2486,7 +2483,7 @@ packages:
   /fbjs@3.0.5:
     resolution: {integrity: sha512-ztsSx77JBtkuMrEypfhgc3cI0+0h+svqeie7xHbh1k/IKdcydnvadp/mUaGgjAOXQmQSxsqgaRhS3q9fy+1kxg==}
     dependencies:
-      cross-fetch: 3.1.6
+      cross-fetch: 3.1.8
       fbjs-css-vars: 1.0.2
       loose-envify: 1.4.0
       object-assign: 4.1.1
@@ -3032,8 +3029,8 @@ packages:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
 
-  /isomorphic-dompurify@1.6.0:
-    resolution: {integrity: sha512-ghd7K3FKk+/gLlK7UBJ6xmCho+NggmDwucEa9MZ/qERMigaLbkaARZ5srw1ZSksEIp9MnNIZFnkxe2+lgNgIrA==}
+  /isomorphic-dompurify@1.7.0:
+    resolution: {integrity: sha512-Iqt+WDG6I6qjsHAV9k3TYXemKHz5pfMZbSDklCXY2KaQY/jY2s+VbpxKP4j0ujCZ+11/oUB4NPQMY+dVEJ9vPA==}
     dependencies:
       '@types/dompurify': 3.0.2
       dompurify: 3.0.4
@@ -3478,8 +3475,8 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /node-fetch@2.6.11:
-    resolution: {integrity: sha512-4I6pdBY1EthSqDmJkiNk3JIT8cswwR9nfeW/cPdUagJYEQG7R95WRH74wpz7ma8Gh/9dI9FP+OU+0E4FvtA55w==}
+  /node-fetch@2.6.12:
+    resolution: {integrity: sha512-C/fGU2E8ToujUivIO0H+tpQ6HWo4eEmchoPIoXtxCrVghxdKq+QOHqEZW7tuP3KlV3bC8FRMO5nMCC7Zm1VP6g==}
     engines: {node: 4.x || >=6.0.0}
     peerDependencies:
       encoding: ^0.1.0
@@ -3993,15 +3990,6 @@ packages:
     dependencies:
       picomatch: 2.3.1
     dev: true
-
-  /redux-devtools-extension@2.13.9(redux@4.2.1):
-    resolution: {integrity: sha512-cNJ8Q/EtjhQaZ71c8I9+BPySIBVEKssbPpskBfsXqb8HJ002A3KRVHfeRzwRo6mGPqsm7XuHTqNSNeS1Khig0A==}
-    deprecated: Package moved to @redux-devtools/extension.
-    peerDependencies:
-      redux: ^3.1.0 || ^4.0.0
-    dependencies:
-      redux: 4.2.1
-    dev: false
 
   /redux-thunk@2.4.2(redux@4.2.1):
     resolution: {integrity: sha512-+P3TjtnP0k/FEjcBL5FZpoovtvrTNT/UXd4/sluaSyrURlSlhLSzEdfsTBW7WsKB6yPvgd7q/iZPICFjW4o57Q==}
