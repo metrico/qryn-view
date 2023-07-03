@@ -1,4 +1,5 @@
  /// <reference types="vitest" />
+ /// <reference types="vite/client" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import basicSsl from "@vitejs/plugin-basic-ssl";
@@ -19,7 +20,6 @@ export default defineConfig({
         environment: 'happy-dom'
       },
     build: {
-        outDir:'../../dist',
         sourcemap: false,
         rollupOptions: {
             output: {

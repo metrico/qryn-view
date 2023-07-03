@@ -60,7 +60,7 @@ jobs:
             - uses: vimtor/action-zip@v1
               if: github.event_name != 'pull_request'
               with:
-                  files: dist/ README.md
+                  files: packages/main/dist/ README.md
                   dest: dist.zip
             - name: Upload release binaries
               if: github.event_name != 'pull_request'
@@ -91,7 +91,7 @@ jobs:
                   API_TOKEN_GITHUB: ${{ secrets.GH_PUSH }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                  source-directory: "dist"
+                  source-directory: "packages/main/dist"
                   target-directory: "view"
                   target-branch: view_${{steps.version.outputs.newTag}}
                   destination-github-username: "metrico"
@@ -103,4 +103,4 @@ jobs:
               uses: JamesIves/github-pages-deploy-action@v4.2.3
               with:
                   branch: gh-pages
-                  folder: dist
+                  folder: packages/main/dist
