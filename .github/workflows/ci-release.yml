@@ -1,0 +1,106 @@
+name: CI-RELEASE
+
+on:
+    push:
+        branches: ["main"]
+        paths-ignore:
+            - "**/README.md"
+            - "**/workflows/*.yml"
+    pull_request:
+        branches: [main]
+        types: [opened, synchronize]
+        paths-ignore:
+            - "**/README.md"
+            - "**/workflows/*.yml"
+
+jobs:
+    release:
+        name: Qryn-View Release
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [18.x]
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  fetch-depth: 2
+            - uses: pnpm/action-setup@v2.0.1
+              with:
+                  version: 6.32.2
+
+
+            - name: "Automated Version Bump"
+              if: github.event_name != 'pull_request'
+              id: version
+              uses: "phips28/gh-action-bump-version@master"
+              with:
+                  tag-prefix: "v"
+                  skip-tag: true
+
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: "version check"
+              if: github.event_name != 'pull_request'
+              run: echo ${{steps.version.outputs.newTag}}
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "pnpm"
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Build 
+              run: pnpm build
+
+            - name: Test
+              run: pnpm test
+
+            - uses: vimtor/action-zip@v1
+              if: github.event_name != 'pull_request'
+              with:
+                  files: dist/ README.md
+                  dest: dist.zip
+            - name: Upload release binaries
+              if: github.event_name != 'pull_request'
+              uses: boxpositron/upload-multiple-releases@1.0.7
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  release_config: |
+                      dist.zip
+                  tag_name: ${{steps.version.outputs.newTag}}
+                  release_name: qryn-view-${{steps.version.outputs.newTag}}
+                  draft: false
+                  prerelease: false
+                  overwrite: true
+            - name: Prepare for Mothership
+              if: github.event_name != 'pull_request'
+              uses: GuillaumeFalourd/create-other-repo-branch-action@v1
+              with:
+                  repository_owner: metrico
+                  repository_name: qryn
+                  new_branch_name: view_${{steps.version.outputs.newTag}}
+                  new_branch_ref: master
+                  access_token: ${{ secrets.GH_PUSH }}
+            - name: Push to Mothership
+              if: github.event_name != 'pull_request'
+              uses: cpina/github-action-push-to-another-repository@main
+              env:
+                  API_TOKEN_GITHUB: ${{ secrets.GH_PUSH }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  source-directory: "dist"
+                  target-directory: "view"
+                  target-branch: view_${{steps.version.outputs.newTag}}
+                  destination-github-username: "metrico"
+                  destination-repository-name: "qryn"
+                  user-email: lorenzo.mangani@gmail.com
+                  commit-message: Upgrade view to ${{steps.version.outputs.newTag}}
+            - name: Deploy to gh-pages 🚀
+              if: github.event_name != 'pull_request'
+              uses: JamesIves/github-pages-deploy-action@v4.2.3
+              with:
+                  branch: gh-pages
+                  folder: dist
