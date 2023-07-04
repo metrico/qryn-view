@@ -9,7 +9,7 @@ import { Switch } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser } from "./actions";
 import DOMPurify from "isomorphic-dompurify";
-
+import sliceAvatar from "@ui/helpers/sliceAvatar";
 export interface User {
     id: string;
     name: string;
@@ -198,7 +198,7 @@ const UserSelected = (theme: any, selected: boolean) => css`
 `;
 
 const QrynAvatar = ({name}:{name:string}) => (
-    <Avatar >{name}</Avatar>
+    <Avatar >{sliceAvatar(name)}</Avatar>
 )
 
 type UserRowProps = {
@@ -360,7 +360,7 @@ const UserRows: React.FC = () => {
                   },
               ]
     );
-
+// eslint-disable-next-line
     const [cookie, setCookie] = useCookies(["user-cookie"]);
 
    
