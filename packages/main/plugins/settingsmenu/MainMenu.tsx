@@ -17,14 +17,12 @@ import StorageIcon from "@mui/icons-material/Storage";
 import CopyButton from "./CopyButton/CopyButton";
 import { Avatar } from "@mui/material";
 import { MenuStyles } from "./styled";
+import sliceAvatar from "@ui/helpers/sliceAvatar"
 
 export type USER_ROLES = "admin" | "superAdmin" | "user" | "guest";
 
-export const hasAccess = (userType: USER_ROLES, accessType: USER_ROLES) => {};
 
-function sliceAvatar(name:string):string {
-    return name.split(" ").map(m => m[0].toUpperCase()).slice(0,3).join("")
-}
+
 
 export default function MainMenu() {
     const showDs = useSelector((store: any) => store.showDataSourceSetting);
