@@ -11,7 +11,7 @@ import setDataSources from "./store/setDataSources";
 import { Container } from "./styles/Container";
 import { Button, Icon } from "./ui";
 import { Settings } from "./views";
-import DOMPurify from 'isomorphic-dompurify';
+import DOMPurify from "isomorphic-dompurify";
 import useTheme from "@ui/theme/useTheme";
 const HeaderRow = css`
     display: flex;
@@ -19,6 +19,26 @@ const HeaderRow = css`
     justify-content: space-between;
     margin-right: 20px;
 `;
+
+interface CookieProps {
+    auth?: string;
+    url?: string;
+}
+
+function setCookieFromParams(parsedDs: string, user: string, password: string) {
+    let cookie: CookieProps = {};
+    let hasAuth = password && password !== "" && user && user !== "";
+    let auth = hasAuth ? `${btoa(user)}:${btoa(password)}` : "";
+    let url = JSON.parse(JSON.stringify(parsedDs));
+
+    if (hasAuth && auth) {
+        cookie.auth = auth;
+    }
+
+    cookie.url = url;
+
+    return JSON.stringify(cookie);
+}
 
 export function DataSourceSetting(props: any) {
     const {
@@ -32,7 +52,10 @@ export function DataSourceSetting(props: any) {
     } = props;
 
     // eslint-disable-next-line
-    const [cookie, setCookie] = useCookies(["qryn-dev-cookie", "qryn-settings"]); // for testing cookies feature
+    const [cookie, setCookie] = useCookies([
+        "qryn-dev-cookie",
+        "qryn-settings",
+    ]); // for testing cookies feature
     const dispatch: any = useDispatch();
     const dataSources = useSelector((store: any) => store.dataSources);
     const useForAll = () => {
@@ -49,10 +72,16 @@ export function DataSourceSetting(props: any) {
                     ...m.auth.fields,
                     basicAuth: [...m.auth.fields.basicAuth]?.map((ba) => {
                         if (ba.name === "user") {
-                            return { ...ba, value: DOMPurify.sanitize(user.value) };
+                            return {
+                                ...ba,
+                                value: DOMPurify.sanitize(user.value),
+                            };
                         }
                         if (ba.name === "password") {
-                            return { ...ba, value: DOMPurify.sanitize(password.value) };
+                            return {
+                                ...ba,
+                                value: DOMPurify.sanitize(password.value),
+                            };
                         }
                         return ba;
                     }),
@@ -63,7 +92,7 @@ export function DataSourceSetting(props: any) {
         // uncomment for testing cookies feature
 
         localStorage.setItem("dataSources", JSON.stringify(newDs));
-        
+
         dispatch(setDataSources(newDs));
         dispatch(
             createAlert({
@@ -74,14 +103,15 @@ export function DataSourceSetting(props: any) {
     };
 
     function addCookie() {
-        var today = new Date();
-        var tomorrow = new Date();
+        const today = new Date();
+        const tomorrow = new Date();
+
         tomorrow.setDate(today.getDate() + 1);
-        const parsedDs = JSON.stringify({ url });
+
         try {
             setCookie(
                 "qryn-settings",
-                `${btoa(user.value)}:${btoa(password.value)}@${btoa(parsedDs)}&&${btoa('admin')}`,
+                setCookieFromParams(url, user.value, password.value),
                 { path: "/" }
             );
         } catch (e) {
@@ -136,7 +166,7 @@ export const DataSourceSettingHeader = (props: any) => {
 
 export function DataSource() {
     let { id } = useParams();
-    const theme = useTheme()
+    const theme = useTheme();
     const dataSources = useSelector((store: any) => store.dataSources);
     const datasource = useMemo(() => {
         if (!dataSources || dataSources.length === 0) {
@@ -145,7 +175,6 @@ export function DataSource() {
 
         return dataSources.find((f: any) => f.id === id) || {};
     }, [id, dataSources]);
-  
 
     return (
         <ThemeProvider theme={theme}>

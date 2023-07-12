@@ -8,7 +8,7 @@ import { setShowDataSourceSetting } from "./setShowDataSourceSetting";
 export function updateDataSourcesWithUrl(
     dispatch: any,
     url: any,
-    cookies: any,
+    cookies: any, // is the cookie object
     haveUrl: any,
     haveCookies: any,
     dataSources: any
@@ -23,12 +23,19 @@ export function updateDataSourcesWithUrl(
     }
 
     if (haveCookies) {
-        let [auth, dsData] = cookies.split("@");
+        let auth = "";
 
-        if (dsData && dsData !== "") {
+        const { url: cookieURL } = cookies;
+
+        if (cookies?.auth) {
+            auth = cookies.auth;
+        }
+
+        if (cookieURL && cookieURL !== "") {
             try {
                 haveUrl = true;
                 urlApi = true;
+                apiUrl = cookieURL;
             } catch (e) {
                 console.log(e);
             }
@@ -174,8 +181,8 @@ export async function checkLocalAPI(
 
 export async function updateDataSourcesFromLocalUrl(
     dataSources: any,
-    dispatch: Function,
-    navigate: Function
+    dispatch: any,
+    navigate: any
 ) {
     const location = window.location.origin;
     const logsDs = dataSources.find((f: any) => f.type === "logs");

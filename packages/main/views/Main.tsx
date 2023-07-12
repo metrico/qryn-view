@@ -32,7 +32,7 @@ export default function Main() {
     }, [hash]);
 
     UpdateStateFromQueryParams();
-  
+  // cookieAuth will be the cookie object
     const { cookiesAvailable, cookieAuth, cookieUser } = useCookiesAvailable(paramsMemo);
 
     const { urlAvailable, url } = useUrlAvailable(paramsMemo);
@@ -42,7 +42,7 @@ export default function Main() {
         const onlyUrl = !cookiesAvailable && urlAvailable;
         const urlAndCookie =
             cookiesAvailable &&
-            cookieAuth !== "" &&
+            cookieAuth &&
             urlAvailable &&
             urlAvailable !== "";
         // else, take url from location
@@ -60,7 +60,7 @@ export default function Main() {
         } else {
             updateDataSourcesFromLocalUrl(dataSources, dispatch, navigate);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(()=>{
@@ -73,7 +73,7 @@ export default function Main() {
                 console.log(e)
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[cookieUser])
 
     useEffect(() => {

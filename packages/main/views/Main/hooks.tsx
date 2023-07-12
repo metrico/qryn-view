@@ -3,7 +3,7 @@ import { useCookies } from "react-cookie";
 import DOMPurify from "isomorphic-dompurify";
 import { useSelector } from "react-redux";
 
-// useCookiesAvailable:
+
 
 export function useCookiesAvailable(urlParams: any) {
     let cookieAuth = "";
@@ -36,8 +36,8 @@ export function useCookiesAvailable(urlParams: any) {
         }
     }
 
-    if (cookie[cookieParam] && cookie[cookieParam] !== "") {
-        cookieAuth = cookie[cookieParam];
+    if (cookie[cookieParam]) {
+        cookieAuth = cookie[cookieParam];  // ==> this will be the object output
         cookiesAvailable = true;
     }
     return { cookieAuth, cookiesAvailable, cookieUser: userCookieParsed };
