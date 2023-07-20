@@ -5,7 +5,8 @@ export type SeriesRowProps = {
     value: number;
     share: number;
     theme: any;
-    onFilter: (e: any) => void;
+    source: any;
+    onFilter: (e: any, val:any) => void;
 };
 
 export const SeriesRowStyle = (theme: any) => css`
@@ -59,10 +60,16 @@ export const SeriesRow = ({
     share,
     theme,
     onFilter,
+    source,
 }: SeriesRowProps) => {
+   // console.log(source)
+    // pass here the source to identify the source
+  
+    
+    
     return (
         <div className={cx(SeriesRowStyle(theme))}>
-            <div className="c-name" onClick={onFilter}>
+            <div className="c-name" onClick={(e) => onFilter(e,{name,value,source})}>
                 {name}
             </div>
             <div className="c-value">{value}</div>
@@ -71,3 +78,4 @@ export const SeriesRow = ({
         </div>
     );
 };
+

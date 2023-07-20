@@ -1,21 +1,19 @@
 import { css, cx } from "@emotion/css";
-import React, { useState } from "react";
-import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
+import React from "react";
+import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";
 import { Totals } from "./Totals";
 import useCardinalityStore from "./store/CardinalityStore";
-
 export const CardContainer = (theme: any) => css`
-   
     background: ${theme.shadow};
     padding: 8px;
     border-radius: 3px;
     margin: 4px;
     margin-bottom: 8px;
     display: flex;
-    flex-direction:column;
-    .form-row{
-        display:flex;
-        flex:1;
+    flex-direction: column;
+    .form-row {
+        display: flex;
+        flex: 1;
     }
     .form-group {
         display: flex;
@@ -34,40 +32,42 @@ export const CardContainer = (theme: any) => css`
             padding: 5px 8px;
             border: 1px solid ${theme.lightNeutral};
             color: ${theme.contrast};
-            transition: .35s all;
+            transition: 0.35s all;
             font-family: monospace;
 
             &:focus {
-                outline:none;
-                border:1px solid ${theme.primary};
+                outline: none;
+                border: 1px solid ${theme.primary};
             }
             &.l {
                 flex: 1;
             }
             &.s {
-            max-width:50px;
+                max-width: 50px;
+            }
         }
-        }
-    
-      
+
         &.l {
             flex: 1;
         }
     }
     .config-actions {
-        display:flex;
-        align-items:center;
+        display: flex;
+        align-items: center;
         justify-content: space-between;
         padding: 4px 0px;
-        .c-totals { display: flex; align-items:center;}
+        .c-totals {
+            display: flex;
+            align-items: center;
+        }
         .query-button {
-            transition: .35s all;
+            transition: 0.35s all;
             background: ${theme.primaryAccent};
             color: ${theme.contrast};
             padding: 4px 6px;
             border-radius: 3px;
             border: 1px solid ${theme.primary};
-            cursor:pointer;
+            cursor: pointer;
             display: flex;
             align-items: center;
             &:hover {
@@ -77,82 +77,100 @@ export const CardContainer = (theme: any) => css`
     }
 `;
 
-
 type ConfiguratorProps = {
     total: number;
-    percent?:number;
+    percent?: number;
     theme: any;
-}
+};
 
+// how should we manage the state?
+// should get a request string and manage the items of the request.
 
+// topN=10&date=2023-06-09&match[]=%7B__name__%3D%22flag%22%7D&focusLabel=name
 
-const Configurator: React.FC<ConfiguratorProps> = ({total, percent=35, theme }) => {
+const Configurator: React.FC<ConfiguratorProps> = ({
+    total,
+    percent = 35,
+    theme,
+}) => {
+    const {
+        timeSeriesSelector,
+        setTimeSeriesSelector,
+        focusLabel,
+        setFocusLabel,
+        limitEntries,
+        setLimitEntries,
+    } = useCardinalityStore();
 
-    const [timeSeriesValue, setTimeSeriesValue] = useState("");
-    const [focusLabelValue, setFocusLabelValue] = useState("");
-    const [limitEntriesValue, setLimitEntriesValue] = useState(10);
-    const {total:totalSeries} = useCardinalityStore()
-   // const totalState = useCardinalityStore((state) => state.total)
+    // const [timeSeriesValue, setTimeSeriesValue] = useState("");
+    // const [focusLabelValue, setFocusLabelValue] = useState("");
+    // const [limitEntriesValue, setLimitEntriesValue] = useState(10);
+    const { total: totalSeries } = useCardinalityStore();
+    // const totalState = useCardinalityStore((state) => state.total)
     const onTimeSeriesChange = (e: any) => {
-        setTimeSeriesValue(() => e.target.value);
-        console.log(e);
+        setTimeSeriesSelector(e.target.value);
+
         //const value = e.target?.value
         // console.log(value)
     };
 
     const onFocusLabeChange = (e: any) => {
-        setFocusLabelValue(() => e.target.value);
-        console.log(e);
+        setFocusLabel(e.target.value);
     };
 
     const onLimitEntriesChange = (e: any) => {
-        setLimitEntriesValue(() => e.target.value);
-        console.log(e);
+        setLimitEntries(e.target.value);
     };
-
-
 
     return (
         <div className={cx(CardContainer(theme))}>
             <div className="form-row">
-            <div className="form-group l">
-                <label>Time Series Selector</label>
-                   
-                <input
-                    className="l"
-                    value={timeSeriesValue}
-                    onChange={onTimeSeriesChange}
-                />
-            </div>
+                <div className="form-group l">
+                    <label>Time Series Selector</label>
 
-            <div className="form-group m">
-                <label>Focus Label</label>
-                <input value={focusLabelValue} onChange={onFocusLabeChange} />
-            </div>
+                    <input
+                        className="l"
+                        type="text"
+                        value={timeSeriesSelector}
+                        onChange={onTimeSeriesChange}
+                    />
+                </div>
 
-            <div className="form-group s">
-                <label>Limit entries</label>
-                <input
-                className="s"
-                    value={limitEntriesValue}
-                    onChange={onLimitEntriesChange}
-                />
-            </div>
+                <div className="form-group m">
+                    <label>Focus Label</label>
+                    <input
+                        value={focusLabel}
+                        type="text"
+                        onChange={onFocusLabeChange}
+                    />
+                </div>
 
+                <div className="form-group s">
+                    <label>Limit entries</label>
+                    <input
+                        className="s"
+                        type="number"
+                        value={limitEntries}
+                        onChange={onLimitEntriesChange}
+                    />
+                </div>
             </div>
             <div className="config-actions">
                 <div className="c-totals">
-                <Totals theme={theme}  value={totalSeries} text={'total'}/>
-                {/* <Totals theme={theme} value={percent} text={'percent'}/> */}
+                    <Totals theme={theme} value={totalSeries.amount} text={"total"} />
+                    <Totals theme={theme} type={'prev'} value={totalSeries.prev} text={"previous"} />
+                    <Totals theme={theme} type={'prev'} value={totalSeries.diff} text={"diff"} />
+
+                    {/* {<Totals theme={theme} value={percent} text={'percent'}/> } */}
                 </div>
-             
+
                 <div className="">
                     <button className="query-button">
-                    <ChevronRightOutlinedIcon fontSize="small"/>
-                        Execute Query</button>
+                        <ChevronRightOutlinedIcon fontSize="small" />
+                        Execute Query
+                    </button>
                 </div>
             </div>
-
         </div>
     );
 };
