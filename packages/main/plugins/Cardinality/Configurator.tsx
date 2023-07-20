@@ -83,10 +83,7 @@ type ConfiguratorProps = {
     theme: any;
 };
 
-// how should we manage the state?
-// should get a request string and manage the items of the request.
 
-// topN=10&date=2023-06-09&match[]=%7B__name__%3D%22flag%22%7D&focusLabel=name
 
 const Configurator: React.FC<ConfiguratorProps> = ({
     total,
@@ -102,16 +99,11 @@ const Configurator: React.FC<ConfiguratorProps> = ({
         setLimitEntries,
     } = useCardinalityStore();
 
-    // const [timeSeriesValue, setTimeSeriesValue] = useState("");
-    // const [focusLabelValue, setFocusLabelValue] = useState("");
-    // const [limitEntriesValue, setLimitEntriesValue] = useState(10);
+
     const { total: totalSeries } = useCardinalityStore();
-    // const totalState = useCardinalityStore((state) => state.total)
+   
     const onTimeSeriesChange = (e: any) => {
         setTimeSeriesSelector(e.target.value);
-
-        //const value = e.target?.value
-        // console.log(value)
     };
 
     const onFocusLabeChange = (e: any) => {
@@ -161,7 +153,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({
                     <Totals theme={theme} type={'prev'} value={totalSeries.prev} text={"previous"} />
                     <Totals theme={theme} type={'prev'} value={totalSeries.diff} text={"diff"} />
 
-                    {/* {<Totals theme={theme} value={percent} text={'percent'}/> } */}
+          
                 </div>
 
                 <div className="">
