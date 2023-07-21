@@ -56,11 +56,18 @@ export const CardContainer = (theme: any) => css`
         align-items: center;
         justify-content: space-between;
         padding: 4px 0px;
+
         .c-totals {
             display: flex;
             align-items: center;
         }
+        .buttons-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
         .query-button {
+            height: 30px;
             transition: 0.35s all;
             background: ${theme.primaryAccent};
             color: ${theme.contrast};
@@ -78,18 +85,10 @@ export const CardContainer = (theme: any) => css`
 `;
 
 type ConfiguratorProps = {
-    total: number;
-    percent?: number;
     theme: any;
 };
 
-
-
-const Configurator: React.FC<ConfiguratorProps> = ({
-    total,
-    percent = 35,
-    theme,
-}) => {
+const Configurator: React.FC<ConfiguratorProps> = ({ theme }) => {
     const {
         timeSeriesSelector,
         setTimeSeriesSelector,
@@ -97,11 +96,11 @@ const Configurator: React.FC<ConfiguratorProps> = ({
         setFocusLabel,
         limitEntries,
         setLimitEntries,
+        reset,
     } = useCardinalityStore();
 
-
     const { total: totalSeries } = useCardinalityStore();
-   
+
     const onTimeSeriesChange = (e: any) => {
         setTimeSeriesSelector(e.target.value);
     };
@@ -149,14 +148,29 @@ const Configurator: React.FC<ConfiguratorProps> = ({
             </div>
             <div className="config-actions">
                 <div className="c-totals">
-                    <Totals theme={theme} value={totalSeries.amount} text={"total"} />
-                    <Totals theme={theme} type={'prev'} value={totalSeries.prev} text={"previous"} />
-                    <Totals theme={theme} type={'prev'} value={totalSeries.diff} text={"diff"} />
-
-          
+                    <Totals
+                        theme={theme}
+                        value={totalSeries.amount}
+                        text={"total"}
+                    />
+                    <Totals
+                        theme={theme}
+                        type={"prev"}
+                        value={totalSeries.prev}
+                        text={"previous"}
+                    />
+                    <Totals
+                        theme={theme}
+                        type={"prev"}
+                        value={totalSeries.diff}
+                        text={"diff"}
+                    />
                 </div>
 
-                <div className="">
+                <div className="buttons-group">
+                    <button onClick={reset} className="query-button">
+                        Reset
+                    </button>
                     <button className="query-button">
                         <ChevronRightOutlinedIcon fontSize="small" />
                         Execute Query

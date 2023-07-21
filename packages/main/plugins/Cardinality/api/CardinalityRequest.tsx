@@ -5,9 +5,6 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "../consts";
 
-
-
-
 export const ConfiguratorBuilder = (
     server: string,
     reqState: CardinalityRequest
@@ -32,6 +29,7 @@ export const defaultCardinalityStatus = {
     totalSeriesPrev: 0,
     totalSeriesByAll: 0,
     totalLabelValuePairs: 0,
+
     seriesCountByMetricName: [],
     seriesCountByLabelName: [],
     seriesCountByFocusLabelValue: [],
@@ -41,8 +39,6 @@ export const defaultCardinalityStatus = {
 
 const useDataSourceData = (type: string) => {
     const datasources = useSelector((store: any) => store.dataSources);
-
-
 
     let auth = ``;
 
@@ -54,7 +50,6 @@ const useDataSourceData = (type: string) => {
 
     const isAuth = authData.basicAuth.value;
     let [user, password] = authData.fields.basicAuth;
-    console.log(user, password);
 
     if (isAuth) {
         let [user, password] = authData.fields.basicAuth;
@@ -95,9 +90,7 @@ export const useCardinalityRequest = (): {
     const [tsdbStatus, setTsdbStatus] = useState<any>({});
 
     const requestCardinality = async (url: string) => {
-        const reqParams = { match, focusLabel, topN, date:reqDate };
-
-        console.log(reqParams);
+        const reqParams = { match, focusLabel, topN, date: reqDate };
 
         /// we should make the three requests in parallel
         // one for now, one for yesterday, one plain
@@ -126,7 +119,9 @@ export const useCardinalityRequest = (): {
         // set
 
         try {
-            const responses = await Promise.all(urls.map((url) => fetch(url,{ headers: { "X-Scope-OrgID": "0" }}))); // add headers and auth in here . make it with axios
+            const responses = await Promise.all(
+                urls.map((url) => fetch(url, { headers }))
+            ); // add headers and auth in here . make it with axios
             const [resp, respPrev, respTotals] = await Promise.all(
                 responses.map((resp) => resp.json())
             );

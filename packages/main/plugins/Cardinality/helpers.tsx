@@ -62,3 +62,62 @@ export const handleFilterClick = (key: string, query: string) => {
         setFocusLabel("");
     }
 };
+
+
+function sortAsc(rows: any[]) {
+    const mess = rows?.sort((a, b) => a.value - b.value);
+
+    return mess;
+}
+
+function sortDesc(rows: any[]) {
+    const mess = rows?.sort((a, b) => b.value - a.value);
+
+    return mess;
+}
+
+function sortAscString(rows: any[]) {
+    return rows.sort((a, b) => {
+        const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+        const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+            return -1;
+        }
+        if (nameA > nameB) {
+            return 1;
+        }
+
+        // names must be equal
+        return 0;
+    });
+}
+
+function sortDescString(rows: any[]) {
+    return rows.sort((a, b) => {
+        const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+        const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+        if (nameB < nameA) {
+            return -1;
+        }
+        if (nameB > nameA) {
+            return 1;
+        }
+
+        // names must be equal
+        return 0;
+    });
+}
+
+export function sortByCol(rows, col, order) {
+    const cb = {
+        name: {
+            asc: () => sortAscString(rows),
+            desc: () => sortDescString(rows),
+        },
+        value: {
+            asc: () => sortAsc(rows),
+            desc: () => sortDesc(rows),
+        },
+    };
+    return cb[col][order]();
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { css, cx } from "@emotion/css";
+import {  cx } from "@emotion/css";
 import useTheme from "@ui/theme/useTheme";
 import { Plugin } from "../types";
 import { nanoid } from "nanoid";
@@ -12,13 +12,14 @@ import Configurator from "./Configurator";
 import { SeriesRowProps } from "./SeriesRow";
 import { SeriesGroup } from "./SeriesGroup";
 import { CardinalityResponse } from "./types";
-
+import { resultsContainerStyles } from './styles'
 import useCardinalityStore from "./store/CardinalityStore";
 
 import {
     defaultCardinalityStatus,
     useCardinalityRequest,
 } from "./api/CardinalityRequest";
+
 
 const sectionsTitles = (str: string | null): Record<string, string> => ({
     seriesCountByMetricName: "Metric names with highest number of series",
@@ -30,16 +31,23 @@ const sectionsTitles = (str: string | null): Record<string, string> => ({
         "Labels with the highest number of unique values",
 });
 
+const tableHeaders:any =  {
+    seriesCountByMetricName: "Metric Name",
+    seriesCountByLabelName: "Label name",
+    seriesCountByFocusLabelValue: "Label value",
+    seriesCountByLabelValuePair: "Label=value pair",
+    labelValueCountByLabelName:"Label name",
+  };
+
+
+
+
 import { queryUpdater } from "./helpers";
 
 const calcPercent = (num: number, total: number) => {
     return (num * 100) / total;
 };
 
-const resultsContainerStyles = css`
-    height: 500px;
-    overflow-y: auto;
-`;
 
 export const CardinalityView = () => {
     const queryClient = new QueryClient();
@@ -148,6 +156,7 @@ export const Cardinality = () => {
                             title={
                                 sectionsTitles("metric")[Object.keys(series)[0]]
                             }
+                            sectionHeader={tableHeaders[Object.keys(series)[0]]}
                             rows={series[Object.keys(series)[0]]}
                         />
                     ))}
