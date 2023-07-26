@@ -40,6 +40,7 @@ interface TimelineRowCellProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export default function TimelineRow(props: TTimelineRowProps) {
     const { children, className = "", ...rest } = props;
+  
     return (
         <div className={cx(FlexRow(props.theme), className)} {...rest}>
             {children}
@@ -58,7 +59,7 @@ export function TimelineRowCell(props: TimelineRowCellProps) {
         ...style,
         flexBasis: widthPercent,
         maxWidth: widthPercent,
-    };
+    };   
     return (
         <div
             className={cx(ubRelative, className, contrast(theme))}

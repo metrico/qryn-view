@@ -137,6 +137,7 @@ export class UnthemedSpanDetailRow extends React.PureComponent<SpanDetailRowProp
             topOfViewRefType,
         } = this.props;
         // const styles = getStyles(theme);
+        console.log(detailState)
         return (
             <TimelineRow theme={this.props.theme}>
                 <TimelineRow.Cell

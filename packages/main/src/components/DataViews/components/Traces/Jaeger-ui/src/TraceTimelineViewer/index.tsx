@@ -1,47 +1,13 @@
-// Copyright (c) 2017 Uber Technologies, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+import React, {useState, useEffect} from 'react';
 
-import { RefObject } from "react";
 
-import React from 'react';
-
-import { Accessors } from "../ScrollManager";
 import { merge as mergeShortcuts } from "../keyboard-shortcuts";
-import { SpanBarOptions } from "../settings/SpanBarSettings";
-import { SpanLinkFunc, TNil } from "../types";
-import TTraceTimeline from "../types/TTraceTimeline";
-import {
-    TraceSpan,
-    Trace,
-    TraceLog,
-    TraceKeyValuePair,
-    TraceLink,
-    TraceSpanReference,
-} from "../types/trace";
 
 import TimelineHeaderRow from "./TimelineHeaderRow";
-import VirtualizedTraceView, { TopOfViewRefType } from "./VirtualizedTraceView";
-import {
-    TUpdateViewRangeTimeFunction,
-    ViewRange,
-    ViewRangeTimeUpdate,
-} from "./types";
+import VirtualizedTraceView from "./VirtualizedTraceView";
+
 import styled from "@emotion/styled";
 
-type TExtractUiFindFromStateReturn = {
-    uiFind: string | undefined;
-};
 
 const TraceTimelineViewer = styled.div<{theme:any}>`
     border-bottom: 1px solid ${({theme})=>theme.accentNeutral};
@@ -76,62 +42,7 @@ const TraceTimelineViewer = styled.div<{theme:any}>`
     }
 `;
 
-type TProps = TExtractUiFindFromStateReturn & {
-    registerAccessors: (accessors: Accessors) => void;
-    findMatchesIDs: Set<string> | TNil;
-    scrollToFirstVisibleSpan: () => void;
-    traceTimeline: TTraceTimeline;
-    trace: Trace;
-    datasourceType: string;
-    spanBarOptions: SpanBarOptions | undefined;
-    updateNextViewRangeTime: (update: ViewRangeTimeUpdate) => void;
-    updateViewRangeTime: TUpdateViewRangeTimeFunction;
-    viewRange: ViewRange;
-    //   timeZone: TimeZone;
 
-    setSpanNameColumnWidth: (width: number) => void;
-    collapseAll: (spans: TraceSpan[]) => void;
-    collapseOne: (spans: TraceSpan[]) => void;
-    expandAll: () => void;
-    expandOne: (spans: TraceSpan[]) => void;
-
-    childrenToggle: (spanID: string) => void;
-    clearShouldScrollToFirstUiFindMatch: () => void;
-    detailEventsToggle: (spanID: string) => void;
-    detailLogItemToggle: (spanID: string, log: TraceLog) => void;
-    detailLogsToggle: (spanID: string) => void;
-    detailWarningsToggle: (spanID: string) => void;
-    detailStackTracesToggle: (spanID: string) => void;
-    detailReferencesToggle: (spanID: string) => void;
-    detailReferenceItemToggle: (
-        spanID: string,
-        reference: TraceSpanReference
-    ) => void;
-    detailProcessToggle: (spanID: string) => void;
-    detailTagsToggle: (spanID: string) => void;
-    detailToggle: (spanID: string) => void;
-    setTrace: (trace: Trace | TNil, uiFind: string | TNil) => void;
-    addHoverIndentGuideId: (spanID: string) => void;
-    removeHoverIndentGuideId: (spanID: string) => void;
-    linksGetter: (
-        span: TraceSpan,
-        items: TraceKeyValuePair[],
-        itemIndex: number
-    ) => TraceLink[];
-    createSpanLink?: SpanLinkFunc;
-    scrollElement?: Element;
-    focusedSpanId?: string;
-    focusedSpanIdForSearch: string;
-    //   createFocusSpanLink: (traceId: string, spanId: string) => LinkModel;
-    topOfViewRef?: RefObject<HTMLDivElement>;
-    topOfViewRefType?: TopOfViewRefType;
-    theme: any;
-};
-
-type State = {
-    // Will be set to real height of the component so it can be passed down to size some other elements.
-    height: number;
-};
 
 const NUM_TICKS = 5;
 
@@ -141,89 +52,77 @@ const NUM_TICKS = 5;
  * re-render the ListView every time the cursor is moved on the trace minimap
  * or `TimelineHeaderRow`.
  */
-export class UnthemedTraceTimelineViewer extends React.PureComponent<
-    TProps,
-    State
-> {
-    constructor(props: TProps) {
-        super(props);
-        this.state = { height: 0 };
-    }
 
-    componentDidMount() {
+ const UnthemedTraceTimelineViewer = (props) => {
+    const [height, setHeight] = useState(0);
+
+    useEffect(() => {
         mergeShortcuts({
-            collapseAll: this.collapseAll,
-            expandAll: this.expandAll,
-            collapseOne: this.collapseOne,
-            expandOne: this.expandOne,
+            collapseAll: collapseAll,
+            expandAll: expandAll,
+            collapseOne: collapseOne,
+            expandOne: expandOne,
         });
-    }
+    }, []);
 
-    collapseAll = () => {
-        this.props.collapseAll(this.props.trace.spans);
+    const collapseAll = () => {
+        props.collapseAll(props.trace.spans);
     };
 
-    collapseOne = () => {
-        this.props.collapseOne(this.props.trace.spans);
+    const collapseOne = () => {
+        props.collapseOne(props.trace.spans);
     };
 
-    expandAll = () => {
-        this.props.expandAll();
+    const expandAll = () => {
+        props.expandAll();
     };
 
-    expandOne = () => {
-        this.props.expandOne(this.props.trace.spans);
+    const expandOne = () => {
+        props.expandOne(props.trace.spans);
     };
 
-    render() {
-        const {
-            setSpanNameColumnWidth,
-            updateNextViewRangeTime,
-            updateViewRangeTime,
-            viewRange,
-            traceTimeline,
-            topOfViewRef,
-            focusedSpanIdForSearch,
-            ...rest
-        } = this.props;
-        const { trace } = rest;
+    const {
+        setSpanNameColumnWidth,
+        updateNextViewRangeTime,
+        updateViewRangeTime,
+        viewRange,
+        traceTimeline,
+        topOfViewRef,
+        focusedSpanIdForSearch,
+        ...rest
+    } = props;
+    const { trace } = rest;
 
-        return (
-            <TraceTimelineViewer
-            theme={this.props.theme}
-                ref={(ref: HTMLDivElement | null) =>
-                    ref &&
-                    this.setState({
-                        height: ref.getBoundingClientRect().height,
-                    })
-                }
-            >
-                <TimelineHeaderRow
-                theme={this.props.theme}
-                    duration={trace.duration}
-                    nameColumnWidth={traceTimeline.spanNameColumnWidth}
-                    numTicks={NUM_TICKS}
-                    onCollapseAll={this.collapseAll}
-                    onCollapseOne={this.collapseOne}
-                    onColummWidthChange={setSpanNameColumnWidth}
-                    onExpandAll={this.expandAll}
-                    onExpandOne={this.expandOne}
-                    viewRangeTime={viewRange.time}
-                    updateNextViewRangeTime={updateNextViewRangeTime}
-                    updateViewRangeTime={updateViewRangeTime}
-                    columnResizeHandleHeight={this.state.height}
-                />
-                <VirtualizedTraceView
-                    {...rest}
-                    {...traceTimeline}
-                    setSpanNameColumnWidth={setSpanNameColumnWidth}
-                    currentViewRangeTime={viewRange.time.current}
-                    topOfViewRef={topOfViewRef}
-                    focusedSpanIdForSearch={focusedSpanIdForSearch}
-                />
-            </TraceTimelineViewer>
-        );
-    }
-}
+    return (
+        <TraceTimelineViewer theme={props.theme}>
+            <TimelineHeaderRow
+                theme={props.theme}
+                duration={trace.duration}
+                nameColumnWidth={traceTimeline.spanNameColumnWidth}
+                numTicks={NUM_TICKS}
+                onCollapseAll={collapseAll}
+                onCollapseOne={collapseOne}
+                onColummWidthChange={setSpanNameColumnWidth}
+                onExpandAll={expandAll}
+                onExpandOne={expandOne}
+                viewRangeTime={viewRange.time}
+                updateNextViewRangeTime={updateNextViewRangeTime}
+                updateViewRangeTime={updateViewRangeTime}
+                columnResizeHandleHeight={height}
+            />
+            <VirtualizedTraceView
+                {...rest}
+                {...traceTimeline}
+                setSpanNameColumnWidth={setSpanNameColumnWidth}
+                currentViewRangeTime={viewRange.time.current}
+                topOfViewRef={topOfViewRef}
+                focusedSpanIdForSearch={focusedSpanIdForSearch}
+            />
+        </TraceTimelineViewer>
+    );
+};
 
-export default /* withTheme2( */ UnthemedTraceTimelineViewer /* ) */;
+export default UnthemedTraceTimelineViewer;
+
+
+
