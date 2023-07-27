@@ -1,32 +1,15 @@
-// Copyright (c) 2017 Uber Technologies, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-import React from 'react';
-
-import { TNil } from "../../types";
+import React, { useEffect, useRef } from "react";
 import { getRgbColorByKey } from "../../utils/color-generator";
-
 import renderIntoCanvas from "./render-into-canvas";
 import styled from "@emotion/styled";
+import useTheme from "@ui/theme/useTheme";
 
 const StyledCanvas = styled.canvas<{ theme: any }>`
-    // background: ${({theme}: any) => theme.activeBg};
-    //background:red !important;
     height: 60px;
     position: absolute;
     width: 100%;
 `;
+
 type CanvasSpanGraphProps = {
     items: Array<{
         valueWidth: number;
@@ -34,48 +17,34 @@ type CanvasSpanGraphProps = {
         serviceName: string;
     }>;
     valueWidth: number;
-    theme: any;
 };
 
-export class UnthemedCanvasSpanGraph extends React.PureComponent<CanvasSpanGraphProps> {
-    _canvasElm: HTMLCanvasElement | TNil;
-    theme: any;
-    constructor(props: CanvasSpanGraphProps) {
-        super(props);
-        this._canvasElm = undefined;
-    }
-    getColor = (key: string) => getRgbColorByKey(key, this.props.theme);
+const UnthemedCanvasSpanGraph: React.FC<CanvasSpanGraphProps> = ({
+    items,
+    valueWidth,
+}) => {
+    const canvasElm = useRef<HTMLCanvasElement | null>(null);
+    const theme = useTheme();
 
-    componentDidMount() {
-        this._draw();
-    }
+    const getColor = (key: string) => getRgbColorByKey(key, theme);
 
-    componentDidUpdate() {
-        this._draw();
-    }
+    useEffect(() => {
+        draw();
+    }, [items, valueWidth, theme]);
 
-    _setCanvasRef = (elm: HTMLCanvasElement | TNil) => {
-        this._canvasElm = elm;
-    };
-
-    _draw() {
-        if (this._canvasElm) {
-            const { valueWidth: totalValueWidth, items } = this.props;
+    const draw = () => {
+        if (canvasElm.current) {
             renderIntoCanvas(
-                this._canvasElm,
+                canvasElm.current,
                 items,
-                totalValueWidth,
-                this.getColor,
-                this.props.theme.activeBg //autoColor(this.props.theme)
+                valueWidth,
+                getColor,
+                theme.activeBg //autoColor(theme)
             );
         }
-    }
+    };
 
-    render() {
-        return (
-            <StyledCanvas theme={this.props.theme} ref={this._setCanvasRef} />
-        );
-    }
-}
+    return <StyledCanvas theme={theme} ref={canvasElm} />;
+};
 
-export default /* withTheme2( */ UnthemedCanvasSpanGraph /* ) */;
+export default UnthemedCanvasSpanGraph;

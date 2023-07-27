@@ -12,49 +12,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import React, { useState } from "react";
 
-import { TNil } from '../types/index';
+import { TNil } from "../types/index";
 
 type Props = {
-  allowClear?: boolean;
-  inputProps: Record<string, any>;
-  location: Location;
-  match: any;
-  trackFindFunction?: (str: string | TNil) => void;
-  value: string | undefined;
-  onChange: (value: string) => void;
+    allowClear?: boolean;
+    inputProps: Record<string, any>;
+    location: Location;
+    match: any;
+    trackFindFunction?: (str: string | TNil) => void;
+    value: string | undefined;
+    onChange: (value: string) => void;
 };
 
-export default class UiFindInput extends React.PureComponent<Props> {
-  static defaultProps: Partial<Props> = {
-    inputProps: {},
-    trackFindFunction: undefined,
-    value: undefined,
-  };
+const UiFindInput: React.FC<Props> = ({
+    inputProps = {},
+    value = "",
+    onChange,
+}) => {
+    const [inputValue, setInputValue] = useState<string>(value);
 
-  clearUiFind = () => {
-    this.props.onChange('');
-  };
+    const clearUiFind = () => {
+        onChange("");
+    };
 
-  render() {
-    const { inputProps, value } = this.props;
-
-    // const suffix = (
-    //   <>
-    //     {inputProps.suffix}
-    //     {allowClear && value && value.length && <CloseIcon  onClick={this.clearUiFind} />}
-    //   </>
-    // );
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.currentTarget.value;
+        setInputValue(newValue);
+        onChange(newValue);
+    };
 
     return (
-      <input
-        placeholder="Find..."
-        {...inputProps}
-        onChange={(e) => this.props.onChange(e.currentTarget.value)}
-        // suffix={suffix}
-        value={value}
-      />
+        <input
+            placeholder="Find..."
+            {...inputProps}
+            onChange={handleInputChange}
+            // suffix={suffix}
+            value={inputValue}
+        />
     );
-  }
-}
+};
+
+export default UiFindInput;
