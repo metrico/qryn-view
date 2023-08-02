@@ -9,7 +9,7 @@ import path from "path";
 let configOpts = {
     server: {},
     plugins: [
-        //basicSsl(),
+        basicSsl(),
         react({
             jsxImportSource: "@emotion/react",
             babel: {
