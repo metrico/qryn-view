@@ -21,9 +21,6 @@ import sliceAvatar from "@ui/helpers/sliceAvatar"
 
 export type USER_ROLES = "admin" | "superAdmin" | "user" | "guest";
 
-
-
-
 export default function MainMenu() {
     const showDs = useSelector((store: any) => store.showDataSourceSetting);
     const currentUser = useSelector((store: any) => store.currentUser);

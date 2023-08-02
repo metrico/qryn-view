@@ -3,6 +3,7 @@ import React from "react";
 import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";
 import { Totals } from "./Totals";
 import useCardinalityStore from "./store/CardinalityStore";
+import DayPicker from './DayPicker'
 export const CardContainer = (theme: any) => css`
     background: ${theme.shadow};
     padding: 8px;
@@ -168,6 +169,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({ theme }) => {
                 </div>
 
                 <div className="buttons-group">
+                    <DayPicker/>
                     <button onClick={reset} className="query-button">
                         Reset
                     </button>

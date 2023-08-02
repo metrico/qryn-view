@@ -48,8 +48,12 @@ const useDataSourceData = (type: string) => {
         headers,
     } = datasources.find((f: any) => f.value === type);
 
+    let reqHeaders = headers?.reduce(
+        (obj, item) => Object.assign(obj, { [item.header]: item.value }),
+        {}
+    );
+
     const isAuth = authData.basicAuth.value;
-    let [user, password] = authData.fields.basicAuth;
 
     if (isAuth) {
         let [user, password] = authData.fields.basicAuth;
@@ -59,7 +63,7 @@ const useDataSourceData = (type: string) => {
         auth = serializeUserPassword(userValue, passwordValue);
     }
 
-    return { url, auth, headers };
+    return { url, auth, headers: reqHeaders };
 };
 
 const useStoreParams = () => {
@@ -82,7 +86,7 @@ export const useCardinalityRequest = (): {
     // const { url, auth, headers }  = useDataSourceData('metrics')
     //  should get auth / headers / url from params
 
-    const { auth, url, headers } = useDataSourceData("logs");
+    const { url, headers } = useDataSourceData("logs");
 
     const reqDate = date || dayjs().format(DATE_FORMAT);
     const [isLoading, setIsLoading] = useState(false);
@@ -112,7 +116,6 @@ export const useCardinalityRequest = (): {
         const urlTotal = ConfiguratorBuilder(url, totalParams);
 
         const urls = [urlBase, urlPrev, urlTotal];
-
         if (!url) return;
         setError("");
         setIsLoading(true);
