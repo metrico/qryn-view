@@ -4,6 +4,7 @@ import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";
 import { Totals } from "./Totals";
 import useCardinalityStore from "./store/CardinalityStore";
 import DayPicker from './DayPicker'
+import { type QrynTheme } from "@ui/theme/types";
 export const CardContainer = (theme: any) => css`
     background: ${theme.shadow};
     padding: 8px;
@@ -86,7 +87,9 @@ export const CardContainer = (theme: any) => css`
 `;
 
 type ConfiguratorProps = {
-    theme: any;
+    theme: QrynTheme;
+    percent: number;
+    total:any;
 };
 
 const Configurator: React.FC<ConfiguratorProps> = ({ theme }) => {

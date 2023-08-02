@@ -118,7 +118,7 @@ export const Cardinality = () => {
         return [];
     };
 
-    const { result, error, isLoading } = useCardinalityRequest();
+    const { result, isLoading } = useCardinalityRequest();
 
     useEffect(() => {
         if (result) {
