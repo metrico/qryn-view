@@ -37,7 +37,7 @@ export const queryUpdater: QueryUpdater = {
         if (match === "") {
             return `{${query}!=""}`;
         }
-        return `${match.replace("}", "")}, ${query}!=""}`;
+        return `${match.replace(/\}/, "")}, ${query}!=""}`;
     },
 };
 
