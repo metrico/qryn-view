@@ -162,7 +162,6 @@ export async function checkLocalAPI(
 
     try {
         let res = await getReadyResponse(url, opts, response);
-
         response = res;
     } catch (e: any) {
         isReady = false;
@@ -170,8 +169,7 @@ export async function checkLocalAPI(
         if (
             response &&
             response?.status === 200 &&
-            (response?.contentType === "application/json; charset=utf-8" ||
-                response?.contentLength === "0")
+            response?.contentLength === "0"
         ) {
             isReady = true;
         }

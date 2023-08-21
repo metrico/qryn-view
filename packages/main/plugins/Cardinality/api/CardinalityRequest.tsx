@@ -15,7 +15,7 @@ export const ConfiguratorBuilder = (
     const focusLabel = reqState.focusLabel
         ? `&focusLabel=${encodeURIComponent(reqState.focusLabel)}`
         : "";
-    return `${server}/ch/api/v1/status/tsdb?topN=${reqState.topN}&date=${reqState.date}${match}${focusLabel}`;
+    return `${server}/api/v1/status/tsdb?topN=${reqState.topN}&date=${reqState.date}${match}${focusLabel}`;
 };
 
 function serializeUserPassword(user: string, password: string) {

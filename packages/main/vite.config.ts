@@ -80,6 +80,7 @@ let configOpts = {
 };
 
 export default defineConfig(({ mode }) => {
+    // this proxy will load origin from .env file if present
     const env = loadEnv(mode, process.cwd(), "");
     const isProxy = env.VITE_API_BASE_URL && env.VITE_API_BASE_URL !== "";
     const proxyApi = isProxy ? env.VITE_API_BASE_URL : "";
@@ -87,12 +88,18 @@ export default defineConfig(({ mode }) => {
     const configProxy = {
         server: {
             proxy: {
-                "/ch": {
+                "/api": {
                     target: proxyApi,
                     changeOrigin: env.VITE_API_BASE_URL,
-                    //secure:false,
-                    rewrite: (path) => path.replace(/^\/ch/, ""),
+                  secure:false,
+                   
                 },
+                "/loki":{target: proxyApi, changeOrigin: env.VITE_API_BASE_URL, secure:false},
+                "/ready":{
+                    target: proxyApi,
+                    changeOrigin: env.VITE_API_BASE_URL,
+                    
+                }
             },
         },
     };
