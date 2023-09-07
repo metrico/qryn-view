@@ -1,95 +1,40 @@
-import { CardinalityRequest } from "./types";
-import useCardinalityStore from "../store/CardinalityStore";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "../consts";
 
-export const ConfiguratorBuilder = (
-    server: string,
-    reqState: CardinalityRequest
-) => {
-    const match = reqState.match
-        ? `&match[]=${encodeURIComponent(reqState.match)}`
-        : "";
-    const focusLabel = reqState.focusLabel
-        ? `&focusLabel=${encodeURIComponent(reqState.focusLabel)}`
-        : "";
-    return `${server}/api/v1/status/tsdb?topN=${reqState.topN}&date=${reqState.date}${match}${focusLabel}`;
-};
+import {
+    toTimeSeconds,
+    useStoreParams,
+    useDataSourceData,
+    ConfiguratorBuilder,
+    defaultCardinalityStatus,
+} from "../helpers";
+import { useSelector } from "react-redux";
 
-function serializeUserPassword(user: string, password: string) {
-    return `${btoa(user)}${password && password !== "" ? ":" : ""}${btoa(
-        password
-    )}`;
-}
-
-export const defaultCardinalityStatus = {
-    totalSeries: 0,
-    totalSeriesPrev: 0,
-    totalSeriesByAll: 0,
-    totalLabelValuePairs: 0,
-
-    seriesCountByMetricName: [],
-    seriesCountByLabelName: [],
-    seriesCountByFocusLabelValue: [],
-    seriesCountByLabelValuePair: [],
-    labelValueCountByLabelName: [],
-};
-
-const useDataSourceData = (type: string) => {
-    const datasources = useSelector((store: any) => store.dataSources);
-
-    let auth = ``;
-
-    const {
-        auth: authData,
-        url,
-        headers,
-    } = datasources.find((f: any) => f.value === type);
-
-    let reqHeaders = headers?.reduce(
-        (obj, item) => Object.assign(obj, { [item.header]: item.value }),
-        {}
-    );
-
-    const isAuth = authData.basicAuth.value;
-
-    if (isAuth) {
-        let [user, password] = authData.fields.basicAuth;
-        let passwordValue = password.value;
-        let userValue = user.value;
-
-        auth = serializeUserPassword(userValue, passwordValue);
-    }
-
-    return { url, auth, headers: reqHeaders };
-};
-
-const useStoreParams = () => {
-    const {
-        timeSeriesSelector: match,
-        focusLabel,
-        limitEntries: topN,
-        date,
-    } = useCardinalityStore();
-    return { match, focusLabel, topN, date };
-};
-
+// main function, manages the requests
 export const useCardinalityRequest = (): {
     fetchurl?: string[];
     isLoading?: boolean;
+    handleDelete?: (name: string, source: string) => void;
     error?: any;
     result: any;
 } => {
-    const { match, focusLabel, topN, date } = useStoreParams();
+    const { match, focusLabel, topN, date, timeRange } = useStoreParams();
     // const { url, auth, headers }  = useDataSourceData('metrics')
     //  should get auth / headers / url from params
-
+    const { start, stop } = useSelector((store: any) => store);
     const { url, headers } = useDataSourceData("logs");
 
     const reqDate = date || dayjs().format(DATE_FORMAT);
+
+    const [range, setRange] = useState<any>(timeRange ||  {
+            end: toTimeSeconds(stop),
+             start: toTimeSeconds(start),
+         });
+
+
     const [isLoading, setIsLoading] = useState(false);
+
     const [error, setError] = useState("");
     const [tsdbStatus, setTsdbStatus] = useState<any>({});
 
@@ -120,7 +65,7 @@ export const useCardinalityRequest = (): {
         setError("");
         setIsLoading(true);
         // set
-
+        //this makes the multiple fetch requests
         try {
             const responses = await Promise.all(
                 urls.map((url) => fetch(url, { headers }))
@@ -141,7 +86,7 @@ export const useCardinalityRequest = (): {
                     result.seriesCountByLabelValuePair.filter(
                         (s) => s.name !== name
                     );
-
+                // this maps all the values to the previous day
                 Object.keys(result).forEach((k) => {
                     const key = k;
                     const entries = result[key];
@@ -172,6 +117,12 @@ export const useCardinalityRequest = (): {
         }
     };
 
+    const handleDelete = (name,  source) => {
+        console.log(range, name, source);
+        
+        //  setTsdbStatus(defaultCardinalityStatus);
+      // console.log("deleted", tsdbStatus);
+    };
     useEffect(() => {
         requestCardinality(url);
     }, [url, match, focusLabel, topN, date]);
@@ -185,6 +136,7 @@ export const useCardinalityRequest = (): {
 
     return {
         isLoading,
+        handleDelete,
         error,
         result: tsdbStatus,
     };

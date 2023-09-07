@@ -16,7 +16,7 @@ import { resultsContainerStyles } from './styles'
 import useCardinalityStore from "./store/CardinalityStore";
 
 import {
-    defaultCardinalityStatus,
+  
     useCardinalityRequest,
 } from "./api/CardinalityRequest";
 
@@ -42,7 +42,7 @@ const tableHeaders:any =  {
 
 
 
-import { queryUpdater } from "./helpers";
+import { defaultCardinalityStatus, queryUpdater } from "./helpers";
 
 const calcPercent = (num: number, total: number) => {
     return (num * 100) / total;

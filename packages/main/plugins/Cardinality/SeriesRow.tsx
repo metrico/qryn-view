@@ -1,5 +1,7 @@
 import { cx, css } from "@emotion/css";
-
+import { useCardinalityRequest } from "./api/CardinalityRequest";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { Button } from "@ui/views/DataSources/ui";
 export type SeriesRowProps = {
     name: string;
     value: number;
@@ -114,6 +116,7 @@ export const SeriesRow = ({
     onFilter,
     source,
 }: SeriesRowProps) => {
+    const { handleDelete } = useCardinalityRequest();
     return (
         <div className={cx(SeriesRowStyle(theme))}>
             <div
@@ -132,6 +135,14 @@ export const SeriesRow = ({
                         <span className="c-share">{share.toFixed(2)}%</span>
                     </div>
                 </div>
+            </div>
+            <div className="cell">
+                <Button
+                    onClick={() => handleDelete(name,source)}
+                    primary={false}
+                    value={<DeleteOutlineOutlinedIcon fontSize="small" />}
+                    className="c-share"
+                />
             </div>
         </div>
     );
@@ -153,6 +164,7 @@ export const SeriesRowHeaders = ({ theme, name, handleSort }) => {
                 Number of Series
             </div>
             <div className="cell-header cell">Share in Total</div>
+            <div className="cell-header cell">Delete</div>
         </div>
     );
 };

@@ -1,4 +1,7 @@
 import useCardinalityStore from "./store/CardinalityStore";
+import dayjs from "dayjs";
+import { useSelector } from "react-redux";
+import { CardinalityRequest } from "./api/types";
 
 const getSeriesSelector = (label: string | null, value: string): string => {
     if (!label) {
@@ -51,7 +54,7 @@ export const handleFilterClick = (key: string, query: string) => {
 
     const value = queryUpdater[key]({ query, focusLabel, match });
 
-    setTimeSeriesSelector(value); 
+    setTimeSeriesSelector(value);
     if (
         key === "labelValueCountByLabelName" ||
         key == "seriesCountByLabelName"
@@ -62,7 +65,6 @@ export const handleFilterClick = (key: string, query: string) => {
         setFocusLabel("");
     }
 };
-
 
 function sortAsc(rows: any[]) {
     const mess = rows?.sort((a, b) => a.value - b.value);
@@ -121,3 +123,86 @@ export function sortByCol(rows, col, order) {
     };
     return cb[col][order]();
 }
+
+
+export const toTimeSeconds = (time: Date) => {
+    return dayjs(time).unix();
+};
+
+export const timeMinusOneDay = (time: Date) => {
+    return dayjs(time).subtract(1, "day").unix();
+};
+
+export const ConfiguratorBuilder = (
+    server: string,
+    reqState: CardinalityRequest
+) => {
+    const match = reqState.match
+        ? `&match[]=${encodeURIComponent(reqState.match)}`
+        : "";
+    const focusLabel = reqState.focusLabel
+        ? `&focusLabel=${encodeURIComponent(reqState.focusLabel)}`
+        : "";
+    return `${server}/api/v1/status/tsdb?topN=${reqState.topN}&date=${reqState.date}${match}${focusLabel}`;
+};
+
+function serializeUserPassword(user: string, password: string) {
+    return `${btoa(user)}${password && password !== "" ? ":" : ""}${btoa(
+        password
+    )}`;
+}
+
+export const defaultCardinalityStatus = {
+    totalSeries: 0,
+    totalSeriesPrev: 0,
+    totalSeriesByAll: 0,
+    totalLabelValuePairs: 0,
+
+    seriesCountByMetricName: [],
+    seriesCountByLabelName: [],
+    seriesCountByFocusLabelValue: [],
+    seriesCountByLabelValuePair: [],
+    labelValueCountByLabelName: [],
+};
+
+// gets the data from the dataSources
+export const useDataSourceData = (type: string) => {
+    const datasources = useSelector((store: any) => store.dataSources);
+
+    let auth = ``;
+
+    const {
+        auth: authData,
+        url,
+        headers,
+    } = datasources.find((f: any) => f.value === type);
+
+    let reqHeaders = headers?.reduce(
+        (obj, item) => Object.assign(obj, { [item.header]: item.value }),
+        {}
+    );
+
+    const isAuth = authData.basicAuth.value;
+
+    if (isAuth) {
+        let [user, password] = authData.fields.basicAuth;
+        let passwordValue = password.value;
+        let userValue = user.value;
+
+        auth = serializeUserPassword(userValue, passwordValue);
+    }
+
+    return { url, auth, headers: reqHeaders };
+};
+
+// gets the data from the  CardinalityStore
+export const useStoreParams = () => {
+    const {
+        timeSeriesSelector: match,
+        focusLabel,
+        timeRange,
+        limitEntries: topN,
+        date,
+    } = useCardinalityStore();
+    return { match, focusLabel, topN, date, timeRange };
+};

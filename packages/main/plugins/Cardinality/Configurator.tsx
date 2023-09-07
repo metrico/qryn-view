@@ -3,8 +3,9 @@ import React from "react";
 import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";
 import { Totals } from "./Totals";
 import useCardinalityStore from "./store/CardinalityStore";
-import DayPicker from './DayPicker'
+import DayPicker from "./DayPicker";
 import { type QrynTheme } from "@ui/theme/types";
+import { useTheme } from "@emotion/react";
 export const CardContainer = (theme: any) => css`
     background: ${theme.shadow};
     padding: 8px;
@@ -89,10 +90,12 @@ export const CardContainer = (theme: any) => css`
 type ConfiguratorProps = {
     theme: QrynTheme;
     percent: number;
-    total:any;
+    total: any;
 };
 
-const Configurator: React.FC<ConfiguratorProps> = ({ theme }) => {
+// we should simply add a switch to choose btween day and timeseconds
+
+const Configurator: React.FC<ConfiguratorProps> = ({ theme = useTheme() }) => {
     const {
         timeSeriesSelector,
         setTimeSeriesSelector,
@@ -172,7 +175,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({ theme }) => {
                 </div>
 
                 <div className="buttons-group">
-                    <DayPicker/>
+                    <DayPicker />
                     <button onClick={reset} className="query-button">
                         Reset
                     </button>
