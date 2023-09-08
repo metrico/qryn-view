@@ -6,6 +6,7 @@ import useCardinalityStore from "./store/CardinalityStore";
 import DayPicker from "./DayPicker";
 import { type QrynTheme } from "@ui/theme/types";
 import { useTheme } from "@emotion/react";
+import { useCardinalityRequest } from "./api/CardinalityRequest";
 export const CardContainer = (theme: any) => css`
     background: ${theme.shadow};
     padding: 8px;
@@ -108,6 +109,8 @@ const Configurator: React.FC<ConfiguratorProps> = ({ theme = useTheme() }) => {
 
     const { total: totalSeries } = useCardinalityStore();
 
+    const { handleCardinalityRequest } = useCardinalityRequest();
+
     const onTimeSeriesChange = (e: any) => {
         setTimeSeriesSelector(e.target.value);
     };
@@ -179,7 +182,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({ theme = useTheme() }) => {
                     <button onClick={reset} className="query-button">
                         Reset
                     </button>
-                    <button className="query-button">
+                    <button onClick={handleCardinalityRequest} className="query-button">
                         <ChevronRightOutlinedIcon fontSize="small" />
                         Execute Query
                     </button>

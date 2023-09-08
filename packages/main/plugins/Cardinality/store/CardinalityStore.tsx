@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "../consts";
-import { toTimeSeconds, timeMinusOneDay } from "../helpers";
+
 
 type CardinalityTotal = {
     amount: number;
@@ -14,9 +14,17 @@ type TimeRange = {
     end: number;
 };
 
+export const toTimeSeconds = (time: Date) => {
+    return dayjs(time).unix();
+};
+
+export const timeMinusOneDay = (time: Date) => {
+    return dayjs(time).subtract(1, "day").unix();
+};
+
 type CardinalityState = {
     total: CardinalityTotal;
-    timeRange: TimeRange; // this should come from main time range selector, we should only convert to timeseconds
+    timeRange: TimeRange; // this should be calculated in seconds from actual date 
     timeSeriesSelector: string;
     focusLabel: string;
     limitEntries: number;
@@ -34,10 +42,12 @@ const initialData = {
     total: { amount: 0, prev: 0, diff: 0 },
 
     date: dayjs().format(DATE_FORMAT),
+
     timeRange: {
         end: toTimeSeconds(new Date()),
         start: timeMinusOneDay(new Date()),
     },
+    
     timeSeriesSelector: "",
     focusLabel: "",
     limitEntries: 10,

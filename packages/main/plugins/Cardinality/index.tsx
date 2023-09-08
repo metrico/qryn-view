@@ -77,6 +77,7 @@ export const Cardinality = () => {
         setTimeSeriesSelector,
     } = useCardinalityStore();
 
+   // activates and deactivates view extras (timerange datasource etc) 
     useEffect(() => {
         
         dispatch(setIsCardinality(true));
@@ -86,6 +87,7 @@ export const Cardinality = () => {
 
     },[]);
 
+    // updates the focuslabel and actual query on clicking on a row value
     const handleFilterClick = (key: string, query: string) => {
         const value = queryUpdater[key]({ query, focusLabel, match });
 
@@ -136,6 +138,8 @@ export const Cardinality = () => {
     const { result, isLoading } = useCardinalityRequest();
 
 
+    // updated all data on result change
+    // this should be submitted with execute query button
 
     useEffect(() => {
         if (result) {
