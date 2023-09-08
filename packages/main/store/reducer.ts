@@ -48,6 +48,8 @@ const reducer = (state: any, action: any) => {
             return { ...state, isSubmit: action.isSubmit };
         case "SET_IS_EMBED":
             return { ...state, isEmbed: action.isEmbed };
+        case "SET_IS_CARDINALITY":
+            return {...state, isCardinality: action.isCardinality};
         case "SET_MATRIX_DATA":
             return { ...state, matrixData: action.matrixData };
         case "SET_CHART_TYPE":

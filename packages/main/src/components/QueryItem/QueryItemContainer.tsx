@@ -49,6 +49,7 @@ export function QueryItemContainer(props: any) {
     const right = useSelector((store: any) => store.right);
     const panel = useSelector((store: any) => store[props.name]);
     const isEmbed = useSelector((store: any) => store.isEmbed);
+    const isCardinality = useSelector((store: any) => store.isCardinality);
     const isSplit = useSelector((store: any) => store.isSplit);
     const dataSources = useSelector((store: any) => store.dataSources);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
@@ -68,7 +69,6 @@ export function QueryItemContainer(props: any) {
 
     useEffect(() => {
         setExtValue(props.data.dataSourceId);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -266,7 +266,7 @@ export function QueryItemContainer(props: any) {
                     )}
                 </div>
 
-                {!isEmbed && (
+                {(!isEmbed && !isCardinality) && (
                     <div className="query-tools">
                         <div
                             style={{ display: "flex", alignItems: "center" }}
@@ -353,7 +353,7 @@ export function QueryItemContainer(props: any) {
 
 export type QueryTitleProps = {
     isEmbed: boolean;
-    onIdRefUpdate: Function;
+    onIdRefUpdate: (e:any) => void;
     expr: string;
     isQueryOpen: any;
     idRef: string;

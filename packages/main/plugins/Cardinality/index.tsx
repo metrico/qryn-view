@@ -14,9 +14,8 @@ import { SeriesGroup } from "./SeriesGroup";
 import { CardinalityResponse } from "./types";
 import { resultsContainerStyles } from './styles'
 import useCardinalityStore from "./store/CardinalityStore";
-
+import { setIsCardinality } from "./store/setIsCardinality";
 import {
-  
     useCardinalityRequest,
 } from "./api/CardinalityRequest";
 
@@ -43,6 +42,7 @@ const tableHeaders:any =  {
 
 
 import { defaultCardinalityStatus, queryUpdater } from "./helpers";
+import { useDispatch } from "react-redux";
 
 const calcPercent = (num: number, total: number) => {
     return (num * 100) / total;
@@ -65,6 +65,8 @@ export const Cardinality = () => {
         formattedSeries: [],
     });
 
+    const dispatch:any = useDispatch();
+
     const theme = useTheme();
 
     const {
@@ -74,6 +76,15 @@ export const Cardinality = () => {
         setFocusLabel,
         setTimeSeriesSelector,
     } = useCardinalityStore();
+
+    useEffect(() => {
+        
+        dispatch(setIsCardinality(true));
+        return () => {
+            dispatch(setIsCardinality(false));
+        };
+
+    },[]);
 
     const handleFilterClick = (key: string, query: string) => {
         const value = queryUpdater[key]({ query, focusLabel, match });
@@ -95,6 +106,10 @@ export const Cardinality = () => {
     const onFilter = (e: any, val: any) => {
         handleFilterClick(val.source, val.name);
     };
+
+
+
+
 
     function formatSeries(arr: any, data: any, key: string): SeriesRowProps[] {
         return arr.map((query: any) => ({
@@ -119,6 +134,8 @@ export const Cardinality = () => {
     };
 
     const { result, isLoading } = useCardinalityRequest();
+
+
 
     useEffect(() => {
         if (result) {
