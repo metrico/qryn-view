@@ -1,7 +1,8 @@
 import { cx, css } from "@emotion/css";
 import { useCardinalityRequest } from "./api/CardinalityRequest";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { Button } from "@ui/views/DataSources/ui";
+// import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+// import { Button } from "@ui/views/DataSources/ui";
+import CardinalityDialog from "./CardinalityDialog";
 export type SeriesRowProps = {
     name: string;
     value: number;
@@ -137,12 +138,13 @@ export const SeriesRow = ({
                 </div>
             </div>
             <div className="cell">
-                <Button
-                    onClick={() => handleDelete(name,source)}
-                    primary={false}
-                    value={<DeleteOutlineOutlinedIcon fontSize="small" />}
-                    className="c-share"
-                />
+                <CardinalityDialog
+                    clearFingerPrints={() =>
+                        handleDelete(name, value, source)
+                    }
+                    label={name}
+                    value={value}
+                    source={source} />
             </div>
         </div>
     );

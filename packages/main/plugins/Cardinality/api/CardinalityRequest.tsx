@@ -14,7 +14,7 @@ import {
 export type CardinalityRequestResponse = {
     fetchurl?: string[];
     isLoading?: boolean;
-    handleDelete?: (name: string, source: string) => void;
+    handleDelete?: (name: string, value:number, source: string) => void;
     handleCardinalityRequest?: () => void;
     error?: any;
     result: any;
@@ -112,7 +112,6 @@ const requestCardinality = async (
     }
 };
 
-// main function, manages the requests
 export const useCardinalityRequest = (): CardinalityRequestResponse => {
     const { match, focusLabel, topN, date, timeRange } = useStoreParams();
     const reqDate = date || dayjs().format(DATE_FORMAT);
@@ -142,8 +141,8 @@ export const useCardinalityRequest = (): CardinalityRequestResponse => {
     const [error, setError] = useState("");
     const [tsdbStatus, setTsdbStatus] = useState<any>({});
 
-    const handleDelete = (name, source) => {
-        console.log(range, name, source);
+    const handleDelete = (name, value, source) => {
+        console.log(range, name, source, value);
 
         //  setTsdbStatus(defaultCardinalityStatus);
         // console.log("deleted", tsdbStatus);

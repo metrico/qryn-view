@@ -160,8 +160,8 @@ export function QueryItemContainer(props: any) {
             ];
         }
         localStorage.setItem("dsSelected", JSON.stringify(newDsLocal));
-
-        setDataSourceValue((_) => optSelected);
+        
+        setDataSourceValue(() => optSelected);
 
         panelCP.forEach((panelCP: any) => {
             if (panelCP?.id === props?.data?.id) {

@@ -1,24 +1,18 @@
 import React, { useEffect, useState } from "react";
-import {  cx } from "@emotion/css";
+import { cx } from "@emotion/css";
 import useTheme from "@ui/theme/useTheme";
 import { Plugin } from "../types";
 import { nanoid } from "nanoid";
-import {
-    QueryClient,
-    QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import Configurator from "./Configurator";
 import { SeriesRowProps } from "./SeriesRow";
 import { SeriesGroup } from "./SeriesGroup";
 import { CardinalityResponse } from "./types";
-import { resultsContainerStyles } from './styles'
+import { resultsContainerStyles, openCardinalityStyles } from "./styles";
 import useCardinalityStore from "./store/CardinalityStore";
 import { setIsCardinality } from "./store/setIsCardinality";
-import {
-    useCardinalityRequest,
-} from "./api/CardinalityRequest";
-
+import { useCardinalityRequest } from "./api/CardinalityRequest";
 
 const sectionsTitles = (str: string | null): Record<string, string> => ({
     seriesCountByMetricName: "Metric names with highest number of series",
@@ -30,24 +24,20 @@ const sectionsTitles = (str: string | null): Record<string, string> => ({
         "Labels with the highest number of unique values",
 });
 
-const tableHeaders:any =  {
+const tableHeaders: any = {
     seriesCountByMetricName: "Metric Name",
     seriesCountByLabelName: "Label name",
     seriesCountByFocusLabelValue: "Label value",
     seriesCountByLabelValuePair: "Label=value pair",
-    labelValueCountByLabelName:"Label name",
-  };
-
-
-
+    labelValueCountByLabelName: "Label name",
+};
 
 import { defaultCardinalityStatus, queryUpdater } from "./helpers";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const calcPercent = (num: number, total: number) => {
     return (num * 100) / total;
 };
-
 
 export const CardinalityView = () => {
     const queryClient = new QueryClient();
@@ -65,7 +55,9 @@ export const Cardinality = () => {
         formattedSeries: [],
     });
 
-    const dispatch:any = useDispatch();
+    const dispatch: any = useDispatch();
+
+    const isCardinality = useSelector((store: any) => store.isCardinality);
 
     const theme = useTheme();
 
@@ -77,15 +69,13 @@ export const Cardinality = () => {
         setTimeSeriesSelector,
     } = useCardinalityStore();
 
-   // activates and deactivates view extras (timerange datasource etc) 
+    // activates and deactivates view extras (timerange datasource etc)
     useEffect(() => {
-        
         dispatch(setIsCardinality(true));
         return () => {
             dispatch(setIsCardinality(false));
         };
-
-    },[]);
+    }, []);
 
     // updates the focuslabel and actual query on clicking on a row value
     const handleFilterClick = (key: string, query: string) => {
@@ -108,10 +98,6 @@ export const Cardinality = () => {
     const onFilter = (e: any, val: any) => {
         handleFilterClick(val.source, val.name);
     };
-
-
-
-
 
     function formatSeries(arr: any, data: any, key: string): SeriesRowProps[] {
         return arr.map((query: any) => ({
@@ -136,7 +122,6 @@ export const Cardinality = () => {
     };
 
     const { result, isLoading } = useCardinalityRequest();
-
 
     // updated all data on result change
     // this should be submitted with execute query button
@@ -169,7 +154,12 @@ export const Cardinality = () => {
                 total={data?.data.totalSeries}
                 percent={35}
             />
-            <div className={cx(resultsContainerStyles)}>
+            <div
+                className={cx(
+                    resultsContainerStyles,
+                    isCardinality && openCardinalityStyles
+                )}
+            >
                 {!isLoading &&
                     data?.formattedSeries?.map((series: any, key: number) => (
                         <SeriesGroup
