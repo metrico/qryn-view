@@ -139,8 +139,8 @@ export const SeriesRow = ({
             </div>
             <div className="cell">
                 <CardinalityDialog
-                    clearFingerPrints={() =>
-                        handleDelete(name, value, source)
+                    clearFingerPrints={(query) =>
+                        handleDelete(query)
                     }
                     label={name}
                     value={value}

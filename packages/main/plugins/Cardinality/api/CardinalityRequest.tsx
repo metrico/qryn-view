@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "../consts";
 
+import { loadEnv } from "vite";
+
 import {
     toTimeSeconds,
     timeMinusOneDay,
@@ -14,7 +16,7 @@ import {
 export type CardinalityRequestResponse = {
     fetchurl?: string[];
     isLoading?: boolean;
-    handleDelete?: (name: string, value:number, source: string) => void;
+    handleDelete?: (query: string) => void;
     handleCardinalityRequest?: () => void;
     error?: any;
     result: any;
@@ -25,6 +27,43 @@ export type RequestParams = {
     focusLabel: string;
     topN: number;
     date: string;
+};
+
+export const deleteFingerprints = async (
+    url,
+    query,
+    start,
+    end,
+    setError,
+    setIsLoading,
+    headers
+) => {
+    try {
+        // start and end should calculated according to current date in seconds
+        setIsLoading(true);
+        const urlDelete =
+            url +
+            "/loki/api/v1/delete?query=" +
+            JSON.stringify(query) +
+            "&start=" +
+            start +
+            "&end=" +
+            end;
+
+        await fetch(urlDelete, {
+            method: "POST",
+            headers: {
+                ...headers,
+            },
+        }).then((res) => {
+            console.log(res);
+            setIsLoading(false);
+        });
+    } catch (e) {
+        console.log(e);
+        setError(JSON.stringify(e));
+        setIsLoading(false);
+    }
 };
 
 const requestCardinality = async (
@@ -141,13 +180,20 @@ export const useCardinalityRequest = (): CardinalityRequestResponse => {
     const [error, setError] = useState("");
     const [tsdbStatus, setTsdbStatus] = useState<any>({});
 
-    const handleDelete = (name, value, source) => {
-        console.log(range, name, source, value);
-
-        //  setTsdbStatus(defaultCardinalityStatus);
-        // console.log("deleted", tsdbStatus);
+    const handleDelete = async (query) => {
+        const dayMinusOne = dayjs(reqDate).subtract(1, "day").unix();
+        const dayToday = dayjs(reqDate).unix();
+        await deleteFingerprints(
+            url,
+            query,
+            dayMinusOne,
+            dayToday,
+            setError,
+            setIsLoading,
+            headers
+        );
     };
-    // this should be submitted with execute query button
+
     const handleCardinalityRequest = () => {
         requestCardinality(
             url,

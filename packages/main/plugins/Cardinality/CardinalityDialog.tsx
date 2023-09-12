@@ -17,6 +17,8 @@ import { ThemeProvider } from "@mui/styles";
 import styled from "@emotion/styled";
 import { DialogStyles } from "../settingsdialog/SettingsDialog";
 import useTheme from "../../theme/useTheme";
+import { queryUpdater } from "./helpers";
+import useCardinalityStore from "./store/CardinalityStore";
 
 const AlertCont = styled.div`
     background: ${({ theme }: any) => theme.shadow};
@@ -32,11 +34,15 @@ const AlertCont = styled.div`
     #alert-dialog-description {
         color: ${({ theme }: any) => theme.lightContrast};
         font-weight: normal;
+        em {
+            color: ${({ theme }: any) => theme.contrast};
+            font-variant: italic;
+        }
     }
 `;
 
 export type CardinalityDialogProps = {
-    clearFingerPrints: () => void;
+    clearFingerPrints: (query:string) => void;
     label: string;
     value: number;
     source: string;
@@ -51,6 +57,7 @@ export default function CardinalityDialog({
     const [open, setOpen] = useState(false);
 
     const theme = useTheme();
+    const {focusLabel, timeSeriesSelector:match} = useCardinalityStore();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -60,7 +67,8 @@ export default function CardinalityDialog({
         setOpen(false);
     };
     function handleClearFingerprints() {
-        clearFingerPrints();
+        const queryText = queryUpdater[source]({query:label, focusLabel, match})
+        clearFingerPrints(queryText);
         setOpen(false);
     }
     return (
