@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "../consts";
 
-import { loadEnv } from "vite";
-
 import {
     toTimeSeconds,
     timeMinusOneDay,
@@ -38,13 +36,15 @@ export const deleteFingerprints = async (
     setIsLoading,
     headers
 ) => {
+    const deleteEndpoint = import.meta.env.VITE_API_DELETE_URL || url;
+
     try {
         // start and end should calculated according to current date in seconds
         setIsLoading(true);
         const urlDelete =
-            url +
+            deleteEndpoint +
             "/loki/api/v1/delete?query=" +
-            JSON.stringify(query) +
+            encodeURIComponent(query) +
             "&start=" +
             start +
             "&end=" +
@@ -56,7 +56,11 @@ export const deleteFingerprints = async (
                 ...headers,
             },
         }).then((res) => {
-            console.log(res);
+            if (res?.status === 204) {
+                // alert with successful response
+                setIsLoading(false);
+            }
+
             setIsLoading(false);
         });
     } catch (e) {
@@ -68,7 +72,6 @@ export const deleteFingerprints = async (
 
 const requestCardinality = async (
     url: string,
-
     reqParams: RequestParams,
     setError: (error: string) => void,
     setIsLoading: (isLoading: boolean) => void,

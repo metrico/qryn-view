@@ -14,8 +14,8 @@ export const SeriesGroupContainer = (theme: any) => css`
     .c-header {
         font-size: 14px;
         padding: 8px 6px;
-        //margin: 0px 12px;
-        border-bottom: 1px solid ${theme.lightContrast};
+        border-bottom: 1px solid ${theme.neutral};
+       
         font-weight: bold;
     }
     .c-table {
@@ -48,12 +48,16 @@ export const SeriesGroup: React.FC<SeriesGroupProps> = ({
         return sortByCol(rows, col, order);
     }, [rows, sortColumn]);
 
+    
+
     const handleSort = (e: any) => {
         setSortColumn((prev: any) => ({
             col: e,
             order: prev.order === "asc" ? "desc" : "asc",
         }));
     };
+
+    console.log(sortedRows)
 
     return (
         <div className={cx(SeriesGroupContainer(theme))}>

@@ -157,22 +157,32 @@ const Configurator: React.FC<ConfiguratorProps> = ({ theme = useTheme() }) => {
                 </div>
             </div>
             <div className="config-actions">
+                
                 <div className="c-totals">
                     <Totals
                         theme={theme}
                         value={totalSeries.amount}
                         text={"total"}
                     />
+
                     <Totals
                         theme={theme}
                         type={"prev"}
                         value={totalSeries.prev}
                         text={"previous"}
                     />
+
                     <Totals
                         theme={theme}
-                        type={"prev"}
+                        type={"diff"}
                         value={totalSeries.diff}
+                        trend={
+                            totalSeries.diff === 0
+                                ? "none"
+                                : totalSeries.diff > 0
+                                ? "up"
+                                : "down"
+                        }
                         text={"diff"}
                     />
                 </div>
@@ -182,7 +192,10 @@ const Configurator: React.FC<ConfiguratorProps> = ({ theme = useTheme() }) => {
                     <button onClick={reset} className="query-button">
                         Reset
                     </button>
-                    <button onClick={handleCardinalityRequest} className="query-button">
+                    <button
+                        onClick={handleCardinalityRequest}
+                        className="query-button"
+                    >
                         <ChevronRightOutlinedIcon fontSize="small" />
                         Execute Query
                     </button>

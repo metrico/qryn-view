@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { cx } from "@emotion/css";
+import { cx, css } from "@emotion/css";
 import useTheme from "@ui/theme/useTheme";
 import { Plugin } from "../types";
 import { nanoid } from "nanoid";
@@ -34,6 +34,40 @@ const tableHeaders: any = {
 
 import { defaultCardinalityStatus, queryUpdater } from "./helpers";
 import { useDispatch, useSelector } from "react-redux";
+
+const LoaderStyle = css`
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    margin-left: 4px;
+    animation: spin 2s linear infinite;
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+`;
+
+const Loader = () => {
+    return (
+        <div
+            style={{
+                display: "flex",
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                minHeight: "300px",
+            }}
+        >
+            <div className={cx(LoaderStyle)}></div>
+        </div>
+    );
+};
 
 const calcPercent = (num: number, total: number) => {
     return (num * 100) / total;
@@ -103,6 +137,8 @@ export const Cardinality = () => {
         return arr.map((query: any) => ({
             name: query.name,
             value: query.value,
+            diff: query.diff,
+            prev: query.valuePrev,
             share: calcPercent(query.value, data?.totalSeries),
             source: key,
             theme,
@@ -160,7 +196,7 @@ export const Cardinality = () => {
                     isCardinality && openCardinalityStyles
                 )}
             >
-                {!isLoading &&
+                {!isLoading ? (
                     data?.formattedSeries?.map((series: any, key: number) => (
                         <SeriesGroup
                             key={key}
@@ -170,7 +206,10 @@ export const Cardinality = () => {
                             sectionHeader={tableHeaders[Object.keys(series)[0]]}
                             rows={series[Object.keys(series)[0]]}
                         />
-                    ))}
+                    ))
+                ) : (
+                    <Loader />
+                )}
             </div>
         </div>
     );

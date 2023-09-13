@@ -84,7 +84,7 @@ export default function MainMenu() {
                     sx: MenuStyles(theme),
                 }}
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
-                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                anchorOrigin={{ horizontal: "right", vertical: "top" }}
             >
                 <CopyButton c={"icon"} />
                 <Divider />

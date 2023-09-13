@@ -5,6 +5,7 @@ import { useCardinalityRequest } from "./api/CardinalityRequest";
 import CardinalityDialog from "./CardinalityDialog";
 export type SeriesRowProps = {
     name: string;
+    diff: number;
     value: number;
     share: number;
     theme: any;
@@ -17,13 +18,14 @@ export const SeriesRowStyle = (theme: any) => css`
     // width:100%;
     align-items: center;
     padding: 12px 8px;
-    border-bottom: 1px solid ${theme.lightContrast};
+
+    border-bottom: 1px solid ${theme.neutral};
 
     .cell {
         display: table-cell;
         padding: 12px 0px;
         width: auto;
-        border-bottom: 1px solid ${theme.lightContrast};
+        border-bottom: 1px solid ${theme.neutral};
     }
     .cell-name {
         width: 60%;
@@ -41,6 +43,9 @@ export const SeriesRowStyle = (theme: any) => css`
         letter-spacing: 1px;
         text-transform: uppercase;
         padding: 12px;
+        &.center {
+            text-align: center;
+        }
     }
     .interactive {
         transition: 0.25s all;
@@ -52,7 +57,7 @@ export const SeriesRowStyle = (theme: any) => css`
 
     .c-name {
         font-size: 12px;
-        color: ${theme.primary};
+        color: ${theme.primaryLight};
 
         cursor: pointer;
         margin: 0px 12px;
@@ -65,11 +70,11 @@ export const SeriesRowStyle = (theme: any) => css`
         width: auto;
     }
     .c-share-cont {
-        grid-gap: 8px;
+        //  grid-gap: 8px;
         align-items: center;
-        display: grid;
-        gap: 8px;
-        grid-template-columns: minmax(50px, 1fr) 70px;
+        display: flex;
+        gap: 1px;
+        //    grid-template-columns: minmax(50px, 1fr) 70px;
         justify-content: flex-start;
     }
     .c-share {
@@ -90,10 +95,11 @@ export const SeriesRowStyle = (theme: any) => css`
     progress {
         background: ${theme.deep};
         border-radius: 3px;
-        width: 100%;
-        height: 12px;
 
+        height: 12px;
         border: 1px solid ${theme.accentNeutral};
+        display: flex;
+        flex: 1;
     }
     progress::-webkit-progress-bar {
         background-color: ${theme.deep};
@@ -112,6 +118,7 @@ export const SeriesRowStyle = (theme: any) => css`
 export const SeriesRow = ({
     name,
     value,
+    diff,
     share,
     theme,
     onFilter,
@@ -127,7 +134,23 @@ export const SeriesRow = ({
                 <div className="c-name">{name}</div>
             </div>
             <div className=" cell">
-                <div className="c-value">{value}</div>
+                <div className="c-value">
+                    <span>{value}</span>
+
+                    <span
+                        className="c-diff"
+                        title={`diff from previous day: ${diff}`}
+                        style={{
+                            fontSize: "10px",
+                            padding: "5px",
+                            paddingBottom:"8px",
+                            color: diff > 0 ? theme.accent : theme.primary,
+                        }}
+                    >
+                        {diff === 0 ? "" : diff > 0 ? "↑" : "↓"}
+                        {diff === 0 ? "" : diff}{" "}
+                    </span>
+                </div>
             </div>
             <div className="cell">
                 <div className="c-share-cont">
@@ -139,12 +162,11 @@ export const SeriesRow = ({
             </div>
             <div className="cell">
                 <CardinalityDialog
-                    clearFingerPrints={(query) =>
-                        handleDelete(query)
-                    }
+                    clearFingerPrints={(query) => handleDelete(query)}
                     label={name}
                     value={value}
-                    source={source} />
+                    source={source}
+                />
             </div>
         </div>
     );
@@ -166,7 +188,7 @@ export const SeriesRowHeaders = ({ theme, name, handleSort }) => {
                 Number of Series
             </div>
             <div className="cell-header cell">Share in Total</div>
-            <div className="cell-header cell">Delete</div>
+            <div className="cell-header cell center">Delete</div>
         </div>
     );
 };
