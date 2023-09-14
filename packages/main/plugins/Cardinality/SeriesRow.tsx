@@ -9,6 +9,7 @@ export type SeriesRowProps = {
     value: number;
     share: number;
     theme: any;
+    headerName: string;
     source: any;
     onFilter: (e: any, val: any) => void;
 };
@@ -97,7 +98,7 @@ export const SeriesRowStyle = (theme: any) => css`
         border-radius: 3px;
 
         height: 12px;
-        border: 1px solid ${theme.accentNeutral};
+        border: 1px solid ${theme.ultraDeep};
         display: flex;
         flex: 1;
     }
@@ -121,9 +122,11 @@ export const SeriesRow = ({
     diff,
     share,
     theme,
+    headerName,
     onFilter,
     source,
 }: SeriesRowProps) => {
+    console.log(headerName, "at series row")
     const { handleDelete } = useCardinalityRequest();
     return (
         <div className={cx(SeriesRowStyle(theme))}>
@@ -152,14 +155,17 @@ export const SeriesRow = ({
                     </span>
                 </div>
             </div>
-            <div className="cell">
-                <div className="c-share-cont">
-                    <div className="c-progress">
-                        <progress value={share} max={100} />
-                        <span className="c-share">{share.toFixed(2)}%</span>
-                    </div>
-                </div>
-            </div>
+            { headerName !== "labelValueCountByLabelName" && (<div className="cell">
+<div className="c-share-cont">
+    <div className="c-progress">
+        <progress value={share} max={100} />
+        <span className="c-share">{share.toFixed(2)}%</span>
+    </div>
+</div>
+</div>)
+            }
+   
+
             <div className="cell">
                 <CardinalityDialog
                     clearFingerPrints={(query) => handleDelete(query)}
@@ -172,7 +178,8 @@ export const SeriesRow = ({
     );
 };
 
-export const SeriesRowHeaders = ({ theme, name, handleSort }) => {
+export const SeriesRowHeaders = ({ theme, name, headerName, handleSort }) => {
+    console.log(headerName);
     return (
         <div className={cx(SeriesRowStyle(theme))}>
             <div
@@ -187,7 +194,10 @@ export const SeriesRowHeaders = ({ theme, name, handleSort }) => {
             >
                 Number of Series
             </div>
-            <div className="cell-header cell">Share in Total</div>
+            {headerName !== "labelValueCountByLabelName" && (
+                <div className="cell-header cell">Share in Total</div>
+            )}
+
             <div className="cell-header cell center">Delete</div>
         </div>
     );

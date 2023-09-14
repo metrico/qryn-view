@@ -27,6 +27,7 @@ export const SeriesGroupContainer = (theme: any) => css`
 export type SeriesGroupProps = {
     rows: SeriesRowProps[];
     sectionHeader: string;
+    sectionHeaderName:string;
 } & SeriesHeaderProps;
 
 // format the header according to the header type
@@ -35,6 +36,7 @@ export const SeriesGroup: React.FC<SeriesGroupProps> = ({
     title,
     rows,
     sectionHeader,
+    sectionHeaderName
 }: SeriesGroupProps) => {
     const theme = useTheme();
 
@@ -66,6 +68,7 @@ export const SeriesGroup: React.FC<SeriesGroupProps> = ({
                 {rows && (
                     <SeriesRowHeaders
                         handleSort={handleSort}
+                        headerName={sectionHeaderName}
                         name={sectionHeader}
                         theme={theme}
                     />
@@ -73,7 +76,7 @@ export const SeriesGroup: React.FC<SeriesGroupProps> = ({
                 {sortedRows &&
                     sortedRows?.length > 0 &&
                     sortedRows.map((row: SeriesRowProps, key: number) => (
-                        <SeriesRow key={key} {...row} />
+                        <SeriesRow  key={key} headerName={sectionHeaderName} {...row} />
                     ))}
             </div>
         </div>

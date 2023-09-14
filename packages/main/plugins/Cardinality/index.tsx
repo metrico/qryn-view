@@ -203,6 +203,7 @@ export const Cardinality = () => {
                             title={
                                 sectionsTitles("metric")[Object.keys(series)[0]]
                             }
+                            sectionHeaderName={Object.keys(series)[0]  as string}
                             sectionHeader={tableHeaders[Object.keys(series)[0]]}
                             rows={series[Object.keys(series)[0]]}
                         />
