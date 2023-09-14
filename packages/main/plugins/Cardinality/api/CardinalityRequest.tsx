@@ -188,9 +188,12 @@ export const useCardinalityRequest = (
     const [tsdbStatus, setTsdbStatus] = useState<any>({});
 
     const handleDelete = async (query) => {
-        const dayStart = moment(reqDate).startOf("date").unix();
-        const dayEnd = moment(reqDate).endOf("date").unix();
 
+        const locale = moment.tz.guess(true);
+        const mDay = moment.tz(reqDate,locale)
+        const dayStart = mDay.clone().utc().startOf("date").unix();
+        const dayEnd = mDay.clone().utc().endOf("date").unix();
+    
         await deleteFingerprints(
             url,
             query,

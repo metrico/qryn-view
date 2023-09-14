@@ -126,7 +126,6 @@ export const SeriesRow = ({
     onFilter,
     source,
 }: SeriesRowProps) => {
-    console.log(headerName, "at series row")
     const { handleDelete } = useCardinalityRequest();
     return (
         <div className={cx(SeriesRowStyle(theme))}>
@@ -179,7 +178,6 @@ export const SeriesRow = ({
 };
 
 export const SeriesRowHeaders = ({ theme, name, headerName, handleSort }) => {
-    console.log(headerName);
     return (
         <div className={cx(SeriesRowStyle(theme))}>
             <div

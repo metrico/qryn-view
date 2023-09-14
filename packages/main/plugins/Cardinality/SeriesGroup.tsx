@@ -59,8 +59,6 @@ export const SeriesGroup: React.FC<SeriesGroupProps> = ({
         }));
     };
 
-    console.log(sortedRows)
-
     return (
         <div className={cx(SeriesGroupContainer(theme))}>
             <SeriesHeader title={title} />
