@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import moment from "moment";
+
 import { DATE_FORMAT } from "../consts";
 
 import {
@@ -154,7 +156,9 @@ const requestCardinality = async (
     }
 };
 
-export const useCardinalityRequest = (isRequest=false): CardinalityRequestResponse => {
+export const useCardinalityRequest = (
+    isRequest = false
+): CardinalityRequestResponse => {
     const { match, focusLabel, topN, date, timeRange } = useStoreParams();
     const reqDate = date || dayjs().format(DATE_FORMAT);
 
@@ -184,13 +188,14 @@ export const useCardinalityRequest = (isRequest=false): CardinalityRequestRespon
     const [tsdbStatus, setTsdbStatus] = useState<any>({});
 
     const handleDelete = async (query) => {
-        const dayMinusOne = dayjs(reqDate).subtract(1, "day").unix();
-        const dayToday = dayjs(reqDate).unix();
+        const dayStart = moment(reqDate).startOf("date").unix();
+        const dayEnd = moment(reqDate).endOf("date").unix();
+
         await deleteFingerprints(
             url,
             query,
-            dayMinusOne,
-            dayToday,
+            dayStart,
+            dayEnd,
             setError,
             setIsLoading,
             headers
@@ -218,9 +223,7 @@ export const useCardinalityRequest = (isRequest=false): CardinalityRequestRespon
                 setTsdbStatus,
                 headers
             );
-
         }
-    
     }, [url, match, focusLabel, topN, date]);
 
     useEffect(() => {
