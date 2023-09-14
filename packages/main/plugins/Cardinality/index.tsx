@@ -157,7 +157,7 @@ export const Cardinality = () => {
         return [];
     };
 
-    const { result, isLoading } = useCardinalityRequest();
+    const { result, isLoading } = useCardinalityRequest(true);
 
     // updated all data on result change
     // this should be submitted with execute query button

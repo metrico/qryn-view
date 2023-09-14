@@ -143,7 +143,7 @@ export const SeriesRow = ({
                         style={{
                             fontSize: "10px",
                             padding: "5px",
-                            paddingBottom:"8px",
+                            paddingBottom: "8px",
                             color: diff > 0 ? theme.accent : theme.primary,
                         }}
                     >

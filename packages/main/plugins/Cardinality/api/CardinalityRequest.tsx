@@ -154,7 +154,7 @@ const requestCardinality = async (
     }
 };
 
-export const useCardinalityRequest = (): CardinalityRequestResponse => {
+export const useCardinalityRequest = (isRequest=false): CardinalityRequestResponse => {
     const { match, focusLabel, topN, date, timeRange } = useStoreParams();
     const reqDate = date || dayjs().format(DATE_FORMAT);
 
@@ -209,14 +209,18 @@ export const useCardinalityRequest = (): CardinalityRequestResponse => {
     };
 
     useEffect(() => {
-        requestCardinality(
-            url,
-            reqParams,
-            setError,
-            setIsLoading,
-            setTsdbStatus,
-            headers
-        );
+        if (isRequest) {
+            requestCardinality(
+                url,
+                reqParams,
+                setError,
+                setIsLoading,
+                setTsdbStatus,
+                headers
+            );
+
+        }
+    
     }, [url, match, focusLabel, topN, date]);
 
     useEffect(() => {
