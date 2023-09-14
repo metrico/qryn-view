@@ -190,10 +190,10 @@ export const useCardinalityRequest = (
     const handleDelete = async (query) => {
 
         const locale = moment.tz.guess(true);
-        const mDay = moment.tz(reqDate,locale)
-        const dayStart = mDay.clone().utc().startOf("date").unix();
-        const dayEnd = mDay.clone().utc().endOf("date").unix();
-    
+        const mDay = moment.tz(reqDate,locale).add(1, "day")
+        const dayStart = mDay.clone().utc().startOf("day").unix();
+        const dayEnd = mDay.clone().utc().endOf("day").unix();
+   
         await deleteFingerprints(
             url,
             query,
