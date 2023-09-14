@@ -17,7 +17,8 @@ import StorageIcon from "@mui/icons-material/Storage";
 import CopyButton from "./CopyButton/CopyButton";
 import { Avatar } from "@mui/material";
 import { MenuStyles } from "./styled";
-import sliceAvatar from "@ui/helpers/sliceAvatar"
+import sliceAvatar from "@ui/helpers/sliceAvatar";
+import Fade from "@mui/material/Fade";
 
 export type USER_ROLES = "admin" | "superAdmin" | "user" | "guest";
 
@@ -66,23 +67,31 @@ export default function MainMenu() {
                         aria-haspopup="true"
                         aria-expanded={open ? "true" : undefined}
                     >
-                       <>
-                       <Avatar  sx={{ bgcolor: theme.primary, width:30, height:30, fontSize:'12px'}}
-                        >{sliceAvatar(currentUser.name)}</Avatar>
-                       </> 
+                        <>
+                            <Avatar
+                                sx={{
+                                    bgcolor: theme.primary,
+                                    width: 30,
+                                    height: 30,
+                                    fontSize: "12px",
+                                }}
+                            >
+                                {sliceAvatar(currentUser.name)}
+                            </Avatar>
+                        </>
                     </IconButton>
                 </Tooltip>
             </Box>
             <Menu
-                anchorEl={anchorEl}
                 id="account-menu"
+                anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                onClick={handleClose}
                 PaperProps={{
                     elevation: 0,
                     sx: MenuStyles(theme),
                 }}
+                TransitionComponent={Fade}
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "top" }}
             >
@@ -114,14 +123,15 @@ export default function MainMenu() {
                     </MenuItem>
                 </Link>
 
-                {showDs && (userType === "admin"|| userType === "superAdmin") && (
-                    <Link to="datasources">
-                        <MenuItem className={"item"}>
-                            <StorageIcon className="icon" />
-                            Datasources
-                        </MenuItem>
-                    </Link>
-                )}
+                {showDs &&
+                    (userType === "admin" || userType === "superAdmin") && (
+                        <Link to="datasources">
+                            <MenuItem className={"item"}>
+                                <StorageIcon className="icon" />
+                                Datasources
+                            </MenuItem>
+                        </Link>
+                    )}
             </Menu>
         </>
     );
