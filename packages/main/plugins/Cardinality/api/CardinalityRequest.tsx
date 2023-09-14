@@ -191,9 +191,9 @@ export const useCardinalityRequest = (
 
         const locale = moment.tz.guess(true);
         const mDay = moment.tz(reqDate,locale).add(1, "day")
+        const endDay = moment.tz(reqDate,locale).add(2, "day")
         const dayStart = mDay.clone().utc().startOf("day").unix();
-        const dayEnd = mDay.clone().utc().endOf("day").unix();
-   
+        const dayEnd = endDay.clone().utc().startOf("day").unix();
         await deleteFingerprints(
             url,
             query,
