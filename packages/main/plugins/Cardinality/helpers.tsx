@@ -44,27 +44,9 @@ export const queryUpdater: QueryUpdater = {
     },
 };
 
-export const handleFilterClick = (key: string, query: string) => {
-    const {
-        focusLabel,
-        timeSeriesSelector: match,
-        setFocusLabel,
-        setTimeSeriesSelector,
-    } = useCardinalityStore();
 
-    const value = queryUpdater[key]({ query, focusLabel, match });
 
-    setTimeSeriesSelector(value);
-    if (
-        key === "labelValueCountByLabelName" ||
-        key == "seriesCountByLabelName"
-    ) {
-        setFocusLabel(query);
-    }
-    if (key == "seriesCountByFocusLabelValue") {
-        setFocusLabel("");
-    }
-};
+
 
 function sortAsc(rows: any[]) {
     const mess = rows?.sort((a, b) => a.value - b.value);
@@ -157,7 +139,6 @@ export const defaultCardinalityStatus = {
     totalSeriesPrev: 0,
     totalSeriesByAll: 0,
     totalLabelValuePairs: 0,
-
     seriesCountByMetricName: [],
     seriesCountByLabelName: [],
     seriesCountByFocusLabelValue: [],
@@ -205,4 +186,65 @@ export const useStoreParams = () => {
         date,
     } = useCardinalityStore();
     return { match, focusLabel, topN, date, timeRange };
+};
+
+
+
+
+
+
+
+
+export const sectionsTitles = (str: string | null): Record<string, string> => ({
+    seriesCountByMetricName: "Metric names with highest number of series",
+    seriesCountByLabelName: " Labels with the highest number of series",
+    seriesCountByFocusLabelValue: `Values for "${str}" label with the highest number of series`,
+    seriesCountByLabelValuePair:
+        "Label=value pairs with the highest number of series",
+    labelValueCountByLabelName:
+        "Labels with the highest number of unique values",
+});
+
+export const tableHeaders: any = {
+    seriesCountByMetricName: "Metric Name",
+    seriesCountByLabelName: "Label name",
+    seriesCountByFocusLabelValue: "Label value",
+    seriesCountByLabelValuePair: "Label=value pair",
+    labelValueCountByLabelName: "Label name",
+};
+
+
+
+
+export const getSectionTitle = (series: any, focusLabel?:string) => {
+    return sectionsTitles(focusLabel ?? "metric")[Object.keys(series)[0]];
+};
+
+export const getHeaderSectionHeaderName = (series: any) => {
+    return Object.keys(series)[0] as string;
+};
+
+export const getSectionHeader = (series: any) => {
+    return tableHeaders[Object.keys(series)[0]];
+};
+
+export const getRows = (series: any) => {
+    return series[Object.keys(series)[0]];
+};
+
+/**
+ * 
+ * @param series 
+ * @param focusLabel 
+ * @returns the series props for cardinality groups
+ */
+
+export const getSeriesProps = (series: any, focusLabel?:string) => {
+
+    return {
+        title: getSectionTitle(series,focusLabel),
+        sectionHeaderName: getHeaderSectionHeaderName(series),
+        sectionHeader: getSectionHeader(series),
+        rows: getRows(series),
+    };
 };
