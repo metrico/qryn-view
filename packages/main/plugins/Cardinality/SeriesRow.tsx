@@ -30,7 +30,8 @@ const SeriesRow: React.FC<SeriesRowProps> = ({
     onFilter,
     source,
 }) => {
-    const { handleDelete } = useCardinalityRequest();
+    
+    const { handleDelete, isLoading } = useCardinalityRequest();
     return (
         <div className={cx(SeriesRowStyle(theme))}>
             <div
@@ -52,6 +53,7 @@ const SeriesRow: React.FC<SeriesRowProps> = ({
             <div className="cell">
                 <CardinalityDialog
                     clearFingerPrints={(query) => handleDelete(query, value)}
+                    isLoading={isLoading}
                     label={name}
                     value={value}
                     source={source}

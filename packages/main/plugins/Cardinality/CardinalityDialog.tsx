@@ -45,6 +45,7 @@ export type CardinalityDialogProps = {
     label: string;
     value: number;
     source: string;
+    isLoading: boolean;
 };
 
 export default function CardinalityDialog({
@@ -52,6 +53,7 @@ export default function CardinalityDialog({
     label,
     value,
     source,
+    isLoading,
 }: CardinalityDialogProps) {
     const [open, setOpen] = useState(false);
 
@@ -125,9 +127,10 @@ export default function CardinalityDialog({
                             </DialogCancelButton>
                             <DialogConfirmButton
                                 onClick={handleClearFingerprints}
+                                active={!isLoading}
                                 autoFocus
                             >
-                                Delete Fingerprints
+                               {!isLoading? "Delete Fingerprints" : "Deleting..." } 
                             </DialogConfirmButton>
                         </DialogActions>
                     </AlertCont>
