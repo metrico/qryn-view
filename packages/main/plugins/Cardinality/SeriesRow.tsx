@@ -1,132 +1,37 @@
-import { cx, css } from "@emotion/css";
+import { cx } from "@emotion/css";
 import { useCardinalityRequest } from "./api/CardinalityRequest";
-// import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-// import { Button } from "@ui/views/DataSources/ui";
+import { SeriesRowStyle } from "./SeriesRowStyles";
 import CardinalityDialog from "./CardinalityDialog";
+import { DiffNumber } from "./DiffNumber";
+import ShareCell from "./ShareCell";
+import React from "react";
+
 export type SeriesRowProps = {
     name: string;
     diff: number;
     value: number;
+    hasShare: boolean;
     share: number;
     theme: any;
-    headerName: string;
+    valuePrev?: number;
     source: any;
     onFilter: (e: any, val: any) => void;
 };
 
-export const SeriesRowStyle = (theme: any) => css`
-    display: table-row;
-    // width:100%;
-    align-items: center;
-    padding: 12px 8px;
+// this component is used to display a row in the cardinality table
 
-    border-bottom: 1px solid ${theme.neutral};
-
-    .cell {
-        display: table-cell;
-        padding: 12px 0px;
-        width: auto;
-        border-bottom: 1px solid ${theme.neutral};
-    }
-    .cell-name {
-        width: 60%;
-        cursor: pointer;
-        transition: 0.25s all;
-        &:hover {
-            background: ${theme.neutral};
-            .c-name {
-                color: ${theme.primaryLight};
-            }
-        }
-    }
-    .cell-header {
-        font-size: 10px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        padding: 12px;
-        &.center {
-            text-align: center;
-        }
-    }
-    .interactive {
-        transition: 0.25s all;
-        &:hover {
-            background: ${theme.neutral};
-            cursor: pointer;
-        }
-    }
-
-    .c-name {
-        font-size: 12px;
-        color: ${theme.primaryLight};
-
-        cursor: pointer;
-        margin: 0px 12px;
-    }
-    .c-value {
-        color: ${theme.contrast};
-        font-size: 14px;
-        margin: 0px 12px;
-
-        width: auto;
-    }
-    .c-share-cont {
-        //  grid-gap: 8px;
-        align-items: center;
-        display: flex;
-        gap: 1px;
-        //    grid-template-columns: minmax(50px, 1fr) 70px;
-        justify-content: flex-start;
-    }
-    .c-share {
-        display: flex;
-        font-size: 12px;
-        font-family: monospace;
-        margin: 0px 12px;
-
-        // flex:1;
-    }
-    .c-progress {
-        grid-gap: 8px;
-        align-items: center;
-        display: grid;
-        grid-template-columns: 1fr auto;
-        justify-content: center;
-    }
-    progress {
-        background: ${theme.deep};
-        border-radius: 3px;
-
-        height: 12px;
-        border: 1px solid ${theme.ultraDeep};
-        display: flex;
-        flex: 1;
-    }
-    progress::-webkit-progress-bar {
-        background-color: ${theme.deep};
-        border-radius: 3px;
-    }
-    progress::-webkit-progress-value {
-        background-color: ${theme.primary};
-        border-radius: 3px;
-    }
-    progress::-moz-progress-bar {
-        background-color: ${theme.primary};
-        border-radius: 3px;
-    }
-`;
-
-export const SeriesRow = ({
+const SeriesRow: React.FC<SeriesRowProps> = ({
     name,
     value,
     diff,
+    hasShare,
     share,
     theme,
-    headerName,
     onFilter,
     source,
-}: SeriesRowProps) => {
-    const { handleDelete } = useCardinalityRequest();
+}) => {
+    
+    const { handleDelete, isLoading } = useCardinalityRequest();
     return (
         <div className={cx(SeriesRowStyle(theme))}>
             <div
@@ -135,39 +40,20 @@ export const SeriesRow = ({
             >
                 <div className="c-name">{name}</div>
             </div>
+
             <div className=" cell">
                 <div className="c-value">
                     <span>{value}</span>
-
-                    <span
-                        className="c-diff"
-                        title={`diff from previous day: ${diff}`}
-                        style={{
-                            fontSize: "10px",
-                            padding: "5px",
-                            paddingBottom: "8px",
-                            color: diff > 0 ? theme.accent : theme.primary,
-                        }}
-                    >
-                        {diff === 0 ? "" : diff > 0 ? "↑" : "↓"}
-                        {diff === 0 ? "" : diff}{" "}
-                    </span>
+                    <DiffNumber theme={theme} diff={diff} />
                 </div>
             </div>
-            { headerName !== "labelValueCountByLabelName" && (<div className="cell">
-<div className="c-share-cont">
-    <div className="c-progress">
-        <progress value={share} max={100} />
-        <span className="c-share">{share.toFixed(2)}%</span>
-    </div>
-</div>
-</div>)
-            }
-   
+
+            {hasShare && <ShareCell share={share} />}
 
             <div className="cell">
                 <CardinalityDialog
-                    clearFingerPrints={(query) => handleDelete(query)}
+                    clearFingerPrints={(query) => handleDelete(query, value)}
+                    isLoading={isLoading}
                     label={name}
                     value={value}
                     source={source}
@@ -177,26 +63,4 @@ export const SeriesRow = ({
     );
 };
 
-export const SeriesRowHeaders = ({ theme, name, headerName, handleSort }) => {
-    return (
-        <div className={cx(SeriesRowStyle(theme))}>
-            <div
-                onClick={() => handleSort("name")}
-                className="cell-header interactive cell"
-            >
-                {name}
-            </div>
-            <div
-                onClick={() => handleSort("value")}
-                className="cell-header interactive cell"
-            >
-                Number of Series
-            </div>
-            {headerName !== "labelValueCountByLabelName" && (
-                <div className="cell-header cell">Share in Total</div>
-            )}
-
-            <div className="cell-header cell center">Delete</div>
-        </div>
-    );
-};
+export default SeriesRow;

@@ -5,18 +5,17 @@ import moment from "moment";
 import { DATE_FORMAT } from "../consts";
 
 import {
-    toTimeSeconds,
-    timeMinusOneDay,
     useStoreParams,
     useDataSourceData,
     ConfiguratorBuilder,
     defaultCardinalityStatus,
 } from "../helpers";
-
+import { createAlert } from "@ui/store/actions";
+import store from "@ui/store/store";
 export type CardinalityRequestResponse = {
     fetchurl?: string[];
     isLoading?: boolean;
-    handleDelete?: (query: string) => void;
+    handleDelete?: (query: string, amount:number) => void;
     handleCardinalityRequest?: () => void;
     error?: any;
     result: any;
@@ -29,9 +28,17 @@ export type RequestParams = {
     date: string;
 };
 
+export type deleteFingerprintsResponse = {
+    status: number;
+    error: string;
+    success: boolean;
+    message: string;
+};
+
 export const deleteFingerprints = async (
     url,
     query,
+    amount,
     start,
     end,
     setError,
@@ -40,36 +47,69 @@ export const deleteFingerprints = async (
 ) => {
     const deleteEndpoint = import.meta.env.VITE_API_DELETE_URL || url;
 
-    try {
-        // start and end should calculated according to current date in seconds
-        setIsLoading(true);
-        const urlDelete =
-            deleteEndpoint +
-            "/loki/api/v1/delete?query=" +
-            encodeURIComponent(query) +
-            "&start=" +
-            start +
-            "&end=" +
-            end;
+    const deleteFingerprint = async () => {
+        try {
+            // start and end should calculated according to current date in seconds
+            setIsLoading(true);
+            const urlDelete =
+                deleteEndpoint +
+                "/loki/api/v1/delete?query=" +
+                encodeURIComponent(query) +
+                "&start=" +
+                start +
+                "&end=" +
+                end;
 
-        await fetch(urlDelete, {
-            method: "POST",
-            headers: {
-                ...headers,
-            },
-        }).then((res) => {
-            if (res?.status === 204) {
-                // alert with successful response
-                setIsLoading(false);
+            await fetch(urlDelete, {
+                method: "POST",
+                headers: {
+                    ...headers,
+                },
+            }).then((response) => {
+                if (
+                    (response && response?.status === 204) ||
+                    response?.status === 200
+                ) {
+                    setIsLoading(false);
+                    store.dispatch(
+                        createAlert({
+                            message: `Deleted ${amount} Fingerprints from ${query}`,
+                            type: "success",
+                        })
+                    );
+
+                return ({
+                    status: response?.status || 200,
+                    success: true,
+                    error: "",
+                    message: ` ${query} Fingerprints deleted`,
+                });
             }
 
+            });
+
+        } catch (e) {
+            console.log(e);
+            setError(JSON.stringify(e));
             setIsLoading(false);
-        });
-    } catch (e) {
-        console.log(e);
-        setError(JSON.stringify(e));
-        setIsLoading(false);
-    }
+
+            store.dispatch(
+                createAlert({
+                    message: `${amount} Fingerprints from ${query} not deleted`,
+                    type: "error",
+                })
+            );
+
+           return ({
+                status: 500,
+                error: JSON.stringify(e),
+                success: false,
+                message: ` ${query} Fingerprints not deleted`,
+            });
+        }
+    };
+
+    return deleteFingerprint();
 };
 
 const requestCardinality = async (
@@ -81,9 +121,6 @@ const requestCardinality = async (
     headers: any
 ) => {
     const { match } = reqParams;
-
-    /// we should make the three requests in parallel
-    // one for now, one for yesterday, one plain
 
     const totalParams = {
         date: reqParams.date,
@@ -107,6 +144,7 @@ const requestCardinality = async (
     setIsLoading(true);
     // set
     //this makes the multiple fetch requests
+
     try {
         const responses = await Promise.all(
             urls.map((url) => fetch(url, { headers }))
@@ -159,50 +197,59 @@ const requestCardinality = async (
 export const useCardinalityRequest = (
     isRequest = false
 ): CardinalityRequestResponse => {
-    const { match, focusLabel, topN, date, timeRange } = useStoreParams();
+    const { match, focusLabel, topN, date } = useStoreParams();
     const reqDate = date || dayjs().format(DATE_FORMAT);
 
     const reqParams = { match, focusLabel, topN, date: reqDate };
 
-    // const { url, auth, headers }  = useDataSourceData('metrics')
-    //  should get auth / headers / url from params
     const { url, headers } = useDataSourceData("logs");
-
-    const [range, setRange] = useState<any>(
-        timeRange || {
-            end: toTimeSeconds(new Date(date)),
-            start: timeMinusOneDay(new Date(date)),
-        }
-    );
-
-    useEffect(() => {
-        setRange({
-            end: toTimeSeconds(new Date(date)),
-            start: timeMinusOneDay(new Date(date)),
-        });
-    }, [date]);
 
     const [isLoading, setIsLoading] = useState(false);
 
     const [error, setError] = useState("");
     const [tsdbStatus, setTsdbStatus] = useState<any>({});
 
-    const handleDelete = async (query) => {
-
+    const handleDelete = async (query, amount) => {
         const locale = moment.tz.guess(true);
-        const mDay = moment.tz(reqDate,locale).add(1, "day")
-        const endDay = moment.tz(reqDate,locale).add(2, "day")
+        const mDay = moment.tz(reqDate, locale).add(1, "day");
+        const endDay = moment.tz(reqDate, locale).add(2, "day");
         const dayStart = mDay.clone().utc().startOf("day").unix();
         const dayEnd = endDay.clone().utc().startOf("day").unix();
-        await deleteFingerprints(
+
+        const result = deleteFingerprints(
             url,
             query,
+            amount,
             dayStart,
             dayEnd,
             setError,
             setIsLoading,
             headers
         );
+
+    
+        await result.then((res) => {
+            console.log(res);
+        });
+
+        // if (result && result?.success) {
+
+        //     dispatch(createAlert({ message: result.message, type: "success" }));
+
+        //     requestCardinality(
+        //         url,
+        //         reqParams,
+        //         setError,
+        //         setIsLoading,
+        //         setTsdbStatus,
+        //         headers
+        //     );
+        // }
+
+        // if (result && !result?.success) {
+
+        //     setError(result.message);
+        // }
     };
 
     const handleCardinalityRequest = () => {
