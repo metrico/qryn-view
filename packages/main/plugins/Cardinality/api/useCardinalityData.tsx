@@ -5,9 +5,8 @@ import useCardinalityStore from "../store/CardinalityStore";
 import { CardinalityResponse } from "../types";
 import { SeriesRowProps } from "../SeriesRow";
 
-
 // This hook is used to fetch the data from the API and format it for the UI
-export const useCardinalityData = () => {
+export const useCardinalityData = (historyManager?, setHistoryItem?) => {
     const {
         focusLabel,
         timeSeriesSelector: match,
@@ -26,13 +25,15 @@ export const useCardinalityData = () => {
     const handleFilterClick = (key: string, query: string) => {
         const value = queryUpdater[key]({ query, focusLabel, match });
 
-        
         setTimeSeriesSelector(value);
+
+        setHistoryItem("timeSeriesSelector", value);
         if (
             key === "labelValueCountByLabelName" ||
             key == "seriesCountByLabelName"
         ) {
             setFocusLabel(query);
+            setHistoryItem("focusLabel", query);
         }
         if (key == "seriesCountByFocusLabelValue") {
             setFocusLabel("");
@@ -47,7 +48,6 @@ export const useCardinalityData = () => {
         return (num * 100) / total;
     };
 
-
     const mapSeries = (arr: SeriesRowProps[], data: any, key: string) => {
         return arr.map((query: SeriesRowProps) => ({
             name: query.name,
@@ -58,21 +58,21 @@ export const useCardinalityData = () => {
             source: key,
             onFilter,
         }));
-    }
+    };
 
     const formattedSeries = (data: CardinalityResponse) => {
         if (data) {
             const keys = Object.keys(data);
-            const filteredKeys = keys.filter((f: any) => Array.isArray(data[f]));
+            const filteredKeys = keys.filter((f: any) =>
+                Array.isArray(data[f])
+            );
             const mappedKeys = filteredKeys.map((key: string) => ({
                 [key]: mapSeries(data[key], data, key),
             }));
             return mappedKeys;
         }
         return [];
-    }
-
-
+    };
 
     useEffect(() => {
         if (result) {

@@ -1,163 +1,99 @@
-import { css, cx } from "@emotion/css";
+import { cx } from "@emotion/css";
 import React from "react";
 import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";
 import { Totals } from "./Totals";
-import useCardinalityStore from "./store/CardinalityStore";
 import DayPicker from "./DayPicker";
-import { type QrynTheme } from "@ui/theme/types";
 import { useTheme } from "@emotion/react";
-import { useCardinalityRequest } from "./api/CardinalityRequest";
-export const CardContainer = (theme: any) => css`
-    background: ${theme.shadow};
-    padding: 8px;
-    border-radius: 3px;
-    margin: 4px;
-    margin-bottom: 8px;
-    display: flex;
-    flex-direction: column;
-    .form-row {
-        display: flex;
-        flex: 1;
-    }
-    .form-group {
-        display: flex;
-        align-items: center;
-        label {
-            color: ${theme.contrast};
-            font-size: 12px;
-            padding: 7px;
-            background: ${theme.background};
-            border: 1px solid ${theme.lightNeutral};
-            border-radius: 3px;
-        }
-        input {
-            background: ${theme.deep};
-            border-radius: 3px;
-            padding: 5px 8px;
-            border: 1px solid ${theme.lightNeutral};
-            color: ${theme.contrast};
-            transition: 0.35s all;
-            font-family: monospace;
+import useConfigurator from "./useConfigurator";
+import CardinalityInput from "./CardinalityInput";
+import { ConfigContainerStyles } from "./ConfigContainerStyles";
 
-            &:focus {
-                outline: none;
-                border: 1px solid ${theme.primary};
-            }
-            &.l {
-                flex: 1;
-            }
-            &.s {
-                max-width: 50px;
-            }
-        }
-
-        &.l {
-            flex: 1;
-        }
-    }
-    .config-actions {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 4px 0px;
-
-        .c-totals {
-            display: flex;
-            align-items: center;
-        }
-        .buttons-group {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .query-button {
-            height: 30px;
-            transition: 0.35s all;
-            background: ${theme.primaryAccent};
-            color: ${theme.contrast};
-            padding: 4px 6px;
-            border-radius: 3px;
-            border: 1px solid ${theme.primary};
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            &:hover {
-                background: ${theme.primary};
-            }
-        }
-    }
-`;
 
 type ConfiguratorProps = {
-    theme: QrynTheme;
-    percent: number;
+    theme: any;
+    percent?: number;
     total: any;
+    focusLabelItems: any;
+    timeSeriesSelectorItems: any;
+    limitEntriesItems: any;
+    setHistoryItem: any;
 };
 
 // we should simply add a switch to choose btween day and timeseconds
 
-const Configurator: React.FC<ConfiguratorProps> = ({ theme = useTheme() }) => {
+const Configurator: React.FC<ConfiguratorProps> = ({
+    theme = useTheme(),
+    focusLabelItems,
+    timeSeriesSelectorItems,
+    limitEntriesItems,
+    setHistoryItem,
+}) => {
+    // in this way we could set history as first values
+
     const {
-        timeSeriesSelector,
-        setTimeSeriesSelector,
-        focusLabel,
-        setFocusLabel,
-        limitEntries,
-        setLimitEntries,
+        onTimeSeriesChange,
+        onKeyDownTimeSeries,
+        onFocusLabeChange,
+        onKeyDownFocusLabel,
+        onLimitEntriesChange,
+        onKeyDownLimitEntries,
+        onQueryHistoryChange,
+        onFocusHistoryChange,
+        onLimitHistoryChange,
+        query,
+        focus,
+        limit,
+        totalSeries,
+        handleCardinalityRequest,
         reset,
-    } = useCardinalityStore();
-
-    const { total: totalSeries } = useCardinalityStore();
-
-    const { handleCardinalityRequest } = useCardinalityRequest();
-
-    const onTimeSeriesChange = (e: any) => {
-        setTimeSeriesSelector(e.target.value);
-    };
-
-    const onFocusLabeChange = (e: any) => {
-        setFocusLabel(e.target.value);
-    };
-
-    const onLimitEntriesChange = (e: any) => {
-        setLimitEntries(e.target.value);
-    };
+    } = useConfigurator({ setHistoryItem });
 
     return (
-        <div className={cx(CardContainer(theme))}>
+        <div className={cx(ConfigContainerStyles(theme))}>
             <div className="form-row">
-                <div className="form-group l">
-                    <label>Time Series Selector</label>
+                <CardinalityInput
+                    name="timeSeriesSelector"
+                    value={query}
+                    label="Time Series Selector"
+                    size="l"
+                    inputSize="l"
+                    type="text"
+                    onChange={onTimeSeriesChange}
+                    onKeyDown={onKeyDownTimeSeries}
+                    onHistoryChange={onQueryHistoryChange}
+                    history={timeSeriesSelectorItems}
+                    hasHistory={timeSeriesSelectorItems.length > 0}
+                />
 
-                    <input
-                        className="l"
-                        type="text"
-                        value={timeSeriesSelector}
-                        onChange={onTimeSeriesChange}
-                    />
-                </div>
+                <CardinalityInput
+                    name="focusLabel"
+                    value={focus}
+                    label="Focus Label"
+                    size="m"
+                    inputSize=""
+                    type="text"
+                    onChange={onFocusLabeChange}
+                    onKeyDown={onKeyDownFocusLabel}
+                    onHistoryChange={onFocusHistoryChange}
+                    history={focusLabelItems}
+                    hasHistory={focusLabelItems.length > 0}
+                />
 
-                <div className="form-group m">
-                    <label>Focus Label</label>
-                    <input
-                        value={focusLabel}
-                        type="text"
-                        onChange={onFocusLabeChange}
-                    />
-                </div>
-
-                <div className="form-group s">
-                    <label>Limit entries</label>
-                    <input
-                        className="s"
-                        type="number"
-                        value={limitEntries}
-                        onChange={onLimitEntriesChange}
-                    />
-                </div>
+                <CardinalityInput
+                    name="limitEntries"
+                    value={limit}
+                    label="Limit Entries"
+                    size="s"
+                    inputSize="s"
+                    type="number"
+                    onChange={onLimitEntriesChange}
+                    onKeyDown={onKeyDownLimitEntries}
+                    onHistoryChange={onLimitHistoryChange}
+                    history={limitEntriesItems}
+                    hasHistory={limitEntriesItems.length > 0}
+                />
             </div>
             <div className="config-actions">
-                
                 <div className="c-totals">
                     <Totals
                         theme={theme}

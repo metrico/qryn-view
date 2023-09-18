@@ -53,7 +53,7 @@ const initialData = {
     limitEntries: 10,
 };
 
-const useCardinalityStore = create<CardinalityState>((set) => ({
+const useCardinalityStore =  create<CardinalityState>((set) => ({
     ...initialData,
     setTotal: (t: CardinalityTotal) => set(() => ({ total: t })),
     setTimeSeriesSelector: (text: string) =>
