@@ -5,6 +5,7 @@ import { useCardinalityData } from "./api/useCardinalityData";
 import { useEffect } from "react";
 import useTheme from "@ui/theme/useTheme";
 import CardinalitySeries from "./CardinalitySeries";
+import useCardinalityHistory from "./history/useCardinalityHistory";
 
 export const Cardinality = () => {
     const dispatch: any = useDispatch();
@@ -18,7 +19,18 @@ export const Cardinality = () => {
         };
     }, []);
 
-    const { totalSeries, formattedSeries, isLoading } = useCardinalityData();
+    const {
+        setHistoryItem,
+        focusLabelItems,
+        timeSeriesSelectorItems,
+        limitEntriesItems,
+        historyManager,
+    } = useCardinalityHistory();
+
+    const { totalSeries, formattedSeries, isLoading } = useCardinalityData(
+     historyManager,
+        setHistoryItem
+    );
 
     return (
         <div
@@ -28,7 +40,15 @@ export const Cardinality = () => {
                 flexDirection: "column",
             }}
         >
-            <Configurator theme={theme} total={totalSeries} percent={35} />
+            <Configurator 
+            theme={theme} 
+            total={totalSeries} 
+            setHistoryItem={setHistoryItem}
+            focusLabelItems={focusLabelItems}
+            timeSeriesSelectorItems={timeSeriesSelectorItems}
+            limitEntriesItems={limitEntriesItems}
+            percent={35} />
+            
             <CardinalitySeries
                 formattedSeries={formattedSeries}
                 isCardinality={isCardinality}
