@@ -1,24 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import dayjs from "dayjs";
 import moment from "moment";
 
 import { DATE_FORMAT } from "../consts";
 
 import {
-    useStoreParams,
     useDataSourceData,
     ConfiguratorBuilder,
     defaultCardinalityStatus,
 } from "../helpers";
 import { createAlert } from "@ui/store/actions";
 import store from "@ui/store/store";
+import useCardinalityStore from "../store/CardinalityStore";
+
 export type CardinalityRequestResponse = {
-    fetchurl?: string[];
-    isLoading?: boolean;
-    handleDelete?: (query: string, amount:number) => void;
+    handleDelete?: (query: string, amount: number) => void;
     handleCardinalityRequest?: () => void;
-    error?: any;
-    result: any;
+    result?: any;
 };
 
 export type RequestParams = {
@@ -42,74 +40,59 @@ export const deleteFingerprints = async (
     start,
     end,
     setError,
+    setDeleteQueries,
     setIsLoading,
     headers
 ) => {
     const deleteEndpoint = import.meta.env.VITE_API_DELETE_URL || url;
 
-    const deleteFingerprint = async () => {
-        try {
-            // start and end should calculated according to current date in seconds
-            setIsLoading(true);
-            const urlDelete =
-                deleteEndpoint +
-                "/loki/api/v1/delete?query=" +
-                encodeURIComponent(query) +
-                "&start=" +
-                start +
-                "&end=" +
-                end;
+    try {
+        // start and end should calculated according to current date in seconds
+        setIsLoading(true);
 
-            await fetch(urlDelete, {
-                method: "POST",
-                headers: {
-                    ...headers,
-                },
-            }).then((response) => {
-                if (
-                    (response && response?.status === 204) ||
-                    response?.status === 200
-                ) {
-                    setIsLoading(false);
-                    store.dispatch(
-                        createAlert({
-                            message: `Deleted ${amount} Fingerprints from ${query}`,
-                            type: "success",
-                        })
-                    );
+        const urlDelete =
+            deleteEndpoint +
+            "/loki/api/v1/delete?query=" +
+            encodeURIComponent(query) +
+            "&start=" +
+            start +
+            "&end=" +
+            end;
 
-                return ({
-                    status: response?.status || 200,
-                    success: true,
-                    error: "",
-                    message: ` ${query} Fingerprints deleted`,
-                });
+        await fetch(urlDelete, {
+            method: "POST",
+            headers: {
+                ...headers,
+            },
+        }).then((response) => {
+            if (
+                (response && response?.status === 204) ||
+                response?.status === 200
+            ) {
+                setIsLoading(false);
+                setError("");
+                store.dispatch(
+                    createAlert({
+                        message: `Deleted ${amount} Fingerprints from ${query}`,
+                        type: "success",
+                    })
+                );
             }
-
-            });
-
-        } catch (e) {
-            console.log(e);
-            setError(JSON.stringify(e));
-            setIsLoading(false);
-
-            store.dispatch(
-                createAlert({
-                    message: `${amount} Fingerprints from ${query} not deleted`,
-                    type: "error",
-                })
-            );
-
-           return ({
-                status: 500,
-                error: JSON.stringify(e),
-                success: false,
-                message: ` ${query} Fingerprints not deleted`,
-            });
-        }
-    };
-
-    return deleteFingerprint();
+        });
+    } catch (e) {
+        console.log(e);
+        setError(JSON.stringify(e));
+        setIsLoading(false);
+        setDeleteQueries((prev) => [...prev, query]);
+        store.dispatch(
+            createAlert({
+                message: `${amount} Fingerprints from ${query} not deleted`,
+                type: "error",
+            })
+        );
+    } finally {
+        setIsLoading(false);
+    }
 };
 
 const requestCardinality = async (
@@ -197,17 +180,25 @@ const requestCardinality = async (
 export const useCardinalityRequest = (
     isRequest = false
 ): CardinalityRequestResponse => {
-    const { match, focusLabel, topN, date } = useStoreParams();
+    const {
+        timeSeriesSelector: match,
+        focusLabel,
+        limitEntries: topN,
+        date,
+        setDeletedQueries,
+        setError,
+        setIsLoading,
+        setTsdbStatus,
+        error,
+    } = useCardinalityStore();
     const reqDate = date || dayjs().format(DATE_FORMAT);
-
     const reqParams = { match, focusLabel, topN, date: reqDate };
 
     const { url, headers } = useDataSourceData("logs");
 
-    const [isLoading, setIsLoading] = useState(false);
-
-    const [error, setError] = useState("");
-    const [tsdbStatus, setTsdbStatus] = useState<any>({});
+    // const [isLoading, setIsLoading] = useState(false);
+    // const [error, setError] = useState("");
+    // const [tsdbStatus, setTsdbStatus] = useState<any>({});
 
     const handleDelete = async (query, amount) => {
         const locale = moment.tz.guess(true);
@@ -216,44 +207,22 @@ export const useCardinalityRequest = (
         const dayStart = mDay.clone().utc().startOf("day").unix();
         const dayEnd = endDay.clone().utc().startOf("day").unix();
 
-        const result = deleteFingerprints(
+        await deleteFingerprints(
             url,
             query,
             amount,
             dayStart,
             dayEnd,
             setError,
+            setDeletedQueries,
             setIsLoading,
             headers
         );
-
-    
-        await result.then((res) => {
-            console.log(res);
-        });
-
-        // if (result && result?.success) {
-
-        //     dispatch(createAlert({ message: result.message, type: "success" }));
-
-        //     requestCardinality(
-        //         url,
-        //         reqParams,
-        //         setError,
-        //         setIsLoading,
-        //         setTsdbStatus,
-        //         headers
-        //     );
-        // }
-
-        // if (result && !result?.success) {
-
-        //     setError(result.message);
-        // }
     };
 
-    const handleCardinalityRequest = () => {
-        requestCardinality(
+    const handleCardinalityRequest = async () => {
+        
+        await requestCardinality(
             url,
             reqParams,
             setError,
@@ -284,10 +253,7 @@ export const useCardinalityRequest = (
     }, [error]);
 
     return {
-        isLoading,
         handleDelete,
         handleCardinalityRequest,
-        error,
-        result: tsdbStatus,
     };
 };

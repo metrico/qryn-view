@@ -1,6 +1,3 @@
-//this should be the hook that manages the state of the configurator
-//it should be used by the configurator component
-
 import  { useEffect, useState, ChangeEvent } from "react";
 import useCardinalityStore from "./store/CardinalityStore";
 import { useCardinalityRequest } from "./api/CardinalityRequest";
@@ -23,8 +20,8 @@ const useConfigurator = ({setHistoryItem}:useConfiguratorProps) => {
     } = useCardinalityStore();
 
     const { total: totalSeries } = useCardinalityStore();
-
-    const { handleCardinalityRequest } = useCardinalityRequest();
+const {handleCardinalityRequest} = useCardinalityRequest(); 
+ 
     
 
     const [query, setQuery] = useState(timeSeriesSelector);
@@ -50,6 +47,7 @@ const useConfigurator = ({setHistoryItem}:useConfiguratorProps) => {
     const onKeyDownTimeSeries = (e: any) => {
         if (e.keyCode === 13) {
             setTimeSeriesSelector(query);
+            handleCardinalityRequest();
             setHistoryItem("timeSeriesSelector", query);
         }
     };
@@ -61,6 +59,7 @@ const useConfigurator = ({setHistoryItem}:useConfiguratorProps) => {
     const onKeyDownFocusLabel = (e: any) => {
         if (e.keyCode === 13) {
             setFocusLabel(focus);
+            handleCardinalityRequest();
             setHistoryItem("focusLabel", focus);
         }
     };
@@ -73,6 +72,7 @@ const useConfigurator = ({setHistoryItem}:useConfiguratorProps) => {
     const onKeyDownLimitEntries = (e: any) => {
         if (e.keyCode === 13) {
             setLimitEntries(Number(limit));
+            handleCardinalityRequest();
             setHistoryItem("limitEntries", Number(limit));
             
         }
@@ -81,18 +81,22 @@ const useConfigurator = ({setHistoryItem}:useConfiguratorProps) => {
     const onQueryHistoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
 
-        setQuery(e.target.value);
+        setQuery(e.target.innerText);
+        handleCardinalityRequest();
     };
 
     const onFocusHistoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
 
-        setFocus(e.target.value);
+        setFocus(e.target.innerText);
+        handleCardinalityRequest();
     }
 
     const onLimitHistoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
-        setLimit(Number(e.target.value));
+       
+        setLimit(Number(e.target.innerText));
+        handleCardinalityRequest();
     }   
 
     return {
@@ -109,7 +113,6 @@ const useConfigurator = ({setHistoryItem}:useConfiguratorProps) => {
         focus,
         limit,
         totalSeries,
-        handleCardinalityRequest,
         reset,
     }
 

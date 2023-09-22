@@ -5,6 +5,7 @@ import CardinalityDialog from "./CardinalityDialog";
 import { DiffNumber } from "./DiffNumber";
 import ShareCell from "./ShareCell";
 import React from "react";
+import useCardinalityStore from "./store/CardinalityStore"
 
 export type SeriesRowProps = {
     name: string;
@@ -31,7 +32,9 @@ const SeriesRow: React.FC<SeriesRowProps> = ({
     source,
 }) => {
     
-    const { handleDelete, isLoading } = useCardinalityRequest();
+    const { handleDelete } = useCardinalityRequest();
+    const {isLoading} = useCardinalityStore();
+
     return (
         <div className={cx(SeriesRowStyle(theme))}>
             <div

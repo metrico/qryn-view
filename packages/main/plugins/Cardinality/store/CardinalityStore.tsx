@@ -35,7 +35,17 @@ type CardinalityState = {
     setTimeRange: (timeRange: TimeRange) => void;
     setFocusLabel: (text: string) => void;
     setLimitEntries: (amount: number) => void;
+    deletedQueries: string[];
+    setDeletedQueries: (query: string) => void;
     reset: () => void;
+    isUpdating: boolean;
+    setIsUpdating: (isUpdating: boolean) => void;
+    isLoading: boolean;
+    setIsLoading: (isLoading: boolean) => void;
+    error: any;
+    setError: (error: any) => void;
+    tsdbStatus: any;
+    setTsdbStatus: (tsdbStatus: any) => void;
 };
 
 const initialData = {
@@ -47,14 +57,20 @@ const initialData = {
         end: toTimeSeconds(new Date()),
         start: timeMinusOneDay(new Date()),
     },
-    
+    isUpdating: false,
     timeSeriesSelector: "",
     focusLabel: "",
     limitEntries: 10,
+    deletedQueries: [],
+    isLoading: false,
+    error: "",
+    tsdbStatus: {},
 };
 
 const useCardinalityStore =  create<CardinalityState>((set) => ({
     ...initialData,
+   
+    setIsUpdating: (isUpdating: boolean) => set(() => ({ isUpdating })),
     setTotal: (t: CardinalityTotal) => set(() => ({ total: t })),
     setTimeSeriesSelector: (text: string) =>
         set(() => ({ timeSeriesSelector: text })),
@@ -62,7 +78,13 @@ const useCardinalityStore =  create<CardinalityState>((set) => ({
     setFocusLabel: (text: string) => set(() => ({ focusLabel: text })),
     setLimitEntries: (amount: number) => set(() => ({ limitEntries: amount })),
     setDate: (day: string) => set(() => ({ date: day })),
+    setDeletedQueries: (query: string) =>
+        set((state) => ({ deletedQueries: [...state.deletedQueries, query] })),
     reset: () => set(() => ({ ...initialData })),
+    setIsLoading: (isLoading: boolean) => set(() => ({ isLoading })),
+    setError: (error: any) => set(() => ({ error })),
+    setTsdbStatus: (tsdbStatus: any) => set(() => ({ tsdbStatus })),
+    
 }));
 
 export default useCardinalityStore;

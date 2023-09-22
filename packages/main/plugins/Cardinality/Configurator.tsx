@@ -7,7 +7,7 @@ import { useTheme } from "@emotion/react";
 import useConfigurator from "./useConfigurator";
 import CardinalityInput from "./CardinalityInput";
 import { ConfigContainerStyles } from "./ConfigContainerStyles";
-
+import { useCardinalityRequest } from "./api/CardinalityRequest";
 
 type ConfiguratorProps = {
     theme: any;
@@ -44,9 +44,17 @@ const Configurator: React.FC<ConfiguratorProps> = ({
         focus,
         limit,
         totalSeries,
-        handleCardinalityRequest,
         reset,
     } = useConfigurator({ setHistoryItem });
+
+    //a handler for making a get request to the api
+
+    const { handleCardinalityRequest } = useCardinalityRequest(true);
+
+    const handleReset = () => {
+        reset();
+        handleCardinalityRequest();
+    };
 
     return (
         <div className={cx(ConfigContainerStyles(theme))}>
@@ -125,7 +133,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({
 
                 <div className="buttons-group">
                     <DayPicker />
-                    <button onClick={reset} className="query-button">
+                    <button onClick={handleReset} className="query-button">
                         Reset
                     </button>
                     <button

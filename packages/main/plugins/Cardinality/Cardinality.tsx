@@ -26,9 +26,10 @@ export const Cardinality = () => {
         limitEntriesItems,
         historyManager,
     } = useCardinalityHistory();
+    
 
     const { totalSeries, formattedSeries, isLoading } = useCardinalityData(
-     historyManager,
+        historyManager,
         setHistoryItem
     );
 
@@ -40,20 +41,22 @@ export const Cardinality = () => {
                 flexDirection: "column",
             }}
         >
-            <Configurator 
-            theme={theme} 
-            total={totalSeries} 
-            setHistoryItem={setHistoryItem}
-            focusLabelItems={focusLabelItems}
-            timeSeriesSelectorItems={timeSeriesSelectorItems}
-            limitEntriesItems={limitEntriesItems}
-            percent={35} />
-            
-            <CardinalitySeries
-                formattedSeries={formattedSeries}
-                isCardinality={isCardinality}
-                isLoading={isLoading}
+            <Configurator
+                theme={theme}
+                total={totalSeries}
+                setHistoryItem={setHistoryItem}
+                focusLabelItems={focusLabelItems}
+                timeSeriesSelectorItems={timeSeriesSelectorItems}
+                limitEntriesItems={limitEntriesItems}
+                percent={35}
             />
+            {!isLoading && (
+                <CardinalitySeries
+                    formattedSeries={formattedSeries}
+                    isCardinality={isCardinality}
+                    isLoading={isLoading}
+                />
+            )}
         </div>
     );
 };

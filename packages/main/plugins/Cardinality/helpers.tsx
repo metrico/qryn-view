@@ -45,9 +45,6 @@ export const queryUpdater: QueryUpdater = {
 };
 
 
-
-
-
 function sortAsc(rows: any[]) {
     const mess = rows?.sort((a, b) => a.value - b.value);
 
@@ -183,17 +180,12 @@ export const useStoreParams = () => {
         focusLabel,
         timeRange,
         limitEntries: topN,
+        setDeletedQueries,
         date,
+        reset
     } = useCardinalityStore();
-    return { match, focusLabel, topN, date, timeRange };
+    return { match, focusLabel, topN, date, timeRange, reset, setDeletedQueries};
 };
-
-
-
-
-
-
-
 
 export const sectionsTitles = (str: string | null): Record<string, string> => ({
     seriesCountByMetricName: "Metric names with highest number of series",
