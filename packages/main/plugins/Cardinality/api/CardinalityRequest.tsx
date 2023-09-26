@@ -16,6 +16,7 @@ import useCardinalityStore from "../store/CardinalityStore";
 export type CardinalityRequestResponse = {
     handleDelete?: (query: string, amount: number) => void;
     handleCardinalityRequest?: () => void;
+    handleGetDeletedFingerprints?: () => void;
     result?: any;
 };
 
@@ -31,6 +32,39 @@ export type deleteFingerprintsResponse = {
     error: string;
     success: boolean;
     message: string;
+};
+
+export const getDeletedFingerprints = async (
+    url,
+    setError,
+    setDeletedQueries,
+    setIsLoading,
+    headers
+) => {
+    const deleteEndpoint = import.meta.env.VITE_API_DELETE_URL || url;
+
+    try {
+        setIsLoading(true);
+        const urlDelete = deleteEndpoint + "/loki/api/v1/delete";
+
+        await fetch(urlDelete, {
+            method: "GET",
+            headers: {
+                ...headers,
+            },
+        }).then((response) => {
+            if (
+                (response && response?.status === 204) ||
+                response?.status === 200
+            ) {
+                console.log(response);
+            }
+        });
+    } catch (e) {
+        console.log(e);
+        setError(JSON.stringify(e));
+    } finally {
+    }
 };
 
 export const deleteFingerprints = async (
@@ -220,8 +254,17 @@ export const useCardinalityRequest = (
         );
     };
 
+    const handleGetDeletedFingerprints = async () => {
+        await getDeletedFingerprints(
+            url,
+            setError,
+            setDeletedQueries,
+            setIsLoading,
+            headers
+        );
+    };
+
     const handleCardinalityRequest = async () => {
-        
         await requestCardinality(
             url,
             reqParams,
@@ -254,6 +297,7 @@ export const useCardinalityRequest = (
 
     return {
         handleDelete,
+        handleGetDeletedFingerprints,
         handleCardinalityRequest,
     };
 };

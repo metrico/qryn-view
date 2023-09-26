@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import SeriesHeader, { type SeriesHeaderProps } from "./SeriesHeader";
 import SeriesRow, { type SeriesRowProps } from "./SeriesRow";
 import SeriesRowHeaders from "./SeriesRowHeaders";
@@ -11,6 +11,8 @@ export type SeriesGroupProps = {
     sectionHeader: string;
     sectionHeaderName: string;
 } & SeriesHeaderProps;
+
+import { ChartsGroup } from "./ChartsGroup";
 
 // This components is used to display a group of series
 export const SeriesGroup: React.FC<SeriesGroupProps> = ({
@@ -26,8 +28,10 @@ export const SeriesGroup: React.FC<SeriesGroupProps> = ({
 
     const { sortedRows, handleSort } = useSortedColumns(rows);
 
+    const containerRef: any = useRef(null);
+
     return (
-        <div className={seriesGroupContainer}>
+        <div className={seriesGroupContainer} ref={containerRef}>
             <SeriesHeader title={title} />
             <div className="c-table">
                 {rows && (
@@ -44,11 +48,15 @@ export const SeriesGroup: React.FC<SeriesGroupProps> = ({
                         <SeriesRow
                             key={key}
                             theme={seriesGroupStyles}
-                            hasShare={sectionHeaderName !== "labelValueCountByLabelName"}
+                            hasShare={
+                                sectionHeaderName !==
+                                "labelValueCountByLabelName"
+                            }
                             {...row}
                         />
                     ))}
             </div>
+            <ChartsGroup rows={sortedRows} theme={theme} />
         </div>
     );
 };

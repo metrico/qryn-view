@@ -29,6 +29,7 @@ export const SeriesGroupContainer = (theme: Partial<QrynTheme>) => css`
     flex-direction: column;
     padding: 8px 4px;
     background: ${theme.shadow};
+    gap: 4px;
     .c-header {
         font-size: 14px;
         padding: 8px 6px;
@@ -41,11 +42,11 @@ export const SeriesGroupContainer = (theme: Partial<QrynTheme>) => css`
     }
 `;
 
-
 export const useSeriesGroupStyles = (theme: QrynTheme) => {
     return {
-        seriesGroupContainer: cx(SeriesGroupContainer(getSeriesGroupTheme(theme)    )),
+        seriesGroupContainer: cx(
+            SeriesGroupContainer(getSeriesGroupTheme(theme))
+        ),
         seriesGroupStyles: getSeriesGroupTheme(theme),
     };
-
-}
+};

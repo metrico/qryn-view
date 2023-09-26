@@ -56,6 +56,11 @@ const Configurator: React.FC<ConfiguratorProps> = ({
         handleCardinalityRequest();
     };
 
+    // this feature is not implemented yet
+    // useEffect(() => {
+    //     handleGetDeletedFingerprints();
+    // }, []);
+
     return (
         <div className={cx(ConfigContainerStyles(theme))}>
             <div className="form-row">
