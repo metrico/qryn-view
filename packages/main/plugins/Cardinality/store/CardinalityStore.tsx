@@ -2,7 +2,6 @@ import { create } from "zustand";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "../consts";
 
-
 type CardinalityTotal = {
     amount: number;
     prev: number;
@@ -24,7 +23,7 @@ export const timeMinusOneDay = (time: Date) => {
 
 type CardinalityState = {
     total: CardinalityTotal;
-    timeRange: TimeRange; // this should be calculated in seconds from actual date 
+    timeRange: TimeRange; // this should be calculated in seconds from actual date
     timeSeriesSelector: string;
     focusLabel: string;
     limitEntries: number;
@@ -67,9 +66,15 @@ const initialData = {
     tsdbStatus: {},
 };
 
-const useCardinalityStore =  create<CardinalityState>((set) => ({
+const initialParams = {
+    topN: 10,
+    timeSeriesSelector: "",
+    focusLabel: "",
+};
+
+const useCardinalityStore = create<CardinalityState>((set) => ({
     ...initialData,
-   
+
     setIsUpdating: (isUpdating: boolean) => set(() => ({ isUpdating })),
     setTotal: (t: CardinalityTotal) => set(() => ({ total: t })),
     setTimeSeriesSelector: (text: string) =>
@@ -80,11 +85,10 @@ const useCardinalityStore =  create<CardinalityState>((set) => ({
     setDate: (day: string) => set(() => ({ date: day })),
     setDeletedQueries: (query: string) =>
         set((state) => ({ deletedQueries: [...state.deletedQueries, query] })),
-    reset: () => set(() => ({ ...initialData })),
+    reset: () => set(() => ({ ...initialParams })),
     setIsLoading: (isLoading: boolean) => set(() => ({ isLoading })),
     setError: (error: any) => set(() => ({ error })),
     setTsdbStatus: (tsdbStatus: any) => set(() => ({ tsdbStatus })),
-    
 }));
 
 export default useCardinalityStore;

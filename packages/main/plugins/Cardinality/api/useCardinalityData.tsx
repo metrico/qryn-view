@@ -82,9 +82,6 @@ export const useCardinalityData = (historyManager?, setHistoryItem?) => {
 
     useEffect(() => {
 
-        console.log(result, "result")
-        console.log(isLoading, "isLoading")
-
         if (result) {
 
             setTotal({
@@ -99,9 +96,6 @@ export const useCardinalityData = (historyManager?, setHistoryItem?) => {
             });
         }
     }, [result]);
-
-
-
     return {
         data,
         totalSeries: data?.data?.totalSeries ?? 0,

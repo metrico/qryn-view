@@ -28,10 +28,8 @@ const CardinalityChart = forwardRef(
                 setWidth(ref?.current?.offsetWidth - 8);
             }
         }, [ref?.current]);
-
         const chartRenderer = (isChartGroup, chartData) => {
             if (chartData && isChartGroup && chart !== "") {
-                console.log(chartData?.valueTypesMapped[chart]?.names);
                 return (
                     <BarChart
                         colors={["#babc00", "#ff5555"]}
@@ -68,8 +66,8 @@ const CardinalityChart = forwardRef(
                         height={300}
                     />
                 );
-            } else {
-                return (
+            } else if (chartData && !isChartGroup) {
+                return ( 
                     <BarChart
                         colors={["#babc00", "#ff5555"]}
                         xAxis={[

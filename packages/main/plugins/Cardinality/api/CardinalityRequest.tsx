@@ -15,7 +15,7 @@ import useCardinalityStore from "../store/CardinalityStore";
 
 export type CardinalityRequestResponse = {
     handleDelete?: (query: string, amount: number) => void;
-    handleCardinalityRequest?: () => void;
+    handleCardinalityRequest?: (params: any) => void;
     handleGetDeletedFingerprints?: () => void;
     result?: any;
 };
@@ -95,10 +95,26 @@ export const deleteFingerprints = async (
 
         await fetch(urlDelete, {
             method: "POST",
+
             headers: {
                 ...headers,
             },
         }).then((response) => {
+            if (
+                (response && response?.status === 500) ||
+                response?.status === 400
+            ) {
+                setError(response.statusText);
+                setIsLoading(false);
+                let error = response.text();
+                store.dispatch(
+                    createAlert({
+                        message: error,
+                        type: "error",
+                    })
+                );
+            }
+
             if (
                 (response && response?.status === 204) ||
                 response?.status === 200
@@ -114,7 +130,6 @@ export const deleteFingerprints = async (
             }
         });
     } catch (e) {
-        console.log(e);
         setError(JSON.stringify(e));
         setIsLoading(false);
         setDeleteQueries((prev) => [...prev, query]);
@@ -157,6 +172,7 @@ const requestCardinality = async (
 
     const urls = [urlBase, urlPrev, urlTotal];
     if (!url) return;
+
     setError("");
     setIsLoading(true);
     // set
@@ -166,6 +182,22 @@ const requestCardinality = async (
         const responses = await Promise.all(
             urls.map((url) => fetch(url, { headers }))
         ); // add headers and auth in here . make it with axios
+
+        if (responses[0].status === 400 || responses[0].status === 500) {
+            const res = await responses[0].text();
+
+            setError(res);
+            setIsLoading(false);
+            store.dispatch(
+                createAlert({
+                    message: res,
+                    type: "error",
+                })
+            );
+
+            return;
+        }
+
         const [resp, respPrev, respTotals] = await Promise.all(
             responses.map((resp) => resp.json())
         );
@@ -225,7 +257,9 @@ export const useCardinalityRequest = (
         setTsdbStatus,
         error,
     } = useCardinalityStore();
+
     const reqDate = date || dayjs().format(DATE_FORMAT);
+
     const reqParams = { match, focusLabel, topN, date: reqDate };
 
     const { url, headers } = useDataSourceData("logs");
@@ -264,7 +298,14 @@ export const useCardinalityRequest = (
         );
     };
 
-    const handleCardinalityRequest = async () => {
+    const handleCardinalityRequest = async (params: any) => {
+        const reqDate = date || dayjs().format(DATE_FORMAT);
+
+        let reqParams = { match, focusLabel, topN, date: reqDate };
+        if (params !== undefined) {
+            reqParams = { ...reqParams, ...params };
+        }
+
         await requestCardinality(
             url,
             reqParams,

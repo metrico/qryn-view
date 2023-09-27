@@ -17,6 +17,7 @@ const useConfigurator = ({setHistoryItem}:useConfiguratorProps) => {
         limitEntries,
         setLimitEntries,
         reset,
+        date,
     } = useCardinalityStore();
 
     const { total: totalSeries } = useCardinalityStore();
@@ -47,7 +48,7 @@ const {handleCardinalityRequest} = useCardinalityRequest();
     const onKeyDownTimeSeries = (e: any) => {
         if (e.keyCode === 13) {
             setTimeSeriesSelector(query);
-            handleCardinalityRequest();
+            handleCardinalityRequest({match:query});
             setHistoryItem("timeSeriesSelector", query);
         }
     };
@@ -59,7 +60,7 @@ const {handleCardinalityRequest} = useCardinalityRequest();
     const onKeyDownFocusLabel = (e: any) => {
         if (e.keyCode === 13) {
             setFocusLabel(focus);
-            handleCardinalityRequest();
+            handleCardinalityRequest({focusLabel:focus});
             setHistoryItem("focusLabel", focus);
         }
     };
@@ -72,7 +73,7 @@ const {handleCardinalityRequest} = useCardinalityRequest();
     const onKeyDownLimitEntries = (e: any) => {
         if (e.keyCode === 13) {
             setLimitEntries(Number(limit));
-            handleCardinalityRequest();
+            handleCardinalityRequest({topN:limit});
             setHistoryItem("limitEntries", Number(limit));
             
         }
@@ -80,23 +81,22 @@ const {handleCardinalityRequest} = useCardinalityRequest();
 
     const onQueryHistoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
+        setTimeSeriesSelector(e.target.innerText);
 
-        setQuery(e.target.innerText);
-        handleCardinalityRequest();
+        handleCardinalityRequest({match:e.target.innerText});
     };
 
     const onFocusHistoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
-
         setFocus(e.target.innerText);
-        handleCardinalityRequest();
+        handleCardinalityRequest({focusLabel:e.target.innerText});
     }
 
     const onLimitHistoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
        
         setLimit(Number(e.target.innerText));
-        handleCardinalityRequest();
+        handleCardinalityRequest({topN:Number(e.target.innerText)});
     }   
 
     return {
@@ -114,6 +114,7 @@ const {handleCardinalityRequest} = useCardinalityRequest();
         limit,
         totalSeries,
         reset,
+        date
     }
 
 }

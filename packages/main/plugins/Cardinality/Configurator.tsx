@@ -8,7 +8,7 @@ import useConfigurator from "./useConfigurator";
 import CardinalityInput from "./CardinalityInput";
 import { ConfigContainerStyles } from "./ConfigContainerStyles";
 import { useCardinalityRequest } from "./api/CardinalityRequest";
-
+import useCardinalityStore from "./store/CardinalityStore";
 type ConfiguratorProps = {
     theme: any;
     percent?: number;
@@ -45,15 +45,23 @@ const Configurator: React.FC<ConfiguratorProps> = ({
         limit,
         totalSeries,
         reset,
+        date,
     } = useConfigurator({ setHistoryItem });
 
     //a handler for making a get request to the api
 
     const { handleCardinalityRequest } = useCardinalityRequest(true);
-
+    const { setTimeSeriesSelector, setFocusLabel, setLimitEntries } =
+        useCardinalityStore();
     const handleReset = () => {
         reset();
-        handleCardinalityRequest();
+
+        handleCardinalityRequest({
+            match: "",
+            focusLabel: "",
+            topN: limit,
+            date,
+        });
     };
 
     // this feature is not implemented yet
@@ -142,7 +150,17 @@ const Configurator: React.FC<ConfiguratorProps> = ({
                         Reset
                     </button>
                     <button
-                        onClick={handleCardinalityRequest}
+                        onClick={() => {
+                            setTimeSeriesSelector(query);
+                            setFocusLabel(focus);
+                            setLimitEntries(Number(limit));
+
+                            handleCardinalityRequest({
+                                match: query,
+                                focusLabel: focus,
+                                topN: limit,
+                            });
+                        }}
                         className="query-button"
                     >
                         <ChevronRightOutlinedIcon fontSize="small" />
