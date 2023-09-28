@@ -56,11 +56,11 @@ export const useCardinalityData = (historyManager?, setHistoryItem?) => {
 
     const mapSeries = (arr: SeriesRowProps[], data: any, key: string) => {
         return arr.map((query: SeriesRowProps) => ({
-            name: query.name,
-            value: query.value,
-            diff: query.diff,
-            prev: query.valuePrev,
-            share: calcPercent(query.value, data?.totalSeries),
+            name: query.name || "",
+            value: query.value || 0,
+            diff: query.diff || 0,
+            prev: query.valuePrev || 0,
+            share: calcPercent(query.value, data?.totalSeries) || 0,
             source: key,
             onFilter,
         }));

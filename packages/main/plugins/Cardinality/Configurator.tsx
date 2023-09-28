@@ -145,6 +145,9 @@ const Configurator: React.FC<ConfiguratorProps> = ({
                 </div>
 
                 <div className="buttons-group">
+                    {/* <button className="query-button">Delete fingerprints</button>
+ */}
+
                     <DayPicker />
                     <button onClick={handleReset} className="query-button">
                         Reset

@@ -69,11 +69,11 @@ const TOTALS_VALUES = {
     },
     previous: {
         text: "Previous total",
-        value: (val: string | number) => val,
+        value: (val: string | number | undefined) => val || 0,
     },
     diff: {
         text: "Diff from previous",
-        value: (val: string | number | null) => `${val ?? ""  }`,
+        value: (val: string | number | null | undefined) => `${val ?? 0  }`,
     },
 };
 export const Totals: React.FC<TotalsProps> = ({

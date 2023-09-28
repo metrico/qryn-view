@@ -23,11 +23,9 @@ export const SeriesGroup: React.FC<SeriesGroupProps> = ({
 }: SeriesGroupProps) => {
     const theme = useTheme();
 
-    const { seriesGroupContainer, seriesGroupStyles } =
-        useSeriesGroupStyles(theme);
+    const { seriesGroupContainer, seriesGroupStyles } = useSeriesGroupStyles(theme);
 
     const { sortedRows, handleSort } = useSortedColumns(rows);
-
     const containerRef: any = useRef(null);
 
     return (
