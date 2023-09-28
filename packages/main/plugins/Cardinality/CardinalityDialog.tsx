@@ -46,6 +46,8 @@ export type CardinalityDialogProps = {
     value: number;
     source: string;
     isLoading: boolean;
+    isCustom?: boolean;
+    query?: string;
 };
 
 export default function CardinalityDialog({
@@ -54,6 +56,8 @@ export default function CardinalityDialog({
     value,
     source,
     isLoading,
+    isCustom = false,
+    query = "",
 }: CardinalityDialogProps) {
     const [open, setOpen] = useState(false);
 
@@ -68,33 +72,46 @@ export default function CardinalityDialog({
         setOpen(false);
     };
     async function handleClearFingerprints() {
-        const queryText = queryUpdater[source]({
-            query: label,
-            focusLabel,
-            match,
-        });
+        //
+
+        let queryText = query ?? "";
+
+        if (!isCustom) {
+            queryText = queryUpdater[source]({
+                query: label,
+                focusLabel,
+                match,
+            });
+        }
 
         await clearFingerPrints(queryText);
 
         // this should give a response from the server
 
         setOpen(false);
+
     }
     return (
         <ThemeProvider theme={theme}>
             <div>
-               
                 <Tooltip title={`Delete fingerprints for ${label}`}>
-                <div style={{ display: "flex", flex:1, alignItems:'center', justifyContent:'center' }}>
-                    <DeleteOutlineOutlinedIcon
-                        onClick={handleClickOpen}
+                    <div
                         style={{
-                            color: theme.contrast,
-                            cursor: "pointer",
-                            fontSize: "18px",
+                            display: "flex",
+                            flex: 1,
+                            alignItems: "center",
+                            justifyContent: "center",
                         }}
-                        fontSize={"small"}
-                    />
+                    >
+                        <DeleteOutlineOutlinedIcon
+                            onClick={handleClickOpen}
+                            style={{
+                                color: theme.contrast,
+                                cursor: "pointer",
+                                fontSize: "18px",
+                            }}
+                            fontSize={"small"}
+                        />
                     </div>
                 </Tooltip>
                 <Dialog
@@ -110,9 +127,17 @@ export default function CardinalityDialog({
                 >
                     <AlertCont>
                         <DialogTitle id="alert-dialog-title">
-                            Are you sure you want to clear the{" "}
+                          {
+                            isCustom ? (<>
+                                 Are you sure you want to clear the{" "}
+                            <span>{value}</span> fingerprints with query {query}?
+                            </>) : (<>
+                                Are you sure you want to clear the{" "}
                             <span>{value}</span> fingerprints with label{" "}
                             <span>{label}</span> from <span>{source}</span>?
+                            </>)
+                          }  
+                          
                         </DialogTitle>
 
                         <DialogContent>
@@ -130,7 +155,9 @@ export default function CardinalityDialog({
                                 active={!isLoading}
                                 autoFocus
                             >
-                               {!isLoading? "Delete Fingerprints" : "Deleting..." } 
+                                {!isLoading
+                                    ? "Delete Fingerprints"
+                                    : "Deleting..."}
                             </DialogConfirmButton>
                         </DialogActions>
                     </AlertCont>
