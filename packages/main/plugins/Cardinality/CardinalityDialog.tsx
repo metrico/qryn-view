@@ -94,7 +94,7 @@ export default function CardinalityDialog({
     return (
         <ThemeProvider theme={theme}>
             <div>
-                <Tooltip title={`Delete fingerprints for ${label}`}>
+                <Tooltip title={`Delete fingerprints for ${label !== "" ? label : query}`}>
                     <div
                         style={{
                             display: "flex",

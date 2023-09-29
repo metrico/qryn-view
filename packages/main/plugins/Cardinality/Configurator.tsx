@@ -51,7 +51,8 @@ const Configurator: React.FC<ConfiguratorProps> = ({
 
     //a handler for making a get request to the api
 
-    const { handleCardinalityRequest, handleDelete } = useCardinalityRequest(true);
+    const { handleCardinalityRequest, handleDelete } =
+        useCardinalityRequest(true);
     const { setTimeSeriesSelector, setFocusLabel, setLimitEntries, isLoading } =
         useCardinalityStore();
     const handleReset = () => {
@@ -146,18 +147,21 @@ const Configurator: React.FC<ConfiguratorProps> = ({
                 </div>
 
                 <div className="buttons-group">
-                    <button className="query-button">
-                        <CardinalityDialog
-                    clearFingerPrints={(query) => handleDelete(query, totalSeries.amount)}
-                    isLoading={isLoading}
-                    label={""}
-                    value={totalSeries.amount}
-                    source={""}
-                    isCustom={true}
-                    query={query}
-                />
-
-                    </button>
+                    {query !== "" && (
+                        <button className="query-button">
+                            <CardinalityDialog
+                                clearFingerPrints={(query) =>
+                                    handleDelete(query, totalSeries.amount)
+                                }
+                                isLoading={isLoading}
+                                label={""}
+                                value={totalSeries.amount}
+                                source={""}
+                                isCustom={true}
+                                query={query}
+                            />
+                        </button>
+                    )}
 
                     <DayPicker />
                     <button onClick={handleReset} className="query-button">
