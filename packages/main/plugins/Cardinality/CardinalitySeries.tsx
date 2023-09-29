@@ -4,6 +4,7 @@ import { SeriesGroup } from "./SeriesGroup";
 import { getSeriesProps } from "./helpers";
 import Loader from "./Loader";
 import { resultsContainerStyles, openCardinalityStyles } from "./styles";
+import useTheme from "@ui/theme/useTheme";
 
 type CardinalitySeriesProps = {
     formattedSeries: any;
@@ -16,6 +17,7 @@ const CardinalitySeries: React.FC<CardinalitySeriesProps> = ({
     isCardinality,
     isLoading,
 }) => {
+    const theme = useTheme();
     return (
         <div
             className={cx(
@@ -25,7 +27,11 @@ const CardinalitySeries: React.FC<CardinalitySeriesProps> = ({
         >
             {!isLoading ? (
                 formattedSeries?.map((series: any, key: number) => (
-                    <SeriesGroup key={key} {...getSeriesProps(series)} />
+                    <SeriesGroup
+                        theme={theme}
+                        key={key}
+                        {...getSeriesProps(series)}
+                    />
                 ))
             ) : (
                 <Loader />

@@ -1,18 +1,19 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import SeriesHeader, { type SeriesHeaderProps } from "./SeriesHeader";
-import SeriesRow, { type SeriesRowProps } from "./SeriesRow";
-import SeriesRowHeaders from "./SeriesRowHeaders";
+import { type SeriesRowProps } from "./SeriesRow";
 import useTheme from "@ui/theme/useTheme";
 import { useSeriesGroupStyles } from "./SeriesGroupStyles";
 import { useSortedColumns } from "./useSortColumn";
+
+import { ChartsGroup } from "./ChartsGroup";
+
+import CardinalityTable from "./CardinalityTable";
 
 export type SeriesGroupProps = {
     rows: SeriesRowProps[];
     sectionHeader: string;
     sectionHeaderName: string;
 } & SeriesHeaderProps;
-
-import { ChartsGroup } from "./ChartsGroup";
 
 // This components is used to display a group of series
 export const SeriesGroup: React.FC<SeriesGroupProps> = ({
@@ -23,38 +24,36 @@ export const SeriesGroup: React.FC<SeriesGroupProps> = ({
 }: SeriesGroupProps) => {
     const theme = useTheme();
 
-    const { seriesGroupContainer, seriesGroupStyles } = useSeriesGroupStyles(theme);
+    const { seriesGroupContainer } = useSeriesGroupStyles(theme);
 
-    const { sortedRows, handleSort } = useSortedColumns(rows);
+    const { sortedRows } = useSortedColumns(rows);
     const containerRef: any = useRef(null);
+    const [tabsValue, setTabsValue] = useState(0);
+
+    const onTabChange = (event: any, newValue: any) => {
+        setTabsValue(newValue);
+    };
 
     return (
         <div className={seriesGroupContainer} ref={containerRef}>
-            <SeriesHeader title={title} />
-            <div className="c-table">
-                {rows && (
-                    <SeriesRowHeaders
-                        handleSort={handleSort}
-                        headerName={sectionHeaderName}
-                        name={sectionHeader}
-                        theme={seriesGroupStyles}
-                    />
-                )}
-                {sortedRows &&
-                    sortedRows?.length > 0 &&
-                    sortedRows.map((row: SeriesRowProps, key: number) => (
-                        <SeriesRow
-                            key={key}
-                            theme={seriesGroupStyles}
-                            hasShare={
-                                sectionHeaderName !==
-                                "labelValueCountByLabelName"
-                            }
-                            {...row}
-                        />
-                    ))}
-            </div>
-            <ChartsGroup rows={sortedRows} theme={theme} />
+            <SeriesHeader
+                theme={theme}
+                title={title}
+                tabsValue={tabsValue}
+                onTabChange={onTabChange}
+            />
+
+            {tabsValue === 0 && (
+                <CardinalityTable
+                    title={title}
+                    rows={sortedRows}
+                    theme={theme}
+                    sectionHeader={sectionHeader}
+                    sectionHeaderName={sectionHeaderName}
+                />
+            )}
+
+            {tabsValue === 1 && <ChartsGroup rows={sortedRows} theme={theme} />}
         </div>
     );
 };

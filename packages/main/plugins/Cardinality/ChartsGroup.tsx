@@ -31,7 +31,6 @@ export const formatValueTypesMapped = (
 };
 
 export const formatChartProps = (rows: SeriesRowProps[]) => {
-
     const xAxisData = rows?.map((row) => row.name);
     const valueData = rows?.map((row) => row.value);
     const diffData = rows?.map((row) =>
@@ -96,8 +95,7 @@ export const useChartData = (rows: SeriesRowProps[]) => {
 export const ChartsGroup: React.FC<ChartsGroupProps> = ({ rows, theme }) => {
     const chartData = useChartData(rows);
 
-
-    if(rows.length === 0) return null
+    if (rows.length === 0) return null;
 
     return (
         <CardinalityChartsContainer>

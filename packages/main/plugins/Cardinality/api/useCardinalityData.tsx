@@ -4,7 +4,6 @@ import useCardinalityStore from "../store/CardinalityStore";
 import { CardinalityResponse } from "../types";
 import { SeriesRowProps } from "../SeriesRow";
 
-
 // This hook is used to fetch the data from the API and format it for the UI
 export const useCardinalityData = (historyManager?, setHistoryItem?) => {
     const {
@@ -13,15 +12,9 @@ export const useCardinalityData = (historyManager?, setHistoryItem?) => {
         setFocusLabel,
         setTimeSeriesSelector,
         setTotal,
-        tsdbStatus:result,
+        tsdbStatus: result,
         isLoading,
-
-      //  isUpdating,
     } = useCardinalityStore();
-
- //   const { result, isLoading } = useCardinalityRequest(true);
-
-
 
     const [data, setData] = useState<any>({
         data: defaultCardinalityStatus,
@@ -81,9 +74,7 @@ export const useCardinalityData = (historyManager?, setHistoryItem?) => {
     };
 
     useEffect(() => {
-
         if (result) {
-
             setTotal({
                 amount: result.totalSeries,
                 prev: result.totalSeriesPrev,
@@ -101,6 +92,5 @@ export const useCardinalityData = (historyManager?, setHistoryItem?) => {
         totalSeries: data?.data?.totalSeries ?? 0,
         formattedSeries: data?.formattedSeries ?? [],
         isLoading,
-       
     };
 };

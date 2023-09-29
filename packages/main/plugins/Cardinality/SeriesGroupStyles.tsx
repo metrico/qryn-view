@@ -31,6 +31,10 @@ export const SeriesGroupContainer = (theme: Partial<QrynTheme>) => css`
     background: ${theme.shadow};
     gap: 4px;
     .c-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
         font-size: 14px;
         padding: 8px 6px;
         border-bottom: 1px solid ${theme.neutral};
