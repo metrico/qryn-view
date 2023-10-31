@@ -202,11 +202,9 @@ export async function updateDataSourcesFromLocalUrl(
 
     let dsReady = false;
 
-    console.log(logsDs.url);
     let isLocalReady = false;
 
     if (logsDs?.url !== "") {
-        console.log(logsDs);
 
         dsReady = await checkLocalAPI(logsDs.url, logsDs, auth, isBasicAuth); // add the auth in here
 
