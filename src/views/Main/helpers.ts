@@ -3,6 +3,7 @@ import { getDsHeaders } from "../../components/QueryBuilder/Operations/helpers";
 import setDataSources from "../DataSources/store/setDataSources";
 import { setShowDataSourceSetting } from "./setShowDataSourceSetting";
 
+
 // updateDataSources:
 
 export function updateDataSourcesWithUrl(
@@ -146,33 +147,35 @@ export async function checkLocalAPI(
     datasource: any,
     auth?: AuthParams,
     isAuth?: boolean
-) {
+): Promise<boolean> {
     let response: any = {};
     let conf = getAxiosConf(datasource);
-    let isReady = false;
     let opts: any = { ...conf };
 
     if (auth?.username !== "" && isAuth) {
         opts.auth = auth;
     }
 
-    try {
-        let res = await getReadyResponse(url, opts, response);
+    return new Promise(async (resolve, rej) => {
+        try {
+            let res = await getReadyResponse(url, opts, response);
 
-        response = res;
-    } catch (e: any) {
-        isReady = false;
-    } finally {
-        if (
-            response &&
-            response?.status === 200 &&
-            (response?.contentType === "application/json; charset=utf-8" ||
-                response?.contentLength === "0")
-        ) {
-            isReady = true;
+            response = res;
+        } catch (e: any) {
+            rej(false);
+        } finally {
+            if (
+                response &&
+                response?.status === 200 &&
+                (response?.contentType.includes("application/json") ||
+                    response?.contentLength === "0")
+            ) {
+                resolve(true);
+            } else {
+                rej(false);
+            }
         }
-    }
-    return isReady;
+    });
 }
 
 export async function updateDataSourcesFromLocalUrl(
@@ -196,26 +199,33 @@ export async function updateDataSourcesFromLocalUrl(
             }
         }
     }
+
     let dsReady = false;
+
+    console.log(logsDs.url);
     let isLocalReady = false;
+
     if (logsDs?.url !== "") {
+        console.log(logsDs);
+
         dsReady = await checkLocalAPI(logsDs.url, logsDs, auth, isBasicAuth); // add the auth in here
-    }
-    if (!dsReady) {
-        isLocalReady = await checkLocalAPI(location, logsDs);
 
-        if (isLocalReady && !dsReady) {
-            const dsCP = [...dataSources];
-            const prevDs = JSON.parse(JSON.stringify(dsCP));
+        if (!dsReady) {
+            isLocalReady = await checkLocalAPI(location, logsDs);
 
-            const newDs = prevDs?.map((m: any) => ({
-                ...m,
-                url: location,
-            }));
-            localStorage.setItem("dataSources", JSON.stringify(newDs));
-            dispatch(setDataSources(newDs));
-        } else if (!dsReady && !isLocalReady) {
-            navigate("datasources");
+            if (isLocalReady && !dsReady) {
+                const dsCP = [...dataSources];
+                const prevDs = JSON.parse(JSON.stringify(dsCP));
+
+                const newDs = prevDs?.map((m: any) => ({
+                    ...m,
+                    url: location,
+                }));
+                localStorage.setItem("dataSources", JSON.stringify(newDs));
+                dispatch(setDataSources(newDs));
+            } else if (!dsReady && !isLocalReady) {
+                navigate("datasources");
+            }
         }
     }
 }
