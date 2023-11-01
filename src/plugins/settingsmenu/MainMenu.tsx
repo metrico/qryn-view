@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
@@ -15,7 +14,7 @@ import { Link } from "react-router-dom";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import StorageIcon from "@mui/icons-material/Storage";
 import CopyButton from "./CopyButton/CopyButton";
-import Avatar from "react-avatar";
+import MenuIcon from '@mui/icons-material/Menu';
 import { MenuStyles } from "./styled";
 
 export type USER_ROLES = "admin" | "superAdmin" | "user" | "guest";
@@ -24,7 +23,6 @@ export const hasAccess = (userType: USER_ROLES, accessType: USER_ROLES) => {};
 
 export default function MainMenu() {
     const showDs = useSelector((store: any) => store.showDataSourceSetting);
-    const currentUser = useSelector((store: any) => store.currentUser);
     const currentUserRole = useSelector((store: any) => store.currentUser.role);
     const dispatch = useDispatch();
     const theme = useTheme();
@@ -59,20 +57,20 @@ export default function MainMenu() {
                 }}
             >
                 <Tooltip title="Settings">
-                    <IconButton
+                    <button
                         onClick={handleClick}
-                        size="small"
-                        sx={{ ml: 2, color: `${theme.textColor}` }}
+                       
+                       style={{
+                        display:'flex',
+                        justifyContent:'center',
+                        alignItems:'center',
+                        marginLeft: 2, paddingLeft:0, cursor:'pointer',paddingRight:0, width:'30px', height:'30px', background:'none', borderRadius:'3px',color: `${theme.textColor}`, border: `1px solid ${theme.buttonBorder}`}}
                         aria-controls={open ? "account-menu" : undefined}
                         aria-haspopup="true"
                         aria-expanded={open ? "true" : undefined}
                     >
-                        <Avatar
-                            name={currentUser.name}
-                            size={"30px"}
-                            round={"3px"}
-                        />
-                    </IconButton>
+                       <MenuIcon style={{width:'14px', height:'14px'}}/>
+                    </button>
                 </Tooltip>
             </Box>
             <Menu
