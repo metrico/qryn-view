@@ -3,7 +3,6 @@ import { getDsHeaders } from "../../components/QueryBuilder/Operations/helpers";
 import setDataSources from "../DataSources/store/setDataSources";
 import { setShowDataSourceSetting } from "./setShowDataSourceSetting";
 
-
 // updateDataSources:
 
 export function updateDataSourcesWithUrl(
@@ -156,26 +155,72 @@ export async function checkLocalAPI(
         opts.auth = auth;
     }
 
-    return new Promise(async (resolve, rej) => {
+    return new Promise(async (resolve) => {
         try {
             let res = await getReadyResponse(url, opts, response);
 
             response = res;
         } catch (e: any) {
-            rej(false);
+            resolve(false);
         } finally {
-            if (
-                response &&
-                response?.status === 200 &&
-                (response?.contentType.includes("application/json") ||
-                    response?.contentLength === "0")
-            ) {
+            if (response && response?.status === 200) {
                 resolve(true);
             } else {
-                rej(false);
+                resolve(false);
             }
         }
     });
+}
+
+// provision the basic auth fields data
+export function basicAuthChecker(auth: any) {
+    let authParams = { username: "", password: "" };
+
+    const isBasicAuth = auth?.basicAuth?.value;
+
+    const basicAuthFields = auth?.fields?.basicAuth;
+
+    const isBasicAuthFields = basicAuthFields?.length > 0;
+
+    if (isBasicAuth && isBasicAuthFields) {
+        for (let field of basicAuthFields) {
+            if (field?.name === "user") {
+                authParams.username = field?.value || "";
+            }
+            if (field?.name === "password") {
+                authParams.password = field?.value || "";
+            }
+        }
+    }
+
+    return {
+        isBasicAuth,
+        auth: authParams,
+    };
+}
+
+export function setLocalDataSources(datasources: any) {
+    // we could check datasources when typed in here
+    localStorage.setItem("dataSources", JSON.stringify(datasources));
+}
+
+export function updateDataSourcesUrl(cb: Function, prevData: any, url: any) {
+    // 1- take datasources
+    const dsCP = [...prevData];
+
+    // 2 - copy as previous
+    const prevDs = JSON.parse(JSON.stringify(dsCP));
+
+    // 3- update datasources value with new source
+    const newDs = prevDs?.map((m: any) => ({
+        ...m,
+        url,
+    }));
+
+    // update localstorage datasources
+    setLocalDataSources(newDs);
+    // update datasources at store
+    cb(setDataSources(newDs));
 }
 
 export async function updateDataSourcesFromLocalUrl(
@@ -183,47 +228,38 @@ export async function updateDataSourcesFromLocalUrl(
     dispatch: Function,
     navigate: Function
 ) {
+    // current location
     const location = window.location.origin;
-    const logsDs = dataSources.find((f: any) => f.type === "logs");
-    const isBasicAuth = logsDs?.auth?.basicAuth?.value;
-    let auth = { username: "", password: "" };
-    let basicAuthFields = logsDs?.auth?.fields?.basicAuth;
-    const isBasicAuthFields = basicAuthFields?.length > 0;
-    if (isBasicAuth && isBasicAuthFields) {
-        for (let field of basicAuthFields) {
-            if (field?.name === "user") {
-                auth.username = field?.value || "";
-            }
-            if (field?.name === "password") {
-                auth.password = field?.value || "";
-            }
-        }
-    }
 
     let dsReady = false;
 
-    let isLocalReady = false;
+    const logsDs = dataSources.find((f: any) => f.type === "logs");
 
-    if (logsDs?.url !== "") {
+    const {
+        isBasicAuth, // check if it has a basic auth
+        auth, // provisions auth params
+    } = basicAuthChecker(logsDs?.auth);
 
+    if (logsDs?.url === "") {
         dsReady = await checkLocalAPI(logsDs.url, logsDs, auth, isBasicAuth); // add the auth in here
 
+  
+
+        if (dsReady) {
+            updateDataSourcesUrl(dispatch, dataSources, location);
+        } else {
+            navigate("datasources");
+        }
+    } else {
+        let dsReady = await checkLocalAPI(
+            logsDs.url,
+            logsDs,
+            auth,
+            isBasicAuth
+        ); // add the auth in here
+
         if (!dsReady) {
-            isLocalReady = await checkLocalAPI(location, logsDs);
-
-            if (isLocalReady && !dsReady) {
-                const dsCP = [...dataSources];
-                const prevDs = JSON.parse(JSON.stringify(dsCP));
-
-                const newDs = prevDs?.map((m: any) => ({
-                    ...m,
-                    url: location,
-                }));
-                localStorage.setItem("dataSources", JSON.stringify(newDs));
-                dispatch(setDataSources(newDs));
-            } else if (!dsReady && !isLocalReady) {
-                navigate("datasources");
-            }
+            navigate("datasources");
         }
     }
 }
