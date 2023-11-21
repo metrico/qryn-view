@@ -34,7 +34,7 @@ const CardinalityTable: React.FC<CardinalityTableProps> = ({
                 />
             )}
 
-            {sortedRows && sortedRows?.length > 0 ? (
+            {sortedRows && sortedRows?.length >= 0 ? (
                 sortedRows.map((row: SeriesRowProps, key: number) => (
                     <SeriesRow
                         {...row}
