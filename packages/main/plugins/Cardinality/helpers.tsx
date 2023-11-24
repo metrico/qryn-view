@@ -10,6 +10,41 @@ const getSeriesSelector = (label: string | null, value: string): string => {
     return "{" + label + "=" + JSON.stringify(value) + "}";
 };
 
+export const getValuesArrayToString = (values: string[]): string => {
+    if (!values?.length) {
+        return '""';
+    }
+
+    return values?.map((value) => `\"${value}\"`).join(",");
+};
+
+/**
+ *
+ * @param labelsArray
+ * @returns a string with the label / values selected
+ */
+
+const getSeriesArraySelector = (labelsArray: string[]): string => {
+    if (labelsArray?.length < 1) {
+        return "";
+    }
+
+    let LabelsString = "{";
+    let labelslength = labelsArray.length;
+    for (let i = 0; i < labelslength; i++) {
+        const [lb, val] = labelsArray[i].split("=");
+
+        LabelsString += `${lb}=\"${val}\"`;
+
+        if (i === labelsArray.length - 1) {
+            LabelsString += "}";
+        } else {
+            LabelsString += ",";
+        }
+    }
+    return LabelsString;
+};
+
 interface QueryUpdaterArgs {
     query: string;
     focusLabel: string;
@@ -31,10 +66,44 @@ export const queryUpdater: QueryUpdater = {
         return getSeriesSelector(focusLabel, query);
     },
     seriesCountByLabelValuePair: ({ query }): string => {
-        const a = query.split("=");
-        const label = a[0];
-        const value = a.slice(1).join("=");
-        return getSeriesSelector(label, value);
+        let previous_match;
+
+        try {
+            const prev = localStorage.getItem("labelValuePairs");
+            if (prev) {
+                previous_match = prev;
+            } else {
+                previous_match = "";
+            }
+        } catch (e) {
+            previous_match = "";
+        }
+
+        let queryStr = "";
+
+        if (previous_match && !previous_match.includes(query)) {
+            queryStr = `${previous_match} ${query}`;
+
+            localStorage.setItem("labelValuePairs", queryStr);
+        } else if (previous_match && previous_match.includes(query)) {
+            let prevArray = previous_match.split(" ");
+
+            let filtered = prevArray.filter((f) => f !== query);
+
+            let joint = filtered.join(" ");
+
+            queryStr = joint;
+
+            localStorage.setItem("labelValuePairs", joint);
+        } else if (previous_match === "") {
+            queryStr = query;
+
+            localStorage.setItem("labelValuePairs", queryStr);
+        }
+
+        let labelsArray = queryStr.split(" ");
+
+        return getSeriesArraySelector(labelsArray);
     },
     labelValueCountByLabelName: ({ query, match }): string => {
         if (match === "") {
@@ -43,7 +112,6 @@ export const queryUpdater: QueryUpdater = {
         return `${match.replace(/\}/gm, "")}, ${query}!=""}`;
     },
 };
-
 
 function sortAsc(rows: any[]) {
     const mess = rows?.sort((a, b) => a.value - b.value);
@@ -102,7 +170,6 @@ export function sortByCol(rows, col, order) {
     };
     return cb[col][order]();
 }
-
 
 export const toTimeSeconds = (time: Date) => {
     return dayjs(time).unix();
@@ -182,9 +249,17 @@ export const useStoreParams = () => {
         limitEntries: topN,
         setDeletedQueries,
         date,
-        reset
+        reset,
     } = useCardinalityStore();
-    return { match, focusLabel, topN, date, timeRange, reset, setDeletedQueries};
+    return {
+        match,
+        focusLabel,
+        topN,
+        date,
+        timeRange,
+        reset,
+        setDeletedQueries,
+    };
 };
 
 export const sectionsTitles = (str: string | null): Record<string, string> => ({
@@ -192,7 +267,7 @@ export const sectionsTitles = (str: string | null): Record<string, string> => ({
     seriesCountByLabelName: " Labels with the highest number of series",
     seriesCountByFocusLabelValue: `Values for "${str}" label with the highest number of series`,
     seriesCountByLabelValuePair:
-        "Label=value pairs with the highest number of series",
+        "Label=value pairs with the highest number of series", //  this is the one that should have multiple selection
     labelValueCountByLabelName:
         "Labels with the highest number of unique values",
 });
@@ -205,10 +280,7 @@ export const tableHeaders: any = {
     labelValueCountByLabelName: "Label name",
 };
 
-
-
-
-export const getSectionTitle = (series: any, focusLabel?:string) => {
+export const getSectionTitle = (series: any, focusLabel?: string) => {
     return sectionsTitles(focusLabel ?? "metric")[Object.keys(series)[0]];
 };
 
@@ -225,16 +297,15 @@ export const getRows = (series: any) => {
 };
 
 /**
- * 
- * @param series 
- * @param focusLabel 
+ *
+ * @param series
+ * @param focusLabel
  * @returns the series props for cardinality groups
  */
 
-export const getSeriesProps = (series: any, focusLabel?:string) => {
-
+export const getSeriesProps = (series: any, focusLabel?: string) => {
     return {
-        title: getSectionTitle(series,focusLabel),
+        title: getSectionTitle(series, focusLabel),
         sectionHeaderName: getHeaderSectionHeaderName(series),
         sectionHeader: getSectionHeader(series),
         rows: getRows(series),

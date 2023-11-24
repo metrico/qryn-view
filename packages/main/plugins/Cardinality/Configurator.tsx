@@ -57,7 +57,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({
         useCardinalityStore();
     const handleReset = () => {
         reset();
-
+        localStorage.setItem("labelValuePairs","")
         handleCardinalityRequest({
             match: "",
             focusLabel: "",
