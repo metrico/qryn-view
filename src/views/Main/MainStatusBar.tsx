@@ -50,7 +50,7 @@ const MainStatusBar: React.FC = () => {
                     height="24px"
                     className="logo"
                 />
-                <p className={"version"}>{process.env.REACT_APP_VERSION}</p>
+                <p className={"version"}>{import.meta.env.REACT_APP_VERSION}</p>
                 <p className="path"> {"/"} {renderPath(location.pathname)}</p>
             </div>
             <PluginRenderer section={"Status Bar"} localProps={theme} />

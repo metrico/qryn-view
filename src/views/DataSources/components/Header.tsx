@@ -56,7 +56,7 @@ export function Header(props: HeaderProps) {
                             opacity:'.5',
                         }}
                     >
-                        v{process.env.REACT_APP_VERSION}
+                        v{import.meta.env.REACT_APP_VERSION}
                     </p>
             </div>
             </div>
