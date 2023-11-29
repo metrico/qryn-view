@@ -96,6 +96,7 @@ export const Totals: React.FC<TotalsProps> = ({
 export const TotalSeriesPlugin: Plugin = {
     name: "Total Series",
     section: "Query Options",
+    visible: true,
     id: nanoid(),
     Component: Totals,
     description: "Total series summary",
