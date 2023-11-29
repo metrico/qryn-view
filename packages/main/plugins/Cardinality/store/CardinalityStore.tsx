@@ -13,6 +13,13 @@ type TimeRange = {
     end: number;
 };
 
+export enum ResponseEnum {
+    GO = "GO",
+    NODE = "NODE",
+}
+
+export type ResponseType = ResponseEnum.GO | ResponseEnum.NODE;
+
 export const toTimeSeconds = (time: Date) => {
     return dayjs(time).unix();
 };
@@ -27,6 +34,7 @@ type CardinalityState = {
     timeSeriesSelector: string;
     focusLabel: string;
     limitEntries: number;
+    responseType: ResponseType;
     date: string;
     setDate: (day: string) => void;
     setTotal: (t: CardinalityTotal) => void;
@@ -37,6 +45,7 @@ type CardinalityState = {
     deletedQueries: string[];
     setDeletedQueries: (query: string) => void;
     reset: () => void;
+    setResponseType: (responseType: ResponseType) => void;
     isUpdating: boolean;
     setIsUpdating: (isUpdating: boolean) => void;
     isLoading: boolean;
@@ -56,6 +65,7 @@ const initialData = {
         end: toTimeSeconds(new Date()),
         start: timeMinusOneDay(new Date()),
     },
+    responseType: ResponseEnum.NODE,
     isUpdating: false,
     timeSeriesSelector: "",
     focusLabel: "",
@@ -87,6 +97,8 @@ const useCardinalityStore = create<CardinalityState>((set) => ({
         set((state) => ({ deletedQueries: [...state.deletedQueries, query] })),
     reset: () => set(() => ({ ...initialParams })),
     setIsLoading: (isLoading: boolean) => set(() => ({ isLoading })),
+    setResponseType: (responseType: ResponseType) =>
+        set(() => ({ responseType })),
     setError: (error: any) => set(() => ({ error })),
     setTsdbStatus: (tsdbStatus: any) => set(() => ({ tsdbStatus })),
 }));

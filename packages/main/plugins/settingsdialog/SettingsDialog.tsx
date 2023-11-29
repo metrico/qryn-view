@@ -46,7 +46,6 @@ type PluginSwitchProps = {
 
 export const PluginSwitch: React.FC<PluginSwitchProps> = (props) => {
     const { name, active, section, description } = props;
-
     const pl = LocalPluginsManagement();
 
     const [isActive, setIsActive] = useState(active);
@@ -62,7 +61,8 @@ export const PluginSwitch: React.FC<PluginSwitchProps> = (props) => {
 
     return (
         <div className={cx(InlineSwitch)}>
-            <SettingLabel>useTheme
+            <SettingLabel>
+                useTheme
                 {name}
                 <Tooltip title={description}>
                     <InfoIcon
@@ -74,7 +74,7 @@ export const PluginSwitch: React.FC<PluginSwitchProps> = (props) => {
             <Switch
                 size={"small"}
                 checked={isActive}
-                onChange={(e) => handlePluginSwitch(section, name, isActive)}
+                onChange={() => handlePluginSwitch(section, name, isActive)}
                 inputProps={{
                     "aria-label": "controlled",
                 }}
@@ -103,8 +103,8 @@ export const PluginSwitchesCont: React.FC<{
     );
 };
 
-export const PluginsSwitches = (props:any) => {
-    const {border} = props || false
+export const PluginsSwitches = (props: any) => {
+    const { border } = props || false;
     const pl = LocalPluginsManagement();
     const [local] = useState(pl.getAll());
     const plugins: any = useMemo(() => {
@@ -136,12 +136,12 @@ export const PluginsSwitches = (props:any) => {
     );
 };
 
-export default function SettingsDialog({ open, onClose }: any) {
+export default function SettingsDialog({ open }: any) {
     const dispatch: any = useDispatch();
     const theme = useSelector((store: any) => store.theme);
     const autoTheme = useSelector((store: any) => store.autoTheme);
     const debugMode = useSelector((store: any) => store.debugMode);
-    const themeC = useTheme()
+    const themeC = useTheme();
     const [embedEdited, setEmbedEdited] = useState(
         getEmbed(window.location.href)
     );
@@ -157,7 +157,6 @@ export default function SettingsDialog({ open, onClose }: any) {
 
     useEffect(() => {
         setEmbedEdited(getEmbed(window.location.href));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [window.location.href]);
 
     useEffect(() => {
@@ -174,7 +173,7 @@ export default function SettingsDialog({ open, onClose }: any) {
         );
     }
 
-    const handleAutoTheme = (val: any) => {
+    const handleAutoTheme = () => {
         const switchedAutoTheme = !autoThemeLocal;
         dispatch(setAutoTheme(switchedAutoTheme));
         setLocalAutoTheme(switchedAutoTheme);
@@ -202,69 +201,70 @@ export default function SettingsDialog({ open, onClose }: any) {
 
     return (
         <ThemeProvider theme={themeC}>
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            PaperProps={{
-                classes: {
-                    root: DialogStyles,
-                },
-            }}
-        >
-            <SettingCont>
-                <SettingHeader>
-                    <h3>Settings</h3>
-                    <SettingCloseBtn onClick={handleClose}>
-                        {" "}
-                        <CloseIcon />{" "}
-                    </SettingCloseBtn>
-                </SettingHeader>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                    classes: {
+                        root: DialogStyles,
+                    },
+                }}
+            >
+                <SettingCont>
+                    <SettingHeader>
+                        <h3>Settings</h3>
+                        <SettingCloseBtn onClick={handleClose}>
+                            {" "}
+                            <CloseIcon />{" "}
+                        </SettingCloseBtn>
+                    </SettingHeader>
 
-                <SettingsInputContainer>
-                    <InputGroup>
-                        <SettingLabel>Theme: {theme}</SettingLabel>
-                        <Switch
-                            size={"small"}
-                            checked={themeSet === "dark"}
-                            onChange={handleThemeSwitch}
-                            disabled={autoThemeLocal}
-                            inputProps={{ "aria-label": "controlled" }}
-                        />
+                    <SettingsInputContainer>
+                        <InputGroup>
+                            <SettingLabel>Theme: {theme}</SettingLabel>
+                            <Switch
+                                size={"small"}
+                                checked={themeSet === "dark"}
+                                onChange={handleThemeSwitch}
+                                disabled={autoThemeLocal}
+                                inputProps={{ "aria-label": "controlled" }}
+                            />
 
-                        <SettingLabel>
-                            Automatic theme detection{" "}
-                            <Tooltip title="Theme determined by your system preferenes">
-                                <InfoIcon fontSize={"inherit"} />
-                            </Tooltip>
-                        </SettingLabel>
+                            <SettingLabel>
+                                Automatic theme detection{" "}
+                                <Tooltip title="Theme determined by your system preferenes">
+                                    <InfoIcon fontSize={"inherit"} />
+                                </Tooltip>
+                            </SettingLabel>
 
-                        <Switch
-                            size={"small"}
-                            checked={autoThemeLocal}
-                            onChange={handleAutoTheme}
-                            inputProps={{ "aria-label": "controlled" }}
-                        />
-                    </InputGroup>
+                            <Switch
+                                size={"small"}
+                                checked={autoThemeLocal}
+                                onChange={handleAutoTheme}
+                                inputProps={{ "aria-label": "controlled" }}
+                            />
+                        </InputGroup>
 
-                    <InputGroup>
-                        <SettingLabel>Set Debug Mode</SettingLabel>
-                        <Switch
-                            size={"small"}
-                            checked={debugMode}
-                            onChange={handleDebugSwitch}
-                            inputProps={{ "aria-label": "controlled" }}
-                        />
-                    </InputGroup>
-                    <InputGroup>
-                        <SettingLabel>Embed View</SettingLabel>
-                        <EmbedArea
-                            rows="8"
-                            value={DOMPurify.sanitize(embedEdited)}
-                            onChange={handleEmbedChange}
-                        ></EmbedArea>
-                    </InputGroup>
-                </SettingsInputContainer>
-            </SettingCont>
-        </Dialog>
-        </ThemeProvider> );
+                        <InputGroup>
+                            <SettingLabel>Set Debug Mode</SettingLabel>
+                            <Switch
+                                size={"small"}
+                                checked={debugMode}
+                                onChange={handleDebugSwitch}
+                                inputProps={{ "aria-label": "controlled" }}
+                            />
+                        </InputGroup>
+                        <InputGroup>
+                            <SettingLabel>Embed View</SettingLabel>
+                            <EmbedArea
+                                rows="8"
+                                value={DOMPurify.sanitize(embedEdited)}
+                                onChange={handleEmbedChange}
+                            ></EmbedArea>
+                        </InputGroup>
+                    </SettingsInputContainer>
+                </SettingCont>
+            </Dialog>
+        </ThemeProvider>
+    );
 }

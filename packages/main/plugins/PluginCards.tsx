@@ -11,13 +11,14 @@ export interface PluginCardProps {
     name: string;
     description: string;
     active: boolean;
+    visible: boolean;
     section: string;
     theme: any;
 }
 
 export const PluginCard: React.FC<PluginCardProps> = (props) => {
-    const { theme, name, description, section, active } = props;
-    return (
+    const { theme, name, description, section, active, visible } = props;
+    return visible ? (
         <>
             <div className={cx(PluginCardStyles(theme))}>
                 <div className="title">
@@ -37,6 +38,8 @@ export const PluginCard: React.FC<PluginCardProps> = (props) => {
                 <div className="text">{description}</div>
             </div>
         </>
+    ) : (
+        <></>
     );
 };
 
@@ -63,6 +66,7 @@ export const PluginCards: React.FC<{
     }, [userType, components]);
 
     const theme = useTheme();
+
     return (
         <div>
             {filteredComponentList?.length > 0 &&
@@ -72,6 +76,7 @@ export const PluginCards: React.FC<{
                         key={k}
                         name={component.name}
                         active={component.active}
+                        visible={component.visible}
                         section={section}
                         description={component.description}
                     />

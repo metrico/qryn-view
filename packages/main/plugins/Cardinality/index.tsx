@@ -11,5 +11,6 @@ export const CardinalViewPlugin: Plugin = {
     Component: Cardinality,
     description: "A cardinality view for labels",
     active: false,
+    visible:true,
     roles: ["admin", "superAdmin"],
 };
