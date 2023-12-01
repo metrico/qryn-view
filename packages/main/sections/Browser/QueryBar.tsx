@@ -504,8 +504,6 @@ export const QueryBar = (props: any) => {
             const multiline = e
                 ?.map((text: any) => text.children[0].text)
                 .join("\n");
-
-                console.log(multiline)
             const panel = [...panelQuery];
             panel.forEach((query) => {
                 if (query.id === id) {
@@ -766,7 +764,6 @@ export const QueryBar = (props: any) => {
     function handleStatsOpen(e: any) {
         const value = e.target.checked;
         setShowStatsOpen(() => value);
-        console.log("parsed in here")
         const prevPanel = JSON.parse(JSON.stringify(panelData));
 
         const newPanel = prevPanel?.map((m: any) => {
