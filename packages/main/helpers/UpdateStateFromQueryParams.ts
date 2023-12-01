@@ -113,7 +113,6 @@ export function UpdateStateFromQueryParams() {
     useEffect(() => {
         const urlFromHash = new URLSearchParams(hash.replace(/#/, ""));
         // !if there is some params set them first on UI
-
         if (hash.length > 0) {
             const startParams = urlQueryParams;
 
@@ -124,7 +123,7 @@ export function UpdateStateFromQueryParams() {
             if (Object.keys(startParams).length > 0) {
                 dispatch(setUrlQueryParams({ ...urlQueryParams, startParams }));
 
-                dispatch(setUrlLocation(DOMPurify.sanitize(hash)));
+                dispatch(setUrlLocation(hash));
 
                 Object.keys(startParams).forEach((param) => {
                     if (
@@ -217,21 +216,28 @@ export function UpdateStateFromQueryParams() {
             });
             (window as any).location.hash = urlFromHash;
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // set store values into url
     useEffect(() => {
+        // compares precious url params with store values and sets new url params with store values
+
         if (hash.length > 0) {
             const paramsFromHash = new URLSearchParams(hash.replace(/#/, ""));
+
             let previousParams: any = {};
+
             for (let [key, value] of paramsFromHash.entries()) {
                 previousParams[key] = value;
             }
+
             Object.keys(STORE_KEYS).forEach((store_key) => {
                 if (
                     STRING_VALUES.includes(store_key) &&
                     previousParams[store_key] !== STORE_KEYS[store_key]
                 ) {
+                    // store string type values from store into url
+
                     const updated = DOMPurify.sanitize(
                         STORE_KEYS[store_key].toString().trim()
                     );
@@ -242,6 +248,8 @@ export function UpdateStateFromQueryParams() {
                     previousParams[store_key] !==
                         encodeTs(STORE_KEYS[store_key])
                 ) {
+                    // store time related values from store into url
+
                     const encodedTs = encodeTs(STORE_KEYS[store_key]);
                     paramsFromHash.set(
                         store_key,
@@ -251,6 +259,8 @@ export function UpdateStateFromQueryParams() {
                     BOOLEAN_VALUES.includes(store_key) &&
                     previousParams[store_key] !== STORE_KEYS[store_key]
                 ) {
+                    // store boolean type values from store into url
+
                     try {
                         paramsFromHash.set(
                             store_key,
@@ -260,16 +270,20 @@ export function UpdateStateFromQueryParams() {
                         console.error(e);
                     }
                 } else if (store_key === "left") {
+                    // store left panel into url
+
                     const parsed = JSON.stringify(left);
-                    paramsFromHash.set("left", DOMPurify.sanitize(parsed));
+                    paramsFromHash.set("left", parsed);
+                    
                 } else if (store_key === "right") {
+                    // store right panel into url
+
                     const parsed = JSON.stringify(right);
-                    paramsFromHash.set("right", DOMPurify.sanitize(parsed));
+                    paramsFromHash.set("right", parsed);
                 }
             });
 
             (window as any).location.hash = paramsFromHash;
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [STORE_KEYS]);
 }

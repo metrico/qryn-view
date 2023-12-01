@@ -359,10 +359,10 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
     const openRight = Boolean(anchorElRight);
 
     const handleClick = (event: any) => {
-        setAnchorEl((prev:any) => event.currentTarget);
+        setAnchorEl(() => event.currentTarget);
     };
     const handleClickRight = (event: any) => {
-        setAnchorElRight((prev:any) => event.currentTarget);
+        setAnchorElRight(() => event.currentTarget);
     };
     const handleClose = (e: any, direction: any, option: any) => {
         setAnchorEl(null);

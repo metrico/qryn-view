@@ -10,7 +10,8 @@ import {
     QuantilesSelector,
 } from "./selectors";
 import { useLabelsFromProps } from "../hooks";
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
+
 
 export const JSONFormatBody = (props: any) => {
     const { setOperations, id } = props;
@@ -36,7 +37,7 @@ export const JSONFormatBody = (props: any) => {
                 return m;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, []);
 
     const onExpRemove = (e: any, index: number) => {
@@ -78,7 +79,7 @@ export const JSONFormatBody = (props: any) => {
                     {" "}
                     <input
                         className={"expression-input"}
-                        value={DOMPurify.sanitize(exp)}
+                        value={sanitizeWithSigns(exp)}
                         onChange={(e: any) => onExpChange(e, index)}
                     />{" "}
                     <button onClick={(e) => onExpRemove(e, index)}>x</button>{" "}
@@ -117,14 +118,14 @@ export const PatternFormatBody = (props: OperationContainerProps) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [expression]
     );
 
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <input
-                value={DOMPurify.sanitize(expression)}
+                value={sanitizeWithSigns(expression)}
                 placeholder={"<pattern|expression>"}
                 onChange={onExpChange}
             />
@@ -151,7 +152,7 @@ export const UnwrapFormatBody: React.FC = (props: any) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [labelValue]
     );
 
@@ -166,13 +167,13 @@ export const UnwrapFormatBody: React.FC = (props: any) => {
                 return m;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, []);
 
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <input
-                value={DOMPurify.sanitize(labelValue)}
+                value={sanitizeWithSigns(labelValue)}
                 placeholder={"Unrap Label"}
                 onChange={onLabelValueChange}
             />
@@ -206,14 +207,14 @@ export const RegexpFormatBody = (props: any) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [expression]
     );
 
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <input
-                value={DOMPurify.sanitize(expression)}
+                value={sanitizeWithSigns(expression)}
                 placeholder={"<re>"}
                 onChange={onExpChange}
             />
@@ -241,14 +242,14 @@ export const LineFormatBody = (props: any) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [expression]
     );
 
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <input
-                value={DOMPurify.sanitize(expression)}
+                value={sanitizeWithSigns(expression)}
                 placeholder={"{{.status_code}}"}
                 onChange={onExpChange}
             />
@@ -263,11 +264,11 @@ export const ClampBody = (props: any) => {
     const theme = useTheme();
 
     const onMaxChange = (e: any) => {
-        setMaximum((prev: any) => e.target.value);
+        setMaximum(() => e.target.value);
     };
 
     const onMinChange = (e: any) => {
-        setMinimum((prev: any) => e.target.value);
+        setMinimum(() => e.target.value);
     };
 
     useEffect(() => {
@@ -285,7 +286,7 @@ export const ClampBody = (props: any) => {
                 return m;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [minimum, maximum]);
 
     return (
@@ -293,7 +294,7 @@ export const ClampBody = (props: any) => {
             <div className="input-group">
                 <label>Minimum Scalar</label>
                 <input
-                    value={DOMPurify.sanitize(minimum)}
+                    value={sanitizeWithSigns(minimum)}
                     placeholder={"1"}
                     onChange={onMinChange}
                 />
@@ -301,7 +302,7 @@ export const ClampBody = (props: any) => {
             <div className="input-group">
                 <label>Maximum Scalar</label>
                 <input
-                    value={DOMPurify.sanitize(maximum)}
+                    value={sanitizeWithSigns(maximum)}
                     placeholder={"1"}
                     onChange={onMaxChange}
                 />
@@ -316,7 +317,7 @@ export const ClampMinBody = (props: any) => {
     const theme = useTheme();
 
     const onMinChange = (e: any) => {
-        setMinimum((prev: any) => e.target.value);
+        setMinimum(() => e.target.value);
     };
     useEffect(() => {
         let clapArr = [minimum];
@@ -333,7 +334,7 @@ export const ClampMinBody = (props: any) => {
                 return m;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [minimum]);
 
     return (
@@ -341,7 +342,7 @@ export const ClampMinBody = (props: any) => {
             <div>
                 <label>Minimum Scalar</label>
                 <input
-                    value={DOMPurify.sanitize(minimum)}
+                    value={sanitizeWithSigns(minimum)}
                     placeholder={"1"}
                     onChange={onMinChange}
                 />
@@ -354,7 +355,7 @@ export const ClampMaxBody = (props: any) => {
     const [maximum, setMaximum] = useState("1");
     const theme = useTheme();
     const onMaxChange = (e: any) => {
-        setMaximum((prev: any) => e.target.value);
+        setMaximum(() => e.target.value);
     };
 
     useEffect(() => {
@@ -372,7 +373,7 @@ export const ClampMaxBody = (props: any) => {
                 return m;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [maximum]);
 
     return (
@@ -380,7 +381,7 @@ export const ClampMaxBody = (props: any) => {
             <div>
                 <label>Maximum Scalar</label>
                 <input
-                    value={DOMPurify.sanitize(maximum)}
+                    value={sanitizeWithSigns(maximum)}
                     placeholder={"1"}
                     onChange={onMaxChange}
                 />
@@ -408,7 +409,7 @@ export const QuantileBody = (props: any) => {
                 return m;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [quantile]);
 
     return (
@@ -416,7 +417,7 @@ export const QuantileBody = (props: any) => {
             <div>
                 <label>Quantile</label>
                 <input
-                    value={DOMPurify.sanitize(quantile)}
+                    value={sanitizeWithSigns(quantile)}
                     placeholder={"1"}
                     onChange={onQuantileChange}
                 />
@@ -430,7 +431,7 @@ export const RoundBody = (props: any) => {
     const [round, setRound] = useState("1");
     const theme = useTheme();
     const onRoundChange = (e: any) => {
-        setRound((prev: any) => e.target.value);
+        setRound(() => e.target.value);
     };
 
     useEffect(() => {
@@ -444,7 +445,7 @@ export const RoundBody = (props: any) => {
                 return m;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [round]);
 
     return (
@@ -452,7 +453,7 @@ export const RoundBody = (props: any) => {
             <div>
                 <label>Nearest Scalar</label>
                 <input
-                    value={DOMPurify.sanitize(round)}
+                    value={sanitizeWithSigns(round)}
                     placeholder={"1"}
                     onChange={onRoundChange}
                 />
@@ -506,7 +507,7 @@ export const LabelReplaceBody = (props: any) => {
                 return m;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [destinationLabel, replacement, sourceLabel, regex]);
 
     return (
@@ -514,7 +515,7 @@ export const LabelReplaceBody = (props: any) => {
             <div className="input-group">
                 <label>Destination Label</label>
                 <input
-                    value={DOMPurify.sanitize(destinationLabel)}
+                    value={sanitizeWithSigns(destinationLabel)}
                     placeholder={destinationLabel}
                     onChange={onDestinationLevelChange}
                 />
@@ -522,7 +523,7 @@ export const LabelReplaceBody = (props: any) => {
             <div className="input-group">
                 <label>Replacement</label>
                 <input
-                    value={DOMPurify.sanitize(replacement)}
+                    value={sanitizeWithSigns(replacement)}
                     placeholder={replacement}
                     onChange={onReplacementChange}
                 />
@@ -530,7 +531,7 @@ export const LabelReplaceBody = (props: any) => {
             <div className="input-group">
                 <label>Source Label</label>
                 <input
-                    value={DOMPurify.sanitize(sourceLabel)}
+                    value={sanitizeWithSigns(sourceLabel)}
                     placeholder={sourceLabel}
                     onChange={onSourceLabelChange}
                 />
@@ -538,7 +539,7 @@ export const LabelReplaceBody = (props: any) => {
             <div className="input-group">
                 <label>Regex</label>
                 <input
-                    value={DOMPurify.sanitize(regex)}
+                    value={sanitizeWithSigns(regex)}
                     placeholder={regex}
                     onChange={onRegexChange}
                 />
@@ -547,7 +548,7 @@ export const LabelReplaceBody = (props: any) => {
     );
 };
 
-export const DefaultFormatBody = (props: any) => {
+export const DefaultFormatBody = () => {
     return <></>;
 };
 
@@ -571,7 +572,7 @@ export const RangeBody = (props: any) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [range]
     );
 
@@ -597,7 +598,7 @@ export const HistogramQuantileBody = (props: any) => {
                 return m;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [props.quantile]);
 
     const theme = useTheme();
@@ -616,7 +617,7 @@ export const HistogramQuantileBody = (props: any) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [quantile]
     );
 
@@ -641,7 +642,7 @@ export const LabelJoinBody = (props: any) => {
 
     const theme = useTheme();
 
-    const onSourceLabelAdd = (e: any) => {
+    const onSourceLabelAdd = () => {
         setSourceLabelSelectors((prev: any) => [...prev, ""]);
     };
 
@@ -668,7 +669,7 @@ export const LabelJoinBody = (props: any) => {
                 return next?.filter((_, i) => i !== index);
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [sourceLabelSelectors]
     );
 
@@ -709,7 +710,7 @@ export const LabelJoinBody = (props: any) => {
                 return m;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [destinationLabel, sourceLabelSelectors, separator]);
 
     return (
@@ -726,7 +727,7 @@ export const LabelJoinBody = (props: any) => {
             <div className="input-group">
                 <label>Replacement</label>
                 <input
-                    value={DOMPurify.sanitize(separator)}
+                    value={sanitizeWithSigns(separator)}
                     placeholder={separator}
                     onChange={onSeparatorChange}
                 />
@@ -747,7 +748,7 @@ export const LabelRangeBody = (props: any) => {
     const [range, setRange] = useState(props.range);
     const [quantile, setQuantile] = useState(props.quantile);
     const theme = useTheme();
-    const onLabelAdd = (e: any) => {
+    const onLabelAdd = () => {
         setLabels((prev) => [...prev, ""]);
     };
 
@@ -770,7 +771,7 @@ export const LabelRangeBody = (props: any) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [labels]
     );
 
@@ -793,7 +794,7 @@ export const LabelRangeBody = (props: any) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [labels]
     );
 
@@ -812,7 +813,7 @@ export const LabelRangeBody = (props: any) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [range]
     );
 
@@ -831,7 +832,7 @@ export const LabelRangeBody = (props: any) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [range]
     );
 
@@ -858,7 +859,7 @@ export const LabelRangeBody = (props: any) => {
             {props.header === "Quantile Over Time" && (
                 <input
                     onChange={onQuantileChange}
-                    value={DOMPurify.sanitize(quantile)}
+                    value={sanitizeWithSigns(quantile)}
                 />
             )}
             <button onClick={onLabelAdd}>Add Label</button>
@@ -874,7 +875,7 @@ export const AggregationsBody = (props: any) => {
     const [kValue, setKValue] = useState<number>(props.kValue || []);
 
     const theme = useTheme();
-    const onLabelAdd = (e: any) => {
+    const onLabelAdd = () => {
         setLabels((prev) => [...prev, ""]);
 
         setOperations((prev: any) => {
@@ -910,7 +911,7 @@ export const AggregationsBody = (props: any) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [labels]
     );
 
@@ -933,7 +934,7 @@ export const AggregationsBody = (props: any) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [labels]
     );
 
@@ -952,7 +953,7 @@ export const AggregationsBody = (props: any) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [kValue]
     );
 
@@ -981,7 +982,7 @@ export const AggregationsBody = (props: any) => {
             {isKValue(aggrType) && (
                 <input
                     type={"number"}
-                    value={DOMPurify.sanitize(String(kValue))}
+                    value={sanitizeWithSigns(String(kValue))}
                     placeholder={"<pattern|expression>"}
                     onChange={onKValueChange}
                 />
@@ -1027,7 +1028,7 @@ export const LabelFilterBody = (props: any) => {
                 return m;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [labelFilterState]);
 
     const onChange = useCallback(
@@ -1044,7 +1045,7 @@ export const LabelFilterBody = (props: any) => {
         return (
             <div className={cx(OperationBodyStyles(theme))}>
                 <input
-                    value={DOMPurify.sanitize(labelFilterState.label)}
+                    value={sanitizeWithSigns(labelFilterState.label)}
                     placeholder={"Text Filter"}
                     onChange={(e) => onChange(e, "label")}
                 />
@@ -1057,7 +1058,7 @@ export const LabelFilterBody = (props: any) => {
                         (opt: { name: string; value: string }, key: number) => (
                             <option
                                 key={key}
-                                value={DOMPurify.sanitize(opt.value)}
+                                value={sanitizeWithSigns(opt.value)}
                             >
                                 {opt.name}
                             </option>
@@ -1066,7 +1067,7 @@ export const LabelFilterBody = (props: any) => {
                 </select>
 
                 <input
-                    value={DOMPurify.sanitize(labelFilterState.value)}
+                    value={sanitizeWithSigns(labelFilterState.value)}
                     placeholder={"Text Filter"}
                     onChange={(e) => onChange(e, "value")}
                 />
@@ -1109,14 +1110,14 @@ export const BinaryOperationsBody = (props: any) => {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [binaryOperationState]
     );
 
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <input
-                value={DOMPurify.sanitize(binaryOperationState.value)}
+                value={sanitizeWithSigns(binaryOperationState.value)}
                 placeholder={"Value"}
                 onChange={(e) => onChange(e, "value")}
             />
@@ -1126,7 +1127,7 @@ export const BinaryOperationsBody = (props: any) => {
                     type={"checkbox"}
                     className={"checkbox"}
                     checked={binaryOperationState.bool || false}
-                    value={DOMPurify.sanitize("Boolean")}
+                    value={sanitizeWithSigns("Boolean")}
                     onChange={(e) => onChange(e, "bool")}
                 />
             </div>
@@ -1160,7 +1161,7 @@ export const LineFilterBody = (props: any) => {
     return (
         <div className={cx(OperationBodyStyles(theme))}>
             <input
-                value={DOMPurify.sanitize(expression)}
+                value={sanitizeWithSigns(expression)}
                 placeholder={"Text Filter"}
                 onChange={onExpChange}
             />

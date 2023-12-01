@@ -1,10 +1,11 @@
+import React from 'react'
 import QueryEditor from "@ui/plugins/queryeditor";
 import HistoryButton from "../../qryn-ui/Buttons/HistoryButton";
 import ShowLabelsButton from "../../qryn-ui/Buttons/ShowLabelsButton";
 import ShowLogsButton from "../../qryn-ui/Buttons/ShowLogsButton";
 import ShowLogsRateButton from "../../qryn-ui/Buttons/ShowLogsRateButton";
 import { QueryBarContainer } from "./styles";
-import  DOMPurify  from "isomorphic-dompurify";
+import sanitizeWithSigns from "../../helpers/sanitizeWithSigns"
 // query bar container (full view)
 
 
@@ -25,6 +26,7 @@ export const QueryBarCont = (props: any) => {
         onSubmitRate,
         loading,
     } = props;
+  
     const buttonsHidden = () =>
         !isSplit &&
         !isTabletOrMobile &&
@@ -39,7 +41,8 @@ export const QueryBarCont = (props: any) => {
                 dataSourceType !== "metrics" && (
                     <QueryEditor
                         onQueryChange={handleQueryChange}
-                        defaultValue={DOMPurify.sanitize(expr || "")}
+                        defaultValue={sanitizeWithSigns(expr || "")}
+                        
                         value={queryValue} // queryValue should change and or update on datasource change
                         onKeyDown={handleInputKeyDown}
                     />

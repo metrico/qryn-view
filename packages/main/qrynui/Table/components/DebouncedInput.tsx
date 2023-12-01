@@ -1,6 +1,7 @@
 import { css, cx } from "@emotion/css";
 import { useState, useEffect, InputHTMLAttributes, ChangeEvent } from "react";
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
+
 export const page_select = (theme: any) => css`
     color: ${theme.contrast};
     background: ${theme.deep};
@@ -40,14 +41,14 @@ export const DebouncedInput: React.FC<Props> = ({
         }, debounce);
 
         return () => clearTimeout(timeout);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [value]);
 
     return (
         <input
             {...props}
             className={cx(page_select(theme))}
-            value={DOMPurify.sanitize(String(value))}
+            value={sanitizeWithSigns(String(value))}
             onChange={handleInputChange}
         />
     );

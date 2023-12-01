@@ -12,7 +12,8 @@ import Select, { components } from "react-select";
 import useTheme from "@ui/theme/useTheme"
 import { cStyles } from "../DataViews/components/QueryBuilder/styles";
 import { selectTheme } from "../DataViews/components/QueryBuilder/helpers";
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
+
 const SearchColumn = css`
     display: flex;
     flex-direction: column;
@@ -186,7 +187,7 @@ export default function TracesSearch(props: any) {
         if (serviceNameOpts.length > 0) {
             setUrlString(formatUrl(urlState));
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+      
     }, [urlState]);
 
     const emit = () => {
@@ -267,14 +268,14 @@ export default function TracesSearch(props: any) {
                     label={"Tags"}
                     placeholder={"http.status_code=200 error=true"}
                     onChange={(e: any) => onChange(e, "tags")}
-                    value={DOMPurify.sanitize(urlState.tags)}
+                    value={sanitizeWithSigns(urlState.tags)}
                     labelWidth={TRACE_SEARCH_LABEL_WIDTH}
                 />
                 <Field
                     label={"Limit"}
                     placeholder={"Set limit, default 20"}
                     onChange={(e: any) => onChange(e, "limit")}
-                    value={DOMPurify.sanitize(String(urlState.limit))}
+                    value={sanitizeWithSigns(String(urlState.limit))}
                     labelWidth={TRACE_SEARCH_LABEL_WIDTH}
                 />
 
@@ -282,14 +283,14 @@ export default function TracesSearch(props: any) {
                     label={"Min Duration"}
                     placeholder={"e.g. 1.2s, 100ms"}
                     onChange={(e: any) => onChange(e, "minDuration")}
-                    value={DOMPurify.sanitize(urlState.minDuration)}
+                    value={sanitizeWithSigns(urlState.minDuration)}
                     labelWidth={TRACE_SEARCH_LABEL_WIDTH}
                 />
                 <Field
                     label={"Max Duration"}
                     placeholder={"e.g. 1.2s, 100ms"}
                     onChange={(e: any) => onChange(e, "maxDuration")}
-                    value={DOMPurify.sanitize(urlState.maxDuration)}
+                    value={sanitizeWithSigns(urlState.maxDuration)}
                     labelWidth={TRACE_SEARCH_LABEL_WIDTH}
                 />
 

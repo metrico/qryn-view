@@ -5,7 +5,8 @@ import FastForwardOutlinedIcon from "@mui/icons-material/FastForwardOutlined";
 import FastRewindOutlinedIcon from "@mui/icons-material/FastRewindOutlined";
 import SkipNextOutlinedIcon from "@mui/icons-material/SkipNextOutlined";
 import SkipPreviousOutlinedIcon from "@mui/icons-material/SkipPreviousOutlined";
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
+
 type Props<T extends RowData> = {
     getSelectedRowModel: () => RowModel<T>;
     hasNextPage: boolean;
@@ -17,7 +18,7 @@ type Props<T extends RowData> = {
     previousPage: () => void;
     refreshData: () => void;
     rerender: () => void;
-    rowSelection: Object;
+    rowSelection: any;
     setPageIndex: (index: number) => void;
     setPageSize: (size: number) => void;
     totalRows: number;
@@ -69,7 +70,7 @@ export const pagination_button = (theme: any) => css`
 `;
 
 export function ActionButtons<T extends RowData>({
-    getSelectedRowModel,
+    
     hasNextPage,
     hasPreviousPage,
     nextPage,
@@ -77,9 +78,6 @@ export function ActionButtons<T extends RowData>({
     pageIndex,
     pageSize,
     previousPage,
-    refreshData,
-    rerender,
-    rowSelection,
     setPageIndex,
     setPageSize,
     totalRows,
@@ -158,7 +156,7 @@ export function ActionButtons<T extends RowData>({
                 </span>
                 <select
                     className={cx(page_select(theme))}
-                    value={DOMPurify.sanitize(String(pageSize))}
+                    value={sanitizeWithSigns(String(pageSize))}
                     onChange={(e: any) => {
                         setPageSize(Number(e.target.value));
                     }}
@@ -166,7 +164,7 @@ export function ActionButtons<T extends RowData>({
                     {[10, 20, 30, 40, 50].map((pageSize) => (
                         <option
                             key={pageSize}
-                            value={DOMPurify.sanitize(String(pageSize))}
+                            value={sanitizeWithSigns(String(pageSize))}
                         >
                             Show {pageSize} Rows
                         </option>

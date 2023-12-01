@@ -2,8 +2,10 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { getDsHeaders } from "@ui/main/components/QueryBuilder/Operations/helpers";
 import setDataSources from "../DataSources/store/setDataSources";
 import { setShowDataSourceSetting } from "./setShowDataSourceSetting";
-
-// updateDataSources:
+import useCardinalityStore, {
+    ResponseEnum,
+} from "@ui/plugins/Cardinality/store/CardinalityStore";
+import { LocalPluginsManagement } from "@ui/plugins/PluginManagerFactory";
 
 export function updateDataSourcesWithUrl(
     dispatch: any,
@@ -93,6 +95,7 @@ export function updateDataSourcesWithUrl(
     dispatch(setDataSources(newDs));
 }
 
+// inject headers into get requests.
 export const getAxiosConf = (datasource: any) => {
     let conf: any = {};
     let cors = datasource?.cors || false;
@@ -120,6 +123,7 @@ export const getAxiosConf = (datasource: any) => {
     return conf;
 };
 
+// get the /ready response
 export const getReadyResponse = async (url: string, conf: any, response: any) =>
     await axios
         .get(`${url}/ready`, conf)
@@ -145,6 +149,7 @@ type AuthParams = {
     password: string;
 };
 
+// returns the API status by /ready GET request
 export async function checkLocalAPI(
     url: string,
     datasource: any,
@@ -154,6 +159,7 @@ export async function checkLocalAPI(
     let response: any = {};
     let conf = getAxiosConf(datasource);
     let isReady = false;
+    const { setResponseType } = useCardinalityStore.getState();
     let opts: any = { ...conf };
 
     if (auth?.username !== "" && isAuth) {
@@ -162,18 +168,28 @@ export async function checkLocalAPI(
 
     try {
         let res = await getReadyResponse(url, opts, response);
-
         response = res;
     } catch (e: any) {
         isReady = false;
     } finally {
-        if (
-            response &&
-            response?.status === 200 &&
-            (response?.contentType === "application/json; charset=utf-8" ||
-                response?.contentLength === "0")
-        ) {
-            isReady = true;
+        if (response && response?.status === 200) {
+            if (response?.contentLength === "0") {
+                setResponseType(ResponseEnum.GO);
+                LocalPluginsManagement().togglePluginVisibility(
+                    "Query Item",
+                    "Cardinal View",
+                    true
+                );
+                isReady = true;
+            } else {
+                setResponseType(ResponseEnum.NODE);
+                LocalPluginsManagement().togglePluginVisibility(
+                    "Query Item",
+                    "Cardinal View",
+                    false
+                );
+                isReady = true;
+            }
         }
     }
     return isReady;
@@ -190,6 +206,7 @@ export async function updateDataSourcesFromLocalUrl(
     let auth = { username: "", password: "" };
     let basicAuthFields = logsDs?.auth?.fields?.basicAuth;
     const isBasicAuthFields = basicAuthFields?.length > 0;
+
     if (isBasicAuth && isBasicAuthFields) {
         for (let field of basicAuthFields) {
             if (field?.name === "user") {
@@ -200,11 +217,14 @@ export async function updateDataSourcesFromLocalUrl(
             }
         }
     }
+
     let dsReady = false;
     let isLocalReady = false;
+
     if (logsDs?.url !== "") {
-        dsReady = await checkLocalAPI(logsDs.url, logsDs, auth, isBasicAuth); // add the auth in here
+        dsReady = await checkLocalAPI(logsDs.url, logsDs, auth, isBasicAuth);
     }
+
     if (!dsReady) {
         isLocalReady = await checkLocalAPI(location, logsDs);
 
@@ -216,6 +236,7 @@ export async function updateDataSourcesFromLocalUrl(
                 ...m,
                 url: location,
             }));
+
             localStorage.setItem("dataSources", JSON.stringify(newDs));
             dispatch(setDataSources(newDs));
         } else if (!dsReady && !isLocalReady) {

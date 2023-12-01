@@ -60,7 +60,7 @@ export default function Main() {
         } else {
             updateDataSourcesFromLocalUrl(dataSources, dispatch, navigate);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
     }, []);
 
     useEffect(()=>{
@@ -73,7 +73,7 @@ export default function Main() {
                 console.log(e)
             }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
     },[cookieUser])
 
     useEffect(() => {

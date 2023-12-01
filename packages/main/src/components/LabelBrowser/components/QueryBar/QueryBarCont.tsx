@@ -52,7 +52,7 @@ const QueryBarCont: React.FC<QueryBarContProps> = (props) => {
     } = props;
     const isSplit = useSelector((store: any) => store.isSplit);
     const dType = (type: string) => dataSourceType === type;
-
+  
     const buttonsHidden = () =>
         !isSplit && dataSourceType !== "flux" && dataSourceType !== "traces";
 
@@ -61,11 +61,12 @@ const QueryBarCont: React.FC<QueryBarContProps> = (props) => {
             {!isTabletOrMobile && !isSplit && !isBuilder && dType("logs") && (
                 <ShowLabelsButton {...props} />
             )}
+
             {(dataSourceType !== "logs" || !isBuilder) &&
                 dataSourceType !== "metrics" && (
                     <QueryEditor
                         onQueryChange={handleQueryChange}
-                        defaultValue={DOMPurify.sanitize(expr || "")}
+                        defaultValue={expr || ""}
                         value={queryValue} // queryValue should change and or update on datasource change
                         onKeyDown={handleInputKeyDown}
                     />

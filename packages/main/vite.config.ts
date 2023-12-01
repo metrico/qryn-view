@@ -1,11 +1,13 @@
- /// <reference types="vitest" />
- /// <reference types="vite/client" />
-import { defineConfig } from "vite";
+/// <reference types="vitest" />
+/// <reference types="vite/client" />
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 import path from "path";
 // https://vitejs.dev/config/
-export default defineConfig({
+
+let configOpts = {
+    server: {},
     plugins: [
         basicSsl(),
         react({
@@ -17,8 +19,8 @@ export default defineConfig({
     ],
     test: {
         globals: true,
-        environment: 'happy-dom'
-      },
+        environment: "happy-dom",
+    },
     build: {
         sourcemap: false,
         rollupOptions: {
@@ -55,7 +57,7 @@ export default defineConfig({
                         "deep-freeze",
                         "immutability-helper",
                     ],
-           
+
                     reactSelect: ["react-select"],
                 },
             },
@@ -75,4 +77,36 @@ export default defineConfig({
             "@ui/environment": path.resolve(__dirname, "environment"),
         },
     },
+};
+
+export default defineConfig(({ mode }) => {
+    // this proxy will load origin from .env file if present
+    const env = loadEnv(mode, process.cwd(), "");
+    const isProxy = env.VITE_API_BASE_URL && env.VITE_API_BASE_URL !== "";
+    const proxyApi = isProxy ? env.VITE_API_BASE_URL : "";
+
+    const configProxy = {
+        server: {
+            proxy: {
+                "/api": {
+                    target: proxyApi,
+                    changeOrigin: env.VITE_API_BASE_URL,
+                  secure:false,
+                   
+                },
+                "/loki":{target: proxyApi, changeOrigin: env.VITE_API_BASE_URL, secure:false},
+                "/ready":{
+                    target: proxyApi,
+                    changeOrigin: env.VITE_API_BASE_URL,
+                    
+                }
+            },
+        },
+    };
+
+    if (isProxy) {
+        configOpts.server = configProxy.server;
+    }
+
+    return configOpts;
 });

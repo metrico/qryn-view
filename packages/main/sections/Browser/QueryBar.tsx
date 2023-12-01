@@ -1,12 +1,11 @@
 /**React */
-import { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 /**npm */
-import { css, cx } from "@emotion/css";
+import {  cx } from "@emotion/css";
 import { ThemeProvider } from "@emotion/react";
 import { useMediaQuery } from "react-responsive";
-import DOMPurify from "isomorphic-dompurify";
 import { Switch } from "@mui/material";
 import { MobileTopQueryMenuCont } from "./MobileTopQueryMenuCont";
 import { QueryBarCont } from "./QueryBarCont";
@@ -30,6 +29,7 @@ import { maxWidth, SettingLabel } from "./styles";
 import MetricsSearch from "@ui/main/components/DataViews/components/Metrics/MetricsSearch";
 import useTheme from "@ui/theme/useTheme";
 import LogsSearch from "@ui/main/components/DataViews/components/Logs/LogsSearch/LogsSearch";
+import sanitizeWithSigns from "../../helpers/sanitizeWithSigns";
 
 /**
  *
@@ -105,7 +105,7 @@ export const QueryBar = (props: any) => {
             console.error(e);
             return exprQuery;
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+       
     }, [dataSourceId]);
 
     const actLocalDs = useMemo(() => {
@@ -138,7 +138,7 @@ export const QueryBar = (props: any) => {
     useEffect(() => {
         setQueryInput(actLocalQuery.expr);
         setQueryValue([
-            { children: [{ text: DOMPurify.sanitize(actLocalQuery.expr) }] },
+            { children: [{ text: sanitizeWithSigns(actLocalQuery.expr) }] },
         ]);
 
         setLogsLevel(actLocalQuery.expr, isLogsVolume);
@@ -192,7 +192,7 @@ export const QueryBar = (props: any) => {
                     currentDataSource?.url
                 )
             );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+       
     }, []);
 
     // force single view from small width
@@ -204,7 +204,7 @@ export const QueryBar = (props: any) => {
         if(!isTabletOrMobile && isSplit) {
             dispatch(setSplitView(true))
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+       
     }, [isTabletOrMobile]);
 
     // changes on changin dataSource Id
@@ -212,7 +212,7 @@ export const QueryBar = (props: any) => {
     useEffect(() => {
         setQueryInput(actLocalQuery.expr);
         setQueryValue([
-            { children: [{ text: DOMPurify.sanitize(actLocalQuery.expr) }] },
+            { children: [{ text: sanitizeWithSigns(actLocalQuery.expr) }] },
         ]);
         if (isLogsVolume && logsVolumeQuery) {
             setLogsLevel(actLocalQuery.expr, isLogsVolume);
@@ -295,7 +295,7 @@ export const QueryBar = (props: any) => {
                 )
             );
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+       
     }, [dataSourceId, id]);
 
     // changes on changing exp
@@ -303,20 +303,20 @@ export const QueryBar = (props: any) => {
     useEffect(() => {
         if (typeof expr === "string") {
             setQueryInput(expr);
-            setQueryValue([{ children: [{ text: DOMPurify.sanitize(expr) }] }]);
+            setQueryValue([{ children: [{ text: sanitizeWithSigns(expr) }] }]);
             saveQuery();
             if (isLogsVolume) {
                 setLogsLevel(expr, true);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+       
     }, [expr]);
 
     useEffect(()=>{
         if(typeof props.launchQuery === "string") {
             setQueryInput(props.launchQuery);
             setQueryValue([
-                { children: [{ text: DOMPurify.sanitize(props.launchQuery) }] },
+                { children: [{ text: sanitizeWithSigns(props.launchQuery) }] },
             ]);
             saveQuery();
             if (isLogsVolume) {
@@ -332,7 +332,7 @@ export const QueryBar = (props: any) => {
 
     useEffect(() => {
         setLogsLevel(queryInput, isLogsVolume);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+       
     }, [queryInput]);
 
     // handlers
@@ -361,12 +361,12 @@ export const QueryBar = (props: any) => {
     };
 
     const onMetricChange = (e: any) => {
-        const query = [{ children: [{ text: DOMPurify.sanitize(e) }] }];
+        const query = [{ children: [{ text: sanitizeWithSigns(e) }] }];
         handleQueryChange(query);
     };
 
     const onLogChange = (e: any) => {
-        const query = [{ children: [{ text: DOMPurify.sanitize(e) }] }];
+        const query = [{ children: [{ text: sanitizeWithSigns(e) }] }];
 
         // at this scope we should do the query change from the
         //  'use query' button
@@ -508,6 +508,7 @@ export const QueryBar = (props: any) => {
             panel.forEach((query) => {
                 if (query.id === id) {
                     if (multiline) {
+
                         query.expr = multiline;
                     }
                 }
@@ -572,7 +573,7 @@ export const QueryBar = (props: any) => {
             query = addQueryInterval(queryInput);
             setQueryInput(query);
             setQueryValue([
-                { children: [{ text: DOMPurify.sanitize(query) }] },
+                { children: [{ text: sanitizeWithSigns(query) }] },
             ]);
             setQueryValid(onQueryValid(query));
         }
@@ -763,7 +764,6 @@ export const QueryBar = (props: any) => {
     function handleStatsOpen(e: any) {
         const value = e.target.checked;
         setShowStatsOpen(() => value);
-
         const prevPanel = JSON.parse(JSON.stringify(panelData));
 
         const newPanel = prevPanel?.map((m: any) => {

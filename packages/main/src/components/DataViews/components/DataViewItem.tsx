@@ -6,7 +6,6 @@ import LogsView from "../views/LogsView";
 import { MatrixView } from "../views/MatrixView";
 import { VectorView } from "../views/VectorView";
 import { TraceView } from "./Traces/TraceView";
-import { flushSync } from "react-dom";
 
 
 export function DataViewItem(props: any) {

@@ -12,7 +12,6 @@ import {
     useReactTable,
     ColumnResizeMode,
 } from "@tanstack/react-table";
-import DOMPurify from "isomorphic-dompurify";
 import { useState, useEffect, useReducer } from "react";
 import { defaultColumn, fuzzyFilter, getTableMeta } from "./models/tableModels";
 
@@ -23,6 +22,7 @@ import CustomTable from "./components/CustomTable";
 import { useSkipper } from "./hooks/useSkipper";
 import { ThemeProvider } from "@emotion/react";
 import useTheme from "@ui/theme/useTheme";
+import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
 
 const Styles = styled.div<{ theme: any }>`
     padding: 5px;
@@ -120,7 +120,7 @@ export default function Table(props: any) {
                 table.setSorting([{ id: "fullName", desc: false }]);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     }, [table.getState().columnFilters[0]?.id]);
 
     return (
@@ -179,7 +179,7 @@ export default function Table(props: any) {
                         <DebouncedInput
                             theme={theme}
                             style={{ fontSize: "12px", padding: "3px 8px" }}
-                            value={DOMPurify.sanitize(globalFilter ?? "")}
+                            value={sanitizeWithSigns(globalFilter ?? "")}
                             onChange={(value) => setGlobalFilter(String(value))}
                             placeholder="Search all columns..."
                         />

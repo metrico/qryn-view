@@ -119,11 +119,37 @@ export function DataSourceSetting(props: any) {
         }
     }
 
+    function downLoadJson() {
+        const { headers, id, name, linkedFields } = props;
+
+        const headersMapped = headers?.map(({ header, value }) => ({
+            [header]: value,
+        }));
+
+        const datasources = { id, name, headers: headersMapped, linkedFields };
+
+        const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+            JSON.stringify(datasources)
+        )}`;
+
+        const link = document.createElement("a");
+        link.href = jsonString;
+        link.download = `${name}_${id}.json`;
+
+        link.click();
+    }
+
     return (
         <div className="ds-cont">
             <div className={cx(HeaderRow)}>
                 <DataSourceSettingHeader {...props} />
                 <div style={{ display: "flex", alignItems: "center" }}>
+                    <Button
+                        title={"Download Datasource settings as JSON"}
+                        value={DOMPurify.sanitize("Download JSON")}
+                        onClick={downLoadJson}
+                        primary={true}
+                    />
                     <Button
                         title={"Set Cookie with name: qryn-settings"}
                         value={DOMPurify.sanitize("Save Cookie")}
