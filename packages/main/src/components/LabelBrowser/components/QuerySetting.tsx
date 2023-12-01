@@ -55,26 +55,30 @@ const QuerySetting: React.FC<QuerySettingProps> = (props) => {
         const urlParams = new URLSearchParams(hash.replace(/#/, ""));
         const urlPanel: any = urlParams.get(name);
 
-        const parsedUrlPanel = JSON.parse(decodeURIComponent(urlPanel));
+        try {
+            const parsedUrlPanel = JSON.parse(decodeURIComponent(urlPanel));
 
-        if (parsedUrlPanel?.length > 0) {
-            const queryFromUrl = parsedUrlPanel.find((f: any) => f.idRef === idRef);
-            if (queryFromUrl) {
+            if (parsedUrlPanel?.length > 0) {
+                const queryFromUrl = parsedUrlPanel.find(
+                    (f: any) => f.idRef === idRef
+                );
+                if (queryFromUrl) {
+                    const panel = [...actPanel];
 
-                const panel = [...actPanel];
+                    const query = getPanelQueryByIDRef(panel, idRef);
 
-                const query = getPanelQueryByIDRef(panel, idRef);
-
-                if (typeof query !== "undefined") {
-                    query.queryType = queryFromUrl.queryType;
-                    query.direction = queryFromUrl.direction;
-                    dispatch(panelAction(name, panel));
+                    if (typeof query !== "undefined") {
+                        query.queryType = queryFromUrl.queryType;
+                        query.direction = queryFromUrl.direction;
+                        dispatch(panelAction(name, panel));
+                    }
                 }
             }
+        } catch (e) {
+            console.log(e);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    
+
     const getPanelQueryByID = (panel: any, queryId: any) => {
         return panel.find((query: any) => {
             return query.id === queryId;

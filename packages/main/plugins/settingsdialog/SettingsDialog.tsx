@@ -27,6 +27,7 @@ import { css, cx } from "@emotion/css";
 import { LocalPluginsManagement } from "../PluginManagerFactory";
 import { ThemeProvider } from "@emotion/react";
 import useTheme from "@ui/theme/useTheme";
+import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
 
 export const DialogStyles = css`
     background-color: transparent !important;
@@ -258,7 +259,7 @@ export default function SettingsDialog({ open }: any) {
                             <SettingLabel>Embed View</SettingLabel>
                             <EmbedArea
                                 rows="8"
-                                value={DOMPurify.sanitize(embedEdited)}
+                                value={sanitizeWithSigns(embedEdited)}
                                 onChange={handleEmbedChange}
                             ></EmbedArea>
                         </InputGroup>

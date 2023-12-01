@@ -108,8 +108,6 @@ export default function QueryEditor({
     onQueryChange,
     value,
     onKeyDown,
-    defaultValue,
-    isSplit,
 }: // wrapperRef
 any) {
 
@@ -152,13 +150,11 @@ any) {
 
     useEffect(() => {
         setEditorValue(value);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         setEditorValue(value);
         editor.children = value;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value, setEditorValue]);
 
     return (

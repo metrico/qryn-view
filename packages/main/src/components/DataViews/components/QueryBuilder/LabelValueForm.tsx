@@ -1,13 +1,13 @@
 import { useMemo, useRef, useState } from "react";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import DOMPurify from "isomorphic-dompurify";
 import { OPERATOR_OPTIONS } from "./consts";
 import { LabelValueContStyles, FlexCenter, IconStyle } from "./styles";
 import { cx } from "@emotion/css";
 import {  useValueSelectOpts } from "./hooks";
 import useTheme from '@ui/theme/useTheme';
 import { InputSelect } from "./InputSelect";
+import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
 
 export const LabelValueForm = (props: any) => {
     const {
@@ -87,7 +87,7 @@ export const LabelValueForm = (props: any) => {
         setLocalKeyVal((prev: any) => ({ ...prev, operator: value?.value }));
     };
 
-    const cleanAndRemove = (e: any) => {
+    const cleanAndRemove = () => {
         if (optRef?.current && operatorRef?.current && valueRef?.current) {
             labelRemove(keyVal.id);
         }
@@ -110,7 +110,7 @@ export const LabelValueForm = (props: any) => {
                     ref={optRef}
                     type={"label"}
                     isMulti={false}
-                    defaultValue={DOMPurify.sanitize(keyVal.label)}
+                    defaultValue={sanitizeWithSigns(keyVal.label)}
                     selectOpts={labelOpts}
                     mainTheme={mainTheme}
                     onChange={onLabelChange}
@@ -124,7 +124,7 @@ export const LabelValueForm = (props: any) => {
                     ref={operatorRef}
                     type={"operator"}
                     isMulti={false}
-                    defaultValue={DOMPurify.sanitize(keyVal.operator)}
+                    defaultValue={sanitizeWithSigns(keyVal.operator)}
                     selectOpts={OPERATOR_OPTIONS}
                     keyVal={keyVal}
                     mainTheme={mainTheme}
@@ -138,7 +138,7 @@ export const LabelValueForm = (props: any) => {
                         ref={valueRef}
                         type={"value"}
                         isMulti={isMulti}
-                        defaultValue={DOMPurify.sanitize(keyVal.values)}
+                        defaultValue={sanitizeWithSigns(keyVal.values)}
                         selectOpts={valueSelectOpts}
                         keyVal={keyVal}
                         mainTheme={mainTheme}
