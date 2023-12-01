@@ -1,6 +1,6 @@
 {
   "name": "qryn-view",
-  "version": "0.25.3",
+  "version": "0.26.0",
   "description": "Data Explorer UI for qryn",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "test": "turbo run test",
-    "dev":  "turbo run dev ",
+    "dev": "turbo run dev ",
     "build": "turbo run build"
   },
   "keywords": [],
