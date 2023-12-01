@@ -23,7 +23,7 @@
     "@szhsin/react-menu": "^4.0.0",
     "@tanstack/match-sorter-utils": "^8.8.4",
     "@tanstack/react-table": "^8.9.2",
-    "axios": "^1.4.0",
+    "axios": "^1.6.0",
     "classnames": "^2.3.2",
     "combokeys": "^3.0.1",
     "date-fns": "^2.30.0",
