@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsxImportSource": "@emotion/react",
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "types": ["vite/client", "@emotion/react/types/css-prop"]
+  },
+  "include": ["vite.config.ts"]
+}

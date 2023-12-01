@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+      "target":"ES2020",
+      "module":"ESNext",
+      "strict": false,
+      "strictNullChecks": false,
+      "esModuleInterop": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "noImplicitAny": false,
+      "noUnusedLocals": false,
+      "lib": ["ES2021.String","DOM","ES2020","DOM.Iterable"],
+      "skipLibCheck": true,
+      "sourceMap": true,
+      "jsx": "react-jsx",
+      "moduleResolution": "bundler",
+    }
+  }
