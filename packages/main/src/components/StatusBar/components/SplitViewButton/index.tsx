@@ -4,6 +4,7 @@ import { setLeftPanel } from "@ui/store/actions/setLeftPanel";
 import { setRightPanel } from "@ui/store/actions/setRightPanel";
 import { setSplitView } from "./setSplitView";
 import { SplitButton } from "./styled";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 export type props = {
     panel?: string;
@@ -13,7 +14,7 @@ export function closePanel(
     [leftOpen, rightOpen]: [leftOpen: boolean, rightOpen: boolean],
     panel: "left" | "right",
     prev: any,
-    dispatch: Function
+    dispatch: any
 ) {
     let data = [...prev];
     let next = data?.map((m: any) => ({ ...m, open: false }));
@@ -28,7 +29,7 @@ export function closePanel(
 
 export function openPanel(
     [left, right]: [left: any, right: any],
-    dispatch: Function
+    dispatch: any
 ) {
     let leftCopy = [...left];
     let rightCopy = [...right];
@@ -40,19 +41,30 @@ export function openPanel(
     dispatch(setRightPanel(openRight));
 }
 
-export default function SplitViewButton(props: any) {
+type SplitButtonProps = {
+    type: "remove" | "split";
+    side?: "left" | "right";
+    isSplit?: boolean;
+    onDeleteQuery?: () => void | undefined;
+};
 
-    const { side, isSplit } = props;
+export default function SplitViewButton({
+    type,
+    side = "left",
+    onDeleteQuery,
+    isSplit,
+}: SplitButtonProps) {
     const panel = useSelector((store: any) => store[side]);
     const left = useSelector((store: any) => store.left);
     const right = useSelector((store: any) => store.right);
-    const dispatch: any = useDispatch();
+    const usedSide = useSelector((store: any) => store[side]);
+    const dispatch:any = useDispatch();
+    const isSplitView = useSelector((store: any) => store.isSplit);
 
     const splitView = (e: any) => {
         e.preventDefault();
         e.stopPropagation();
-
-        if (!isSplit) {
+        if (!isSplit && !isSplitView) {
             openPanel([left, right], dispatch);
             dispatch(setSplitView(true));
         } else {
@@ -63,14 +75,33 @@ export default function SplitViewButton(props: any) {
         }
     };
 
+    const handleDeleteAction = (e: any) => {
+        if (usedSide?.length > 1 && onDeleteQuery !== undefined) {
+            onDeleteQuery();
+        } else if (isSplitView) {
+            splitView(e);
+        }
+    };
+
     const setTitle = isSplit ? "Close Split View" : "Split View";
     return (
         <>
-            <Tooltip title={setTitle}>
-                <SplitButton onClick={splitView}>
-                    {isSplit ? "Close" : "Split"}
-                </SplitButton>
-            </Tooltip>
+            {type === "split" ? (
+                <Tooltip title={setTitle}>
+                    <SplitButton onClick={splitView}>
+                        {isSplit ? "Close" : "Split"}
+                    </SplitButton>
+                </Tooltip>
+            ) : (
+                <DeleteOutlineIcon
+                    style={{
+                        fontSize: "15px",
+                        cursor: "pointer",
+                        padding: "3px",
+                    }}
+                    onClick={handleDeleteAction}
+                />
+            )}
         </>
     );
 }

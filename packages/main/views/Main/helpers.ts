@@ -155,7 +155,7 @@ export async function checkLocalAPI(
     datasource: any,
     auth?: AuthParams,
     isAuth?: boolean
-) {
+): Promise<boolean> {
     let response: any = {};
     let conf = getAxiosConf(datasource);
     let isReady = false;
@@ -192,7 +192,32 @@ export async function checkLocalAPI(
             }
         }
     }
+
     return isReady;
+}
+
+export function setLocalDataSources(datasources: any) {
+    // we could check datasources when typed in here
+    localStorage.setItem("dataSources", JSON.stringify(datasources));
+}
+
+export function updateDataSourcesUrl(cb: any, prevData: any, url: any) {
+    // 1- take datasources
+    const dsCP = [...prevData];
+
+    // 2 - copy as previous
+    const prevDs = JSON.parse(JSON.stringify(dsCP));
+
+    // 3- update datasources value with new source
+    const newDs = prevDs?.map((m: any) => ({
+        ...m,
+        url,
+    }));
+
+    // update localstorage datasources
+    setLocalDataSources(newDs);
+    // update datasources at store
+    cb(setDataSources(newDs));
 }
 
 export async function updateDataSourcesFromLocalUrl(
@@ -200,6 +225,7 @@ export async function updateDataSourcesFromLocalUrl(
     dispatch: any,
     navigate: any
 ) {
+    // current location
     const location = window.location.origin;
     const logsDs = dataSources.find((f: any) => f.type === "logs");
     const isBasicAuth = logsDs?.auth?.basicAuth?.value;
