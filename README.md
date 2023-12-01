@@ -1,6 +1,6 @@
 <a href="https://qryn.cloud" target="_blank"><img src='https://user-images.githubusercontent.com/1423657/218816262-e0e8d7ad-44d0-4a7d-9497-0d383ed78b83.png' width=250></a>
 
-[![Node.js CI](https://github.com/metrico/cloki-view/actions/workflows/npm_build_test.yml/badge.svg)](https://github.com/metrico/cloki-view/actions/workflows/npm_build_test.yml)
+[![Node.js CI](https://github.com/metrico/cloki-view/actions/workflows/ci-release.yml/badge.svg)](https://github.com/metrico/cloki-view/actions/workflows/ci-release.yml)
 [![CodeQL](https://github.com/metrico/cloki-view/actions/workflows/codeql-scanner.yml/badge.svg)](https://github.com/metrico/cloki-view/actions/workflows/codeql-scanner.yml)
 
 
