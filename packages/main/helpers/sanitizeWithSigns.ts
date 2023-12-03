@@ -4,6 +4,10 @@ export const convertEntityToBrackets = (text) => {
 
     const isEntityUsed = entities.test(text);
 
+    if(text === undefined) {
+        return ""
+    }
+
     if (isEntityUsed) {
         return text
             ?.replaceAll(/&lt;/g, "<")
