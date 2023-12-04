@@ -6,6 +6,23 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 import path from "path";
 // https://vitejs.dev/config/
 
+export const ignorePlugin = {
+    resourceRegExp: /^\.\/locale$/,
+    contextRegExp: /moment$/,
+};
+
+const customTransformers = [
+    {
+        test: (id) => {
+            return (
+                ignorePlugin.resourceRegExp.test(id) &&
+                ignorePlugin.contextRegExp.test(id)
+            );
+        },
+        transform: () => 'export {}',
+    },
+];
+
 let configOpts = {
     server: {},
     plugins: [
@@ -21,6 +38,11 @@ let configOpts = {
         globals: true,
         environment: "happy-dom",
     },
+    optimizeDeps:{
+        exclude: ['moment'], // Exclude 'moment' from automatic dependency optimization
+        include: ['**/*.+(js|ts)'], // Include JavaScript and TypeScript files for manual dependency optimization
+        customTransformers
+    },
     build: {
         sourcemap: false,
         rollupOptions: {
@@ -33,8 +55,6 @@ let configOpts = {
                         "@tanstack/react-table",
                         "@tanstack/match-sorter-utils",
                     ],
-                    moment: ["moment"],
-                    momentTimeZone: ["moment-timezone"],
                     slate: ["slate", "slate-history", "slate-react"],
                     vendor: [
                         "react-responsive",
@@ -49,6 +69,7 @@ let configOpts = {
                         "prismjs",
                         "javascript-time-ago",
                         "json-markup",
+                    
                     ],
                     reactDnd: ["react-dnd", "react-dnd-html5-backend"],
                     memoize: [
@@ -91,15 +112,17 @@ export default defineConfig(({ mode }) => {
                 "/api": {
                     target: proxyApi,
                     changeOrigin: env.VITE_API_BASE_URL,
-                  secure:false,
-                   
+                    secure: false,
                 },
-                "/loki":{target: proxyApi, changeOrigin: env.VITE_API_BASE_URL, secure:false},
-                "/ready":{
+                "/loki": {
                     target: proxyApi,
                     changeOrigin: env.VITE_API_BASE_URL,
-                    
-                }
+                    secure: false,
+                },
+                "/ready": {
+                    target: proxyApi,
+                    changeOrigin: env.VITE_API_BASE_URL,
+                },
             },
         },
     };
