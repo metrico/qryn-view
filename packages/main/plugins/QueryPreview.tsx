@@ -14,7 +14,7 @@ interface Props {
     queryInput?: any;
 }
 
-const QueryPreviewContainer = (theme: any) => css`
+export const QueryPreviewContainer = (theme: any) => css`
     padding: 8px;
     display: flex;
     flex: 1;
