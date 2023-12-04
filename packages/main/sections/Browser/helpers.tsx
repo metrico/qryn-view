@@ -14,7 +14,7 @@ export default function queryInit(query: any) {
             type: "paragraph",
             children: [
                 {
-                    text: DOMPurify.sanitize("Enter a cLoki Query"),
+                    text: DOMPurify.sanitize("Enter a Query"),
                 },
             ],
         },
