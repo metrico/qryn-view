@@ -1,12 +1,12 @@
 import DOMPurify from "isomorphic-dompurify";
 import { setLeftPanel, setRightPanel } from "./actions";
-
+import sanitizeWithSigns from '../../helpers/sanitizeWithSigns'
 export default function queryInit(query: any) {
     return query.split(/[  ]+/).map((m: any) => ({
         type: "paragraph",
         children: [
             {
-                text: DOMPurify.sanitize(m),
+                text: sanitizeWithSigns(m),
             },
         ],
     })) || [
@@ -14,7 +14,7 @@ export default function queryInit(query: any) {
             type: "paragraph",
             children: [
                 {
-                    text: DOMPurify.sanitize("Enter a cLoki Query"),
+                    text: DOMPurify.sanitize("Enter a Query"),
                 },
             ],
         },

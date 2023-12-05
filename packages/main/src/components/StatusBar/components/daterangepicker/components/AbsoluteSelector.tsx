@@ -2,8 +2,9 @@ import styled from "@emotion/styled";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import { BtnSmall } from "@ui/theme/styles/Button";
 import { ThemeProvider } from "@emotion/react";
-import DOMPurify from "isomorphic-dompurify";
 import useTheme from "@ui/theme/useTheme"
+import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
+
 const SelectorsContainer: any = styled.div`
     display: ${(props: any) => (props.isDisplay ? "flex" : "none")};
     flex-direction: column;
@@ -119,7 +120,7 @@ export default function AbsoluteSelector({
                     <div className="input-group">
                         <input
                             className={"date-time-ranged"}
-                            value={DOMPurify.sanitize(getEditedStartDate())}
+                            value={sanitizeWithSigns(getEditedStartDate())}
                             onChange={(e) => handleStart(e, false)}
                             onBlur={(e) => handleStart(e, true)}
                         />
@@ -136,7 +137,7 @@ export default function AbsoluteSelector({
                     <div className="input-group">
                         <input
                             className={"date-time-ranged"}
-                            value={DOMPurify.sanitize(getEditedEndDate())}
+                            value={sanitizeWithSigns(getEditedEndDate())}
                             onChange={(e) => handleStop(e, false)}
                             onBlur={(e) => handleStop(e, true)}
                         />

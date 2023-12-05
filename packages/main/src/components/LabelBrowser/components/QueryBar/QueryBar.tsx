@@ -7,7 +7,6 @@ import { css, cx } from "@emotion/css";
 import { ThemeProvider } from "@emotion/react";
 
 import { useMediaQuery } from "react-responsive";
-import DOMPurify from "isomorphic-dompurify";
 /**Actions */
 import getData from "@ui/store/actions/getData";
 import setQueryHistory from "@ui/store/actions/setQueryHistory";
@@ -46,7 +45,8 @@ import { Switch } from "@mui/material";
 import { SettingLabel } from "../styled";
 import MetricsSearch from "../../../DataViews/components/Metrics/MetricsSearch";
 import LogsSearch from "../../../DataViews/components/Logs/LogsSearch/LogsSearch";
-import useTheme from "@ui/theme/useTheme"
+import useTheme from "@ui/theme/useTheme";
+import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
 
 export function panelAction(name: any, value: any) {
     if (name === "left") {
@@ -116,11 +116,11 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
     const saveUrl = localUrl();
     const historyService = localService().historyStore();
     const theme = useTheme();
-    const historyOpen = useSelector((store:any) => store.historyOpen)
-    const isEmbed = useSelector((store:any) => store.isEmbed)
-    const queryHistory = useSelector((store:any) => store.queryHistory)
-    const start = useSelector((store:any) => store.start)
-    const stop = useSelector((store:any) => store.stop)
+    const historyOpen = useSelector((store: any) => store.historyOpen);
+    const isEmbed = useSelector((store: any) => store.isEmbed);
+    const queryHistory = useSelector((store: any) => store.queryHistory);
+    const start = useSelector((store: any) => store.start);
+    const stop = useSelector((store: any) => store.stop);
     const isSplit = useSelector((store: any) => store.isSplit);
     const panelQuery = useSelector((store: any) => store[name]);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1070px)" });
@@ -203,16 +203,13 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
                     currentDataSource?.url
                 )
             );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // force single view from small width
 
     useEffect(() => {
         setQueryInput(data.expr);
-        setQueryValue([
-            { children: [{ text: DOMPurify.sanitize(data.expr) }] },
-        ]);
+        setQueryValue([{ children: [{ text: sanitizeWithSigns(data.expr) }] }]);
     }, [data.expr]);
 
     useEffect(() => {
@@ -224,14 +221,13 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         if (isTabletOrMobile && isSplit) {
             dispatch(setSplitView(false));
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isTabletOrMobile]);
 
     useEffect(() => {
         let { expr } = getLocalQueryItem(dataSourceId, id);
         let actLocalDs = getLocalDataSources(dataSourceId);
         setQueryInput(expr);
-        setQueryValue([{ children: [{ text: DOMPurify.sanitize(expr) }] }]);
+        setQueryValue([{ children: [{ text: sanitizeWithSigns(expr) }] }]);
 
         if (isLogsVolume && logsVolumeQuery) {
             setLogsLevel(expr, isLogsVolume);
@@ -314,40 +310,36 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
                 )
             );
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataSourceId, id]);
 
     useEffect(() => {
         if (typeof queryInput === "string") {
             setQueryInput(queryInput);
             setQueryValue([
-                { children: [{ text: DOMPurify.sanitize(queryInput) }] },
+                { children: [{ text: sanitizeWithSigns(queryInput) }] },
             ]);
             saveQuery();
             if (isLogsVolume) {
                 setLogsLevel(queryInput, true);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryInput]);
 
     useEffect(() => {
         if (typeof launchQuery === "string" && launchQuery !== "") {
             setQueryInput(launchQuery);
             setQueryValue([
-                { children: [{ text: DOMPurify.sanitize(launchQuery) }] },
+                { children: [{ text: sanitizeWithSigns(launchQuery) }] },
             ]);
             saveQuery();
             if (isLogsVolume) {
                 setLogsLevel(launchQuery, true);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [launchQuery]);
 
     useEffect(() => {
         setLogsLevel(queryInput, isLogsVolume);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryInput]);
 
     function setLogsLevel(queryInput: string, isLogsVolume: boolean) {
@@ -374,12 +366,12 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
     };
 
     const onMetricChange = (e: any) => {
-        const query = [{ children: [{ text: DOMPurify.sanitize(e) }] }];
+        const query = [{ children: [{ text: sanitizeWithSigns(e) }] }];
         handleQueryChange(query);
     };
 
     const onLogChange = (e: any) => {
-        const query = [{ children: [{ text: DOMPurify.sanitize(e) }] }];
+        const query = [{ children: [{ text: sanitizeWithSigns(e) }] }];
 
         handleQueryChange(query);
     };
@@ -464,12 +456,13 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         }
     };
 
-    const saveQuery = (e:any = []) => {
+    const saveQuery = (e: any = []) => {
         if (e?.length > 0) {
             const queryParams = new URLSearchParams(hash.replace(/#/, ""));
             const multiline = e
                 ?.map((text: any) => text.children[0].text)
                 .join("\n");
+
             const panel = [...panelQuery];
             panel.forEach((query) => {
                 if (query.id === id) {
@@ -536,9 +529,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         if (!isEmptyQuery) {
             query = addQueryInterval(queryInput);
             setQueryInput(query);
-            setQueryValue([
-                { children: [{ text: DOMPurify.sanitize(query) }] },
-            ]);
+            setQueryValue([{ children: [{ text: sanitizeWithSigns(query) }] }]);
             setQueryValid(onQueryValid(query));
         }
 
@@ -713,7 +704,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
         dispatch(setLinksHistory(storedUrl));
     };
-    function handleHistoryClick(e: any) {
+    function handleHistoryClick() {
         dispatch(setHistoryOpen(!historyOpen));
     }
     function onShowQuerySettings() {

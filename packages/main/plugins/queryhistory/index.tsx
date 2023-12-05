@@ -29,9 +29,9 @@ import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import { Typography } from "@mui/material";
-import DOMPurify from "isomorphic-dompurify";
-import localUrl from "../../services/localUrl";
 
+import localUrl from "../../services/localUrl";
+import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
 import setLinksHistory from "@ui/store/actions/setLinksHistory";
 import {
     TabsList,
@@ -267,15 +267,15 @@ function HistoryLinkTools(props: any) {
     const [isRelative, setIsRelative] = useState(false);
 
     const handleClick = (event: any) => {
-        setAnchorEl((prev) => event.currentTarget);
-        setIsRelative((prev) => isRelative);
+        setAnchorEl(() => event.currentTarget);
+        setIsRelative(() => isRelative);
     };
-    const handleClose = (e: any, direction: any, option: any) => {
+    const handleClose = () => {
         setAnchorEl(null);
     };
 
     const handleChange = (event: any) => {
-        setIsRelative((prev) => Boolean(event.target.checked));
+        setIsRelative(() => Boolean(event.target.checked));
     };
 
     return (
@@ -291,7 +291,7 @@ function HistoryLinkTools(props: any) {
                 <Tooltip title={"Copy Link to Clipboard"} placement="right-end">
                     <span style={{ display: "flex" }}>
                         <HistoryButton
-                            onClick={(e: any) =>
+                            onClick={() =>
                                 copyLink(item?.data, "link", isRelative)
                             }
                             isActive={true}
@@ -370,7 +370,7 @@ function HistoryLinkTools(props: any) {
                 </Tooltip>
             </>
             <Tooltip title={"Delete Query"}>
-                <HistoryButton onClick={(e: any) => handleDelete(item)}>
+                <HistoryButton onClick={() => handleDelete(item)}>
                     <DeleteOutlineIcon
                         style={{ height: "14px", width: "14px" }}
                         fontSize="small"
@@ -417,7 +417,6 @@ function QueryHistoryTab({
     const [listDisplay, setListDisplay] = useState([]);
     useEffect(() => {
         setListDisplay(queryHistory);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -554,7 +553,6 @@ function LinksHistoryTab({
 
     useEffect(() => {
         setListDisplay(linksHistory);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     useEffect(() => {
         if (filtered.length > 0) {
@@ -625,7 +623,6 @@ function StarredHistoryTab({
     useEffect(() => {
         setQueryListDisplay(starredQueries);
         setLinksListDisplay(starredLinks);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -720,7 +717,7 @@ function QueryHistoryTabHeader({
                 <TabHistorySearchIcon />
                 <FilterInput
                     type="text"
-                    value={DOMPurify.sanitize(value)}
+                    value={sanitizeWithSigns(value)}
                     onChange={handleValueChange}
                     placeholder={`Search ${searchQueriesText}`}
                 />{" "}
@@ -782,7 +779,7 @@ function SettingTab({ clearHistory, clearLinksHistory }: any) {
     );
 }
 
-const QueryHistory = (props: any) => {
+const QueryHistory = () => {
     const LINK_COPIED = "Link Copied To Clipboard";
     const dispatch: any = useDispatch();
     const historyService = localService().historyStore();

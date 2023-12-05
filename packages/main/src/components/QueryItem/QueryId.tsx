@@ -1,9 +1,10 @@
 import { useState } from "react";
 
-import DOMPurify from "isomorphic-dompurify";
+
 import { css, cx } from "@emotion/css";
 import { Tooltip } from "@mui/material";
 import useTheme from "@ui/theme/useTheme"
+import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
 
 export const QueryTitleStyles = (theme: any) => css`
     margin-left: 20px;
@@ -47,7 +48,7 @@ export function QueryId(props: any) {
                 <Tooltip title={idText}>
                     <input
                         className={cx(QueryTitleStyles(theme))}
-                        value={DOMPurify.sanitize(idText)}
+                        value={sanitizeWithSigns(idText)}
                         placeholder={idText}
                         onChange={onIdTextChange}
                         onKeyDown={handleKeydown}

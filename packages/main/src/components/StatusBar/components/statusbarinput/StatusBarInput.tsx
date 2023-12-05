@@ -1,7 +1,10 @@
 import { useDispatch } from "react-redux";
 import { ThemeProvider } from "@emotion/react";
-import DOMPurify from "isomorphic-dompurify";
 import useTheme from "@ui/theme/useTheme"
+import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
+
+
+
 export function StatusBarInput(props: any) {
     const theme = useTheme();
     const { label, value, dispatchAction, type } = props;
@@ -15,7 +18,7 @@ export function StatusBarInput(props: any) {
                 <span className="label">{label}</span>
                 <input
                     className={type}
-                    value={DOMPurify.sanitize(value)}
+                    value={sanitizeWithSigns(value)}
                     onChange={handleStatusInputChange}
                 />
             </div>

@@ -9,6 +9,7 @@ import { DataviewsContainer } from "./styled";
 export default function DataViews(props: any) {
     const { name, open } = props;
     const theme = useTheme();
+    const isCardinality = useSelector((store: any) => store.isCardinality);
 
     const [side] = useState(name);
     const dataViews = useSelector((store: any) => store[`${side}DataView`]);
@@ -26,7 +27,7 @@ export default function DataViews(props: any) {
             <ThemeProvider theme={theme}>
                 <DataviewsContainer>
                     <PluginRenderer section={"Data Views"} localProps={props} />
-                    {viewsMemo?.map((dv: any, index: any) => (
+                    {!isCardinality && viewsMemo?.map((dv: any, index: any) => (
                         <DataViewItem
                             key={index}
                             {...props}

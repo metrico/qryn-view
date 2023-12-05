@@ -1,13 +1,12 @@
 import { cx, css } from "@emotion/css";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import  { useCallback, useEffect, useMemo, useState } from "react";
 import Prism from "prismjs";
 import "prismjs/components/prism-sql";
 import { createEditor, Text } from "slate";
 import { withHistory } from "slate-history";
-import DOMPurify from "isomorphic-dompurify";
 import { Slate, Editable, withReact } from "slate-react";
 import useTheme from '@ui/theme/useTheme';
-
+import sanitizeWithSigns   from '@ui/helpers/sanitizeWithSigns'
 interface Props {
     queryText: string;
     searchButton: any;
@@ -15,7 +14,7 @@ interface Props {
     queryInput?: any;
 }
 
-const QueryPreviewContainer = (theme: any) => css`
+export const QueryPreviewContainer = (theme: any) => css`
     padding: 8px;
     display: flex;
     flex: 1;
@@ -140,7 +139,7 @@ export default function QueryPreview(props: Props) {
     const [initialValue, setInitialValue] = useState([
         {
             type: "paragraph",
-            children: [{ text: DOMPurify.sanitize(queryText) }],
+            children: [{ text:  sanitizeWithSigns(queryText)}],
         },
     ]);
 
@@ -174,7 +173,7 @@ export default function QueryPreview(props: Props) {
 
     const renderLeaf = useCallback(
         (props:any) => <Leaf {...props} theme={theme} />,
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+   
         []
     );
 
@@ -182,18 +181,18 @@ export default function QueryPreview(props: Props) {
         setInitialValue([
             {
                 type: "paragraph",
-                children: [{ text: DOMPurify.sanitize(props.queryText) }],
+                children: [{ text:  sanitizeWithSigns(props.queryText) }],
             },
         ]);
-        editor.children = [{ text: DOMPurify.sanitize(props.queryText) }];
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        editor.children = [{ text:  sanitizeWithSigns(props.queryText) }];
+      
     }, [props.queryText]);
 
     const onChange = useCallback(
         (e:any) => {
             setInitialValue(e);
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+       
         [initialValue]
     );
 
@@ -202,12 +201,12 @@ export default function QueryPreview(props: Props) {
             setInitialValue([
                 {
                     type: "paragraph",
-                    children: [{ text: DOMPurify.sanitize(queryInput) }],
+                    children: [{ text:  sanitizeWithSigns(queryInput) }],
                 },
             ]);
-            editor.children = [{ text: DOMPurify.sanitize(queryInput) }];
+            editor.children = [{ text: sanitizeWithSigns(queryInput) }];
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+      
     }, [queryInput]);
 
     const editor:any = useMemo(

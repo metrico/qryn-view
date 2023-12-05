@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setLeftPanel } from "@ui/store/actions/setLeftPanel";
 import { setRightPanel } from "@ui/store/actions/setRightPanel";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SyncIcon from "@mui/icons-material/Sync";
 import {
     CloseQuery,
@@ -34,13 +33,20 @@ export const StyledTabsCont = (theme: any) => css`
     }
 `;
 
+const iconButtonStyle = {
+    fontSize: "15px",
+    cursor: "pointer",
+    padding: "3px",
+    marginLeft: "10px",
+};
+
 export function QueryItemContainer(props: any) {
     const dispatch: any = useDispatch();
     // update panel on id change
     const { onTabChange, tabsValue, isTabs, activeTabs } = props;
     const { children } = props;
     const {
-        data: { expr, open, id, start, stop, label, pickerOpen, idRef },
+        data: { expr, id, start, stop, label, pickerOpen, idRef },
         isQueryOpen,
     } = props;
 
@@ -49,6 +55,7 @@ export function QueryItemContainer(props: any) {
     const right = useSelector((store: any) => store.right);
     const panel = useSelector((store: any) => store[props.name]);
     const isEmbed = useSelector((store: any) => store.isEmbed);
+    const isCardinality = useSelector((store: any) => store.isCardinality);
     const isSplit = useSelector((store: any) => store.isSplit);
     const dataSources = useSelector((store: any) => store.dataSources);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
@@ -68,7 +75,6 @@ export function QueryItemContainer(props: any) {
 
     useEffect(() => {
         setExtValue(props.data.dataSourceId);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -160,8 +166,8 @@ export function QueryItemContainer(props: any) {
             ];
         }
         localStorage.setItem("dsSelected", JSON.stringify(newDsLocal));
-
-        setDataSourceValue((_) => optSelected);
+        
+        setDataSourceValue(() => optSelected);
 
         panelCP.forEach((panelCP: any) => {
             if (panelCP?.id === props?.data?.id) {
@@ -266,7 +272,7 @@ export function QueryItemContainer(props: any) {
                     )}
                 </div>
 
-                {!isEmbed && (
+                {(!isEmbed && !isCardinality) && (
                     <div className="query-tools">
                         <div
                             style={{ display: "flex", alignItems: "center" }}
@@ -284,8 +290,8 @@ export function QueryItemContainer(props: any) {
                             />
                             {!isTabletOrMobile && (
                                 <SplitViewButton
+                                    type="split"
                                     isSplit={isSplit}
-                                    open={open}
                                     side={props.name}
                                 />
                             )}
@@ -303,12 +309,7 @@ export function QueryItemContainer(props: any) {
 
                             <Tooltip title={"Sync Time Ranges"}>
                                 <SyncIcon
-                                    style={{
-                                        fontSize: "15px",
-                                        cursor: "pointer",
-                                        padding: "3px",
-                                        marginLeft: "10px",
-                                    }}
+                                    style={iconButtonStyle}
                                     onClick={onSyncTimeRanges}
                                 />
                             </Tooltip>
@@ -321,30 +322,18 @@ export function QueryItemContainer(props: any) {
                                 label={""}
                             />
                             <AddOutlinedIcon
-                                style={{
-                                    fontSize: "15px",
-                                    cursor: "pointer",
-                                    padding: "3px",
-                                    marginLeft: "10px",
-                                }}
+                                style={iconButtonStyle}
                                 onClick={props.onAddQuery}
                             />
-                            <DeleteOutlineIcon
-                                style={{
-                                    fontSize: "15px",
-                                    cursor: "pointer",
-                                    padding: "3px",
-                                }}
-                                onClick={props.onDeleteQuery}
+                            <SplitViewButton
+                                type="remove"
+                                onDeleteQuery={props.onDeleteQuery}
+                                side={props.name}
                             />
                         </div>
                     </div>
                 )}
             </div>
-
-            {/* add a flag in here for when we will have tabs */}
-
-            {/* here we need the children container // the tabs */}
             {children}
         </QueryItemContainerStyled>
     );
@@ -353,7 +342,7 @@ export function QueryItemContainer(props: any) {
 
 export type QueryTitleProps = {
     isEmbed: boolean;
-    onIdRefUpdate: Function;
+    onIdRefUpdate: (e:any) => void;
     expr: string;
     isQueryOpen: any;
     idRef: string;

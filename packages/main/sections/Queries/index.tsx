@@ -9,7 +9,7 @@ const Queries = (props: any) => {
     if (queries && Array.isArray(queries) && queries?.length > 0) {
         return (
             <div className={cx(QueriesContainer(theme))}>
-                {queries?.map((query: any, idx: number) => (
+                { queries?.map((query: any, idx: number) => (
                     <QueryItem {...props} data={query} key={idx} />
                 ))}
                 <PluginRenderer section={'Queries'} localProps={{queries,theme}} /> 

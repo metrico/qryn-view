@@ -12,6 +12,7 @@ export interface HeaderProps {
 }
 
 export function Header(props: HeaderProps) {
+    console.log(props)
     const navigate = useNavigate();
     const theme = useTheme();
     const urlLocation = useSelector((store: any) => store.urlLocation);

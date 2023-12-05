@@ -2,7 +2,8 @@ import { Column, RowData, Table } from "@tanstack/react-table";
 import { Fragment, useMemo, FC } from "react";
 import useTheme from "@ui/theme/useTheme";
 import DebouncedInput from "./DebouncedInput";
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
+
 type NumberInputProps = {
     columnFilterValue: [number, number];
     getFacetedMinMaxValues: () => [number, number] | undefined;
@@ -88,13 +89,13 @@ const TextInput: FC<TextInputProps> = ({
         <Fragment>
             <datalist id={dataListId}>
                 {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-                    <option value={DOMPurify.sanitize(value)} key={value} />
+                    <option value={sanitizeWithSigns(value)} key={value} />
                 ))}
             </datalist>
             <DebouncedInput
                 theme={theme}
                 type="text"
-                value={DOMPurify.sanitize(columnFilterValue ?? "")}
+                value={sanitizeWithSigns(columnFilterValue ?? "")}
                 onChange={(value) => setFilterValue(value)}
                 placeholder={`Search... (${columnSize})`}
                 className="w-36 border shadow rounded"
@@ -123,7 +124,7 @@ export function Filter<T extends RowData>({ column, table }: Props<T>) {
             typeof firstValue === "number"
                 ? []
                 : Array.from(uniqueValues.keys()).sort(),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [uniqueValues]
     );
 
@@ -136,7 +137,7 @@ export function Filter<T extends RowData>({ column, table }: Props<T>) {
     ) : (
         <TextInput
             columnId={column.id}
-            columnFilterValue={DOMPurify.sanitize(columnFilterValue as string)}
+            columnFilterValue={sanitizeWithSigns(columnFilterValue as string)}
             columnSize={uniqueValues.size}
             setFilterValue={column.setFilterValue}
             sortedUniqueValues={sortedUniqueValues}

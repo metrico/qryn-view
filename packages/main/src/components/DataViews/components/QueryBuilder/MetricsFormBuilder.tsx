@@ -6,16 +6,21 @@ import { FlexColumn } from "./styles";
 
 import { MetricsFormBuilderProps, Builder } from "./types";
 import { FormBuilders } from "./FormBuilders";
-import QueryPreview from "@ui/plugins/QueryPreview";
+import { QueryPreviewContainer } from "@ui/plugins/QueryPreview";
+import QueryEditor from "@ui/plugins/queryeditor";
 import { useSelector } from "react-redux";
 import { initialMetricsBuilder, binaryOperatorOpts } from "./consts";
+import queryInit from "@ui/main/components/LabelBrowser/helpers/queryInit";
 
 export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
-    const { dataSourceId, labelValueChange, searchButton, logsRateButton, queryInput } = props;
-    
+    const { dataSourceId, labelValueChange, searchButton, logsRateButton } =
+        props;
+
     const dataSources = useSelector((store: any) => store.dataSources);
-    const start = useSelector ((store:any)=> store.start)
-    const stop = useSelector ((store:any)=> store.stop)
+    const start = useSelector((store: any) => store.start);
+    const stop = useSelector((store: any) => store.stop);
+
+    const [editorValue, setEditorValue] = useState(queryInit(""));
 
     // this one should be comming form selected metric
 
@@ -37,13 +42,13 @@ export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
         (idx: number) => {
             setBuilders((prev) => [...prev, { ...prev[idx], isBinary: true }]);
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
         [builders]
     );
 
     useEffect(() => {
         labelValueChange(finalQuery);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        setEditorValue(queryInit(finalQuery));
     }, [finalQuery]);
 
     useEffect(() => {
@@ -82,9 +87,12 @@ export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
 
     // send a 'logs query' to the builders
 
+    const onEditorChange = (e) => {
+        labelValueChange(e[0]?.children[0]?.text);
+    };
+
     useEffect(() => {
         setFinalQuery(finalQueryOperator(builders));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [builders]);
 
     return (
@@ -99,13 +107,21 @@ export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
                     builders={builders}
                     finalQuery={finalQuery}
                 />
-                <QueryPreview
-                    queryText={finalQuery}
-                    searchButton={searchButton}
-                    logsRateButton={logsRateButton}
-                    queryInput={queryInput}
-                />
+
+                <div className={cx(QueryPreviewContainer(mainTheme))}>
+                    <label>Raw Query</label>
+                    <QueryEditor
+                        onQueryChange={onEditorChange}
+                        defaultValue={editorValue}
+                        value={editorValue}
+                    />
+                    <div className="action-buttons">
+                        {logsRateButton}
+                        {searchButton}
+                    </div>
+                </div>
             </div>
         </ThemeProvider>
     );
 }
+// the queryPreview should be switched to a query editor with a button
