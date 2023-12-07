@@ -11,7 +11,7 @@ import ExtensionIcon from "@mui/icons-material/Extension";
 import useTheme from "@ui/theme/useTheme";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import StorageIcon from "@mui/icons-material/Storage";
 import CopyButton from "./CopyButton/CopyButton";
@@ -39,6 +39,7 @@ export const ButtonMenuStyles = (theme: QrynTheme) => ({
 });
 
 export default function MainMenu() {
+    const {key} = useLocation()
     const showDs = useSelector((store: any) => store.showDataSourceSetting);
     const currentUserRole = useSelector((store: any) => store.currentUser.role);
     const dispatch: any = useDispatch();
@@ -51,17 +52,22 @@ export default function MainMenu() {
         setUserType(currentUserRole);
     }, [currentUserRole]);
 
+    useEffect(()=>{
+        handleClose()
+
+    },[key])
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(() => event.currentTarget);
     };
 
-    const handleClose = (e?: any) => {
-        e.stopPropagation();
+    const handleClose = () => {
+       
         setAnchorEl(() => undefined);
     };
 
-    const handleSettingsOpen = (e: any) => {
-        handleClose(e);
+    const handleSettingsOpen = () => {
+        handleClose();
         dispatch(setSettingsDialogOpen(true));
     };
 

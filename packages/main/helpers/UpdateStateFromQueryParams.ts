@@ -214,7 +214,7 @@ export function UpdateStateFromQueryParams() {
                     }
                 }
             });
-            (window as any).location.hash = urlFromHash;
+            (window as any).location.hash = `/search/#${urlFromHash}`;
         }
     }, []);
 
@@ -283,7 +283,7 @@ export function UpdateStateFromQueryParams() {
                 }
             });
 
-            (window as any).location.hash = paramsFromHash;
+            (window as any).location.hash =  `/search/#${paramsFromHash}`;
         }
     }, [STORE_KEYS]);
 }
