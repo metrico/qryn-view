@@ -229,15 +229,19 @@ export const useDataSourceData = (type: string) => {
 
     const isAuth = authData.basicAuth.value;
 
+    let user_pass= {u: '', p:''}
+
     if (isAuth) {
         let [user, password] = authData.fields.basicAuth;
         let passwordValue = password.value;
         let userValue = user.value;
+        user_pass.u = user?.value;
+        user_pass.p = password?.value;
 
         auth = serializeUserPassword(userValue, passwordValue);
     }
 
-    return { url, auth, headers: reqHeaders };
+    return { url, auth, user_pass, headers: reqHeaders };
 };
 
 // gets the data from the  CardinalityStore
