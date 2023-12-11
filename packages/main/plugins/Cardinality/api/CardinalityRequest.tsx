@@ -39,18 +39,20 @@ export const getDeletedFingerprints = async (
     setError,
     setDeletedQueries,
     setIsLoading,
-    headers
+    headers,
+    auth
 ) => {
     const deleteEndpoint = import.meta.env.VITE_API_DELETE_URL || url;
 
     try {
         setIsLoading(true);
         const urlDelete = deleteEndpoint + "/loki/api/v1/delete";
-
+        const { u, p } = auth;
         await fetch(urlDelete, {
             method: "GET",
             headers: {
                 ...headers,
+                Authorization: `Basic ${btoa(u + ":" + p)}`,
             },
         }).then((response) => {
             if (
@@ -76,14 +78,15 @@ export const deleteFingerprints = async (
     setError,
     setDeleteQueries,
     setIsLoading,
-    headers
+    headers,
+    auth
 ) => {
     const deleteEndpoint = import.meta.env.VITE_API_DELETE_URL || url;
 
     try {
         // start and end should calculated according to current date in seconds
         setIsLoading(true);
-
+        const { u, p } = auth;
         const urlDelete =
             deleteEndpoint +
             "/loki/api/v1/delete?query=" +
@@ -98,6 +101,7 @@ export const deleteFingerprints = async (
 
             headers: {
                 ...headers,
+                Authorization: `Basic ${btoa(u + ":" + p)}`,
             },
         }).then((response) => {
             if (
@@ -150,10 +154,10 @@ const requestCardinality = async (
     setError: (error: string) => void,
     setIsLoading: (isLoading: boolean) => void,
     setTsdbStatus: (tsdbStatus: any) => void,
-    headers: any
+    headers: any,
+    auth: { u: string; p: string }
 ) => {
     const { match } = reqParams;
-
     const totalParams = {
         date: reqParams.date,
         topN: 0,
@@ -177,10 +181,18 @@ const requestCardinality = async (
     setIsLoading(true);
     // set
     //this makes the multiple fetch requests
-
+   
     try {
+        const { u, p } = auth;
         const responses = await Promise.all(
-            urls.map((url) => fetch(url, { headers }))
+            urls.map((url) =>
+                fetch(url, {
+                    headers: {
+                        ...headers,
+                        Authorization: `Basic ${btoa(u + ":" + p)}`,
+                    },
+                })
+            )
         ); // add headers and auth in here . make it with axios
 
         if (responses[0].status === 400 || responses[0].status === 500) {
@@ -262,7 +274,8 @@ export const useCardinalityRequest = (
 
     const reqParams = { match, focusLabel, topN, date: reqDate };
 
-    const { url, headers } = useDataSourceData("logs");
+    const { url, headers, user_pass } = useDataSourceData("logs");
+
 
     // const [isLoading, setIsLoading] = useState(false);
     // const [error, setError] = useState("");
@@ -284,7 +297,8 @@ export const useCardinalityRequest = (
             setError,
             setDeletedQueries,
             setIsLoading,
-            headers
+            headers,
+            user_pass
         );
     };
 
@@ -294,7 +308,8 @@ export const useCardinalityRequest = (
             setError,
             setDeletedQueries,
             setIsLoading,
-            headers
+            headers,
+            user_pass
         );
     };
 
@@ -312,7 +327,8 @@ export const useCardinalityRequest = (
             setError,
             setIsLoading,
             setTsdbStatus,
-            headers
+            headers,
+            user_pass
         );
     };
 
@@ -324,7 +340,8 @@ export const useCardinalityRequest = (
                 setError,
                 setIsLoading,
                 setTsdbStatus,
-                headers
+                headers,
+                user_pass
             );
         }
     }, [url, match, focusLabel, topN, date]);
