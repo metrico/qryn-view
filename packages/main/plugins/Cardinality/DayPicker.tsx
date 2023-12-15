@@ -61,20 +61,20 @@ export const MenuStyles = (theme: any) => ({
     "& .icon": {
         fontSize: "16px",
         marginRight: "4px",
-        color: `${theme.contrast}`,
+        color: `${theme.maxContrast}`,
     },
     "& .item": {
         fontSize: "12px",
-        color: `${theme.contrast}`,
+        color: `${theme.maxContrast}`,
     },
     ".rdp-day_selected, .rdp-day_selected:focus-visible, .rdp-day_selected:hover":
         {
             background: `${theme.primary}`,
-            color: `${theme.contrast}`,
+            color: `${theme.maxContrast}`,
         },
     "& .rdp-day_selected : hover": {
         background: `${theme.primary}`,
-        color: `${theme.contrast}`,
+        color: `${theme.maxContrast}`,
     },
 });
 
@@ -139,7 +139,7 @@ export default function PickerMenu() {
                         size="small"
                         sx={{
                             ml: 2,
-                            color: `${theme.contrast}`,
+                            color: `${theme.maxContrast}`,
                             background: `${theme.primaryAccent}`,
                             "&.MuiIconButton-root": {
                                 border: `1px solid ${theme.primary}`,
