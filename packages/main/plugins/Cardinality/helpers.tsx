@@ -18,6 +18,9 @@ export const getValuesArrayToString = (values: string[]): string => {
     return values?.map((value) => `\"${value}\"`).join(",");
 };
 
+const labelsFreq = (arr: string[]) =>
+    arr.reduce((cnt, cur) => ((cnt[cur] = cnt[cur] + 1 || 1), cnt), {});
+
 /**
  *
  * @param labelsArray
@@ -31,7 +34,26 @@ const getSeriesArraySelector = (labelsArray: string[]): string => {
 
     let LabelsString = "{";
     let labelslength = labelsArray.length;
+
+    let lsarray = [];
+    // generate labels array splitting by equals or non equals
     for (let i = 0; i < labelslength; i++) {
+        const [label] = labelsArray[i].split(/(=|!=)/);
+        lsarray.push(label);
+    }
+    // check for frequency of same label
+    const labelsFrequency = labelsFreq(lsarray);
+
+    for (let i = 0; i < labelslength; i++) {
+        let currentLabel = lsarray[i];
+        // check if non equals label is hit and another one in the room is present
+        if (
+            labelsArray[i].includes("!=") &&
+            labelsFrequency[currentLabel] > 1
+        ) {
+            continue;
+        }
+
         const [lb, val] = labelsArray[i].split("=");
 
         LabelsString += `${lb}=\"${val}\"`;
@@ -60,7 +82,10 @@ export const queryUpdater: QueryUpdater = {
         return getSeriesSelector("__name__", query);
     },
     seriesCountByLabelName: ({ query }): string => {
-        return `{${query}!=""}`;
+        const queryStr = `{${query}!=""}`;
+        localStorage.setItem("labelValuePairs", `${query}!=`);
+
+        return queryStr;
     },
     seriesCountByFocusLabelValue: ({ query, focusLabel }): string => {
         return getSeriesSelector(focusLabel, query);
@@ -229,7 +254,7 @@ export const useDataSourceData = (type: string) => {
 
     const isAuth = authData.basicAuth.value;
 
-    let user_pass= {u: '', p:''}
+    let user_pass = { u: "", p: "" };
 
     if (isAuth) {
         let [user, password] = authData.fields.basicAuth;

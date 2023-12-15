@@ -72,7 +72,7 @@ export const ConfigContainerStyles = (theme: any) => css`
             height: 30px;
             transition: 0.35s all;
             background: ${theme.primaryAccent};
-            color: ${theme.contrast};
+            color: ${theme.maxContrast};
             padding: 4px 6px;
             border-radius: 3px;
             border: 1px solid ${theme.primary};

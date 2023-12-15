@@ -39,7 +39,7 @@ export const ButtonMenuStyles = (theme: QrynTheme) => ({
 });
 
 export default function MainMenu() {
-    const {key} = useLocation()
+    const { key } = useLocation();
     const showDs = useSelector((store: any) => store.showDataSourceSetting);
     const currentUserRole = useSelector((store: any) => store.currentUser.role);
     const dispatch: any = useDispatch();
@@ -52,17 +52,19 @@ export default function MainMenu() {
         setUserType(currentUserRole);
     }, [currentUserRole]);
 
-    useEffect(()=>{
-        handleClose()
-
-    },[key])
+    useEffect(() => {
+        handleClose();
+    }, [key]);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        event.stopPropagation();
+        event.preventDefault();
         setAnchorEl(() => event.currentTarget);
     };
 
-    const handleClose = () => {
-       
+    const handleClose = (event?: any) => {
+        event?.stopPropagation();
+        event?.preventDefault();
         setAnchorEl(() => undefined);
     };
 
@@ -97,7 +99,7 @@ export default function MainMenu() {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                onClick={handleClose}
+                onClick={handleClick}
                 PaperProps={{
                     elevation: 0,
                     sx: MenuStyles(theme),
@@ -114,21 +116,21 @@ export default function MainMenu() {
                 <Divider />
 
                 <Link to="/">
-                    <MenuItem className={"item"} onClick={handleClose}>
+                    <MenuItem className={"item"}>
                         <TravelExploreIcon className="icon" />
                         Search
                     </MenuItem>
                 </Link>
 
                 <Link to="/plugins">
-                    <MenuItem className={"item"} onClick={handleClose}>
+                    <MenuItem className={"item"}>
                         <ExtensionIcon className="icon" />
                         Plugins
                     </MenuItem>
                 </Link>
 
                 <Link to="/users">
-                    <MenuItem className={"item"} onClick={handleClose}>
+                    <MenuItem className={"item"}>
                         <PersonOutlineOutlinedIcon className="icon" />
                         Users
                     </MenuItem>
@@ -137,7 +139,7 @@ export default function MainMenu() {
                 {showDs &&
                     (userType === "admin" || userType === "superAdmin") && (
                         <Link to="datasources">
-                            <MenuItem className={"item"} onClick={handleClose}>
+                            <MenuItem className={"item"}>
                                 <StorageIcon className="icon" />
                                 Datasources
                             </MenuItem>
