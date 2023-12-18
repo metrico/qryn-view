@@ -180,6 +180,11 @@ export async function checkLocalAPI(
                     "Cardinal View",
                     true
                 );
+                LocalPluginsManagement().togglePlugin(
+                    "Query Item",
+                    "Cardinal View",
+                    true
+                )
                 isReady = true;
             } else {
                 setResponseType(ResponseEnum.NODE);
@@ -188,6 +193,11 @@ export async function checkLocalAPI(
                     "Cardinal View",
                     false
                 );
+                LocalPluginsManagement().togglePlugin(
+                    "Query Item",
+                    "Cardinal View",
+                    false
+                )
                 isReady = true;
             }
         }
