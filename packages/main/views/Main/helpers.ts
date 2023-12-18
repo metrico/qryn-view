@@ -175,11 +175,17 @@ export async function checkLocalAPI(
         if (response && response?.status === 200) {
             if (response?.contentLength === "0") {
                 setResponseType(ResponseEnum.GO);
+                console.log("setting plugin to true")
                 LocalPluginsManagement().togglePluginVisibility(
                     "Query Item",
                     "Cardinal View",
                     true
                 );
+                LocalPluginsManagement().togglePlugin(
+                    "Query Item",
+                    "Cardinal View",
+                    true
+                )
                 isReady = true;
             } else {
                 setResponseType(ResponseEnum.NODE);
@@ -188,6 +194,11 @@ export async function checkLocalAPI(
                     "Cardinal View",
                     false
                 );
+                LocalPluginsManagement().togglePlugin(
+                    "Query Item",
+                    "Cardinal View",
+                    false
+                )
                 isReady = true;
             }
         }
