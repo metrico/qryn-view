@@ -15,24 +15,24 @@ import { DatePickerButton } from "@ui/main/components/StatusBar/styled";
 export const StyledDrawer: any = styled((props: any) => (
     <Drawer
         anchor={"bottom"}
-        style={{ maxHeight: "250px", }}
+        style={{ maxHeight: "250px" }}
         variant={"persistent"}
         {...props}
     />
 ))(({ theme }) => ({
     "& .MuiPaper-root": {
-        borderTop:`1px solid ${theme.accentNeutral}`,
+        borderTop: `1px solid ${theme.accentNeutral}`,
     },
 }));
 
 export const TabsContainer: any = styled(Tabs)`
     height: "320px";
-    background: ${({theme}: any) => theme.deep};
+    background: ${({ theme }: any) => theme.deep};
 `;
 export const Tab: any = styled(TabUnstyled)`
-    color: ${({theme}: any) => theme.contrast};
-    background: ${({theme}: any) => theme.neutral};
-    border:1px solid ${(props: any)=>props.theme.accentNeutral};
+    color: ${({ theme }: any) => theme.contrast};
+    background: ${({ theme }: any) => theme.neutral};
+    border: 1px solid ${(props: any) => props.theme.accentNeutral};
     cursor: pointer;
     font-size: 13px;
     background-color: transparent;
@@ -110,9 +110,9 @@ export const TabHeaderContainer: any = styled.div`
     font-size: 13px;
     display: flex;
     align-items: center;
-    color: ${({theme}: any) => theme.contrast};
+    color: ${({ theme }: any) => theme.contrast};
     justify-content: space-between;
-    background: ${({theme}: any) => theme.shadow};
+    background: ${({ theme }: any) => theme.shadow};
     height: 37px;
 `;
 export const TabPanel: any = styled(TabPanelUnstyled)`
@@ -133,7 +133,7 @@ export const EmptyHistory: any = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: ${({theme}: any) => theme.contrast};
+    color: ${({ theme }: any) => theme.contrast};
     font-size: 14px;
     flex: 1;
     padding: 20px;
@@ -143,29 +143,28 @@ export const EmptyHistory: any = styled.div`
 export const QueryHistoryContainer: any = styled.div`
     height: 250px;
     overflow-y: auto;
-    color: ${({theme}: any) => theme.contrast};
-    background: ${({theme}: any) => theme.lightActiveBg};
+    color: ${({ theme }: any) => theme.contrast};
+    background: ${({ theme }: any) => theme.lightActiveBg};
     &.starredCont {
         height: 210px;
     }
     &::-webkit-scrollbar {
         width: 5px;
-        background: ${({theme}: any) => theme.neutral};
+        background: ${({ theme }: any) => theme.neutral};
     }
     &::-webkit-scrollbar-corner {
         background: transparent;
-      }
+    }
     &::-webkit-scrollbar-thumb {
         border-radius: 5px;
-        background: ${({theme}: any) => theme.alphaPlusNeutral};
+        background: ${({ theme }: any) => theme.alphaPlusNeutral};
     }
 `;
-
 
 export const HistoryButton: any = styled(DatePickerButton)`
     padding: 3px 6px;
     background: ${({ theme }: any) => theme.neutral};
-    border: 1px solid ${(props: any)=>props.theme.accentNeutral};
+    border: 1px solid ${(props: any) => props.theme.accentNeutral};
     border-radius: 3px;
     border: none;
     color: ${({ theme }: any) => theme.contrast};
@@ -185,7 +184,7 @@ export const SettingItemContainer: any = styled.div`
     justify-content: space-between;
     padding: 20px;
     background: ${({ theme }: any) => theme.neutral};
-    border:1px solid ${(props: any)=>props.theme.accentNeutral};
+    border: 1px solid ${(props: any) => props.theme.accentNeutral};
     margin: 10px;
     border-radius: 3px;
     & div {
@@ -195,7 +194,7 @@ export const SettingItemContainer: any = styled.div`
     }
     & small {
         font-size: 12px;
-        color: ${({theme}: any) => theme.contrast};
+        color: ${({ theme }: any) => theme.contrast};
         line-height: 1.5;
         margin-bottom: 10px;
     }
@@ -217,7 +216,6 @@ export const SubmitButton: any = styled(HistoryButton)`
         }
         .open-text {
             display: none;
-            
         }
     }
 `;
@@ -241,19 +239,23 @@ export const StyledCloseButton: any = styled(HistoryButton)`
 
 export const DialogCancelButton: any = styled(HistoryButton)`
     background: ${({ theme }: any) => theme.neutral};
-    border:1px solid ${(props: any)=>props.theme.accentNeutral};
+    border: 1px solid ${(props: any) => props.theme.accentNeutral};
     padding: 8px 16px;
 `;
 export const DialogConfirmButton: any = styled(HistoryButton)`
-    background: ${({ theme }: any) => theme.primary};
-    color:${({theme}: any) => theme.maxContrast};
+    background: ${({ theme, active }: any) =>
+        active ? theme.primary : theme.shadow};
+    color: ${({ theme, active }: any) =>
+        active ? theme.maxContrast : theme.contrast};
     padding: 8px 16px;
+    cursor: ${({ active }) => (active ? "pointer" : "not-allowed")};
+    pointer-events: ${({ active }) => (active ? "auto" : "none")};
 `;
 
 export const FilterInput: any = styled.input`
-    color: ${({theme}: any) => theme.contrast};
+    color: ${({ theme }: any) => theme.contrast};
     background: ${({ theme }: any) => theme.deep};
-    border:none;
+    border: none;
     height: 21px;
     margin: 0px 10px 0px 0px;
     padding: 0px;
@@ -269,10 +271,10 @@ export const FilterInput: any = styled.input`
 export const RowData: any = styled.span`
     flex: 1;
     font-family: monospace;
-    display:flex;
+    display: flex;
     align-items: center;
     font-size: "13px";
-    color: ${({theme}: any) => theme.contrast};
+    color: ${({ theme }: any) => theme.contrast};
     white-space: nowrap;
     padding: 4px 0px;
     overflow: hidden;
@@ -288,7 +290,7 @@ export const LinkParams: any = styled.div`
     }
     .inline-params {
         align-items: center;
-        display: ${(props: any) => props.open ? "none" : "grid"};
+        display: ${(props: any) => (props.open ? "none" : "grid")};
         flex: 1;
         grid-template-columns: 1fr 0.25fr 0.25fr auto;
         margin-right: 5px;
@@ -301,7 +303,7 @@ export const LinkParams: any = styled.div`
         border: none;
     }
     .block-params {
-        display: ${(props: any) => props.open ? "flex" : "none"};
+        display: ${(props: any) => (props.open ? "flex" : "none")};
         flex-direction: column;
         flex: 1;
         p {
