@@ -340,3 +340,11 @@ export const getSeriesProps = (series: any, focusLabel?: string) => {
         rows: getRows(series),
     };
 };
+
+export function calcQuotaOverCardinality(cardinality: number, quota: number) {
+    return (cardinality / quota) * 100 - 5;
+}
+
+export function isQuotaWarning(quotaOverCardinality: number) {
+    return quotaOverCardinality > 60;
+}

@@ -33,7 +33,14 @@ const SeriesRowHeaders: React.FC<SeriesRowHeadersProps> = ({
                 <div className="cell-header cell">Share in Total</div>
             )}
 
-            <div className="cell-header cell center">Delete</div>
+            <div className="cell-header cell start">Quota</div>
+
+            <div
+                className="cell-header cell end"
+                style={{ textAlign: "right" }}
+            >
+                Drop
+            </div>
         </div>
     );
 };
