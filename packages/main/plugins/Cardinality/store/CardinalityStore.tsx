@@ -6,6 +6,7 @@ type CardinalityTotal = {
     amount: number;
     prev: number;
     diff: number;
+    quota: number;
 };
 
 type TimeRange = {
@@ -57,7 +58,7 @@ type CardinalityState = {
 };
 
 const initialData = {
-    total: { amount: 0, prev: 0, diff: 0 },
+    total: { amount: 0, prev: 0, diff: 0, quota: 0 },
 
     date: dayjs().format(DATE_FORMAT),
 
@@ -87,6 +88,7 @@ const useCardinalityStore = create<CardinalityState>((set) => ({
 
     setIsUpdating: (isUpdating: boolean) => set(() => ({ isUpdating })),
     setTotal: (t: CardinalityTotal) => set(() => ({ total: t })),
+
     setTimeSeriesSelector: (text: string) =>
         set(() => ({ timeSeriesSelector: text })),
     setTimeRange: (timeRange: TimeRange) => set(() => ({ timeRange })),

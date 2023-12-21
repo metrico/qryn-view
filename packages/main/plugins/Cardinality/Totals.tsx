@@ -7,7 +7,7 @@ type TotalsProps = {
     theme: any;
     value: number | string;
     trend?: "up" | "down" | "none";
-    text: "total" | "percent" | "previous" | "diff";
+    text: "total" | "percent" | "previous" | "diff" | "quota";
     type?: "amount" | "prev" | "diff";
 };
 
@@ -75,6 +75,10 @@ const TOTALS_VALUES = {
         text: "Diff from previous",
         value: (val: string | number | null | undefined) => `${val ?? 0  }`,
     },
+    quota: {
+        text: "Quota",
+        value : (val: string | number ) => `${val}`
+    }
 };
 export const Totals: React.FC<TotalsProps> = ({
     theme,

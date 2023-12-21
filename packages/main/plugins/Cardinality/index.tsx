@@ -5,7 +5,7 @@ import { Cardinality } from "./Cardinality";
 
 
 export const CardinalViewPlugin: Plugin = {
-    name: "Cardinal View",
+    name: "Cardinality View",
     section: "Query Item",
     id: nanoid(),
     Component: Cardinality,
