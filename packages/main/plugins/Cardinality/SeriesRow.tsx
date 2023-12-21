@@ -27,6 +27,7 @@ export type SeriesRowProps = {
 
 export type QuotaCellProps = {
     quota: number;
+    cardinality: number;
     isQuotaWarning: boolean;
 };
 
@@ -52,13 +53,17 @@ export const QuotaSquare = (isWarning: boolean) => css`
     }
 `;
 
-export const QuotaCell = ({ quota, isQuotaWarning }: QuotaCellProps) => {
+export const QuotaCell = ({
+    quota,
+    cardinality,
+    isQuotaWarning,
+}: QuotaCellProps) => {
     return (
         <div className={cx(QuotaSquare(isQuotaWarning))}>
             <div className={"square"}></div>
             <div className={"info-icon"}>
                 <Tooltip
-                    title={`cardinality quota ${
+                    title={`cardinality over quota percentage ${
                         isQuotaWarning ? "warning" : "(no warning)"
                     }`}
                 >
@@ -71,7 +76,9 @@ export const QuotaCell = ({ quota, isQuotaWarning }: QuotaCellProps) => {
                     />
                 </Tooltip>
             </div>
-            <p className="quota-num">{quota}</p>
+            <p className="quota-num">
+                {calcQuotaOverCardinality(cardinality, quota)}%
+            </p>
         </div>
     );
 };
@@ -113,7 +120,11 @@ const SeriesRow: React.FC<SeriesRowProps> = ({
 
             {hasShare && <ShareCell share={share} />}
             <div className="cell">
-                <QuotaCell quota={quota} isQuotaWarning={quotaWarning} />
+                <QuotaCell
+                    quota={quota}
+                    cardinality={value}
+                    isQuotaWarning={quotaWarning}
+                />
             </div>
             <div className="cell">
                 <div
