@@ -28,8 +28,17 @@ export const SeriesRowStyle = (theme: Partial<QrynTheme>) => css`
         letter-spacing: 1px;
         text-transform: uppercase;
         padding: 12px;
+        padding-left: 0px;
         &.center {
             text-align: center;
+        }
+        &.start {
+            text-align: left;
+        }
+        .end {
+            text-align: right;
+            padding: 0;
+            padding-right: 0px !important;
         }
     }
     .interactive {
@@ -49,7 +58,7 @@ export const SeriesRowStyle = (theme: Partial<QrynTheme>) => css`
     .c-value {
         color: ${theme.contrast};
         font-size: 14px;
-        margin: 0px 12px;
+        //margin: 0px 12px;
 
         width: auto;
     }
@@ -74,6 +83,7 @@ export const SeriesRowStyle = (theme: Partial<QrynTheme>) => css`
         grid-template-columns: 1fr auto;
         justify-content: center;
     }
+
     progress {
         background: ${theme.deep};
         border-radius: 3px;
