@@ -85,6 +85,7 @@ export const useCardinalityData = (historyManager?, setHistoryItem?) => {
                 amount: result.totalSeries,
                 prev: result.totalSeriesPrev,
                 diff: result.totalSeries - result.totalSeriesPrev,
+                quota: result?.quota || 0
             });
 
             setData({

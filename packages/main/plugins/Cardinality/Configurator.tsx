@@ -57,7 +57,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({
         useCardinalityStore();
     const handleReset = () => {
         reset();
-        localStorage.setItem("labelValuePairs","")
+        localStorage.setItem("labelValuePairs", "");
         handleCardinalityRequest({
             match: "",
             focusLabel: "",
@@ -139,10 +139,16 @@ const Configurator: React.FC<ConfiguratorProps> = ({
                             totalSeries.diff === 0
                                 ? "none"
                                 : totalSeries.diff > 0
-                                ? "up"
-                                : "down"
+                                  ? "up"
+                                  : "down"
                         }
                         text={"diff"}
+                    />
+                    <Totals
+                        theme={theme}
+                        type={"prev"}
+                        value={totalSeries.quota}
+                        text={"quota"}
                     />
                 </div>
 
