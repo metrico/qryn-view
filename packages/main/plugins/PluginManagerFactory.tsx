@@ -52,7 +52,6 @@ export function LocalPluginsManagement() {
         if (!plugins[location]) {
             plugins[location] = [];
         }
-
         if (!plugins[location]?.some((s: any) => s.name === plugin.name)) {
             plugins[location].push(plugin);
             localStorage.setItem("plugins", JSON.stringify(plugins));
@@ -171,10 +170,30 @@ export function PluginManagerFactory(locations: ILocations) {
     const lp = LocalPluginsManagement();
     let localPlugins = lp.getAll();
 
-    // const dispatch: any = store.dispatch
+    function registerPlugin(plugin: any, totalPlugins: Plugin[]) {
+        // check for registered plugins vs locally stored
+        if (totalPlugins?.length > 0) {
+            for (const existingPlugin of totalPlugins) {
+                const section = existingPlugin.section;
 
-    // add plugin to a specific location
-    function registerPlugin(plugin: any) {
+                if (localPlugins[section]) {
+                    const totalPluginsFound = totalPlugins
+                        .filter((pl) => pl.section === section)
+                        .map(({ name }) => name);
+
+                    const filtered = localPlugins[section]?.filter(
+                        (p) => !totalPluginsFound.includes(p.name)
+                    );
+
+                    if (filtered?.length > 0) {
+                        filtered.forEach(({ section, name }) => {
+                            lp.removePlugin(section, name);
+                        });
+                    }
+                }
+            }
+        }
+
         if (!plugins[plugin.section]) {
             plugins[plugin.section] = [];
         }
@@ -195,7 +214,7 @@ export function PluginManagerFactory(locations: ILocations) {
     function registerPluginGlobally(plugin: any) {
         for (let location in locations) {
             if (location !== "Main") {
-                registerPlugin(plugin);
+                registerPlugin(plugin, plugins);
             }
         }
     }
@@ -264,7 +283,7 @@ export const PluginManager = PluginManagerFactory(locations);
 export function initPlugins(plugins: Plugin[]) {
     plugins.forEach((plugin: any) => {
         if (plugin.visible) {
-            PluginManager.registerPlugin(plugin);
+            PluginManager.registerPlugin(plugin, plugins);
         }
     });
 }
