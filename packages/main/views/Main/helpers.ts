@@ -180,11 +180,7 @@ export async function checkLocalAPI(
                     "Cardinal View",
                     true
                 );
-                LocalPluginsManagement().togglePlugin(
-                    "Query Item",
-                    "Cardinal View",
-                    true
-                )
+           
                 isReady = true;
             } else {
                 setResponseType(ResponseEnum.NODE);
