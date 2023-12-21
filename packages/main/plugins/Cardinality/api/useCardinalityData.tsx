@@ -54,20 +54,26 @@ export const useCardinalityData = (historyManager?, setHistoryItem?) => {
             diff: query.diff || 0,
             prev: query.valuePrev || 0,
             share: calcPercent(query.value, data?.totalSeries) || 0,
+            quota: data.quota,
             source: key,
             onFilter,
         }));
     };
 
-    const formattedSeries = (data: CardinalityResponse) => {
+    const formattedSeries = (data: CardinalityResponse["data"]) => {
         if (data) {
-            const keys = Object.keys(data);
+            let dataFormatted: CardinalityResponse["data"] = data;
+            if (!dataFormatted?.quota) {
+                dataFormatted.quota = 0;
+            }
+            const keys = Object.keys(dataFormatted);
             const filteredKeys = keys.filter((f: any) =>
-                Array.isArray(data[f])
+                Array.isArray(dataFormatted[f])
             );
             const mappedKeys = filteredKeys.map((key: string) => ({
-                [key]: mapSeries(data[key], data, key),
+                [key]: mapSeries(dataFormatted[key], dataFormatted, key),
             }));
+
             return mappedKeys;
         }
         return [];

@@ -346,5 +346,7 @@ export function calcQuotaOverCardinality(cardinality: number, quota: number) {
 }
 
 export function isQuotaWarning(quotaOverCardinality: number) {
+ 
+    if(quotaOverCardinality === Infinity)  return false
     return quotaOverCardinality > 60;
 }

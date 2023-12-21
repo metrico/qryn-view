@@ -85,7 +85,7 @@ const SeriesRow: React.FC<SeriesRowProps> = ({
     theme,
     onFilter,
     source,
-    quota = 4,
+    quota,
 }) => {
     const { handleDelete } = useCardinalityRequest();
     const { isLoading } = useCardinalityStore();

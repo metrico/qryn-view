@@ -6,6 +6,7 @@ export interface CardinalityData {
     seriesCountByFocusLabelValue: SeriesCountByLabelName[];
     seriesCountByLabelValuePair: SeriesCountByLabelName[];
     labelValueCountByLabelName: SeriesCountByLabelName[];
+    quota?:number;
 }
 export interface CardinalityResponse {
     data: CardinalityData;
