@@ -76,8 +76,8 @@ const TOTALS_VALUES = {
         value: (val: string | number | null | undefined) => `${val ?? 0  }`,
     },
     quota: {
-        text: "Quota",
-        value : (val: string | number ) => `${val}`
+        text: "Quota Limit",
+        value : (val: string | number ) => val === 0 ? 'Unlimited' : `${val}`
     }
 };
 export const Totals: React.FC<TotalsProps> = ({
