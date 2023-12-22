@@ -17,6 +17,8 @@ import {
     filterLocal,
     getStoredQueries,
     setStoredQuery,
+    setLocalTabsState,
+    getLocalTabsState
 } from "./helpers";
 import { useIdRefs } from "./hooks";
 
@@ -52,7 +54,7 @@ const QueryItem = (props: any) => {
     const isQueryOpen = useState(true);
     const idRefs = useIdRefs(name);
     const theme = useTheme();
-    const [tabsValue, setTabsValue] = useState(0);
+    const [tabsValue, setTabsValue] = useState(getLocalTabsState(name, id));
 
     const onAddQuery = () => {
         const panelData = setNewPanelData(panelSelected, data, idRefs);
@@ -96,6 +98,7 @@ const QueryItem = (props: any) => {
     };
 
     const onTabChange = (e: React.SyntheticEvent, tabValue: number) => {
+        setLocalTabsState(name, id, tabValue);
         setTabsValue(() => tabValue);
     };
     const { activeTabs, isActiveTabs } = useActiveTabs(`Query Item`);
