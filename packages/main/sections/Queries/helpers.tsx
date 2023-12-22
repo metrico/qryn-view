@@ -91,9 +91,15 @@ export const dataViewAction = (panel: any, data: any) => {
     }
 };
 
-export const setLocalTabsState = (panel: string, queryId: string, value: number) => {
+export const setLocalTabsState = (
+    panel: string,
+    queryId: string,
+    value: number
+) => {
     try {
-        const localTabs = JSON.parse(localStorage.getItem("localTabsState") || "{}");
+        const localTabs = JSON.parse(
+            localStorage.getItem("localTabsState") || "{}"
+        );
         const panelState = localTabs[panel] || {};
 
         panelState[queryId] = value;
@@ -107,7 +113,9 @@ export const setLocalTabsState = (panel: string, queryId: string, value: number)
 
 export const getLocalTabsState = (panel: string, queryId: string) => {
     try {
-        const tabsState = JSON.parse(localStorage.getItem("localTabsState") || "{}");
+        const tabsState = JSON.parse(
+            localStorage.getItem("localTabsState") || "{}"
+        );
         return tabsState[panel]?.[queryId] || 0;
     } catch (e) {
         console.log(e);
