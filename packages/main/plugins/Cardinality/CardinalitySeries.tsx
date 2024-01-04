@@ -10,6 +10,7 @@ type CardinalitySeriesProps = {
     formattedSeries: any;
     isCardinality: boolean;
     isLoading: boolean;
+  
 };
 // This component is used to display the series data in the cardinality rows
 const CardinalitySeries: React.FC<CardinalitySeriesProps> = ({

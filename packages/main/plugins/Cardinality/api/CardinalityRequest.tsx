@@ -46,7 +46,7 @@ export const getDeletedFingerprints = async (
 
     try {
         setIsLoading(true);
-        const urlDelete = deleteEndpoint + "/loki/api/v1/delete";
+        const urlDelete = deleteEndpoint + "/loki/api/v1/maintenance";
         const { u, p } = auth;
         await fetch(urlDelete, {
             method: "GET",
@@ -281,6 +281,9 @@ export const useCardinalityRequest = (
     // const [error, setError] = useState("");
     // const [tsdbStatus, setTsdbStatus] = useState<any>({});
 
+
+    
+
     const handleDelete = async (query, amount) => {
         const locale = moment.tz.guess(true);
         const mDay = moment.tz(reqDate, locale).add(1, "day");
@@ -303,6 +306,7 @@ export const useCardinalityRequest = (
     };
 
     const handleGetDeletedFingerprints = async () => {
+
         await getDeletedFingerprints(
             url,
             setError,
@@ -311,6 +315,7 @@ export const useCardinalityRequest = (
             headers,
             user_pass
         );
+        
     };
 
     const handleCardinalityRequest = async (params: any) => {
