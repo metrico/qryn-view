@@ -7,6 +7,7 @@ export interface CardinalityRequest {
 
 export interface MaintainanceItem {
     id: string;
+    query: string;
     created_sec: number; // ts sec
     from_sec: number; // ts sec
     to_sec: number; // ts sec

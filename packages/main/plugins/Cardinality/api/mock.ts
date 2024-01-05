@@ -1,7 +1,10 @@
+import { MaintainanceItem } from '../api/types'
 
-export const totalsMock = [
+
+export const totalsMock: MaintainanceItem[] = [
     {
         id: "85331a29-ea2f-4d6c-89ae-fa87349e4d7f",
+        query: "{a=\"b\"}",
         type: "delete",
         status: "running",
         created_sec: 1704359839,
@@ -17,6 +20,7 @@ export const totalsMock = [
     },
     {
         id: "85331a29-ea2f-4d6c-89ae-fa87349e4d7f",
+        query: "{a=\"b\"}",
         type: "delete",
         status: "running",
         created_sec: 1704359839,
@@ -32,6 +36,7 @@ export const totalsMock = [
     },
     {
         id: "85331a29-ea2f-4d6c-89ae-fa87349e4d7f",
+        query: "{__name=\"server\",type=\"clickhouse\",level=\"info\"}",
         type: "delete",
         status: "running",
         created_sec: 1704359839,
@@ -47,6 +52,7 @@ export const totalsMock = [
     },
     {
         id: "85331a29-ea2f-4d6c-89ae-fa87349e4d7f",
+        query: "{__name=\"server\",type=\"clickhouse\",level=\"debug\"}",
         type: "delete",
         status: "running",
         created_sec: 1704359839,
@@ -61,3 +67,4 @@ export const totalsMock = [
         ],
     },
 ];
+

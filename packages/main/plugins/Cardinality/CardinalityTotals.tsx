@@ -5,7 +5,7 @@ import { css, cx } from "@emotion/css";
 import { Tooltip } from "@mui/material";
 import ReplayIcon from '@mui/icons-material/Replay';
 
-import {format} from 'date-fns'
+import { format } from 'date-fns'
 
 
 export const TotalRowStyle = css`
@@ -69,6 +69,7 @@ export function Total(props: MaintainanceItem & MaintainanceActions) {
     const {
         id,
         type,
+        query,
         status,
         created_sec,
         from_sec,
@@ -84,17 +85,18 @@ export function Total(props: MaintainanceItem & MaintainanceActions) {
         <div className="table-row">
             <div className="cell">{status}</div>
             <div className="cell"> {type} </div>
-            <div className="cell">{format(created_sec*1000,"dd-MM-yyyy hh:mm:ss")}</div>
-            <div className="cell"> {format(from_sec*1000,"dd-MM-yyyy hh:mm:ss") } </div>
-            <div className="cell"> {format(to_sec*1000,"dd-MM-yyyy hh:mm:ss")}</div>
+            <div className="cell">{query}</div>
+            <div className="cell">{format(created_sec * 1000, "dd-MM-yyyy hh:mm:ss")}</div>
+            <div className="cell"> {format(from_sec * 1000, "dd-MM-yyyy hh:mm:ss")} </div>
+            <div className="cell"> {format(to_sec * 1000, "dd-MM-yyyy hh:mm:ss")}</div>
             <div className="cell"> {series_dropped} </div>
             <div className="cell"> {series_created}</div>
             <div className="cell"> <code>{JSON.stringify(logs)}</code> </div>
             <div className="cell">
-              <Tooltip title="undo action">
-                <button onClick={() => undoAction(id, type, status)}>
-                  <ReplayIcon style={{width:'14px', height:'14px'}}/>
-                </button>                
+                <Tooltip title="undo action">
+                    <button onClick={() => undoAction(id, type, status)}>
+                        <ReplayIcon style={{ width: '14px', height: '14px' }} />
+                    </button>
                 </Tooltip>
             </div>
         </div>
@@ -113,30 +115,31 @@ export default function CardinalityTotals() {
             {" "}
             <div className={cx(TotalRowStyle)}>
                 <div className="table">
-                <div className="table-header">
-                    <div className="cell">Status</div>
-                    <div className="cell">Type</div>
-                    <div className="cell">Created sec</div>
-                    <div className="cell">From sec</div>
-                    <div className="cell">To sec</div>
-                    <div className="cell">Series Dropped</div>
-                    <div className="cell">Series Created</div>
-                    <div className="cell">Logs</div>
-                    <div className="cell">Undo</div>
-                </div>
-                <>
-                    {totals?.length ? (
-                        totals?.map((total,key) => (
-                            <Total
-                                undoAction={onUndoAction}
-                                key={key}
-                                {...total}
-                            />
-                        ))
-                    ) : (
-                        <> no totals </>
-                    )}
-                </>
+                    <div className="table-header">
+                        <div className="cell">Status</div>
+                        <div className="cell">Type</div>
+                        <div className="cell">Query</div>
+                        <div className="cell">Created sec</div>
+                        <div className="cell">From sec</div>
+                        <div className="cell">To sec</div>
+                        <div className="cell">Series Dropped</div>
+                        <div className="cell">Series Created</div>
+                        <div className="cell">Logs</div>
+                        <div className="cell">Undo</div>
+                    </div>
+                    <>
+                        {totals?.length ? (
+                            totals?.map((total, key) => (
+                                <Total
+                                    undoAction={onUndoAction}
+                                    key={key}
+                                    {...total}
+                                />
+                            ))
+                        ) : (
+                            <> no totals </>
+                        )}
+                    </>
                 </div>
             </div>
         </>

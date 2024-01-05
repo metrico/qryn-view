@@ -69,6 +69,70 @@ export const getDeletedFingerprints = async (
     }
 };
 
+export const undoFingerPrintAction = async (
+    id,
+    url,
+    setIsLoading,
+    headers,
+    auth,
+    setError
+) => {
+    try {
+        const { u, p } = auth;
+
+        const urlUndo = `${url}/api/v1/undo/${id}`;
+        await fetch(urlUndo, {
+            method: "POST",
+
+            headers: {
+                ...headers,
+                Authorization: `Basic ${btoa(u + ":" + p)}`,
+            },
+        }).then((response) => {
+            if (
+                (response && response?.status === 500) ||
+                response?.status === 400
+            ) {
+                setError(response.statusText);
+                setIsLoading(false);
+                let error = response.text();
+                store.dispatch(
+                    createAlert({
+                        message: `Deleted fingerprints not undone, ${error}`,
+                        type: "error",
+                    })
+                );
+            }
+
+            if (
+                (response && response?.status === 200) ||
+                response?.status === 200
+            ) {
+                setIsLoading(false);
+                setError("");
+                store.dispatch(
+                    createAlert({
+                        message: `Undone deleted fingerprints`,
+                        type: "success",
+                    })
+                );
+                console.log(response);
+            }
+        });
+    } catch (e) {
+        setError(JSON.stringify(e));
+        setIsLoading(false);
+        store.dispatch(
+            createAlert({
+                message: `Deleted fingerprints not undone`,
+                type: "error",
+            })
+        );
+        console.log(e);
+        setIsLoading(false);
+    }
+};
+
 export const deleteFingerprints = async (
     url,
     query,
@@ -181,7 +245,7 @@ const requestCardinality = async (
     setIsLoading(true);
     // set
     //this makes the multiple fetch requests
-   
+
     try {
         const { u, p } = auth;
         const responses = await Promise.all(
@@ -276,13 +340,9 @@ export const useCardinalityRequest = (
 
     const { url, headers, user_pass } = useDataSourceData("logs");
 
-
     // const [isLoading, setIsLoading] = useState(false);
     // const [error, setError] = useState("");
     // const [tsdbStatus, setTsdbStatus] = useState<any>({});
-
-
-    
 
     const handleDelete = async (query, amount) => {
         const locale = moment.tz.guess(true);
@@ -306,7 +366,6 @@ export const useCardinalityRequest = (
     };
 
     const handleGetDeletedFingerprints = async () => {
-
         await getDeletedFingerprints(
             url,
             setError,
@@ -315,7 +374,6 @@ export const useCardinalityRequest = (
             headers,
             user_pass
         );
-        
     };
 
     const handleCardinalityRequest = async (params: any) => {
