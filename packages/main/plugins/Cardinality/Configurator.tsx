@@ -1,5 +1,5 @@
 import { cx, css } from "@emotion/css";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";
 import { Totals } from "./Totals";
 import DayPicker from "./DayPicker";
@@ -24,7 +24,7 @@ type ConfiguratorProps = {
     limitEntriesItems: any;
     setHistoryItem: any;
     activeTab;
-    onTabChange : (event:any, tab:any) => void
+    onTabChange: (event: any, tab: any) => void;
 };
 
 // we should simply add a switch to choose btween day and timeseconds
@@ -40,8 +40,6 @@ export const StyledTabsCont = (theme: any) => css`
     }
 `;
 
-
-
 const Configurator: React.FC<ConfiguratorProps> = ({
     theme = useTheme(),
     focusLabelItems,
@@ -49,7 +47,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({
     limitEntriesItems,
     setHistoryItem,
     activeTab = 0,
-    onTabChange
+    onTabChange,
 }) => {
     // in this way we could set history as first values
 
@@ -73,19 +71,20 @@ const Configurator: React.FC<ConfiguratorProps> = ({
 
     //a handler for making a get request to the api
 
-    const { handleCardinalityRequest, handleDelete, handleGetDeletedFingerprints } =
-        useCardinalityRequest(true);
+    const {
+        handleCardinalityRequest,
+        handleDelete,
+        handleGetDeletedFingerprints,
+    } = useCardinalityRequest(true);
     const { setTimeSeriesSelector, setFocusLabel, setLimitEntries, isLoading } =
         useCardinalityStore();
 
-        //this feature is not implemented yet
+    //this feature is not implemented yet
     useEffect(() => {
         handleGetDeletedFingerprints();
     }, []);
 
-
-
-   // console.log(handleGetDeletedFingerprints())
+    // console.log(handleGetDeletedFingerprints())
 
     const handleReset = () => {
         reset();
@@ -99,7 +98,6 @@ const Configurator: React.FC<ConfiguratorProps> = ({
     };
 
     //this feature is not implemented yet
-
 
     return (
         <div className={cx(ConfigContainerStyles(theme))}>
@@ -182,14 +180,12 @@ const Configurator: React.FC<ConfiguratorProps> = ({
                     />
                 </div>
                 <div className="buttons-group">
-
-                <div className={cx(StyledTabsCont(theme))}>
-                <StyledTabs value={activeTab} onChange={onTabChange}>
-                    <StyledTab label="List" />
-                    <StyledTab label="Processed" />
-                </StyledTabs>
-            </div>
-
+                    <div className={cx(StyledTabsCont(theme))}>
+                        <StyledTabs value={activeTab} onChange={onTabChange}>
+                            <StyledTab label="Series" />
+                            <StyledTab label="In Process" />
+                        </StyledTabs>
+                    </div>
                 </div>
 
                 <div className="buttons-group">

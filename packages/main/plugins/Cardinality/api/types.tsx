@@ -18,11 +18,13 @@ export interface MaintainanceItem {
     logs: string[];
 }
 
+export interface Total {
+    total: MaintainanceItem;
+}
+
 export type MaintenanceResponse = MaintainanceItem[];
 
 export type MaintainanceItemUndoResponse = {
     code: number;
     message: string;
 };
-
-

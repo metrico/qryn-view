@@ -6,8 +6,7 @@ import { useEffect, useState } from "react";
 import useTheme from "@ui/theme/useTheme";
 import CardinalitySeries from "./CardinalitySeries";
 import useCardinalityHistory from "./history/useCardinalityHistory";
-import CardinalityTotals from "./CardinalityTotals";
-
+import CardinalityTotals from "./TotalsPanel/CardinalityTotals";
 
 export const setLocalTabsState = (value: number) => {
     try {
@@ -46,7 +45,7 @@ export const Cardinality = () => {
     const onTabChange = (event: any, newValue: any) => {
         //   console.log(tab)
         setActiveTab(() => newValue);
-        setLocalTabsState(newValue)
+        setLocalTabsState(newValue);
     };
 
     useEffect(() => {
@@ -95,7 +94,6 @@ export const Cardinality = () => {
                     isLoading={isLoading}
                     activeTab={activeTab}
                 />
-
             )}
         </div>
     );
@@ -123,7 +121,7 @@ export const CardinalityDashboardContainer = ({
                     isLoading={isLoading}
                 />
             )}
-            {activeTab === 1 && <CardinalityTotals />}
+            {activeTab === 1 && <CardinalityTotals isLoading={isLoading} />}
         </>
     );
 };

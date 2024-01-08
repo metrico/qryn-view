@@ -17,6 +17,7 @@ export type CardinalityRequestResponse = {
     handleDelete?: (query: string, amount: number) => void;
     handleCardinalityRequest?: (params: any) => void;
     handleGetDeletedFingerprints?: () => void;
+    handleUndoFingerprints?: (id: string) => void;
     result?: any;
 };
 
@@ -78,9 +79,10 @@ export const undoFingerPrintAction = async (
     setError
 ) => {
     try {
+      
         const { u, p } = auth;
 
-        const urlUndo = `${url}/api/v1/undo/${id}`;
+        const urlUndo = `${url}/api/v1/maintainance/${id}/undo`;
         await fetch(urlUndo, {
             method: "POST",
 
@@ -376,6 +378,17 @@ export const useCardinalityRequest = (
         );
     };
 
+    const handleUndoFingerprints = async (id) => {
+        await undoFingerPrintAction(
+            id,
+            url,
+            setIsLoading,
+            headers,
+            user_pass,
+            setError
+        );
+    };
+
     const handleCardinalityRequest = async (params: any) => {
         const reqDate = date || dayjs().format(DATE_FORMAT);
 
@@ -418,7 +431,8 @@ export const useCardinalityRequest = (
 
     return {
         handleDelete,
-        handleGetDeletedFingerprints,
+        handleGetDeletedFingerprints, // this should be the list
+        handleUndoFingerprints,
         handleCardinalityRequest,
     };
 };

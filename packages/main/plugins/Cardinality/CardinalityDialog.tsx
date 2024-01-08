@@ -16,7 +16,7 @@ import {
     Tooltip,
     Typography,
 } from "@mui/material";
-
+import ReplayIcon from "@mui/icons-material/Replay";
 import { ThemeProvider } from "@mui/styles";
 import styled from "@emotion/styled";
 import { DialogStyles } from "../settingsdialog/SettingsDialog";
@@ -55,6 +55,13 @@ export type CardinalityDialogProps = {
     isCustom?: boolean;
     query?: string;
     labelsRelated?: string[];
+};
+
+export type UndoCardinalityDialogProps = {
+    undoAction: (id: string) => void;
+    id: string;
+    query: string;
+    isLoading: boolean;
 };
 
 export type LabelRelatedProps = {
@@ -138,7 +145,7 @@ export default function CardinalityDialog({
     isLoading,
     isCustom = false,
     query = "",
-    labelsRelated = [],
+   
 }: CardinalityDialogProps) {
     const [open, setOpen] = useState(false);
     const [confirmRemove, setConfirmRemove] = useState(false);
@@ -267,6 +274,117 @@ export default function CardinalityDialog({
                                 {!isLoading
                                     ? "Delete Fingerprints"
                                     : "Deleting..."}
+                            </DialogConfirmButton>
+                        </DialogActions>
+                    </AlertCont>
+                </Dialog>
+            </div>
+        </ThemeProvider>
+    );
+}
+
+export function UndoCardinalityDialog({
+    undoAction,
+    id,
+    isLoading,
+    query = "",
+  
+}: UndoCardinalityDialogProps) {
+    const [open, setOpen] = useState(false);
+    const [confirmRemove, setConfirmRemove] = useState(false);
+    const theme = useTheme();
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleConfirm = () => {
+        setConfirmRemove((prev) => !prev);
+    };
+    async function handleUndoFingerprints() {
+        await undoAction(id);
+
+        // this should give a response from the server
+
+        setOpen(false);
+    }
+    return (
+        <ThemeProvider theme={theme}>
+            <div>
+                <Tooltip title={`Undo Delete fingerprints for ${query}`}>
+                    <div
+                        style={{
+                            display: "flex",
+                            flex: 1,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <ReplayIcon
+                            onClick={handleClickOpen}
+                            style={{
+                                color: theme.primary,
+                                cursor: "pointer",
+                                fontSize: "18px",
+                               // background:"#b8860b"
+                            }}
+                            fontSize={"small"}
+                        />
+                    </div>
+                </Tooltip>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    PaperProps={{
+                        classes: {
+                            root: DialogStyles,
+                        },
+                    }}
+                >
+                    <AlertCont>
+                        <DialogTitle id="alert-dialog-title">
+                            <>
+                                Are you sure you want to undo the
+                                delete action for the query {query}?
+                            </>
+                        </DialogTitle>
+
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                <p style={{ marginTop: "10px" }}>
+                                    Click <em>Undo Delete Fingerprints</em> to
+                                    undo the delete fingerprints action.
+                                </p>
+
+                                <CheckboxWithLabel
+                                    checked={confirmRemove}
+                                    handleChange={handleConfirm}
+                                    theme={theme}
+                                    label={true}
+                                    text={
+                                        "I want to undo deletion of all fingerprints related to this labels."
+                                    }
+                                />
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <DialogCancelButton onClick={handleClose}>
+                                Cancel
+                            </DialogCancelButton>
+                            <DialogConfirmButton
+                                onClick={handleUndoFingerprints}
+                                active={!isLoading && confirmRemove}
+                                autoFocus
+                            >
+                                {!isLoading
+                                    ? "Undo Delete Fingerprints"
+                                    : "Undoing..."}
                             </DialogConfirmButton>
                         </DialogActions>
                     </AlertCont>

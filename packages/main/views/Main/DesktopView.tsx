@@ -20,7 +20,7 @@ export interface Props {
 }
 export function DesktopView({
     theme,
-    isEmbed,
+
     isSplit,
     settingsDialogOpen,
 }: Props) {
