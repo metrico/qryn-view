@@ -9,13 +9,13 @@ import { Switch } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { setLeftPanel } from "@ui/store/actions/setLeftPanel";
 import { setRightPanel } from "@ui/store/actions/setRightPanel";
-import useTheme from "@ui/theme/useTheme"
+import useTheme from "@ui/theme/useTheme";
 import PluginRenderer from "@ui/plugins/PluginsRenderer";
 
 const QueryTypeCont = styled.div`
     display: flex;
     padding: 4px;
-   // background: ${(props: any) => props.theme.shadow};
+    // background: ${(props: any) => props.theme.shadow};
     color: ${(props: any) => props.color};
     height: 26px;
 `;
@@ -36,8 +36,7 @@ export const DIRECTION_SWITCH_OPTIONS = [
     { value: "backwards", label: "Backwards" },
 ];
 
-
-// Bar with switches: 
+// Bar with switches:
 // query type
 // timestamp
 // query builder
@@ -101,7 +100,6 @@ export default function QueryTypeBar(props: any) {
                 dispatch(panelAction(name, panel));
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -180,6 +178,7 @@ export default function QueryTypeBar(props: any) {
 
     function handleLogsVolumeSwitch() {
         const panel = [...panelQuery];
+
         panel.forEach((query) => {
             if (query.id === id) {
                 query.isLogsVolume = isLogsVolumeSet ? false : true;
@@ -204,7 +203,7 @@ export default function QueryTypeBar(props: any) {
     return (
         <ThemeProvider theme={theme}>
             <QueryTypeCont>
-                <PluginRenderer section={"Query Options"} localProps={props}/>
+                <PluginRenderer section={"Query Options"} localProps={props} />
                 <QueryTypeSwitch
                     label={"Query Type"}
                     options={SWITCH_OPTIONS}
