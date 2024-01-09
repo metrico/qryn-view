@@ -101,7 +101,7 @@ export default function QueryTypeBar(props: any) {
                 dispatch(panelAction(name, panel));
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     }, []);
 
     useEffect(() => {
@@ -180,12 +180,14 @@ export default function QueryTypeBar(props: any) {
 
     function handleLogsVolumeSwitch() {
         const panel = [...panelQuery];
+
         panel.forEach((query) => {
             if (query.id === id) {
                 query.isLogsVolume = isLogsVolumeSet ? false : true;
             }
         });
 
+        console.log(name, panel)
         dispatch(panelAction(name, panel));
     }
 
