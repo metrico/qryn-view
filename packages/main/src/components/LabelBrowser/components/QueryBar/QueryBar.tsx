@@ -119,8 +119,6 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
     const historyOpen = useSelector((store: any) => store.historyOpen);
     const isEmbed = useSelector((store: any) => store.isEmbed);
     const queryHistory = useSelector((store: any) => store.queryHistory);
-    const start = useSelector((store: any) => store.start);
-    const stop = useSelector((store: any) => store.stop);
     const isSplit = useSelector((store: any) => store.isSplit);
     const panelQuery = useSelector((store: any) => store[name]);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1070px)" });
@@ -142,7 +140,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         return defaultDataSources.find((f) => f.id === dataSourceId);
     }, [dataSourceId]);
 
-    const findCurrentDataSource = (dataSources: any, id: string) => {
+    const findCurrentDataSource = (dataSources: any) => {
         return dataSources?.find((f: any) => f.id === dataSourceId);
     };
 
@@ -155,7 +153,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
         setLogsLevel(expr, isLogsVolume);
 
-        const dataSource: any = findCurrentDataSource(dataSources, id);
+        const dataSource: any = findCurrentDataSource(dataSources);
 
         let currentDataSource: any = {};
 
@@ -416,11 +414,12 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         const { query, customStep } = setQueryTimeInterval(
             queryString,
             width,
-            start,
-            stop
+            data.start,
+            data.stop
         );
         saveLogsVolumeQuery({ query, customStep });
     };
+
     const onSubmit = (e: any) => {
         e.preventDefault();
         const ds: any = dataSources.find((f: any) => f.id === dataSourceId);
@@ -662,7 +661,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
         if (queryExpr.includes("$__interval")) {
             isMatrix = true;
-            const timeDiff = (stop.getTime() - start.getTime()) / 1000;
+            const timeDiff = (data.stop.getTime() - data.start.getTime()) / 1000;
             const timeProportion = timeDiff / 30;
             const screenProportion = Number(
                 (width / window.innerWidth).toFixed(1)
@@ -951,6 +950,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
                         handleLogValueChange={onLogChange}
                         handleLogsVolumeChange={onLogVolumeChange}
                     />,
+
                     <ShowLogsButton
                         disabled={!queryValid}
                         onClick={onSubmit}
