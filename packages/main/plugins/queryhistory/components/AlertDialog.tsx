@@ -20,6 +20,7 @@ const AlertCont = styled.div`
     background: ${({ theme }: any) => theme.shadow};
     #alert-dialog-title {
         color: ${({ theme }: any) => theme.contrast};
+        background: ${({theme}:any) => theme.deep};
     }
     #alert-dialog-description {
         color: ${({ theme }: any) => theme.lightContrast};

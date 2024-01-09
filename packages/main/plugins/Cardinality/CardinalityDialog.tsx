@@ -29,6 +29,9 @@ const AlertCont = styled.div`
     background: ${({ theme }: any) => theme.shadow};
     #alert-dialog-title {
         color: ${({ theme }: any) => theme.contrast};
+        background: ${({theme}:any) => theme.deep};
+        border: 2px solid ${({theme}:any) => theme.shadow};
+        border-radius:8px;
         span {
             color: ${({ theme }: any) => theme.primary};
             padding: 2px 4px;
@@ -145,7 +148,6 @@ export default function CardinalityDialog({
     isLoading,
     isCustom = false,
     query = "",
-   
 }: CardinalityDialogProps) {
     const [open, setOpen] = useState(false);
     const [confirmRemove, setConfirmRemove] = useState(false);
@@ -288,7 +290,6 @@ export function UndoCardinalityDialog({
     id,
     isLoading,
     query = "",
-  
 }: UndoCardinalityDialogProps) {
     const [open, setOpen] = useState(false);
     const [confirmRemove, setConfirmRemove] = useState(false);
@@ -330,7 +331,7 @@ export function UndoCardinalityDialog({
                                 color: theme.primary,
                                 cursor: "pointer",
                                 fontSize: "18px",
-                               // background:"#b8860b"
+                                // background:"#b8860b"
                             }}
                             fontSize={"small"}
                         />
@@ -350,8 +351,20 @@ export function UndoCardinalityDialog({
                     <AlertCont>
                         <DialogTitle id="alert-dialog-title">
                             <>
-                                Are you sure you want to undo the
-                                delete action for the query {query}?
+                                Are you sure you want to undo the delete action
+                                for the query{" "}
+                                <code
+                                    style={{
+                                        fontFamily: "monospace",
+                                        fontSize: ".75em",
+                                        padding: "4px 8px",
+                                        borderRadius: ".5em",
+                                        background: theme.shadow,
+                                    }}
+                                >
+                                    {query}
+                                </code>{" "}
+                                ?
                             </>
                         </DialogTitle>
 
