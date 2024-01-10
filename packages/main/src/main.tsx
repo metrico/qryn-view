@@ -31,6 +31,10 @@ const UserRoles = lazy(() => import("../views/User/UserRoles"));
 
 errorInterceptor(axios);
 
+const base = document.createElement('base')
+base.href = import.meta.env.VITE_APP_BASE_URL || "/"
+document.head.insertBefore(base, document.head.firstChild)
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <React.StrictMode>
         <CookiesProvider>
