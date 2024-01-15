@@ -183,7 +183,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({
                     <div className={cx(StyledTabsCont(theme))}>
                         <StyledTabs value={activeTab} onChange={onTabChange}>
                             <StyledTab label="Series" />
-                            <StyledTab label="In Process" />
+                            <StyledTab label="Maintainance" />
                         </StyledTabs>
                     </div>
                 </div>

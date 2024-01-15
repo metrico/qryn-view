@@ -14,9 +14,15 @@ export const TotalRowStyle = (theme: QrynTheme) => css`
         display: table-header-group;
         font-size: 10px;
         text-transform: uppercase;
+
         .cell {
             font-size: 10px;
             letter-spacing: 1px;
+            cursor: pointer;
+            margin: 1px;
+            &:hover {
+                background: ${theme.deep};
+            }
         }
     }
     .table-row {
