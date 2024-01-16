@@ -19,20 +19,29 @@ export default function CardinalityTotals({ isLoading }) {
 
     const sortByProperty = useCallback(
         (column: string) => {
-            const numberCols = [];
+            const numberCols = [
+                "series_created",
+                "series_dropped",
+                "to_sec",
+                "from_sec",
+                "created_sec",
+            ];
+
+            const columnName = column.split(" ").join("_").toLocaleLowerCase();
 
             setTotals((prev) => {
                 let prevCols = [...prev];
-                if (numberCols.includes(column)) {
-                    return prevCols.sortColByNumber(column, sort);
+                if (numberCols.includes(columnName)) {
+                    return prevCols.sortColByNumber(columnName, sort);
                 }
-                return prevCols.sortColByString(column, sort);
+                return prevCols.sortColByString(columnName, sort);
             });
 
             setSort((prev) => (prev === "asc" ? "desc" : "asc"));
         },
         [totals]
     );
+
     return (
         <div className={cx(TotalRowStyle(theme))}>
             <div
@@ -50,7 +59,11 @@ export default function CardinalityTotals({ isLoading }) {
             <div className="table">
                 <div className="table-header">
                     {PROCESS_HEADERS?.map((header) => (
-                        <div key={header} className="cell">
+                        <div
+                            key={header}
+                            onClick={() => sortByProperty(header)}
+                            className="cell"
+                        >
                             {header}
                         </div>
                     ))}

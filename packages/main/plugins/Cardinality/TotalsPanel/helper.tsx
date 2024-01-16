@@ -52,7 +52,6 @@ const TYPES = (type: string) => {
 };
 
 export function TypeRenderer({ type, children }) {
-    console.log(type);
 
     return <span style={{ color: TYPES(type) }}>{children}</span>;
 }
