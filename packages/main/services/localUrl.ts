@@ -102,7 +102,6 @@ const localUrl = () => {
     };
 
     const add = (hash: string, item: any, maxLength = Infinity) => {
-        // we should pass the paeams here istead of parsing inside
         let previousData = get() || [];
         const { href, url, type, queryInput, queryType, limit, panel } =
             item.data;
@@ -110,11 +109,25 @@ const localUrl = () => {
         const origin = window.location.origin;
         const urlParams = new URLSearchParams(hash.replace(/#/, ""));
 
-        let paramsData = {} as UrlParamsData;
+        let paramsData: UrlParamsData = {
+            autoTheme: "",
+            isEmbed: "",
+            isSplit: "",
+            isSubmit: "",
+            left: "",
+            right: "",
+            step: "",
+            start: "",
+            stop: "",
+            theme: "",
+            time: "",
+        };
         urlParams.set("isSubmit", "true");
 
         for (let [key, value] of urlParams) {
-            paramsData[key] = value;
+            if (paramsData.hasOwnProperty(key)) {
+                paramsData[key] = value;
+            }
         }
 
         const fromDate = format(
@@ -122,7 +135,7 @@ const localUrl = () => {
             "yyyy-MM-dd HH:mm:ss"
         );
         const toDate = format(
-            parseInt(paramsData.stop) / 1000000,
+            parseInt(paramsData?.stop) / 1000000,
             "yyyy-MM-dd HH:mm:ss"
         );
 
