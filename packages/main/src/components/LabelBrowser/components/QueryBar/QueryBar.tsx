@@ -110,7 +110,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
     const { getLocalQueryItem, getLocalDataSources, setLocalQueryData } =
         QueryLocalService;
-
+  
     const { hash } = useLocation();
     const dispatch: any = useDispatch();
     const saveUrl = localUrl();
