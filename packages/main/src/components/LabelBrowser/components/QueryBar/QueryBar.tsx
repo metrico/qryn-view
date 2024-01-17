@@ -110,7 +110,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
     const { getLocalQueryItem, getLocalDataSources, setLocalQueryData } =
         QueryLocalService;
-
+  
     const { hash } = useLocation();
     const dispatch: any = useDispatch();
     const saveUrl = localUrl();
@@ -685,6 +685,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
     const updateLinksHistory = () => {
         const ds = dataSources.find((f: any) => f.id === dataSourceId);
         const storedUrl = saveUrl.add(
+            hash,
             {
                 data: {
                     href: window.location.href,
