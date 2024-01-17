@@ -15,7 +15,7 @@ import {
 import { ThemeProvider } from "@mui/styles";
 import styled from "@emotion/styled";
 import { DialogStyles } from "../../settingsdialog/SettingsDialog";
-import useTheme from "@ui/theme/useTheme"
+import useTheme from "@ui/theme/useTheme";
 const AlertCont = styled.div`
     background: ${({ theme }: any) => theme.shadow};
     #alert-dialog-title {
@@ -78,6 +78,7 @@ export default function AlertDialog({ clearHistory, dialogType }: any) {
                                 Cancel
                             </DialogCancelButton>
                             <DialogConfirmButton
+                                active={true}
                                 onClick={handleClearHistory}
                                 autoFocus
                             >
