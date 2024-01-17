@@ -1,9 +1,10 @@
 import localUrl from "@ui/services/localUrl";
 
-export function storedUrl() {
+export function storedUrl(hash: string) {
     return localUrl().add(
+        hash,
         {
-            data: window.location.href,
+            data: { href: window.location.href },
             description: "From Shared URL",
         },
         10
