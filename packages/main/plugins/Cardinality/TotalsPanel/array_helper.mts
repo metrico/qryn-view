@@ -27,8 +27,15 @@ if (!Array.prototype.sortColByString) {
     ): T[] {
         if (sort === "asc") {
             return this.sort((a, b) => {
-                const colA = a[col].toUpperCase(); // ignore upper and lowercase
-                const colB = b[col].toUpperCase(); // ignore upper and lowercase
+                let colA: string, colB: string;
+                if (Array.isArray(a[col])) {
+                    colA = a[col]?.join("").toUpperCase();
+                    colB = b[col]?.join("").toUpperCase();
+                } else {
+                    colA = a[col].toUpperCase(); // ignore upper and lowercase
+                    colB = b[col].toUpperCase(); // ignore upper and lowercase
+                }
+
                 if (colA < colB) {
                     return -1;
                 }
@@ -42,8 +49,14 @@ if (!Array.prototype.sortColByString) {
         }
 
         return this.sort((a, b) => {
-            const colA = a[col].toUpperCase(); // ignore upper and lowercase
-            const colB = b[col].toUpperCase(); // ignore upper and lowercase
+            let colA: string, colB: string;
+            if (Array.isArray(a[col])) {
+                colA = a[col]?.join("").toUpperCase();
+                colB = b[col]?.join("").toUpperCase();
+            } else {
+                colA = a[col].toUpperCase(); // ignore upper and lowercase
+                colB = b[col].toUpperCase(); // ignore upper and lowercase
+            }
             if (colB < colA) {
                 return -1;
             }

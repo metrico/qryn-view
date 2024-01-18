@@ -4,7 +4,7 @@ import { type Total } from "../api/types";
 import { CellFormatter, getCellData } from "./helper";
 import { type MaintainanceActions } from "./types";
 import { UndoCardinalityDialog } from "../CardinalityDialog";
-import { Tooltip } from "@mui/material";
+
 
 export function TotalsRow({
     headers,
@@ -24,14 +24,14 @@ export function TotalsRow({
             ))}
 
             <div className="cell">
-                <Tooltip title="undo action">
+                
                     <UndoCardinalityDialog
                         id={total.id}
                         query={total.query}
                         isLoading={isLoading}
                         undoAction={() => handleUndoFingerprints(total.id)}
                     />
-                </Tooltip>
+                
             </div>
         </div>
     );

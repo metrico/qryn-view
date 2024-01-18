@@ -19,6 +19,7 @@ export default function CardinalityTotals({ isLoading }) {
 
     const sortByProperty = useCallback(
         (column: string) => {
+
             const numberCols = [
                 "series_created",
                 "series_dropped",
@@ -72,8 +73,8 @@ export default function CardinalityTotals({ isLoading }) {
                     {totals?.length ? (
                         totals?.map((total, key) => (
                             <TotalsRow
+                            key={key}
                                 isLoading={isLoading}
-                                key={key}
                                 headers={PROCESS_HEADERS}
                                 total={total}
                             />
