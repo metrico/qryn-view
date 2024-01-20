@@ -45,17 +45,9 @@ export default function CardinalityTotals({ isLoading }) {
 
     return (
         <div className={cx(TotalRowStyle(theme))}>
-            <div
-                style={{
-                    textAlign: "center",
-                    padding: "10px 0px",
-                    margin: "0px 4px",
-                    fontSize: "12px",
-                    borderRadius: "3px",
-                    background: theme.shadow,
-                }}
+            <div className="total-rows-header"
             >
-                Deleted fingerprints in Maintainance mode
+                Fingerprints in Maintainance mode
             </div>
             <div className="table">
                 <div className="table-header">

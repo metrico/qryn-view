@@ -5,7 +5,14 @@ export const TotalRowStyle = (theme: QrynTheme) => css`
     display: flex;
     flex: 1;
     flex-direction: column;
-
+    .total-rows-header {
+        text-align: center;
+        padding: 10px 0px;
+        margin: 0px 4px;
+        font-size: 12px;
+        border-radius: 3px;
+        background: ${theme.shadow};
+    }
     .table {
         display: table;
         width: 100%;
@@ -20,6 +27,8 @@ export const TotalRowStyle = (theme: QrynTheme) => css`
             letter-spacing: 1px;
             cursor: pointer;
             margin: 1px;
+           padding-top:20px;
+           padding-bottom:4px;
             &:hover {
                 background: ${theme.deep};
             }
