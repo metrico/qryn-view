@@ -13,6 +13,14 @@ export const TotalRowStyle = (theme: QrynTheme) => css`
         border-radius: 3px;
         background: ${theme.shadow};
     }
+    .table-container {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        width: 100%;
+        overflow-y: auto;
+        max-height: 600px;
+    }
     .table {
         display: table;
         width: 100%;
@@ -27,15 +35,20 @@ export const TotalRowStyle = (theme: QrynTheme) => css`
             letter-spacing: 1px;
             cursor: pointer;
             margin: 1px;
-           padding-top:20px;
-           padding-bottom:4px;
+            padding-top: 20px;
+            padding-bottom: 4px;
             &:hover {
                 background: ${theme.deep};
             }
         }
     }
-    .table-row {
+    .table-body {
         display: table-row-group;
+        max-height: 600px;
+        overflow-y: auto;
+    }
+    .table-row {
+        display: table-row;
         &:hover {
             background: ${theme.deep};
         }
@@ -47,14 +60,36 @@ export const TotalRowStyle = (theme: QrynTheme) => css`
         padding: 10px;
         max-width: 10%;
     }
+    .table-footer {
+        display: flex;
+        font-size: 10px;
+        text-transform: uppercase;
+        align-items:center;
+        gap: 4px;
+        padding: 4px 0px;
+        margin: 0px 4px;
+        border-radius: 3px;
+        background: ${theme.shadow};
+
+        button {
+            padding: 4px 12px;
+            color: white;
+            border: none;
+            background: ${theme.primary};
+            border-radius: 3px;
+            border-color: ${theme.primaryAccent};
+            cursor: pointer;
+            outline: none;
+        }
+    }
 
     button {
         padding: 4px 12px;
         color: white;
         border: none;
-        background: theme.primary;
+        background: ${theme.primary};
         border-radius: 3px;
-        border-color: theme.primaryDark;
+        border-color: ${theme.primaryAccent};
         cursor: pointer;
         outline: none;
     }
