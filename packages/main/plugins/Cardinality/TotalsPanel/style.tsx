@@ -64,22 +64,40 @@ export const TotalRowStyle = (theme: QrynTheme) => css`
         display: flex;
         font-size: 10px;
         text-transform: uppercase;
-        align-items:center;
+        align-items: center;
         gap: 4px;
-        padding: 4px 0px;
+        padding: 4px 12px;
         margin: 0px 4px;
+        margin-top: 12px;
         border-radius: 3px;
         background: ${theme.shadow};
-
+        p {
+            margin: 0px 12px;
+        }
+        .disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
         button {
             padding: 4px 12px;
             color: white;
             border: none;
-            background: ${theme.primary};
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 0;
+            gap: 4px;
+            background: ${theme.shadow};
             border-radius: 3px;
-            border-color: ${theme.primaryAccent};
+            border: 1px solid ${theme.deep};
             cursor: pointer;
             outline: none;
+            letter-spacing: 1px;
+
+            :hover {
+                background: ${theme.deep};
+            }
         }
     }
 
