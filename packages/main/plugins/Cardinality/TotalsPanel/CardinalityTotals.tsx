@@ -5,17 +5,18 @@
 import { useCallback, useEffect, useState } from "react";
 import { totalsMock } from "../api/mock";
 import { cx } from "@emotion/css";
-import { PROCESS_HEADERS, NUMBER_COLS } from "./consts";
+import { headers, NUMBER_COLS } from "./consts";
 import { TotalRowStyle } from "./style";
 import useTheme from "@ui/theme/useTheme";
 import { getMaintenance, useMaintenance } from "./useMaintenance";
 import "./array_helper.mjs";
 import TotalsTable from "./TotalsTable";
+
 export default function CardinalityTotals({ isLoading }) {
-    const Maintainance = useMaintenance();
+    const { maintenance } = useMaintenance();
 
     const theme = useTheme();
-    const [totals, setTotals] = useState(Maintainance ?? totalsMock);
+    const [totals, setTotals] = useState(maintenance ?? totalsMock);
     const [sort, setSort] = useState("asc");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -35,26 +36,27 @@ export default function CardinalityTotals({ isLoading }) {
     }, []);
 
     useEffect(() => {
-        setTotals(paginateTotals(Maintainance));
+        setTotals(paginateTotals(maintenance));
     }, [page]);
 
     const sortByProperty = useCallback(
         (column: string) => {
-            const columnName = column.split(" ").join("_").toLocaleLowerCase();
+            
+            if (column !== "undo") {
+                setTotals(() => {
+                    let items = [...maintenance];
 
-            setTotals(() => {
-                let items = [...Maintainance];
+                    if (NUMBER_COLS.includes(column)) {
+                        items.sortColByNumber(column, sort);
+                        return paginateTotals(items);
+                    }
 
-                if (NUMBER_COLS.includes(columnName)) {
-                    items.sortColByNumber(columnName, sort);
+                    items.sortColByString(column, sort);
                     return paginateTotals(items);
-                }
+                });
 
-                items.sortColByString(columnName, sort);
-                return paginateTotals(items);
-            });
-
-            setSort((prev) => (prev === "asc" ? "desc" : "asc"));
+                setSort((prev) => (prev === "asc" ? "desc" : "asc"));
+            }
         },
         [totals]
     );
@@ -69,7 +71,7 @@ export default function CardinalityTotals({ isLoading }) {
 
             {totals?.length > 0 && (
                 <TotalsTable
-                    headers={PROCESS_HEADERS}
+                    headers={headers}
                     sortByProperty={sortByProperty}
                     isLoading={isLoading}
                     totals={totals}
@@ -77,7 +79,7 @@ export default function CardinalityTotals({ isLoading }) {
                     setPage={setPage}
                     rowsPerPage={rowsPerPage}
                     setRowsPerPage={setRowsPerPage}
-                    Maintainance={Maintainance}
+                    Maintainance={maintenance}
                 />
             )}
         </div>

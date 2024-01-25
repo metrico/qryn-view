@@ -1,6 +1,23 @@
 import { TotalsRow } from "./TotalsRow";
 import TotalsPagination from "./Pagination";
 
+type totalHeader = {
+    value: string;
+    text: string;
+};
+
+type TotalsTableProps = {
+    headers: totalHeader[];
+    sortByProperty: any;
+    isLoading: boolean;
+    totals: any;
+    page: number;
+    setPage: any;
+    rowsPerPage: number;
+    setRowsPerPage: any;
+    Maintainance: any;
+};
+
 const TotalsTable = ({
     headers,
     sortByProperty,
@@ -11,18 +28,18 @@ const TotalsTable = ({
     rowsPerPage,
     setRowsPerPage,
     Maintainance,
-}) => {
+}: TotalsTableProps) => {
     return (
         <>
             <div className="table">
                 <div className="table-header">
                     {headers?.map((header) => (
                         <div
-                            key={header}
-                            onClick={() => sortByProperty(header)}
+                            key={header.value}
+                            onClick={() => sortByProperty(header.value)}
                             className="cell"
                         >
-                            {header}
+                            {header.text}
                         </div>
                     ))}
                 </div>

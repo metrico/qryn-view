@@ -1,11 +1,17 @@
 import { format } from "date-fns";
 import React from "react";
 import { type Total } from "../api/types";
+import { Tooltip } from "@mui/material";
 
-export const getCellData = (total: Total["total"], headers: string[]) => {
+type cellHeader = {
+    value: string;
+    text: string;
+};
+
+export const getCellData = (total: Total["total"], headers: cellHeader[]) => {
     const cell_names = headers
-        ?.filter((h) => h !== "Undo")
-        ?.map((header) => header.toLowerCase().split(" ").join("_"));
+        ?.filter((h) => h.text !== "Undo")
+        ?.map((header) => header.value);
 
     return cell_names?.map((key) => ({ [key]: total[key] }));
 };
@@ -24,12 +30,13 @@ export function CellFormatter({ col }): React.ReactNode | string | number {
         case "to_sec":
             return format(data * 1000, "dd-MM-yyyy hh:mm:ss");
         case "logs":
-        case "query":
             return (
-                <code style={{ fontFamily: "monospace" }}>
-                    {JSON.stringify(data)}
-                </code>
+                <Tooltip title={data.join("\n")}>
+                    <p>{data[0]}</p>
+                </Tooltip>
             );
+        case "query":
+            return <code style={{ fontFamily: "monospace" }}>{data}</code>;
         case "type":
         case "status":
             return <TypeRenderer type={data}>{data}</TypeRenderer>;
@@ -52,6 +59,5 @@ const TYPES = (type: string) => {
 };
 
 export function TypeRenderer({ type, children }) {
-
     return <span style={{ color: TYPES(type) }}>{children}</span>;
 }
