@@ -1,5 +1,6 @@
 import { TotalsRow } from "./TotalsRow";
 import TotalsPagination from "./Pagination";
+import  TableColHeader  from "./TableColHeader";
 
 type totalHeader = {
     value: string;
@@ -33,14 +34,13 @@ const TotalsTable = ({
         <>
             <div className="table">
                 <div className="table-header">
-                    {headers?.map((header) => (
-                        <div
-                            key={header.value}
-                            onClick={() => sortByProperty(header.value)}
-                            className="cell"
-                        >
-                            {header.text}
-                        </div>
+                    {headers?.map(({ value, text }) => (
+                        <TableColHeader 
+                        key={value} 
+                        value={value} 
+                        text={text} 
+                        sortByProperty={sortByProperty} 
+                        />
                     ))}
                 </div>
 

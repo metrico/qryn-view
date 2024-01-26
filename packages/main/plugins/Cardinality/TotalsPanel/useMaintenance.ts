@@ -7,7 +7,7 @@ export async function getMaintenance() {
     return await fetch("http://localhost:8081/api/v1/maintenance");
 }
 
-export async function undoAction(id) {
+export async function undoAction(id: string) {
     return await fetch(`http://localhost:8081/api/v1/undo/${id}`)
         .then((res) => {
             if (res.status === 200) {
@@ -17,7 +17,6 @@ export async function undoAction(id) {
                         message: "Successfully restored fingerprints",
                     })
                 );
-
                 return res.json();
             } else {
                 store.dispatch(
@@ -26,7 +25,9 @@ export async function undoAction(id) {
                         message: "Failed to restore fingerprints",
                     })
                 );
-                return { error: "Failed to restore fingerprints" };
+                return {
+                    error: "Failed to restore fingerprints",
+                };
             }
         })
         .then((data) => {

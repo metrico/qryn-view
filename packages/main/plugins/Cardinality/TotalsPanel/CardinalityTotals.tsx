@@ -20,8 +20,9 @@ export default function CardinalityTotals({ isLoading }) {
     const [sort, setSort] = useState("asc");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [searchValue, setSearchValue] = useState("");
 
-    function paginateTotals(data) {
+    function paginateTotals(data: Array<any>) {
         const startIndex = page * rowsPerPage;
         const endIndex = startIndex + rowsPerPage;
         return data.slice(startIndex, endIndex);
@@ -39,9 +40,27 @@ export default function CardinalityTotals({ isLoading }) {
         setTotals(paginateTotals(maintenance));
     }, [page]);
 
+    const searchHandler = useCallback(
+        (text: string) => {
+            setSearchValue(text);
+
+            const filteredData = maintenance.filter((item) => {
+                return item.query.toLowerCase().includes(text.toLowerCase());
+            });
+
+            if (filteredData?.length > 0) {
+                setTotals(paginateTotals(filteredData));
+            }
+
+            if (text === "") {
+                setTotals(paginateTotals(maintenance));
+            }
+        },
+        [totals]
+    );
+
     const sortByProperty = useCallback(
         (column: string) => {
-            
             if (column !== "undo") {
                 setTotals(() => {
                     let items = [...maintenance];
@@ -63,11 +82,11 @@ export default function CardinalityTotals({ isLoading }) {
 
     return (
         <div className={cx(TotalRowStyle(theme))}>
-            <div className="total-rows-header">
-                {totals?.length > 0
-                    ? "Fingerprints in Maintainance mode"
-                    : "No Fingerprints in Maintainance mode"}
-            </div>
+            <TotalRowsHeader
+                searchValue={searchValue}
+                searchHandler={searchHandler}
+                totalsLength={totals?.length ?? 0}
+            />
 
             {totals?.length > 0 && (
                 <TotalsTable
@@ -85,3 +104,26 @@ export default function CardinalityTotals({ isLoading }) {
         </div>
     );
 }
+
+export const TotalRowsHeader = ({
+    totalsLength,
+    searchHandler,
+    searchValue,
+}) => {
+    return (
+        <div className="total-rows-header">
+            <div className="search-container">
+                <label>Search By Query</label>
+                <input
+                    type="text"
+                    value={searchValue}
+                    onChange={(e) => searchHandler(e.target.value)}
+                    placeholder=""
+                />
+            </div>
+            {totalsLength > 0
+                ? "Fingerprints in Maintainance mode"
+                : "No Fingerprints in Maintainance mode"}
+        </div>
+    );
+};

@@ -7,11 +7,32 @@ export const TotalRowStyle = (theme: QrynTheme) => css`
     flex-direction: column;
     .total-rows-header {
         text-align: center;
-        padding: 10px 0px;
+        padding: 10px 20px;
         margin: 0px 4px;
         font-size: 12px;
         border-radius: 3px;
         background: ${theme.shadow};
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            input {
+                background: ${theme.shadow};
+                border: 1px solid ${theme.deep};
+                color: ${theme.contrast};
+                font-size: 10px;
+                padding: 5px 10px;
+                border-radius: 3px;
+                margin: 0px 4px;
+                :focus {
+                    outline: none;
+                    background: ${theme.deep};
+                }
+            }
+        }
     }
     .table-container {
         display: flex;

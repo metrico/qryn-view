@@ -12,6 +12,15 @@ export const SeriesRowStyle = (theme: Partial<QrynTheme>) => css`
         width: auto;
         border-bottom: 1px solid ${theme.neutral};
     }
+    .cell-column-header {
+        display: flex;
+        flex-direction: column;
+    }
+    .cell-column-name {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
     .cell-name {
         width: 60%;
         cursor: pointer;
