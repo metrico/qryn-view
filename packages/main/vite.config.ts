@@ -27,7 +27,6 @@ let configOpts = {
     base: "",
     server: {},
     plugins: [
-        baseUrl({ url: "", staticImports: true }),
         basicSsl(),
         react({
             jsxImportSource: "@emotion/react",
