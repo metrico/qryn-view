@@ -112,7 +112,7 @@ export function DataSourceSetting(props: any) {
             setCookie(
                 "qryn-settings",
                 setCookieFromParams(url, user.value, password.value),
-                { path: "/" }
+                { path: "" }
             );
         } catch (e) {
             console.log(e);
