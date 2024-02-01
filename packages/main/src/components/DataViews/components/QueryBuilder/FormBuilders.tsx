@@ -114,6 +114,7 @@ export const FormBuilder = (props: any) => {
     const [labelsString, setLabelsString] = useState(
         logsToString(builder.labelValuesState) || ""
     );
+   
     const labelValueMemo = useMemo(() => {
         if (builder?.labelValuesState) {
             let labelString = labelsToString(builder?.labelValuesState);
@@ -177,7 +178,10 @@ export const FormBuilder = (props: any) => {
         return logLabels;
     };
 
-    const onLabelValueChange = (e:any) => { console.log(e)};
+    const onLabelValueChange = (e: any) => {
+        localStorage.setItem("labelsSelectedChange", JSON.stringify(e));
+   
+    };
     const onBinaryOptionChange = (e: any, name: string) => {
         setBuilders((prev: any) => {
             const next = [...prev];
