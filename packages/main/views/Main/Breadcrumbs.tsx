@@ -9,7 +9,7 @@ const Breadcrumbs = () => {
         if (el === "" && id === 0) {
             return {
                 name: "home",
-                link: "/",
+                link: "",
             };
         }
         return {

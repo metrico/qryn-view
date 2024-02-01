@@ -384,8 +384,12 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
         let customStep = 0;
 
+        const dateStart = new Date(start);
+        const dateStop = new Date(stop);
+
         if (query.includes(`$__interval`)) {
-            const timeDiff = (stop.getTime() - start.getTime()) / 1000;
+            const timeDiff =
+                (dateStop?.getTime() - dateStart?.getTime()) / 1000;
 
             const timeProportion = timeDiff / 30;
 
@@ -661,7 +665,8 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
         if (queryExpr.includes("$__interval")) {
             isMatrix = true;
-            const timeDiff = (data.stop.getTime() - data.start.getTime()) / 1000;
+            const timeDiff =
+                (data.stop.getTime() - data.start.getTime()) / 1000;
             const timeProportion = timeDiff / 30;
             const screenProportion = Number(
                 (width / window.innerWidth).toFixed(1)

@@ -24,7 +24,7 @@ export default function ProtectedRoute({ children }: { children: any }) {
     }, []);
 
     if (cookieMemo.cookie || (userType !== 'admin' && userType !== 'superAdmin')) {
-        return <Navigate to={"/"} />;
+        return <Navigate to={""} />;
     }
     return children;
 }
