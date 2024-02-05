@@ -4,10 +4,8 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import { getHeaders } from "../helpers";
 
-export function useMetricsList(id: string, value: string) {
+export function useMetricsList(id: string, value: string, start, stop) {
     const dataSources = useSelector((store: any) => store.dataSources);
-    const start = useSelector((store: any) => store.start);
-    const stop = useSelector((store: any) => store.stop);
 
     const timeParams = useMemo(() => {
         return {
@@ -19,7 +17,7 @@ export function useMetricsList(id: string, value: string) {
     const [metricNames, setMetricNames] = useState([]);
 
     const dataSource = useMemo(() => {
-        return dataSources.find((f:any) => f.id === id);
+        return dataSources.find((f: any) => f.id === id);
     }, [dataSources, id]);
 
     const valueFormatter = useMemo(() => {
@@ -56,7 +54,6 @@ export function useMetricsList(id: string, value: string) {
 
             apiRequest();
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataSource, timeParams.end, timeParams.start, valueFormatter]);
 
     return useMemo(() => {
@@ -68,7 +65,7 @@ export function useMetricsList(id: string, value: string) {
                 metricKeys.forEach((metricKey) => {
                     if (
                         !metricSelect[metricKey]?.some(
-                            (s:any) => s === metric[metricKey]
+                            (s: any) => s === metric[metricKey]
                         )
                     ) {
                         metricSelect[metricKey] = [

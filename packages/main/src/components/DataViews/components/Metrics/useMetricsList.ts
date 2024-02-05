@@ -3,10 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { getHeaders } from "./helpers";
 import moment from "moment";
-export function useMetricsList(id: any, value: any) {
+export function useMetricsList(id: any, value: any, start, stop) {
     const dataSources = useSelector((store: any) => store.dataSources);
-    const start = useSelector((store: any) => store.start);
-    const stop = useSelector((store: any) => store.stop);
 
     const timeParams = useMemo(() => {
         return {

@@ -29,10 +29,13 @@ const getTimestamp = (time: any, type: any): any => {
     )[type];
 };
 
-export default function useLabels(id: any, dataSourceURL = "") {
+export default function useLabels(
+    id: any,
+    dataSourceURL = "",
+    start: any,
+    stop: any
+) {
     const dispatch: any = useDispatch();
-    const start = useSelector ((store:any)=> store.start)
-    const stop = useSelector ((store:any)=> store.stop)
     const dataSources = useSelector((store: any) => store.dataSources);
 
     const currentDataSource = useMemo(() => {
@@ -42,7 +45,6 @@ export default function useLabels(id: any, dataSourceURL = "") {
         }
 
         return current;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, dataSources]);
 
     const [type, setType] = useState(currentDataSource.type || "");
@@ -63,7 +65,6 @@ export default function useLabels(id: any, dataSourceURL = "") {
 
     useEffect(() => {
         setUrl(getUrlFromType(currentDataSource.url, type, timeStart, timeEnd));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [setUrl, type, currentDataSource]);
 
     const [response, setResponse] = useState([]);
@@ -142,7 +143,6 @@ export default function useLabels(id: any, dataSourceURL = "") {
             };
             apiRequest();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url, currentDataSource]);
 
     return {

@@ -11,7 +11,7 @@ type Props = {
     loading: boolean;
     logs: any[];
     theme: any;
-    openLog: Function;
+    openLog: any;
     showLabels: (e: any) => void;
 };
 

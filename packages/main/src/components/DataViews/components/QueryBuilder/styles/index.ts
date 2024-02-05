@@ -27,17 +27,17 @@ export const cStyles = (theme: any, minWidth: number, flexOne?: boolean) => ({
         fontSize: "12px",
         color: theme.contrast,
     }),
-    indicatorSeparator: (base: any) => ({
+    indicatorSeparator: () => ({
         display: "none",
     }),
-    dropdownIndicator: (base: any) => ({
+    dropdownIndicator: () => ({
         padding: 0,
         svg: {
             height: 12,
         },
         color: theme.contrast,
     }),
-    clearIndicator: (base: any) => ({
+    clearIndicator: () => ({
         padding: 0,
         svg: {
             height: 12,
@@ -93,7 +93,7 @@ export const InitialAddStyle = (theme: any) => css`
     color: ${theme.contrast};
     padding: 0px 12px;
     border-radius: 3px;
-    height: 28px;
+    height: 26px;
     small {
         font-size: 12px;
         margin: 0;
@@ -111,12 +111,14 @@ export const FlexWrap = css`
     flex-wrap: wrap;
     gap: 4px;
     margin: 0px 0px;
+    transition: 0.5s all;
 `;
 
 export const FlexColumn = css`
     display: flex;
     flex-direction: column;
     flex: 1;
+    transition: 0.5s all;
 `;
 export const MetricsContStyle = css`
     display: flex;

@@ -110,7 +110,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
     const { getLocalQueryItem, getLocalDataSources, setLocalQueryData } =
         QueryLocalService;
-  
+
     const { hash } = useLocation();
     const dispatch: any = useDispatch();
     const saveUrl = localUrl();
@@ -665,8 +665,10 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
         if (queryExpr.includes("$__interval")) {
             isMatrix = true;
-            const timeDiff =
-                (data.stop.getTime() - data.start.getTime()) / 1000;
+
+            const timeStart = new Date(data?.start);
+            const timeStop = new Date(data?.stop);
+            const timeDiff = (timeStop.getTime() - timeStart.getTime()) / 1000;
             const timeProportion = timeDiff / 30;
             const screenProportion = Number(
                 (width / window.innerWidth).toFixed(1)

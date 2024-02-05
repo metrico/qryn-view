@@ -18,7 +18,6 @@ export const MenuButton = styled.button`
     background: ${(props: any) => props.theme.neutral};
     border: 1px solid ${(props: any) => props.theme.accentNeutral};
     color: ${(props: any) => props.theme.contrast};
-    padding: 3px 12px;
     border-radius: 3px;
     font-size: 12px;
     cursor: pointer;

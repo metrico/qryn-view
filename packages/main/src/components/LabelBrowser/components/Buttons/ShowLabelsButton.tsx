@@ -8,7 +8,7 @@ import { setLeftPanel } from "@ui/store/actions/setLeftPanel";
 import { setRightPanel } from "@ui/store/actions/setRightPanel";
 import { css, cx } from "@emotion/css";
 import { Tooltip } from "@mui/material";
-import  useTheme  from "@ui/theme/useTheme";
+import useTheme from "@ui/theme/useTheme";
 
 export function panelAction(name: string, value: any) {
     if (name === "left") {
@@ -28,7 +28,6 @@ export default function ShowLabelsButton(props: any) {
     const { id, browserOpen } = props.data;
     const open = useMemo(() => browserOpen, [browserOpen]);
     const theme = useTheme();
-    const labels = useSelector((store: any) => store.labels);
     const panelQuery = useSelector((store: any) => store[name]);
 
     const [isBrowserOpen, setIsBrowserOpen] = useState(open);
@@ -48,7 +47,7 @@ export default function ShowLabelsButton(props: any) {
         setIsBrowserOpen(open);
     }
 
-    const labelsTitle = (labels: any) => {
+    const labelsTitle = () => {
         if (props.labels?.length > 0) {
             return "Show / Hide Labels";
         }
@@ -63,7 +62,7 @@ export default function ShowLabelsButton(props: any) {
 
     return (
         <ThemeProvider theme={theme}>
-            <Tooltip title={labelsTitle(labels)}>
+            <Tooltip title={labelsTitle()}>
                 <ShowLabelsBtn
                     onClick={handleBrowserOpen}
                     browserActive={isBrowserOpen}

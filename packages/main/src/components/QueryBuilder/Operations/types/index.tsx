@@ -7,12 +7,14 @@ export interface LabelSeries {
 
 export type UseLabelSeriesFn = (
     dataSourceId: string,
-    label: string
+    label: string,
+    start: any,
+    stop: any
 ) => LabelSeries;
 
 export interface SeriesResponse {
     status: string;
-    data: Object[];
+    data: any[];
 }
 
 // Operator Builders

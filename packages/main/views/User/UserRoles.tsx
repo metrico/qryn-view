@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { cx, css } from "@emotion/css";
 import useTheme from "@ui/theme/useTheme";
 import { nanoid } from "nanoid";
-import Avatar from '@mui/material/Avatar';
+import Avatar from "@mui/material/Avatar";
 import CookieIcon from "@mui/icons-material/Cookie";
 import { useCookies } from "react-cookie";
 import { Switch } from "@mui/material";
@@ -140,7 +140,7 @@ const UserRolesStyles = (theme: any) => css`
             border-radius: 3px;
             background: ${theme.deep};
             color: ${theme.contrast};
-            height: 28px;
+            height: 26px;
             font-size: 12px;
         }
 
@@ -197,9 +197,9 @@ const UserSelected = (theme: any, selected: boolean) => css`
     }
 `;
 
-const QrynAvatar = ({name}:{name:string}) => (
-    <Avatar >{sliceAvatar(name)}</Avatar>
-)
+const QrynAvatar = ({ name }: { name: string }) => (
+    <Avatar>{sliceAvatar(name)}</Avatar>
+);
 
 type UserRowProps = {
     user: User;
@@ -254,7 +254,6 @@ const UserRow: React.FC<UserRowProps> = (props) => {
 
     const onUserConfirm = (e: any) => {
         if (e.key === "Enter") {
-         
             setUserEdit(() => false);
         }
     };
@@ -269,9 +268,8 @@ const UserRow: React.FC<UserRowProps> = (props) => {
         <div className={"user-row"}>
             {!userEdit ? (
                 <div onClick={onUserEdit} className="avatar">
-                
-                  <QrynAvatar name={name} />
-                
+                    <QrynAvatar name={name} />
+
                     <span>{name}</span>
                 </div>
             ) : (
@@ -360,10 +358,8 @@ const UserRows: React.FC = () => {
                   },
               ]
     );
-// eslint-disable-next-line
+    // eslint-disable-next-line
     const [cookie, setCookie] = useCookies(["user-cookie"]);
-
-   
 
     const onUserAdd = () => {
         setUsers((prev: User[]) => {
@@ -384,8 +380,8 @@ const UserRows: React.FC = () => {
         });
     };
 
-    const onUserSelect = (e:any, data: User) => {
-        e.preventDefault()
+    const onUserSelect = (e: any, data: User) => {
+        e.preventDefault();
         setUsers((prev: User[]) => {
             let newUs = [...prev];
 
@@ -406,7 +402,7 @@ const UserRows: React.FC = () => {
     };
 
     const onUserRemove = (e: any, id: string) => {
-        e.preventDefault()
+        e.preventDefault();
         const prev = [...users]?.filter((f: User) => f.id !== id);
 
         // if user removed is currentuser, go back to admin
@@ -420,7 +416,7 @@ const UserRows: React.FC = () => {
     };
 
     const onUserChange = (e: any, data: User) => {
-        e.preventDefault()
+        e.preventDefault();
         let prev = [...users];
 
         let newUsers = prev?.map((user: User) => {
@@ -439,7 +435,7 @@ const UserRows: React.FC = () => {
     };
 
     const onUserCookie = (e: any, data: User) => {
-        e.preventDefault()
+        e.preventDefault();
         try {
             setCookie("user-cookie", btoa(JSON.stringify(data)));
         } catch (e) {

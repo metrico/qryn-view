@@ -11,7 +11,7 @@ export const OperationContainerStyles = (theme: any) => css`
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: 28px;
+        height: 26px;
         span {
             //  font-weight: bold;
             font-size: 12px;

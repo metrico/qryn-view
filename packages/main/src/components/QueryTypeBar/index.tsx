@@ -11,10 +11,12 @@ import { setLeftPanel } from "@ui/store/actions/setLeftPanel";
 import { setRightPanel } from "@ui/store/actions/setRightPanel";
 import useTheme from "@ui/theme/useTheme";
 import PluginRenderer from "@ui/plugins/PluginsRenderer";
+import CustomSwitch from "@ui/qrynui/CustomSwitch/CustomSwitch";
 
 const QueryTypeCont = styled.div`
     display: flex;
     padding: 4px;
+    margin-top: 4px;
     // background: ${(props: any) => props.theme.shadow};
     color: ${(props: any) => props.color};
     height: 26px;
@@ -204,6 +206,7 @@ export default function QueryTypeBar(props: any) {
         <ThemeProvider theme={theme}>
             <QueryTypeCont>
                 <PluginRenderer section={"Query Options"} localProps={props} />
+
                 <QueryTypeSwitch
                     label={"Query Type"}
                     options={SWITCH_OPTIONS}
@@ -232,41 +235,31 @@ export default function QueryTypeBar(props: any) {
                     <>
                         <InputGroup>
                             <SettingLabel>Timestamp</SettingLabel>
-                            <Switch
-                                checked={isShowTsSet}
-                                size={"small"}
+                            <CustomSwitch
+                                defaultActive={isShowTsSet}
                                 onChange={handleShowTsSwitch}
-                                inputProps={{ "aria-label": "controlled-ts" }}
                             />
                         </InputGroup>
                         <InputGroup>
                             <SettingLabel>Query Builder</SettingLabel>
-                            <Switch
-                                checked={isBuilderSet}
-                                size={"small"}
+                            <CustomSwitch
+                                defaultActive={isBuilderSet}
                                 onChange={handleBuilderSwitch}
-                                inputProps={{ "aria-label": "controlled-ts" }}
                             />
                         </InputGroup>
                         <InputGroup>
                             <SettingLabel>Logs Volume</SettingLabel>
-                            <Switch
-                                checked={isLogsVolumeSet}
-                                size={"small"}
+                            <CustomSwitch
+                                defaultActive={isLogsVolumeSet}
                                 onChange={handleLogsVolumeSwitch}
-                                inputProps={{ "aria-label": "controlled-ts" }}
                             />
                         </InputGroup>
                         {hasStats && (
                             <InputGroup>
                                 <SettingLabel>Stats Info</SettingLabel>
-                                <Switch
-                                    checked={isShowStatsSet}
-                                    size={"small"}
+                                <CustomSwitch
+                                    defaultActive={isShowStatsSet}
                                     onChange={handleStatsInfoSwitch}
-                                    inputProps={{
-                                        "aria-label": "controlled-ts",
-                                    }}
                                 />
                             </InputGroup>
                         )}

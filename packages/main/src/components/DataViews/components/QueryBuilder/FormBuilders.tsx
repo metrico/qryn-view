@@ -106,7 +106,7 @@ export const BinaryOperationBar = (props: any) => {
 };
 
 export const FormBuilder = (props: any) => {
-    const { builder, theme, idx, setBuilders, logsResponse, dataSourceId } =
+    const { builder, theme, idx, setBuilders, logsResponse, dataSourceId, start, stop } =
         props;
 
     // const [logsVolumeQuery, setLogsVolumeQuery] = useState(builder.logsVolumeQuery)
@@ -122,7 +122,7 @@ export const FormBuilder = (props: any) => {
         }
         return {};
     }, [builder.labelValuesState]);
-    const metricsOpts = useValuesFromMetrics(dataSourceId);
+    const metricsOpts = useValuesFromMetrics(dataSourceId, start, stop);
     const [metricValue, setMetricValue] = useState(
         metricsOpts[0] || { label: "", value: "" }
     );
@@ -218,10 +218,14 @@ export const FormBuilder = (props: any) => {
                             theme={theme}
                             onMetricChange={onMetricChange}
                             dataSourceId={dataSourceId}
+                            start={props.start}
+                            stop={props.stop}
                         />
                         <MetricsLabelValueSelectors
                             // label value selectors for metrics
                             index={idx}
+                            start={props.start}
+                            stop={props.stop}
                             onChange={onLabelValueChange} // this will be set
                             dataSourceId={dataSourceId}
                             value={sanitizeWithSigns(metricValue.value)}
@@ -238,6 +242,8 @@ export const FormBuilder = (props: any) => {
                     <LabelValuesSelectors
                         //  Label value selector for logs
                         {...builder}
+                        start={props.start}
+                        stop={props.stop}
                         dataSourceId={dataSourceId}
                         logsResponse={logsResponse}
                         setLabelsString={setLabelsString}
@@ -257,6 +263,8 @@ export const FormBuilder = (props: any) => {
                 {...builder}
                 setBuilders={setBuilders}
                 dataSourceId={dataSourceId}
+                start={props.start}
+                stop={props.stop}
                 labelsString={handleMetricType(
                     builder,
                     labelsString,
@@ -271,13 +279,15 @@ export const FormBuilder = (props: any) => {
     );
 };
 export interface MetricSelectorProps {
+    start: Date;
+    stop: Date;
     theme: any;
     dataSourceId: string;
     onMetricChange(e: any): void;
 }
 export const MetricsSelector = (props: MetricSelectorProps) => {
-    const { dataSourceId, theme, onMetricChange } = props;
-    const metricsOpts = useValuesFromMetrics(dataSourceId);
+    const { dataSourceId, theme, onMetricChange, start, stop } = props;
+    const metricsOpts = useValuesFromMetrics(dataSourceId, start, stop);
     return (
         <InputSelect
             isMulti={false}

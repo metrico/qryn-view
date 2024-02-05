@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { cx } from "@emotion/css";
 import { ThemeProvider, useTheme } from "@emotion/react";
 import { useCallback, useEffect, useState } from "react";
@@ -59,8 +60,14 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
     } = props;
 
     const dataSources = useSelector((store: any) => store.dataSources);
-    const start = useSelector((store: any) => store.start);
-    const stop = useSelector((store: any) => store.stop);
+    const start = useMemo(() => {
+        return new Date(props.data?.start);
+    }, [props?.data?.start]);
+
+    const stop = useMemo(() => {
+        return new Date(props.data?.stop);
+    }, [props?.data?.stop]);
+
     const [editorValue, setEditorValue] = useState(queryInit(""));
     const { logsResponse } = useLogLabels(
         dataSourceId,
@@ -149,6 +156,8 @@ export function LogsFormBuilder(props: LogsFormBuilderProps) {
                     setBuilders={setBuilders}
                     builders={builders}
                     finalQuery={finalQuery}
+                    start={start}
+                    stop={stop}
                 />
 
                 <div className={cx(QueryPreviewContainer(mainTheme))}>

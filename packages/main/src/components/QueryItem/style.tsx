@@ -2,34 +2,33 @@ import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRig
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import styled from "@emotion/styled";
 
-
 export const QueryItemContainerStyled = styled.div`
     background: ${({ theme }: any) => `${theme.background}`};
     color: ${({ theme }: any) => `${theme.contrast}`};
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
     border-radius: 3px;
     margin-bottom: 3px;
-    padding:5px;
+    padding: 5px;
     .query-title {
         display: flex;
         align-items: center;
     }
     .query-tools-cont {
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        flex-wrap:wrap;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding-bottom: 4px;
     }
     .query-tools {
         display: flex;
         align-items: center;
-        flex-wrap:wrap;
-        justify-content:space-between;
-        flex:1;
-        gap:2px;
-        margin-top:4px;
-        
+        flex-wrap: wrap;
+        justify-content: space-between;
+        flex: 1;
+        gap: 2px;
+        margin-top: 4px;
     }
     .query-id {
         font-size: 13px;
@@ -37,8 +36,49 @@ export const QueryItemContainerStyled = styled.div`
         margin-left: 5px;
     }
     .query-title-tabs {
-        display:flex;
-        align-items:center;
+        display: flex;
+        align-items: center;
+    }
+    // query sync timestamp button
+    .sync-btn {
+        margin: 0px 4px;
+        margin-right: 10px;
+        background: ${({ theme }: any) => theme.neutral};
+        outline: none;
+        border: none;
+        color: ${({ theme }: any) => theme.contrast};
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+        cursor: pointer;
+        transition: 0.2s all;
+        &:hover {
+            background: ${({ theme }: any) => theme.lightNeutral};
+        }
+    }
+    .add-btn {
+        margin-left: 10px;
+        background: none;
+        outline: none;
+        border: none;
+
+        color: ${({ theme }: any) => theme.contrast};
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+        cursor: pointer;
+        transition: 0.2s all;
+        &:hover {
+            background: ${({ theme }: any) => theme.lightNeutral};
+        }
+        &.trash {
+            margin: 0px;
+            margin-right: 5px;
+        }
     }
 `;
 
@@ -67,11 +107,11 @@ export const InputGroup = styled.div`
     align-items: center;
     select {
         background: ${(props: any) => props.theme.deep};
-        color:  ${(props: any) => props.theme.contrast};
+        color: ${(props: any) => props.theme.contrast};
         border: 1px solid ${(props: any) => props.theme.accentNeutral};
-        border-radius:3px;
-        font-size:12px;
-        height:26px;
+        border-radius: 3px;
+        font-size: 12px;
+        height: 26px;
     }
 `;
 

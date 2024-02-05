@@ -13,7 +13,7 @@ export const HistoryButtonStyled: any = styled(BtnSmall)`
     color: ${(props: any) => props.theme.contrast};
     background: ${(props: any) => props.theme.neutral};
     border: 1px solid ${(props: any) => props.theme.accentNeutral};
-    height: 28px;
+    height: 26px;
     span {
         margin-left: 5px;
     }
@@ -30,7 +30,7 @@ export const ShowLabelsBtn: any = styled(BtnSmall)`
     padding-left: 6px;
     justify-content: flex-start;
     color: ${({ theme }: any) => theme.contrast};
-    height: 28px;
+    height: 26px;
     &:hover {
         background: ${({ theme }: any) => theme.lightNeutral};
     }
@@ -48,6 +48,7 @@ export const QueryBarContainer: any = styled.div`
     margin-left: 0px;
     flex-wrap: wrap;
     border-radius: 3px;
+    margin-right:2px;
 `;
 export const ShowLogsBtn: any = styled(BtnSmall, {
     shouldForwardProp: (prop) => isPropValid(prop) && prop !== "loading",
@@ -61,7 +62,7 @@ export const ShowLogsBtn: any = styled(BtnSmall, {
     justify-content: center;
     padding: 3px 12px;
 
-    height: 28px;
+    height: 26px;
     &:hover {
         background: ${(props: any) => props.theme.primaryLight};
     }
@@ -85,7 +86,7 @@ export const ShowSettingsBtn: any = styled(BtnSmall)`
     color: ${(props: any) => props.theme.contrast};
     background: ${(props: any) => props.theme.neutral};
     border: 1px solid ${(props: any) => props.theme.accentNeutral};
-    height: 28px;
+    height: 26px;
     span {
         margin-left: 5px;
     }
