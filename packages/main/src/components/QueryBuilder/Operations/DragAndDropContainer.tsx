@@ -12,34 +12,34 @@ import { css, cx } from "@emotion/css";
 export const OperationsContainerStyles = css`
     width: 100%;
     display: flex;
-    flex-wrap:wrap;
+    flex-wrap: wrap;
 `;
 
 export interface LabelFilter {
-    label:string;
-    operator:string;
-    value:string;
+    label: string;
+    operator: string;
+    value: string;
 }
 
 export interface BinaryOperation {
     value: string | number;
-    bool:boolean;
+    bool: boolean;
 }
 export interface Item {
     id: number;
     header: any;
     body: any;
     expressions: any[];
-    filterText:string;
-    conversion_function: string,
-    labelValue: string,
+    filterText: string;
+    conversion_function: string;
+    labelValue: string;
     labelFilter: LabelFilter;
     binaryOperation: BinaryOperation;
-    lineFilter:string;
-    quantile:string|number
-    kValue:number;
+    lineFilter: string;
+    quantile: string | number;
+    kValue: number;
     labels: any[];
-    labelOpts:string[];
+    labelOpts: string[];
     opType: string;
 }
 
@@ -48,14 +48,16 @@ export interface ContainerState {
 }
 
 export type OperationsContainerProps = {
-    addBinary(index:number):void
+    addBinary(index: number): void;
     operations: any[];
     setOperations: (operations: any) => void;
 };
 
 // OPERATIONS CONTAINER
 
-export const OperationsContainer: FC<OperationsContainerProps> = (props: any) => {
+export const OperationsContainer: FC<OperationsContainerProps> = (
+    props: any
+) => {
     const { operations, setOperations } = props;
     const moveItem = useCallback((dragIndex: number, hoverIndex: number) => {
         setOperations((prevCards: Item[]) =>
@@ -66,14 +68,12 @@ export const OperationsContainer: FC<OperationsContainerProps> = (props: any) =>
                 ],
             })
         );
-          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const removeItem = useCallback((dragIndex: number) => {
         setOperations((prevCards: Item[]) =>
             update(prevCards, { $splice: [[dragIndex, 1]] })
         );
-          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const renderCard = useCallback((operation: Item, index: number) => {
@@ -97,19 +97,17 @@ export const OperationsContainer: FC<OperationsContainerProps> = (props: any) =>
                 removeItem={removeItem}
             />
         );
-          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <DndProvider backend={HTML5Backend}>
-        <div className={cx(OperationsContainerStyles)}>
-            {operations.map((operation: any, i: number) =>
-                renderCard(operation, i)
-            )}
-        </div>
+            <div className={cx(OperationsContainerStyles)}>
+                {operations.map((operation: any, i: number) =>
+                    renderCard(operation, i)
+                )}
+            </div>
         </DndProvider>
     );
 };
 
 // Drag and drop base provider
-

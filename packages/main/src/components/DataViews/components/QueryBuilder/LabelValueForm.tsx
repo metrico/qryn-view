@@ -4,8 +4,8 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { OPERATOR_OPTIONS } from "./consts";
 import { LabelValueContStyles, FlexCenter, IconStyle } from "./styles";
 import { cx } from "@emotion/css";
-import {  useValueSelectOpts } from "./hooks";
-import useTheme from '@ui/theme/useTheme';
+import { useValueSelectOpts } from "./hooks";
+import useTheme from "@ui/theme/useTheme";
 import { InputSelect } from "./InputSelect";
 import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
 

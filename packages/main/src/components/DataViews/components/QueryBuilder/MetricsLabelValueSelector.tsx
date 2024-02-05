@@ -24,8 +24,10 @@ export function MetricsLabelValueSelectors(props: any) {
         setFinalQuery,
         labelValueString,
         setLabelValueString,
+        start,
+        stop,
     } = props;
-    const valuesOpts = useMetricsList(dataSourceId, value);
+    const valuesOpts = useMetricsList(dataSourceId, value, start, stop);
 
     const [labelValuesState, setLabelValuesState] = useState<Label[]>( // here should add the initial metric
         props.labelValuesState || [{ ...InitialLabelValueState, metric: value }]
@@ -105,7 +107,7 @@ export function MetricsLabelValueSelectors(props: any) {
      * Resets the labels value state into initial value.
      */
     const resetLabelsState = () => {
-        setLabelValuesState((prev) => [
+        setLabelValuesState(() => [
             { ...InitialLabelValueState, metric: value },
         ]);
     };
@@ -117,7 +119,7 @@ export function MetricsLabelValueSelectors(props: any) {
 
         metricValueChange(metricString);
         setFinalQuery(metricString);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+      
     }, [labelValueString, value]);
 
     useEffect(() => {
@@ -134,7 +136,7 @@ export function MetricsLabelValueSelectors(props: any) {
                 return builder;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+      
     }, [labelValuesState]);
 
     /**
@@ -159,9 +161,12 @@ export function MetricsLabelValueSelectors(props: any) {
                 {labelValuesState?.length > 0 &&
                     labelValuesState?.map((keyval, key) => (
                         <LabelValueForm
+                   
                             id={keyval.id}
                             idx={key}
                             key={key}
+                            start={props.start}
+                            stop={props.stop}
                             metric={value}
                             keyVal={keyval}
                             labelOpts={labelOpts}

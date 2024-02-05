@@ -6,8 +6,6 @@ import { Loader, LoaderCont, SmallInput } from "./styled";
 import { panelAction } from "../QueryTypeBar";
 import { decodeQuery } from "../LabelBrowser/helpers/querybuilder";
 
-
-
 export const selectedStyle = {
     borderColor: "#11abab",
     color: "#11abab",
@@ -24,8 +22,7 @@ export const LabelValue = (props: any) => {
         if (isValueSelected || data?.metric === value.name) {
             return selectedStyle;
         } else return {};
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isValueSelected,  value.selected, data.metric, value.name]);
+    }, [isValueSelected, value.selected, data.metric, value.name]);
 
     useEffect(() => {
         setIsValueSelected(value.selected);
@@ -36,7 +33,7 @@ export const LabelValue = (props: any) => {
 
         setIsValueSelected((prev: any) => {
             isSelected = !prev;
-            return !prev
+            return !prev;
         });
 
         const valueUpdated = { ...value, selected: isSelected };
@@ -56,12 +53,9 @@ export const LabelValue = (props: any) => {
 
 export default function ValuesList(props: any) {
     const dispatch: any = useDispatch();
-    const { name, data } = props;
-
+    const { name, data, start, stop } = props;
 
     const { dataSourceId } = data;
-    const start = useSelector ((store:any)=> store.start)
-    const stop = useSelector ((store:any)=> store.stop)
     const panelQuery = useSelector((store: any) => store[name]);
 
     const [filterState, setFilterState] = useState("");
@@ -89,38 +83,42 @@ export default function ValuesList(props: any) {
 
     useEffect(() => {
         const panel = panelQuery.find((panel: any) => panel.id === data.id);
-        const label = panel?.labels?.find((label: any)=>label.name === props.label)
-        const values = label?.values
-        if (typeof values !== 'undefined') {
-            setValsSelection(values)
+        const label = panel?.labels?.find(
+            (label: any) => label.name === props.label
+        );
+        const values = label?.values;
+        if (typeof values !== "undefined") {
+            setValsSelection(values);
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[panelQuery])
+    }, [panelQuery]);
 
     const valuesFromProps = useMemo(() => {
         if (props?.data?.labels?.length < 1) {
             return [];
         }
 
-        const actLabel = props.data.labels.find((f: any) => f.name === props.label);
+        const actLabel = props.data.labels.find(
+            (f: any) => f.name === props.label
+        );
 
         if (!actLabel) {
             return [];
         }
 
         return actLabel?.values;
-          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.data.labels]);
 
     const resp = useMemo(() => {
         if (response?.data?.data?.length > 0) {
             const panel = panelQuery.find((panel: any) => panel.id === data.id);
-            const label = panel?.labels?.find((label: any) => label.name === props.label)
+            const label = panel?.labels?.find(
+                (label: any) => label.name === props.label
+            );
             const values = label?.values;
             const valuesMap = new Map();
-            values?.forEach((value: any)=>{
+            values?.forEach((value: any) => {
                 valuesMap.set(value.name, value);
-            })
+            });
             return response?.data?.data?.map((val: any) => ({
                 label: props.label,
                 name: val,
@@ -132,7 +130,6 @@ export default function ValuesList(props: any) {
         } else {
             return [];
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [response]);
 
     const [valuesState, setValuesState] = useState(resp);
@@ -174,7 +171,7 @@ export default function ValuesList(props: any) {
             label || props.label,
             null,
             "=",
-            'value'
+            "value"
         );
 
         const panel = [...panelQuery];
@@ -201,7 +198,7 @@ export default function ValuesList(props: any) {
 
     const onValueClick = (val: any, isAll = false) => {
         let initialValues: any = [];
-        if(isAll) {
+        if (isAll) {
             setValsSelection([]);
         }
         if (valsSelection.length > 0) {
@@ -219,9 +216,7 @@ export default function ValuesList(props: any) {
                         });
                     }
                 });
-
             }
-
         } else if (!isAll) {
             initialValues = [...initialValues, { ...val }];
         }
@@ -286,19 +281,19 @@ export default function ValuesList(props: any) {
     const onFilterChange = useCallback(
         (e) => {
             const value = e.target.value;
-            setFilterState((prev) => value);
+            setFilterState(() => value);
 
             if (e !== "") {
-                setFilterValuesState((prev: any) =>
+                setFilterValuesState(() =>
                     valuesState.filter((f: any) =>
                         f.name.toLowerCase().includes(value.toLowerCase())
                     )
                 );
             } else {
-                setFilterValuesState((prev: any) => valuesState);
+                setFilterValuesState(() => valuesState);
             }
         },
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+
         [filterState]
     );
 
@@ -341,8 +336,7 @@ export function LabelHeader({
     filterState,
     onFilterChange,
 }: any) {
-
-// Add here a replace for label with a custom name 
+    // Add here a replace for label with a custom name
 
     return (
         <>
@@ -356,10 +350,7 @@ export function LabelHeader({
                     onChange={onFilterChange}
                 />
             </span>
-            <span
-                className={"close-column"}
-                onClick={(e) => onClear(label)}
-            >
+            <span className={"close-column"} onClick={() => onClear(label)}>
                 clear
             </span>
         </>

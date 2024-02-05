@@ -89,7 +89,7 @@ export const PageContainer: any = styled.div`
         padding: 10px 20px;
         border: 1px solid ${({ theme }: any) => theme.accentNeutral};
         border-radius: 3px;
-        height:fit-content;
+        height: fit-content;
         .title {
             font-size: 14px;
             padding: 10px 0px;
@@ -109,7 +109,7 @@ export const Label: any = styled.div`
     border-radius: 3px 0px 0px 3px;
     display: flex;
     align-items: center;
-    height: 28px;
+    height: 26px;
 `;
 
 export const Input: any = styled.input`
@@ -226,7 +226,7 @@ export const DsButtonStyled: any = styled(BtnSmall)`
     transition: 0.25s all;
     justify-content: center;
     padding: 3px 12px;
-    height: 28px;
+    height: 26px;
     display: flex;
     &:hover {
         background: ${({ theme }: any) => theme.primaryLight};

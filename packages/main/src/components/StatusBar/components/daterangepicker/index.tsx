@@ -149,6 +149,12 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
     } = props;
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
     const isSplit = useSelector((store:any)=> store.isSplit);
+
+    const isFullWidth = useMemo(() => {
+        return !isTabletOrMobile && !isSplit
+    },[isTabletOrMobile, isSplit]);
+
+
     const theme = useTheme();
     const defaultRange = {
         label: 'Last 5 minutes',
@@ -374,12 +380,13 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
 
     return (
         <div style={{ display: "flex" }}>
-            {(!isTabletOrMobile && !isSplit) && (
+            {(isFullWidth) && (
                 <>
                     <DatePickerButton
                         onClick={() => {
                             adjustTimeRange("backward");
                         }}
+                        side={'left'}
                         attachedside={"r"}
                         emptySide={"l"}
                         className={cx(DTStyles)}
@@ -389,6 +396,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                     <DatePickerButton
                         onClick={handleClick}
                         attachedside={"both"}
+                        side={'central'}
                         size={"small"}
                         className={cx(DTStyles)}
                         aria-controls={open ? "backward-menu" : undefined}
@@ -423,6 +431,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                 <DatePickerButton
                     onClick={openButtonHandler}
                     className={cx(DTStyles)}
+                    side={isFullWidth ? 'central' : 'individual'}
                     attachedside={"both"}
                 >
                     <AccessTimeOutlinedIcon />
@@ -449,12 +458,13 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                 </DatePickerButton>
             </Tooltip>
 
-            {(!isTabletOrMobile && !isSplit) && (
+            {(isFullWidth) && (
                 <>
                     <DatePickerButton
                         onClick={handleClickRight}
                         id={`forward-button-${id}`}
                         size={"small"}
+                        side={'central'}
                         className={cx(DTStyles)}
                         aria-controls={
                             openRight ? `forward-menu${id}` : undefined
@@ -488,6 +498,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                         onClick={() => {
                             adjustTimeRange("forward");
                         }}
+                        side={'right'}
                         attachedside={"l"}
                         className={cx(DTStyles)}
                     >
