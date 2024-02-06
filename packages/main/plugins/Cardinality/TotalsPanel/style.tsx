@@ -70,6 +70,7 @@ export const TotalRowStyle = (theme: QrynTheme) => css`
     }
     .table-row {
         display: table-row;
+        height: 18px;
         &:hover {
             background: ${theme.deep};
         }
@@ -77,9 +78,9 @@ export const TotalRowStyle = (theme: QrynTheme) => css`
     .cell {
         display: table-cell;
         font-size: 12px;
-        //  margin: 10px;
-        padding: 10px;
+        padding: 8px;
         max-width: 10%;
+        height: 26px;
     }
     .table-footer {
         display: flex;

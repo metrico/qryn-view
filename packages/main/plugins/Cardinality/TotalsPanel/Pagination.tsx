@@ -31,7 +31,7 @@ const TotalsPagination = ({
                 Prev
             </button>
             <p>
-                Page {page + 1} of {totalPages}
+                Page {Math.round(page) + 1} of {Math.round(totalPages)}
             </p>
             <button
                 className={page === totalPages - 1 ? "disabled" : ""}

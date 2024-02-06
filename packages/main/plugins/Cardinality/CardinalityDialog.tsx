@@ -328,9 +328,13 @@ export function UndoCardinalityDialog({
                         <ReplayIcon
                             onClick={handleClickOpen}
                             style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
                                 color: theme.primary,
                                 cursor: "pointer",
-                                fontSize: "18px",
+                                height: "16px",
+                                width: "16px",
                                 // background:"#b8860b"
                             }}
                             fontSize={"small"}
