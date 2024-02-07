@@ -30,10 +30,10 @@ const getLabels = async (labelsUrl: string, config: any) => {
 const getLogQueries = async (
     logLabels: any[],
     filterValues: any[],
-    labelValuesUrl: Function,
+    labelValuesUrl: any,
     config: any
 ) => {
-    let logQueries = [];
+    let logQueries:any = [];
     try {
         for (let item of logLabels) {
             /* Filter Metric labels out */
@@ -53,7 +53,7 @@ const getLogQueries = async (
 
 const getLogs = async (
     logQueries: any[],
-    logRequest: Function,
+    logRequest: any,
     config: any
 ) => {
     let res: any = [];
@@ -78,7 +78,7 @@ const getLogsSeries = async (
     start: number,
     end: number,
     host: string,
-    setLoading: Function,
+    setLoading: any,
     config: any
 ) => {
     setLoading(() => true);
