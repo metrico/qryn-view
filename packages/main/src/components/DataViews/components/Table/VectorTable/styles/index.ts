@@ -5,6 +5,7 @@ export const TableStyles = styled.div`
     overflow: auto;
     &::-webkit-scrollbar {
         width: 5px;
+        height: 5px;
     }
     &::-webkit-scrollbar-corner {
         background: transparent;
