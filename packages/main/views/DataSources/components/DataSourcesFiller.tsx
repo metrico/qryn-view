@@ -1,56 +1,18 @@
 import { useState } from "react";
-import { css, cx } from "@emotion/css";
+import { cx } from "@emotion/css";
 import { useDispatch, useSelector } from "react-redux";
 import setDataSources from "../store/setDataSources";
 import { Button, Field } from "../ui";
 import DOMPurify from "isomorphic-dompurify";
 import useTheme from "@ui/theme/useTheme";
 import CustomSwitch from "@ui/qrynui/CustomSwitch/CustomSwitch";
-
-
-const InlineFlex = (theme: any) => css`
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    flex-wrap: wrap;
-    width: 400px;
-    border: 1px solid ${theme.accentNeutral};
-    padding: 5px;
-    border-radius: 3px;
-    margin-left: 10px;
-`;
-
-const oneForAllStyle = css`
-    display: flex;
-    padding: 4px 12px;
-    font-size: 14px;
-    border-radius: 4px;
-    white-space: nowrap;
-    align-items: center;
-    justify-content: space-between;
-`;
-
-const FieldsCont = css`
-    margin: 5px;
-`;
-
-const BasicAuth = css`
-    margin-left: 20px;
-    display: flex;
-    align-items: center;
-    span {
-        font-size: 12px;
-    }
-`;
-
-const ForAllButton = css`
-    align-items: center;
-    width: 100%;
-    display: flex;
-    margin-top: 10px;
-    justify-content: space-between;
-    flex: 1;
-`;
+import {
+    InlineFlex,
+    FieldsCont,
+    BasicAuth,
+    ForAllButton,
+    oneForAllStyle,
+} from "./DatasourcesFiller.styles";
 
 export const DataSourcesFiller = () => {
     const [url, setUrl] = useState("");

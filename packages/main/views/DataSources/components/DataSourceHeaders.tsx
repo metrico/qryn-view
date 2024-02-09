@@ -7,7 +7,8 @@ import { InputCol, InputGroup, Label } from "../styles";
 import { Field } from "../ui";
 import { SectionHeader } from "./SectionHeader";
 import DOMPurify from "isomorphic-dompurify";
-import { Switch } from "@mui/material";
+import CustomSwitch from "@ui/qrynui/CustomSwitch/CustomSwitch";
+
 
 export const DataSourceHeaders = (props: any) => {
     const dispatch: any = useDispatch();
@@ -119,9 +120,8 @@ export const DataSourceHeaders = (props: any) => {
                     />
                     <InputCol>
                         <Label>Use CORS</Label>{" "}
-                        <Switch
-                            size={"small"}
-                            checked={cors}
+                        <CustomSwitch
+                            defaultActive={cors}
                             onChange={onCorsChange}
                         />
                     </InputCol>

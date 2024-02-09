@@ -1,5 +1,4 @@
-
-import { Switch } from "@mui/material";
+import CustomSwitch from "@ui/qrynui/CustomSwitch/CustomSwitch";
 import { InputGroup, Label } from "../styles";
 
 export const QrynSwitch = (props: any) => {
@@ -7,10 +6,9 @@ export const QrynSwitch = (props: any) => {
     return (
         <InputGroup>
             <Label>{label}</Label>
-            <Switch
+            <CustomSwitch
                 disabled={locked}
-                size={"small"}
-                checked={value}
+                defaultActive={value}
                 onChange={onChange}
             />
         </InputGroup>

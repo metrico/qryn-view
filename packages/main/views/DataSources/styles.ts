@@ -41,6 +41,7 @@ export const PageContainer: any = styled.div`
         }
     }
     .ds-cont {
+        background: ${({ theme }: any) => theme.shadow};
         margin-bottom: 10px;
         border: 1px solid ${({ theme }: any) => theme.accentNeutral};
         border-radius: 3px;
@@ -210,7 +211,7 @@ export const SettingsTitle: any = styled.div`
 `;
 
 export const DataSourceSettingsCont: any = styled.div`
-    background: ${({ theme }: any) => theme.deep};
+    background: ${({ theme }: any) => theme.shadow};
     padding: 10px;
     border-radius: 0px 0px 3px 3px;
     border-top: 1px solid ${({ theme }: any) => theme.accentNeutral};

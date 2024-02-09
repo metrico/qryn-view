@@ -210,7 +210,7 @@ export function DataSource() {
                         title={"DataSource Settings"}
                         datasource={datasource}
                     />
-                    <div className={"datasource-body"}>
+                    <div>
                         <DataSourceSetting {...datasource} />
                     </div>
                 </div>
