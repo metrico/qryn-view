@@ -21,7 +21,9 @@ const useConfigurator = ({setHistoryItem}:useConfiguratorProps) => {
     } = useCardinalityStore();
 
     const { total: totalSeries } = useCardinalityStore();
-const {handleCardinalityRequest} = useCardinalityRequest(); 
+const {handleCardinalityRequest
+
+} = useCardinalityRequest(); 
  
     
 

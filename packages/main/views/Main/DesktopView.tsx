@@ -20,7 +20,7 @@ export interface Props {
 }
 export function DesktopView({
     theme,
-    isEmbed,
+
     isSplit,
     settingsDialogOpen,
 }: Props) {
@@ -43,8 +43,8 @@ export function DesktopView({
         const realMinWidth = !isSplit
             ? widthTotal
             : widthTotal / 4 > 370
-            ? widthTotal / 4
-            : 370;
+              ? widthTotal / 4
+              : 370;
         setMinWidth(realMinWidth);
     }, [
         setWidthLeft,
@@ -102,10 +102,7 @@ export function DesktopView({
 
     return (
         <ThemeProvider theme={theme}>
-            <MainContainer>
-                {panelsRenderer(leftOpen, rightOpen)}
-            </MainContainer>
-
+            <MainContainer>{panelsRenderer(leftOpen, rightOpen)}</MainContainer>
             <SettingsDialog open={settingsDialogOpen} />
             <QueryHistory />
         </ThemeProvider>

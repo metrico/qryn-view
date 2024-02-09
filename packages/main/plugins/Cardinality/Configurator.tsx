@@ -1,5 +1,5 @@
-import { cx } from "@emotion/css";
-import React from "react";
+import { cx, css } from "@emotion/css";
+import React, { useEffect } from "react";
 import ChevronRightOutlinedIcon from "@mui/icons-material/ChevronRightOutlined";
 import { Totals } from "./Totals";
 import DayPicker from "./DayPicker";
@@ -10,6 +10,11 @@ import { ConfigContainerStyles } from "./ConfigContainerStyles";
 import { useCardinalityRequest } from "./api/CardinalityRequest";
 import useCardinalityStore from "./store/CardinalityStore";
 import CardinalityDialog from "./CardinalityDialog";
+import {
+    StyledTabs,
+    StyledTab,
+} from "@ui/main/components/QueryItem/StyledTabs";
+
 type ConfiguratorProps = {
     theme: any;
     percent?: number;
@@ -18,9 +23,22 @@ type ConfiguratorProps = {
     timeSeriesSelectorItems: any;
     limitEntriesItems: any;
     setHistoryItem: any;
+    activeTab;
+    onTabChange: (event: any, tab: any) => void;
 };
 
 // we should simply add a switch to choose btween day and timeseconds
+
+export const StyledTabsCont = (theme: any) => css`
+    background: ${theme.WidgetBg};
+    .MuiTabs-root {
+        height: 20px !important;
+        min-height: 20px;
+    }
+    .MuiButtonBase-root {
+        min-height: 0;
+    }
+`;
 
 const Configurator: React.FC<ConfiguratorProps> = ({
     theme = useTheme(),
@@ -28,6 +46,8 @@ const Configurator: React.FC<ConfiguratorProps> = ({
     timeSeriesSelectorItems,
     limitEntriesItems,
     setHistoryItem,
+    activeTab = 0,
+    onTabChange,
 }) => {
     // in this way we could set history as first values
 
@@ -51,10 +71,21 @@ const Configurator: React.FC<ConfiguratorProps> = ({
 
     //a handler for making a get request to the api
 
-    const { handleCardinalityRequest, handleDelete } =
-        useCardinalityRequest(true);
+    const {
+        handleCardinalityRequest,
+        handleDelete,
+        handleGetDeletedFingerprints,
+    } = useCardinalityRequest(true);
     const { setTimeSeriesSelector, setFocusLabel, setLimitEntries, isLoading } =
         useCardinalityStore();
+
+    //this feature is not implemented yet
+    useEffect(() => {
+        handleGetDeletedFingerprints();
+    }, []);
+
+    // console.log(handleGetDeletedFingerprints())
+
     const handleReset = () => {
         reset();
         localStorage.setItem("labelValuePairs", "");
@@ -66,10 +97,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({
         });
     };
 
-    // this feature is not implemented yet
-    // useEffect(() => {
-    //     handleGetDeletedFingerprints();
-    // }, []);
+    //this feature is not implemented yet
 
     return (
         <div className={cx(ConfigContainerStyles(theme))}>
@@ -150,6 +178,14 @@ const Configurator: React.FC<ConfiguratorProps> = ({
                         value={totalSeries.quota}
                         text={"quota"}
                     />
+                </div>
+                <div className="buttons-group">
+                    <div className={cx(StyledTabsCont(theme))}>
+                        <StyledTabs value={activeTab} onChange={onTabChange}>
+                            <StyledTab label="Series" />
+                            <StyledTab label="Maintainance" />
+                        </StyledTabs>
+                    </div>
                 </div>
 
                 <div className="buttons-group">

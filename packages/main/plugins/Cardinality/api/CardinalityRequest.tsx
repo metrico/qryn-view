@@ -17,6 +17,7 @@ export type CardinalityRequestResponse = {
     handleDelete?: (query: string, amount: number) => void;
     handleCardinalityRequest?: (params: any) => void;
     handleGetDeletedFingerprints?: () => void;
+    handleUndoFingerprints?: (id: string) => void;
     result?: any;
 };
 
@@ -46,7 +47,7 @@ export const getDeletedFingerprints = async (
 
     try {
         setIsLoading(true);
-        const urlDelete = deleteEndpoint + "/loki/api/v1/delete";
+        const urlDelete = deleteEndpoint + "/loki/api/v1/maintenance";
         const { u, p } = auth;
         await fetch(urlDelete, {
             method: "GET",
@@ -66,6 +67,71 @@ export const getDeletedFingerprints = async (
         console.log(e);
         setError(JSON.stringify(e));
     } finally {
+    }
+};
+
+export const undoFingerPrintAction = async (
+    id,
+    url,
+    setIsLoading,
+    headers,
+    auth,
+    setError
+) => {
+    try {
+      
+        const { u, p } = auth;
+
+        const urlUndo = `${url}/api/v1/maintainance/${id}/undo`;
+        await fetch(urlUndo, {
+            method: "POST",
+
+            headers: {
+                ...headers,
+                Authorization: `Basic ${btoa(u + ":" + p)}`,
+            },
+        }).then((response) => {
+            if (
+                (response && response?.status === 500) ||
+                response?.status === 400
+            ) {
+                setError(response.statusText);
+                setIsLoading(false);
+                let error = response.text();
+                store.dispatch(
+                    createAlert({
+                        message: `Deleted fingerprints not undone, ${error}`,
+                        type: "error",
+                    })
+                );
+            }
+
+            if (
+                (response && response?.status === 200) ||
+                response?.status === 200
+            ) {
+                setIsLoading(false);
+                setError("");
+                store.dispatch(
+                    createAlert({
+                        message: `Undone deleted fingerprints`,
+                        type: "success",
+                    })
+                );
+                console.log(response);
+            }
+        });
+    } catch (e) {
+        setError(JSON.stringify(e));
+        setIsLoading(false);
+        store.dispatch(
+            createAlert({
+                message: `Deleted fingerprints not undone`,
+                type: "error",
+            })
+        );
+        console.log(e);
+        setIsLoading(false);
     }
 };
 
@@ -181,7 +247,7 @@ const requestCardinality = async (
     setIsLoading(true);
     // set
     //this makes the multiple fetch requests
-   
+
     try {
         const { u, p } = auth;
         const responses = await Promise.all(
@@ -276,7 +342,6 @@ export const useCardinalityRequest = (
 
     const { url, headers, user_pass } = useDataSourceData("logs");
 
-
     // const [isLoading, setIsLoading] = useState(false);
     // const [error, setError] = useState("");
     // const [tsdbStatus, setTsdbStatus] = useState<any>({});
@@ -310,6 +375,17 @@ export const useCardinalityRequest = (
             setIsLoading,
             headers,
             user_pass
+        );
+    };
+
+    const handleUndoFingerprints = async (id) => {
+        await undoFingerPrintAction(
+            id,
+            url,
+            setIsLoading,
+            headers,
+            user_pass,
+            setError
         );
     };
 
@@ -355,7 +431,8 @@ export const useCardinalityRequest = (
 
     return {
         handleDelete,
-        handleGetDeletedFingerprints,
+        handleGetDeletedFingerprints, // this should be the list
+        handleUndoFingerprints,
         handleCardinalityRequest,
     };
 };
