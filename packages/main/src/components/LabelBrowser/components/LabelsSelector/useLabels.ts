@@ -29,12 +29,16 @@ const getTimestamp = (time: any, type: any): any => {
     )[type];
 };
 
+export default function useLabels(
+    id: string,
+    dataSourceURL = "",
+    startTs?: string,
+    stopTs?: string
+) {
+    const dispatch: any = useDispatch();
 
-export default function useLabels(id:string, dataSourceURL = "", startTs?:string , stopTs?:string ) {
-    const dispatch:any = useDispatch();
-
-    const start = startTs || new Date(Date.now() + 30000) 
-    const stop = stopTs || new Date(Date.now())
+    const start = startTs || new Date(Date.now() + 30000);
+    const stop = stopTs || new Date(Date.now());
 
     const dataSources = useSelector((store: any) => store.dataSources);
 
@@ -45,7 +49,6 @@ export default function useLabels(id:string, dataSourceURL = "", startTs?:string
         }
 
         return current;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, dataSources]);
 
     const [type, setType] = useState(currentDataSource.type || "");
@@ -56,7 +59,7 @@ export default function useLabels(id:string, dataSourceURL = "", startTs?:string
 
     let timeStart: any;
     let timeEnd: any;
-    
+
     timeStart = getTimestamp(new Date(start), type);
     timeEnd = getTimestamp(new Date(stop), type);
 
@@ -66,7 +69,6 @@ export default function useLabels(id:string, dataSourceURL = "", startTs?:string
 
     useEffect(() => {
         setUrl(getUrlFromType(currentDataSource.url, type, timeStart, timeEnd));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [setUrl, type, currentDataSource]);
 
     const [response, setResponse] = useState([]);
@@ -145,7 +147,6 @@ export default function useLabels(id:string, dataSourceURL = "", startTs?:string
             };
             apiRequest();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url, currentDataSource]);
 
     return {

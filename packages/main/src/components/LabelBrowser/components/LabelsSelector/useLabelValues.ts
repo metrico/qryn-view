@@ -17,7 +17,7 @@ const getUrlType = (
     ({
         metrics: `${api}/api/v1/label/${label}/values`,
         logs: `${api}/loki/api/v1/label/${label}/values?start=${start}&end=${end}`,
-    }[type]);
+    })[type];
 
 export default function useLabelValues(
     id: any,
@@ -69,7 +69,6 @@ export default function useLabelValues(
                 nanoEnd
             )
         );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [label, setUrl, currentDataSource]);
     const extraheaders = getDsHeaders(currentDataSource);
     const [headers] = useState({
@@ -82,7 +81,7 @@ export default function useLabelValues(
             signal: controller.signal,
             method: "GET",
         }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
         []
     );
 
@@ -108,7 +107,6 @@ export default function useLabelValues(
 
             apiRequest();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentDataSource, url, label]);
 
     return {

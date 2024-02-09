@@ -274,7 +274,6 @@ export function UpdateStateFromQueryParams() {
 
                     const parsed = JSON.stringify(left);
                     paramsFromHash.set("left", parsed);
-                    
                 } else if (store_key === "right") {
                     // store right panel into url
 
@@ -283,7 +282,7 @@ export function UpdateStateFromQueryParams() {
                 }
             });
 
-            (window as any).location.hash =  `/search/#${paramsFromHash}`;
+            (window as any).location.hash = `/search/#${paramsFromHash}`;
         }
     }, [STORE_KEYS]);
 }

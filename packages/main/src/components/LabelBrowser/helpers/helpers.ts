@@ -36,4 +36,5 @@ const labelHelpers = {
     updateLabel,
     updateLabelSelected,
 };
+
 export default labelHelpers;

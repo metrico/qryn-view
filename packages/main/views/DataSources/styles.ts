@@ -211,7 +211,7 @@ export const SettingsTitle: any = styled.div`
 `;
 
 export const DataSourceSettingsCont: any = styled.div`
-    background: ${({ theme }: any) => theme.shadow};
+    background: ${({ theme }: any) => theme.background}; 
     padding: 10px;
     border-radius: 0px 0px 3px 3px;
     border-top: 1px solid ${({ theme }: any) => theme.accentNeutral};
