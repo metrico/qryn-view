@@ -1,11 +1,13 @@
-import { Switch } from "@mui/material";
 import { useState } from "react";
 import { css, cx } from "@emotion/css";
 import { useDispatch, useSelector } from "react-redux";
 import setDataSources from "../store/setDataSources";
 import { Button, Field } from "../ui";
 import DOMPurify from "isomorphic-dompurify";
-import useTheme from "@ui/theme/useTheme"
+import useTheme from "@ui/theme/useTheme";
+import CustomSwitch from "@ui/qrynui/CustomSwitch/CustomSwitch";
+
+
 const InlineFlex = (theme: any) => css`
     display: flex;
     flex-direction: column;
@@ -15,7 +17,7 @@ const InlineFlex = (theme: any) => css`
     border: 1px solid ${theme.accentNeutral};
     padding: 5px;
     border-radius: 3px;
-    margin-left:10px;
+    margin-left: 10px;
 `;
 
 const oneForAllStyle = css`
@@ -50,7 +52,7 @@ const ForAllButton = css`
     flex: 1;
 `;
 
-export const DataSourcesFiller = (props: any) => {
+export const DataSourcesFiller = () => {
     const [url, setUrl] = useState("");
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
@@ -62,8 +64,8 @@ export const DataSourcesFiller = (props: any) => {
     const theme = useTheme();
 
     const urlChange = (e: any) => {
-           const value = e?.target?.value || "";
-    const strippedValue = value.replace(/\/$/, '');
+        const value = e?.target?.value || "";
+        const strippedValue = value.replace(/\/$/, "");
         setUrl(() => strippedValue);
     };
     const userChange = (e: any) => {
@@ -81,7 +83,7 @@ export const DataSourcesFiller = (props: any) => {
         setBasicAuth(() => e.target.checked);
     };
 
-    const onUseForAll = (e: any) => {
+    const onUseForAll = () => {
         const prevDs = JSON.parse(JSON.stringify(dataSources));
         const newDs = prevDs?.map((m: any) => ({
             ...m,
@@ -111,9 +113,8 @@ export const DataSourcesFiller = (props: any) => {
         <div className={cx(InlineFlex(theme))}>
             <div className={cx(oneForAllStyle)}>
                 Use one setting for all Data Sources
-                <Switch
-                    checked={oneForAll}
-                    size={"small"}
+                <CustomSwitch
+                    defaultActive={oneForAll}
                     onChange={onSwitchChange}
                 />
             </div>
@@ -145,12 +146,11 @@ export const DataSourcesFiller = (props: any) => {
 
                     <div className={cx(ForAllButton)}>
                         <div className={cx(BasicAuth)}>
-                            <span>Use Basic Auth</span>{" "}
-                            <Switch
-                                checked={basicAuth}
-                                size={"small"}
+                            <span>Use Basic Auth</span>
+                            <CustomSwitch
+                                defaultActive={basicAuth}
                                 onChange={onBasicAuthChange}
-                            />{" "}
+                            />
                         </div>
                         <Button
                             value={DOMPurify.sanitize(submitMessage)}
