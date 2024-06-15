@@ -61,7 +61,7 @@
     "reselect": "^4.1.8",
     "slate": "^0.94.1",
     "slate-history": "^0.93.0",
-    "slate-react": "^0.97.2",
+    "slate-react": "^0.105.0",
     "tss-react": "^4.9.6",
     "zustand": "^4.5.2"
   },
