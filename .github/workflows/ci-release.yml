@@ -39,9 +39,27 @@ jobs:
 
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              
+            - name: "Main Package Version Bump"
+              if: github.event_name != 'pull_request'
+              id: main-version
+              uses: "phips28/gh-action-bump-version@master"
+              with:
+                  tag-prefix: "v"
+                  skip-tag: true
+    
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  PACKAGEJSON_DIR:  'packages/main'
+            
             - name: "version check"
               if: github.event_name != 'pull_request'
               run: echo ${{steps.version.outputs.newTag}}
+
+            - name: "main version check"
+              if: github.event_name != 'pull_request'
+              run: echo ${{steps.main-version.outputs.newTag}}
+
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v4
               with:
