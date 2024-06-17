@@ -52,8 +52,8 @@ importers:
         specifier: latest
         version: 1.23.0(@types/react@18.2.68)(react-dom@18.2.0)(react@18.2.0)
       '@mui/base':
-        specifier: 5.0.0-beta.5
-        version: 5.0.0-beta.5(@types/react@18.2.68)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 5.0.0-beta.40
+        version: 5.0.0-beta.40(@types/react@18.2.68)(react-dom@18.2.0)(react@18.2.0)
       '@mui/icons-material':
         specifier: ^5.15.14
         version: 5.15.14(@mui/material@5.15.20)(@types/react@18.2.68)(react@18.2.0)
@@ -1219,30 +1219,6 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@mui/base@5.0.0-beta.5(@types/react@18.2.68)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-vy3TWLQYdGNecTaufR4wDNQFV2WEg6wRPi6BVbx6q1vP3K1mbxIn1+XOqOzfYBXjFHvMx0gZAo2TgWbaqfgvAA==}
-    engines: {node: '>=12.0.0'}
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0
-      react: ^17.0.0 || ^18.0.0
-      react-dom: ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      '@babel/runtime': 7.24.1
-      '@emotion/is-prop-valid': 1.2.2
-      '@mui/types': 7.2.14(@types/react@18.2.68)
-      '@mui/utils': 5.15.14(@types/react@18.2.68)(react@18.2.0)
-      '@popperjs/core': 2.11.8
-      '@types/react': 18.2.68
-      clsx: 1.2.1
-      prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-is: 18.2.0
-    dev: false
-
   /@mui/core-downloads-tracker@5.15.20:
     resolution: {integrity: sha512-DoL2ppgldL16utL8nNyj/P12f8mCNdx/Hb/AJnX9rLY4b52hCMIx1kH83pbXQ6uMy6n54M3StmEbvSGoj2OFuA==}
     dev: false
@@ -2361,11 +2337,6 @@ packages:
 
   /classnames@2.5.1:
     resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
-    dev: false
-
-  /clsx@1.2.1:
-    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
-    engines: {node: '>=6'}
     dev: false
 
   /clsx@2.1.0:
