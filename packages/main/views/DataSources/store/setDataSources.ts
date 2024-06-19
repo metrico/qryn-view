@@ -1,4 +1,4 @@
-const setDataSources = (dataSources: any) => (dispatch: Function) => {
+const setDataSources = (dataSources: any) => (dispatch: any) => {
     dispatch({
         type: 'SET_DATA_SOURCES',
         dataSources
