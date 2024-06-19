@@ -24,11 +24,8 @@ export const Settings = (props: any) => {
     });
     const onFieldChange = (prop: any, value: any) => {
         let val = value;
-        if (prop === "url") {
-            const strippedValue = value.replace(/\/$/, "");
-            val = strippedValue;
-        }
         const arrayClone = JSON.parse(JSON.stringify(state));
+        
         arrayClone.forEach((field: any) => {
             if (field.id === id) {
                 field[prop] = val;
