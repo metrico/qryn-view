@@ -1,5 +1,5 @@
 import { Switch } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { css, cx } from "@emotion/css";
 import { useDispatch, useSelector } from "react-redux";
 import setDataSources from "../store/setDataSources";
@@ -51,9 +51,14 @@ const ForAllButton = css`
     flex: 1;
 `;
 
+// set a global url for all datasources
+
 export const urlSchema = z.string().url()
 
+const DEFAULT_URL = window.location.origin
+
 export const DataSourcesFiller = (props: any) => {
+
     const [url, setUrl] = useState("");
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
@@ -64,6 +69,49 @@ export const DataSourcesFiller = (props: any) => {
     const dispatch: any = useDispatch();
     const submitMessage = "Save";
     const theme = useTheme();
+
+    const onUseForAll = (defaultUrl="") => {
+        const changedUrl = defaultUrl === "" ? url : defaultUrl
+        const prevDs = JSON.parse(JSON.stringify(dataSources));
+        const newDs = prevDs?.map((m: any) => ({
+            ...m,
+            url:changedUrl,
+            auth: {
+                ...m.auth,
+                basicAuth: { ...m.auth.basicAuth, value: basicAuth },
+                fields: {
+                    ...m.auth.fields,
+                    basicAuth: [...m.auth.fields.basicAuth]?.map((ba: any) => {
+                        if (ba.name === "user") {
+                            return { ...ba, value: user };
+                        }
+                        if (ba.name === "password") {
+                            return { ...ba, value: password };
+                        }
+                        return ba;
+                    }),
+                },
+            },
+        }));
+        localStorage.setItem("dataSources", JSON.stringify(newDs));
+        dispatch(setDataSources(newDs));
+    };
+
+    useEffect(()=>{
+        if (url === ""){
+            
+            if(dataSources[0]?.url === "" && dataSources[1]?.url === "") {
+                setUrl(DEFAULT_URL)
+                onUseForAll(DEFAULT_URL)
+            } else  {
+                setUrl(dataSources[0]?.url)
+            }
+    
+            setOneForAll(true)
+            setUrlValid(true)
+        } 
+      
+    },[url])
 
     const urlChange = (e: any) => {
            const value = e?.target?.value || "";
@@ -88,31 +136,7 @@ export const DataSourcesFiller = (props: any) => {
         setBasicAuth(() => e.target.checked);
     };
 
-    const onUseForAll = (e: any) => {
-        const prevDs = JSON.parse(JSON.stringify(dataSources));
-        const newDs = prevDs?.map((m: any) => ({
-            ...m,
-            url,
-            auth: {
-                ...m.auth,
-                basicAuth: { ...m.auth.basicAuth, value: basicAuth },
-                fields: {
-                    ...m.auth.fields,
-                    basicAuth: [...m.auth.fields.basicAuth]?.map((ba: any) => {
-                        if (ba.name === "user") {
-                            return { ...ba, value: user };
-                        }
-                        if (ba.name === "password") {
-                            return { ...ba, value: password };
-                        }
-                        return ba;
-                    }),
-                },
-            },
-        }));
-        localStorage.setItem("dataSources", JSON.stringify(newDs));
-        dispatch(setDataSources(newDs));
-    };
+
 
     return (
         <div className={cx(InlineFlex(theme))}>
