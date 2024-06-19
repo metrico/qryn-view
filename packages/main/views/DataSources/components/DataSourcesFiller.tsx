@@ -6,6 +6,7 @@ import setDataSources from "../store/setDataSources";
 import { Button, Field } from "../ui";
 import DOMPurify from "isomorphic-dompurify";
 import useTheme from "@ui/theme/useTheme"
+import {z} from 'zod'
 const InlineFlex = (theme: any) => css`
     display: flex;
     flex-direction: column;
@@ -50,12 +51,15 @@ const ForAllButton = css`
     flex: 1;
 `;
 
+export const urlSchema = z.string().url()
+
 export const DataSourcesFiller = (props: any) => {
     const [url, setUrl] = useState("");
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
     const [oneForAll, setOneForAll] = useState(false);
     const [basicAuth, setBasicAuth] = useState(false);
+    const [urlValid, setUrlValid] = useState(false)
     const dataSources = useSelector((store: any) => store.dataSources);
     const dispatch: any = useDispatch();
     const submitMessage = "Save";
@@ -63,8 +67,11 @@ export const DataSourcesFiller = (props: any) => {
 
     const urlChange = (e: any) => {
            const value = e?.target?.value || "";
-    const strippedValue = value.replace(/\/$/, '');
-        setUrl(() => strippedValue);
+        const message = urlSchema.safeParse(value)
+       
+        setUrlValid(()=> message.success)
+
+           setUrl(() => value);
     };
     const userChange = (e: any) => {
         setUser(() => e.target.value);
@@ -123,7 +130,7 @@ export const DataSourcesFiller = (props: any) => {
                         value={DOMPurify.sanitize(url)}
                         label={"url"}
                         onChange={urlChange}
-                        placeholder={"http://qryn.dev"}
+                        placeholder={window.location.origin}
                     />
                     {basicAuth && (
                         <>
@@ -154,10 +161,13 @@ export const DataSourcesFiller = (props: any) => {
                         </div>
                         <Button
                             value={DOMPurify.sanitize(submitMessage)}
+                            disabled={!urlValid}
+
                             onClick={onUseForAll}
                             editing={false}
-                            primary={true}
+                            primary={urlValid}
                         />
+                    
                     </div>
                 </div>
             )}

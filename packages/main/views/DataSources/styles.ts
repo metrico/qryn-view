@@ -78,7 +78,7 @@ export const PageContainer: any = styled.div`
             cursor: pointer;
         }
         .ds-settings {
-            background: ${({ theme }: any) => theme.background};
+            background: ${({ theme }: any) => theme.shadow};
         }
     }
     .plugins-cont {
@@ -210,15 +210,16 @@ export const SettingsTitle: any = styled.div`
 `;
 
 export const DataSourceSettingsCont: any = styled.div`
-    background: ${({ theme }: any) => theme.deep};
     padding: 10px;
     border-radius: 0px 0px 3px 3px;
     border-top: 1px solid ${({ theme }: any) => theme.accentNeutral};
 `;
 
 export const DsButtonStyled: any = styled(BtnSmall)`
+    
     background: ${(props: any) =>
         props.primary ? props.theme.primary : props.theme.neutral};
+
     border: 1px solid ${({ theme }: any) => theme.accentNeutral};
     color: ${(props: any) =>
         props.primary ? props.theme.maxContrast : props.theme.contrast};
@@ -229,7 +230,7 @@ export const DsButtonStyled: any = styled(BtnSmall)`
     height: 26px;
     display: flex;
     &:hover {
-        background: ${({ theme }: any) => theme.primaryLight};
+        background: ${({ theme, disabled }: any) => disabled ? theme.neutral : theme.primaryLight};
         color: ${(props: any) =>
             props.primary ? props.theme.contrast : props.theme.maxContrast};
     }
