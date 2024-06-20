@@ -36,6 +36,9 @@ jobs:
               with:
                   tag-prefix: "v"
                   skip-tag: true
+                  minor-wording: 'feat,add,Adds,new'
+                  major-wording: 'MAJOR,cut-major'
+                  patch-wording: 'patch,fixes,fix,dependabot,deps-dev,deps,Bumps,chore'
 
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -47,6 +50,9 @@ jobs:
               with:
                   tag-prefix: "v"
                   skip-tag: true
+                  minor-wording: 'feat,add,Adds,new'
+                  major-wording: 'MAJOR,cut-major'
+                  patch-wording: 'patch,fixes,fix,dependabot,deps-dev,deps,Bumps,chore'
     
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
