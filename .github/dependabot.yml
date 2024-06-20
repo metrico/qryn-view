@@ -9,3 +9,9 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+    commit-message: 
+      prefix: "chore"
+    open-pull-requests-limit: 10
+    labels: 
+      - "dependencies"
+
