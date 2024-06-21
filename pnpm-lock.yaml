@@ -239,8 +239,8 @@ importers:
         specifier: ^0.4.7
         version: 0.4.7(eslint@8.57.0)
       happy-dom:
-        specifier: ^13.10.1
-        version: 13.10.1
+        specifier: ^14.12.3
+        version: 14.12.3
       prettier:
         specifier: ^3.3.2
         version: 3.3.2
@@ -258,7 +258,7 @@ importers:
         version: 5.3.1(@types/node@20.14.5)(sass@1.77.6)
       vitest:
         specifier: ^0.32.4
-        version: 0.32.4(happy-dom@13.10.1)(jsdom@24.1.0)(sass@1.77.6)
+        version: 0.32.4(happy-dom@14.12.3)(jsdom@24.1.0)(sass@1.77.6)
 
 packages:
 
@@ -3201,8 +3201,8 @@ packages:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
     dev: true
 
-  /happy-dom@13.10.1:
-    resolution: {integrity: sha512-9GZLEFvQL5EgfJX2zcBgu1nsPUn98JF/EiJnSfQbdxI6YEQGqpd09lXXxOmYonRBIEFz9JlGCOiPflDzgS1p8w==}
+  /happy-dom@14.12.3:
+    resolution: {integrity: sha512-vsYlEs3E9gLwA1Hp+w3qzu+RUDFf4VTT8cyKqVICoZ2k7WM++Qyd2LwzyTi5bqMJFiIC/vNpTDYuxdreENRK/g==}
     engines: {node: '>=16.0.0'}
     dependencies:
       entities: 4.5.0
@@ -5153,7 +5153,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitest@0.32.4(happy-dom@13.10.1)(jsdom@24.1.0)(sass@1.77.6):
+  /vitest@0.32.4(happy-dom@14.12.3)(jsdom@24.1.0)(sass@1.77.6):
     resolution: {integrity: sha512-3czFm8RnrsWwIzVDu/Ca48Y/M+qh3vOnF16czJm98Q/AN1y3B6PBsyV8Re91Ty5s7txKNjEhpgtGPcfdbh2MZg==}
     engines: {node: '>=v14.18.0'}
     hasBin: true
@@ -5197,7 +5197,7 @@ packages:
       cac: 6.7.14
       chai: 4.4.1
       debug: 4.3.5
-      happy-dom: 13.10.1
+      happy-dom: 14.12.3
       jsdom: 24.1.0
       local-pkg: 0.4.3
       magic-string: 0.30.10
