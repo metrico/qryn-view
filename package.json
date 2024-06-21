@@ -19,7 +19,7 @@
     "@types/node": "^20.14.2",
     "@types/react": "^18.3.3",
     "jsdom": "24.1.0",
-    "turbo": "^1.13.4",
+    "turbo": "^2.0.4",
     "typescript": "^5.4.5"
   },
   "dependencies": {
