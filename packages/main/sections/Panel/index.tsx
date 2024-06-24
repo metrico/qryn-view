@@ -49,7 +49,7 @@ const Panel = (props: PanelProps) => {
             window.removeEventListener("resize", onWindowResize);
         };
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, []);
 
     // set queries container with proportional to client width

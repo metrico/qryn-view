@@ -53,6 +53,6 @@ export const useLabelsFromProps = (id: number, props: any) => {
             return props.labelOpts?.filter((f: any) => f !== "__name__") || [];
         }
         return [];
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+          
     }, [id, props]);
 };

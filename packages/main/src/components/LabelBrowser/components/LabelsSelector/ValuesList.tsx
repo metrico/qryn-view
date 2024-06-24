@@ -29,7 +29,7 @@ export const LabelValue = (props: any) => {
         if (isValueSelected || data?.metric === value.name) {
             return selectedStyle;
         } else return {};
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [isValueSelected, value.selected, data.metric, value.name]);
 
     useEffect(() => {
@@ -154,7 +154,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
             setValsSelection(currentLabelValues);
         }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [queries]);
 
     const valuesFromProps = useMemo(() => {
@@ -169,7 +169,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
         }
 
         return actLabel?.values;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [props.data.labels]);
 
     const resp = useMemo(() => {
@@ -195,7 +195,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
         } else {
             return [];
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [labelValuesResponse]);
 
     const [valuesState, setValuesState] = useState(resp);
@@ -347,7 +347,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
     const onFilterChange = useCallback(
         (e) => {
             const value = e.target.value;
-            setFilterState((prev) => value);
+            setFilterState(() => value);
 
             if (e !== "") {
                 setFilterValuesState(() =>
@@ -359,7 +359,7 @@ const ValuesList: React.FC<ValuesListProps> = (props) => {
                 setFilterValuesState(() => valuesState);
             }
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [filterState]
     );
 
@@ -426,7 +426,7 @@ export const LabelHeader: React.FC<LabelHeaderProps> = ({
                     onChange={onFilterChange}
                 />
             </span>
-            <span className={"close-column"} onClick={(e) => onClear(label)}>
+            <span className={"close-column"} onClick={() => onClear(label)}>
                 clear
             </span>
         </>

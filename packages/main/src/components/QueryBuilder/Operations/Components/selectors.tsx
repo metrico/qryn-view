@@ -88,7 +88,7 @@ export const RangeLabelsSelector = (props: any) => {
                 { name: "Select Label", value: "" },
             ]
         );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, []);
 
     return (

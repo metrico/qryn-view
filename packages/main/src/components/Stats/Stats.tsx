@@ -19,7 +19,7 @@ const StatsHeader = (theme: any) => css`
     border-bottom: 1px solid ${theme.accentNeutral};
 `;
 
-const StatsTable = (theme: any) => css`
+const StatsTable = css`
     display: table;
 `;
 const StatsRow = css`
@@ -62,7 +62,7 @@ export function Stats(props: any) {
         return (
             <div className={cx(StatsCont(theme))}>
                 <div className={cx(StatsHeader(theme))}>Stats</div>
-                <div className={cx(StatsTable(theme))}>
+                <div className={cx(StatsTable)}>
                     {statsDisplay?.map(([key, value], index) => (
                         <div key={index} className={cx(StatsRow)}>
                             <div

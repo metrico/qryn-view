@@ -25,5 +25,4 @@ type TTraceTimeline = {
   traceID: string | TNil;
 };
 
-// eslint-disable-next-line no-undef
 export default TTraceTimeline;

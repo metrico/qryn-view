@@ -24,7 +24,7 @@ const LogsView: React.FunctionComponent<any> = (props: any) => {
         theight,
         viewWidth,
         tableData,
-        streamData,
+
         logsVolumeData,
     } = props;
     const { isLogsVolume, loading } = actualQuery;

@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { useSelector } from "react-redux";
 import { OPERATORS } from "../consts";
 import { getTimeParsed, multiType } from "../helpers";
 import { AxiosResponse } from "axios";
@@ -49,7 +48,7 @@ export const useDefaultValue = (defaultValue: any, type: any, keyVal: any) => {
         }
 
         return { key: defaultValue, label: defaultValue };
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+          
     }, [defaultValue]);
 };
 
@@ -78,7 +77,7 @@ export const useCurrentDataSource = (
         }
 
         return current;
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+          
     }, [id, dataSources]);
 };
 

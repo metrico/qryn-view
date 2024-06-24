@@ -272,7 +272,6 @@ export const enforceUniqueSpanIds = createSelector(
         const updatedSpan = { ...span, spanID };
 
         if (spanID !== getSpanId(span)) {
-          // eslint-disable-next-line no-console
           console.warn('duplicate spanID in trace replaced', getSpanId(span), 'new:', spanID);
         }
 

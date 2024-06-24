@@ -68,7 +68,7 @@ export const useMatrixData = (
             }
         }
         return parsed;
-           // eslint-disable-next-line react-hooks/exhaustive-deps
+           
     }, [spliced, data]);
 };
 
@@ -81,7 +81,7 @@ export const useChartOptions = ({ tWidth }: { tWidth: number },isLogsVolume=fals
         } else {
             return CHART_OPTIONS;
         }
-           // eslint-disable-next-line react-hooks/exhaustive-deps
+           
     }, [tWidth]);
 };
 

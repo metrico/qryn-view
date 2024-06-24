@@ -121,7 +121,6 @@ export function processLinkPattern(pattern: any): ProcessedLinkPattern | TNil {
             parameters: _uniq(url.parameters.concat(text.parameters)),
         };
     } catch (error) {
-        // eslint-disable-next-line no-console
         console.error(`Ignoring invalid link pattern: ${error}`, pattern);
         return null;
     }
@@ -157,8 +156,8 @@ export function computeTraceLink(
     trace: Trace
 ) {
     const result: TLinksRV = [];
-    const validKeys: any = (Object.keys(trace) as Array<keyof Trace>).filter(
-        (key) => typeof trace[key] === "string" || trace[key] === "number"
+    const validKeys: any = (Object.keys(trace)).filter(
+        (key:any) => typeof trace[key] === "string" || trace[key] === "number"
     );
 
     linkPatterns
@@ -221,7 +220,6 @@ export function computeLinks(
                     parameterValues[parameter] = entry.value;
                     return true;
                 }
-                // eslint-disable-next-line no-console
                 console.warn(
                     DOMPurify.sanitize(
                         `Skipping link pattern, missing parameter ${parameter} for key ${item.key} in ${type}.`
