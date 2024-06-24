@@ -4920,6 +4920,7 @@ packages:
       - terser
     dev: true
 
+
   /vite@5.3.1(@types/node@20.14.5)(sass@1.77.6):
     resolution: {integrity: sha512-XBmSKRLXLxiaPYamLv3/hnP/KXDai1NDexN0FpkTaZXTfycHvkRHoenpgl/fvuK/kPbB6xAgoyiryAhQNxYmAQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
