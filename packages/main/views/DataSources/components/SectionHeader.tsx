@@ -100,7 +100,7 @@ export function SectionHeader(props: any) {
         return () => {
             setIsSaved(false);
         };
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+          
     }, [isEditing]);
 
     return (

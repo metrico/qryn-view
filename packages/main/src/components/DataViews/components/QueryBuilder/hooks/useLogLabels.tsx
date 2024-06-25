@@ -42,7 +42,7 @@ export default function useLogLabels(
     useEffect(() => {
    
         getApiRequest(currentDataSource, url, setLoading, setResponse);
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+          
     }, [currentDataSource]);
 
     //const logsResponse = useLogsResponse(response);

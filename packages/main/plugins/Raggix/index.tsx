@@ -214,7 +214,7 @@ const Raggix: React.FC = (props: any) => {
         }, recurrentValue);
 
         return () => clearInterval(interval);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, []);
 
     useEffect(() => {
@@ -235,7 +235,7 @@ const Raggix: React.FC = (props: any) => {
                 setLogs(data);
             });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [isRecurrent, actTimestamp]);
 
     return (

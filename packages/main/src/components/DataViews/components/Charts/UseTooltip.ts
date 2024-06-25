@@ -50,7 +50,8 @@ export default function UseTooltip(this: void, plot: any) {
                 if (plotTimes.includes(plotTime) && plotIsVisible) {
                     const plotIndex = plotTimes.indexOf(plotTime);
                       // eslint-disable-next-line
-                    const [_, value] = plotPoints.find(
+                    const [_, value] = plotPoints.find( 
+                        //eslint-disable-next-line
                         ([time, _]: [time: any, _: any]) => time === plotTime
                     );
                     labelsList.push({

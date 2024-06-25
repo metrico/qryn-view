@@ -705,14 +705,14 @@ const Aggregations: React.FC = (props: any) => {
         }, 5000);
 
         return () => clearInterval(interval);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, []);
 
     useEffect(() => {
         if (autoRefresh && actTimestamp) {
             getAggregations(url, config, setAggrResponse, setLoading);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [autoRefresh, actTimestamp]);
 
     let param = `{{.parameter}}`;

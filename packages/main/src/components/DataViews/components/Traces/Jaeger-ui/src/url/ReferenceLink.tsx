@@ -16,10 +16,11 @@ import React from "react";
 
 import { TraceSpanReference } from "../types/trace";
 
-type ReferenceLinkProps = {
+export type ReferenceLinkProps = {
     reference: TraceSpanReference;
     children: React.ReactNode;
     //   createFocusSpanLink: (traceId: string, spanId: string) => LinkModel<Field>;
 };
+
 export default null
 

@@ -7,7 +7,7 @@ import { DetailState } from "./Jaeger-ui/src";
  * Keeps state of the span detail. This means whether span details are open but also state of each detail subitem
  * like logs or tags.
  */
-export function useDetailState(frame: any) {
+export function useDetailState() {
     // console.trace()
     const [detailStates, setDetailStates] = useState(
         new Map<string, DetailState>()
