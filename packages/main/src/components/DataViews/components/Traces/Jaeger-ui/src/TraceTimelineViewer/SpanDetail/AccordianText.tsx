@@ -66,7 +66,7 @@ export default function AccordianText(props: AccordianTextProps) {
     const isEmpty = !Array.isArray(data) || !data.length;
       const iconCls = cx(uAlignIcon, { [emptyIcon]: isEmpty });
     let arrow: React.ReactNode | null = null;
-    let headerProps: {} | null = null;
+    let headerProps: any | null = null;
     if (interactive) {
         arrow = isOpen ? (
             <KeyboardArrowDown className={iconCls} fontSize={'small'} />

@@ -4,5 +4,5 @@ export interface Button {
     disabled?: boolean;
     isMobile: boolean;
     loading:boolean;
-    onClick: Function;
+    onClick:any;
 }

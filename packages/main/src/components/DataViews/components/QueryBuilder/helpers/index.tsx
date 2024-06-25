@@ -126,7 +126,7 @@ export function selectOperator(keyVal: any, operators: any, type: any) {
     };
 }
 
-export function updateSelectedOption(cb: Function, type: any, keyVal: any) {
+export function updateSelectedOption(cb , type: any, keyVal: any) {
     if (type === "metric") {
         cb((prev: any) => prev);
     } else if (type === "operator") {
@@ -210,8 +210,8 @@ export const apiRequest = async (
     url: string,
     options: any,
     basicAuth: any,
-    setLoading: Function,
-    setResponse: Function
+    setLoading,
+    setResponse
 ) => {
     setLoading(true);
     try {
@@ -233,8 +233,8 @@ export const apiRequest = async (
 export async function getApiRequest(
     dataSource: ApiDataSource,
     url: string,
-    setLoading: Function,
-    setResponse: Function
+    setLoading,
+    setResponse
 ) {
     if (dataSource.type !== "flux" && dataSource.url && dataSource.url !== "") {
         const { basicAuth, options } = getAuthAndOptions(dataSource);

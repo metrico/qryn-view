@@ -8,5 +8,5 @@ export const useIdRefs = (name: string) =>
                 name?.slice(0, 1)?.toUpperCase() + "-" + String.fromCharCode(x)
         );
         return alphabet;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, []);

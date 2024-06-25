@@ -32,7 +32,7 @@ export function useTraceServiceName({ id }: any) {
 
             apiRequest();
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+          
     }, []);
 
     return useMemo(() => {
