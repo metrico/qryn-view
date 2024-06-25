@@ -23,31 +23,6 @@
  * @param hex
  * @param base
  */
-export function autoColor( hex: string, base?: string) {
-  if (true) {
+export function autoColor( hex: string) {
     return hex;
-  } else {
-    // if (base) {
-    //   const color = tinycolor(hex);
-    //   return tinycolor
-    //     .mostReadable(
-    //       base,
-    //       [
-    //         color.clone().lighten(25),
-    //         color.clone().lighten(10),
-    //         color,
-    //         color.clone().darken(10),
-    //         color.clone().darken(25),
-    //       ],
-    //       {
-    //         includeFallbackColors: false,
-    //       }
-    //     )
-    //     .toHex8String();
-    // }
-    // const color = tinycolor(hex).toHsl();
-    // color.l = 1 - color.l;
-    // const newColor = tinycolor(color);
-    // return newColor.isLight() ? newColor.darken(5).toHex8String() : newColor.lighten(5).toHex8String();
-  }
 }

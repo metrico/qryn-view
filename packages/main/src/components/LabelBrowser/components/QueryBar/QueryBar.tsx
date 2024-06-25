@@ -342,7 +342,6 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
     function setLogsLevel(queryInput: string, isLogsVolume: boolean) {
         if (isLogsVolume && queryInput !== "") {
-            // eslint-disable-next-line
             let pureLabels = queryInput.match(/[^{\}]+(?=})/g);
             if (Array.isArray(pureLabels) && pureLabels?.length > 0) {
                 let pureLabelsString = `{${pureLabels?.join(",")}}`;
@@ -789,7 +788,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         querySearch: any,
         metricsSearch: any,
         logsSearch: any,
-        showResultButton: any
+       
     ) => {
         if (type === "traces") {
             return (
@@ -958,14 +957,6 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
                         handleLogValueChange={onLogChange}
                         handleLogsVolumeChange={onLogVolumeChange}
                     />,
-
-                    <ShowLogsButton
-                        disabled={!queryValid}
-                        onClick={onSubmit}
-                        loading={loading || false}
-                        isMobile={false}
-                        alterText={"Search Trace"}
-                    />
                 )}
 
                 {!isSplit &&

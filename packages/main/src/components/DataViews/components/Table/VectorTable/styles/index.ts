@@ -98,7 +98,7 @@ export const TableStyles = styled.div`
     }
 `;
 
-export const getStyles = (props: any, align = "left") => [
+export const getStyles = (props: any ) => [
     props,
     {
         style: {

@@ -29,89 +29,7 @@ export interface LinkModel<T = any> {
     // When a click callback exists, this is passed the raw mouse|react event
     onClick?: (e: any, origin?: any) => void;
   }
-// const getStyles = (theme) => {
-//   return {
-//     AccordianReferenceItem: css`
-//       border-bottom: 1px solid ${autoColor(theme, '#d8d8d8')};
-//     `,
-//     AccordianKeyValues: css`
-//       margin-left: 10px;
-//     `,
-//     AccordianReferences: css`
-//       label: AccordianReferences;
-//       border: 1px solid ${autoColor(theme, '#d8d8d8')};
-//       position: relative;
-//       margin-bottom: 0.25rem;
-//     `,
-//     AccordianReferencesHeader: css`
-//       label: AccordianReferencesHeader;
-//       background: ${autoColor(theme, '#e4e4e4')};
-//       color: inherit;
-//       display: block;
-//       padding: 0.25rem 0.5rem;
-//       &:hover {
-//         background: ${autoColor(theme, '#dadada')};
-//       }
-//     `,
-//     AccordianReferencesContent: css`
-//       label: AccordianReferencesContent;
-//       background: ${autoColor(theme, '#f0f0f0')};
-//       border-top: 1px solid ${autoColor(theme, '#d8d8d8')};
-//       padding: 0.5rem 0.5rem 0.25rem 0.5rem;
-//     `,
-//     AccordianReferencesFooter: css`
-//       label: AccordianReferencesFooter;
-//       color: ${autoColor(theme, '#999')};
-//     `,
-//     ReferencesList: css`
-//       background: #fff;
-//       border: 1px solid #ddd;
-//       margin-bottom: 0.7em;
-//       max-height: 450px;
-//       overflow: auto;
-//     `,
-//     list: css`
-//       width: 100%;
-//       list-style: none;
-//       padding: 0;
-//       margin: 0;
-//       background: #fff;
-//     `,
-//     itemContent: css`
-//       padding: 0.25rem 0.5rem;
-//       display: flex;
-//       width: 100%;
-//       justify-content: space-between;
-//     `,
-//     item: css`
-//       &:nth-child(2n) {
-//         background: #f5f5f5;
-//       }
-//     `,
-//     debugInfo: css`
-//       letter-spacing: 0.25px;
-//       margin: 0.5em 0 0;
-//       flex-wrap: wrap;
-//       display: flex;
-//       justify-content: flex-end;
-//     `,
-//     debugLabel: css`
-//       margin: 0 5px 0 5px;
-//       &::before {
-//         color: #bbb;
-//         content: attr(data-label);
-//       }
-//     `,
-//     serviceName: css`
-//       margin-right: 8px;
-//     `,
-//     title: css`
-//       display: flex;
-//       align-items: center;
-//       gap: 4px;
-//     `,
-//   };
-// };
+
 
 type AccordianReferencesProps = {
   data: TraceSpanReference[];
@@ -199,7 +117,7 @@ const AccordianReferences: React.FC<AccordianReferencesProps> = ({
   const isEmpty = !Array.isArray(data) || !data.length;
   let arrow: React.ReactNode | null = null;
   let HeaderComponent: 'span' | 'a' = 'span';
-  let headerProps: {} | null = null;
+  let headerProps: any | null = null;
   if (interactive) {
     arrow = isOpen ? <IoIosArrowDown className={uAlignIcon} /> : <IoIosArrowRight className={uAlignIcon} />;
     HeaderComponent = 'a';
