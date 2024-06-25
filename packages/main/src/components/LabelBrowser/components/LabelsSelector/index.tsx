@@ -156,7 +156,7 @@ export default function LabelsSelector(props: any) {
             setLabelsState(labelsStateUpd);
             setLabelsSelected(selUpdated);
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [labelsState, labelsSelected, propsLabels]
     );
 

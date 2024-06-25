@@ -11,7 +11,7 @@ interface ChartToolsProps {
     handleNoLimitData: (e: any) => void;
     handleLimitData: (e: any) => void;
     isSpliced: boolean;
-    onSetChartType: Function;
+    onSetChartType: any;
 }
 
 export default function ChartTools({

@@ -29,6 +29,7 @@ export default function TracesSwitch(props: TracesSwitchProps) {
     const [switchValue, setSwitchValue] = useState(value || "traceId");
 
     const onTraceQueryChange = (e: any) => {
+        //eslint-disable-next-line
         setSwitchValue((_) => e);
         onChange(e);
     };

@@ -12,60 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { css } from "@emotion/css";
-import cx from "classnames";
 import { memo, Dispatch, SetStateAction } from "react";
 import React from 'react';
 
 
 import UiFindInput from "../common/UiFindInput";
-import { ubFlexAuto, ubJustifyEnd } from "../uberUtilityStyles";
+import { ubJustifyEnd } from "../uberUtilityStyles";
 import Button from '@mui/material/Button';
 
-// export const getStyles = (theme) => {
-//   return {
-//     TracePageSearchBar: css`
-//       label: TracePageSearchBar;
-//       float: right;
-//       position: sticky;
-//       top: 8px;
-//       right: 0;
-//       z-index: ${theme.zIndex.navbarFixed};
-//       background: ${theme.colors.background.primary};
-//       margin-top: 8px;
-//       margin-bottom: -48px;
-//       padding: 8px;
-//       margin-right: 2px;
-//       border-radius: 4px;
-//       box-shadow: ${theme.shadows.z2};
-//     `,
-//     TracePageSearchBarBar: css`
-//       label: TracePageSearchBarBar;
-//       max-width: 20rem;
-//       transition: max-width 0.5s;
-//       &:focus-within {
-//         max-width: 100%;
-//       }
-//     `,
-//     TracePageSearchBarSuffix: css`
-//       label: TracePageSearchBarSuffix;
-//       opacity: 0.6;
-//     `,
-//     TracePageSearchBarBtn: css`
-//       label: TracePageSearchBarBtn;
-//       transition: 0.2s;
-//       margin-left: 8px;
-//     `,
-//     TracePageSearchBarBtnDisabled: css`
-//       label: TracePageSearchBarBtnDisabled;
-//       opacity: 0.5;
-//     `,
-//     TracePageSearchBarLocateBtn: css`
-//       label: TracePageSearchBarLocateBtn;
-//       padding: 1px 8px 4px;
-//     `,
-//   };
-// };
 
 type TracePageSearchBarProps = {
     navigable: boolean;

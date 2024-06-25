@@ -30,7 +30,7 @@ export function QueryId(props: any) {
         setIdText(txt);
     }
 
-    function closeInput(e: any) {
+    function closeInput() {
         props.onIdRefUpdate(idText);
         setIsEditing(false);
     }
@@ -64,7 +64,7 @@ export function QueryId(props: any) {
                 <Tooltip title={idText}>
                     <p
                         className={cx(QueryTitleStyles(theme))}
-                        onClick={(e) => setIsEditing(true)}
+                        onClick={() => setIsEditing(true)}
                     >
                         {idText}
                     </p>

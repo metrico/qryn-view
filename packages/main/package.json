@@ -19,7 +19,7 @@
     "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.15.20",
     "@mui/styles": "^5.15.20",
-    "@mui/x-charts": "7.7.0",
+    "@mui/x-charts": "7.7.1",
     "@szhsin/react-menu": "^4.1.0",
     "@tanstack/match-sorter-utils": "^8.15.1",
     "@tanstack/react-table": "^8.17.3",
@@ -60,7 +60,7 @@
     "redux-thunk": "^2.4.2",
     "reselect": "^5.1.1",
     "slate": "^0.103.0",
-    "slate-history": "^0.93.0",
+    "slate-history": "^0.100.0",
     "slate-react": "^0.105.0",
     "tss-react": "^4.9.10",
     "zod": "^3.23.8",
@@ -86,6 +86,6 @@
     "scss": "^0.2.4",
     "typescript": "^5.4.5",
     "vite": "^5.3.1",
-    "vitest": "^0.32.4"
+    "vitest": "^1.6.0"
   }
 }

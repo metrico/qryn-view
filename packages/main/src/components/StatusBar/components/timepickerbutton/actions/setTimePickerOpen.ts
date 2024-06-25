@@ -1,4 +1,4 @@
-const setTimePickerOpen = (timePickerOpen: any) => (dispatch: Function) => {
+const setTimePickerOpen = (timePickerOpen: any) => (dispatch) => {
     dispatch({
         type: 'SET_TIME_PICKER_OPEN',
         timePickerOpen

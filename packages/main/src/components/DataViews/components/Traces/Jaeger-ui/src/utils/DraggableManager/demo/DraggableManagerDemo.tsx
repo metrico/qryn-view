@@ -27,10 +27,10 @@ export type DraggableManagerDemoState = {
   regionDragging: [number, number] | TNil;
 };
 
-export default class DraggableManagerDemo extends React.PureComponent<{}, DraggableManagerDemoState> {
+export default class DraggableManagerDemo extends React.PureComponent<any, DraggableManagerDemoState> {
  // state: DraggableManagerDemoState;
 
-  constructor(props: {}) {
+  constructor(props: any) {
     super(props);
     this.state = {
       dividerPosition: 0.25,
@@ -39,7 +39,7 @@ export default class DraggableManagerDemo extends React.PureComponent<{}, Dragga
     };
   }
 
-  _updateState = (nextState: {}) => {
+  _updateState = (nextState: any) => {
     this.setState(nextState);
   };
 
