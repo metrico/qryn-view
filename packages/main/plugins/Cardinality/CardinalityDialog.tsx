@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     DialogCancelButton,
     DialogConfirmButton,
@@ -142,8 +142,18 @@ export default function CardinalityDialog({
 }: CardinalityDialogProps) {
     const [open, setOpen] = useState(false);
     const [confirmRemove, setConfirmRemove] = useState(false);
+    const [queryMatchText, setQueryMatchText] = useState("")
     const theme = useTheme();
     const { focusLabel, timeSeriesSelector: match } = useCardinalityStore();
+    
+useEffect(()=>{
+    // this should be only if open
+    if(open) {
+       const matchText = queryUpdater[source]({query:label, match})
+       setQueryMatchText(matchText)
+    }
+  
+},[open])
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -161,7 +171,10 @@ export default function CardinalityDialog({
 
         let queryText = query ?? "";
 
+        
+
         if (!isCustom) {
+
             queryText = queryUpdater[source]({
                 query: label,
                 focusLabel,
@@ -169,7 +182,7 @@ export default function CardinalityDialog({
             });
         }
 
-        await clearFingerPrints(queryText);
+       await clearFingerPrints(queryText);
 
         // this should give a response from the server
 
@@ -222,27 +235,28 @@ export default function CardinalityDialog({
                                     {query}?
                                 </>
                             ) : (
+                                // this is the one that should match the query
                                 <>
                                     Are you sure you want to clear the{" "}
-                                    <span>{value}</span> fingerprints with label{" "}
-                                    <span>{label}</span> from{" "}
-                                    <span>{source}</span>?
+                                    <span>{value}</span> fingerprints with {queryMatchText} request?
+                                    
                                 </>
                             )}
                         </DialogTitle>
 
                         <DialogContent>
                             <DialogContentText id="alert-dialog-description">
-                                <p style={{ marginTop: "10px" }}>
+                                <span style={{ marginTop: "10px" }}>
                                     Click <em>Delete Fingerprints</em> to delete
                                     your fingerprints permanently
-                                </p>
-                                <p style={{ margin: "6px" }}>
+                                </span>
+                                <br/>
+                                <span style={{ margin: "6px" }}>
                                     <em>
                                         Note that you will also be removing all
                                         fingerprints with labels related.
                                     </em>
-                                </p>
+                                </span>
 
                                 <CheckboxWithLabel
                                     checked={confirmRemove}

@@ -68,9 +68,9 @@ const getSeriesArraySelector = (labelsArray: string[]): string => {
 };
 
 interface QueryUpdaterArgs {
-    query: string;
-    focusLabel: string;
-    match: string;
+    query?: string;
+    focusLabel?: string;
+    match?: string;
 }
 
 export type QueryUpdater = {
@@ -90,13 +90,16 @@ export const queryUpdater: QueryUpdater = {
     seriesCountByFocusLabelValue: ({ query, focusLabel }): string => {
         return getSeriesSelector(focusLabel, query);
     },
-    seriesCountByLabelValuePair: ({ query }): string => {
+    seriesCountByLabelValuePair: ({ query, match }): string => {
+
         let previous_match;
 
         try {
             const prev = localStorage.getItem("labelValuePairs");
             if (prev) {
                 previous_match = prev;
+            } else if(match && match !== ""){
+                previous_match = match
             } else {
                 previous_match = "";
             }
@@ -109,7 +112,7 @@ export const queryUpdater: QueryUpdater = {
         if (previous_match && !previous_match.includes(query)) {
             queryStr = `${previous_match} ${query}`;
 
-            localStorage.setItem("labelValuePairs", queryStr);
+            //localStorage.setItem("labelValuePairs", queryStr);
         } else if (previous_match && previous_match.includes(query)) {
             let prevArray = previous_match.split(" ");
 
@@ -119,11 +122,11 @@ export const queryUpdater: QueryUpdater = {
 
             queryStr = joint;
 
-            localStorage.setItem("labelValuePairs", joint);
+           localStorage.setItem("labelValuePairs", joint);
         } else if (previous_match === "") {
             queryStr = query;
-
-            localStorage.setItem("labelValuePairs", queryStr);
+            
+           localStorage.setItem("labelValuePairs", queryStr);
         }
 
         let labelsArray = queryStr.split(" ");
