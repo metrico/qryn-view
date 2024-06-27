@@ -21,14 +21,14 @@ export const DataSourceSelect = (props: Props) => {
         if (value?.value !== extValue && extValue !== "" ) {
             selectRef.current.value = extValue;
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+          
     }, []);
 
     useEffect(() => {
         if (value?.value !== extValue && extValue !== "" && selectRef?.current) {
             selectRef.current.setValue(extValue);
         }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+          
     }, [extValue]);
     const customSelectChange = (e: any) => {
         onChange({ target: { value: e?.value } });

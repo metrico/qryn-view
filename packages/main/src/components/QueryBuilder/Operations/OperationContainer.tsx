@@ -34,7 +34,7 @@ export default function OperationContainer(props: OperationContainerProps) {
                 });
             });
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
         [opHeader]
     );
 
@@ -52,7 +52,7 @@ export default function OperationContainer(props: OperationContainerProps) {
                         />
                         <CloseIcon
                             className={cx(CloseIconStyle)}
-                            onClick={(e) => removeItem(index)}
+                            onClick={() => removeItem(index)}
                         />
                     </div>
                 </div>

@@ -109,7 +109,7 @@ export default function AccordianKeyValues(props: any) {
     } = props;
     const isEmpty = !Array.isArray(data) || !data.length;
     let arrow: React.ReactNode | null = null;
-    let headerProps: {} | null = null;
+    let headerProps: any | null = null;
     if (interactive) {
         arrow = isOpen ? (
             <KeyboardArrowDown

@@ -21,7 +21,7 @@ export interface labelLinkAddDispatchObj {
  
 export type dispatchFn = (object: labelLinkDispatchObj) => void
 
-export default function setLabelLinks(linkedFields:LabelLink[]):Function  {
+export default function setLabelLinks(linkedFields:LabelLink[])  {
     return function(dispatch:dispatchFn):void{
         dispatch({
             type: 'SET_LABEL_LINKS',

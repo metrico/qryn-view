@@ -95,7 +95,7 @@ const menuItemHover = (theme: any) => css`
     background: ${theme.shadow} !important;
 `;
 
-const menuItemClassName = ({ hover, disabled }: any, theme: any) =>
+const menuItemClassName = ({ hover }: any, theme: any) =>
     classNames(menuItem(theme), {
         [menuItemHover(theme)]: hover,
     });

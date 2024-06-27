@@ -82,7 +82,7 @@ export default function QueryTypeSwitch(props: any) {
                             selected={value.value === activeBtn}
                             defaultActive={defaultActive}
                             position={getBtnPos(key, arr)}
-                            onClick={(e: any) => setButtonValue(value.value)}
+                            onClick={() => setButtonValue(value.value)}
                         >
                             {value.label}
                         </QuerySwitchBtn>

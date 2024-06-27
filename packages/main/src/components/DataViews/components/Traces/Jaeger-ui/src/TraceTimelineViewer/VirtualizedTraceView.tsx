@@ -387,7 +387,7 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
         key: string,
         style: React.CSSProperties,
         index: number,
-        attrs: {}
+        attrs:any
     ) => {
         const { isDetail, span, spanIndex } = this.getRowStates()[index];
         return isDetail
@@ -412,7 +412,7 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
         spanIndex: number,
         key: string,
         style: React.CSSProperties,
-        attrs: {}
+        attrs: any
     ) {
         const { spanID } = span;
         const { serviceName } = span.process;
@@ -512,7 +512,7 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
         span: TraceSpan,
         key: string,
         style: React.CSSProperties,
-        attrs: {}
+        attrs: any
     ) {
         const { spanID } = span;
         const { serviceName } = span.process;

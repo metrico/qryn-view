@@ -178,7 +178,7 @@ const rowFocused = (theme: any) => css`
     }
 `;
 
-const rowExpandedAndMatchingFilter = (theme: any) => css`
+const rowExpandedAndMatchingFilter = () => css`
     &:hover .${viewClassName} {
         background: #ffeccf;
     }
@@ -226,7 +226,6 @@ const nameDetailExpanded = css`
 `;
 const svcName = css`
     padding: 0 0.25rem 0 0.5rem;
-    12px;
 `;
 const svcNameChildrenCollapsed = css`
     font-weight: bold;
@@ -392,7 +391,7 @@ export class UnthemedSpanBarRow extends React.PureComponent<SpanBarRowProps> {
                     {
                         [rowExpanded(this.props.theme)]: isDetailExpanded,
                         [rowMatchingFilter(this.props.theme)]: isMatchingFilter,
-                        [rowExpandedAndMatchingFilter(this.props.theme)]:
+                        [rowExpandedAndMatchingFilter()]:
                             isMatchingFilter && isDetailExpanded,
                         [rowFocused(this.props.theme)]: isFocused,
                         [rowClippingLeft]: clippingLeft,
