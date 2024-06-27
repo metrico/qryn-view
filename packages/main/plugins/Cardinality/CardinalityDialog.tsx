@@ -14,7 +14,6 @@ import {
     FormControlLabel,
     FormGroup,
     Tooltip,
-    Typography,
 } from "@mui/material";
 
 import { ThemeProvider } from "@mui/styles";
@@ -116,14 +115,14 @@ export function CheckboxWithLabel({
                     />
                 }
                 label={
-                    <Typography
+                    <span
                         style={{
                             fontSize: "14px",
                             color: theme.contrast,
                         }}
                     >
                         {text}
-                    </Typography>
+                    </span>
                 }
             />
         </FormGroup>
@@ -138,22 +137,21 @@ export default function CardinalityDialog({
     isLoading,
     isCustom = false,
     query = "",
-    labelsRelated = [],
+   // labelsRelated = [],
 }: CardinalityDialogProps) {
     const [open, setOpen] = useState(false);
     const [confirmRemove, setConfirmRemove] = useState(false);
-    const [queryMatchText, setQueryMatchText] = useState("")
+    const [queryMatchText, setQueryMatchText] = useState("");
     const theme = useTheme();
     const { focusLabel, timeSeriesSelector: match } = useCardinalityStore();
-    
-useEffect(()=>{
-    // this should be only if open
-    if(open) {
-       const matchText = queryUpdater[source]({query:label, match})
-       setQueryMatchText(matchText)
-    }
-  
-},[open])
+
+    useEffect(() => {
+        // this should be only if open
+        if (open) {
+            const matchText = queryUpdater[source]({ query: label, match });
+            setQueryMatchText(matchText);
+        }
+    }, [open]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -171,10 +169,7 @@ useEffect(()=>{
 
         let queryText = query ?? "";
 
-        
-
         if (!isCustom) {
-
             queryText = queryUpdater[source]({
                 query: label,
                 focusLabel,
@@ -182,7 +177,7 @@ useEffect(()=>{
             });
         }
 
-       await clearFingerPrints(queryText);
+        await clearFingerPrints(queryText);
 
         // this should give a response from the server
 
@@ -238,8 +233,8 @@ useEffect(()=>{
                                 // this is the one that should match the query
                                 <>
                                     Are you sure you want to clear the{" "}
-                                    <span>{value}</span> fingerprints with {queryMatchText} request?
-                                    
+                                    <span>{value}</span> fingerprints with{" "}
+                                    {queryMatchText} request?
                                 </>
                             )}
                         </DialogTitle>
@@ -250,7 +245,7 @@ useEffect(()=>{
                                     Click <em>Delete Fingerprints</em> to delete
                                     your fingerprints permanently
                                 </span>
-                                <br/>
+                                <br />
                                 <span style={{ margin: "6px" }}>
                                     <em>
                                         Note that you will also be removing all

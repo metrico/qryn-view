@@ -108,6 +108,7 @@ export default function PickerMenu() {
     const handleSelect = (dateSelected: Date) => {
         setSelected(() => formatUTC(dateSelected));
         setDate(dayjs(formatUTC(dateSelected)).format(DATE_FORMAT));
+        localStorage.setItem("currentCardinalityDate", JSON.stringify({value: dayjs(formatUTC(dateSelected)).format(DATE_FORMAT)}))
         setAnchorEl(null);
     };
 

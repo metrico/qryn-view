@@ -38,14 +38,14 @@ const Configurator: React.FC<ConfiguratorProps> = ({
         onKeyDownFocusLabel,
         onLimitEntriesChange,
         onKeyDownLimitEntries,
-        onQueryHistoryChange,
+        onQueryHistoryChange,///
         onFocusHistoryChange,
         onLimitHistoryChange,
         query,
         focus,
         limit,
         totalSeries,
-        reset,
+       reset,
         date,
     } = useConfigurator({ setHistoryItem });
 
@@ -56,7 +56,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({
     const { setTimeSeriesSelector, setFocusLabel, setLimitEntries, isLoading } =
         useCardinalityStore();
     const handleReset = () => {
-        reset();
+        reset()
         localStorage.setItem("labelValuePairs", "");
         handleCardinalityRequest({
             match: "",

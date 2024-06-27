@@ -36,7 +36,7 @@ type CardinalityState = {
     focusLabel: string;
     limitEntries: number;
     responseType: ResponseType;
-    date: string;
+    date: string | Date;
     setDate: (day: string) => void;
     setTotal: (t: CardinalityTotal) => void;
     setTimeSeriesSelector: (text: string) => void;
@@ -57,10 +57,36 @@ type CardinalityState = {
     setTsdbStatus: (tsdbStatus: any) => void;
 };
 
+const prevData = () => {
+    let timeSeriesSelector = "";
+    let date = dayjs().format(DATE_FORMAT);
+    try {
+        const local = JSON.parse(localStorage.getItem("cardinalityHistory"));
+        if (local && local?.length > 0) {
+            timeSeriesSelector = local[local?.length - 1].value;
+        }
+    } catch (e) {
+        timeSeriesSelector = "";
+    }
+
+    try {
+        const localDate = JSON.parse(
+            localStorage.getItem("currentCardinalityDate")
+        );
+        if (localDate && localDate.value) {
+            date = localDate.value;
+        }
+    } catch (e) {
+        date = dayjs().format(DATE_FORMAT);
+    }
+
+    return { timeSeriesSelector, date };
+};
+
 const initialData = {
     total: { amount: 0, prev: 0, diff: 0, quota: 0 },
 
-    date: dayjs().format(DATE_FORMAT),
+    date: prevData()["date"],
 
     timeRange: {
         end: toTimeSeconds(new Date()),
@@ -68,7 +94,7 @@ const initialData = {
     },
     responseType: ResponseEnum.NODE,
     isUpdating: false,
-    timeSeriesSelector: "",
+    timeSeriesSelector: prevData()["timeSeriesSelector"],
     focusLabel: "",
     limitEntries: 10,
     deletedQueries: [],
