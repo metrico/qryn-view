@@ -36,7 +36,7 @@ type CardinalityState = {
     focusLabel: string;
     limitEntries: number;
     responseType: ResponseType;
-    date: string | Date;
+    date: string;
     setDate: (day: string) => void;
     setTotal: (t: CardinalityTotal) => void;
     setTimeSeriesSelector: (text: string) => void;
