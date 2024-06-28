@@ -53,6 +53,12 @@ const {handleCardinalityRequest} = useCardinalityRequest();
         }
     };
 
+    const onReset = () => {
+       reset()
+       setHistoryItem("timeSeriesSelector", "");
+
+    }
+
     const onFocusLabeChange = (e: any) => {
         setFocus(() => e.target.value);
     };
@@ -82,7 +88,6 @@ const {handleCardinalityRequest} = useCardinalityRequest();
     const onQueryHistoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
         setTimeSeriesSelector(e.target.innerText);
-
         handleCardinalityRequest({match:e.target.innerText});
     };
 
@@ -114,6 +119,7 @@ const {handleCardinalityRequest} = useCardinalityRequest();
         limit,
         totalSeries,
         reset,
+        onReset,
         date
     }
 

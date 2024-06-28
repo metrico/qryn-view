@@ -23,5 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 *.env
-#turbo generated cookie files
 *.cookie
