@@ -22,7 +22,7 @@
     "@mui/x-charts": "7.7.1",
     "@szhsin/react-menu": "^4.1.0",
     "@tanstack/match-sorter-utils": "^8.15.1",
-    "@tanstack/react-table": "^8.17.3",
+    "@tanstack/react-table": "^8.19.2",
     "axios": "^1.7.2",
     "classnames": "^2.5.1",
     "combokeys": "^3.0.1",
