@@ -28,6 +28,8 @@ const labelsFreq = (arr: string[]) =>
  */
 
 const getSeriesArraySelector = (labelsArray: string[]): string => {
+
+   // console.log(labelsArray)
     if (labelsArray?.length < 1) {
         return "";
     }
@@ -78,21 +80,34 @@ export type QueryUpdater = {
 };
 
 export const queryUpdater: QueryUpdater = {
+
+    // Metric names with highest number of series
     seriesCountByMetricName: ({ query }): string => {
+        
         return getSeriesSelector("__name__", query);
     },
+
+    //Labels with the highest number of series
     seriesCountByLabelName: ({ query }): string => {
+       // console.log(query)
         const queryStr = `{${query}!=""}`;
+
         localStorage.setItem("labelValuePairs", `${query}!=`);
 
         return queryStr;
     },
+
+    // Values for "${str}" label with the highest number of series`
     seriesCountByFocusLabelValue: ({ query, focusLabel }): string => {
         return getSeriesSelector(focusLabel, query);
     },
+
+    //Label=value pairs with the highest number of series
     seriesCountByLabelValuePair: ({ query, match }): string => {
 
         let previous_match;
+
+        //console.log(query, match)
 
         try {
             const prev = localStorage.getItem("labelValuePairs");
@@ -110,7 +125,11 @@ export const queryUpdater: QueryUpdater = {
         let queryStr = "";
 
         if (previous_match && !previous_match.includes(query)) {
-            queryStr = `${previous_match} ${query}`;
+            console.log("this is the case")
+            // strip curly braces
+            // remove empty value 
+            const striped = previous_match.replace(/[{}]/g, "").replace(/[,]/g,"").replace(/[""]/g,"")
+            queryStr = `${striped} ${query}`;
 
             //localStorage.setItem("labelValuePairs", queryStr);
         } else if (previous_match && previous_match.includes(query)) {
@@ -129,10 +148,13 @@ export const queryUpdater: QueryUpdater = {
            localStorage.setItem("labelValuePairs", queryStr);
         }
 
+      console.log(queryStr)
         let labelsArray = queryStr.split(" ");
-
+        console.log(labelsArray)
         return getSeriesArraySelector(labelsArray);
     },
+
+    //Labels with the highest number of unique values
     labelValueCountByLabelName: ({ query, match }): string => {
         if (match === "") {
             return `{${query}!=""}`;
