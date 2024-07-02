@@ -42,6 +42,11 @@ const {handleCardinalityRequest} = useCardinalityRequest();
     }, [limitEntries]);
 
     const onTimeSeriesChange = (e: any) => {
+        if(e.target.value.trim()===""){
+            localStorage.setItem("labelValuePairs","")
+        }
+        
+        
         setQuery(() => e.target.value);
     };
 

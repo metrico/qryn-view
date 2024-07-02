@@ -123,7 +123,9 @@ const useCardinalityStore = create<CardinalityState>((set) => ({
     setDate: (day: string) => set(() => ({ date: day })),
     setDeletedQueries: (query: string) =>
         set((state) => ({ deletedQueries: [...state.deletedQueries, query] })),
-    reset: () => set(() => ({ ...initialParams })),
+    reset: () => set(() => {
+        localStorage.setItem("labelValuePairs","")
+       return ({ ...initialParams })}),
     setIsLoading: (isLoading: boolean) => set(() => ({ isLoading })),
     setResponseType: (responseType: ResponseType) =>
         set(() => ({ responseType })),
