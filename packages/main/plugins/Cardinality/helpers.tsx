@@ -29,7 +29,7 @@ const labelsFreq = (arr: string[]) =>
 
 const getSeriesArraySelector = (labelsArray: string[]): string => {
 
-   // console.log(labelsArray)
+  
     if (labelsArray?.length < 1) {
         return "";
     }
@@ -78,23 +78,36 @@ interface QueryUpdaterArgs {
 export type QueryUpdater = {
     [key: string]: (args: QueryUpdaterArgs) => string;
 };
-
+// rmove localstorage on change when empty the input
 export const queryUpdater: QueryUpdater = {
 
     // Metric names with highest number of series
-    seriesCountByMetricName: ({ query }): string => {
+    seriesCountByMetricName: ({ query, match }): string => {
+
         
-        return getSeriesSelector("__name__", query);
+        if(!match) {
+            return getSeriesSelector("__name__", query);
+        } else {
+            const prev_match = match.replace(/[{}]/g, "").replace(/[,]/g," ").replace(/[""]/g,"")
+            const queryStr = `${prev_match} __name__=${query}`
+            let labelsArray = queryStr.split(" ");
+            return getSeriesArraySelector(labelsArray);
+        }
     },
 
     //Labels with the highest number of series
-    seriesCountByLabelName: ({ query }): string => {
-       // console.log(query)
+    seriesCountByLabelName: ({ query, match }): string => {
+  
+       if(!match){
         const queryStr = `{${query}!=""}`;
-
         localStorage.setItem("labelValuePairs", `${query}!=`);
-
         return queryStr;
+       } else {
+        const prev_match = match.replace(/[{}]/g, "").replace(/[,]/g," ").replace(/[""]/g,"")
+        const queryStr = `${prev_match} ${query}!=`
+        let labelsArray = queryStr.split(" ");
+        return getSeriesArraySelector(labelsArray);
+       }
     },
 
     // Values for "${str}" label with the highest number of series`
@@ -104,10 +117,7 @@ export const queryUpdater: QueryUpdater = {
 
     //Label=value pairs with the highest number of series
     seriesCountByLabelValuePair: ({ query, match }): string => {
-
         let previous_match;
-
-        //console.log(query, match)
 
         try {
             const prev = localStorage.getItem("labelValuePairs");
@@ -125,32 +135,23 @@ export const queryUpdater: QueryUpdater = {
         let queryStr = "";
 
         if (previous_match && !previous_match.includes(query)) {
-            console.log("this is the case")
-            // strip curly braces
-            // remove empty value 
+
             const striped = previous_match.replace(/[{}]/g, "").replace(/[,]/g,"").replace(/[""]/g,"")
             queryStr = `${striped} ${query}`;
-
-            //localStorage.setItem("labelValuePairs", queryStr);
+            localStorage.setItem("labelValuePairs", queryStr);
         } else if (previous_match && previous_match.includes(query)) {
             let prevArray = previous_match.split(" ");
-
             let filtered = prevArray.filter((f) => f !== query);
-
             let joint = filtered.join(" ");
-
             queryStr = joint;
-
            localStorage.setItem("labelValuePairs", joint);
+
         } else if (previous_match === "") {
             queryStr = query;
-            
            localStorage.setItem("labelValuePairs", queryStr);
         }
 
-      console.log(queryStr)
         let labelsArray = queryStr.split(" ");
-        console.log(labelsArray)
         return getSeriesArraySelector(labelsArray);
     },
 
