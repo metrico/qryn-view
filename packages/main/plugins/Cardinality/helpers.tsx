@@ -1,6 +1,7 @@
 import useCardinalityStore from "./store/CardinalityStore";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
+import { LABEL_VALUE_STORE } from "./consts";
 import { CardinalityRequest } from "./api/types";
 
 const getSeriesSelector = (label: string | null, value: string): string => {
@@ -28,8 +29,6 @@ const labelsFreq = (arr: string[]) =>
  */
 
 const getSeriesArraySelector = (labelsArray: string[]): string => {
-
-  
     if (labelsArray?.length < 1) {
         return "";
     }
@@ -80,34 +79,83 @@ export type QueryUpdater = {
 };
 // rmove localstorage on change when empty the input
 export const queryUpdater: QueryUpdater = {
-
-    // Metric names with highest number of series
     seriesCountByMetricName: ({ query, match }): string => {
+        const query_with_label = `__name__=${query}`;
 
-        
-        if(!match) {
+        if (!match) {
+            localStorage.setItem(LABEL_VALUE_STORE, query_with_label);
             return getSeriesSelector("__name__", query);
-        } else {
-            const prev_match = match.replace(/[{}]/g, "").replace(/[,]/g," ").replace(/[""]/g,"")
-            const queryStr = `${prev_match} __name__=${query}`
-            let labelsArray = queryStr.split(" ");
-            return getSeriesArraySelector(labelsArray);
         }
+
+        const prev_match = match.replace(/[{}"]/g, "").replace(/[,]/g, " ");
+        const prev_match_splitted = prev_match.split(" ");
+        let queryStr = `${prev_match} ${query_with_label}`;
+        const name_open_query = "__name__!=";
+        const has_name_open_query =
+            prev_match_splitted.includes(name_open_query);
+        const has_query_with_label =
+            prev_match_splitted.includes(query_with_label);
+
+        if (has_name_open_query) {
+            queryStr = prev_match_splitted
+                .map((value) =>
+                    value === name_open_query ? query_with_label : value
+                )
+                .join(" ");
+        }
+
+        if (has_query_with_label) {
+            queryStr = prev_match;
+        }
+
+        localStorage.setItem(LABEL_VALUE_STORE, queryStr);
+        const labelsArray = queryStr.split(" ");
+        return getSeriesArraySelector(labelsArray);
     },
 
     //Labels with the highest number of series
     seriesCountByLabelName: ({ query, match }): string => {
-  
-       if(!match){
-        const queryStr = `{${query}!=""}`;
-        localStorage.setItem("labelValuePairs", `${query}!=`);
-        return queryStr;
-       } else {
-        const prev_match = match.replace(/[{}]/g, "").replace(/[,]/g," ").replace(/[""]/g,"")
-        const queryStr = `${prev_match} ${query}!=`
+        const queryFormatted = `${query}!=`;
+        const queryBrackets = `{${queryFormatted}""}`;
+
+        if (queryBrackets === match) {
+            return queryBrackets;
+        }
+
+        if (!match) {
+            localStorage.setItem(LABEL_VALUE_STORE, `${queryFormatted}`);
+            return queryBrackets;
+        }
+
+        const prev_match = match.replace(/[{}"]/g, "").replace(/[,]/g, " ");
+
+        const previous_label_values_pairs_list = prev_match.split(" ");
+        const previous_label_value_pairs_exists =
+            previous_label_values_pairs_list.some(
+                (value) => value.split("=")[0] === query
+            );
+
+        const previous_label_exists = previous_label_values_pairs_list.some(
+            (value) => value === queryFormatted
+        );
+
+        let queryStr = `${prev_match} ${queryFormatted}`;
+
+        if (previous_label_value_pairs_exists) {
+            queryStr = previous_label_values_pairs_list
+                .map((value) =>
+                    value.split("=")[0] === query ? queryFormatted : value
+                )
+                .join(" ");
+        }
+
+        if (previous_label_exists) {
+            queryStr = prev_match;
+        }
+
+        localStorage.setItem(LABEL_VALUE_STORE, queryStr);
         let labelsArray = queryStr.split(" ");
         return getSeriesArraySelector(labelsArray);
-       }
     },
 
     // Values for "${str}" label with the highest number of series`
@@ -120,11 +168,11 @@ export const queryUpdater: QueryUpdater = {
         let previous_match;
 
         try {
-            const prev = localStorage.getItem("labelValuePairs");
+            const prev = localStorage.getItem(LABEL_VALUE_STORE);
             if (prev) {
                 previous_match = prev;
-            } else if(match && match !== ""){
-                previous_match = match
+            } else if (match && match !== "") {
+                previous_match = match;
             } else {
                 previous_match = "";
             }
@@ -135,20 +183,38 @@ export const queryUpdater: QueryUpdater = {
         let queryStr = "";
 
         if (previous_match && !previous_match.includes(query)) {
+            const striped = previous_match
+                .replace(/[{}"]/g, "")
+                .replace(/[,]/g, " ");
 
-            const striped = previous_match.replace(/[{}]/g, "").replace(/[,]/g,"").replace(/[""]/g,"")
-            queryStr = `${striped} ${query}`;
-            localStorage.setItem("labelValuePairs", queryStr);
+            console.log(striped, query);
+
+            // check first for label / values
+
+            const previous_striped_values = striped.split(" ");
+
+            const query_splitted = query.split("=");
+
+            const query_label = query_splitted[0] + "!=";
+
+            if (previous_striped_values.includes(query_label)) {
+                queryStr = previous_striped_values
+                    .map((value) => (value === query_label ? query : value))
+                    .join(" ");
+            } else {
+                queryStr = `${striped} ${query}`;
+            }
+            console.log(queryStr);
+            localStorage.setItem(LABEL_VALUE_STORE, queryStr);
         } else if (previous_match && previous_match.includes(query)) {
             let prevArray = previous_match.split(" ");
             let filtered = prevArray.filter((f) => f !== query);
             let joint = filtered.join(" ");
             queryStr = joint;
-           localStorage.setItem("labelValuePairs", joint);
-
+            localStorage.setItem(LABEL_VALUE_STORE, joint);
         } else if (previous_match === "") {
             queryStr = query;
-           localStorage.setItem("labelValuePairs", queryStr);
+            localStorage.setItem(LABEL_VALUE_STORE, queryStr);
         }
 
         let labelsArray = queryStr.split(" ");

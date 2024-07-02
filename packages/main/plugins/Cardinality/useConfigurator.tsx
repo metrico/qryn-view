@@ -1,5 +1,6 @@
 import  { useEffect, useState, ChangeEvent } from "react";
 import useCardinalityStore from "./store/CardinalityStore";
+import { LABEL_VALUE_STORE } from "./consts";
 import { useCardinalityRequest } from "./api/CardinalityRequest";
 
 
@@ -44,11 +45,11 @@ const {handleCardinalityRequest} = useCardinalityRequest();
     const onTimeSeriesChange = (e: any) => {
         if(e.target.value.trim()===""){
             // store empty local value
-            localStorage.setItem("labelValuePairs","")
+            localStorage.setItem(LABEL_VALUE_STORE,"")
         }
        // store simplifyed version of query
-        const striped = e.target.value.replace(/[{}]/g, "").replace(/[,]/g," ").replace(/[""]/g,"")    
-        localStorage.setItem("labelValuePairs", striped)
+        const striped = e.target.value.replace(/[{}"]/g, "").replace(/[,]/g," ")
+        localStorage.setItem(LABEL_VALUE_STORE, striped)
     
         
         setQuery(() => e.target.value);

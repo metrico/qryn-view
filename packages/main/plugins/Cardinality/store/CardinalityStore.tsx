@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "../consts";
+import { LABEL_VALUE_STORE } from "../consts";
 
 type CardinalityTotal = {
     amount: number;
@@ -124,7 +125,7 @@ const useCardinalityStore = create<CardinalityState>((set) => ({
     setDeletedQueries: (query: string) =>
         set((state) => ({ deletedQueries: [...state.deletedQueries, query] })),
     reset: () => set(() => {
-        localStorage.setItem("labelValuePairs","")
+        localStorage.setItem(LABEL_VALUE_STORE,"")
        return ({ ...initialParams })}),
     setIsLoading: (isLoading: boolean) => set(() => ({ isLoading })),
     setResponseType: (responseType: ResponseType) =>
