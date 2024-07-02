@@ -8,6 +8,7 @@ import useConfigurator from "./useConfigurator";
 import CardinalityInput from "./CardinalityInput";
 import { ConfigContainerStyles } from "./ConfigContainerStyles";
 import { useCardinalityRequest } from "./api/CardinalityRequest";
+import { LABEL_VALUE_STORE } from "./consts";
 import useCardinalityStore from "./store/CardinalityStore";
 import CardinalityDialog from "./CardinalityDialog";
 type ConfiguratorProps = {
@@ -57,7 +58,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({
         useCardinalityStore();
     const handleReset = () => {
         reset()
-        localStorage.setItem("labelValuePairs", "");
+        localStorage.setItem(LABEL_VALUE_STORE, "");
         handleCardinalityRequest({
             match: "",
             focusLabel: "",

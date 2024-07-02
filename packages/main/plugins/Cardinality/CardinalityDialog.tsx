@@ -148,8 +148,11 @@ export default function CardinalityDialog({
     useEffect(() => {
         // this should be only if open
         if (open) {
-            const matchText = queryUpdater[source]({ query: label, match });
-            setQueryMatchText(matchText);
+            if(queryUpdater[source]) {
+                const matchText = queryUpdater[source]({ query: label, match });
+                setQueryMatchText(matchText);
+            }
+          
         }
     }, [open]);
 
