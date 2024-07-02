@@ -2,6 +2,7 @@ import { create } from "zustand";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "../consts";
 import { LABEL_VALUE_STORE } from "../consts";
+import { getSeriesArraySelector } from "../helpers";
 
 type CardinalityTotal = {
     amount: number;
@@ -62,10 +63,10 @@ const prevData = () => {
     let timeSeriesSelector = "";
     let date = dayjs().format(DATE_FORMAT);
     try {
-        const local = JSON.parse(localStorage.getItem("cardinalityHistory"));
-        if (local && local?.length > 0) {
-            timeSeriesSelector = local[local?.length - 1].value;
-        }
+       const local = localStorage.getItem(LABEL_VALUE_STORE)
+          if( local && local?.length > 0) {
+            timeSeriesSelector = getSeriesArraySelector(local.split(" "))
+          }
     } catch (e) {
         timeSeriesSelector = "";
     }

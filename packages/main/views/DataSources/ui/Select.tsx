@@ -5,7 +5,9 @@ import { InputGroup, Label } from "../styles";
 
 const FlexOne = (fullWidth: any) => css`
     display: flex;
+    min-width: 100px;
     flex: ${fullWidth ? 1 : 0};
+    -ms-flex:${fullWidth ? 1 : 0};
 `;
 
 export const Select = ({

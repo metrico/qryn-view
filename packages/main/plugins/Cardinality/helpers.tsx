@@ -28,7 +28,7 @@ const labelsFreq = (arr: string[]) =>
  * @returns a string with the label / values selected
  */
 
-const getSeriesArraySelector = (labelsArray: string[]): string => {
+export const getSeriesArraySelector = (labelsArray: string[]): string => {
     if (labelsArray?.length < 1) {
         return "";
     }
@@ -169,6 +169,7 @@ export const queryUpdater: QueryUpdater = {
 
         try {
             const prev = localStorage.getItem(LABEL_VALUE_STORE);
+            
             if (prev) {
                 previous_match = prev;
             } else if (match && match !== "") {
@@ -187,9 +188,6 @@ export const queryUpdater: QueryUpdater = {
                 .replace(/[{}"]/g, "")
                 .replace(/[,]/g, " ");
 
-            console.log(striped, query);
-
-            // check first for label / values
 
             const previous_striped_values = striped.split(" ");
 
@@ -204,7 +202,7 @@ export const queryUpdater: QueryUpdater = {
             } else {
                 queryStr = `${striped} ${query}`;
             }
-            console.log(queryStr);
+    
             localStorage.setItem(LABEL_VALUE_STORE, queryStr);
         } else if (previous_match && previous_match.includes(query)) {
             let prevArray = previous_match.split(" ");
