@@ -64,7 +64,7 @@
     "slate-react": "^0.105.0",
     "tss-react": "^4.9.10",
     "zod": "^3.23.8",
-    "zustand": "^4.5.2"
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.11.0",
