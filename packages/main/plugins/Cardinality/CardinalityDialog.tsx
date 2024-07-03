@@ -146,10 +146,9 @@ export default function CardinalityDialog({
     const { focusLabel, timeSeriesSelector: match } = useCardinalityStore();
 
     useEffect(() => {
-        // this should be only if open
         if (open) {
             if(queryUpdater[source]) {
-                const matchText = queryUpdater[source]({ query: label, match });
+                const matchText = queryUpdater[source]({ query: label, match, isDialog:true });
                 setQueryMatchText(matchText);
             }
           
@@ -230,14 +229,18 @@ export default function CardinalityDialog({
                                 <>
                                     Are you sure you want to clear the{" "}
                                     <span>{value}</span> fingerprints with query{" "}
-                                    {query}?
+                                    <br/>
+                                    <code style={{maxWidth:'100%',fontSize:'0.75em'}}>{query}</code>?
                                 </>
                             ) : (
                                 // this is the one that should match the query
                                 <>
                                     Are you sure you want to clear the{" "}
                                     <span>{value}</span> fingerprints with{" "}
-                                    {queryMatchText} request?
+                                    <br/>
+                                    <code style={{maxWidth:'100%',fontSize:'0.75em'}}>{queryMatchText}</code>
+                                    <br/>
+                                    request?
                                 </>
                             )}
                         </DialogTitle>
