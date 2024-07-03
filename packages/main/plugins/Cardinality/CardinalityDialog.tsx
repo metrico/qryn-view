@@ -24,22 +24,41 @@ import { queryUpdater } from "./helpers";
 import useCardinalityStore from "./store/CardinalityStore";
 import { QrynTheme } from "@ui/theme/types";
 
-const AlertCont = styled.div`
-    background: ${({ theme }: any) => theme.shadow};
+const AlertCont = styled.div<{theme?:QrynTheme}>`
+    background: ${({ theme }) => theme.shadow};
     #alert-dialog-title {
-        color: ${({ theme }: any) => theme.contrast};
+        color: ${({ theme }) => theme.contrast};
         span {
-            color: ${({ theme }: any) => theme.primary};
+            color: ${({ theme }) => theme.primary};
             padding: 2px 4px;
             border-radius: 3px;
             font-family: monospace;
         }
+        code {
+            color: ${({ theme }) => theme.contrast};
+            font-family: monospace;
+            max-width: 100%;
+            font-size: 0.8em;
+            background: ${({ theme }) => theme.background};
+            display: flex;
+            flex:1;
+            padding: 0.5em;
+            word-wrap: break-word;
+            border-radius: 4px;
+
+        }
     }
     #alert-dialog-description {
-        color: ${({ theme }: any) => theme.lightContrast};
+        color: ${({ theme }) => theme.lightContrast};
         font-weight: normal;
+        code {
+            color: ${({ theme }) => theme.contrast};
+            font-family: monospace;
+            max-width: 100%;
+            font-size: 0.8em;
+        }
         em {
-            color: ${({ theme }: any) => theme.contrast};
+            color: ${({ theme }) => theme.contrast};
             font-variant: italic;
         }
     }
@@ -149,7 +168,8 @@ export default function CardinalityDialog({
         if (open) {
             if(queryUpdater[source]) {
                 const matchText = queryUpdater[source]({ query: label, match, isDialog:true });
-                setQueryMatchText(matchText);
+                const commaspaced = matchText.replace(/[,]/g,", ")
+                setQueryMatchText(commaspaced);
             }
           
         }
@@ -229,17 +249,14 @@ export default function CardinalityDialog({
                                 <>
                                     Are you sure you want to clear the{" "}
                                     <span>{value}</span> fingerprints with query{" "}
-                                    <br/>
-                                    <code style={{maxWidth:'100%',fontSize:'0.75em'}}>{query}</code>?
+                                    <code>{query}</code>?
                                 </>
                             ) : (
                                 // this is the one that should match the query
                                 <>
                                     Are you sure you want to clear the{" "}
                                     <span>{value}</span> fingerprints with{" "}
-                                    <br/>
-                                    <code style={{maxWidth:'100%',fontSize:'0.75em'}}>{queryMatchText}</code>
-                                    <br/>
+                                    <code>{queryMatchText}</code>
                                     request?
                                 </>
                             )}
