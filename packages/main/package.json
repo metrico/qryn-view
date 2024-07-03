@@ -1,7 +1,7 @@
 {
   "name": "@ui/main",
   "private": true,
-  "version": "3.2.9",
+  "version": "3.2.10",
   "type": "module",
   "scripts": {
     "dev": "VITE_APP_VERSION=$npm_package_version vite",
