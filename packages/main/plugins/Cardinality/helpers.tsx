@@ -72,6 +72,7 @@ interface QueryUpdaterArgs {
     query?: string;
     focusLabel?: string;
     match?: string;
+    isDialog?: boolean;
 }
 
 export type QueryUpdater = {
@@ -79,11 +80,11 @@ export type QueryUpdater = {
 };
 // rmove localstorage on change when empty the input
 export const queryUpdater: QueryUpdater = {
-    seriesCountByMetricName: ({ query, match }): string => {
+    seriesCountByMetricName: ({ query, match, isDialog }): string => {
         const query_with_label = `__name__=${query}`;
 
         if (!match) {
-            localStorage.setItem(LABEL_VALUE_STORE, query_with_label);
+           !isDialog && localStorage.setItem(LABEL_VALUE_STORE, query_with_label);
             return getSeriesSelector("__name__", query);
         }
 
@@ -108,13 +109,13 @@ export const queryUpdater: QueryUpdater = {
             queryStr = prev_match;
         }
 
-        localStorage.setItem(LABEL_VALUE_STORE, queryStr);
+        !isDialog && localStorage.setItem(LABEL_VALUE_STORE, queryStr);
         const labelsArray = queryStr.split(" ");
         return getSeriesArraySelector(labelsArray);
     },
 
     //Labels with the highest number of series
-    seriesCountByLabelName: ({ query, match }): string => {
+    seriesCountByLabelName: ({ query, match, isDialog }): string => {
         const queryFormatted = `${query}!=`;
         const queryBrackets = `{${queryFormatted}""}`;
 
@@ -123,7 +124,7 @@ export const queryUpdater: QueryUpdater = {
         }
 
         if (!match) {
-            localStorage.setItem(LABEL_VALUE_STORE, `${queryFormatted}`);
+            !isDialog && localStorage.setItem(LABEL_VALUE_STORE, `${queryFormatted}`);
             return queryBrackets;
         }
 
@@ -153,7 +154,7 @@ export const queryUpdater: QueryUpdater = {
             queryStr = prev_match;
         }
 
-        localStorage.setItem(LABEL_VALUE_STORE, queryStr);
+       !isDialog && localStorage.setItem(LABEL_VALUE_STORE, queryStr);
         let labelsArray = queryStr.split(" ");
         return getSeriesArraySelector(labelsArray);
     },
@@ -164,7 +165,8 @@ export const queryUpdater: QueryUpdater = {
     },
 
     //Label=value pairs with the highest number of series
-    seriesCountByLabelValuePair: ({ query, match }): string => {
+    seriesCountByLabelValuePair: ({ query, match, isDialog }): string => {
+
         let previous_match;
 
         try {
@@ -199,20 +201,24 @@ export const queryUpdater: QueryUpdater = {
                 queryStr = previous_striped_values
                     .map((value) => (value === query_label ? query : value))
                     .join(" ");
+
             } else {
                 queryStr = `${striped} ${query}`;
             }
     
-            localStorage.setItem(LABEL_VALUE_STORE, queryStr);
+           !isDialog && localStorage.setItem(LABEL_VALUE_STORE, queryStr);
+
         } else if (previous_match && previous_match.includes(query)) {
+
             let prevArray = previous_match.split(" ");
             let filtered = prevArray.filter((f) => f !== query);
             let joint = filtered.join(" ");
-            queryStr = joint;
-            localStorage.setItem(LABEL_VALUE_STORE, joint);
+            queryStr = isDialog ? previous_match : joint 
+            !isDialog && localStorage.setItem(LABEL_VALUE_STORE, joint);
+
         } else if (previous_match === "") {
             queryStr = query;
-            localStorage.setItem(LABEL_VALUE_STORE, queryStr);
+            !isDialog && localStorage.setItem(LABEL_VALUE_STORE, queryStr);
         }
 
         let labelsArray = queryStr.split(" ");
