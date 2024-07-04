@@ -82,10 +82,10 @@ const InputErrorWarning = ({ errorText }: { errorText: string }) => {
 
 export type SectionHeaderProps = {
     isEditing?: boolean
-    isEdit: boolean 
-    isAdd:boolean 
-    title: string
-    fieldErrors: any 
+    isEdit?: boolean 
+    isAdd?:boolean 
+    title?: string
+    fieldErrors?: any 
     onClickAdd?: () => void 
 }
 

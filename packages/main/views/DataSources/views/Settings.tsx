@@ -135,7 +135,14 @@ export const Settings = (props: any) => {
                 </InputCol>
             </InputCont>
 
-            <AuthFields {...props} />
+            <AuthFields
+                id={settingsData.id}
+                auth={settingsData.auth}
+                dataSources={initialDs}
+                onDsChange={setInitialDs}
+
+             //{...props} 
+             />
 
             <DataSourceHeaders
              id={settingsData.id}
@@ -145,7 +152,9 @@ export const Settings = (props: any) => {
              onDsChange={setInitialDs}
               />
 
-            <LinkedFields {...props} linkedFields={settingsData.linkedFields} />
+            <LinkedFields
+             {...props} 
+             linkedFields={settingsData.linkedFields} />
         </DataSourceSettingsCont>
     );
 };

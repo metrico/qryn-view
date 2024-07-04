@@ -1,18 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import setDataSources from "../store/setDataSources";
 import { InputCol, InputCont } from "../styles";
 import { QrynSwitch, Select, Field } from "../ui";
 import { TextAreaField } from "../ui/TextArea";
 import { SectionHeader } from "./SectionHeader";
 import DOMPurify from "isomorphic-dompurify";
 
-export function AuthFields(props: any) {
-   // console.log(props)
-    const { auth, id } = props;
-    const dispatch: any = useDispatch();
+export type AuthFieldsProps = {
+    auth?: any 
+    id?: string 
+    dataSources?: any 
+    onDsChange?: (prev:any) => void
+    fieldErrors?: any
+}
 
-    const dataSources = useSelector((store: any) => store.dataSources);
+export function AuthFields(props: AuthFieldsProps) {
+   // console.log(props)
+    const { auth, id, dataSources, onDsChange } = props;
+    //const dispatch: any = useDispatch();
+
+    //const dataSources = useSelector((store: any) => store.dataSources);
 
     const [activeFields, setActiveFields] = useState<any>([]);
     const [isEditing, setIsEditing] = useState(false);
@@ -46,9 +52,10 @@ export function AuthFields(props: any) {
             return dataSource;
         });
 
-        localStorage.setItem("dataSources", JSON.stringify(newDataSources));
+        onDsChange(()=> newDataSources)
+        //localStorage.setItem("dataSources", JSON.stringify(newDataSources));
 
-        dispatch(setDataSources(newDataSources));
+        //dispatch(setDataSources(newDataSources));
 
         return newDataSources;
     };
@@ -108,9 +115,9 @@ export function AuthFields(props: any) {
             return ds;
         });
 
-        localStorage.setItem("dataSources", JSON.stringify(newDataSources));
-        dispatch(setDataSources(newDataSources));
-
+        //localStorage.setItem("dataSources", JSON.stringify(newDataSources));
+        //dispatch(setDataSources(newDataSources));
+        onDsChange(()=> newDataSources)
         setTimeout(() => {
             setIsEditing(() => false);
         }, 600);
