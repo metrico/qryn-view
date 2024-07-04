@@ -8,6 +8,7 @@ import { SectionHeader } from "./SectionHeader";
 import DOMPurify from "isomorphic-dompurify";
 
 export function AuthFields(props: any) {
+   // console.log(props)
     const { auth, id } = props;
     const dispatch: any = useDispatch();
 

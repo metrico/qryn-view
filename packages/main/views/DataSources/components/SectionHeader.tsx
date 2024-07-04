@@ -80,9 +80,18 @@ const InputErrorWarning = ({ errorText }: { errorText: string }) => {
     );
 };
 
-export function SectionHeader(props: any) {
+export type SectionHeaderProps = {
+    isEditing?: boolean
+    isEdit: boolean 
+    isAdd:boolean 
+    title: string
+    fieldErrors: any 
+    onClickAdd?: () => void 
+}
+
+export function SectionHeader(props: SectionHeaderProps) {
     const { onClickAdd, isAdd, title, isEditing, fieldErrors } = props;
-    const dispatch: any = useDispatch();
+   const dispatch: any = useDispatch();
     const [isSaved, setIsSaved] = useState(false);
 
     useEffect(() => {
