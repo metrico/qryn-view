@@ -50,7 +50,7 @@ importers:
         version: 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@microlink/react-json-view':
         specifier: latest
-        version: 1.23.0(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 1.23.1(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/base':
         specifier: 5.0.0-beta.5
         version: 5.0.0-beta.5(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -657,8 +657,8 @@ packages:
   '@juggle/resize-observer@3.4.0':
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
 
-  '@microlink/react-json-view@1.23.0':
-    resolution: {integrity: sha512-HYJ1nsfO4/qn8afnAMhuk7+5a1vcjEaS8Gm5Vpr1SqdHDY0yLBJGpA+9DvKyxyVKaUkXzKXt3Mif9RcmFSdtYg==}
+  '@microlink/react-json-view@1.23.1':
+    resolution: {integrity: sha512-Iz1uA2Y4x7Xr+O4BP2Brk16UpL6rh9GDv2A19OOb9pymkUE8eXHq1GzhJte4269wMDc8Esm2jXsTqIPLgqq7kg==}
     peerDependencies:
       react: '>= 15'
       react-dom: '>= 15'
@@ -3455,7 +3455,7 @@ snapshots:
 
   '@juggle/resize-observer@3.4.0': {}
 
-  '@microlink/react-json-view@1.23.0(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@microlink/react-json-view@1.23.1(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       flux: 4.0.4(react@18.3.1)
       react: 18.3.1
