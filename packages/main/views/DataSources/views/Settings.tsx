@@ -153,8 +153,13 @@ export const Settings = (props: any) => {
               />
 
             <LinkedFields
-             {...props} 
-             linkedFields={settingsData.linkedFields} />
+            // {...props} 
+            id={settingsData.id}
+            name={settingsData.name}
+            onDsChange={setInitialDs}
+            dataSources={initialDs}
+            linkedFields={settingsData.linkedFields} />
+            
         </DataSourceSettingsCont>
     );
 };

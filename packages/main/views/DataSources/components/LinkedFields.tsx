@@ -1,17 +1,25 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+//import { useDispatch, useSelector } from "react-redux";
 import { LinkedFieldItem } from "../classes/LinkedFieldItem";
-import setDataSources from "../store/setDataSources";
+//import setDataSources from "../store/setDataSources";
 import { InputCont } from "../styles";
 import { LinkedField } from "./LinkedField";
 import { SectionHeader } from "./SectionHeader";
 
-export const LinkedFields = (props: any) => {
-    const { linkedFields, name, id } = props;
+export type LinkedFieldsProps = {
+    id: string;
+    name: string;
+    linkedFields: any;
+    dataSources: any;
+    onDsChange: (prev:any) => void
+}
 
-    const dataSources = useSelector((store: any) => store.dataSources);
+export const LinkedFields = (props: LinkedFieldsProps) => {
+    const { linkedFields, name, id, dataSources, onDsChange } = props;
 
-    const dispatch: any = useDispatch();
+    //const dataSources = useSelector((store: any) => store.dataSources);
+
+  //  const dispatch: any = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
 
     const onAddLinkedField = () => {
@@ -35,8 +43,10 @@ export const LinkedFields = (props: any) => {
             return m;
         });
 
-        localStorage.setItem("dataSources", JSON.stringify(newDataSources));
-        dispatch(setDataSources(newDataSources));
+        onDsChange( () => newDataSources)
+
+       // localStorage.setItem("dataSources", JSON.stringify(newDataSources));
+       // dispatch(setDataSources(newDataSources));
     };
 
     const fieldEditing = () => {
