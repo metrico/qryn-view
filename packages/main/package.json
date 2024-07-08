@@ -19,7 +19,7 @@
     "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.15.20",
     "@mui/styles": "^5.15.20",
-    "@mui/x-charts": "7.7.1",
+    "@mui/x-charts": "7.9.0",
     "@szhsin/react-menu": "^4.1.0",
     "@tanstack/match-sorter-utils": "^8.15.1",
     "@tanstack/react-table": "^8.17.3",
