@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useCallback, useEffect, useState } from "react";
+import {  useSelector } from "react-redux";
 import DOMPurify from "isomorphic-dompurify";
 import {
     DataSourceHeaders,
@@ -13,8 +13,10 @@ import { DataSourceSettingsCont, InputCont, InputCol } from "../styles";
 import { Field } from "../ui";
 
 
+
 export const Settings = (props: any) => {
     const state = useSelector(({ dataSources }: any) => dataSources);
+    const { saveSettings } = props
     // sets the initial and editable data
     const [settingsData, setSettingsData] = useState(props)
     const [initialDs, setInitialDs] = useState(state)
@@ -27,7 +29,7 @@ export const Settings = (props: any) => {
     // const { headers, id, linkedFields, name, url, cors }: any = props;
     
 
-   // const dispatch: any = useDispatch();
+  
     const [fieldErrors, setFieldErrors] = useState({
         url: false,
         protocol: false,
@@ -87,6 +89,7 @@ export const Settings = (props: any) => {
 
                 // localStorage.setItem("dataSources", JSON.stringify(newVal));
                 // dispatch(setDataSources(newVal));
+                saveSettings(newVal)
                 setTimeout(() => {
                     setIsEditing(() => false);
                 }, 800);
@@ -98,10 +101,17 @@ export const Settings = (props: any) => {
         //setSettingsData( () => newVal)
        // localStorage.setItem("dataSources", JSON.stringify(newVal));
        // dispatch(setDataSources(newVal));
+       saveSettings(newVal)
         setTimeout(() => {
             setIsEditing(() => false);
         }, 800);
     };
+
+    const onSaveDsSettings = useCallback(()=>{
+        saveSettings(initialDs)
+      
+
+    },[initialDs])
 
     useEffect(()=>{
         setSettingsData((prev) => ({ ...prev, ...initialDs?.find(f => f.id === prev.id)}))
@@ -116,6 +126,7 @@ export const Settings = (props: any) => {
                 isAdd={false}
                 title={"DataSource Settings"}
                 fieldErrors={fieldErrors}
+                saveSettings={onSaveDsSettings}
             />
 
             <InputCont>

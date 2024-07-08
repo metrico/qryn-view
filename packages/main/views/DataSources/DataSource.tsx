@@ -1,6 +1,6 @@
 import { css, cx } from "@emotion/css";
 import { ThemeProvider } from "@emotion/react";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -56,6 +56,8 @@ export function DataSourceSetting(props: any) {
         "qryn-dev-cookie",
         "qryn-settings",
     ]); // for testing cookies feature
+
+  
     const dispatch: any = useDispatch();
     const dataSources = useSelector((store: any) => store.dataSources);
     const useForAll = () => {
@@ -169,7 +171,7 @@ export function DataSourceSetting(props: any) {
             </div>
 
             <div className="ds-settings">
-                <Settings {...props} />
+                <Settings {...props}  />
             </div>
         </div>
     );
@@ -193,7 +195,11 @@ export const DataSourceSettingHeader = (props: any) => {
 export function DataSource() {
     let { id } = useParams();
     const theme = useTheme();
+    const dispatch:any = useDispatch()
+
     const dataSources = useSelector((store: any) => store.dataSources);
+    const [dataChanged, setDataChanged] = useState([])
+
     const datasource = useMemo(() => {
         if (!dataSources || dataSources.length === 0) {
             return {};
@@ -202,6 +208,13 @@ export function DataSource() {
         return dataSources.find((f: any) => f.id === id) || {};
     }, [id, dataSources]);
 
+    const saveSettings = () => useCallback(()=>{
+        dispatch(setDataSources(dataChanged))
+        localStorage.setItem("dataSources", JSON.stringify(dataChanged));
+    },[dataChanged])
+
+
+
     return (
         <ThemeProvider theme={theme}>
             <Container>
@@ -209,9 +222,12 @@ export function DataSource() {
                     <Header
                         title={"DataSource Settings"}
                         datasource={datasource}
+                        onSave={saveSettings}
                     />
                     <div className={"datasource-body"}>
-                        <DataSourceSetting {...datasource} />
+                        <DataSourceSetting
+                         {...datasource} 
+                         saveSettings={setDataChanged}  />
                     </div>
                 </div>
             </Container>

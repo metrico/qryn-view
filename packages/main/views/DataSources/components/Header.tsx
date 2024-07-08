@@ -9,14 +9,16 @@ import useTheme from "@ui/theme/useTheme"
 export interface HeaderProps {
     title: string;
     datasource?: any;
+    onSave?: () => void
 }
 
 export function Header(props: HeaderProps) {
+
     const navigate = useNavigate();
     const theme = useTheme();
     const urlLocation = useSelector((store: any) => store.urlLocation);
     const dispatch: any = useDispatch();
-    const { title } = props;
+    const { title, onSave } = props;
     const isDsSaved = useSelector((store: any) => store.isDsSaved);
     const buttonMessage = useMemo(() => {
         if (isDsSaved) {
@@ -61,7 +63,14 @@ export function Header(props: HeaderProps) {
             </div>
             </div>
             <Button
-                value={DOMPurify.sanitize(buttonMessage)}
+                value={DOMPurify.sanitize("Save")}
+                onClick={onSave}
+                editing={true}
+                primary={isDsSaved}
+            />
+
+            <Button
+                value={DOMPurify.sanitize("Back")}
                 onClick={backOne}
                 editing={true}
                 primary={isDsSaved}

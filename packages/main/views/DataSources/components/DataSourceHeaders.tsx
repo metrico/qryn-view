@@ -1,7 +1,7 @@
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { nanoid } from "nanoid";
 import { useState } from "react";
-import setDataSources from "../store/setDataSources";
+//import setDataSources from "../store/setDataSources";
 import { InputCol, InputGroup, Label } from "../styles";
 import { Field } from "../ui";
 import { SectionHeader } from "./SectionHeader";
@@ -117,8 +117,10 @@ export const DataSourceHeaders = (props: DataSourceHadersProps) => {
             return ds;
         });
 
-        localStorage.setItem("dataSources", JSON.stringify(newDataSources));
-        dispatch(setDataSources(newDataSources));
+        onDsChange(()=> newDataSources)
+
+       // localStorage.setItem("dataSources", JSON.stringify(newDataSources));
+       // dispatch(setDataSources(newDataSources));
     };
 
     return (
