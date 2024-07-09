@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import {  useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+
 import DOMPurify from "isomorphic-dompurify";
 import {
     DataSourceHeaders,
@@ -11,34 +11,22 @@ import {
 
 import { DataSourceSettingsCont, InputCont, InputCol } from "../styles";
 import { Field } from "../ui";
-
+import { useStoreSettings } from "../hooks/useStoreSettings";
 
 
 export const Settings = (props: any) => {
-    const state = useSelector(({ dataSources }: any) => dataSources);
-    const { saveSettings } = props
+ 
     // sets the initial and editable data
     const [settingsData, setSettingsData] = useState(props)
-    const [initialDs, setInitialDs] = useState(state)
-    // we will pass all props into the processor and from there get the initial values 
-
-    //console.log(props) // this will be the initial fields before saving 
-    // the ones triggered on the cancel button
-    
-
-    // const { headers, id, linkedFields, name, url, cors }: any = props;
-    
-
+    const { settings, setSettings } = useStoreSettings()
   
     const [fieldErrors, setFieldErrors] = useState({
         url: false,
         protocol: false,
     });
     const onFieldChange = (prop: any, value: any) => {
-        console.log(prop, value)
         let val = value;
-        const arrayClone = JSON.parse(JSON.stringify(initialDs));
-        
+        const arrayClone = JSON.parse(JSON.stringify(settings));
         arrayClone.forEach((field: any) => {
             if (field.id === settingsData.id) {
                 field[prop] = val;
@@ -84,12 +72,15 @@ export const Settings = (props: any) => {
                     url: false,
                 }));
                 const newVal = onFieldChange(name, value);
-                setInitialDs( newVal)
+                console.log(newVal)
+               setSettings( ()=> newVal)
+
                 //setSettingsData( (prev) => ({...prev, ...newVal}))
 
                 // localStorage.setItem("dataSources", JSON.stringify(newVal));
                 // dispatch(setDataSources(newVal));
-                saveSettings(newVal)
+             //   saveSettings(newVal)
+
                 setTimeout(() => {
                     setIsEditing(() => false);
                 }, 800);
@@ -97,26 +88,25 @@ export const Settings = (props: any) => {
         }
 
         const newVal = onFieldChange(name, value);
-        setInitialDs(newVal)
+        console.log(newVal)
+        setSettingsData(()=> newVal)
+       // setInitialDs(newVal)
         //setSettingsData( () => newVal)
        // localStorage.setItem("dataSources", JSON.stringify(newVal));
        // dispatch(setDataSources(newVal));
-       saveSettings(newVal)
+      // saveSettings(newVal)
+      setSettings(()=> newVal)
         setTimeout(() => {
             setIsEditing(() => false);
         }, 800);
     };
 
-    const onSaveDsSettings = useCallback(()=>{
-        saveSettings(initialDs)
-      
 
-    },[initialDs])
 
     useEffect(()=>{
-        setSettingsData((prev) => ({ ...prev, ...initialDs?.find(f => f.id === prev.id)}))
+        setSettingsData((prev) => ({ ...prev, ...settings?.find(f => f.id === prev.id)}))
 
-    },[initialDs])
+    },[settings])
 
     return (
         <DataSourceSettingsCont>
@@ -126,7 +116,7 @@ export const Settings = (props: any) => {
                 isAdd={false}
                 title={"DataSource Settings"}
                 fieldErrors={fieldErrors}
-                saveSettings={onSaveDsSettings}
+              
             />
 
             <InputCont>
@@ -149,8 +139,8 @@ export const Settings = (props: any) => {
             <AuthFields
                 id={settingsData.id}
                 auth={settingsData.auth}
-                dataSources={initialDs}
-                onDsChange={setInitialDs}
+                dataSources={settings}
+                onDsChange={setSettings}
 
              //{...props} 
              />
@@ -159,16 +149,16 @@ export const Settings = (props: any) => {
              id={settingsData.id}
              cors={settingsData.cors} 
              headers={settingsData.headers} 
-             dataSources={initialDs}
-             onDsChange={setInitialDs}
+             dataSources={settings}
+             onDsChange={setSettings}
               />
 
             <LinkedFields
             // {...props} 
             id={settingsData.id}
             name={settingsData.name}
-            onDsChange={setInitialDs}
-            dataSources={initialDs}
+            onDsChange={setSettings}
+            dataSources={settings}
             linkedFields={settingsData.linkedFields} />
             
         </DataSourceSettingsCont>

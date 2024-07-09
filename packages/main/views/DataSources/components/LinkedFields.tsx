@@ -75,6 +75,8 @@ export const LinkedFields = (props: LinkedFieldsProps) => {
                             dataSourceId={id}
                             locked={false}
                             fieldEditing={fieldEditing}
+                            dsChange={onDsChange}
+                            dataSources={dataSources}
                         />
                     ))}
                 </InputCont>

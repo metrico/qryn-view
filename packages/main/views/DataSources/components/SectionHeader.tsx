@@ -17,7 +17,6 @@ export type SectionHeaderProps = {
     title?: string;
     fieldErrors?: any;
     onClickAdd?: (e?:any) => void;
-    saveSettings?: () => void
 };
 
 export function SectionHeader(props: SectionHeaderProps) {

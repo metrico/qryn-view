@@ -1,8 +1,6 @@
-import { useDispatch, useSelector } from "react-redux";
 import { LinkFieldsGroup, InputCol } from "../styles";
 import { Field, QrynSwitch, Select } from "../ui";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import setDataSources from "../store/setDataSources";
 import { useMemo } from "react";
 import DOMPurify from 'isomorphic-dompurify'
 export const LinkedField = (props:any) => {
@@ -15,12 +13,15 @@ export const LinkedField = (props:any) => {
         linkType,
         locked,
         dataSourceId,
-        fieldEditing
+        fieldEditing,
+        dataSources,
+        dsChange
+
     } = props;
 
-    const dispatch: any = useDispatch();
+    // const dispatch: any = useDispatch();
 
-    const dataSources = useSelector((store:any) => store.dataSources);
+    // const dataSources = useSelector((store:any) => store.dataSources);
 
     const dataSourcesOpts = useMemo(() => {
         return dataSources.map((m:any) => ({
@@ -52,7 +53,7 @@ export const LinkedField = (props:any) => {
         });
     };
 
-    const onLinkedFieldRemove = (e:any) => {
+    const onLinkedFieldRemove = () => {
         fieldEditing()
         const prevDataSources = JSON.parse(JSON.stringify(dataSources));
         const prevDs = prevDataSources.find((f:any) => f.id === dataSourceId);
@@ -66,8 +67,9 @@ export const LinkedField = (props:any) => {
             return m;
         });
 
-        localStorage.setItem("dataSources", JSON.stringify(newDataSources));
-        dispatch(setDataSources(newDataSources));
+       // localStorage.setItem("dataSources", JSON.stringify(newDataSources));
+       // dispatch(setDataSources(newDataSources));
+       dsChange(()=> newDataSources)
     };
 
     const onChange = (e:any, name:any) => {
@@ -77,9 +79,11 @@ export const LinkedField = (props:any) => {
 
         const newVal = onLinkedFieldChange(name, value);
 
-        localStorage.setItem("dataSources", JSON.stringify(newVal));
+        dsChange(()=> newVal)
 
-        dispatch(setDataSources(newVal));
+    //    localStorage.setItem("dataSources", JSON.stringify(newVal));
+
+    //    dispatch(setDataSources(newVal));
     };
 
     const onSwitchChange = (e:any, name:any) => {
@@ -87,8 +91,10 @@ export const LinkedField = (props:any) => {
         const value = Boolean(e.target.checked);
 
         const newVal = onLinkedFieldChange(name, value);
-        localStorage.setItem("dataSources", JSON.stringify(newVal));
-        dispatch(setDataSources(newVal));
+        dsChange(()=> newVal)
+
+      //  localStorage.setItem("dataSources", JSON.stringify(newVal));
+      //  dispatch(setDataSources(newVal));
     };
 
     return (

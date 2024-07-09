@@ -6,19 +6,20 @@ import setIsDatasourceSaved from "../store/setIsDataSourceSaved";
 import { Button, QrynLogo } from "../ui";
 import DOMPurify from "isomorphic-dompurify";
 import useTheme from "@ui/theme/useTheme"
+import { useStoreSettings } from "../hooks/useStoreSettings";
 export interface HeaderProps {
     title: string;
     datasource?: any;
-    onSave?: () => void
+   
 }
 
 export function Header(props: HeaderProps) {
-
+    const { storeDataSources} = useStoreSettings()
     const navigate = useNavigate();
     const theme = useTheme();
     const urlLocation = useSelector((store: any) => store.urlLocation);
     const dispatch: any = useDispatch();
-    const { title, onSave } = props;
+    const { title } = props;
     const isDsSaved = useSelector((store: any) => store.isDsSaved);
     const buttonMessage = useMemo(() => {
         if (isDsSaved) {
@@ -64,7 +65,7 @@ export function Header(props: HeaderProps) {
             </div>
             <Button
                 value={DOMPurify.sanitize("Save")}
-                onClick={onSave}
+                onClick={storeDataSources}
                 editing={true}
                 primary={isDsSaved}
             />
