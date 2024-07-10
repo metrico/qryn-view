@@ -103,14 +103,14 @@ export const deleteFingerprints = async (
                 ...headers,
                 Authorization: `Basic ${btoa(u + ":" + p)}`,
             },
-        }).then((response) => {
+        }).then(async (response) => {
             if (
                 (response && response?.status === 500) ||
                 response?.status === 400
             ) {
                 setError(response.statusText);
                 setIsLoading(false);
-                let error = response.text();
+                let error = await response.text();
                 store.dispatch(
                     createAlert({
                         message: error,
