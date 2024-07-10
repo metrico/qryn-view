@@ -1,7 +1,6 @@
-import React, {useState} from "react";
+import { useState, MouseEvent } from "react";
 
 import { IconButton, Tooltip } from "@mui/material";
-import moment from "moment";
 //import utc from 'dayjs/plugin/utc';
 import dayjs from "dayjs";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
@@ -98,11 +97,11 @@ export const formatUTC = (dateInt, addOffset = false) => {
 
 export default function PickerMenu() {
     const theme = useTheme();
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const { date, setDate } = useCardinalityStore();
-    const [selected, setSelected] = React.useState<Date>(new Date(date));
-    const [selectedOffset, setSelectedOffset] = useState(false)
+    const [selected, setSelected] = useState<Date>(new Date(date));
+    const [selectedOffset, setSelectedOffset] = useState(false);
 
     const open = Boolean(anchorEl);
 
@@ -113,9 +112,8 @@ export default function PickerMenu() {
     }
 
     const handleSelect = (dateSelected: Date) => {
-
         const hasOffset = new Date(dateSelected).getTimezoneOffset() < 0;
-        setSelectedOffset(()=>hasOffset)
+        setSelectedOffset(() => hasOffset);
         setSelected(() => formatUTC(dateSelected, hasOffset));
         setDate(dayjs(formatUTC(dateSelected, hasOffset)).format(DATE_FORMAT));
 
@@ -130,7 +128,7 @@ export default function PickerMenu() {
         setAnchorEl(null);
     };
 
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    const handleClick = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
@@ -148,7 +146,9 @@ export default function PickerMenu() {
             >
                 {selected && (
                     <p style={{ fontSize: ".8em" }}>
-                        {dayjs(formatUTC(selected, selectedOffset)).format(DATE_FORMAT)}
+                        {dayjs(formatUTC(selected, selectedOffset)).format(
+                            DATE_FORMAT
+                        )}
                     </p>
                 )}
                 <Tooltip title="Select Day">

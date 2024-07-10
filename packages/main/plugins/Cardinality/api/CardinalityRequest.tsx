@@ -179,9 +179,7 @@ const requestCardinality = async (
 
     setError("");
     setIsLoading(true);
-    // set
-    //this makes the multiple fetch requests
-   
+
     try {
         const { u, p } = auth;
         const responses = await Promise.all(
@@ -276,33 +274,38 @@ export const useCardinalityRequest = (
 
     const { url, headers, user_pass } = useDataSourceData("logs");
 
-
     // const [isLoading, setIsLoading] = useState(false);
     // const [error, setError] = useState("");
     // const [tsdbStatus, setTsdbStatus] = useState<any>({});
 
     const handleDelete = async (query, amount) => {
         const locale = moment.tz.guess(true);
-        console.log(locale)
-        const mDay = moment.tz(reqDate, DATE_FORMAT, locale).add(1, "day");
-        const endDay = moment.tz(reqDate, DATE_FORMAT, locale).add(2, "day");
-        console.log(mDay)
-        console.log(endDay)
+        const hasTimeOffset = new Date(reqDate).getTimezoneOffset() < 0;
+
+        const getDayToAdd = (hasOffset) => (hasOffset ? 1 : 0);
+
+        const mDay = moment
+            .tz(reqDate, DATE_FORMAT, locale)
+            .add(getDayToAdd(hasTimeOffset), "day");
+        const endDay = moment
+            .tz(reqDate, DATE_FORMAT, locale)
+            .add(getDayToAdd(hasTimeOffset), "day");
         const dayStart = mDay.clone().utc().startOf("day").unix();
-        const dayEnd = endDay.clone().utc().startOf("day").unix();
-       console.log(dayStart, dayEnd)
-        // await deleteFingerprints(
-        //     url,
-        //     query,
-        //     amount,
-        //     dayStart,
-        //     dayEnd,
-        //     setError,
-        //     setDeletedQueries,
-        //     setIsLoading,
-        //     headers,
-        //     user_pass
-        // );
+
+        const dayEnd = endDay.clone().utc().endOf("day").unix();
+
+        await deleteFingerprints(
+            url,
+            query,
+            amount,
+            dayStart,
+            dayEnd,
+            setError,
+            setDeletedQueries,
+            setIsLoading,
+            headers,
+            user_pass
+        );
     };
 
     const handleGetDeletedFingerprints = async () => {
