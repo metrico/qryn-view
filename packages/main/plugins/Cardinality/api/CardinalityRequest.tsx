@@ -103,14 +103,14 @@ export const deleteFingerprints = async (
                 ...headers,
                 Authorization: `Basic ${btoa(u + ":" + p)}`,
             },
-        }).then((response) => {
+        }).then(async (response) => {
             if (
                 (response && response?.status === 500) ||
                 response?.status === 400
             ) {
                 setError(response.statusText);
                 setIsLoading(false);
-                let error = response.text();
+                let error = await response.text();
                 store.dispatch(
                     createAlert({
                         message: error,
@@ -179,9 +179,7 @@ const requestCardinality = async (
 
     setError("");
     setIsLoading(true);
-    // set
-    //this makes the multiple fetch requests
-   
+
     try {
         const { u, p } = auth;
         const responses = await Promise.all(
@@ -276,17 +274,25 @@ export const useCardinalityRequest = (
 
     const { url, headers, user_pass } = useDataSourceData("logs");
 
-
     // const [isLoading, setIsLoading] = useState(false);
     // const [error, setError] = useState("");
     // const [tsdbStatus, setTsdbStatus] = useState<any>({});
 
     const handleDelete = async (query, amount) => {
         const locale = moment.tz.guess(true);
-        const mDay = moment.tz(reqDate, locale).add(1, "day");
-        const endDay = moment.tz(reqDate, locale).add(2, "day");
+        const hasTimeOffset = new Date(reqDate).getTimezoneOffset() < 0;
+
+        const getDayToAdd = (hasOffset) => (hasOffset ? 1 : 0);
+
+        const mDay = moment
+            .tz(reqDate, DATE_FORMAT, locale)
+            .add(getDayToAdd(hasTimeOffset), "day");
+        const endDay = moment
+            .tz(reqDate, DATE_FORMAT, locale)
+            .add(getDayToAdd(hasTimeOffset), "day");
         const dayStart = mDay.clone().utc().startOf("day").unix();
-        const dayEnd = endDay.clone().utc().startOf("day").unix();
+
+        const dayEnd = endDay.clone().utc().endOf("day").unix();
 
         await deleteFingerprints(
             url,
