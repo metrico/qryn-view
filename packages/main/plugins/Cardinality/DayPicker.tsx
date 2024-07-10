@@ -1,13 +1,16 @@
-import React from "react";
+import React, {useState} from "react";
 
-import { Box, IconButton, Tooltip } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
+import moment from "moment";
+//import utc from 'dayjs/plugin/utc';
+import dayjs from "dayjs";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import Menu from "@mui/material/Menu";
 import useTheme from "@ui/theme/useTheme";
 import styled from "@emotion/styled";
-
+import Box from "@mui/material/Box";
 import { format } from "date-fns";
-import dayjs from "dayjs";
+
 import { DayPicker } from "react-day-picker";
 import { DATE_FORMAT } from "./consts";
 import "react-day-picker/dist/style.css";
@@ -77,18 +80,21 @@ export const MenuStyles = (theme: any) => ({
     },
 });
 
-
 export const formatUTC = (dateInt, addOffset = false) => {
-    let date = (!dateInt || dateInt.length < 1) ? new Date : new Date(dateInt);
+    let date = !dateInt || dateInt.length < 1 ? new Date() : new Date(dateInt);
+
     if (typeof dateInt === "string") {
         return date;
     } else {
-        const offset = addOffset ? date.getTimezoneOffset() : - (date.getTimezoneOffset());
+        const offset = addOffset
+            ? -date.getTimezoneOffset()
+            : date.getTimezoneOffset();
         const offsetDate = new Date();
-        offsetDate.setTime(date.getTime() + offset * 60000)
+        const timeWithOffset = date.getTime() + offset * 60000;
+        offsetDate.setTime(timeWithOffset);
         return offsetDate;
     }
-}
+};
 
 export default function PickerMenu() {
     const theme = useTheme();
@@ -96,6 +102,7 @@ export default function PickerMenu() {
 
     const { date, setDate } = useCardinalityStore();
     const [selected, setSelected] = React.useState<Date>(new Date(date));
+    const [selectedOffset, setSelectedOffset] = useState(false)
 
     const open = Boolean(anchorEl);
 
@@ -106,9 +113,20 @@ export default function PickerMenu() {
     }
 
     const handleSelect = (dateSelected: Date) => {
-        setSelected(() => formatUTC(dateSelected));
-        setDate(dayjs(formatUTC(dateSelected)).format(DATE_FORMAT));
-        localStorage.setItem("currentCardinalityDate", JSON.stringify({value: dayjs(formatUTC(dateSelected)).format(DATE_FORMAT)}))
+
+        const hasOffset = new Date(dateSelected).getTimezoneOffset() < 0;
+        setSelectedOffset(()=>hasOffset)
+        setSelected(() => formatUTC(dateSelected, hasOffset));
+        setDate(dayjs(formatUTC(dateSelected, hasOffset)).format(DATE_FORMAT));
+
+        localStorage.setItem(
+            "currentCardinalityDate",
+            JSON.stringify({
+                value: dayjs(formatUTC(dateSelected, hasOffset)).format(
+                    DATE_FORMAT
+                ),
+            })
+        );
         setAnchorEl(null);
     };
 
@@ -116,7 +134,7 @@ export default function PickerMenu() {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
-         setAnchorEl(null);
+        setAnchorEl(null);
     };
 
     return (
@@ -130,7 +148,7 @@ export default function PickerMenu() {
             >
                 {selected && (
                     <p style={{ fontSize: ".8em" }}>
-                        {dayjs(selected).format(DATE_FORMAT)}
+                        {dayjs(formatUTC(selected, selectedOffset)).format(DATE_FORMAT)}
                     </p>
                 )}
                 <Tooltip title="Select Day">
@@ -170,7 +188,7 @@ export default function PickerMenu() {
             >
                 <DayPicker
                     mode="single"
-                    selected={formatUTC(selected,true)}
+                    selected={formatUTC(selected, selectedOffset)}
                     onSelect={handleSelect}
                     footer={footer}
                 />

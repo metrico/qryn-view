@@ -283,23 +283,26 @@ export const useCardinalityRequest = (
 
     const handleDelete = async (query, amount) => {
         const locale = moment.tz.guess(true);
-        const mDay = moment.tz(reqDate, locale).add(1, "day");
-        const endDay = moment.tz(reqDate, locale).add(2, "day");
+        console.log(locale)
+        const mDay = moment.tz(reqDate, DATE_FORMAT, locale).add(1, "day");
+        const endDay = moment.tz(reqDate, DATE_FORMAT, locale).add(2, "day");
+        console.log(mDay)
+        console.log(endDay)
         const dayStart = mDay.clone().utc().startOf("day").unix();
         const dayEnd = endDay.clone().utc().startOf("day").unix();
-
-        await deleteFingerprints(
-            url,
-            query,
-            amount,
-            dayStart,
-            dayEnd,
-            setError,
-            setDeletedQueries,
-            setIsLoading,
-            headers,
-            user_pass
-        );
+       console.log(dayStart, dayEnd)
+        // await deleteFingerprints(
+        //     url,
+        //     query,
+        //     amount,
+        //     dayStart,
+        //     dayEnd,
+        //     setError,
+        //     setDeletedQueries,
+        //     setIsLoading,
+        //     headers,
+        //     user_pass
+        // );
     };
 
     const handleGetDeletedFingerprints = async () => {
