@@ -1,5 +1,5 @@
 import { colors } from "./colors";
-import {type QrynTheme, type QrynColors } from "./types";
+import { type QrynTheme, type QrynColors } from "./types";
 import { createTheme } from "@mui/material";
 const defaultTheme = createTheme();
 
@@ -18,14 +18,14 @@ export const light: QrynColors = {
     // text
     accent: colors.orange.or100, //         hsl(39, 100%, 50%) accent
     // input bg, negative space
-    deep: colors.white.w100, //              hsl(0, 0%, 7%) deep
+    deep: colors.white.w300, //              hsl(0, 0%, 7%) deep
     ultraDeep: "#fff", //          #111111 ultraDeep
     // primary (colored)
     primary: colors.turquoise.tq200, //     hsl(180, 62%, 28%) primary primary
     primaryLight: colors.turquoise.tq300, //hsl(180, 62%, 44%) primaryLight
     primaryAccent: colors.turquoise.tq1, // hsl(181, 98%, 21%) primaryAccent
     // neutral colors (button default colors)
-    neutral: colors.white.w100, //      hsl(0, 0%, 28%) neutral
+    neutral: colors.white.w200, //      hsl(0, 0%, 28%) neutral
     lightNeutral: colors.white.w700, //  hsla(0, 0%, 48%, 0.333) lightNeutral
     accentNeutral: colors.lightgrey.lg100, //hsl(0, 0%, 36%) accentNeutral
     contrastNeutral: colors.lightgrey.lg400, //hsl(0, 0%, 68%) alphaNeutral,

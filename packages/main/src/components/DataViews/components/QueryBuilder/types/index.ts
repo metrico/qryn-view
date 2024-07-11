@@ -28,8 +28,8 @@ export type operator =
 
 export interface Operation {
     id: number;
-    after_args:string;
-    prev_args:string;
+    after_args: string;
+    prev_args: string;
     name: string;
     header: any;
     range: string;
@@ -55,19 +55,21 @@ export interface BinaryValue {
 export interface Builder {
     operations: any[];
     labelsState: any[];
-    labelValuesState?: Label[]; 
+    labelValuesState?: Label[];
     binaryValue: BinaryValue;
     logsVolumeQuery: string;
     builderResult: string;
     isBinary: boolean;
-    isMetrics?:boolean;
+    isMetrics?: boolean;
 }
 
 export interface FormBuilderProps {
-    type: 'metrics_search' | 'logs_search';
+    start: Date;
+    stop: Date;
+    type: "metrics_search" | "logs_search";
     builders: Builder[];
     finalQuery: string;
-    setBuilders: Function;
+    setBuilders: any;
     dataSourceId: string;
     logsResponse: any;
     addBinary(idx: number): void;
@@ -75,7 +77,7 @@ export interface FormBuilderProps {
 
 export interface Label {
     id: string;
-    metric?:string;
+    metric?: string;
     label: string;
     operator: operator;
     values: string[];
@@ -112,8 +114,8 @@ export interface ApiDataSource {
 export interface GetApiRequestArgs {
     dataSource: ApiDataSource;
     url: string;
-    setLoading: Function;
-    setResponse: Function;
+    setLoading: any;
+    setResponse: any;
 }
 
 export type InitialOperationFn = (
@@ -141,19 +143,20 @@ export interface BinaryOperator {
 }
 
 export interface LogsFormBuilderProps {
+    data: any;
     dataSourceId: string;
     labelValueChange(labelValue: string): void;
     handleLogsVolumeChange(logsVolumeQuery: string): void;
-    searchButton:any;
-    queryInput?:any;
+    searchButton: any;
+    queryInput?: any;
 }
 
 export interface MetricsFormBuilderProps {
+    data: any;
     dataSourceId: string;
-    labelValueChange(labelValue:string):void 
-    handleMetricsChange(metric:string):void
-    searchButton:any;
-    logsRateButton:any;
-    queryInput?:any;
-
+    labelValueChange(labelValue: string): void;
+    handleMetricsChange(metric: string): void;
+    searchButton: any;
+    logsRateButton: any;
+    queryInput?: any;
 }

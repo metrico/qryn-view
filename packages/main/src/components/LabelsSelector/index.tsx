@@ -17,7 +17,12 @@ export default function LabelsSelector(props: any) {
 
     const theme = useTheme();
 
-    const { response, loading }: any = useLabels(dataSourceId);
+    const { response, loading }: any = useLabels(
+        dataSourceId,
+        "",
+        data?.start,
+        data?.stop
+    );
 
     const labelsFromProps = useMemo(() => {
         if (data?.labels?.length > 0) {

@@ -78,7 +78,7 @@ export const PageContainer: any = styled.div`
             cursor: pointer;
         }
         .ds-settings {
-            background: ${({ theme }: any) => theme.background};
+            background: ${({ theme }: any) => theme.shadow};
         }
     }
     .plugins-cont {
@@ -89,7 +89,7 @@ export const PageContainer: any = styled.div`
         padding: 10px 20px;
         border: 1px solid ${({ theme }: any) => theme.accentNeutral};
         border-radius: 3px;
-        height:fit-content;
+        height: fit-content;
         .title {
             font-size: 14px;
             padding: 10px 0px;
@@ -109,7 +109,7 @@ export const Label: any = styled.div`
     border-radius: 3px 0px 0px 3px;
     display: flex;
     align-items: center;
-    height: 28px;
+    height: 26px;
 `;
 
 export const Input: any = styled.input`
@@ -210,15 +210,16 @@ export const SettingsTitle: any = styled.div`
 `;
 
 export const DataSourceSettingsCont: any = styled.div`
-    background: ${({ theme }: any) => theme.deep};
     padding: 10px;
     border-radius: 0px 0px 3px 3px;
     border-top: 1px solid ${({ theme }: any) => theme.accentNeutral};
 `;
 
 export const DsButtonStyled: any = styled(BtnSmall)`
+    
     background: ${(props: any) =>
         props.primary ? props.theme.primary : props.theme.neutral};
+
     border: 1px solid ${({ theme }: any) => theme.accentNeutral};
     color: ${(props: any) =>
         props.primary ? props.theme.maxContrast : props.theme.contrast};
@@ -226,10 +227,10 @@ export const DsButtonStyled: any = styled(BtnSmall)`
     transition: 0.25s all;
     justify-content: center;
     padding: 3px 12px;
-    height: 28px;
+    height: 26px;
     display: flex;
     &:hover {
-        background: ${({ theme }: any) => theme.primaryLight};
+        background: ${({ theme, disabled }: any) => disabled ? theme.neutral : theme.primaryLight};
         color: ${(props: any) =>
             props.primary ? props.theme.contrast : props.theme.maxContrast};
     }

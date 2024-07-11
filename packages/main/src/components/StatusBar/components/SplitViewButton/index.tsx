@@ -58,7 +58,7 @@ export default function SplitViewButton({
     const left = useSelector((store: any) => store.left);
     const right = useSelector((store: any) => store.right);
     const usedSide = useSelector((store: any) => store[side]);
-    const dispatch:any = useDispatch();
+    const dispatch: any = useDispatch();
     const isSplitView = useSelector((store: any) => store.isSplit);
 
     const splitView = (e: any) => {
@@ -93,14 +93,15 @@ export default function SplitViewButton({
                     </SplitButton>
                 </Tooltip>
             ) : (
-                <DeleteOutlineIcon
-                    style={{
-                        fontSize: "15px",
-                        cursor: "pointer",
-                        padding: "3px",
-                    }}
-                    onClick={handleDeleteAction}
-                />
+                <button className="add-btn trash" onClick={handleDeleteAction}>
+                    <DeleteOutlineIcon
+                        style={{
+                            fontSize: "15px",
+                            cursor: "pointer",
+                            padding: "3px",
+                        }}
+                    />
+                </button>
             )}
         </>
     );

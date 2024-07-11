@@ -19,11 +19,12 @@ const customTransformers = [
                 ignorePlugin.contextRegExp.test(id)
             );
         },
-        transform: () => 'export {}',
+        transform: () => "export {}",
     },
 ];
 
 let configOpts = {
+    base: "",
     server: {},
     plugins: [
         basicSsl(),
@@ -38,12 +39,13 @@ let configOpts = {
         globals: true,
         environment: "happy-dom",
     },
-    optimizeDeps:{
-        exclude: ['moment'], // Exclude 'moment' from automatic dependency optimization
-        include: ['**/*.+(js|ts)'], // Include JavaScript and TypeScript files for manual dependency optimization
-        customTransformers
+    optimizeDeps: {
+        exclude: ["moment"], // Exclude 'moment' from automatic dependency optimization
+        include: ["**/*.+(js|ts)"], // Include JavaScript and TypeScript files for manual dependency optimization
+        customTransformers,
     },
     build: {
+        base: "",
         sourcemap: false,
         rollupOptions: {
             output: {
@@ -69,7 +71,6 @@ let configOpts = {
                         "prismjs",
                         "javascript-time-ago",
                         "json-markup",
-                    
                     ],
                     reactDnd: ["react-dnd", "react-dnd-html5-backend"],
                     memoize: [

@@ -9,7 +9,7 @@ import "react-flot/flot-override/jquery.flot.resize";
 import "react-flot/flot/jquery.flot.stack.min.js";
 //React
 import { useState, useEffect, useRef, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 //Packages
 import moment from "moment";
 import { format } from "date-fns";
@@ -88,7 +88,7 @@ export default function QrynChart(props: any): any {
                 return "line";
             }
         }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+           
     }, [isLogsVolume]);
 
     const [chartType, setChartType] = useState(getInitialChartType);
@@ -331,14 +331,14 @@ export default function QrynChart(props: any): any {
         //setChartData(getDataParsed(isSpliced));
         setChartData(matrix);
         localStorage.setItem("labelsSelected", JSON.stringify([]));
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+         
     }, []);
 
     useEffect(() => {
         setChartOptions(chartOptions);
         setElement(chartRef.current);
         drawChartFromData();
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+       
     }, [matrixData, isSpliced]);
 
     function drawChartFromData() {
@@ -377,11 +377,11 @@ export default function QrynChart(props: any): any {
         }
     }
 
-    const handleNoLimitData = (e: any) => {
+    const handleNoLimitData = () => {
         setIsSpliced(false);
     };
 
-    const handleLimitData = (e: any) => {
+    const handleLimitData = () => {
         setIsSpliced(true);
     };
 
@@ -409,7 +409,7 @@ export default function QrynChart(props: any): any {
         if (pointSet.size === 1 && chartType !== "bar") {
             onSetChartType("bar");
         }
-
+       
         return <FlotChart {...flotChartProps} />;
     }
 

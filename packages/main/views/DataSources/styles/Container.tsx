@@ -73,7 +73,7 @@ export const Container: any = styled.div<{theme:any}>`
             cursor: pointer;
         }
         .ds-settings {
-            background: ${({ theme }) => theme.background};
+            background: ${({ theme }) => theme.shadow};
         }
     }
 `;

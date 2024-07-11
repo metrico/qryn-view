@@ -113,6 +113,8 @@ export const ViewHeaderStyled = styled.div`
     display: flex;
     flex: 1;
     align-items: center;
+    padding:4px;
+    padding-bottom:8px;
     span {
       margin: 0px 3px;
       .exp {

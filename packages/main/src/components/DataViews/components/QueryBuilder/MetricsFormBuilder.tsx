@@ -13,12 +13,13 @@ import { initialMetricsBuilder, binaryOperatorOpts } from "./consts";
 import queryInit from "@ui/main/components/LabelBrowser/helpers/queryInit";
 
 export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
-    const { dataSourceId, labelValueChange, searchButton, logsRateButton } =
+    const { dataSourceId, labelValueChange, searchButton, logsRateButton,data } =
         props;
 
     const dataSources = useSelector((store: any) => store.dataSources);
-    const start = useSelector((store: any) => store.start);
-    const stop = useSelector((store: any) => store.stop);
+
+    const start = new Date(data?.start)
+    const stop = new Date(data?.stop)
 
     const [editorValue, setEditorValue] = useState(queryInit(""));
 
@@ -99,6 +100,8 @@ export function MetricsFormBuilder(props: MetricsFormBuilderProps) {
         <ThemeProvider theme={mainTheme}>
             <div className={cx(FlexColumn)}>
                 <FormBuilders
+                    start={start}
+                    stop={stop}
                     type={"metrics_search"}
                     addBinary={addBinaryOperation}
                     dataSourceId={dataSourceId}

@@ -3,13 +3,11 @@ import { useSelector } from "react-redux";
 import { QueryBarContainer } from "../styled";
 import ShowLabelsButton from "../Buttons/ShowLabelsButton";
 import QueryEditor from "@ui/plugins/queryeditor";
-import DOMPurify from "isomorphic-dompurify";
 import HistoryButton from "../Buttons/HistoryButton";
 import ShowLogsRateButton from "../Buttons/ShowLogsRateButton";
 import ShowLogsButton from "../Buttons/ShowLogsButton";
 
 type QueryBarContProps = {
-
     //booleans
     isTabletOrMobile: boolean;
     isBuilder: boolean;
@@ -22,16 +20,16 @@ type QueryBarContProps = {
     expr: string;
     queryValue: any;
     queryHistory: any;
-    labels:any;
+    labels: any;
 
     //handlers
-    handleQueryChange: (e:any) => void;
-    handleInputKeyDown: (e:any) => void;
-    handleHistoryClick: (e:any) => void;
+    handleQueryChange: (e: any) => void;
+    handleInputKeyDown: (e: any) => void;
+    handleHistoryClick: (e: any) => void;
 
     //events
-    onSubmit: (e:any) => void;
-    onSubmitRate: (e:any) => void;
+    onSubmit: (e: any) => void;
+    onSubmitRate: (e: any) => void;
 };
 
 const QueryBarCont: React.FC<QueryBarContProps> = (props) => {
@@ -52,7 +50,7 @@ const QueryBarCont: React.FC<QueryBarContProps> = (props) => {
     } = props;
     const isSplit = useSelector((store: any) => store.isSplit);
     const dType = (type: string) => dataSourceType === type;
-  
+
     const buttonsHidden = () =>
         !isSplit && dataSourceType !== "flux" && dataSourceType !== "traces";
 

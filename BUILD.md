@@ -9,13 +9,13 @@
 ##### install: 
 
 ```bash
-~/$ npm install
+~/$ pnpm install
 ```
 
 ##### serve (development mode): 
 
 ```bash
-~/$ npm start
+~/$ pnpm dev
 ```
 
 will serve the UI on ``http://localhost:8080``
@@ -24,7 +24,7 @@ will serve the UI on ``http://localhost:8080``
  
 
 ```bash
-~/$ npm run build
+~/$ pnpm run build
 ```
 #### *Serve (dist):*
 
@@ -37,7 +37,7 @@ will serve the UI on ``http://localhost:8080``
 2 - Serve 
 
 ```bash
-~/$ serve -s build
+~/$ serve -s ./packages/main/dist
 ```
 
 will serve by default the UI on ``http://localhost:3000``
@@ -54,5 +54,5 @@ will serve by default the UI on ``http://localhost:3000``
 - ``API_URL`` default: ``http://localhost:3100``
 
 ```bash
-~/$ HOST=localhost PORT=8080 API_URL=http://qryn-host:3100 npm start
+~/$ HOST=localhost PORT=8080 API_URL=http://qryn-host:3100 pnpm dev
 ```

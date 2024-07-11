@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import dayjs from "dayjs";
 import { DATE_FORMAT } from "../consts";
+import { LABEL_VALUE_STORE } from "../consts";
+import { getSeriesArraySelector } from "../helpers";
 
 type CardinalityTotal = {
     amount: number;
@@ -57,10 +59,36 @@ type CardinalityState = {
     setTsdbStatus: (tsdbStatus: any) => void;
 };
 
+const prevData = () => {
+    let timeSeriesSelector = "";
+    let date = dayjs().format(DATE_FORMAT);
+    try {
+       const local = localStorage.getItem(LABEL_VALUE_STORE)
+          if( local && local?.length > 0) {
+            timeSeriesSelector = getSeriesArraySelector(local.split(" "))
+          }
+    } catch (e) {
+        timeSeriesSelector = "";
+    }
+
+    try {
+        const localDate = JSON.parse(
+            localStorage.getItem("currentCardinalityDate")
+        );
+        if (localDate && localDate.value) {
+            date = localDate.value;
+        }
+    } catch (e) {
+        date = dayjs().format(DATE_FORMAT);
+    }
+
+    return { timeSeriesSelector, date };
+};
+
 const initialData = {
     total: { amount: 0, prev: 0, diff: 0, quota: 0 },
 
-    date: dayjs().format(DATE_FORMAT),
+    date: prevData()["date"],
 
     timeRange: {
         end: toTimeSeconds(new Date()),
@@ -68,7 +96,7 @@ const initialData = {
     },
     responseType: ResponseEnum.NODE,
     isUpdating: false,
-    timeSeriesSelector: "",
+    timeSeriesSelector: prevData()["timeSeriesSelector"],
     focusLabel: "",
     limitEntries: 10,
     deletedQueries: [],
@@ -97,7 +125,9 @@ const useCardinalityStore = create<CardinalityState>((set) => ({
     setDate: (day: string) => set(() => ({ date: day })),
     setDeletedQueries: (query: string) =>
         set((state) => ({ deletedQueries: [...state.deletedQueries, query] })),
-    reset: () => set(() => ({ ...initialParams })),
+    reset: () => set(() => {
+        localStorage.setItem(LABEL_VALUE_STORE,"")
+       return ({ ...initialParams })}),
     setIsLoading: (isLoading: boolean) => set(() => ({ isLoading })),
     setResponseType: (responseType: ResponseType) =>
         set(() => ({ responseType })),

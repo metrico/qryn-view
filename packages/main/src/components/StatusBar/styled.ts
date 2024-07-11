@@ -93,17 +93,17 @@ export const ApiSelectorButton = styled(BtnSmall)`
     color: ${(props: any) => props.theme.contrast};
     text-overflow: ellipsis;
     transition: 0.2s all;
-    display:flex;
-    align-items:center;
+    display: flex;
+    align-items: center;
     height: 26px;
     &:hover {
         background: ${(props: any) => props.theme.lightNeutral};
     }
     span {
-        margin:0;
-        padding:0;
+        margin: 0;
+        padding: 0;
         @media screen and (max-width: 565px) {
-        display: none;
+            display: none;
         }
     }
 `;
@@ -118,15 +118,33 @@ export const ApiSelectorInput = styled(InputSmall)`
     }
 `;
 
+// we should use central , lef and right properties in here
 
-export const DatePickerButton: any = styled(BtnSmall)`
+export const DatePickerButton: any = styled.button`
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    cursor: pointer;
+    user-select: none;
+    border: none;
+    border-radius: ${(props: any) => {
+        switch (props.side) {
+            case "central":
+                return "0px";
+            case "left":
+                return "10px 0px 0px 10px";
+            case "right":
+                return "0px 10px 10px 0px";
+            case "individual":
+                return "10px";
+        }
+    }};
+    padding: 0px 6px;
+    white-space: nowrap;
     background: ${(props: any) => props.theme.neutral};
-    border: 1px solid ${(props: any) => props.theme.accentNeutral};
+    border: 1px solid ${(props: any) => props.theme.deep};
     color: ${(props: any) => props.theme.contrast};
-    border-radius: 3px;
     height: 26px;
-    margin:0px 1px;
-    padding: ${(props: any) => props.size === 'small' ? '3px 5px' : ''};
     span {
         margin-left: 5px;
     }
@@ -140,7 +158,8 @@ export const DatePickerButton: any = styled(BtnSmall)`
 `;
 export const UrlCopyButton: any = styled(DatePickerButton)`
     background: ${(props: any) => props.theme.neutral};
-    color: ${({ isActive, theme }: any) => (isActive ? "orange" : theme.contrast)};
+    color: ${({ isActive, theme }: any) =>
+        isActive ? "orange" : theme.contrast};
     cursor: ${({ isActive }: any) => (isActive ? "pointer" : "not-allowed")};
     text-overflow: ellipsis;
     transition: 0.2s all;
@@ -149,11 +168,10 @@ export const UrlCopyButton: any = styled(DatePickerButton)`
         margin-left: 4px;
         color: ${(props: any) => props.theme.contrast};
         @media screen and (max-width: 565px) {
-        display: none;
-    }
+            display: none;
+        }
     }
     &:hover {
         background: ${(props: any) => props.theme.lightNeutral};
     }
-    
 `;

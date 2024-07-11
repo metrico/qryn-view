@@ -12,7 +12,6 @@ export interface HeaderProps {
 }
 
 export function Header(props: HeaderProps) {
-    console.log(props)
     const navigate = useNavigate();
     const theme = useTheme();
     const urlLocation = useSelector((store: any) => store.urlLocation);
@@ -35,7 +34,7 @@ export function Header(props: HeaderProps) {
         ) {
             navigate(-1);
         } else {
-            navigate("/");
+            navigate("");
         }
     };
 

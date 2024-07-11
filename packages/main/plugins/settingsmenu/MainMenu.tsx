@@ -115,7 +115,7 @@ export default function MainMenu() {
                 </MenuItem>
                 <Divider />
 
-                <Link to="/">
+                <Link to="">
                     <MenuItem className={"item"}>
                         <TravelExploreIcon className="icon" />
                         Search

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     DialogCancelButton,
     DialogConfirmButton,
@@ -14,7 +14,6 @@ import {
     FormControlLabel,
     FormGroup,
     Tooltip,
-    Typography,
 } from "@mui/material";
 
 import { ThemeProvider } from "@mui/styles";
@@ -25,22 +24,41 @@ import { queryUpdater } from "./helpers";
 import useCardinalityStore from "./store/CardinalityStore";
 import { QrynTheme } from "@ui/theme/types";
 
-const AlertCont = styled.div`
-    background: ${({ theme }: any) => theme.shadow};
+const AlertCont = styled.div<{theme?:QrynTheme}>`
+    background: ${({ theme }) => theme.shadow};
     #alert-dialog-title {
-        color: ${({ theme }: any) => theme.contrast};
+        color: ${({ theme }) => theme.contrast};
         span {
-            color: ${({ theme }: any) => theme.primary};
+            color: ${({ theme }) => theme.primary};
             padding: 2px 4px;
             border-radius: 3px;
             font-family: monospace;
         }
+        code {
+            color: ${({ theme }) => theme.contrast};
+            font-family: monospace;
+            max-width: 100%;
+            font-size: 0.8em;
+            background: ${({ theme }) => theme.background};
+            display: flex;
+            flex:1;
+            padding: 0.5em;
+            word-wrap: break-word;
+            border-radius: 4px;
+
+        }
     }
     #alert-dialog-description {
-        color: ${({ theme }: any) => theme.lightContrast};
+        color: ${({ theme }) => theme.lightContrast};
         font-weight: normal;
+        code {
+            color: ${({ theme }) => theme.contrast};
+            font-family: monospace;
+            max-width: 100%;
+            font-size: 0.8em;
+        }
         em {
-            color: ${({ theme }: any) => theme.contrast};
+            color: ${({ theme }) => theme.contrast};
             font-variant: italic;
         }
     }
@@ -116,14 +134,14 @@ export function CheckboxWithLabel({
                     />
                 }
                 label={
-                    <Typography
+                    <span
                         style={{
                             fontSize: "14px",
                             color: theme.contrast,
                         }}
                     >
                         {text}
-                    </Typography>
+                    </span>
                 }
             />
         </FormGroup>
@@ -138,12 +156,24 @@ export default function CardinalityDialog({
     isLoading,
     isCustom = false,
     query = "",
-    labelsRelated = [],
+   // labelsRelated = [],
 }: CardinalityDialogProps) {
     const [open, setOpen] = useState(false);
     const [confirmRemove, setConfirmRemove] = useState(false);
+    const [queryMatchText, setQueryMatchText] = useState("");
     const theme = useTheme();
     const { focusLabel, timeSeriesSelector: match } = useCardinalityStore();
+
+    useEffect(() => {
+        if (open) {
+            if(queryUpdater[source]) {
+                const matchText = queryUpdater[source]({ query: label, match, isDialog:true });
+                const commaspaced = matchText.replace(/[,]/g,", ")
+                setQueryMatchText(commaspaced);
+            }
+          
+        }
+    }, [open]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -219,30 +249,32 @@ export default function CardinalityDialog({
                                 <>
                                     Are you sure you want to clear the{" "}
                                     <span>{value}</span> fingerprints with query{" "}
-                                    {query}?
+                                    <code>{query}</code>?
                                 </>
                             ) : (
+                                // this is the one that should match the query
                                 <>
                                     Are you sure you want to clear the{" "}
-                                    <span>{value}</span> fingerprints with label{" "}
-                                    <span>{label}</span> from{" "}
-                                    <span>{source}</span>?
+                                    <span>{value}</span> fingerprints with{" "}
+                                    <code>{queryMatchText}</code>
+                                    request?
                                 </>
                             )}
                         </DialogTitle>
 
                         <DialogContent>
                             <DialogContentText id="alert-dialog-description">
-                                <p style={{ marginTop: "10px" }}>
+                                <span style={{ marginTop: "10px" }}>
                                     Click <em>Delete Fingerprints</em> to delete
                                     your fingerprints permanently
-                                </p>
-                                <p style={{ margin: "6px" }}>
+                                </span>
+                                <br />
+                                <span style={{ margin: "6px" }}>
                                     <em>
                                         Note that you will also be removing all
                                         fingerprints with labels related.
                                     </em>
-                                </p>
+                                </span>
 
                                 <CheckboxWithLabel
                                     checked={confirmRemove}

@@ -34,10 +34,8 @@ export const StyledTabsCont = (theme: any) => css`
 `;
 
 const iconButtonStyle = {
-    fontSize: "15px",
+    fontSize: "18px",
     cursor: "pointer",
-    padding: "3px",
-    marginLeft: "10px",
 };
 
 export function QueryItemContainer(props: any) {
@@ -166,7 +164,7 @@ export function QueryItemContainer(props: any) {
             ];
         }
         localStorage.setItem("dsSelected", JSON.stringify(newDsLocal));
-        
+
         setDataSourceValue(() => optSelected);
 
         panelCP.forEach((panelCP: any) => {
@@ -272,7 +270,7 @@ export function QueryItemContainer(props: any) {
                     )}
                 </div>
 
-                {(!isEmbed && !isCardinality) && (
+                {!isEmbed && !isCardinality && (
                     <div className="query-tools">
                         <div
                             style={{ display: "flex", alignItems: "center" }}
@@ -308,10 +306,12 @@ export function QueryItemContainer(props: any) {
                             />
 
                             <Tooltip title={"Sync Time Ranges"}>
-                                <SyncIcon
-                                    style={iconButtonStyle}
-                                    onClick={onSyncTimeRanges}
-                                />
+                                <button className="sync-btn">
+                                    <SyncIcon
+                                        style={iconButtonStyle}
+                                        onClick={onSyncTimeRanges}
+                                    />
+                                </button>
                             </Tooltip>
 
                             <DataSourceSelect
@@ -321,10 +321,12 @@ export function QueryItemContainer(props: any) {
                                 opts={dataSourceOptions}
                                 label={""}
                             />
-                            <AddOutlinedIcon
-                                style={iconButtonStyle}
-                                onClick={props.onAddQuery}
-                            />
+                            <button className="add-btn">
+                                <AddOutlinedIcon
+                                    style={iconButtonStyle}
+                                    onClick={props.onAddQuery}
+                                />
+                            </button>
                             <SplitViewButton
                                 type="remove"
                                 onDeleteQuery={props.onDeleteQuery}
@@ -342,7 +344,7 @@ export function QueryItemContainer(props: any) {
 
 export type QueryTitleProps = {
     isEmbed: boolean;
-    onIdRefUpdate: (e:any) => void;
+    onIdRefUpdate: (e: any) => void;
     expr: string;
     isQueryOpen: any;
     idRef: string;

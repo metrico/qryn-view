@@ -1,5 +1,6 @@
 import  { useEffect, useState, ChangeEvent } from "react";
 import useCardinalityStore from "./store/CardinalityStore";
+import { LABEL_VALUE_STORE } from "./consts";
 import { useCardinalityRequest } from "./api/CardinalityRequest";
 
 
@@ -42,6 +43,15 @@ const {handleCardinalityRequest} = useCardinalityRequest();
     }, [limitEntries]);
 
     const onTimeSeriesChange = (e: any) => {
+        if(e.target.value.trim()===""){
+            // store empty local value
+            localStorage.setItem(LABEL_VALUE_STORE,"")
+        }
+       // store simplifyed version of query
+        const striped = e.target.value.replace(/[{}"]/g, "").replace(/[,]/g," ")
+        localStorage.setItem(LABEL_VALUE_STORE, striped)
+    
+        
         setQuery(() => e.target.value);
     };
 
@@ -52,6 +62,12 @@ const {handleCardinalityRequest} = useCardinalityRequest();
             setHistoryItem("timeSeriesSelector", query);
         }
     };
+
+    const onReset = () => {
+       reset()
+       setHistoryItem("timeSeriesSelector", "");
+
+    }
 
     const onFocusLabeChange = (e: any) => {
         setFocus(() => e.target.value);
@@ -82,7 +98,6 @@ const {handleCardinalityRequest} = useCardinalityRequest();
     const onQueryHistoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
         setTimeSeriesSelector(e.target.innerText);
-
         handleCardinalityRequest({match:e.target.innerText});
     };
 
@@ -114,6 +129,7 @@ const {handleCardinalityRequest} = useCardinalityRequest();
         limit,
         totalSeries,
         reset,
+        onReset,
         date
     }
 

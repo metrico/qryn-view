@@ -28,6 +28,7 @@ export function FlotChart(props: any) {
                             justifyContent: "center",
                             fontSize: "12px",
                             color: theme.contrast,
+                            paddingTop:"8px"
                         }}
                     >
                         Logs Volume

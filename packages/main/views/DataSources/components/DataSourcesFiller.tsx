@@ -1,11 +1,12 @@
 import { Switch } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { css, cx } from "@emotion/css";
 import { useDispatch, useSelector } from "react-redux";
 import setDataSources from "../store/setDataSources";
 import { Button, Field } from "../ui";
 import DOMPurify from "isomorphic-dompurify";
 import useTheme from "@ui/theme/useTheme"
+import {z} from 'zod'
 const InlineFlex = (theme: any) => css`
     display: flex;
     flex-direction: column;
@@ -50,42 +51,31 @@ const ForAllButton = css`
     flex: 1;
 `;
 
+// set a global url for all datasources
+
+export const urlSchema = z.string().url()
+
+const DEFAULT_URL = window.location.origin
+
 export const DataSourcesFiller = (props: any) => {
+
     const [url, setUrl] = useState("");
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
     const [oneForAll, setOneForAll] = useState(false);
     const [basicAuth, setBasicAuth] = useState(false);
+    const [urlValid, setUrlValid] = useState(false)
     const dataSources = useSelector((store: any) => store.dataSources);
     const dispatch: any = useDispatch();
     const submitMessage = "Save";
     const theme = useTheme();
 
-    const urlChange = (e: any) => {
-           const value = e?.target?.value || "";
-    const strippedValue = value.replace(/\/$/, '');
-        setUrl(() => strippedValue);
-    };
-    const userChange = (e: any) => {
-        setUser(() => e.target.value);
-    };
-    const passwordChange = (e: any) => {
-        setPassword(() => e.target.value);
-    };
-
-    const onSwitchChange = (e: any) => {
-        setOneForAll(() => e.target.checked);
-    };
-
-    const onBasicAuthChange = (e: any) => {
-        setBasicAuth(() => e.target.checked);
-    };
-
-    const onUseForAll = (e: any) => {
+    const onUseForAll = (defaultUrl="") => {
+        const changedUrl = defaultUrl === "" ? url : defaultUrl
         const prevDs = JSON.parse(JSON.stringify(dataSources));
         const newDs = prevDs?.map((m: any) => ({
             ...m,
-            url,
+            url:changedUrl,
             auth: {
                 ...m.auth,
                 basicAuth: { ...m.auth.basicAuth, value: basicAuth },
@@ -107,6 +97,47 @@ export const DataSourcesFiller = (props: any) => {
         dispatch(setDataSources(newDs));
     };
 
+    useEffect(()=>{
+        if (url === ""){
+            
+            if(dataSources[0]?.url === "" && dataSources[1]?.url === "") {
+                setUrl(DEFAULT_URL)
+                onUseForAll(DEFAULT_URL)
+            } else  {
+                setUrl(dataSources[0]?.url)
+            }
+    
+            setOneForAll(true)
+            setUrlValid(true)
+        } 
+      
+    },[url])
+
+    const urlChange = (e: any) => {
+           const value = e?.target?.value || "";
+        const message = urlSchema.safeParse(value)
+       
+        setUrlValid(()=> message.success)
+
+           setUrl(() => value);
+    };
+    const userChange = (e: any) => {
+        setUser(() => e.target.value);
+    };
+    const passwordChange = (e: any) => {
+        setPassword(() => e.target.value);
+    };
+
+    const onSwitchChange = (e: any) => {
+        setOneForAll(() => e.target.checked);
+    };
+
+    const onBasicAuthChange = (e: any) => {
+        setBasicAuth(() => e.target.checked);
+    };
+
+
+
     return (
         <div className={cx(InlineFlex(theme))}>
             <div className={cx(oneForAllStyle)}>
@@ -123,7 +154,7 @@ export const DataSourcesFiller = (props: any) => {
                         value={DOMPurify.sanitize(url)}
                         label={"url"}
                         onChange={urlChange}
-                        placeholder={"http://qryn.dev"}
+                        placeholder={window.location.origin}
                     />
                     {basicAuth && (
                         <>
@@ -154,10 +185,13 @@ export const DataSourcesFiller = (props: any) => {
                         </div>
                         <Button
                             value={DOMPurify.sanitize(submitMessage)}
+                            disabled={!urlValid}
+
                             onClick={onUseForAll}
                             editing={false}
-                            primary={true}
+                            primary={urlValid}
                         />
+                    
                     </div>
                 </div>
             )}

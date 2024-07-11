@@ -1000,7 +1000,6 @@ const QueryHistory = () => {
         const url = new URL(item);
         const { hash } = url;
         const params = new URLSearchParams(hash.replace(/#/, ""));
-        params.set("label", label);
         const locationWithLabel = new URL(window.location.href);
         locationWithLabel.hash = `#${params.toString()}`;
         const copyText =

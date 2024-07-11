@@ -35,7 +35,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <React.StrictMode>
         <CookiesProvider>
             <Provider store={store}>
-                <HashRouter basename="/">
+                <HashRouter basename="">
                     <Suspense fallback={<ScreenLoader />}>
                         <Routes>
                             <Route path="/" element={<AppRoute />}>

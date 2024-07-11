@@ -11,7 +11,7 @@ const Icons: any = {
 export const Icon = ({ icon, style }: any) => {
     return (
         <img
-            height="40px"
+            height="20px"
             className="logo"
             style={style}
             src={Icons[icon] || logs_icon}

@@ -45,7 +45,7 @@ export default function useLabels(id:string, dataSourceURL = "", startTs?:string
         }
 
         return current;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [id, dataSources]);
 
     const [type, setType] = useState(currentDataSource.type || "");
@@ -66,7 +66,7 @@ export default function useLabels(id:string, dataSourceURL = "", startTs?:string
 
     useEffect(() => {
         setUrl(getUrlFromType(currentDataSource.url, type, timeStart, timeEnd));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [setUrl, type, currentDataSource]);
 
     const [response, setResponse] = useState([]);
@@ -145,7 +145,7 @@ export default function useLabels(id:string, dataSourceURL = "", startTs?:string
             };
             apiRequest();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [url, currentDataSource]);
 
     return {

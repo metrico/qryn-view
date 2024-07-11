@@ -69,7 +69,7 @@ Install Serve (npm serve)
 ```bash
 sudo npm i -g serve
 
-serve -s build
+serve -s ./packages/main/dist
 ```
 ---
 
@@ -88,16 +88,43 @@ _Use the [public client](https://view.cloki.org) _(no data goes through the serv
 #### Environment Variables:
 
 - ``HOST`` default: `` 0.0.0.0``
+
 - ``PORT`` default: ``8080``
+
 - ``API_URL`` default: ``http://localhost:3100``
+
 
 ##### Example 
 ```bash
-~/$ HOST=localhost PORT=8080 API_URL=http://qryn-host:3100 npm start
+~/$ HOST=localhost PORT=8080 API_URL=http://qryn-host:3100 pnpm dev
 ```
 ------------
+
+##### Available Routes
+
+- qryn-view works under a hash router to make it flexible for static deployments and simpler to run over a single route.
+
+Current available routes: 
+
+`/#/datasources` : Datasources settings
+
+
+`/#/search` : Main search view
+
+
+`/#/users` : users reserved route
+
+
+`/#/plugins` : custom plugins 
+
+------------
+
 ##### URL Parameters
-_cLoki-view can be controlled through URL parameters__
+
+
+_qryn-view can be controlled globally through URL parameters__
+
+
 
 | param | description | default |
 |-------|-------------|---------|

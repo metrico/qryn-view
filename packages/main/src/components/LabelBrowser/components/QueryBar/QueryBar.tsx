@@ -342,7 +342,6 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
     function setLogsLevel(queryInput: string, isLogsVolume: boolean) {
         if (isLogsVolume && queryInput !== "") {
-            // eslint-disable-next-line
             let pureLabels = queryInput.match(/[^{\}]+(?=})/g);
             if (Array.isArray(pureLabels) && pureLabels?.length > 0) {
                 let pureLabelsString = `{${pureLabels?.join(",")}}`;
@@ -384,8 +383,12 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
         let customStep = 0;
 
+        const dateStart = new Date(start);
+        const dateStop = new Date(stop);
+
         if (query.includes(`$__interval`)) {
-            const timeDiff = (stop.getTime() - start.getTime()) / 1000;
+            const timeDiff =
+                (dateStop?.getTime() - dateStart?.getTime()) / 1000;
 
             const timeProportion = timeDiff / 30;
 
@@ -661,7 +664,10 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
         if (queryExpr.includes("$__interval")) {
             isMatrix = true;
-            const timeDiff = (data.stop.getTime() - data.start.getTime()) / 1000;
+
+            const timeStart = new Date(data?.start);
+            const timeStop = new Date(data?.stop);
+            const timeDiff = (timeStop.getTime() - timeStart.getTime()) / 1000;
             const timeProportion = timeDiff / 30;
             const screenProportion = Number(
                 (width / window.innerWidth).toFixed(1)
@@ -685,6 +691,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
     const updateLinksHistory = () => {
         const ds = dataSources.find((f: any) => f.id === dataSourceId);
         const storedUrl = saveUrl.add(
+            hash,
             {
                 data: {
                     href: window.location.href,
@@ -781,7 +788,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         querySearch: any,
         metricsSearch: any,
         logsSearch: any,
-        showResultButton: any
+       
     ) => {
         if (type === "traces") {
             return (
@@ -950,14 +957,6 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
                         handleLogValueChange={onLogChange}
                         handleLogsVolumeChange={onLogVolumeChange}
                     />,
-
-                    <ShowLogsButton
-                        disabled={!queryValid}
-                        onClick={onSubmit}
-                        loading={loading || false}
-                        isMobile={false}
-                        alterText={"Search Trace"}
-                    />
                 )}
 
                 {!isSplit &&

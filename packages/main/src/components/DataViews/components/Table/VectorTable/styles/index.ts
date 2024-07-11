@@ -5,6 +5,7 @@ export const TableStyles = styled.div`
     overflow: auto;
     &::-webkit-scrollbar {
         width: 5px;
+        height: 5px;
     }
     &::-webkit-scrollbar-corner {
         background: transparent;
@@ -97,7 +98,7 @@ export const TableStyles = styled.div`
     }
 `;
 
-export const getStyles = (props: any, align = "left") => [
+export const getStyles = (props: any ) => [
     props,
     {
         style: {

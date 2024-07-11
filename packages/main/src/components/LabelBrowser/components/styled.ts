@@ -13,10 +13,11 @@ export const HistoryIconStyled: any = styled(HistoryIcon)`
 export const HistoryButtonStyled: any = styled(BtnSmall)`
     background: none;
     margin-left: 5px;
+    padding: 0px 8px;
     color: ${(props) => props.theme.contrast};
     background: ${(props) => props.theme.neutral};
     border: 1px solid ${(props) => props.theme.accentNeutral};
-    height: 28px;
+    height: 26px;
     span {
         margin-left: 5px;
     }
@@ -31,10 +32,12 @@ export const ShowLabelsBtn: any = styled(BtnSmall)`
     border: 1px solid ${(props) => props.theme.accentNeutral};
     text-overflow: ellipsis;
     transition: 0.25s all;
-    padding-left: 6px;
+    padding: 0px 2px;
+    padding-right: 8px;
+    margin-left: 4px;
     justify-content: flex-start;
     color: ${({ theme }: any) => theme.contrast};
-    height: 28px;
+    height: 26px;
     &:hover {
         background: ${({ theme }: any) => theme.lightNeutral};
     }
@@ -55,13 +58,12 @@ export const QueryBarContainer: any = styled.div`
 export const ShowLogsBtn: any = styled(BtnSmall, {
     shouldForwardProp: (prop) => isPropValid(prop) && prop !== "loading",
 })`
-    background: ${(props) =>
-        props.loading ? "#44bcd8" : props.theme.primary};
+    background: ${(props) => (props.loading ? "#44bcd8" : props.theme.primary)};
     border: 1px solid ${(props) => props.theme.primaryAccent};
     color: ${(props) => props.theme.maxContrast};
     transition: 0.25s all;
     justify-content: center;
-    height: 28px;
+    height: 26px;
     margin: 0px 4px;
     &:hover {
         background: ${(props) => props.theme.primaryLight};
@@ -85,7 +87,7 @@ export const ShowSettingsBtn: any = styled(BtnSmall)`
     color: ${(props) => props.theme.contrast};
     background: ${(props) => props.theme.neutral};
     border: 1px solid ${(props) => props.theme.accentNeutral};
-    height: 28px;
+    height: 26px;
     span {
         margin-left: 5px;
     }

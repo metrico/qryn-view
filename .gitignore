@@ -1,2 +1,6 @@
 /node_modules/*
 dist
+server
+.env
+*.cookie
+packages/main/.env

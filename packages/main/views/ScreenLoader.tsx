@@ -1,6 +1,7 @@
-import useTheme from "@ui/theme/useTheme"
+import useTheme from "@ui/theme/useTheme";
 import { cx } from "@emotion/css";
 import { QrynLogo } from "./DataSources/ui";
+
 import {
     LoaderCont,
     LogoCont,

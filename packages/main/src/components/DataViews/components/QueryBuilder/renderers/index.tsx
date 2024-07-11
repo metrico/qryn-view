@@ -19,8 +19,8 @@ import { OperationsManager } from "../builders/OperationsManager";
 /// it renders the label = value selectors
 /**
  * Sets a default Logs Volume operation
- * @param query 
- * @returns 
+ * @param query
+ * @returns
  */
 
 const setOperationForLogsVolume = (query: string) => {
@@ -38,6 +38,8 @@ export interface LabelValuesSelectorsProps {
     setLabelValueString: any;
     setBuilders: any;
     index: number;
+    start: any;
+    stop: any;
 }
 
 export type LabelValuesSelectorsFn = (
@@ -60,10 +62,12 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
         setLabelValueString,
         setBuilders,
         index,
+        start,
+        stop,
     } = props;
 
     const [labelValuesState, setLabelValuesState] = useState<Label[]>(
-        props.labelValuesState ||[ {...InitialLabelValueState}]
+        props.labelValuesState || [{ ...InitialLabelValueState }]
     );
 
     // manage the labelValuesState at builder scope
@@ -85,7 +89,7 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
     };
 
     // adds a new labelValue to list, should be at labelValue side
-    const onAdd = (e: any) => {
+    const onAdd = () => {
         setLabelValuesState((prev: Label[]) => {
             return [...prev, { ...NewLabel, id: nanoid() }];
         });
@@ -96,7 +100,7 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
         const labelFound = labelValuesState?.some((f) => f.id === e.id);
         if (labelValuesState?.length === 1 && !labelFound) {
             setLabelValuesState(() => [e]);
-            setLabelValueString(() => JSON.stringify([e])); 
+            setLabelValueString(() => JSON.stringify([e]));
         }
 
         const prevState = [...labelValuesState];
@@ -117,9 +121,8 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
     useEffect(() => {
         const labValue = labelValueString || JSON.stringify("");
         const logsString = logsToString(JSON.parse(labValue));
-        setLabelsString(logsString)
+        setLabelsString(logsString);
         setFinalQuery(logsString);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [labelValueString]);
 
     // update builder state at label values change
@@ -140,16 +143,14 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
                 return builder;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [labelValuesState]);
-
 
     /**
      *
      * resets the label values state to it's initial value
      */
     const resetLabelsState = () => {
-        setLabelValuesState(() => [{...InitialLabelValueState}]);
+        setLabelValuesState(() => [{ ...InitialLabelValueState }]);
     };
 
     if (Array.isArray(labelValuesState)) {
@@ -158,6 +159,8 @@ export const LabelValuesSelectors: LabelValuesSelectorsFn = (props) => {
                 {labelValuesState?.length > 0 &&
                     labelValuesState?.map((keyval: any, key: number) => (
                         <LogLabelValueForm
+                            start={start}
+                            stop={stop}
                             dataSourceId={dataSourceId}
                             id={keyval.id}
                             key={key}
@@ -195,16 +198,22 @@ export const OperationFunctions = (props: any) => {
         addBinary,
         setBuilders,
         index,
+        start,
+        stop,
     } = props;
-    const { labelSeries } = useLabelSeries(dataSourceId, labelsString);
+    const { labelSeries } = useLabelSeries(
+        dataSourceId,
+        labelsString,
+        start,
+        stop
+    );
     const [operations, setOperations] = useState<any>(props.operations || []);
 
     useEffect(() => {
         if (labelValueString !== "") {
-            let res = OperationsManager(labelValueString, operations); 
+            let res = OperationsManager(labelValueString, operations);
             setFinalQuery(res);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [operations, labelValueString]);
 
     // add new operation function
@@ -225,7 +234,7 @@ export const OperationFunctions = (props: any) => {
                 setOperatorByType(opType, initialOperator, prev)
             );
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
         [operations, labelSeries, labelsString]
     );
 
@@ -240,7 +249,6 @@ export const OperationFunctions = (props: any) => {
                 return builder;
             });
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [operations]);
 
     return (

@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { QrynTheme } from "@ui/theme/types";
 
 export const MainViewStyled = styled.div`
     padding-top: 5px;
