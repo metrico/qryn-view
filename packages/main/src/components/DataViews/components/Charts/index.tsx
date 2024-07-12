@@ -43,7 +43,7 @@ export default function QrynChart(props: any): any {
     const { matrixData, actualQuery, type } = props;
     const { tWidth } = props;
 
-    const { expr, dataSourceType, queryType, limit, panel, id, isLogsVolume } =
+    const { expr, dataSourceType, queryType, limit, panel, id, isLogsVolume, start, stop } =
         actualQuery;
 
     const chartRef = useRef(null);
@@ -94,13 +94,24 @@ export default function QrynChart(props: any): any {
     const [chartType, setChartType] = useState(getInitialChartType);
 
     function plotChartData(data: any, type: any, element: any) {
+        console.log(data)
         let barWidth = 0;
         if (isLogsVolume && type === "stream") {
             barWidth = getBarWidth(getTimeSpan(data), tWidth);
         }
 
         const chartSeries = setChartTypeSeries(type, barWidth);
-        const { timeformat, min, max } = formatDateRange(data);
+        console.log( new Date(start).getTime())
+        console.log( new Date(stop).getTime() )
+
+        const startDate = (new Date(start).getTime()) * 1000
+
+        const stopDate = ( new Date(stop).getTime() ) * 1000
+        
+        const { timeformat, min, max } = formatDateRange(data, startDate, stopDate);
+        console.log(min, max)
+        console.log(data)
+        console.log(timeformat, min, max)
         return $q.plot(
             element,
             data,
@@ -129,8 +140,10 @@ export default function QrynChart(props: any): any {
     }
 
     function setRanges(event: any, ranges: any) {
+        console.log("setRanges triggered")
         const element = $q(chartRef.current);
         const data = isSpliced ? chartData : allData;
+
         event.preventDefault();
 
         let newData = [];
@@ -176,6 +189,12 @@ export default function QrynChart(props: any): any {
         }
 
         try {
+           // const startDate = (new Date(start).getTime()) * 1000
+
+           // const stopDate = ( new Date(stop).getTime() ) * 1000
+
+           const { first, last} = getTimeSpan (newData )
+
             let plot = $q.plot(
                 element,
                 newData,
@@ -183,7 +202,7 @@ export default function QrynChart(props: any): any {
                     xaxis: {
                         min: ranges.xaxis.from - 100000,
                         max: ranges.xaxis.to + 100000,
-                        timeformat: formatDateRange(newData).timeformat,
+                        timeformat: formatDateRange(newData, first, last).timeformat,
                     },
                 })
             );
@@ -262,7 +281,11 @@ export default function QrynChart(props: any): any {
                 }
             });
 
-            const { timeformat, min, max } = formatDateRange(dataSelected);
+            const startDate = (new Date(start).getTime()) * 1000
+
+            const stopDate = ( new Date(stop).getTime() ) * 1000
+
+            const { timeformat, min, max } = formatDateRange(dataSelected, startDate, stopDate);
             let barWidth = 0;
             if (isLogsVolume && type === "stream") {
                 barWidth = getBarWidth(getTimeSpan(dataSelected), tWidth);
@@ -303,7 +326,11 @@ export default function QrynChart(props: any): any {
                     shadowSize: 0,
                 };
             });
-            const { timeformat, min, max } = formatDateRange(newData);
+            const startDate = (new Date(start).getTime()) * 1000
+
+            const stopDate = ( new Date(stop).getTime() ) * 1000
+
+            const { timeformat, min, max } = formatDateRange(newData, startDate, stopDate);
 
             let plot = $q.plot(
                 element,
@@ -352,7 +379,11 @@ export default function QrynChart(props: any): any {
                 barWidth = getBarWidth(getTimeSpan(newData), tWidth);
             }
 
-            const { timeformat, min, max } = formatDateRange(newData);
+            const startDate = (new Date(start).getTime()) * 1000
+
+            const stopDate = ( new Date(stop).getTime() ) * 1000
+
+            const { timeformat, min, max } = formatDateRange(newData, startDate, stopDate);
 
             let { bars, lines, points, stack } = getSeriesFromChartType(
                 chartType,
