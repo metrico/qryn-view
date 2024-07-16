@@ -12,7 +12,6 @@ import {
     RankingInfo,
 } from "@tanstack/match-sorter-utils";
 
-
 export const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     // Rank the item
     const itemRank = rankItem(row.getValue(columnId), value);
@@ -49,24 +48,22 @@ export const defaultColumn: Partial<ColumnDef<any>> = {
     cell: (info: any) => info.getValue(),
 };
 
-
 export const getTableMeta = (
     setData: React.Dispatch<React.SetStateAction<any[]>>,
     skipAutoResetPageIndex: () => void
-) =>
-    ({
-        updateData: (rowIndex, columnId, value) => {
-            // Skip age index reset until after next rerender
-            skipAutoResetPageIndex();
-            setData((old) =>
-                old.map((row, index) => {
-                    if (index !== rowIndex) return row;
+): TableMeta => ({
+    updateData: (rowIndex, columnId, value) => {
+        // Skip age index reset until after next rerender
+        skipAutoResetPageIndex();
+        setData((old) =>
+            old.map((row, index) => {
+                if (index !== rowIndex) return row;
 
-                    return {
-                        ...old[rowIndex]!,
-                        [columnId]: value,
-                    };
-                })
-            );
-        },
-    } as TableMeta);
+                return {
+                    ...old[rowIndex]!,
+                    [columnId]: value,
+                };
+            })
+        );
+    },
+});
