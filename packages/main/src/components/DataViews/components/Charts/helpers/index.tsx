@@ -131,13 +131,11 @@ export const getBarWidth = (tSpan: TimeSpan, width: number) => {
 
 export function formatDateRange(data: any, start, stop) {
 
-    console.log(start, stop)
 
-    const { timeSpan, first, last } = getTimeSpan(data);
 
-    console.log(first, last)
+    // first and last should be only when selecting with range
+     const { timeSpan, } = getTimeSpan(data);
 
-    console.log(timeSpan)
     const formatted =
         timeSpan > 0
             ? "%m/%d %H:%M"

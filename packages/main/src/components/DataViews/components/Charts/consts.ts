@@ -65,7 +65,7 @@ export const CHART_OPTIONS = (isLogsVolume = false) => ({
 // pass the bar width
 // calculate here the span width
 
-export const CHART_BAR_SERIES = (barWidth=0, isLogsVolume = false) => ({
+export const CHART_BAR_SERIES = (barWidth = 0, isLogsVolume = false) => ({
     stack: isLogsVolume,
     lines: {
         show: false,

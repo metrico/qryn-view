@@ -1,4 +1,4 @@
-import QrynChart from "../components/Charts";
+import QrynChart from "../components/Charts/QrynChart";
 import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
 import { Tabs } from "@mui/base";
