@@ -11,28 +11,19 @@ export type LinkedFieldsProps = {
     name: string;
     linkedFields: any;
     dataSources: any;
-    onDsChange: (prev:any) => void
-}
+    onDsChange: (prev: any) => void;
+};
 
 export const LinkedFields = (props: LinkedFieldsProps) => {
     const { linkedFields, name, id, dataSources, onDsChange } = props;
-
-    //const dataSources = useSelector((store: any) => store.dataSources);
-
-  //  const dispatch: any = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
-
     const onAddLinkedField = () => {
-        // modify to add linked filed into datasources => linkedFields
         const newLinked = new LinkedFieldItem();
         newLinked.dataSource = name;
         newLinked.create();
         const linkedClone = JSON.parse(JSON.stringify(linkedFields));
-
         const newList = [...linkedClone, { ...newLinked }];
-
         const prevDataSources = JSON.parse(JSON.stringify(dataSources));
-
         const newDataSources = prevDataSources?.map((m: any) => {
             if (m.id === id) {
                 return {
@@ -43,10 +34,7 @@ export const LinkedFields = (props: LinkedFieldsProps) => {
             return m;
         });
 
-        onDsChange( () => newDataSources)
-
-       // localStorage.setItem("dataSources", JSON.stringify(newDataSources));
-       // dispatch(setDataSources(newDataSources));
+        onDsChange(newDataSources);
     };
 
     const fieldEditing = () => {
@@ -68,17 +56,18 @@ export const LinkedFields = (props: LinkedFieldsProps) => {
                 />
 
                 <InputCont>
-                    {linkedFields?.map((val: any, key: any) => (
-                        <LinkedField
-                            key={key}
-                            {...val}
-                            dataSourceId={id}
-                            locked={false}
-                            fieldEditing={fieldEditing}
-                            dsChange={onDsChange}
-                            dataSources={dataSources}
-                        />
-                    ))}
+                    {linkedFields &&
+                        linkedFields?.map((val: any, key: any) => (
+                            <LinkedField
+                                key={key}
+                                {...val}
+                                dataSourceId={id}
+                                locked={false}
+                                fieldEditing={fieldEditing}
+                                dsChange={onDsChange}
+                                dataSources={dataSources}
+                            />
+                        ))}
                 </InputCont>
             </>
         );

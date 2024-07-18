@@ -57,7 +57,7 @@ export const urlSchema = z.string().url()
 
 const DEFAULT_URL = window.location.origin
 
-export const DataSourcesFiller = (props: any) => {
+export const DataSourcesFiller = () => {
 
     const [url, setUrl] = useState("");
     const [user, setUser] = useState("");

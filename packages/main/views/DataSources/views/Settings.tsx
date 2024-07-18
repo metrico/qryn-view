@@ -7,19 +7,15 @@ import {
     SectionHeader,
     AuthFields,
 } from "../components";
-//import setDataSources from "../store/setDataSources";
 
 import { DataSourceSettingsCont, InputCont, InputCol } from "../styles";
 import { Field } from "../ui";
 import { useStoreSettings } from "../hooks/useStoreSettings";
 
-
 export const Settings = (props: any) => {
- 
-    // sets the initial and editable data
-    const [settingsData, setSettingsData] = useState(props)
-    const { settings, setSettings } = useStoreSettings()
-  
+    const [settingsData, setSettingsData] = useState(props);
+    const { settings, storeSettings } = useStoreSettings();
+
     const [fieldErrors, setFieldErrors] = useState({
         url: false,
         protocol: false,
@@ -32,14 +28,12 @@ export const Settings = (props: any) => {
                 field[prop] = val;
             }
         });
-
         return arrayClone;
     };
 
     const [isEditing, setIsEditing] = useState(false);
 
     const checkURLProtocol = (value: URL | any) => {
-
         try {
             const current_protocol = window.location.protocol;
             const value_protocol = new URL(value)["protocol"];
@@ -52,8 +46,7 @@ export const Settings = (props: any) => {
     const onChange = (e: any, name: any) => {
         setIsEditing(() => true);
         const value = e.target.value;
-        console.log(value,name)
-        // check here if name === url
+
         if (name === "url") {
             const protocol_match = checkURLProtocol(value);
 
@@ -71,15 +64,10 @@ export const Settings = (props: any) => {
                     protocol: false,
                     url: false,
                 }));
+
                 const newVal = onFieldChange(name, value);
-                console.log(newVal)
-               setSettings( ()=> newVal)
 
-                //setSettingsData( (prev) => ({...prev, ...newVal}))
-
-                // localStorage.setItem("dataSources", JSON.stringify(newVal));
-                // dispatch(setDataSources(newVal));
-             //   saveSettings(newVal)
+                storeSettings(newVal);
 
                 setTimeout(() => {
                     setIsEditing(() => false);
@@ -88,25 +76,18 @@ export const Settings = (props: any) => {
         }
 
         const newVal = onFieldChange(name, value);
-        console.log(newVal)
-        setSettingsData(()=> newVal)
-       // setInitialDs(newVal)
-        //setSettingsData( () => newVal)
-       // localStorage.setItem("dataSources", JSON.stringify(newVal));
-       // dispatch(setDataSources(newVal));
-      // saveSettings(newVal)
-      setSettings(()=> newVal)
+        storeSettings(newVal);
         setTimeout(() => {
             setIsEditing(() => false);
         }, 800);
     };
 
-
-
-    useEffect(()=>{
-        setSettingsData((prev) => ({ ...prev, ...settings?.find(f => f.id === prev.id)}))
-
-    },[settings])
+    useEffect(() => {
+        setSettingsData((prev) => ({
+            ...prev,
+            ...settings?.find((f) => f.id === prev.id),
+        }));
+    }, [settings]);
 
     return (
         <DataSourceSettingsCont>
@@ -116,7 +97,6 @@ export const Settings = (props: any) => {
                 isAdd={false}
                 title={"DataSource Settings"}
                 fieldErrors={fieldErrors}
-              
             />
 
             <InputCont>
@@ -140,27 +120,24 @@ export const Settings = (props: any) => {
                 id={settingsData.id}
                 auth={settingsData.auth}
                 dataSources={settings}
-                onDsChange={setSettings}
-
-             //{...props} 
-             />
+                onDsChange={storeSettings}
+            />
 
             <DataSourceHeaders
-             id={settingsData.id}
-             cors={settingsData.cors} 
-             headers={settingsData.headers} 
-             dataSources={settings}
-             onDsChange={setSettings}
-              />
+                id={settingsData.id}
+                cors={settingsData.cors}
+                headers={settingsData.headers}
+                dataSources={settings}
+                onDsChange={storeSettings}
+            />
 
             <LinkedFields
-            // {...props} 
-            id={settingsData.id}
-            name={settingsData.name}
-            onDsChange={setSettings}
-            dataSources={settings}
-            linkedFields={settingsData.linkedFields} />
-            
+                id={settingsData.id}
+                name={settingsData.name}
+                onDsChange={storeSettings}
+                dataSources={settings}
+                linkedFields={settingsData.linkedFields}
+            />
         </DataSourceSettingsCont>
     );
 };

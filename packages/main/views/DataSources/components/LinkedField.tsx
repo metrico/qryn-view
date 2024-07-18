@@ -2,8 +2,8 @@ import { LinkFieldsGroup, InputCol } from "../styles";
 import { Field, QrynSwitch, Select } from "../ui";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useMemo } from "react";
-import DOMPurify from 'isomorphic-dompurify'
-export const LinkedField = (props:any) => {
+import DOMPurify from "isomorphic-dompurify";
+export const LinkedField = (props: any) => {
     const {
         id,
         name,
@@ -15,37 +15,32 @@ export const LinkedField = (props:any) => {
         dataSourceId,
         fieldEditing,
         dataSources,
-        dsChange
-
+        dsChange,
     } = props;
 
-    // const dispatch: any = useDispatch();
-
-    // const dataSources = useSelector((store:any) => store.dataSources);
-
     const dataSourcesOpts = useMemo(() => {
-        return dataSources.map((m:any) => ({
+        return dataSources?.map((m: any) => ({
             name: m.name,
             value: m.id,
         }));
     }, [dataSources]);
 
-    const onLinkedFieldChange = (prop:any, value:any) => {
-        fieldEditing()
+    const onLinkedFieldChange = (prop: any, value: any) => {
+        fieldEditing();
 
         const prevDataSources = JSON.parse(JSON.stringify(dataSources));
-        const prevDs = prevDataSources.find((f:any) => f.id === dataSourceId);
+        const prevDs = prevDataSources.find((f: any) => f.id === dataSourceId);
 
         const prevLinked = prevDs["linkedFields"];
 
-        const newLinked = prevLinked.map((m:any) => {
+        const newLinked = prevLinked?.map((m: any) => {
             if (m.id === id) {
                 return { ...m, [prop]: value };
             }
             return m;
         });
 
-        return prevDataSources.map((m:any) => {
+        return prevDataSources?.map((m: any) => {
             if (m.id === dataSourceId) {
                 return { ...m, linkedFields: newLinked };
             }
@@ -54,47 +49,35 @@ export const LinkedField = (props:any) => {
     };
 
     const onLinkedFieldRemove = () => {
-        fieldEditing()
+        fieldEditing();
         const prevDataSources = JSON.parse(JSON.stringify(dataSources));
-        const prevDs = prevDataSources.find((f:any) => f.id === dataSourceId);
+        const prevDs = prevDataSources?.find((f: any) => f.id === dataSourceId);
         const prevLinked = prevDs["linkedFields"];
-        const newLinked = prevLinked.filter((f:any) => f.id !== id);
+        const newLinked = prevLinked?.filter((f: any) => f.id !== id);
 
-        const newDataSources = prevDataSources.map((m:any) => {
+        const newDataSources = prevDataSources?.map((m: any) => {
             if (m.id === dataSourceId) {
                 return { ...m, linkedFields: [...newLinked] };
             }
             return m;
         });
 
-       // localStorage.setItem("dataSources", JSON.stringify(newDataSources));
-       // dispatch(setDataSources(newDataSources));
-       dsChange(()=> newDataSources)
+        dsChange(newDataSources);
     };
 
-    const onChange = (e:any, name:any) => {
-        fieldEditing()
+    const onChange = (e: any, name: any) => {
+        fieldEditing();
         const value = e.target.value;
-        // setNewDataSources
-
         const newVal = onLinkedFieldChange(name, value);
-
-        dsChange(()=> newVal)
-
-    //    localStorage.setItem("dataSources", JSON.stringify(newVal));
-
-    //    dispatch(setDataSources(newVal));
+        dsChange(newVal);
     };
 
-    const onSwitchChange = (e:any, name:any) => {
-        fieldEditing()
+    const onSwitchChange = (e: any, name: any) => {
+        fieldEditing();
         const value = Boolean(e.target.checked);
 
         const newVal = onLinkedFieldChange(name, value);
-        dsChange(()=> newVal)
-
-      //  localStorage.setItem("dataSources", JSON.stringify(newVal));
-      //  dispatch(setDataSources(newVal));
+        dsChange(newVal);
     };
 
     return (
@@ -103,26 +86,26 @@ export const LinkedField = (props:any) => {
                 <Field
                     value={DOMPurify.sanitize(name)}
                     label={"Name"}
-                    onChange={(e:any) => onChange(e, "name")}
+                    onChange={(e: any) => onChange(e, "name")}
                 />
 
                 <Field
                     value={DOMPurify.sanitize(regex)}
                     label={"Regex"}
-                    onChange={(e:any) => onChange(e, "regex")}
+                    onChange={(e: any) => onChange(e, "regex")}
                 />
 
                 <Field
                     value={DOMPurify.sanitize(urlLabel)}
                     label={"URL Label"}
-                    onChange={(e:any) => onChange(e, "urlLabel")}
+                    onChange={(e: any) => onChange(e, "urlLabel")}
                 />
 
                 <DeleteOutlineOutlinedIcon
                     onClick={onLinkedFieldRemove}
                     fontSize={"small"}
                     style={{
-                        marginLeft:'10px',
+                        marginLeft: "10px",
                         cursor: "pointer",
                         display: locked ? "none" : "inline-block",
                     }}
@@ -133,7 +116,7 @@ export const LinkedField = (props:any) => {
                 <QrynSwitch
                     value={internalLink}
                     label={"Internal Link"}
-                    onChange={(e:any) => onSwitchChange(e, "internalLink")}
+                    onChange={(e: any) => onSwitchChange(e, "internalLink")}
                 />
 
                 <Select
@@ -141,7 +124,7 @@ export const LinkedField = (props:any) => {
                     value={DOMPurify.sanitize(linkType)}
                     opts={dataSourcesOpts}
                     selectType={"linkedField"}
-                    onChange={(e:any) => onChange(e, "linkID")}
+                    onChange={(e: any) => onChange(e, "linkID")}
                 />
             </InputCol>
         </LinkFieldsGroup>

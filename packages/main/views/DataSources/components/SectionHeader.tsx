@@ -2,7 +2,6 @@ import { SettingsTitle } from "../styles";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CachedOutlinedIcon from "@mui/icons-material/CachedOutlined";
 
-
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import setIsDatasourceSaved from "../store/setIsDataSourceSaved";
@@ -16,21 +15,14 @@ export type SectionHeaderProps = {
     isAdd?: boolean;
     title?: string;
     fieldErrors?: any;
-    onClickAdd?: (e?:any) => void;
+    onClickAdd?: (e?: any) => void;
 };
 
 export function SectionHeader(props: SectionHeaderProps) {
     const { onClickAdd, isAdd, title, isEditing, fieldErrors } = props;
-    const theme = useTheme()
+    const theme = useTheme();
     const dispatch: any = useDispatch();
     const [isSaved, setIsSaved] = useState(false);
-
-
-
-    // here should go the save settings dialog
-
-    // we should add the dialog in here or a switch to alternate autosave 
-    // with save with confirmation
 
     useEffect(() => {
         if (isEditing) {
@@ -53,21 +45,19 @@ export function SectionHeader(props: SectionHeaderProps) {
         <SettingsTitle>
             {title}
             {isAdd && (
-                    <>
-                        <AddOutlinedIcon
-                            fontSize={"small"}
-                            style={{
-                                cursor: "pointer",
-                                display: "flex",
-                            }}
-                            onClick={onClickAdd}
-                        />
-                    </>
-                )}
+                <>
+                    <AddOutlinedIcon
+                        fontSize={"small"}
+                        style={{
+                            cursor: "pointer",
+                            display: "flex",
+                        }}
+                        onClick={onClickAdd}
+                    />
+                </>
+            )}
 
             <div className="edit-buttons">
-     
-
                 {isEditing && (
                     <div className={SavingLoader}>
                         <CachedOutlinedIcon
@@ -77,14 +67,11 @@ export function SectionHeader(props: SectionHeaderProps) {
                     </div>
                 )}
 
-                 <FieldErrors fieldErrors={fieldErrors}/>
+                <FieldErrors fieldErrors={fieldErrors} />
 
-                {isSaved && 
-                <ConfirmSave
-
-                theme={theme}
-                setIsSaved={setIsSaved} />}
-
+                {isSaved && (
+                    <ConfirmSave theme={theme} setIsSaved={setIsSaved} />
+                )}
             </div>
         </SettingsTitle>
     );

@@ -9,21 +9,19 @@ import DOMPurify from "isomorphic-dompurify";
 import { Switch } from "@mui/material";
 
 type HeaderEntry = {
-    id: string
-    header: string
-    value: string  
-}
+    id: string;
+    header: string;
+    value: string;
+};
 type DataSourceHadersProps = {
     id: string;
-    cors?: boolean 
-    headers: HeaderEntry[]
-    dataSources: any
-    onDsChange: (prev:any) => void 
-}
+    cors?: boolean;
+    headers: HeaderEntry[];
+    dataSources: any;
+    onDsChange: (prev: any) => void;
+};
 
 export const DataSourceHeaders = (props: DataSourceHadersProps) => {
-
-   // const dataSources = useSelector((store: any) => store.dataSources);
     const [editing, setEditing] = useState(false);
 
     const { headers, id, onDsChange, dataSources } = props;
@@ -40,9 +38,7 @@ export const DataSourceHeaders = (props: DataSourceHadersProps) => {
         });
 
         setCors(() => value);
-        onDsChange(()=>newDataSources)
-        // localStorage.setItem("dataSources", JSON.stringify(newDataSources));
-       // dispatch(setDataSources(newDataSources));
+        onDsChange(newDataSources);
     };
 
     const onChange = (e: any, headerId: any, name: any) => {
@@ -66,10 +62,7 @@ export const DataSourceHeaders = (props: DataSourceHadersProps) => {
             return ds;
         });
 
-      //  localStorage.setItem("dataSources", JSON.stringify(newDataSources));
-      //  dispatch(setDataSources(newDataSources));
-
-      onDsChange(()=>newDataSources)
+        onDsChange(newDataSources);
         setTimeout(() => {
             setEditing(() => false);
         }, 800);
@@ -99,9 +92,7 @@ export const DataSourceHeaders = (props: DataSourceHadersProps) => {
                 }
                 return ds;
             });
-            onDsChange(()=> newDataSources)
-           // localStorage.setItem("dataSources", JSON.stringify(newDataSources));
-           // dispatch(setDataSources(newDataSources));
+            onDsChange(newDataSources);
         }
     };
 
@@ -117,10 +108,7 @@ export const DataSourceHeaders = (props: DataSourceHadersProps) => {
             return ds;
         });
 
-        onDsChange(()=> newDataSources)
-
-       // localStorage.setItem("dataSources", JSON.stringify(newDataSources));
-       // dispatch(setDataSources(newDataSources));
+        onDsChange(newDataSources);
     };
 
     return (

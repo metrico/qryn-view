@@ -14,43 +14,34 @@ export type AuthFieldsProps = {
 };
 
 export function AuthFields(props: AuthFieldsProps) {
-    // console.log(props)
-   
     const { auth, id, dataSources, onDsChange } = props;
-    // const dispatch: any = useDispatch();
-    // console.log(auth)
-    // const dataSources = useSelector((store: any) => store.dataSources);
-
     const [activeFields, setActiveFields] = useState<any>([]);
     const [isEditing, setIsEditing] = useState(false);
     const fields = useMemo(() => {
-        if(auth) {    return Object.entries(auth)
-            ?.map(([name, field]: [name: any, field: any]) => ({
-                name,
-                ...field,
-            }))
-            .filter((f) => f.name !== "fields");
+        if (auth) {
+            return Object.entries(auth)
+                ?.map(([name, field]: [name: any, field: any]) => ({
+                    name,
+                    ...field,
+                }))
+                .filter((f) => f.name !== "fields");
         }
-        
-    
     }, [auth]);
 
     const certFields = useMemo(() => {
-        if(auth) {
+        if (auth) {
             return Object.entries(auth)
-            ?.map(([name, field]: [name: any, field: any]) => ({
-                name,
-                ...field,
-            }))
-            .find((f) => f.name === "fields");
+                ?.map(([name, field]: [name: any, field: any]) => ({
+                    name,
+                    ...field,
+                }))
+                .find((f) => f.name === "fields");
         }
-     
     }, [auth]);
 
     const onValueChange = (value: any, name: any) => {
         const newAuth = JSON.parse(JSON.stringify(auth));
         newAuth[name].value = value;
-
         const dsCP = JSON.parse(JSON.stringify(dataSources));
         const newDataSources = dsCP.map((dataSource: any) => {
             if (dataSource.id === id) {
@@ -59,14 +50,8 @@ export function AuthFields(props: AuthFieldsProps) {
             return dataSource;
         });
 
-        onDsChange(() => newDataSources);
-
-        //localStorage.setItem("dataSources", JSON.stringify(newDataSources));
-
-        //dispatch(setDataSources(newDataSources));
-
+        onDsChange(newDataSources);
         return newDataSources;
-
     };
 
     useEffect(() => {
@@ -77,7 +62,6 @@ export function AuthFields(props: AuthFieldsProps) {
         setActiveFields(certFields);
     }, [fields, setActiveFields]);
 
-    console.log(certFields)
     const onSelectChange = (e: any, name: any) => {
         setIsEditing(() => true);
         const value = e.target.value;
@@ -90,7 +74,6 @@ export function AuthFields(props: AuthFieldsProps) {
     const onSwitchChange = (e: any, name: any) => {
         setIsEditing(() => true);
         const value = e.target.checked;
-
         onValueChange(value, name);
         setTimeout(() => {
             setIsEditing(() => false);
@@ -101,7 +84,6 @@ export function AuthFields(props: AuthFieldsProps) {
         setIsEditing(() => true);
         const value = e.target.value;
         const prevAuth = JSON.parse(JSON.stringify(auth));
-
         const newAuth = {
             ...prevAuth,
             fields: {
@@ -115,11 +97,7 @@ export function AuthFields(props: AuthFieldsProps) {
                 }),
             },
         };
-
         const prevDataSources = JSON.parse(JSON.stringify([...dataSources]));
-
-        console.log(prevDataSources)
-
         const newDataSources = prevDataSources?.map((ds: any) => {
             if (ds.id === id) {
                 ds.auth = newAuth;
@@ -128,19 +106,12 @@ export function AuthFields(props: AuthFieldsProps) {
             return ds;
         });
 
-        console.log(newDataSources)
-
-        //localStorage.setItem("dataSources", JSON.stringify(newDataSources));
-        //dispatch(setDataSources(newDataSources));
-        onDsChange(() => newDataSources);
+        onDsChange(newDataSources);
 
         setTimeout(() => {
             setIsEditing(() => false);
         }, 600);
     };
-
-    console.log(activeFields)
-    console.log(fields)
 
     return (
         <>
@@ -185,7 +156,8 @@ export function AuthFields(props: AuthFieldsProps) {
                         return null;
                     })}
                 <InputCol>
-                    {activeFields?.length > 0 && certFields &&
+                    {activeFields?.length > 0 &&
+                        certFields &&
                         activeFields?.map((val: any, key: any) => {
                             return (
                                 <InputCol key={key}>
