@@ -1,6 +1,6 @@
 import { Tabs } from "@mui/base";
 import { useMemo, useRef, useState, SyntheticEvent } from "react";
-import QrynChart from "../components/Charts";
+import QrynChart from "../components/Charts/QrynChart";
 import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
 import { TabsListq, Tabq, TabPanelq, ViewStyled } from "./styled";
