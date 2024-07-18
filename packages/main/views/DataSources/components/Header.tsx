@@ -1,10 +1,8 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button, QrynLogo } from "../ui";
 import DOMPurify from "isomorphic-dompurify";
 import useTheme from "@ui/theme/useTheme";
-import { useStoreSettings } from "../hooks/useStoreSettings";
-import { createAlert } from "@ui/store/actions";
 
 export interface HeaderProps {
     title: string;
@@ -12,29 +10,13 @@ export interface HeaderProps {
 }
 
 export function Header(props: HeaderProps) {
-    const dispatch:any = useDispatch()
-    const { storeDataSources, setSettings } = useStoreSettings();
-    const datasources = useSelector((store: any) => store.dataSources);
     const navigate = useNavigate();
     const theme = useTheme();
     const { title } = props;
     const isDsSaved = useSelector((store: any) => store.isDsSaved);
 
-    const onSave = () => {
-        storeDataSources()
-        dispatch(createAlert({
-            type:'success',
-            message: "Data Source Setting Saved SuccessFully",
-
-        }))
-    }
-
     const backOne = () => {
-            navigate(-1);
-    };
-
-    const cancelAction = () => {
-        setSettings(datasources);
+        navigate(-1);
     };
 
     return (
@@ -59,18 +41,6 @@ export function Header(props: HeaderProps) {
                     </p>
                 </div>
             </div>
-            <Button
-                value={DOMPurify.sanitize("Save")}
-                onClick={onSave}
-                editing={true}
-                primary={isDsSaved}
-            />
-            <Button
-                value={DOMPurify.sanitize("Cancel")}
-                onClick={cancelAction}
-                editing={true}
-                primary={isDsSaved}
-            />
 
             <Button
                 value={DOMPurify.sanitize("Back")}

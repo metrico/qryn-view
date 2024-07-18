@@ -5,7 +5,8 @@ import { useCookies } from "react-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { createAlert } from "@ui/store/actions";
-
+import ConfirmDialog from "./ConfirmDialog";
+import { useStoreSettings } from "./hooks/useStoreSettings";
 import { Header } from "./components";
 import setDataSources from "./store/setDataSources";
 import { Container } from "./styles/Container";
@@ -59,6 +60,23 @@ export function DataSourceSetting(props: any) {
 
     const dispatch: any = useDispatch();
     const dataSources = useSelector((store: any) => store.dataSources);
+    const isDsSaved = useSelector((store: any) => store.isDsSaved);
+    const { storeDataSources, setSettings } = useStoreSettings();
+
+    const onSave = () => {
+        storeDataSources();
+        dispatch(
+            createAlert({
+                type: "success",
+                message: "Data Source Setting Saved SuccessFully",
+            })
+        );
+    };
+
+    const cancelAction = () => {
+        setSettings(dataSources);
+    };
+
     const useForAll = () => {
         const dsCP = [...dataSources];
         const prevDs = JSON.parse(JSON.stringify(dsCP));
@@ -140,22 +158,30 @@ export function DataSourceSetting(props: any) {
         link.click();
     }
 
+    // here should add buttons
+
     return (
         <div className="ds-cont">
             <div className={cx(HeaderRow)}>
                 <DataSourceSettingHeader {...props} />
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: ".5em",
+                    }}
+                >
                     <Button
                         title={"Download Datasource settings as JSON"}
                         value={DOMPurify.sanitize("Download JSON")}
                         onClick={downLoadJson}
-                        primary={true}
+                        primary={false}
                     />
                     <Button
                         title={"Set Cookie with name: qryn-settings"}
                         value={DOMPurify.sanitize("Save Cookie")}
                         onClick={addCookie}
-                        primary={true}
+                        primary={false}
                     />
 
                     <Button
@@ -164,7 +190,25 @@ export function DataSourceSetting(props: any) {
                         }
                         value={DOMPurify.sanitize("Use For All")}
                         onClick={useForAll}
-                        primary={true}
+                        primary={false}
+                    />
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "1em",
+                    }}
+                >
+                    <ConfirmDialog
+                        saveDataSource={onSave}
+                        changed={isDsSaved}
+                    />
+                    <Button
+                        value={DOMPurify.sanitize("Cancel")}
+                        onClick={cancelAction}
+                        editing={true}
+                        primary={false}
                     />
                 </div>
             </div>
