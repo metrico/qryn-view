@@ -1,11 +1,9 @@
 import { SettingsTitle } from "../styles";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import CachedOutlinedIcon from "@mui/icons-material/CachedOutlined";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import setIsDatasourceSaved from "../store/setIsDataSourceSaved";
 import useTheme from "@ui/theme/useTheme";
-import { SavingLoader } from "./header.styles";
 import { ConfirmSave } from "./ConfirmSave";
 import { FieldErrors } from "./FieldErrors";
 import { Tooltip } from "@mui/material";
@@ -63,14 +61,6 @@ export function SectionHeader(props: SectionHeaderProps) {
             </div>
 
             <div className="edit-buttons">
-                {isEditing && (
-                    <div className={SavingLoader}>
-                        <CachedOutlinedIcon
-                            style={{ height: "13px", width: "13px" }}
-                        />{" "}
-                        Saving ...
-                    </div>
-                )}
 
                 <FieldErrors fieldErrors={fieldErrors} />
 
