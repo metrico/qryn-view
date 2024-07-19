@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+
 import DOMPurify from "isomorphic-dompurify";
 import {
     DataSourceHeaders,
@@ -7,31 +7,27 @@ import {
     SectionHeader,
     AuthFields,
 } from "../components";
-import setDataSources from "../store/setDataSources";
 
 import { DataSourceSettingsCont, InputCont, InputCol } from "../styles";
 import { Field } from "../ui";
+import { useStoreSettings } from "../hooks/useStoreSettings";
 
 export const Settings = (props: any) => {
-    const { headers, id, linkedFields, name, url, cors }: any = props;
+    const [settingsData, setSettingsData] = useState(props);
+    const { settings, storeSettings } = useStoreSettings();
 
-    const dispatch: any = useDispatch();
-
-    const state = useSelector(({ dataSources }: any) => dataSources);
     const [fieldErrors, setFieldErrors] = useState({
         url: false,
         protocol: false,
     });
     const onFieldChange = (prop: any, value: any) => {
         let val = value;
-        const arrayClone = JSON.parse(JSON.stringify(state));
-        
+        const arrayClone = JSON.parse(JSON.stringify(settings));
         arrayClone.forEach((field: any) => {
-            if (field.id === id) {
+            if (field.id === settingsData.id) {
                 field[prop] = val;
             }
         });
-
         return arrayClone;
     };
 
@@ -50,7 +46,7 @@ export const Settings = (props: any) => {
     const onChange = (e: any, name: any) => {
         setIsEditing(() => true);
         const value = e.target.value;
-        // check here if name === url
+
         if (name === "url") {
             const protocol_match = checkURLProtocol(value);
 
@@ -68,9 +64,11 @@ export const Settings = (props: any) => {
                     protocol: false,
                     url: false,
                 }));
+
                 const newVal = onFieldChange(name, value);
-                localStorage.setItem("dataSources", JSON.stringify(newVal));
-                dispatch(setDataSources(newVal));
+
+                storeSettings(newVal);
+
                 setTimeout(() => {
                     setIsEditing(() => false);
                 }, 800);
@@ -78,12 +76,18 @@ export const Settings = (props: any) => {
         }
 
         const newVal = onFieldChange(name, value);
-        localStorage.setItem("dataSources", JSON.stringify(newVal));
-        dispatch(setDataSources(newVal));
+        storeSettings(newVal);
         setTimeout(() => {
             setIsEditing(() => false);
         }, 800);
     };
+
+    useEffect(() => {
+        setSettingsData((prev) => ({
+            ...prev,
+            ...settings?.find((f) => f.id === prev.id),
+        }));
+    }, [settings]);
 
     return (
         <DataSourceSettingsCont>
@@ -98,13 +102,13 @@ export const Settings = (props: any) => {
             <InputCont>
                 <InputCol>
                     <Field
-                        value={DOMPurify.sanitize(name)}
+                        value={DOMPurify.sanitize(settingsData.name)}
                         label={"Name"}
                         onChange={(e: any) => onChange(e, "name")}
                     />
 
                     <Field
-                        value={DOMPurify.sanitize(url)}
+                        value={DOMPurify.sanitize(settingsData.url)}
                         label={"URL"}
                         error={fieldErrors.url || fieldErrors.protocol}
                         onChange={(e: any) => onChange(e, "url")}
@@ -112,11 +116,28 @@ export const Settings = (props: any) => {
                 </InputCol>
             </InputCont>
 
-            <AuthFields {...props} />
+            <AuthFields
+                id={settingsData.id}
+                auth={settingsData.auth}
+                dataSources={settings}
+                onDsChange={storeSettings}
+            />
 
-            <DataSourceHeaders cors={cors} headers={headers} id={id} />
+            <DataSourceHeaders
+                id={settingsData.id}
+                cors={settingsData.cors}
+                headers={settingsData.headers}
+                dataSources={settings}
+                onDsChange={storeSettings}
+            />
 
-            <LinkedFields {...props} linkedFields={linkedFields} />
+            <LinkedFields
+                id={settingsData.id}
+                name={settingsData.name}
+                onDsChange={storeSettings}
+                dataSources={settings}
+                linkedFields={settingsData.linkedFields}
+            />
         </DataSourceSettingsCont>
     );
 };
