@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/css": "^11.11.2",
+    "@emotion/css": "^11.13.0",
     "@emotion/is-prop-valid": "^1.2.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
