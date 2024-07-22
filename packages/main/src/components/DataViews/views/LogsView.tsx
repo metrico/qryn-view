@@ -5,7 +5,7 @@ import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
 import { TabsListq, Tabq, TabPanelq, ViewStyled } from "./styled";
 import { localTabsState } from "../helpers";
-import QrynChart from "../components/Charts";
+import QrynChart from "../components/Charts/QrynChart";
 import { LogRows } from "../components/Logs/LogRows";
 import ReactJson from "@microlink/react-json-view";
 import React from "react";

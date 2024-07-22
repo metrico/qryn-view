@@ -5,10 +5,12 @@ import { useCookies } from "react-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { createAlert } from "@ui/store/actions";
-
+import ConfirmDialog from "./ConfirmDialog";
+import { useStoreSettings } from "./hooks/useStoreSettings";
 import { Header } from "./components";
 import setDataSources from "./store/setDataSources";
 import { Container } from "./styles/Container";
+import { Button as FileButton } from "@mui/material";
 import { Button, Icon } from "./ui";
 import { Settings } from "./views";
 import DOMPurify from "isomorphic-dompurify";
@@ -42,7 +44,9 @@ function setCookieFromParams(parsedDs: string, user: string, password: string) {
 
 export function DataSourceSetting(props: any) {
     const {
+        id,
         url,
+        type,
         auth: {
             basicAuth,
             fields: {
@@ -51,15 +55,38 @@ export function DataSourceSetting(props: any) {
         },
     } = props;
 
+    console.log(props);
+
+    const theme = useTheme();
+
     // eslint-disable-next-line
     const [cookie, setCookie] = useCookies([
         "qryn-dev-cookie",
         "qryn-settings",
     ]); // for testing cookies feature
+
     const dispatch: any = useDispatch();
     const dataSources = useSelector((store: any) => store.dataSources);
+    const isDsSaved = useSelector((store: any) => store.isDsSaved);
+    const { storeDataSources, setSettings, storeSettings, settings } =
+        useStoreSettings();
+
+    const onSave = () => {
+        storeDataSources();
+        dispatch(
+            createAlert({
+                type: "success",
+                message: "Data Source Setting Saved SuccessFully",
+            })
+        );
+    };
+
+    const cancelAction = () => {
+        setSettings(dataSources);
+    };
+
     const useForAll = () => {
-        const dsCP = [...dataSources];
+        const dsCP = JSON.parse(JSON.stringify(settings));
         const prevDs = JSON.parse(JSON.stringify(dsCP));
 
         const newDs = prevDs?.map((m: any) => ({
@@ -120,14 +147,16 @@ export function DataSourceSetting(props: any) {
     }
 
     function downLoadJson() {
-        const { headers, id, name, linkedFields } = props;
 
-        const headersMapped = headers?.map(({ header, value }) => ({
-            [header]: value,
-        }));
-
-        const datasources = { id, name, headers: headersMapped, linkedFields };
-
+        const { headers, id, name, linkedFields, url } = props;
+        const datasources = {
+            id,
+            name,
+            type,
+            url,
+            headers,
+            linkedFields,
+        };
         const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
             JSON.stringify(datasources)
         )}`;
@@ -135,26 +164,90 @@ export function DataSourceSetting(props: any) {
         const link = document.createElement("a");
         link.href = jsonString;
         link.download = `${name}_${id}.json`;
-
         link.click();
     }
+
+    const onFileOpen = (evt) => {
+        let reader = new FileReader();
+        reader.onload = onReaderLoad;
+        reader.readAsText(evt.target.files[0]);
+    };
+
+    function onReaderLoad(event) {
+        let obj = JSON.parse(event.target.result);
+        const newDs = JSON.parse(JSON.stringify(settings));
+        let copy = [];
+        for (let ds of newDs) {
+            let datasource = {};
+            if (ds.type === obj.type && ds.name === obj.name) {
+                console.log(ds);
+                datasource = { ...ds, ...obj, id };
+            } else {
+                datasource = ds;
+            }
+
+            copy.push(datasource);
+        }
+        storeSettings(copy);
+        dispatch(
+            createAlert({
+                message: "Datasources Setting Imported Successfully",
+                type: "success",
+            })
+        );
+    }
+
+    // here should add buttons
 
     return (
         <div className="ds-cont">
             <div className={cx(HeaderRow)}>
                 <DataSourceSettingHeader {...props} />
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: ".5em",
+                    }}
+                >
                     <Button
                         title={"Download Datasource settings as JSON"}
                         value={DOMPurify.sanitize("Download JSON")}
                         onClick={downLoadJson}
-                        primary={true}
+                        primary={false}
                     />
+
+                    <>
+                        <input
+                            style={{ display: "none" }}
+                            accept="application/json"
+                            onChange={onFileOpen}
+                            id={`preview-${id}`}
+                            type="file"
+                        />
+                        <label htmlFor={`preview-${id}`}>
+                            <FileButton
+                                style={{
+                                    background: theme.neutral,
+                                    color: theme.contrast,
+                                    fontFamily: "sans-serif",
+                                    textTransform: "none",
+                                    padding: "3px 12px",
+                                    height: "26px",
+                                }}
+                                component="span"
+                                size="small"
+                            >
+                                Import JSON
+                            </FileButton>
+                        </label>
+                    </>
+
                     <Button
                         title={"Set Cookie with name: qryn-settings"}
                         value={DOMPurify.sanitize("Save Cookie")}
                         onClick={addCookie}
-                        primary={true}
+                        primary={false}
                     />
 
                     <Button
@@ -163,7 +256,25 @@ export function DataSourceSetting(props: any) {
                         }
                         value={DOMPurify.sanitize("Use For All")}
                         onClick={useForAll}
-                        primary={true}
+                        primary={false}
+                    />
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "1em",
+                    }}
+                >
+                    <ConfirmDialog
+                        saveDataSource={onSave}
+                        changed={isDsSaved}
+                    />
+                    <Button
+                        value={DOMPurify.sanitize("Cancel")}
+                        onClick={cancelAction}
+                        editing={true}
+                        primary={false}
                     />
                 </div>
             </div>
@@ -193,7 +304,9 @@ export const DataSourceSettingHeader = (props: any) => {
 export function DataSource() {
     let { id } = useParams();
     const theme = useTheme();
+
     const dataSources = useSelector((store: any) => store.dataSources);
+
     const datasource = useMemo(() => {
         if (!dataSources || dataSources.length === 0) {
             return {};

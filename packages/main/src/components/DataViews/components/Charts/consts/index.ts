@@ -51,7 +51,7 @@ export const CHART_OPTIONS = (isLogsVolume=false)=>({
             shadowSize: 0,
             zero: false,
         },
-        points: { show: true, radius: 1, shadowSize: 0, zero: false },
+        points: { show: true, radius: 1, shadowSize: 0, zero: true},
     },
     markings: {
         clickable: false,

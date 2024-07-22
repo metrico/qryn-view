@@ -1,5 +1,5 @@
 import { cx, css } from "@emotion/css";
-import DOMPurify from 'isomorphic-dompurify'
+import DOMPurify from "isomorphic-dompurify";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { InputGroup, Label } from "../styles";
 
@@ -7,7 +7,7 @@ const FlexOne = (fullWidth: any) => css`
     display: flex;
     min-width: 100px;
     flex: ${fullWidth ? 1 : 0};
-    -ms-flex:${fullWidth ? 1 : 0};
+    -ms-flex: ${fullWidth ? 1 : 0};
 `;
 
 export const Select = ({
@@ -25,13 +25,12 @@ export const Select = ({
     const selectRef: any = useRef(null);
 
     const formattedSelect = useMemo(() => {
-        if (typeof opts[0] === "string") {
-            return opts.map((k: string) => ({
+        if (opts && opts[0] && typeof opts[0] === "string") {
+            return opts?.map((k: string) => ({
                 value: k,
-                name:k,
+                name: k,
             }));
-        } else
-       return opts
+        } else return opts;
     }, [opts]);
 
     useEffect(() => {
@@ -42,12 +41,13 @@ export const Select = ({
             setInitialValue(selected);
             selectRef.current.value = selected;
         }
-          
     }, [value]);
 
     return (
         <InputGroup width={width}>
-            {label?.length > 0 && <Label width={labelWidth || null}>{label}</Label>}
+            {label?.length > 0 && (
+                <Label width={labelWidth || null}>{label}</Label>
+            )}
             <select
                 ref={selectRef}
                 className={cx(FlexOne(fullWidth))}
@@ -56,10 +56,7 @@ export const Select = ({
                 onChange={(e) => onChange(e, name)}
             >
                 {formattedSelect?.map((field: any, key: number) => (
-                    <option
-                        key={key}
-                        value={DOMPurify.sanitize(field.value)}
-                    >
+                    <option key={key} value={DOMPurify.sanitize(field.value)}>
                         {field.name}
                     </option>
                 ))}
