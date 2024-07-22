@@ -50,7 +50,7 @@ importers:
         version: 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
       '@microlink/react-json-view':
         specifier: latest
-        version: 1.23.0(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 1.23.1(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/base':
         specifier: 5.0.0-beta.5
         version: 5.0.0-beta.5(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -148,8 +148,8 @@ importers:
         specifier: ^7.1.4
         version: 7.1.4(react@18.3.1)
       react-day-picker:
-        specifier: ^8.10.1
-        version: 8.10.1(date-fns@2.30.0)(react@18.3.1)
+        specifier: ^9.0.1
+        version: 9.0.1(react@18.3.1)
       react-dnd:
         specifier: ^16.0.1
         version: 16.0.1(@types/hoist-non-react-statics@3.3.5)(@types/node@20.14.8)(@types/react@18.3.3)(react@18.3.1)
@@ -657,8 +657,8 @@ packages:
   '@juggle/resize-observer@3.4.0':
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
 
-  '@microlink/react-json-view@1.23.0':
-    resolution: {integrity: sha512-HYJ1nsfO4/qn8afnAMhuk7+5a1vcjEaS8Gm5Vpr1SqdHDY0yLBJGpA+9DvKyxyVKaUkXzKXt3Mif9RcmFSdtYg==}
+  '@microlink/react-json-view@1.23.1':
+    resolution: {integrity: sha512-Iz1uA2Y4x7Xr+O4BP2Brk16UpL6rh9GDv2A19OOb9pymkUE8eXHq1GzhJte4269wMDc8Esm2jXsTqIPLgqq7kg==}
     peerDependencies:
       react: '>= 15'
       react-dom: '>= 15'
@@ -1424,6 +1424,9 @@ packages:
   date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
+
+  date-fns@3.6.0:
+    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
 
   dayjs@1.11.11:
     resolution: {integrity: sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==}
@@ -2348,11 +2351,10 @@ packages:
     peerDependencies:
       react: '>= 16.3.0'
 
-  react-day-picker@8.10.1:
-    resolution: {integrity: sha512-TMx7fNbhLk15eqcMt+7Z7S2KF7mfTId/XJDjKE8f+IUcFn0l08/kI4FiYTL/0yuOLmEcbR4Fwe3GJf/NiiMnPA==}
+  react-day-picker@9.0.1:
+    resolution: {integrity: sha512-BVpvpt1OLsDNy6rYK/lD+ruXMqTiYRWioR32jJ/zhBODT5KCoMVr2IcbISJBQWKnMRicDxFhb8ijW32yE2MSYg==}
     peerDependencies:
-      date-fns: ^2.28.0 || ^3.0.0
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react: '>=16.8.0'
 
   react-dnd-html5-backend@16.0.1:
     resolution: {integrity: sha512-Wu3dw5aDJmOGw8WjH1I1/yTH+vlXEL4vmjk5p+MHxP8HuHJS1lAGeIdG/hze1AvNeXWo/JgULV87LyQOr+r5jw==}
@@ -3455,7 +3457,7 @@ snapshots:
 
   '@juggle/resize-observer@3.4.0': {}
 
-  '@microlink/react-json-view@1.23.0(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@microlink/react-json-view@1.23.1(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       flux: 4.0.4(react@18.3.1)
       react: 18.3.1
@@ -4278,6 +4280,8 @@ snapshots:
   date-fns@2.30.0:
     dependencies:
       '@babel/runtime': 7.24.7
+
+  date-fns@3.6.0: {}
 
   dayjs@1.11.11: {}
 
@@ -5307,9 +5311,9 @@ snapshots:
       react: 18.3.1
       universal-cookie: 7.1.4
 
-  react-day-picker@8.10.1(date-fns@2.30.0)(react@18.3.1):
+  react-day-picker@9.0.1(react@18.3.1):
     dependencies:
-      date-fns: 2.30.0
+      date-fns: 3.6.0
       react: 18.3.1
 
   react-dnd-html5-backend@16.0.1:
