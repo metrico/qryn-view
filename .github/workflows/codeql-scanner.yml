@@ -57,6 +57,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - uses: pnpm/action-setup@v4.0.0
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v4
+      with:
+          node-version: 20
+          cache: "pnpm"
+    - name: Install dependencies
+      run: pnpm install
+    - name: Build
+      run: pnpm build
+
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
