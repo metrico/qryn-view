@@ -6,11 +6,16 @@ import "./scss/app.scss";
 import errorInterceptor from "@ui/helpers/error.interceptor";
 
 import { Notification } from "@ui/qrynui/notifications";
-
 import { CookiesProvider } from "react-cookie";
 
-import { Routes, Route, HashRouter } from "react-router-dom";
+import {
+    Routes,
+    Route,
+    HashRouter,
+} from "react-router-dom";
+
 import { lazy, Suspense } from "react";
+
 import ScreenLoader from "@ui/views/ScreenLoader";
 
 import store from "@ui/store/store";

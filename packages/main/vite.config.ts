@@ -120,6 +120,11 @@ export default defineConfig(({ mode }) => {
                     changeOrigin: env.VITE_API_BASE_URL,
                     secure: false,
                 },
+                "/influx": {
+                    target: proxyApi,
+                    changeOrigin: env.VITE_API_BASE_URL,
+                    secure: false,
+                },
                 "/ready": {
                     target: proxyApi,
                     changeOrigin: env.VITE_API_BASE_URL,

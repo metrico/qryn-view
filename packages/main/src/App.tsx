@@ -6,7 +6,7 @@ import { Notification } from "@ui/qrynui/notifications";
 import { useSelector } from "react-redux";
 import SettingsDialog from "@ui/plugins/settingsdialog/SettingsDialog";
 import { QrynTheme } from "@ui/theme/types";
-
+import { useWebVitals } from '../workers/useVitalsWorker'
 export const MainAppStyles = (theme:QrynTheme) => css`
     background: ${theme.background};
     display:flex;
@@ -18,6 +18,7 @@ export const MainAppStyles = (theme:QrynTheme) => css`
 export default function App() {
     const theme = useTheme();
     const settingDialogOpen = useSelector((store:any)=>store.settingsDialogOpen)
+    useWebVitals()
     return (
         <div className={cx(MainAppStyles(theme))}>
             <MainStatusBar/>
