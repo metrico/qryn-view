@@ -68,10 +68,10 @@ let configOpts = {
                         "@microlink/react-json-view",
                         "date-fns",
                         "nanoid",
-                        "prismjs",
                         "javascript-time-ago",
-                        "json-markup",
                     ],
+                    prinsmJs: ["prismjs"],
+                    dayJs: ["dayjs"],
                     reactDnd: ["react-dnd", "react-dnd-html5-backend"],
                     memoize: [
                         "memoize-one",
