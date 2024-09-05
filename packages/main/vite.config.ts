@@ -70,7 +70,7 @@ let configOpts = {
                         "nanoid",
                         "javascript-time-ago",
                     ],
-                    prinsmJs: ["prismjs"],
+                    prismJs: ["prismjs"],
                     dayJs: ["dayjs"],
                     reactDnd: ["react-dnd", "react-dnd-html5-backend"],
                     memoize: [
