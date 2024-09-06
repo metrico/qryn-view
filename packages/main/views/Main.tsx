@@ -16,6 +16,7 @@ import {
 import { css, cx } from "@emotion/css";
 import useTheme from "@ui/theme/useTheme";
 import { setCurrentUser } from "./User/actions";
+import { useWebVitals } from '@util/useWebVitals'
 
 const MainStyles = (theme: any) => css`
     background: ${theme.shadow};
@@ -24,6 +25,9 @@ const MainStyles = (theme: any) => css`
 export default function Main() {
     const navigate = useNavigate();
     const dataSources = useSelector((store: any) => store.dataSources);
+
+    useWebVitals({page:"Main"});
+    
     // get hash from current location
     const { hash } = useLocation();
     // get url params as object

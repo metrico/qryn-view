@@ -9,7 +9,7 @@ import { DataSourcesFiller } from "./components/DataSourcesFiller";
 import { setTheme } from "@ui/store/actions";
 import { useMediaQuery } from "react-responsive";
 import useTheme from "@ui/theme/useTheme"
-
+import { useWebVitals} from '@util/useWebVitals'
 export function getURlParams(params: any) {
     const url = params.replace(/#/, "");
     const decoded = decodeURIComponent(url);
@@ -27,6 +27,9 @@ export default function DataSources() {
     const dispatch: any = useDispatch();
     const theme = useTheme();
     const autoTheme = useSelector((store: any) => store.autoTheme);
+
+    useWebVitals({page:"DataSources"})
+    
     useEffect(() => {
         if (autoTheme) {
             const theme = isAutoDark ? "dark" : "light";

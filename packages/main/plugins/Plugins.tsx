@@ -4,9 +4,11 @@ import useTheme from "@ui/theme/useTheme";
 import { LocalPluginsManagement } from "./PluginManagerFactory";
 import { PluginPageStyles } from "./PluginStyles";
 import { PluginCards } from "./PluginCards";
+import { useWebVitals } from "@util/useWebVitals";
 
 export default function Plugins() {
     const theme = useTheme();
+    useWebVitals({page:"Plugins"});
     const pl = LocalPluginsManagement();
     const [local] = useState(pl.getAll());
     const plugins: any = useMemo(() => {
