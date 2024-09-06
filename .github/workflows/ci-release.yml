@@ -99,29 +99,6 @@ jobs:
                   draft: false
                   prerelease: false
                   overwrite: true
-            - name: Prepare for Mothership
-              if: github.event_name != 'pull_request'
-              uses: GuillaumeFalourd/create-other-repo-branch-action@v1.5
-              with:
-                  repository_owner: metrico
-                  repository_name: qryn
-                  new_branch_name: view_${{steps.version.outputs.newTag}}
-                  new_branch_ref: master
-                  access_token: ${{ secrets.GH_PUSH }}
-            - name: Push to Mothership
-              if: github.event_name != 'pull_request'
-              uses: cpina/github-action-push-to-another-repository@main
-              env:
-                  API_TOKEN_GITHUB: ${{ secrets.GH_PUSH }}
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  source-directory: "packages/main/dist"
-                  target-directory: "view"
-                  target-branch: view_${{steps.version.outputs.newTag}}
-                  destination-github-username: "metrico"
-                  destination-repository-name: "qryn"
-                  user-email: lorenzo.mangani@gmail.com
-                  commit-message: Upgrade view to ${{steps.version.outputs.newTag}}
             - name: Deploy to gh-pages 🚀
               if: github.event_name != 'pull_request'
               uses: JamesIves/github-pages-deploy-action@v4.2.3
