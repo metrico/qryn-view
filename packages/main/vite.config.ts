@@ -97,6 +97,7 @@ let configOpts = {
             "@ui/theme": path.resolve(__dirname, "theme"),
             "@ui/qrynui": path.resolve(__dirname, "qrynui"),
             "@ui/environment": path.resolve(__dirname, "environment"),
+            "@util": path.resolve(__dirname, "util"),
         },
     },
 };
@@ -121,6 +122,11 @@ export default defineConfig(({ mode }) => {
                     secure: false,
                 },
                 "/influx": {
+                    target: proxyApi,
+                    changeOrigin: env.VITE_API_BASE_URL,
+                    secure: false,
+                },
+                "/tempo": {
                     target: proxyApi,
                     changeOrigin: env.VITE_API_BASE_URL,
                     secure: false,

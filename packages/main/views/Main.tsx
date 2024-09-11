@@ -16,7 +16,7 @@ import {
 import { css, cx } from "@emotion/css";
 import useTheme from "@ui/theme/useTheme";
 import { setCurrentUser } from "./User/actions";
-import { useWebVitals } from '@util/useWebVitals'
+import { useWebVitals } from "@ui/plugins/WebVitals/useWebVitals";
 
 const MainStyles = (theme: any) => css`
     background: ${theme.shadow};
@@ -26,8 +26,8 @@ export default function Main() {
     const navigate = useNavigate();
     const dataSources = useSelector((store: any) => store.dataSources);
 
-    useWebVitals({page:"Main"});
-    
+    useWebVitals({ page: "Main" });
+
     // get hash from current location
     const { hash } = useLocation();
     // get url params as object
@@ -36,8 +36,9 @@ export default function Main() {
     }, [hash]);
 
     UpdateStateFromQueryParams();
-  // cookieAuth will be the cookie object
-    const { cookiesAvailable, cookieAuth, cookieUser } = useCookiesAvailable(paramsMemo);
+    // cookieAuth will be the cookie object
+    const { cookiesAvailable, cookieAuth, cookieUser } =
+        useCookiesAvailable(paramsMemo);
 
     const { urlAvailable, url } = useUrlAvailable(paramsMemo);
 
@@ -60,25 +61,20 @@ export default function Main() {
                 cookiesAvailable,
                 dataSources
             );
-
         } else {
             updateDataSourcesFromLocalUrl(dataSources, dispatch, navigate);
         }
-    
     }, []);
 
-    useEffect(()=>{
-  
-        if(cookieUser && typeof cookieUser === 'string') {
+    useEffect(() => {
+        if (cookieUser && typeof cookieUser === "string") {
             try {
-                dispatch(setCurrentUser(JSON.parse(cookieUser)))
-
-            } catch(e) {
-                console.log(e)
+                dispatch(setCurrentUser(JSON.parse(cookieUser)));
+            } catch (e) {
+                console.log(e);
             }
         }
-    
-    },[cookieUser])
+    }, [cookieUser]);
 
     useEffect(() => {
         const urlSetting = {
@@ -113,7 +109,7 @@ export default function Main() {
             );
         }
     }, [isAutoDark, autoTheme, dispatch]);
-    
+
     const viewRenderer = (
         isTabletOrMobile: boolean,
         isSplit: boolean,

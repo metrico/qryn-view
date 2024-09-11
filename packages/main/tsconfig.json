@@ -37,6 +37,6 @@
             "react": ["./node_modules/@types/react"],
         }
     },
-    "include": ["src","views","util"],
+    "include": ["src","views","util", "plugins"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }
