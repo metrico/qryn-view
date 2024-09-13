@@ -8,6 +8,7 @@ import { useWebVitals } from "@ui/plugins/WebVitals/useWebVitals";
 
 export default function Plugins() {
     const theme = useTheme();
+     // check web vitals 
     useWebVitals({ page: "Plugins" });
     const pl = LocalPluginsManagement();
     const [local] = useState(pl.getAll());

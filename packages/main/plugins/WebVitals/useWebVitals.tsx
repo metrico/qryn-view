@@ -3,8 +3,8 @@ import {
     flushQueue,
     handleVisibilityChange,
     reportWebVitals,
-} from "./webVitals";
-import { QueueItem } from "./webVitals";
+} from "./helper/webVitals";
+import { QueueItem } from "./helper/webVitals";
 import { WebVitalsStore } from "./store";
 
 export type WebVitalsProps = {

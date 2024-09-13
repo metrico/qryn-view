@@ -1,6 +1,5 @@
 import { onCLS, onFCP, onINP, onLCP, onTTFB, Metric } from "web-vitals";
 import { v4 as uuidv4 } from "uuid";
-
 const location = window.location;
 const url = location.protocol + "//" + location.host;
 export const LOKI_WRITE = url + "/loki/api/v1/push";
@@ -20,6 +19,27 @@ export interface QueueItem {
     metric: Metric;
     page: string;
     traceId: string;
+}
+
+function simplifyINPArray(array: any[]): any[] {
+    const countMap = new Map<string, number>();
+
+    // First pass: count occurrences
+    for (const entry of array) {
+        const key = JSON.stringify(entry);
+        countMap.set(key, (countMap.get(key) || 0) + 1);
+    }
+
+    // Second pass: create result array
+    const result = [];
+    for (const [key, count] of countMap.entries()) {
+        const entry = JSON.parse(key);
+        const final_entry = { ...entry, count };
+
+        result.push(final_entry);
+    }
+
+    return result;
 }
 
 const formatWebVitalsMetrics = (queue_array: QueueItem[]) => {
@@ -61,30 +81,44 @@ const logs_push = async (logs_data: string) => {
     }
 };
 
-const format_logs_queue = (queue: QueueItem[]) => {
-    const mapped = queue.map(({ metric, page, traceId }) => ({
-        stream: {
-            level: "info",
-            job: "webVitals",
-            name: metric.name,
-            description:
-                MetricDescription[
-                    metric.name as keyof typeof MetricDescription
-                ],
-            value: metric.value.toString(),
-            rating: metric.rating || "unknown",
-            delta: metric.delta?.toString() || "N/A",
-            traceId: traceId,
-            page: page,
-        },
-        values: [
-            [
-                String(Date.now() * 1000000),
-                `job=WebVitals name=${metric.name} description=${MetricDescription[metric.name as keyof typeof MetricDescription]} traceId=${traceId} page=${page} value=${metric.value} rating=${metric.rating || "unknown"} delta=${metric.delta?.toString() || "N/A"} entries=${JSON.stringify(metric.entries || [])}`,
-            ],
-        ],
-    }));
-    return JSON.stringify({ streams: mapped });
+const format_logs_queue = async (queue: QueueItem[]) => {
+    //    const encryption = new Encryption();
+    // will format first the url with encoding to not show at request and spam everything
+
+    const mapped = await queue.map(async ({ metric, page, traceId }) => {
+        let metric_entries: any = metric.entries;
+
+        if (metric.name === "INP") {
+            metric_entries = simplifyINPArray(metric.entries);
+        }
+
+        const logString = `job=WebVitals name=${metric.name} description="${MetricDescription[metric.name as keyof typeof MetricDescription]}" traceId=${traceId} page="${page}" value=${metric.value} rating=${metric.rating || "unknown"} delta=${metric.delta?.toString() || "N/A"} entries=${JSON.stringify(metric_entries || [])}`;
+
+        return {
+            stream: {
+                level: "info",
+                job: "webVitals",
+                name: metric.name,
+                description:
+                    MetricDescription[
+                        metric.name as keyof typeof MetricDescription
+                    ],
+                value: metric.value.toString(),
+                rating: metric.rating || "unknown",
+                delta: metric.delta?.toString() || "N/A",
+                traceId: traceId,
+                page: page,
+            },
+            values: [[String(Date.now() * 1000000), logString]],
+        };
+    });
+
+    const streams_mapped = await Promise.all(mapped);
+    if (streams_mapped) {
+        return JSON.stringify({ streams: streams_mapped });
+    } else {
+        return JSON.stringify({ streams: [] });
+    }
 };
 
 const format_metrics_queue = (queue: QueueItem[]): QueueItem[] => {
@@ -196,27 +230,53 @@ const createWebVitalSpan = (metric: any, page: string, traceId: string) => {
         };
     };
 
+    const createINPParentSpan = (metric: any, page: string) => {
+        return {
+            id: parentId,
+            traceId: traceId,
+            timestamp: timestamp,
+            duration: Math.floor(metric.value * 1000), // microseconds
+            name: "INP",
+            tags: {
+                "http.method": "GET",
+                "inp.name": metric.name,
+                "inp.page": page,
+                "inp.value": metric.value,
+                "inp.rating": metric.rating,
+                "inp.delta": metric.delta,
+            },
+
+            localEndpoint: {
+                serviceName: "Web Vitals",
+            },
+        };
+    };
+
     let parentSpan: any = {
         id: parentId,
         traceId: traceId,
         timestamp: timestamp,
         duration: Math.floor(metric.value * 1000), // microseconds
         name: metric.name,
-        tags: {
-            "http.method": "GET",
-            "http.path": page,
-            "web.vital.name": metric.name,
-            "web.vital.description": metric.description,
-            "web.vital.value": metric.value.toString(),
-            "web.vital.rating": metric.rating || "unknown",
-            "web.vital.delta": metric.delta?.toString() || "N/A",
-        },
+
         localEndpoint: {
             serviceName: "Web Vitals",
         },
     };
 
-    let childSpans = [];
+    let tags: any = {
+        "http.method": "GET",
+        "http.path": page,
+        "web.vital.name": metric.name,
+        "web.vital.description": metric.description,
+        "web.vital.value": metric.value.toString(),
+        "web.vital.rating": metric.rating || "unknown",
+        "web.vital.delta": metric.delta?.toString() || "N/A",
+    };
+
+    parentSpan.tags = tags;
+
+    let childSpans: any = [];
 
     if (metric.name === "TTFB") {
         parentSpan = createTTFBParentSpan(metric, page);
@@ -333,6 +393,36 @@ const createWebVitalSpan = (metric: any, page: string, traceId: string) => {
         }
     }
 
+    if (metric.name === "INP") {
+        parentSpan = createINPParentSpan(metric, page);
+        const child_entries = simplifyINPArray(metric.entries)?.map(
+            (metric_entry) =>
+                createChildSpan(
+                    metric_entry.name,
+                    Math.round(
+                        metric_entry.processingEnd -
+                            metric_entry.processingStart
+                    ),
+                    traceId,
+                    parentId,
+                    Math.round(metric_entry.processingStart),
+                    {
+                        "inp.name": metric_entry.name,
+                        "inp.interactionId": metric_entry.interactionId,
+                        "inp.startTime": metric_entry.startTime,
+                        "inp.processingStart": metric_entry.processingStart,
+                        "inp.processingEnd": metric_entry.processingEnd,
+                        "inp.cancellable": metric_entry.cancelable,
+                        "inp.count": metric_entry.count,
+                    }
+                )
+        );
+
+        if (child_entries?.length > 0) {
+            childSpans = child_entries;
+        }
+    }
+
     let spans = [parentSpan];
 
     if (Object.keys(childSpans)?.length > 0) {
@@ -361,7 +451,10 @@ export async function flushQueue(queue: Set<QueueItem>) {
 
     try {
         const queueArray = Array.from(queue);
-        const logs_body = format_logs_queue(queueArray);
+        const logs_body = await format_logs_queue(queueArray).then((data) => {
+            return data;
+        });
+
         const metricsQueue = format_metrics_queue(queueArray);
         const formattedMetrics = formatWebVitalsMetrics(metricsQueue);
         const allSpans = queueArray.flatMap(({ metric, page, traceId }) =>
