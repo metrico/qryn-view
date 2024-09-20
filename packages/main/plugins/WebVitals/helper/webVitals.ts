@@ -99,6 +99,8 @@ const format_logs_queue = async (queue: QueueItem[]) => {
                 level: "info",
                 job: "webVitals",
                 name: metric.name,
+                metricName: metric.name,
+                metricLabel: "page",
                 description:
                     MetricDescription[
                         metric.name as keyof typeof MetricDescription
@@ -108,6 +110,7 @@ const format_logs_queue = async (queue: QueueItem[]) => {
                 delta: metric.delta?.toString() || "N/A",
                 traceId: traceId,
                 page: page,
+                hasMetrics:true,
             },
             values: [[String(Date.now() * 1000000), logString]],
         };

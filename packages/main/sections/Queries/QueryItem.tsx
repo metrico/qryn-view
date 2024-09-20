@@ -18,7 +18,7 @@ import {
     getStoredQueries,
     setStoredQuery,
     setLocalTabsState,
-    getLocalTabsState
+    getLocalTabsState,
 } from "./helpers";
 import { useIdRefs } from "./hooks";
 
@@ -46,6 +46,8 @@ function TabPanel(props: TabPanelProps) {
 
 const QueryItem = (props: any) => {
     const { name, data } = props;
+
+    console.log(data)
     const { id } = data;
     const [launchQuery, setLaunchQuery] = useState("");
     const dispatch: any = useDispatch();
@@ -64,7 +66,6 @@ const QueryItem = (props: any) => {
 
     const deleteStoredQuery = (): void => {
         const prevStored = getStoredQueries();
-
         if (prevStored?.length > 0) {
             const filtered = filterLocal(prevStored, id);
             setStoredQuery(filtered);
@@ -73,9 +74,7 @@ const QueryItem = (props: any) => {
 
     const onDeleteQuery = (): void => {
         const filtered = filterPanel(panelSelected, id);
-
         const viewFiltered = filterPanel(dataView, id);
-
         const prevStoredQuery = getStoredQueries();
 
         if (prevStoredQuery?.length > 0) {

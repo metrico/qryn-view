@@ -1,5 +1,5 @@
 import axios from "axios";
-import store  from "@ui/store/store";
+import store from "@ui/store/store";
 import setIsEmptyView from "./setIsEmptyView";
 import { getEndpoint } from "./helpers/getEP";
 import { getQueryOptions } from "./helpers/getQueryOptions";
@@ -15,6 +15,12 @@ import { DataViews } from "../store.model";
 import { setLeftDataView } from "./setLeftDataView";
 import { setRightDataView } from "./setRightDataView";
 
+import {
+    performanceAxios,
+    flushPerformanceQueue,
+} from "@ui/plugins/WebVitals/performanceAxios";
+//import { flushQueue } from './webVitals';
+
 /**
  *
  * @param queryInput  the expression text
@@ -28,7 +34,7 @@ import { setRightDataView } from "./setRightDataView";
 // this one should load logs and metrics data
 // just change endpoint
 
-function panelDispatch(panel: string, dispatch: Function, data: any) {
+function panelDispatch(panel: string, dispatch: any, data: any) {
     if (panel === "left") {
         return dispatch(setLeftPanel(data));
     }
@@ -40,7 +46,7 @@ function panelDispatch(panel: string, dispatch: Function, data: any) {
 export function dataViewDispatch(
     panel: string,
     dataViews: DataViews,
-    dispatch: Function
+    dispatch: any
 ) {
     if (panel === "left") {
         return dispatch(setLeftDataView(dataViews));
@@ -164,7 +170,7 @@ export default function getData(
     );
 
     const endpoint = getEndpoint(type, queryType, params);
-    const setLoading = (state: boolean, dispatch: Function) => {
+    const setLoading = (state: boolean, dispatch: any) => {
         const dataViews: DataViews = store.getState()?.[`${panel}DataView`];
         const dataView = dataViews?.find((view) => view.id === id);
         if (dataView) {
@@ -172,7 +178,7 @@ export default function getData(
         }
         dataViewDispatch(panel, dataViews, dispatch);
     };
-    return async function (dispatch: Function) {
+    return async function (dispatch: any) {
         setLoading(true, dispatch);
         loadingState(dispatch, true);
         let cancelToken: any;
@@ -202,8 +208,15 @@ export default function getData(
 
         try {
             if (options?.method === "POST") {
-                await axios
-                    ?.post(endpoint, queryInput, options)
+                //await axios
+                await performanceAxios({
+                    method: "POST",
+                    url: endpoint,
+                    data: queryInput,
+                    type,
+                    ...options,
+                })
+                    // ?.post(endpoint, queryInput, options)
                     ?.then((response) => {
                         processResponse(
                             type,
@@ -226,13 +239,22 @@ export default function getData(
                     .finally(() => {
                         setLoading(false, dispatch);
                         loadingState(dispatch, false);
+                        flushPerformanceQueue(); // Flush the performance data
+                        //  flushQueue(webVitalsQueue);
                     });
             } else if (options?.method === "GET") {
-                await axios
-                    ?.get(endpoint, {
-                        auth: { username: user, password: pass },
-                        ...options,
-                    })
+                // await axios
+                // ?.get(endpoint, {
+                //     auth: { username: user, password: pass },
+                //     ...options,
+                // })
+                await performanceAxios({
+                    method: "GET",
+                    url: endpoint,
+                    type,
+                    auth: { username: user, password: pass },
+                    ...options,
+                })
                     ?.then((response) => {
                         processResponse(
                             type,
@@ -273,6 +295,7 @@ export default function getData(
                     .finally(() => {
                         loadingState(dispatch, false);
                         setLoading(false, dispatch);
+                        flushPerformanceQueue(); // Flush the performance data
                     });
             }
         } catch (e) {

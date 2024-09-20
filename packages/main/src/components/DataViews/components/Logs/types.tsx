@@ -4,6 +4,7 @@ export interface ILogRowProps {
     isSplit: boolean;
     isMobile: boolean;
     isShowTs: boolean;
+    onRowClick : () => void
 }
 
 export interface IRowProps {
