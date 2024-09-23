@@ -15,11 +15,21 @@ const WebVitalStyles = (theme: QrynTheme) => css`
 `;
 
 export const WebVitals: React.FC = () => {
-    const { active, setActive } = WebVitalsStore();
+    const { 
+        webVitalsActive, 
+        httpPerformanceActive,
+        setWebVitalsActive,
+        setHttpPerformanceActive,
+        qrynInstance
+    } = WebVitalsStore();
+    
     const theme = useTheme();
     const onWebVitalsActivate = () => {
-        setActive(active);
+        setWebVitalsActive(webVitalsActive);
     };
+    const onHttpPerformanceRequestActivate = () => {
+        setHttpPerformanceActive(httpPerformanceActive)
+    }
 
     return (
         <div className={cx(WebVitalStyles(theme))}>
@@ -28,8 +38,18 @@ export const WebVitals: React.FC = () => {
             </Tooltip>
             <CustomSwitch
                 onChange={onWebVitalsActivate}
-                defaultActive={active}
+                defaultActive={webVitalsActive}
             />
+                      <Tooltip title="Monitor HTTP Requests sending data to Qryn">
+                <p>Monitor HTTP Requests</p>
+            </Tooltip>
+            <CustomSwitch
+                onChange={onHttpPerformanceRequestActivate}
+                defaultActive={httpPerformanceActive}
+            />
+            <Tooltip title="Your qryn-view instance tag to monitor statistics">
+            <p>Instance: {qrynInstance ?? ""}</p>
+            </Tooltip>
         </div>
     );
 };

@@ -1,5 +1,7 @@
 import { onCLS, onFCP, onINP, onLCP, onTTFB, Metric } from "web-vitals";
 import { v4 as uuidv4 } from "uuid";
+import { WebVitalsStore } from '@ui/plugins/WebVitals/store'
+
 const location = window.location;
 const url = location.protocol + "//" + location.host;
 export const LOKI_WRITE = url + "/loki/api/v1/push";
@@ -19,6 +21,7 @@ export interface QueueItem {
     metric: Metric;
     page: string;
     traceId: string;
+    instance:string;
 }
 
 function simplifyINPArray(array: any[]): any[] {
@@ -81,7 +84,7 @@ const logs_push = async (logs_data: string) => {
     }
 };
 
-const format_logs_queue = async (queue: QueueItem[]) => {
+const format_logs_queue = async (queue: QueueItem[], instance: string) => {
     //    const encryption = new Encryption();
     // will format first the url with encoding to not show at request and spam everything
 
@@ -92,7 +95,7 @@ const format_logs_queue = async (queue: QueueItem[]) => {
             metric_entries = simplifyINPArray(metric.entries);
         }
 
-        const logString = `job=WebVitals name=${metric.name} description="${MetricDescription[metric.name as keyof typeof MetricDescription]}" traceId=${traceId} page="${page}" value=${metric.value} rating=${metric.rating || "unknown"} delta=${metric.delta?.toString() || "N/A"} entries=${JSON.stringify(metric_entries || [])}`;
+        const logString = `job=WebVitals name=${metric.name} description="${MetricDescription[metric.name as keyof typeof MetricDescription]}" traceId=${traceId} instance=${instance} page="${page}" value=${metric.value} rating=${metric.rating || "unknown"} delta=${metric.delta?.toString() || "N/A"} entries=${JSON.stringify(metric_entries || [])}`;
 
         return {
             stream: {
@@ -101,6 +104,7 @@ const format_logs_queue = async (queue: QueueItem[]) => {
                 name: metric.name,
                 metricName: metric.name,
                 metricLabel: "page",
+                instance: instance,
                 description:
                     MetricDescription[
                         metric.name as keyof typeof MetricDescription
@@ -124,15 +128,16 @@ const format_logs_queue = async (queue: QueueItem[]) => {
     }
 };
 
-const format_metrics_queue = (queue: QueueItem[]): QueueItem[] => {
+const format_metrics_queue = (queue: QueueItem[], instance:string): QueueItem[] => {
     return queue.map(({ metric, page, traceId }) => ({
         metric,
         page,
         traceId,
+        instance
     }));
 };
 
-const createWebVitalSpan = (metric: any, page: string, traceId: string) => {
+const createWebVitalSpan = (metric: any, page: string, traceId: string, instance: string) => {
     const timestamp = Math.floor(Date.now() * 1000); // microseconds
     const parentId = uuidv4().replace(/-/g, "");
 
@@ -157,6 +162,7 @@ const createWebVitalSpan = (metric: any, page: string, traceId: string) => {
                 "web.vital.page": page,
                 "web.vital.name": metric.name,
                 "web.vital.description": metric.description,
+                "qryn-view.instance": metric.instance,
                 ...attributes,
             },
             localEndpoint: {
@@ -226,6 +232,7 @@ const createWebVitalSpan = (metric: any, page: string, traceId: string) => {
                 "performance.loadEvent": (
                     entry.loadEventEnd - entry.loadEventStart
                 ).toString(),
+                "qryn-view.instance" : instance,
             },
             localEndpoint: {
                 serviceName: "Web Vitals",
@@ -247,6 +254,7 @@ const createWebVitalSpan = (metric: any, page: string, traceId: string) => {
                 "inp.value": metric.value,
                 "inp.rating": metric.rating,
                 "inp.delta": metric.delta,
+                "qryn-view.instance": instance,
             },
 
             localEndpoint: {
@@ -275,6 +283,7 @@ const createWebVitalSpan = (metric: any, page: string, traceId: string) => {
         "web.vital.value": metric.value.toString(),
         "web.vital.rating": metric.rating || "unknown",
         "web.vital.delta": metric.delta?.toString() || "N/A",
+        "qryn-view.instance": instance
     };
 
     parentSpan.tags = tags;
@@ -417,6 +426,7 @@ const createWebVitalSpan = (metric: any, page: string, traceId: string) => {
                         "inp.processingEnd": metric_entry.processingEnd,
                         "inp.cancellable": metric_entry.cancelable,
                         "inp.count": metric_entry.count,
+                        "qryn-view.instance":instance,
                     }
                 )
         );
@@ -450,18 +460,20 @@ const sendTraceData = async (spans: any[]) => {
 };
 
 export async function flushQueue(queue: Set<QueueItem>) {
+
     if (queue.size === 0) return;
 
     try {
+        const {qrynInstance} = WebVitalsStore.getState()
         const queueArray = Array.from(queue);
-        const logs_body = await format_logs_queue(queueArray).then((data) => {
+        const logs_body = await format_logs_queue(queueArray,qrynInstance).then((data) => {
             return data;
         });
 
-        const metricsQueue = format_metrics_queue(queueArray);
+        const metricsQueue = format_metrics_queue(queueArray, qrynInstance);
         const formattedMetrics = formatWebVitalsMetrics(metricsQueue);
-        const allSpans = queueArray.flatMap(({ metric, page, traceId }) =>
-            createWebVitalSpan(metric, page, traceId)
+        const allSpans = queueArray.flatMap(({ metric, page, traceId, instance }) =>
+            createWebVitalSpan(metric, page, traceId, instance)
         );
 
         await Promise.all([
@@ -483,10 +495,11 @@ export const handleVisibilityChange = async (queue: Set<QueueItem>) => {
 };
 
 export const reportWebVitals = (queue: Set<QueueItem>, page: string) => {
+    const { qrynInstance } = WebVitalsStore.getState();
     const addToQueue = async (metric: any) => {
         const traceId = uuidv4().replace(/-/g, "");
 
-        queue.add({ metric, page, traceId });
+        queue.add({ metric, page, traceId, instance: qrynInstance});
     };
 
     onCLS(addToQueue);

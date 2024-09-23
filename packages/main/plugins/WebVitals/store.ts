@@ -1,22 +1,40 @@
 import { create } from "zustand";
 
 export type WebVitalsStoreType = {
-    active: boolean;
+    webVitalsActive: boolean;
+    httpPerformanceActive: boolean;
     apiUrl: string | null;
-    setActive: (active: boolean) => void;
-    setApiUrl: (apiUrl:string) => void;
+    setWebVitalsActive: (active: boolean) => void;
+    setHttpPerformanceActive: (active: boolean) => void;
+    setApiUrl: (apiUrl: string) => void;
+    qrynInstance: string;
+    setQrynInstance: (qrynInstance) => void;
 };
 
 const initialState = {
-    active:
+    webVitalsActive:
         JSON.parse(localStorage.getItem("webVitalsActive") ?? "false") ?? false,
-        apiUrl: null,
+    httpPerformanceActive:
+        JSON.parse(localStorage.getItem("httpPerformanceActive") ?? "false") ??
+        false,
+    qrynInstance:
+        JSON.parse(localStorage.getItem("qrynInstance") ?? "false") ?? false,
+    apiUrl: null,
 };
 export const WebVitalsStore = create<WebVitalsStoreType>((set) => ({
     ...initialState,
-    setActive: (active) => {
+    setWebVitalsActive: (active) => {
         localStorage.setItem("webVitalsActive", JSON.stringify(!active));
-        return set({ active: !active });
+        return set({ webVitalsActive: !active });
     },
-    setApiUrl:(url) => set({apiUrl:url}),
+    setHttpPerformanceActive: (active) => {
+        localStorage.setItem("httpPerformanceActive", JSON.stringify(!active));
+        return set({ webVitalsActive: !active });
+    },
+    setQrynInstance: (qrynInstance) => {
+        localStorage.setItem("qrynInstance", JSON.stringify(qrynInstance));
+
+        return set({ qrynInstance });
+    },
+    setApiUrl: (url) => set({ apiUrl: url }),
 }));

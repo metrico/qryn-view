@@ -48,6 +48,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.11.5
         version: 11.11.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
+      '@fingerprintjs/fingerprintjs':
+        specifier: ^4.5.0
+        version: 4.5.0
       '@microlink/react-json-view':
         specifier: latest
         version: 1.23.1(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -214,6 +217,9 @@ importers:
       '@testing-library/react':
         specifier: ^14.3.1
         version: 14.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/fingerprintjs':
+        specifier: ^0.5.28
+        version: 0.5.28
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
@@ -616,6 +622,9 @@ packages:
   '@eslint/js@8.57.0':
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+
+  '@fingerprintjs/fingerprintjs@4.5.0':
+    resolution: {integrity: sha512-mFSQoxyt8SGGRp1QUlhcnVtquW2HzCKfHKxAoIurR6soIJpuK3VvZuH0sg8eNaHH2dJhI3mZOEUx4k+P4GqXzw==}
 
   '@floating-ui/core@1.6.2':
     resolution: {integrity: sha512-+2XpQV9LLZeanU4ZevzRnGFg2neDeKHgFLjP6YLW+tly0IvrhqT4u8enLGjLH3qeh85g19xY5rsAusfwTdn5lg==}
@@ -1027,6 +1036,9 @@ packages:
 
   '@types/estree@1.0.5':
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
+
+  '@types/fingerprintjs@0.5.28':
+    resolution: {integrity: sha512-y4HGQNMocps8rj+S/2Q+qtVqI9XEE8ax2txSThPq9PHQq1ExLaShci31KAcLUtE+bczXEGeW8LzUqqwWlGk+KQ==}
 
   '@types/hoist-non-react-statics@3.3.5':
     resolution: {integrity: sha512-SbcrWzkKBw2cdwRTwQAswfpB9g9LJWfjtUeW/jvNwbhC8cpmmNYVePa+ncbUe0rGTQ7G3Ff6mYUN2VMfLVr+Sg==}
@@ -2770,6 +2782,9 @@ packages:
   tslib@2.3.0:
     resolution: {integrity: sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==}
 
+  tslib@2.7.0:
+    resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
+
   tss-react@4.9.10:
     resolution: {integrity: sha512-uQj+r8mOKy0tv+/GAIzViVG81w/WeTCOF7tjsDyNjlicnWbxtssYwTvVjWT4lhWh5FSznDRy6RFp0BDdoLbxyg==}
     peerDependencies:
@@ -3459,6 +3474,10 @@ snapshots:
 
   '@eslint/js@8.57.0': {}
 
+  '@fingerprintjs/fingerprintjs@4.5.0':
+    dependencies:
+      tslib: 2.7.0
+
   '@floating-ui/core@1.6.2':
     dependencies:
       '@floating-ui/utils': 0.2.2
@@ -3877,6 +3896,8 @@ snapshots:
       '@types/trusted-types': 2.0.7
 
   '@types/estree@1.0.5': {}
+
+  '@types/fingerprintjs@0.5.28': {}
 
   '@types/hoist-non-react-statics@3.3.5':
     dependencies:
@@ -5787,6 +5808,8 @@ snapshots:
       yn: 3.1.1
 
   tslib@2.3.0: {}
+
+  tslib@2.7.0: {}
 
   tss-react@4.9.10(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@mui/material@5.15.20(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
     dependencies:

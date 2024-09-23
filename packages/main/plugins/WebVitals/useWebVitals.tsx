@@ -12,17 +12,17 @@ export type WebVitalsProps = {
 };
 
 export const useWebVitals = ({ page }: WebVitalsProps) => {
-    const { active } = WebVitalsStore();
+    const { webVitalsActive } = WebVitalsStore();
 
     useEffect(() => {
         // Queue Set
         const metricsQueue = new Set<QueueItem>();
-        if (active) {
+        if (webVitalsActive) {
             reportWebVitals(metricsQueue, page);
         }
 
         return () => {
-            if (active) {
+            if (webVitalsActive) {
                 document.removeEventListener("visibilitychange", () =>
                     handleVisibilityChange(metricsQueue)
                 );
