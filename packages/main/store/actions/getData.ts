@@ -16,9 +16,9 @@ import { setLeftDataView } from "./setLeftDataView";
 import { setRightDataView } from "./setRightDataView";
 
 import {
-    performanceAxios,
+    requestPerformance,
     flushPerformanceQueue,
-} from "@ui/plugins/WebVitals/performanceAxios";
+} from "@ui/plugins/WebVitals/requestPerformance";
 //import { flushQueue } from './webVitals';
 
 /**
@@ -209,7 +209,7 @@ export default function getData(
         try {
             if (options?.method === "POST") {
                 //await axios
-                await performanceAxios({
+                await requestPerformance({
                     method: "POST",
                     url: endpoint,
                     data: queryInput,
@@ -248,7 +248,7 @@ export default function getData(
                 //     auth: { username: user, password: pass },
                 //     ...options,
                 // })
-                await performanceAxios({
+                await requestPerformance({
                     method: "GET",
                     url: endpoint,
                     type,

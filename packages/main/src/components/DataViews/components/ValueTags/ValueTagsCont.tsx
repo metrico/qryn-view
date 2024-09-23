@@ -41,7 +41,6 @@ export function ValueTagsCont(props: any) {
         }
     }, [tags]);
 
-    console.log(logMetrics, tags.hasMetrics);
     if (showLabels) {
         return (
             <div className="value-tags-container">

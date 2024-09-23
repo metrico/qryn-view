@@ -46,8 +46,6 @@ function TabPanel(props: TabPanelProps) {
 
 const QueryItem = (props: any) => {
     const { name, data } = props;
-
-    console.log(data)
     const { id } = data;
     const [launchQuery, setLaunchQuery] = useState("");
     const dispatch: any = useDispatch();
