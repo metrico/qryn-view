@@ -7,7 +7,7 @@ import { useMediaQuery } from "react-responsive";
 import { LinkButtonWithTraces } from "./LinkButtonWithTraces";
 import { ValueTagsStyled } from "./styled";
 import { FilterButtons } from "./FilterButtons";
-import  useTheme  from "@ui/theme/useTheme";
+import useTheme from "@ui/theme/useTheme";
 
 /**
  *
@@ -18,7 +18,6 @@ import  useTheme  from "@ui/theme/useTheme";
  * @param {Object} queryObj // actual query object
  * @returns Component for the Tags for the Log rows
  */
-
 
 export default function ValueTags(props: any) {
     const { tags, actQuery, dataSourceData, linkedFieldTags } = props;
@@ -90,7 +89,7 @@ export default function ValueTags(props: any) {
     };
     return (
         <ThemeProvider theme={theme}>
-            {Object.entries(tags).map(([label, value]:[string,string], k) => (
+            {Object.entries(tags).map(([label, value]: [string, string], k) => (
                 <ValueTagsStyled key={k}>
                     <div className={"value-tags"} key={k}>
                         {!isEmbed && (
