@@ -83,17 +83,25 @@ export async function flushPerformanceQueue() {
         await Promise.all([
             fetch(METRICS_WRITE, {
                 method: "POST",
-                headers: { "Content-Type": "text/plain" },
+                headers: {
+                    "Content-Type": "text/plain",
+                },
                 body: metricsData,
             }),
             fetch(LOKI_WRITE, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: logsData,
             }),
             fetch(TEMPO_WRITE, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify(tracesData),
             }),
         ]);
@@ -108,11 +116,9 @@ export function requestPerformance(config: any): Promise<AxiosResponse> {
     const startTime = performance.now();
     const timestamp = Date.now();
 
-    
-
     const { httpPerformanceActive, qrynInstance } = WebVitalsStore.getState();
 
-    const instance = qrynInstance 
+    const instance = qrynInstance;
     return axios(config)
         .then((response) => {
             // filter in here if the interceptor is active

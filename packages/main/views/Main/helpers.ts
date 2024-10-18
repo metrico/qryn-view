@@ -180,6 +180,8 @@ export async function checkLocalAPI(
                     "Cardinality View",
                     true
                 );
+
+                // activate web vitals 
            
                 isReady = true;
             } else {
@@ -194,6 +196,8 @@ export async function checkLocalAPI(
                     "Cardinality View",
                     false
                 )
+
+                // deactivate web vitals 
                 isReady = true;
             }
         }

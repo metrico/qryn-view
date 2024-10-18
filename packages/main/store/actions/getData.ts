@@ -168,7 +168,6 @@ export default function getData(
         id,
         panel
     );
-
     const endpoint = getEndpoint(type, queryType, params);
     const setLoading = (state: boolean, dispatch: any) => {
         const dataViews: DataViews = store.getState()?.[`${panel}DataView`];
@@ -208,7 +207,6 @@ export default function getData(
 
         try {
             if (options?.method === "POST") {
-                //await axios
                 await requestPerformance({
                     method: "POST",
                     url: endpoint,
