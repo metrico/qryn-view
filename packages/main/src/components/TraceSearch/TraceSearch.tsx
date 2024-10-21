@@ -13,11 +13,6 @@ import useTheme from "@ui/theme/useTheme";
 import { cStyles } from "../DataViews/components/QueryBuilder/styles";
 import { selectTheme } from "../DataViews/components/QueryBuilder/helpers";
 import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
-import { SettingLabel } from "../styles";
-import CustomSwitch from "@ui/qrynui/CustomSwitch/CustomSwitch";
-import { timeStore, TimeState } from "@ui/store/timeStore";
-import { CustomSelect } from "@ui/qrynui/CustomSelect/CustomSelect";
-import { Tooltip } from "@mui/material";
 
 export const timeRangeLabels = [
     "Last 5 minutes",
@@ -35,12 +30,6 @@ export const timeRangeLabels = [
     "Last 7 Days",
 ];
 
-const selectFormatter = (opts: string[]) => {
-    return opts.map((option) => ({
-        label: option,
-        value: option.split(" ").join("_"),
-    }));
-};
 
 const SearchColumn = css`
     display: flex;
@@ -186,16 +175,9 @@ export default function TracesSearch(props: any) {
         onSearchChange,
     } = props;
 
-    const { isTimeLookup, setIsTimeLookup, rangeLabel, setRangeLabel } =
-        timeStore.getState() as TimeState;
 
-    const [options] = useState(selectFormatter(timeRangeLabels));
 
-    // default value for lookup: 1h
-    const [selectedLabel, setSelectedLabel] = useState({
-        label: rangeLabel,
-        value: rangeLabel.split(" ").join("_"),
-    });
+
 
     const dispatch: any = useDispatch();
     const serviceNameOpts = useTraceServiceName({ id: dataSourceId });
@@ -264,10 +246,6 @@ export default function TracesSearch(props: any) {
         onSearchChange(emit());
     };
 
-    const handleChangeSelect = (val: any) => {
-        setSelectedLabel(val);
-        setRangeLabel(val.label);
-    };
     const onSubmit = () => {
         if (dataSourceURL && dataSourceURL !== "") {
             dispatch(
@@ -343,36 +321,16 @@ export default function TracesSearch(props: any) {
                         gap: ".5em",
                         marginTop: ".5em",
                         padding: "1em",
-                        justifyContent: "space-between",
+                        justifyContent: "flex-end",
                         background: theme.shadow,
                     }}
                 >
-                    <div
-                        style={{
-                            display: "flex",
-                            gap: ".5em",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Tooltip title="traces time range lookup">
-                            <SettingLabel>Time Lookup</SettingLabel>
-                        </Tooltip>
-                        <CustomSwitch
-                            defaultActive={isTimeLookup}
-                            onChange={() => setIsTimeLookup(!isTimeLookup)}
-                        />
-                        <CustomSelect
-                            options={options}
-                            placeHolder="Please select..."
-                            onChange={(e) => handleChangeSelect(e)}
-                            defaultValue={selectedLabel}
-                            isSearchable
-                            isMulti={false}
-                            align="left"
-                        />
-                    </div>
+
                     <button
                         className={cx(TraceButton(theme))}
+                        style={{
+                            justifySelf:'end'
+                        }}
                         onClick={onSubmit}
                     >
                         Search Traces

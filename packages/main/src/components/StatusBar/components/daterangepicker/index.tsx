@@ -436,7 +436,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                     <AccessTimeOutlinedIcon />
 
                     <span>
-                        {label
+                        {label !== ""
                             ? label
                             : (isValid(dateRange.dateStart)
                                   ? format(

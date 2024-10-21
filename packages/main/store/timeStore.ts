@@ -10,8 +10,8 @@ export type TimeState = {
 export const timeStore = create(
     persist(
         (set): TimeState => ({
-            rangeLabel: "Last 1 hour",
-            isTimeLookup: true,
+            rangeLabel: "Last 5 minutes",
+            isTimeLookup: false,
             setRangeLabel: (rl: string) => set({ rangeLabel: rl }),
             setIsTimeLookup: (tl: boolean) => set({ isTimeLookup: tl }),
         }),
