@@ -6,7 +6,7 @@ export interface Plugin {
     id: string;
     Component: React.FC<any>;
     description: string;
-    visible: boolean;
+    visible?: boolean;
     active: boolean;
     roles: string[];
 }

@@ -151,6 +151,12 @@ _JSON stringifyed and URL encoded_
 
 ------------
 
+### Local Proxy for headeless qryn-view (for experimentation purposes only): 
+
+Add to you .env file: 
+
+`VITE_API_BASE_URL= { your local qryn api }`
+should we with same protocol as your qryn-view instance 
 
 ### About qryn
 

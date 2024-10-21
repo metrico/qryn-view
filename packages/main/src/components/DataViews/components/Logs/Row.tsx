@@ -47,17 +47,17 @@ export function Row(props: IRowProps) {
         dataSourceData,
     };
 
-    const rowProps = {
-        rowColor,
-        onClick: () => {
-            toggleItemActive(index);
-        },
-    };
-
     return (
-        <LogRowStyled {...rowProps}>
-            <LogRow {...logRowProps} isShowTs={actQuery.isShowTs} />
-            <ValueTagsCont {...valueTagsProps} />
+        <LogRowStyled rowColor={rowColor}>
+            <LogRow
+                onRowClick={() => toggleItemActive(index)}
+                {...logRowProps}
+                isShowTs={actQuery.isShowTs}
+            />
+            <ValueTagsCont
+                onValueTagsClick={() => toggleItemActive(index)}
+                {...valueTagsProps}
+            />
         </LogRowStyled>
     );
 }

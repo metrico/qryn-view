@@ -442,7 +442,7 @@ export default function QrynChart(props: QrynChartProps) {
                 barWidth,
                 isLogsVolume && type === "stream"
             );
-
+            if(min && max && timeformat) {
             let plot = $q.plot(
                 element,
                 newData,
@@ -451,10 +451,12 @@ export default function QrynChart(props: QrynChartProps) {
                     xaxis: { timeformat, min, max },
                 })
             );
-
             const colorLabels = plot.getData();
             setLabels(colorLabels);
             $q(chartRef.current).UseTooltip(plot);
+        }
+
+          
         } catch (e) {
             console.log(e);
         }

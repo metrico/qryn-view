@@ -2,6 +2,7 @@ import moment, { Moment, MomentInput } from "moment";
 import { environment } from "@ui/environment/env.dev";
 import stateFromQueryParams from "../helpers/stateFromQueryParams";
 import localService from "../services/localService";
+import addMinutes from "date-fns/addMinutes";
 import localUrl from "../services/localUrl";
 import {
     defaultDataSources,
@@ -130,7 +131,7 @@ export default function initialState() {
         vectorData: {},
         loading: false,
         queryResolution: 1,
-        start: new Date(Date.now() - 5 * 60000),
+        start: addMinutes(new Date(Date.now()), -5),
         time: urlState.time || "", // for instant queries        
         stop: new Date(Date.now()),
         from: urlState.from || null,
@@ -183,7 +184,7 @@ export default function initialState() {
                 direction: "backwards",
                 loading: false,
                 open: true,
-                start: new Date(Date.now() - 5 * 60000),
+                start: addMinutes(new Date(Date.now()), -5),
                 time: "", // for instant queries
                 stop: new Date(Date.now()),
                 label: "", // range label
@@ -215,7 +216,7 @@ export default function initialState() {
                 direction: "backwards",
                 loading: false,
                 open: false,
-                start: new Date(Date.now() - 5 * 60000),
+                start: addMinutes(new Date(Date.now()), -5),
                 time: "", // for instant queries
                 stop: new Date(Date.now()),
                 label: "", // range label

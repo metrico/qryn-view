@@ -6,8 +6,8 @@ import { getHeaders } from "./helpers";
 export function useTraceNames({ id }: any) {
     const dataSources = useSelector(({ dataSources }: any) => dataSources);
 
-    const [traceNames, settraceNames] = useState(
-        { data: { tagValues: [] } } || {}
+    const [traceNames, settraceNames] = useState <any>(
+        { data: { tagValues: [] } }
     );
 
     const dataSource = useMemo(() => {

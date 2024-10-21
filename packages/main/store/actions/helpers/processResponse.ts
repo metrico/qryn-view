@@ -19,7 +19,7 @@ export function setPanelData(panel: string, data: any) {
 
 export const resetTraceData = (
     type: string,
-    dispatch: Function,
+    dispatch: any,
     panel: string,
     id: string,
     direction: QueryDirection,
@@ -47,7 +47,7 @@ export const resetTraceData = (
 export async function processResponse(
     type: string,
     response: any,
-    dispatch: Function,
+    dispatch: any,
     panel: string,
     id: string,
     direction: QueryDirection,

@@ -3,6 +3,7 @@ import setDebug from "./setDebug";
 import moment from "moment";
 import { nanoid } from "nanoid";
 import DOMPurify from "isomorphic-dompurify";
+import addMinutes from "date-fns/addMinutes";
 const BOOLEAN_VALUES = ["isSubmit", "isSplit", "autoTheme", "isEmbed"];
 export const initialUrlState: any = {
     query: "",
@@ -66,7 +67,7 @@ export const initialUrlState: any = {
             values: [], // label name selected
             response: {}, // the target should be just the last one
             open: false,
-            start: new Date(Date.now() - 5 * 60000),
+            start: addMinutes(new Date(Date.now()), -5),
             time: "", // for instant queries
             stop: new Date(Date.now()),
             label: "",

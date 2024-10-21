@@ -68,7 +68,7 @@ export const PluginCards: React.FC<{
     const theme = useTheme();
 
     return (
-        <div>
+        <div style={{ display: "flex", gap: ".5em" }}>
             {filteredComponentList?.length > 0 &&
                 filteredComponentList?.map((component: any, k: number) => (
                     <PluginCard

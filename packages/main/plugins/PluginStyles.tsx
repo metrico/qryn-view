@@ -1,4 +1,4 @@
-import { css } from '@emotion/css'
+import { css } from "@emotion/css";
 import { QrynTheme } from "@ui/theme/types";
 
 export const PluginPageStyles = (theme: QrynTheme) => css`
@@ -15,6 +15,7 @@ export const PluginPageStyles = (theme: QrynTheme) => css`
     flex: 1;
     overflow-x: hidden;
     display: flex;
+    flex-direction: column;
     flex: 1;
     height: 100%;
     overflow: hidden;
@@ -24,6 +25,28 @@ export const PluginPageStyles = (theme: QrynTheme) => css`
         padding: 4px;
         font-size: 14px;
         color: ${theme.contrast};
+    }
+    .page-header {
+        border-bottom: 1px solid ${theme.shadow};
+        margin-bottom: 0.5em;
+        padding: 1em 0.25em;
+        display: flex;
+        gap: 0.25em;
+        align-items: baseline;
+        h1 {
+            font-size: 1.5em;
+            color: ${theme.contrast};
+        }
+        h3 {
+            font-size: 1.25em;
+            color: ${theme.contrastNeutral};
+        }
+    }
+    .cards-container {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        gap: 1em;
     }
 `;
 

@@ -5,8 +5,8 @@ import { getHeaders } from "./helpers";
 
 export function useTraceServiceName({ id }: any) {
     const dataSources = useSelector(({ dataSources }: any) => dataSources);
-    const [serviceNames, setserviceNames] = useState(
-        { data: { tagValues: [] } } || {}
+    const [serviceNames, setserviceNames] = useState<any>(
+        { data: { tagValues: [] } }
     );
     const dataSource = useMemo(() => {
         return dataSources.find((f: any) => f.id === id);
