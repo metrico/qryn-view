@@ -36,7 +36,7 @@ export const initialUrlState: any = {
             values: [], // label name selected
             response: {}, // the target should be just the last one
             open: true,
-            start: new Date(Date.now() - 5 * 60000),
+            start: addMinutes(new Date(Date.now()), -5),
             time: "", // for instant queries
             stop: new Date(Date.now()),
             label: "",

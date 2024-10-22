@@ -20,7 +20,7 @@ import {
 
 import { PickerNav } from "./components/Nav";
 import {
-    findRangeByLabel,
+    //findRangeByLabel,
     getDefaultRanges,
     getValidatedMonths,
     parseOptionalDate,
@@ -162,22 +162,18 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
         dateEnd: new Date(Date.now())
     }
     const initialDateRange = () => {
+        
         try {
-            const ls = timeDateRangeFromLocal(DATE_TIME_RANGE);
+            if(defaultRange.label !== label) {
+                return {
+                    dateStart: startTs,
+                    dateEnd: stopTs, 
+                    label
+                }
+            }
 
-            if(!ls) {
                 return defaultRange
-            }
-           
-            if (ls?.label !== "" && typeof ls.label !== "undefined") {
-                const range: any = findRangeByLabel(ls?.label);
-                ls.dateStart = range.dateStart;
-                ls.dateEnd = range.dateEnd;
-            } else {
-                ls.dateStart = new Date(ls.dateStart);
-                ls.dateEnd = new Date(ls.dateEnd);
-            }
-            return ls;
+
         } catch (e) {
             if (isDate(startTs) && isDate(stopTs)) {
                 return { dateStart: startTs, dateEnd: stopTs };

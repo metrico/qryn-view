@@ -1,5 +1,8 @@
 import { create } from "zustand";
 
+
+// init as true if VITE_WEB_VITALS == true 
+
 export type WebVitalsStoreType = {
     webVitalsActive: boolean;
     httpPerformanceActive: boolean;
