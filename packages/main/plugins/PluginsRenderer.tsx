@@ -8,11 +8,18 @@ interface PluginRendererProps {
 
 const PluginRenderer: React.FC<PluginRendererProps> = (props) => {
     const { section, localProps } = props;
-    return ( 
-        <div className="renderer-content">
+    return (
+        <div
+            style={{
+                display: "flex",
+                gap: ".5em",
+                alignItems: "center",
+                padding: ".5em",
+            }}
+        >
             {PluginManager.getPlugins(section)?.length > 0 &&
                 PluginManager.getPlugins(section)?.map(
-                    ( 
+                    (
                         {
                             name,
                             Component,

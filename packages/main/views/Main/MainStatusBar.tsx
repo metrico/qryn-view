@@ -45,7 +45,6 @@ const StatusBarStyles = (theme: QrynTheme) => css`
 
 const MainStatusBar = () => {
     const theme = useTheme();
-
     return (
         <div className={cx(StatusBarStyles(theme))}>
             <div className="logo-section">
@@ -61,8 +60,9 @@ const MainStatusBar = () => {
                     <Breadcrumbs />
                 </p>
             </div>
-            <PluginRenderer section={"Status Bar"} localProps={theme} />
-
+            <div style={{ display: "flex", alignItems: "center" }}>
+                <PluginRenderer section={"Status Bar"} localProps={theme} />
+            </div>
             <MainMenu />
         </div>
     );

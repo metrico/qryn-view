@@ -58,6 +58,7 @@ export function QueryItemContainer(props: any) {
     const dataSources = useSelector((store: any) => store.dataSources);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
     const [extValue, setExtValue] = useState(props.data.dataSourceId);
+    const [queryTimeLabel, setQueryTimeLabel] = useState <string> (label !== "" ? label : "Last 5 minutes" )
 
     const dataSourceOptions = useMemo(() => {
         if (dataSources.length > 0) {
@@ -74,6 +75,12 @@ export function QueryItemContainer(props: any) {
     useEffect(() => {
         setExtValue(props.data.dataSourceId);
     }, []);
+
+    useEffect(()=>{
+        if(label !== "") {
+            setQueryTimeLabel(label)
+        }
+    },[label])
 
     useEffect(() => {
         if (props?.data?.dataSourceId) {
@@ -301,7 +308,7 @@ export function QueryItemContainer(props: any) {
                                 onPickerOpen={onPickerOpen}
                                 startTs={start}
                                 stopTs={stop}
-                                label={label}
+                                label={queryTimeLabel}
                                 pickerOpen={pickerOpen}
                             />
 

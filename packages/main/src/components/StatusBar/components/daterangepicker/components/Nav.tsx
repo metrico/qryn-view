@@ -8,6 +8,7 @@ import {
     differenceInCalendarMonths,
     isValid,
     isDate,
+    addMinutes,
     isSameSecond,
     isBefore,
 } from "date-fns";
@@ -26,11 +27,14 @@ import AbsoluteSelector from "./AbsoluteSelector";
 import { useMediaQuery } from "react-responsive";
 import styled from "@emotion/styled";
 import { ThemeProvider } from "@emotion/react";
-import useTheme from "@ui/theme/useTheme"
-const PickerTypeButton = styled.button`
+import useTheme from "@ui/theme/useTheme";
+import { QrynTheme } from "@ui/theme/types";
+
+
+const PickerTypeButton = styled.button<{theme:QrynTheme}>`
     padding: 10px;
     border-radius: 3px;
-    color: ${({ theme }: { theme: any }) => theme.accent};
+    color: ${({ theme }) => theme.accent};
     font-size: 1em;
     border: none;
     background: none;
@@ -41,7 +45,7 @@ const PickerTypeButton = styled.button`
     justify-content: center;
     margin-bottom: 10px;
     &:hover {
-        background: #11111155;
+        background: ${({theme})=> theme.deep};
     }
     span {
         margin-right: 4px;
@@ -49,7 +53,7 @@ const PickerTypeButton = styled.button`
     }
 `;
 
-const StyledNav = styled.div`
+const StyledNav = styled.div<{theme:QrynTheme}>`
     position: absolute;
     .header {
         padding: 10px;
@@ -68,21 +72,12 @@ const StyledNav = styled.div`
     .container {
         position: relative;
         z-index: 1000;
-        right: 75%; // this should be 100% by default
+        right: 75%; 
         top: 30px;
         display: flex;
         flex-direction: column;
         overflow-y: auto;
-        background: ${({ theme }: { theme: any }) => theme.background};
-    }
-    .applyButton {
-        color: white;
-        background: hsl(0, 0%, 31%);
-        border: 1px solid hsl(0, 0%, 31%);
-        padding: 6px 8px;
-        border-radius: 3px;
-        margin-left: 10px;
-        cursor: pointer;
+        background: ${({ theme }) => theme.background};
     }
 `;
 
@@ -103,11 +98,13 @@ export const PickerNav = (props: any) => {
     } = props;
     const theme = useTheme();
     const [calendarOpen, setCalendarOpen] = useState(false);
+
     const defaultRange = {
         label: "Last 5 minutes",
-        dateStart: new Date(Date.now()-5 * 60000),
-        dateEnd: new Date(Date.now())
-    }
+        dateStart: addMinutes(new Date(Date.now()), -5),
+        dateEnd: new Date(Date.now()),
+    };
+
     const canNavigateCloser =
         differenceInCalendarMonths(secondMonth, firstMonth) >= 2;
     const commonProps = { dateRange, minDate, maxDate, helpers, handlers };
@@ -130,6 +127,7 @@ export const PickerNav = (props: any) => {
             setEditedEndDate(newRange.dateEnd);
         }
     }, [setEditedEndDate, setEditedStartDate, rangeLabel]);
+    
     const handleStopInputChange = (event: any, isBlur: any) => {
         event.preventDefault();
         const value = new Date(event.target.value);
@@ -175,7 +173,6 @@ export const PickerNav = (props: any) => {
             saveDateRange({ dateStart: startDate, dateEnd: endDate });
             props.onClose(e);
         } else if (!isValidInterval) {
-            // TODO: Add a warning/error on screen when we get to it
             console.log("Invalid time range");
         }
     };
@@ -192,8 +189,8 @@ export const PickerNav = (props: any) => {
         return isValid(editedEndDate)
             ? format(editedEndDate, "yyy-MM-dd HH:mm:ss")
             : typeof editedEndDate !== "undefined"
-            ? editedEndDate
-            : "";
+              ? editedEndDate
+              : "";
     };
     const openRelative = () => {
         setRelativeOpen((open) => (open ? false : true));
@@ -201,7 +198,7 @@ export const PickerNav = (props: any) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <StyledNav>
+            <StyledNav theme={theme}>
                 <Paper className={"container"} elevation={5}>
                     <Grid display={"flex"} style={{ flex: "1" }}>
                         {calendarOpen && isBigScreen && (
