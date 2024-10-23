@@ -10,6 +10,6 @@ export const WebVitalsPlugin: Plugin = {
     Component: WebVitals,
     description: "Web vitals for qryn-view",
     active: false,
-    visible: true,
+    visible: false,
     roles: ["admin", "user", "guest", "superAdmin"],
 };
