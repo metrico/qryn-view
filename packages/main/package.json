@@ -24,7 +24,7 @@
     "@szhsin/react-menu": "^4.1.0",
     "@tanstack/match-sorter-utils": "^8.15.1",
     "@tanstack/react-table": "^8.17.3",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "classnames": "^2.5.1",
     "combokeys": "^3.0.1",
     "date-fns": "^2.30.0",
@@ -90,7 +90,7 @@
     "sass": "^1.77.5",
     "scss": "^0.2.4",
     "typescript": "^5.4.5",
-    "vite": "^5.3.1",
+    "vite": "^5.4.6",
     "vitest": "^1.6.0"
   }
 }
