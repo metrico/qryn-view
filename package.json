@@ -1,6 +1,6 @@
 {
   "name": "qryn-view",
-  "version": "3.3.0",
+  "version": "3.4.2",
   "description": "Data Explorer UI for qryn",
   "repository": {
     "type": "git",
@@ -16,14 +16,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.14.8",
-    "@types/react": "^18.3.3",
-    "jsdom": "24.1.0",
+    "@types/node": "^20.16.15",
+    "@types/react": "^18.3.12",
+    "jsdom": "24.1.1",
     "turbo": "^1.13.4",
-    "typescript": "^5.4.5"
+    "typescript": "^5.6.3"
   },
   "dependencies": {
-    "jsdom": "24.1.0",
+    "jsdom": "24.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "ts-node": "^10.9.2"

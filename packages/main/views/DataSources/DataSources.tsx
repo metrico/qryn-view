@@ -8,25 +8,17 @@ import { List } from "./views/List";
 import { DataSourcesFiller } from "./components/DataSourcesFiller";
 import { setTheme } from "@ui/store/actions";
 import { useMediaQuery } from "react-responsive";
-import useTheme from "@ui/theme/useTheme"
-
-export function getURlParams(params: any) {
-    const url = params.replace(/#/, "");
-    const decoded = decodeURIComponent(url);
-    const urlParams = new URLSearchParams(decoded);
-    let panels = { left: "", right: "" };
-    for (let [key, val] of urlParams) {
-        if (key === "left" || key === "right") {
-            panels[key] = JSON.parse(val);
-        }
-    }
-}
+import useTheme from "@ui/theme/useTheme";
+import { useWebVitals } from "@ui/plugins/WebVitals/useWebVitals";
 
 export default function DataSources() {
     const isAutoDark = useMediaQuery({ query: "(prefers-color-scheme: dark)" });
     const dispatch: any = useDispatch();
     const theme = useTheme();
     const autoTheme = useSelector((store: any) => store.autoTheme);
+
+    useWebVitals({ page: "DataSources" });
+
     useEffect(() => {
         if (autoTheme) {
             const theme = isAutoDark ? "dark" : "light";
@@ -42,7 +34,7 @@ export default function DataSources() {
         <ThemeProvider theme={theme}>
             <PageContainer>
                 <div className="cont">
-          <List />
+                    <List />
                     <div style={{ display: "flex", flex: 1 }}>
                         <div
                             style={{

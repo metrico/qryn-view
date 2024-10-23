@@ -191,7 +191,7 @@ export function parseVectorResponse(responseProps: QueryResult | TracesResult) {
                     const panelResult = {
                         id,
                         type: "vector",
-                        data: { tableData: vectorTableData } || {},
+                        data: vectorTableData ? { tableData: vectorTableData } : {},
                         raw,
                         dsType,
                         tableData: vectorTableData || {},

@@ -68,10 +68,10 @@ let configOpts = {
                         "@microlink/react-json-view",
                         "date-fns",
                         "nanoid",
-                        "prismjs",
                         "javascript-time-ago",
-                        "json-markup",
                     ],
+                    prismJs: ["prismjs"],
+                    dayJs: ["dayjs"],
                     reactDnd: ["react-dnd", "react-dnd-html5-backend"],
                     memoize: [
                         "memoize-one",
@@ -97,6 +97,7 @@ let configOpts = {
             "@ui/theme": path.resolve(__dirname, "theme"),
             "@ui/qrynui": path.resolve(__dirname, "qrynui"),
             "@ui/environment": path.resolve(__dirname, "environment"),
+            "@util": path.resolve(__dirname, "util"),
         },
     },
 };
@@ -116,6 +117,16 @@ export default defineConfig(({ mode }) => {
                     secure: false,
                 },
                 "/loki": {
+                    target: proxyApi,
+                    changeOrigin: env.VITE_API_BASE_URL,
+                    secure: false,
+                },
+                "/influx": {
+                    target: proxyApi,
+                    changeOrigin: env.VITE_API_BASE_URL,
+                    secure: false,
+                },
+                "/tempo": {
                     target: proxyApi,
                     changeOrigin: env.VITE_API_BASE_URL,
                     secure: false,

@@ -1,17 +1,15 @@
+// sets the timerange for the getData action
 import { findRangeByLabel } from "@ui/main/components/StatusBar/components/daterangepicker/utils";
-import store  from "@ui/store/store";
+import store from "@ui/store/store";
 import { getTimeParsed, getTimeSec } from "./timeParser";
-
+import { timeStore, TimeState } from "@ui/store/timeStore";
 const getPrevTime = (lastTime: number) => {
     return lastTime || parseInt(new Date().getTime() + "000000");
 };
-
 const getRangeByLabel = (rl: string, type?: string) => {
     let r: any = findRangeByLabel(rl);
     const { dateStart, dateEnd } = r;
-
     let pStart, pStop;
-
     if (type === "metrics") {
         pStart = getTimeSec(dateStart);
         pStop = getTimeSec(dateEnd);
@@ -22,7 +20,6 @@ const getRangeByLabel = (rl: string, type?: string) => {
         pStart = parseInt(getTimeParsed(dateStart));
         pStop = parseInt(getTimeParsed(dateEnd));
     }
-
     return {
         pStart,
         pStop,
@@ -32,26 +29,26 @@ const getRangeByLabel = (rl: string, type?: string) => {
 };
 export default function getTimeParams(type: string, id: string, panel: string) {
     const { time: lsTime, from, to } = store.getState();
-
+    const prevInstantTime = getPrevTime(lsTime);
     const queries = store.getState()[panel];
-
     const queryFound = queries?.find((f: any) => f.id === id);
-
     const startTs = queryFound.start;
     const stopTs = queryFound.stop;
 
-    const prevInstantTime = getPrevTime(lsTime);
-
     const rl: string = queryFound.label;
+    const { isTimeLookup, rangeLabel } = timeStore.getState() as TimeState;
 
+    const label =
+        type === "traces" && isTimeLookup && rangeLabel !== ""
+            ? rangeLabel
+            : rl;
     const _start = startTs;
     const _stop = stopTs;
 
     let parsedStart = 0,
         parsedStop = 0;
-    if (findRangeByLabel(rl)) {
-        const { pStart, pStop } = getRangeByLabel(rl, type);
-
+    if (findRangeByLabel(label)) {
+        const { pStart, pStop } = getRangeByLabel(label, type);
         if (type === "traces") {
             parsedStart = Math.round(pStart / 1000000000);
             parsedStop = Math.round(pStop / 1000000000);
