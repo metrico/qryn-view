@@ -67,7 +67,7 @@
     "uuid": "^10.0.0",
     "web-vitals": "^4.2.4",
     "zod": "^3.23.8",
-    "zustand": "^4.5.5"
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.12.0",
