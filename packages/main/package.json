@@ -82,7 +82,7 @@
     "@vitejs/plugin-react": "^4.3.3",
     "dayjs-plugin-utc": "^0.1.2",
     "eslint": "^8.57.1",
-    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.13",
     "happy-dom": "^15.7.4",
     "jsdom": "24.1.1",
