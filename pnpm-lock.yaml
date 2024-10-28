@@ -254,8 +254,8 @@ importers:
         specifier: ^0.4.13
         version: 0.4.13(eslint@8.57.1)
       happy-dom:
-        specifier: ^14.12.3
-        version: 14.12.3
+        specifier: ^15.7.4
+        version: 15.7.4
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
@@ -273,7 +273,7 @@ importers:
         version: 5.4.10(@types/node@22.7.9)(sass@1.80.3)
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@22.7.9)(happy-dom@14.12.3)(jsdom@24.1.1)(sass@1.80.3)
+        version: 1.6.0(@types/node@22.7.9)(happy-dom@15.7.4)(jsdom@24.1.1)(sass@1.80.3)
 
 packages:
 
@@ -1864,9 +1864,9 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
-  happy-dom@14.12.3:
-    resolution: {integrity: sha512-vsYlEs3E9gLwA1Hp+w3qzu+RUDFf4VTT8cyKqVICoZ2k7WM++Qyd2LwzyTi5bqMJFiIC/vNpTDYuxdreENRK/g==}
-    engines: {node: '>=16.0.0'}
+  happy-dom@15.7.4:
+    resolution: {integrity: sha512-r1vadDYGMtsHAAsqhDuk4IpPvr6N8MGKy5ntBo7tSdim+pWDxus2PNqOcOt8LuDZ4t3KJHE+gCuzupcx/GKnyQ==}
+    engines: {node: '>=18.0.0'}
 
   has-bigints@1.0.2:
     resolution: {integrity: sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ==}
@@ -4904,7 +4904,7 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  happy-dom@14.12.3:
+  happy-dom@15.7.4:
     dependencies:
       entities: 4.5.0
       webidl-conversions: 7.0.0
@@ -6051,7 +6051,7 @@ snapshots:
       fsevents: 2.3.3
       sass: 1.80.3
 
-  vitest@1.6.0(@types/node@22.7.9)(happy-dom@14.12.3)(jsdom@24.1.1)(sass@1.80.3):
+  vitest@1.6.0(@types/node@22.7.9)(happy-dom@15.7.4)(jsdom@24.1.1)(sass@1.80.3):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -6075,7 +6075,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.7.9
-      happy-dom: 14.12.3
+      happy-dom: 15.7.4
       jsdom: 24.1.1
     transitivePeerDependencies:
       - less
