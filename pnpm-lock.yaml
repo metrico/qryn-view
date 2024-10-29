@@ -136,8 +136,8 @@ importers:
         specifier: ^0.5.46
         version: 0.5.46
       nanoid:
-        specifier: ^5.0.7
-        version: 5.0.7
+        specifier: ^5.0.8
+        version: 5.0.8
       papaparse:
         specifier: ^5.4.1
         version: 5.4.1
@@ -2273,8 +2273,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanoid@5.0.7:
-    resolution: {integrity: sha512-oLxFY2gd2IqnjcYyOXD8XGCftpGtZP2AbHbOkthDkvRywH5ayNtPVy9YlOPcHckXzbLTCHpkb7FB+yuxKV13pQ==}
+  nanoid@5.0.8:
+    resolution: {integrity: sha512-TcJPw+9RV9dibz1hHUzlLVy8N4X9TnwirAjrU08Juo6BNKggzVfP2ZJ/3ZUSq15Xl5i85i+Z89XBO90pB2PghQ==}
     engines: {node: ^18 || >=20}
     hasBin: true
 
@@ -5333,7 +5333,7 @@ snapshots:
 
   nanoid@3.3.7: {}
 
-  nanoid@5.0.7: {}
+  nanoid@5.0.8: {}
 
   natural-compare@1.4.0: {}
 
@@ -6034,6 +6034,7 @@ snapshots:
       '@types/node': 22.7.9
       fsevents: 2.3.3
       sass: 1.80.4
+
 
   vitest@1.6.0(@types/node@22.7.9)(happy-dom@15.7.4)(jsdom@25.0.1)(sass@1.80.4):
     dependencies:
