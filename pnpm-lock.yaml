@@ -53,7 +53,7 @@ importers:
         version: 4.5.1
       '@microlink/react-json-view':
         specifier: latest
-        version: 1.23.3(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 1.23.4(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/base':
         specifier: 5.0.0-beta.5
         version: 5.0.0-beta.5(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -195,13 +195,12 @@ importers:
       slate-react:
         specifier: ^0.110.3
         version: 0.110.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(slate@0.110.2)
-
       tss-react:
         specifier: ^4.9.13
         version: 4.9.13(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@mui/material@6.1.5(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       uuid:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^11.0.2
+        version: 11.0.2
       web-vitals:
         specifier: ^4.2.4
         version: 4.2.4
@@ -663,8 +662,8 @@ packages:
   '@juggle/resize-observer@3.4.0':
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
 
-  '@microlink/react-json-view@1.23.3':
-    resolution: {integrity: sha512-5az8z8ebKEU/8XN60TF7aAB7d68z8EtHbIL43tO8MJdBhm4jLQCjAKuuoGX01WgdgnazYnqtBe6LLcUmCv/MyA==}
+  '@microlink/react-json-view@1.23.4':
+    resolution: {integrity: sha512-A4rizny9JxHuzpZ9bd8oBT7ExJXcFgvb3VGkjNlAC+MBDZIzQ7TT9bUWqFU6+0ygSCAZ1YVyDhD04HTctAVWCw==}
     peerDependencies:
       react: '>= 15'
       react-dom: '>= 15'
@@ -2988,8 +2987,8 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
-  uuid@10.0.0:
-    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+  uuid@11.0.2:
+    resolution: {integrity: sha512-14FfcOJmqdjbBPdDjFQyk/SdT4NySW4eM0zcG+HqbHP5jzuH56xO3J1DGhgs/cEMCfwYi3HQI1gnTO62iaG+tQ==}
     hasBin: true
 
   v8-compile-cache-lib@3.0.1:
@@ -3584,7 +3583,7 @@ snapshots:
 
   '@juggle/resize-observer@3.4.0': {}
 
-  '@microlink/react-json-view@1.23.3(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@microlink/react-json-view@1.23.4(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       flux: 4.0.4(react@18.3.1)
       react: 18.3.1
@@ -6024,7 +6023,7 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  uuid@10.0.0: {}
+  uuid@11.0.2: {}
 
   v8-compile-cache-lib@3.0.1: {}
 
@@ -6055,6 +6054,7 @@ snapshots:
       '@types/node': 22.7.9
       fsevents: 2.3.3
       sass: 1.80.4
+
   vitest@1.6.0(@types/node@22.7.9)(happy-dom@15.7.4)(jsdom@24.1.1)(sass@1.80.4):
     dependencies:
       '@vitest/expect': 1.6.0
