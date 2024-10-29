@@ -53,7 +53,7 @@ importers:
         version: 4.5.1
       '@microlink/react-json-view':
         specifier: latest
-        version: 1.23.3(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 1.23.4(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/base':
         specifier: 5.0.0-beta.5
         version: 5.0.0-beta.5(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -88,8 +88,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^4.1.0
+        version: 4.1.0
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -195,7 +195,6 @@ importers:
       slate-react:
         specifier: ^0.110.3
         version: 0.110.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(slate@0.110.2)
-
       tss-react:
         specifier: ^4.9.13
         version: 4.9.13(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@mui/material@6.1.5(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
@@ -663,8 +662,8 @@ packages:
   '@juggle/resize-observer@3.4.0':
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
 
-  '@microlink/react-json-view@1.23.3':
-    resolution: {integrity: sha512-5az8z8ebKEU/8XN60TF7aAB7d68z8EtHbIL43tO8MJdBhm4jLQCjAKuuoGX01WgdgnazYnqtBe6LLcUmCv/MyA==}
+  '@microlink/react-json-view@1.23.4':
+    resolution: {integrity: sha512-A4rizny9JxHuzpZ9bd8oBT7ExJXcFgvb3VGkjNlAC+MBDZIzQ7TT9bUWqFU6+0ygSCAZ1YVyDhD04HTctAVWCw==}
     peerDependencies:
       react: '>= 15'
       react-dom: '>= 15'
@@ -1550,10 +1549,6 @@ packages:
   data-urls@5.0.0:
     resolution: {integrity: sha512-ZYP5VBHshaDAiVZxjbRVcFJpc+4xGgT0bK3vzy1HLN8jTO975HEbuYzZJcHoQEY5K1a0z8YayJkyVETa08eNTg==}
     engines: {node: '>=18'}
-
-  date-fns@2.30.0:
-    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
-    engines: {node: '>=0.11'}
 
   date-fns@4.1.0:
     resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
@@ -3584,7 +3579,7 @@ snapshots:
 
   '@juggle/resize-observer@3.4.0': {}
 
-  '@microlink/react-json-view@1.23.3(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@microlink/react-json-view@1.23.4(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       flux: 4.0.4(react@18.3.1)
       react: 18.3.1
@@ -4507,10 +4502,6 @@ snapshots:
     dependencies:
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.0.0
-
-  date-fns@2.30.0:
-    dependencies:
-      '@babel/runtime': 7.25.9
 
   date-fns@4.1.0: {}
 
@@ -6055,6 +6046,7 @@ snapshots:
       '@types/node': 22.7.9
       fsevents: 2.3.3
       sass: 1.80.4
+
   vitest@1.6.0(@types/node@22.7.9)(happy-dom@15.7.4)(jsdom@24.1.1)(sass@1.80.4):
     dependencies:
       '@vitest/expect': 1.6.0
