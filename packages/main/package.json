@@ -18,7 +18,7 @@
     "@microlink/react-json-view": "latest",
     "@mui/base": "5.0.0-beta.5",
     "@mui/icons-material": "^6.1.5",
-    "@mui/material": "^6.1.5",
+    "@mui/material": "^6.1.6",
     "@mui/styles": "^5.16.7",
     "@mui/x-charts": "7.7.1",
     "@szhsin/react-menu": "^4.2.2",
