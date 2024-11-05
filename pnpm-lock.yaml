@@ -237,10 +237,11 @@ importers:
         version: 8.13.0(eslint@8.57.1)(typescript@5.6.3)
       '@vitejs/plugin-basic-ssl':
         specifier: ^1.1.0
-        version: 1.1.0(vite@5.4.10(@types/node@22.9.0)(sass@1.80.4))
+        version: 1.1.0(vite@5.4.10(@types/node@22.9.0)(sass@1.80.6))
       '@vitejs/plugin-react':
         specifier: ^4.3.3
-        version: 4.3.3(vite@5.4.10(@types/node@22.9.0)(sass@1.80.4))
+        version: 4.3.3(vite@5.4.10(@types/node@22.9.0)(sass@1.80.6))
+
       dayjs-plugin-utc:
         specifier: ^0.1.2
         version: 0.1.2
@@ -260,8 +261,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       sass:
-        specifier: ^1.80.4
-        version: 1.80.4
+        specifier: ^1.80.6
+        version: 1.80.6
       scss:
         specifier: ^0.2.4
         version: 0.2.4
@@ -270,10 +271,11 @@ importers:
         version: 5.6.3
       vite:
         specifier: ^5.4.10
-        version: 5.4.10(@types/node@22.9.0)(sass@1.80.4)
+        version: 5.4.10(@types/node@22.9.0)(sass@1.80.6)
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@22.9.0)(happy-dom@15.7.4)(jsdom@25.0.1)(sass@1.80.4)
+        version: 1.6.0(@types/node@22.9.0)(happy-dom@15.7.4)(jsdom@25.0.1)(sass@1.80.6)
+
 
 packages:
 
@@ -2648,8 +2650,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  sass@1.80.4:
-    resolution: {integrity: sha512-rhMQ2tSF5CsuuspvC94nPM9rToiAFw2h3JTrLlgmNw1MH79v8Cr3DH6KF6o6r+8oofY3iYVPUf66KzC8yuVN1w==}
+  sass@1.80.6:
+    resolution: {integrity: sha512-ccZgdHNiBF1NHBsWvacvT5rju3y1d/Eu+8Ex6c21nHp2lZGLBEtuwc415QfiI1PJa1TpCo3iXwwSRjRpn2Ckjg==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -3846,6 +3848,7 @@ snapshots:
       '@parcel/watcher-win32-arm64': 2.4.1
       '@parcel/watcher-win32-ia32': 2.4.1
       '@parcel/watcher-win32-x64': 2.4.1
+    optional: true
 
   '@popperjs/core@2.11.8': {}
 
@@ -4197,18 +4200,18 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-basic-ssl@1.1.0(vite@5.4.10(@types/node@22.9.0)(sass@1.80.4))':
+  '@vitejs/plugin-basic-ssl@1.1.0(vite@5.4.10(@types/node@22.9.0)(sass@1.80.6))':
     dependencies:
-      vite: 5.4.10(@types/node@22.9.0)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.9.0)(sass@1.80.6)
+  '@vitejs/plugin-react@4.3.3(vite@5.4.10(@types/node@22.9.0)(sass@1.80.6))':
 
-  '@vitejs/plugin-react@4.3.3(vite@5.4.10(@types/node@22.9.0)(sass@1.80.4))':
     dependencies:
       '@babel/core': 7.25.9
       '@babel/plugin-transform-react-jsx-self': 7.25.9(@babel/core@7.25.9)
       '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.25.9)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.4.10(@types/node@22.9.0)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.9.0)(sass@1.80.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -4578,7 +4581,8 @@ snapshots:
 
   delayed-stream@1.0.0: {}
 
-  detect-libc@1.0.3: {}
+  detect-libc@1.0.3:
+    optional: true
 
   diff-sequences@29.6.3: {}
 
@@ -5332,7 +5336,8 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  node-addon-api@7.1.1: {}
+  node-addon-api@7.1.1:
+    optional: true
 
   node-fetch@2.7.0:
     dependencies:
@@ -5695,12 +5700,13 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  sass@1.80.4:
+  sass@1.80.6:
     dependencies:
-      '@parcel/watcher': 2.4.1
       chokidar: 4.0.1
       immutable: 4.3.7
       source-map-js: 1.2.1
+    optionalDependencies:
+      '@parcel/watcher': 2.4.1
 
   saxes@6.0.0:
     dependencies:
@@ -5981,14 +5987,13 @@ snapshots:
   uuid@11.0.2: {}
 
   v8-compile-cache-lib@3.0.1: {}
-
-  vite-node@1.6.0(@types/node@22.9.0)(sass@1.80.4):
+  vite-node@1.6.0(@types/node@22.9.0)(sass@1.80.6):
     dependencies:
       cac: 6.7.14
       debug: 4.3.7
       pathe: 1.1.2
       picocolors: 1.1.1
-      vite: 5.4.10(@types/node@22.9.0)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.9.0)(sass@1.80.6)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -6000,7 +6005,7 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.4.10(@types/node@22.9.0)(sass@1.80.4):
+  vite@5.4.10(@types/node@22.9.0)(sass@1.80.6):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
@@ -6008,8 +6013,9 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.9.0
       fsevents: 2.3.3
-      sass: 1.80.4
-  vitest@1.6.0(@types/node@22.9.0)(happy-dom@15.7.4)(jsdom@25.0.1)(sass@1.80.4):
+      sass: 1.80.6
+  vitest@1.6.0(@types/node@22.9.0)(happy-dom@15.7.4)(jsdom@25.0.1)(sass@1.80.6):
+
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -6028,8 +6034,8 @@ snapshots:
       strip-literal: 2.1.0
       tinybench: 2.9.0
       tinypool: 0.8.4
-      vite: 5.4.10(@types/node@22.9.0)(sass@1.80.4)
-      vite-node: 1.6.0(@types/node@22.9.0)(sass@1.80.4)
+      vite: 5.4.10(@types/node@22.9.0)(sass@1.80.6)
+      vite-node: 1.6.0(@types/node@22.9.0)(sass@1.80.6)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.9.0
