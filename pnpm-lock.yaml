@@ -5992,6 +5992,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.7.9
       fsevents: 2.3.3
+
       sass: 1.81.0
   vitest@2.1.5(@types/node@22.7.9)(happy-dom@15.11.6)(jsdom@25.0.1)(sass@1.81.0):
 
