@@ -62,7 +62,7 @@
     "reselect": "^5.1.1",
     "slate": "^0.110.2",
     "slate-history": "^0.110.3",
-    "slate-react": "^0.110.3",
+    "slate-react": "^0.111.0",
     "tss-react": "^4.9.13",
     "uuid": "^11.0.2",
     "web-vitals": "^4.2.4",
