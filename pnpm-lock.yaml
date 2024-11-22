@@ -70,8 +70,8 @@ importers:
         specifier: 7.7.1
         version: 7.7.1(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@mui/material@6.1.5(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@szhsin/react-menu':
-        specifier: ^4.2.2
-        version: 4.2.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^4.2.3
+        version: 4.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/match-sorter-utils':
         specifier: ^8.19.4
         version: 8.19.4
@@ -1066,8 +1066,8 @@ packages:
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
 
-  '@szhsin/react-menu@4.2.2':
-    resolution: {integrity: sha512-xI1LlPlOAmyjcnBxEwhathJs3YV0U+4hbEKMbR2CXK2O9X+r7g02l5EqB9Slsjj1poVMpgQvf81vOZuCw1HUjg==}
+  '@szhsin/react-menu@4.2.3':
+    resolution: {integrity: sha512-pLbjaR1XNu8rnHnmkf7eCotKFheumcxVrLQUxRRJB+P8XAc7LusAv4Rd6krhkGbeI4NsLFxNCvNq+wmx3/y/Wg==}
     peerDependencies:
       react: '>=16.14.0'
       react-dom: '>=16.14.0'
@@ -3941,7 +3941,7 @@ snapshots:
 
   '@sinclair/typebox@0.27.8': {}
 
-  '@szhsin/react-menu@4.2.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@szhsin/react-menu@4.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       prop-types: 15.8.1
       react: 18.3.1
