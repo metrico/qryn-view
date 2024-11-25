@@ -89,7 +89,7 @@
     "prettier": "^3.3.3",
     "sass": "^1.80.4",
     "scss": "^0.2.4",
-    "typescript": "^5.6.3",
+    "typescript": "^5.7.2",
     "vite": "^5.4.10",
     "vitest": "^1.6.0"
   }
