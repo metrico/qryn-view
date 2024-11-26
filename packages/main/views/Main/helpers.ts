@@ -18,7 +18,9 @@ export function updateDataSourcesWithUrl(
     let apiUrl = "";
     let basicAuth = false;
     let urlApi = false;
+    let hasToken = false;
     let cookieAuth: any = {};
+    let tokenHeader:  any = {};
 
     if (haveUrl) {
         urlApi = true;
@@ -45,6 +47,16 @@ export function updateDataSourcesWithUrl(
 
         let [user, pass] = auth.split(":");
 
+        if( user === "token" ) {
+
+            hasToken = true;
+            tokenHeader = {
+                header: "x-api-token",
+                value: pass
+            }
+            
+        }
+
         if (user !== "" && pass !== "") {
             cookieAuth = { user, password: pass };
             basicAuth = true;
@@ -67,6 +79,7 @@ export function updateDataSourcesWithUrl(
     const newDs = prevDs?.map((m: any) => ({
         ...m,
         url: urlApi ? apiUrl : m.url,
+        headers: hasToken ? [...m.headers, { ...tokenHeader}] : [...m.headers],
         auth: {
             ...m.auth,
             basicAuth: { ...m.auth.basicAuth, value: basicAuth },
