@@ -34,7 +34,9 @@ export function useValuesFromMetrics(id: any, start, stop) {
                 // setLoading(true);
 
                 try {
-                    const req = await axios.get(url, metricsHeaders);
+                    const req = await axios.get(url, {
+                        ...metricsHeaders.options,
+                    });
                     if (req?.status === 200) {
                         setMetricNames(req?.data?.data || []);
                     }

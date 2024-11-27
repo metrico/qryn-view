@@ -44,7 +44,9 @@ export function useMetricsList(id: any, value: any, start, stop) {
             const url = `${dataSource.url}/api/v1/series?start=${timeParams.start}&end=${timeParams.end}&${valueFormatter}`;
             const apiRequest = async () => {
                 try {
-                    const req = await axios.get(url, metricsHeaders);
+                    const req = await axios.get(url, {
+                        ...metricsHeaders.options,
+                    });
                     if (req?.status === 200) {
                         setMetricNames(req?.data?.data || []);
                     }

@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
+import { type QrynTheme } from "@ui/theme/types";
 const Label: any = styled.div`
     color: ${(props: any) => props.theme.contrast};
     background: ${(props: any) => props.theme.shadow};
@@ -22,14 +23,12 @@ const QuerySwitchCont: any = styled.div`
     margin-right: 10px;
 `;
 
-const QuerySwitchBtn: any = styled.div`
+const QuerySwitchBtn: any = styled.div<{ theme: QrynTheme; selected: boolean }>`
     cursor: pointer;
     display: flex;
     align-items: center;
-    background: ${(props: any) =>
-        props.selected
-            ? props.theme.neutral
-            : props.theme.shadow};
+    background: ${(props) =>
+        props.selected ? props.theme.alphaPlusNeutral : props.theme.shadow};
     border-left: ${(props: any) =>
         props.position === "last"
             ? `1px solid ${props.theme.accentNeutral}`
@@ -42,8 +41,8 @@ const QuerySwitchBtn: any = styled.div`
         position === "first"
             ? "3px 0px 0px 3px"
             : position === "last"
-            ? "0px 3px 3px 0px"
-            : "0px"};
+              ? "0px 3px 3px 0px"
+              : "0px"};
     flex: 1;
     height: 90%;
 
