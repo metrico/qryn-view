@@ -18,7 +18,9 @@ export function updateDataSourcesWithUrl(
     let apiUrl = "";
     let basicAuth = false;
     let urlApi = false;
+    let hasToken = false;
     let cookieAuth: any = {};
+    let tokenHeader: any = {};
 
     if (haveUrl) {
         urlApi = true;
@@ -45,7 +47,16 @@ export function updateDataSourcesWithUrl(
 
         let [user, pass] = auth.split(":");
 
-        if (user !== "" && pass !== "") {
+        if (user === "token") {
+            hasToken = true;
+            basicAuth = false;
+            tokenHeader = {
+                header: "x-api-token",
+                value: pass,
+            };
+        }
+
+        if (user !== "" && pass !== "" && user !== "token") {
             cookieAuth = { user, password: pass };
             basicAuth = true;
         }
@@ -67,6 +78,7 @@ export function updateDataSourcesWithUrl(
     const newDs = prevDs?.map((m: any) => ({
         ...m,
         url: urlApi ? apiUrl : m.url,
+        headers: hasToken ? [...m.headers, { ...tokenHeader }] : [...m.headers],
         auth: {
             ...m.auth,
             basicAuth: { ...m.auth.basicAuth, value: basicAuth },
@@ -181,8 +193,8 @@ export async function checkLocalAPI(
                     true
                 );
 
-                // activate web vitals 
-           
+                // activate web vitals
+
                 isReady = true;
             } else {
                 setResponseType(ResponseEnum.NODE);
@@ -195,9 +207,9 @@ export async function checkLocalAPI(
                     "Query Item",
                     "Cardinality View",
                     false
-                )
+                );
 
-                // deactivate web vitals 
+                // deactivate web vitals
                 isReady = true;
             }
         }
