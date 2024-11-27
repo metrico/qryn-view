@@ -1,4 +1,4 @@
-import{g as Q,c as B}from"./react-B8DbRJ_3.js";var W={exports:{}};(function(G){var X=typeof window<"u"?window:typeof WorkerGlobalScope<"u"&&self instanceof WorkerGlobalScope?self:{};/**
+import{c as B,g as Q}from"./react-B8DbRJ_3.js";var W={exports:{}};(function(G){var X=typeof window<"u"?window:typeof WorkerGlobalScope<"u"&&self instanceof WorkerGlobalScope?self:{};/**
  * Prism: Lightweight, robust, elegant syntax highlighting
  *
  * @license MIT <https://opensource.org/licenses/MIT>
