@@ -79,7 +79,7 @@
     "@typescript-eslint/eslint-plugin": "^8.12.1",
     "@typescript-eslint/parser": "^8.11.0",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
-    "@vitejs/plugin-react": "^4.3.3",
+    "@vitejs/plugin-react": "^4.3.4",
     "dayjs-plugin-utc": "^0.1.2",
     "eslint": "^8.57.1",
     "eslint-plugin-react-hooks": "^5.0.0",
