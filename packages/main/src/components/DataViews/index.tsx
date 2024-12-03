@@ -25,7 +25,7 @@ export default function DataViews(props: any) {
     if (viewsMemo.length > 0) {
         return (
             <ThemeProvider theme={theme}>
-                <DataviewsContainer>
+                <DataviewsContainer theme={theme}>
                     <PluginRenderer section={"Data Views"} localProps={props} />
                     {!isCardinality && viewsMemo?.map((dv: any, index: any) => (
                         <DataViewItem
