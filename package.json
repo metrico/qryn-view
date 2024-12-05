@@ -17,7 +17,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.16.15",
-    "@types/react": "^18.3.12",
+    "@types/react": "^18.3.13",
     "jsdom": "25.0.1",
     "turbo": "^1.13.4",
     "typescript": "^5.6.3"
