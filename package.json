@@ -17,15 +17,15 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.16.15",
-    "@types/react": "^18.3.12",
+    "@types/react": "^19.0.0",
     "jsdom": "25.0.1",
     "turbo": "^1.13.4",
     "typescript": "^5.6.3"
   },
   "dependencies": {
     "jsdom": "25.0.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "ts-node": "^10.9.2"
   }
 }
