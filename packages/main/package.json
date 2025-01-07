@@ -19,7 +19,7 @@
     "@mui/base": "5.0.0-beta.5",
     "@mui/icons-material": "^6.2.0",
     "@mui/material": "^6.2.0",
-    "@mui/styles": "^5.16.11",
+    "@mui/styles": "^5.16.14",
     "@mui/x-charts": "7.7.1",
     "@szhsin/react-menu": "^4.2.3",
     "@tanstack/match-sorter-utils": "^8.19.4",
