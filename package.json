@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.17.10",
+    "@types/node": "^20.17.15",
     "@types/react": "^18.3.17",
     "jsdom": "25.0.1",
     "turbo": "^1.13.4",
