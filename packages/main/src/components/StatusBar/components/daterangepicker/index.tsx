@@ -178,6 +178,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
             if (isDate(startTs) && isDate(stopTs)) {
                 return { dateStart: startTs, dateEnd: stopTs };
             }
+            console.log(e)
         }
     };
 
@@ -208,7 +209,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
 
     const { dateStart, dateEnd } = dateRange;
 
-    const { ref } = useOutsideRef();
+    const { ref } = useOutsideRef(onPickerOpen);
 
     const setFirstMonthValidated = (date: any) => {
         if (isBefore(date, secondMonth)) {
@@ -503,9 +504,10 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
             )}
 
             {pickerOpen ? (
-                <div tabIndex={0} ref={ref}>
+                <div tabIndex={0}>
                     <ThemeProvider theme={theme}>
                         <PickerNav
+                            ref={ref}
                             dateRange={dateRange}
                             minDate={minDateValid}
                             maxDate={maxDateValid}
