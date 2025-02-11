@@ -16,6 +16,8 @@ import {
     add,
     sub,
     intervalToDuration,
+    startOfDay,
+    endOfDay,
 } from "date-fns";
 
 import { PickerNav } from "./components/Nav";
@@ -37,7 +39,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { Tooltip } from "@mui/material";
 import TimeLabel from "./components/TimeLabel";
 import { DatePickerButton } from "../../styled";
-import useTheme from "@ui/theme/useTheme"
+import useTheme from "@ui/theme/useTheme";
 import { useMediaQuery } from "react-responsive";
 import { useSelector } from "react-redux";
 
@@ -147,38 +149,36 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
         pickerOpen,
         onPickerOpen,
     } = props;
+    const [localLabel, setLocalLabel] = useState(label);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1013px)" });
-    const isSplit = useSelector((store:any)=> store.isSplit);
+    const isSplit = useSelector((store: any) => store.isSplit);
 
     const isFullWidth = useMemo(() => {
-        return !isTabletOrMobile && !isSplit
-    },[isTabletOrMobile, isSplit]);
-
+        return !isTabletOrMobile && !isSplit;
+    }, [isTabletOrMobile, isSplit]);
 
     const theme = useTheme();
     const defaultRange = {
-        label: 'Last 5 minutes',
-        dateStart: new Date(Date.now()-5 * 60000),
-        dateEnd: new Date(Date.now())
-    }
+        label: "Last 5 minutes",
+        dateStart: new Date(Date.now() - 5 * 60000),
+        dateEnd: new Date(Date.now()),
+    };
     const initialDateRange = () => {
-        
         try {
-            if(defaultRange.label !== label) {
+            if (defaultRange.label !== label) {
                 return {
                     dateStart: startTs,
-                    dateEnd: stopTs, 
-                    label
-                }
+                    dateEnd: stopTs,
+                    label,
+                };
             }
 
-                return defaultRange
-
+            return defaultRange;
         } catch (e) {
             if (isDate(startTs) && isDate(stopTs)) {
                 return { dateStart: startTs, dateEnd: stopTs };
             }
-            console.log(e)
+            console.log(e);
         }
     };
 
@@ -224,12 +224,13 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
     };
 
     const setDateRangeValidated = (range: any) => {
-        let { label, dateStart: newStart, dateEnd: newEnd } = range;
+        let { label: newLabel, dateStart: newStart, dateEnd: newEnd } = range;
         if (newStart && newEnd) {
-            range.label = label;
+            range.label = newLabel;
             range.dateStart = newStart = max([newStart, minDateValid]);
             range.dateEnd = newEnd = min([newEnd, maxDateValid]);
             setDateRange(range);
+            setLocalLabel(newLabel || ""); // Update local label
             saveDateRange(range);
             onChange(range);
             setFirstMonth(newStart);
@@ -243,15 +244,21 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
     };
     const onDayClick = (day: any) => {
         if (dateStart && !dateEnd && !isBefore(day, dateStart)) {
-            const newRange: any = { dateStart, dateEnd: day };
+            const newRange: any = {
+                dateStart: startOfDay(dateStart), // Set to beginning of start day
+                dateEnd: endOfDay(day), // Set to end of end day
+            };
             onChange(newRange);
             saveDateRange(newRange);
             setDateRange(newRange);
-
-            onLabelChange("");
+            setLocalLabel(""); // Clear local label for custom range
+            onLabelChange(""); // Still notify parent about label change
             onClose();
         } else {
-            setDateRange({ dateStart: day, dateEnd: undefined });
+            setDateRange({
+                dateStart: startOfDay(day), // Set to beginning of day
+                dateEnd: undefined,
+            });
         }
         setHoverDay(day);
     };
@@ -305,10 +312,10 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
         const { dateStart, dateEnd, label } = range;
         const isStart = isDate(dateStart);
         const isEnd = isDate(dateEnd);
-        const isLabel = typeof label !== "undefined";
-        if (isStart) onStartChange(dateStart); //dispatch(setStartTime(dateStart));
-        if (isEnd) onStopChange(dateEnd); //dispatch(setStopTime(dateEnd));
-        if (isLabel) onLabelChange(label); //dispatch(setTimeRangeLabel(label));
+        const isLabel = !!label;
+        if (isStart) onStartChange(dateStart);
+        if (isEnd) onStopChange(dateEnd); 
+        onLabelChange(isLabel ? label : "");
     }
 
     const openButtonHandler = (e: any) => {
@@ -376,13 +383,13 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
 
     return (
         <div style={{ display: "flex" }}>
-            {(isFullWidth) && (
+            {isFullWidth && (
                 <>
                     <DatePickerButton
                         onClick={() => {
                             adjustTimeRange("backward");
                         }}
-                        side={'left'}
+                        side={"left"}
                         attachedside={"r"}
                         emptySide={"l"}
                         className={cx(DTStyles)}
@@ -392,7 +399,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                     <DatePickerButton
                         onClick={handleClick}
                         attachedside={"both"}
-                        side={'central'}
+                        side={"central"}
                         size={"small"}
                         className={cx(DTStyles)}
                         aria-controls={open ? "backward-menu" : undefined}
@@ -427,14 +434,14 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                 <DatePickerButton
                     onClick={openButtonHandler}
                     className={cx(DTStyles)}
-                    side={isFullWidth ? 'central' : 'individual'}
+                    side={isFullWidth ? "central" : "individual"}
                     attachedside={"both"}
                 >
                     <AccessTimeOutlinedIcon />
 
                     <span>
-                        {label !== ""
-                            ? label
+                        {localLabel !== ""
+                            ? localLabel
                             : (isValid(dateRange.dateStart)
                                   ? format(
                                         dateRange.dateStart,
@@ -448,19 +455,19 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                                         "yyyy/MM/dd HH:mm:ss"
                                     )
                                   : typeof dateRange.dateEnd !== "undefined"
-                                  ? dateRange.dateEnd
-                                  : "")}
+                                    ? dateRange.dateEnd
+                                    : "")}
                     </span>
                 </DatePickerButton>
             </Tooltip>
 
-            {(isFullWidth) && (
+            {isFullWidth && (
                 <>
                     <DatePickerButton
                         onClick={handleClickRight}
                         id={`forward-button-${id}`}
                         size={"small"}
-                        side={'central'}
+                        side={"central"}
                         className={cx(DTStyles)}
                         aria-controls={
                             openRight ? `forward-menu${id}` : undefined
@@ -494,7 +501,7 @@ export function DateRangePickerMain(props: DateRangePickerProps) {
                         onClick={() => {
                             adjustTimeRange("forward");
                         }}
-                        side={'right'}
+                        side={"right"}
                         attachedside={"l"}
                         className={cx(DTStyles)}
                     >
