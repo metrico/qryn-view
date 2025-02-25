@@ -254,8 +254,8 @@ importers:
         specifier: ^0.4.16
         version: 0.4.16(eslint@8.57.1)
       happy-dom:
-        specifier: ^15.11.7
-        version: 15.11.7
+        specifier: ^17.1.8
+        version: 17.1.8
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
@@ -273,7 +273,7 @@ importers:
         version: 5.4.11(@types/node@22.10.2)(sass@1.83.0)
       vitest:
         specifier: ^3.0.7
-        version: 3.0.7(@types/node@22.10.2)(happy-dom@15.11.7)(jsdom@25.0.1)(sass@1.83.0)
+        version: 3.0.7(@types/node@22.10.2)(happy-dom@17.1.8)(jsdom@25.0.1)(sass@1.83.0)
 
 packages:
 
@@ -1871,8 +1871,8 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
-  happy-dom@15.11.7:
-    resolution: {integrity: sha512-KyrFvnl+J9US63TEzwoiJOQzZBJY7KgBushJA8X61DMbNsH+2ONkDuLDnCnwUiPTF42tLoEmrPyoqbenVA5zrg==}
+  happy-dom@17.1.8:
+    resolution: {integrity: sha512-Yxbq/FG79z1rhAf/iB6YM8wO2JB/JDQBy99RiLSs+2siEAi5J05x9eW1nnASHZJbpldjJE2KuFLsLZ+AzX/IxA==}
     engines: {node: '>=18.0.0'}
 
   has-bigints@1.0.2:
@@ -2851,6 +2851,9 @@ packages:
     resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  ufo@1.5.4:
+    resolution: {integrity: sha512-UsUk3byDzKd04EyoZ7U4DOlxQaD14JUKQl6/P7wiX4FNvUfm3XL246n9W5AmqwW5RSFJ27NAuM0iLscAOYUiGQ==}
 
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
@@ -4764,9 +4767,8 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  happy-dom@15.11.7:
+  happy-dom@17.1.8:
     dependencies:
-      entities: 4.5.0
       webidl-conversions: 7.0.0
       whatwg-mimetype: 3.0.0
 
@@ -5768,6 +5770,7 @@ snapshots:
 
   typescript@5.7.2: {}
 
+  ufo@1.5.4: {}
   undici-types@6.19.8: {}
 
   undici-types@6.20.0: {}
@@ -5842,7 +5845,7 @@ snapshots:
       fsevents: 2.3.3
       sass: 1.83.0
 
-  vitest@3.0.7(@types/node@22.10.2)(happy-dom@15.11.7)(jsdom@25.0.1)(sass@1.83.0):
+  vitest@3.0.7(@types/node@22.10.2)(happy-dom@17.1.8)(jsdom@25.0.1)(sass@1.83.0):
     dependencies:
       '@vitest/expect': 3.0.7
       '@vitest/mocker': 3.0.7(vite@5.4.11(@types/node@22.10.2)(sass@1.83.0))
@@ -5866,7 +5869,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.10.2
-      happy-dom: 15.11.7
+      happy-dom: 17.1.8
       jsdom: 25.0.1
     transitivePeerDependencies:
       - less
