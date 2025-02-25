@@ -1,19 +1,16 @@
-import { useEffect, useRef } from "react";
-import { setRangeOpen } from '@ui/store/actions/setRangeOpen';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from "react";
 
-export default function useOutsideRef() {
- const dispatch: any = useDispatch()
-    const ref = useRef<any>(null);
+export default function useOutsideRef(onOpen: (value: boolean) => void) {
+    const ref = React.createRef<HTMLDivElement>();
 
-    const handleHideDateRange = (event:any) => {
+    const handleHideDateRange = (event: any) => {
         if (event.key === "Escape") {
-            dispatch(setRangeOpen(false));
+            onOpen(false);
         }
     };
-    const handleClickOutside = (event:any) => {
+    const handleClickOutside = (event: any) => {
         if (ref.current && !ref.current.contains(event.target)) {
-            dispatch(setRangeOpen(false));
+            onOpen(false);
         }
     };
     useEffect(() => {
