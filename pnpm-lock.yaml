@@ -70,8 +70,8 @@ importers:
         specifier: 7.7.1
         version: 7.7.1(@emotion/react@11.14.0(@types/react@18.3.17)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.17)(react@18.3.1))(@types/react@18.3.17)(react@18.3.1))(@mui/material@6.2.0(@emotion/react@11.14.0(@types/react@18.3.17)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.17)(react@18.3.1))(@types/react@18.3.17)(react@18.3.1))(@types/react@18.3.17)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.17)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@szhsin/react-menu':
-        specifier: ^4.2.3
-        version: 4.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^4.3.0
+        version: 4.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/match-sorter-utils':
         specifier: ^8.19.4
         version: 8.19.4
@@ -1117,8 +1117,8 @@ packages:
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
 
-  '@szhsin/react-menu@4.2.3':
-    resolution: {integrity: sha512-pLbjaR1XNu8rnHnmkf7eCotKFheumcxVrLQUxRRJB+P8XAc7LusAv4Rd6krhkGbeI4NsLFxNCvNq+wmx3/y/Wg==}
+  '@szhsin/react-menu@4.3.0':
+    resolution: {integrity: sha512-TklTnPT6cYZcOO0GYnBQX6qVvpsdHvI0GkWsL90/fisIMlFfv+rpEPy4YNm+qNTUuCPeOkcRYVU7ooH0yUFTgQ==}
     peerDependencies:
       react: '>=16.14.0'
       react-dom: '>=16.14.0'
@@ -3572,7 +3572,6 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   '@juggle/resize-observer@3.4.0': {}
-
   '@microlink/react-json-view@1.26.1(@types/react@18.3.17)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       react: 18.3.1
@@ -3966,9 +3965,8 @@ snapshots:
 
   '@sinclair/typebox@0.27.8': {}
 
-  '@szhsin/react-menu@4.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@szhsin/react-menu@4.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-transition-state: 2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -5844,7 +5842,6 @@ snapshots:
 
   tough-cookie@5.1.1:
     dependencies:
-
       tldts: 6.1.78
 
   tr46@5.0.0:
