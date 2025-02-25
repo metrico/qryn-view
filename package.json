@@ -20,7 +20,7 @@
     "@types/react": "^18.3.17",
     "jsdom": "26.0.0",
     "turbo": "^1.13.4",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "jsdom": "26.0.0",
