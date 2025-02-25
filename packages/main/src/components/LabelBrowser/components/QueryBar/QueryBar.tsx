@@ -205,140 +205,6 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
     // force single view from small width
 
-    useEffect(() => {
-        setQueryInput(data.expr);
-        setQueryValue([{ children: [{ text: sanitizeWithSigns(data.expr) }] }]);
-    }, [data.expr]);
-
-    useEffect(() => {
-        let queryText = queryValue[0].children[0].text;
-        setQueryInput(queryText);
-    }, [queryValue]);
-
-    useEffect(() => {
-        if (isTabletOrMobile && isSplit) {
-            dispatch(setSplitView(false));
-        }
-    }, [isTabletOrMobile]);
-
-    useEffect(() => {
-        let { expr } = getLocalQueryItem(dataSourceId, id);
-        let actLocalDs = getLocalDataSources(dataSourceId);
-        setQueryInput(expr);
-        setQueryValue([{ children: [{ text: sanitizeWithSigns(expr) }] }]);
-
-        if (isLogsVolume && logsVolumeQuery) {
-            setLogsLevel(expr, isLogsVolume);
-        }
-        const dataSource: any = dataSources?.find(
-            (f: any) => f.id === dataSourceId
-        );
-
-        let currentDataSource: any = {};
-
-        if (
-            actLocalDs &&
-            actLocalDs?.url !== initialDefault &&
-            actLocalDs?.url !== ""
-        ) {
-            currentDataSource = { ...actLocalDs };
-
-            const panelCP = [...panelData];
-
-            panelCP.forEach((query) => {
-                if (query.id === id) {
-                    query.dataSourceId = currentDataSource.id;
-                    query.dataSourceType = currentDataSource.type;
-                    query.dataSourceURL = currentDataSource.url;
-                }
-            });
-
-            dispatch(panelAction(name, panelCP));
-
-            const dsCopy = [...dataSources];
-            dsCopy.forEach((ds) => {
-                if (ds.id === dataSourceId) {
-                    ds = currentDataSource;
-                }
-            });
-
-            dispatch(setDataSources(dsCopy));
-        } else if (dataSource && dataSource.url !== "") {
-            currentDataSource = { ...dataSource };
-        }
-
-        let { isMatrix } = getIntvalData(expr);
-        if (expr !== "" && expr?.length > 6) {
-            dispatch(
-                getData(
-                    dataSourceType,
-                    expr,
-                    queryType,
-                    limit,
-                    name,
-                    id,
-                    direction,
-                    dataSourceId,
-                    currentDataSource?.url
-                )
-            );
-        }
-
-        // setLogsLevel(queryInput, isLogsVolume);
-        if (
-            isLogsVolume &&
-            logsVolumeQuery?.query &&
-            logsVolumeQuery?.query !== "" &&
-            dataSourceType === "logs" &&
-            !isMatrix
-        ) {
-            dispatch(
-                getData(
-                    dataSourceType,
-                    logsVolumeQuery.query,
-                    queryType,
-                    limit,
-                    name,
-                    id,
-                    direction,
-                    dataSourceId,
-                    currentDataSource.url,
-                    logsVolumeQuery.customStep,
-                    true // isLogsVolume
-                )
-            );
-        }
-    }, [dataSourceId, id]);
-
-    useEffect(() => {
-        if (typeof queryInput === "string") {
-            setQueryInput(queryInput);
-            setQueryValue([
-                { children: [{ text: sanitizeWithSigns(queryInput) }] },
-            ]);
-            saveQuery();
-            if (isLogsVolume) {
-                setLogsLevel(queryInput, true);
-            }
-        }
-    }, [queryInput]);
-
-    useEffect(() => {
-        if (typeof launchQuery === "string" && launchQuery !== "") {
-            setQueryInput(launchQuery);
-            setQueryValue([
-                { children: [{ text: sanitizeWithSigns(launchQuery) }] },
-            ]);
-            saveQuery();
-            if (isLogsVolume) {
-                setLogsLevel(launchQuery, true);
-            }
-        }
-    }, [launchQuery]);
-
-    useEffect(() => {
-        setLogsLevel(queryInput, isLogsVolume);
-    }, [queryInput]);
 
     function setLogsLevel(queryInput: string, isLogsVolume: boolean) {
         if (isLogsVolume && queryInput !== "") {
@@ -423,8 +289,8 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         saveLogsVolumeQuery({ query, customStep });
     };
 
-    const onSubmit = (e: any) => {
-        e.preventDefault();
+    const onSubmit = (e?: any) => {
+        e?.preventDefault();
         const ds: any = dataSources.find((f: any) => f.id === dataSourceId);
         if (onQueryValid(queryInput) && ds) {
             try {
@@ -778,10 +644,6 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         return null;
     };
 
-    if (isEmbed) {
-        return null;
-    }
-
     const queryTypeRenderer = (
         type: any,
         traceSearch: any,
@@ -833,6 +695,150 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
         return querySearch;
     };
+
+
+    useEffect(() => {
+        setQueryInput(data.expr);
+        setQueryValue([{ children: [{ text: sanitizeWithSigns(data.expr) }] }]);
+    }, [data.expr]);
+
+    useEffect(() => {
+        let queryText = queryValue[0].children[0].text;
+        setQueryInput(queryText);
+    }, [queryValue]);
+
+    useEffect(() => {
+        if (isTabletOrMobile && isSplit) {
+            dispatch(setSplitView(false));
+        }
+    }, [isTabletOrMobile]);
+
+    useEffect(() => {
+        let { expr } = getLocalQueryItem(dataSourceId, id);
+        let actLocalDs = getLocalDataSources(dataSourceId);
+        setQueryInput(expr);
+        setQueryValue([{ children: [{ text: sanitizeWithSigns(expr) }] }]);
+
+        if (isLogsVolume && logsVolumeQuery) {
+            setLogsLevel(expr, isLogsVolume);
+        }
+        const dataSource: any = dataSources?.find(
+            (f: any) => f.id === dataSourceId
+        );
+
+        let currentDataSource: any = {};
+
+        if (
+            actLocalDs &&
+            actLocalDs?.url !== initialDefault &&
+            actLocalDs?.url !== ""
+        ) {
+            currentDataSource = { ...actLocalDs };
+
+            const panelCP = [...panelData];
+
+            panelCP.forEach((query) => {
+                if (query.id === id) {
+                    query.dataSourceId = currentDataSource.id;
+                    query.dataSourceType = currentDataSource.type;
+                    query.dataSourceURL = currentDataSource.url;
+                }
+            });
+
+            dispatch(panelAction(name, panelCP));
+
+            const dsCopy = [...dataSources];
+            dsCopy.forEach((ds) => {
+                if (ds.id === dataSourceId) {
+                    ds = currentDataSource;
+                }
+            });
+
+            dispatch(setDataSources(dsCopy));
+        } else if (dataSource && dataSource.url !== "") {
+            currentDataSource = { ...dataSource };
+        }
+
+        let { isMatrix } = getIntvalData(expr);
+        if (expr !== "" && expr?.length > 6) {
+            dispatch(
+                getData(
+                    dataSourceType,
+                    expr,
+                    queryType,
+                    limit,
+                    name,
+                    id,
+                    direction,
+                    dataSourceId,
+                    currentDataSource?.url
+                )
+            );
+        }
+
+        // setLogsLevel(queryInput, isLogsVolume);
+        if (
+            isLogsVolume &&
+            logsVolumeQuery?.query &&
+            logsVolumeQuery?.query !== "" &&
+            dataSourceType === "logs" &&
+            !isMatrix
+        ) {
+            dispatch(
+                getData(
+                    dataSourceType,
+                    logsVolumeQuery.query,
+                    queryType,
+                    limit,
+                    name,
+                    id,
+                    direction,
+                    dataSourceId,
+                    currentDataSource.url,
+                    logsVolumeQuery.customStep,
+                    true // isLogsVolume
+                )
+            );
+        }
+    }, [dataSourceId, id]);
+
+    useEffect(() => {
+        if (typeof queryInput === "string") {
+            setQueryInput(queryInput);
+            setQueryValue([
+                { children: [{ text: sanitizeWithSigns(queryInput) }] },
+            ]);
+            saveQuery();
+            if (isLogsVolume) {
+                setLogsLevel(queryInput, true);
+            }
+        }
+    }, [queryInput]);
+
+    useEffect(() => {
+        if (typeof launchQuery === "string" && launchQuery !== "") {
+            setQueryInput(launchQuery);
+            setQueryValue([
+                { children: [{ text: sanitizeWithSigns(launchQuery) }] },
+            ]);
+            saveQuery();
+            if (isLogsVolume) {
+                setLogsLevel(launchQuery, true);
+            }
+        }
+    }, [launchQuery]);
+
+    useEffect(() => {
+        setLogsLevel(queryInput, isLogsVolume);
+    }, [queryInput]);
+
+    useEffect(()=>{
+        if(data?.start && data?.stop){
+            onSubmit()
+        }
+
+    },[data.start, data.stop])
+
 
     // render
 

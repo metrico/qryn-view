@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -26,7 +26,6 @@ import { findRangeByLabel } from "../utils";
 import AbsoluteSelector from "./AbsoluteSelector";
 import { useMediaQuery } from "react-responsive";
 import styled from "@emotion/styled";
-import { ThemeProvider } from "@emotion/react";
 import useTheme from "@ui/theme/useTheme";
 import { QrynTheme } from "@ui/theme/types";
 
@@ -82,7 +81,7 @@ const StyledNav = styled.div<{theme:QrynTheme}>`
 `;
 
 // open month only at
-export const PickerNav = (props: any) => {
+export const PickerNav = forwardRef((props: any, ref:any) => {
     const {
         ranges,
         dateRange,
@@ -197,9 +196,8 @@ export const PickerNav = (props: any) => {
     };
 
     return (
-        <ThemeProvider theme={theme}>
             <StyledNav theme={theme}>
-                <Paper className={"container"} elevation={5}>
+                <Paper className={"container"} ref={ref} elevation={5}>
                     <Grid display={"flex"} style={{ flex: "1" }}>
                         {calendarOpen && isBigScreen && (
                             <Grid container direction={"row"} wrap={"nowrap"}>
@@ -394,6 +392,6 @@ export const PickerNav = (props: any) => {
                     </Grid>
                 </Paper>
             </StyledNav>
-        </ThemeProvider>
+      
     );
-};
+});

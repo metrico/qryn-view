@@ -20,7 +20,7 @@ import {
     min,
     max,
 } from "date-fns";
-import  isSameMinute  from "date-fns/isSameMinute";
+import isSameMinute from "date-fns/isSameMinute";
 
 export const chunks = (array: any, size: any) => {
     return Array.from({ length: Math.ceil(array.length / size) }, (v, i) =>
@@ -61,23 +61,29 @@ export const inDateRange = (
         isSameDay(day, dateStart) ||
         isSameDay(day, dateEnd));
 
-export const isRangeSameDay = ({ dateStart, dateEnd }:{ dateStart:any; dateEnd:any }) => {
+export const isRangeSameDay = ({
+    dateStart,
+    dateEnd,
+}: {
+    dateStart: any;
+    dateEnd: any;
+}) => {
     if (dateStart && dateEnd) {
         return isSameDay(dateStart, dateEnd);
     }
     return false;
 };
 
-export const findRange = (dateRange:any) => {
+export const findRange = (dateRange: any) => {
     return getDefaultRanges(new Date()).find((range) =>
         isSameRange(dateRange, range)
     )?.label;
 };
-export const findRangeByLabel = (label:any) => {
+export const findRangeByLabel = (label: any) => {
     return getDefaultRanges(new Date()).find((range) => range.label === label);
 };
 
-export const parseOptionalDate = (date:any, defaultValue:any) => {
+export const parseOptionalDate = (date: any, defaultValue: any) => {
     if (date instanceof Date) {
         const parsed = toDate(date);
         if (isValid(parsed)) {
@@ -95,25 +101,28 @@ export const parseOptionalDate = (date:any, defaultValue:any) => {
     }
 };
 
-export const generateYears = (relativeTo:any, count:any) => {
+export const generateYears = (relativeTo: any, count: any) => {
     const half = Math.floor(count / 2);
     return Array(count)
         ?.fill(0)
         ?.map((y, i) => relativeTo?.getFullYear() - half + i);
 };
 
-export const isSameRange = (first:any, second:any) => {
+export const isSameRange = (first: any, second: any) => {
     const { dateStart: fStart, dateEnd: fEnd, label: fLabel } = first;
     const { dateStart: sStart, dateEnd: sEnd, label: sLabel } = second;
     if (fLabel === sLabel) {
         return true;
     } else if (fStart && sStart && fEnd && sEnd) {
-        return isSameMinute(fStart, sStart) && isSameMinute(fEnd, sEnd);
+        return (
+            isSameMinute(parseISO(fStart), parseISO(sStart)) &&
+            isSameMinute(parseISO(fEnd), parseISO(sEnd))
+        );
     }
     return false;
 };
 
-export const getValidatedMonths = (range:any, minDate:any, maxDate:any) => {
+export const getValidatedMonths = (range: any, minDate: any, maxDate: any) => {
     let { dateStart, dateEnd } = range;
     if (dateStart && dateEnd) {
         const newStart = max([dateStart, minDate]);
@@ -128,7 +137,7 @@ export const getValidatedMonths = (range:any, minDate:any, maxDate:any) => {
     }
 };
 
-export const getDefaultRanges = (date:any) => [
+export const getDefaultRanges = (date: Date | number) => [
     {
         label: "Last 5 minutes",
         dateStart: addMinutes(date, -5),
