@@ -87,16 +87,14 @@ _Use the [public client](https://view.cloki.org) _(no data goes through the serv
 
 #### Environment Variables:
 
-- ``HOST`` default: `` 0.0.0.0``
+- ``host`` default: `` 0.0.0.0``
 
-- ``PORT`` default: ``8080``
-
-- ``API_URL`` default: ``http://localhost:3100``
+- ``port`` default: ``5173``
 
 
 ##### Example 
 ```bash
-~/$ HOST=localhost PORT=8080 API_URL=http://qryn-host:3100 pnpm dev
+~/$  pnpm dev -- --host localhost --port 8080
 ```
 ------------
 

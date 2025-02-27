@@ -16,14 +16,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.17.10",
+    "@types/node": "^20.17.19",
     "@types/react": "^18.3.17",
-    "jsdom": "25.0.1",
+    "jsdom": "26.0.0",
     "turbo": "^1.13.4",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "dependencies": {
-    "jsdom": "25.0.1",
+    "jsdom": "26.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "ts-node": "^10.9.2"
