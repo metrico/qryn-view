@@ -63,7 +63,7 @@
     "slate": "^0.112.0",
     "slate-history": "^0.110.3",
     "slate-react": "^0.110.3",
-    "tss-react": "^4.9.14",
+    "tss-react": "^4.9.15",
     "uuid": "^11.0.3",
     "web-vitals": "^4.2.4",
     "zod": "^3.24.1",
