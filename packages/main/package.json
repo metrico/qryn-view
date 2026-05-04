@@ -38,7 +38,7 @@
     "javascript-time-ago": "^2.5.11",
     "jquery": "^3.7.1",
     "jsdom": "26.0.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.1",
     "lru-memoize": "^1.1.0",
     "memoize-one": "^6.0.0",
     "moment": "^2.30.1",
@@ -64,7 +64,7 @@
     "slate-history": "^0.110.3",
     "slate-react": "^0.110.3",
     "tss-react": "^4.9.14",
-    "uuid": "^11.0.3",
+    "uuid": "^14.0.0",
     "web-vitals": "^4.2.4",
     "zod": "^3.24.1",
     "zustand": "^5.0.2"
@@ -84,13 +84,13 @@
     "eslint": "^8.57.1",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.16",
-    "happy-dom": "^17.1.8",
+    "happy-dom": "^20.8.9",
     "jsdom": "26.0.0",
     "prettier": "^3.4.2",
     "sass": "^1.83.0",
     "scss": "^0.2.4",
     "typescript": "^5.7.3",
-    "vite": "^5.4.11",
+    "vite": "^6.4.2",
     "vitest": "^3.0.7"
   }
 }
