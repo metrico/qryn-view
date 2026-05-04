@@ -112,8 +112,8 @@ importers:
         specifier: ^3.12.0
         version: 3.12.0
       javascript-time-ago:
-        specifier: ^2.5.11
-        version: 2.5.11
+        specifier: ^2.6.4
+        version: 2.6.4
       jquery:
         specifier: ^3.7.1
         version: 3.7.1
@@ -2466,8 +2466,8 @@ packages:
     resolution: {integrity: sha512-8n+j+6ypTHvriJwFOQ2qusQ6bzGjZVcR3jbe1pBpLcGI1dn4WIl0ctLBngqE5QttquQBAlKXwJeTMw+X7x7qKw==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
 
-  javascript-time-ago@2.5.11:
-    resolution: {integrity: sha512-Zeyf5R7oM1fSMW9zsU3YgAYwE0bimEeF54Udn2ixGd8PUwu+z1Yc5t4Y8YScJDMHD6uCx6giLt3VJR5K4CMwbg==}
+  javascript-time-ago@2.6.4:
+    resolution: {integrity: sha512-7K/Z37LuwVaxxjutUDd1pXpznufPcox0b1UYu00ksAMMlV6IsxIvduwL3kgfPxuBVF8jVj7nhrKMPDslMq94aQ==}
 
   jest-diff@29.7.0:
     resolution: {integrity: sha512-LMIgiIrhigmPrs03JHpxUh2yISK3vLFPkAodPeo0+BuF7wA2FoQbkEg1u8gBYBThncu7e1oEDUfIXVuTqLRUjw==}
@@ -2983,8 +2983,8 @@ packages:
     resolution: {integrity: sha512-vqlC04+RQoFalODCbCumG2xIOvapzVMHwsyIGM/SIE8fRhFFsXeH8/QQ+s0T0kDAhKc4k30s73/0ydkHQz6HlQ==}
     engines: {node: '>= 0.4'}
 
-  relative-time-format@1.1.6:
-    resolution: {integrity: sha512-aCv3juQw4hT1/P/OrVltKWLlp15eW1GRcwP1XdxHrPdZE9MtgqFpegjnTjLhi2m2WI9MT/hQQtE+tjEWG1hgkQ==}
+  relative-time-format@1.1.12:
+    resolution: {integrity: sha512-qaZBjmRIuXLfuLnzgqpFdBPa5W0euSX1tMnoMUHGPphLwJmrt8xbNiOIHrlvYOD6oNJ0M5owPCZyPibI8de5pQ==}
 
   remove-accents@0.5.0:
     resolution: {integrity: sha512-8g3/Otx1eJaVD12e31UbJj1YzdtVvzH85HV7t+9MJYk/u3XmkOUJ5Ys9wQrf9PCPK8+xn4ymzqYCiZl6QWKn+A==}
@@ -5905,9 +5905,9 @@ snapshots:
       - '@noble/hashes'
       - canvas
 
-  javascript-time-ago@2.5.11:
+  javascript-time-ago@2.6.4:
     dependencies:
-      relative-time-format: 1.1.6
+      relative-time-format: 1.1.12
 
   jest-diff@29.7.0:
     dependencies:
@@ -6454,7 +6454,7 @@ snapshots:
       es-errors: 1.3.0
       set-function-name: 2.0.2
 
-  relative-time-format@1.1.6: {}
+  relative-time-format@1.1.12: {}
 
   remove-accents@0.5.0: {}
 
