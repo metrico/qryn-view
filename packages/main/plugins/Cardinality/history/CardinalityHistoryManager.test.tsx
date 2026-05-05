@@ -21,7 +21,9 @@ describe("CardinalityHistoryManager", () => {
 
     test("should get the local history item", () => {
         const item = manager.getLocalHistoryItemsFromType("timeSeriesSelector");
-        expect(item).toEqual({ type: "timeSeriesSelector", value: "test" });
+        expect(item).toEqual([
+            { type: "timeSeriesSelector", value: "test" },
+        ]);
     });
 
     test("should get the local history as an array with one item", () => {
@@ -42,7 +44,7 @@ describe("CardinalityHistoryManager", () => {
 
     test("should get the local history item", () => {
         const item = manager.getLocalHistoryItemsFromType("focusLabel");
-        expect(item).toEqual({ type: "focusLabel", value: "test" });
+        expect(item).toEqual([{ type: "focusLabel", value: "test" }]);
     });
 
     test("should remove last item from list when there are ten and add a new one", () => {

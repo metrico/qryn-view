@@ -65,7 +65,7 @@ const getLocalQueryData = () => {
     try {
         const prevQuery = JSON.parse(localStorage.getItem("queryData") || "[]");
         return prevQuery;
-    } catch (e) {
+    } catch {
         return [];
     }
 };
@@ -76,7 +76,7 @@ const getLocalDataSources = (dataSourceId: string) => {
             localStorage.getItem("dataSources") || "[]"
         );
         return localData?.find((f: any) => f.id === dataSourceId);
-    } catch (e) {
+    } catch {
         return {};
     }
 };

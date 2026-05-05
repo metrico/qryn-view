@@ -71,8 +71,8 @@ const SummaryDelim = styled.span`
     padding: 0 0.2em;
 `;
 
-export function KeyValuesSummary(props: { data?: TraceKeyValuePair[] }) {
-    const { data } = props;
+export function KeyValuesSummary(props: { data?: TraceKeyValuePair[] | null }) {
+    const { data = null } = props;
 
     if (!Array.isArray(data) || !data.length) {
         return null;
@@ -92,20 +92,16 @@ export function KeyValuesSummary(props: { data?: TraceKeyValuePair[] }) {
     );
 }
 
-KeyValuesSummary.defaultProps = {
-    data: null,
-};
-
 export default function AccordianKeyValues(props: any) {
     const {
-        className,
+        className = null,
         data,
-        highContrast,
-        interactive,
+        highContrast = false,
+        interactive = true,
         isOpen,
         label,
         linksGetter,
-        onToggle,
+        onToggle = null,
     } = props;
     const isEmpty = !Array.isArray(data) || !data.length;
     let arrow: React.ReactNode | null = null;
@@ -156,10 +152,3 @@ export default function AccordianKeyValues(props: any) {
         </div>
     );
 }
-
-AccordianKeyValues.defaultProps = {
-    className: null,
-    highContrast: false,
-    interactive: true,
-    onToggle: null,
-};

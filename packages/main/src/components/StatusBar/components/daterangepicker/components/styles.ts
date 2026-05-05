@@ -1,5 +1,4 @@
 import { createTheme } from "@mui/material/styles";
-import { createStyles } from '@mui/styles';
 import store  from "@ui/store/store"
 
 import { darkTheme } from '@ui/theme/dark'
@@ -15,8 +14,7 @@ const themes = {
 const themeSelected = themes[actTheme]
 
 export const DayStyles = () =>
-
-    createStyles({
+    ({
         leftBorderRadius: {
             borderRadius: "50% 0 0 50%"
         },
@@ -58,8 +56,7 @@ export const DayStyles = () =>
         }
     });
 
-export const HeadingStyles = () => createStyles({
-
+export const HeadingStyles = () => ({
     iconContainer: {
         padding: 5,
         color: themeSelected.contrast

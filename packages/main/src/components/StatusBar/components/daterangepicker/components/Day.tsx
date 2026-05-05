@@ -1,13 +1,12 @@
 //import React from 'react';
 import { ThemeProvider } from "@emotion/react";
-import { createStyles } from "@mui/styles";
 import { IconButton, Typography } from "@mui/material";
 import { withStyles } from "tss-react/mui";
 import { combine } from "../utils";
 import { theme } from "./styles";
 
 const DayStyles:any = () => {
-    return createStyles({
+    return {
         leftBorderRadius: {
             borderRadius: "50% 0 0 50%",
         },
@@ -48,7 +47,7 @@ const DayStyles:any = () => {
         contrast: {
             color: "text.primary",
         },
-    });
+    };
 };
 
 const Day:any = (props: any) => {

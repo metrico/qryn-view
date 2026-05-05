@@ -44,7 +44,7 @@ export interface LabelValuesSelectorsProps {
 
 export type LabelValuesSelectorsFn = (
     props: LabelValuesSelectorsProps
-) => JSX.Element | null;
+) => React.JSX.Element | null;
 
 /**
  *

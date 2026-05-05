@@ -1,9 +1,8 @@
 import { useMemo, useState, SyntheticEvent, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Tabs } from "@mui/base";
 import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
-import { TabsListq, Tabq, TabPanelq, ViewStyled } from "./styled";
+import { TabsContainer, TabsListq, Tabq, TabPanelq, ViewStyled } from "./styled";
 import { localTabsState } from "../helpers";
 import QrynChart from "../components/Charts/QrynChart";
 import { LogRows } from "../components/Logs/LogRows";
@@ -96,7 +95,7 @@ const LogsView: React.FunctionComponent<any> = (props: any) => {
                 </div>
             )}
 
-            <Tabs
+            <TabsContainer
                 defaultValue={localTabsState(actualQuery)[actualQuery.id] || 0}
                 value={tabsState}
                 onChange={onTabChange}
@@ -140,7 +139,7 @@ const LogsView: React.FunctionComponent<any> = (props: any) => {
                         </div>
                     </div>
                 </TabPanelq>
-            </Tabs>
+            </TabsContainer>
         </ViewStyled>
     );
 };

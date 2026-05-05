@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 import {
-    TabPanel,
-    TabsList,
-    Tabs,
-    Tab,
-} from "@mui/base";
-import { tabClasses } from "@mui/base/Tab";
-import { buttonClasses } from "@mui/base/Button";
+    QrynTab,
+    qrynButtonClasses,
+    qrynTabClasses,
+    QrynTabPanel,
+    QrynTabs,
+    QrynTabsList,
+} from "@ui/qrynui/Tabs";
 
 export const ViewStyled: any = styled.div`
     margin: 4px;
@@ -43,17 +43,17 @@ export const ViewStyled: any = styled.div`
     }
 `;
 
-export const TabPanelq = styled(TabPanel)`
+export const TabPanelq = styled(QrynTabPanel)`
     width: 100%;
     background: ${({ theme }: any) => theme.shadow};
     height: inherit;
     flex: 1;
 `;
-export const TabsContainer = styled(Tabs)`
+export const TabsContainer = styled(QrynTabs)`
     display: flex;
     height: 100%;
 `;
-export const TabsListq: any = styled(TabsList)`
+export const TabsListq: any = styled(QrynTabsList)`
     min-width: 320px;
     background: ${({ theme }: any) => theme.shadow};
     border-bottom: 4px solid ${({ theme }: any) => theme.bgNeutral};
@@ -62,7 +62,7 @@ export const TabsListq: any = styled(TabsList)`
     align-content: space-between;
 `;
 
-export const Tabq = styled(Tab)`
+export const Tabq = styled(QrynTab)`
     color: ${({ theme }: any) => theme.contrast};
     background: ${({ theme }: any) => theme.neutral};
     border: 1px solid ${(props: any) => props.theme.accentNeutral};
@@ -90,11 +90,11 @@ export const Tabq = styled(Tab)`
         outline-offset: 2px;
     }
 
-    &.${tabClasses.selected} {
+    &.${qrynTabClasses.selected} {
         border-bottom: 1px solid ${({ theme }: any) => theme.primary};
     }
 
-    &.${buttonClasses.disabled} {
+    &.${qrynButtonClasses.disabled} {
         opacity: 0.5;
         cursor: not-allowed;
     }

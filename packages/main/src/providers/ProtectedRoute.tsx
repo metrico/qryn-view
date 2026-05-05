@@ -17,7 +17,7 @@ export default function ProtectedRoute({ children }: { children: any }) {
             } else {
                 cookie = false;
             }
-        } catch (e) {
+        } catch {
             cookie = false;
         }
         return { cookie, url };

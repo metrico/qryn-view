@@ -1,19 +1,22 @@
-import Tab, { tabClasses } from "@mui/base/Tab";
-import TabsList  from "@mui/base/TabsList";
-import TabPanel from "@mui/base/TabPanel";
-import { buttonClasses } from "@mui/base/Button";
 import styled from "@emotion/styled";
-import Tabs from "@mui/base/Tabs";
 import Panel from "../sections/Panel";
+import {
+    QrynTab,
+    qrynButtonClasses,
+    qrynTabClasses,
+    QrynTabPanel,
+    QrynTabs,
+    QrynTabsList,
+} from "@ui/qrynui/Tabs";
 
-export const TabsContainer = styled(Tabs)`
+export const TabsContainer = styled(QrynTabs)`
     background: ${({theme}: any) => theme.deep};
   
 `;
 
 
 
-export const Tabq = styled(Tab)`
+export const Tabq = styled(QrynTab)`
     color: ${({theme}: any) => theme.contrast};
     background: ${({theme}: any) => theme.neutral};
     border: 1px solid ${({theme}: any) => theme.accentNeutral};
@@ -41,11 +44,11 @@ export const Tabq = styled(Tab)`
         outline-offset: 2px;
     }
 
-    &.${tabClasses.selected} {
+    &.${qrynTabClasses.selected} {
         border-bottom: 1px solid ${({ theme }: any) => theme.primary};
     }
 
-    &.${buttonClasses.disabled} {
+    &.${qrynButtonClasses.disabled} {
         opacity: 0.5;
         cursor: not-allowed;
     }
@@ -67,13 +70,13 @@ export const TabHeaderContainer = styled.div`
     background: ${({theme}: any) => theme.shadow};
     height: 37px;
 `;
-export const TabPanelq = styled(TabPanel)`
+export const TabPanelq = styled(QrynTabPanel)`
     width: 100%;
     background: ${({ theme }: any) => theme.shadow};
     height: inherit;
 `;
 
-export const TabsListq = styled(TabsList)`
+export const TabsListq = styled(QrynTabsList)`
     min-width: 320px;
     background: ${({ theme }: any) => theme.shadow};
     border-bottom: 4px solid ${({ theme }: any) => theme.bgNeutral};
@@ -95,12 +98,12 @@ export default function MainTabs() {
                     <span>{"Right"}</span>
                 </Tabq>
             </TabsListq>
-            <TabPanel value={0}>
+            <TabPanelq value={0}>
                 <Panel name="left" />
-            </TabPanel>
-            <TabPanel value={1}>
+            </TabPanelq>
+            <TabPanelq value={1}>
                 <Panel name="right" />
-            </TabPanel>
+            </TabPanelq>
         </TabsContainer>
     );
 }

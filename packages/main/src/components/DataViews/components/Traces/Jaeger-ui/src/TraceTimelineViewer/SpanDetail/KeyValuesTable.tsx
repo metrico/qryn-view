@@ -68,7 +68,7 @@ function parseIfComplexJson(value: unknown) {
         // otherwise just return as is
         try {
             return JSON.parse(value);
-        } catch (_) {}
+        } catch {}
     }
     return value;
 }
@@ -78,20 +78,17 @@ export const LinkValue = (props: {
     title?: string;
     children: React.ReactNode;
 }) => {
+    const { children, href, title = "" } = props;
     return (
         <a
-            href={props.href}
-            title={props.title}
+            href={href}
+            title={title}
             target="_blank"
             rel="noopener noreferrer"
         >
-            {props.children} <OpenInNewIcon />
+            {children} <OpenInNewIcon />
         </a>
     );
-};
-
-LinkValue.defaultProps = {
-    title: "",
 };
 
 type KeyValuesTableProps = {

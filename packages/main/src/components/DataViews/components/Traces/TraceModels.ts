@@ -12,8 +12,7 @@ export interface InstrumentationLibrarySpan {
     spans:                  Span[];
 }
 
-export interface InstrumentationLibrary {
-}
+export type InstrumentationLibrary = Record<string, unknown>;
 
 export interface Span {
     traceID:           string;
@@ -124,7 +123,6 @@ export interface PurpleTag {
     value: number | string;
     key:   string;
 }
-
 
 
 

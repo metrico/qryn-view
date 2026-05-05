@@ -7,6 +7,9 @@
     "url": "git+ssh://git@github.com/metrico/qryn-view.git"
   },
   "main": "index.js",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "test": "turbo run test",
     "dev": "turbo run dev ",
@@ -16,16 +19,17 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.19.39",
-    "@types/react": "^18.3.28",
+    "@types/node": "^24.12.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "19.2.3",
     "jsdom": "26.0.0",
     "turbo": "^1.13.4",
     "typescript": "^5.9.3"
   },
   "dependencies": {
     "jsdom": "26.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
     "ts-node": "^10.9.2"
   }
 }

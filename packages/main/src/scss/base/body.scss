@@ -1,3 +1,5 @@
+@use "../variables/colors" as *;
+
 * {
     &::-webkit-scrollbar {
         width: 5px;

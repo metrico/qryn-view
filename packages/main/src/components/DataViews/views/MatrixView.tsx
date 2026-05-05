@@ -1,8 +1,7 @@
 import QrynChart from "../components/Charts/QrynChart";
 import { VectorTable } from "../components/Table/VectorTable/VectorTable";
 import { ViewHeader } from "../components/ViewHeader";
-import { Tabs } from "@mui/base";
-import { TabsListq, Tabq, TabPanelq, ViewStyled } from "./styled";
+import { TabsContainer, TabsListq, Tabq, TabPanelq, ViewStyled } from "./styled";
 
 import ReactJson from "@microlink/react-json-view";
 import { useSelector } from "react-redux";
@@ -76,7 +75,7 @@ export const MatrixView = (props: any) => {
                 type={type}
                 {...props}
             />
-            <Tabs
+            <TabsContainer
                 style={{ display: "flex", flex: 1, flexDirection: "column" }}
                 defaultValue={localTabsState(actualQuery)[actualQuery.id] || 0}
                 value={tabsState}
@@ -121,7 +120,7 @@ export const MatrixView = (props: any) => {
                         </div>
                     </div>
                 </TabPanelq>
-            </Tabs>
+            </TabsContainer>
         </ViewStyled>
     );
 };

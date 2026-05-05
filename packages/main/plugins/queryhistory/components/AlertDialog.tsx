@@ -12,7 +12,7 @@ import {
     DialogTitle,
     Tooltip,
 } from "@mui/material";
-import { ThemeProvider } from "@mui/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import styled from "@emotion/styled";
 import { DialogStyles } from "../../settingsdialog/SettingsDialog";
 import useTheme from "@ui/theme/useTheme";

@@ -38,6 +38,7 @@ let configOpts = {
     test: {
         globals: true,
         environment: "happy-dom",
+        include: ["**/*.{test,spec}.{ts,tsx}"],
     },
     optimizeDeps: {
         exclude: ["moment"], // Exclude 'moment' from automatic dependency optimization

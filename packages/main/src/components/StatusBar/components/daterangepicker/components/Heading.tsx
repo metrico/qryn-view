@@ -72,7 +72,7 @@ const Heading:any = ({
                 alignItems={"center"}
                 style={{ marginTop: "20px" }}
             >
-                <Grid item className={classes.iconContainer}>
+                <Grid className={classes.iconContainer}>
                     <IconButton
                         disabled={prevDisabled}
                         onClick={onClickPrevious}
@@ -86,7 +86,7 @@ const Heading:any = ({
                         />
                     </IconButton>
                 </Grid>
-                <Grid item>
+                <Grid>
                     <DateSelect
                         value={getMonth(date)}
                         onChange={handleMonthChange}
@@ -99,7 +99,7 @@ const Heading:any = ({
                     </DateSelect>
                 </Grid>
 
-                <Grid item>
+                <Grid>
                     <DateSelect
                         value={getYear(date)}
                         onChange={handleYearChange}
@@ -115,7 +115,7 @@ const Heading:any = ({
                         ))}
                     </DateSelect>
                 </Grid>
-                <Grid item className={classes.iconContainer}>
+                <Grid className={classes.iconContainer}>
                     <IconButton disabled={nextDisabled} onClick={onClickNext}>
                         <ChevronRight
                             style={{

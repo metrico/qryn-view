@@ -54,13 +54,13 @@ function DefaultTextComponent({ data }: { data: string[] }) {
 
 export default function AccordianText(props: AccordianTextProps) {
     const {
-        className,
+        className = null,
         data,
         headerClassName,
-        interactive,
+        interactive = true,
         isOpen,
         label,
-        onToggle,
+        onToggle = null,
         TextComponent = DefaultTextComponent,
     }: any = props;
     const isEmpty = !Array.isArray(data) || !data.length;
@@ -92,10 +92,3 @@ export default function AccordianText(props: AccordianTextProps) {
         </div>
     );
 }
-
-AccordianText.defaultProps = {
-    className: null,
-    highContrast: false,
-    interactive: true,
-    onToggle: null,
-};

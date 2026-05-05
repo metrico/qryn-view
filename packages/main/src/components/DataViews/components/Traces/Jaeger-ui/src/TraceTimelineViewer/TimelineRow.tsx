@@ -47,12 +47,8 @@ export default function TimelineRow(props: TTimelineRowProps) {
     );
 }
 
-TimelineRow.defaultProps = {
-    className: "",
-};
-
 export function TimelineRowCell(props: TimelineRowCellProps) {
-    const { children, className = "", width, style, theme, ...rest } = props;
+    const { children, className = "", width, style = {}, theme, ...rest } = props;
     const widthPercent = `${width * 100}%`;
     const mergedStyle = {
         ...style,
@@ -70,7 +66,5 @@ export function TimelineRowCell(props: TimelineRowCellProps) {
         </div>
     );
 }
-
-TimelineRowCell.defaultProps = { className: "", style: {} };
 
 TimelineRow.Cell = TimelineRowCell;
