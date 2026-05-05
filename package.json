@@ -25,7 +25,7 @@
     "@types/react-dom": "19.2.3",
     "jsdom": "26.0.0",
     "turbo": "^1.13.4",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "dependencies": {
     "jsdom": "26.0.0",
