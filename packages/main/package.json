@@ -21,7 +21,7 @@
     "@fingerprintjs/fingerprintjs": "^5.2.0",
     "@microlink/react-json-view": "latest",
     "@mui/icons-material": "^7.3.10",
-    "@mui/material": "^7.3.10",
+    "@mui/material": "^9.0.0",
     "@mui/x-charts": "9.0.4",
     "@szhsin/react-menu": "^4.5.1",
     "@tanstack/match-sorter-utils": "^8.19.4",
