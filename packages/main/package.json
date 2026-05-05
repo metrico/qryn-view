@@ -68,7 +68,7 @@
     "slate-react": "^0.110.3",
     "tss-react": "^4.9.20",
     "uuid": "^14.0.0",
-    "web-vitals": "^4.2.4",
+    "web-vitals": "^5.2.0",
     "zod": "^4.4.3",
     "zustand": "^5.0.13"
   },
