@@ -56,7 +56,3 @@ export default function BreakableText(
     }
     return spans;
 }
-
-BreakableText.defaultProps = {
-    wordRegexp: WORD_RX,
-};

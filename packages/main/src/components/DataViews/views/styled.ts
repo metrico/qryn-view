@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 import {
-    TabPanel,
-    TabsList,
-    Tabs,
-    Tab,
-} from "@mui/base";
-import { tabClasses } from "@mui/base/Tab";
-import { buttonClasses } from "@mui/base/Button";
+    QrynTab,
+    qrynButtonClasses,
+    qrynTabClasses,
+    QrynTabPanel,
+    QrynTabs,
+    QrynTabsList,
+} from "@ui/qrynui/Tabs";
 
 export const ViewStyled: any = styled.div`
     margin: 4px;
@@ -16,44 +16,35 @@ export const ViewStyled: any = styled.div`
     border-radius: 3px;
     display: flex;
     flex-direction: column;
-    flex: ${({ size }: any) => (size === "min" ? 0 : 1)};
-
-    height: ${(props: any) =>
-        props.size === "regular"
-            ? props.vheight.regularCont
-            : props.size === "max"
-            ? props.vheight.maxCont
-            : "20px"};
+    flex: ${({ size }: any) => (size === "min" ? "0 0 auto" : "1 1 auto")};
+    min-height: 0;
+    height: ${({ size }: any) => (size === "min" ? "20px" : "auto")};
+    overflow: hidden;
     .view-content {
-        height: ${(props: any) =>
-            props.size === "regular"
-                ? props.vheight.regularView
-                : props.size === "max"
-                ? props.vheight.maxView
-                : "0px"};
-        display: ${(props: any) =>
-            props.size === "min"
-                ? "none"
-                : props.size === "regular"
-                ? "flex"
-                : "flex"};
-        flex-direction: ${(props: any) =>
-            props.size === "regular" ? "column" : "column"};
-        flex: 1;
+        display: ${({ size }: any) => (size === "min" ? "none" : "flex")};
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
     }
 `;
 
-export const TabPanelq = styled(TabPanel)`
+export const TabPanelq = styled(QrynTabPanel)`
     width: 100%;
     background: ${({ theme }: any) => theme.shadow};
-    height: inherit;
-    flex: 1;
-`;
-export const TabsContainer = styled(Tabs)`
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
     display: flex;
-    height: 100%;
+    flex-direction: column;
 `;
-export const TabsListq: any = styled(TabsList)`
+export const TabsContainer = styled(QrynTabs)`
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+`;
+export const TabsListq: any = styled(QrynTabsList)`
     min-width: 320px;
     background: ${({ theme }: any) => theme.shadow};
     border-bottom: 4px solid ${({ theme }: any) => theme.bgNeutral};
@@ -62,7 +53,7 @@ export const TabsListq: any = styled(TabsList)`
     align-content: space-between;
 `;
 
-export const Tabq = styled(Tab)`
+export const Tabq = styled(QrynTab)`
     color: ${({ theme }: any) => theme.contrast};
     background: ${({ theme }: any) => theme.neutral};
     border: 1px solid ${(props: any) => props.theme.accentNeutral};
@@ -90,11 +81,11 @@ export const Tabq = styled(Tab)`
         outline-offset: 2px;
     }
 
-    &.${tabClasses.selected} {
+    &.${qrynTabClasses.selected} {
         border-bottom: 1px solid ${({ theme }: any) => theme.primary};
     }
 
-    &.${buttonClasses.disabled} {
+    &.${qrynButtonClasses.disabled} {
         opacity: 0.5;
         cursor: not-allowed;
     }

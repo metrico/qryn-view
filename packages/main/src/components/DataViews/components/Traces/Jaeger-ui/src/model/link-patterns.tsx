@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { uniq as _uniq } from "lodash";
+import _uniq from "lodash/uniq";
 import memoize from "lru-memoize";
 import DOMPurify from "isomorphic-dompurify";
 import { TNil } from "../types";

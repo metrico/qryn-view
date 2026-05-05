@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { css } from "@emotion/css";
-import { sortBy as _sortBy } from "lodash";
+import _sortBy from "lodash/sortBy";
 import React from 'react';
 import IoIosArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import IoIosArrowRight from "@mui/icons-material/ArrowForwardIos";
@@ -66,13 +66,13 @@ type AccordianLogsProps = {
 
 export default function AccordianLogs(props: AccordianLogsProps) {
     const {
-        interactive,
+        interactive = true,
         isOpen,
-        linksGetter,
+        linksGetter = undefined,
         logs,
-        openedItems,
-        onItemToggle,
-        onToggle,
+        openedItems = undefined,
+        onItemToggle = undefined,
+        onToggle = undefined,
         timestamp,
     } = props;
     let arrow: React.ReactNode | null = null;
@@ -143,11 +143,3 @@ export default function AccordianLogs(props: AccordianLogsProps) {
         </AccordianLogsStyled>
     );
 }
-
-AccordianLogs.defaultProps = {
-    interactive: true,
-    linksGetter: undefined,
-    onItemToggle: undefined,
-    onToggle: undefined,
-    openedItems: undefined,
-};

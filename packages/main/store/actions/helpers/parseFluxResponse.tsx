@@ -2,7 +2,7 @@ import { QueryResult } from "../types";
 import { addNanoId } from "./addNanoId";
 import moment from "moment";
 import { isDate } from 'date-fns'
-import { sortBy } from "lodash";
+import sortBy from "lodash/sortBy";
 import { setLeftDataView } from "../setLeftDataView";
 import { setRightDataView } from "../setRightDataView";
 import store from "@ui/store/store";

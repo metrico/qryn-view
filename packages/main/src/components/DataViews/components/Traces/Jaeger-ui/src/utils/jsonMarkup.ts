@@ -5,7 +5,7 @@ const INDENTATION = '    '
 
 function createInlineStyle(rules: Record<string, string> | undefined): string {
   let inlineStyle = ''
-  rules && Object.keys(rules).forEach((property) => {
+  if (rules) Object.keys(rules).forEach((property) => {
     inlineStyle += `${property}:${rules[property]};`
   })
   return inlineStyle

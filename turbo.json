@@ -3,7 +3,7 @@
     "pipeline": {
         "build": {
             "dependsOn": ["^build"],
-            "outputs": ["build/**"]
+            "outputs": ["dist/**"]
         },
         "dev": {
             "cache": false,
@@ -15,8 +15,11 @@
             "inputs": [
                 "src/**/*.tsx",
                 "src/**/*.ts",
+                "plugins/**/*.test.ts",
+                "plugins/**/*.test.tsx",
                 "test/**/*.ts",
-                "test/**/*.tsx"
+                "test/**/*.tsx",
+                "vite.config.ts"
             ]
         }
     }

@@ -1,15 +1,13 @@
-@import "vendor/reset";
-@import "variables/colors";
-@import "tools/mixins";
+@use "vendor/reset";
 
-@import "base/body";
-@import "base/forms";
-@import "base/links";
+@use "base/body";
+@use "base/forms";
+@use "base/links";
 
-@import "modules/log-search";
-@import "modules/filter";
-@import "modules/log-view";
-@import "modules/query-bar.scss";
-@import "modules/status-bar.scss";
-@import "modules/date-range-picker.scss";
-@import "modules/notifications.scss";
+@use "modules/log-search";
+@use "modules/filter";
+@use "modules/log-view";
+@use "modules/query-bar";
+@use "modules/status-bar";
+@use "modules/date-range-picker";
+@use "modules/notifications";

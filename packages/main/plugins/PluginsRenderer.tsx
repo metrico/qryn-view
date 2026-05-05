@@ -8,6 +8,8 @@ interface PluginRendererProps {
 
 const PluginRenderer: React.FC<PluginRendererProps> = (props) => {
     const { section, localProps } = props;
+    const plugins = PluginManager.getPlugins(section);
+    if (!plugins?.length) return null;
     return (
         <div
             style={{
@@ -17,29 +19,26 @@ const PluginRenderer: React.FC<PluginRendererProps> = (props) => {
                 padding: ".5em",
             }}
         >
-            {PluginManager.getPlugins(section)?.length > 0 &&
-                PluginManager.getPlugins(section)?.map(
-                    (
-                        {
-                            name,
-                            Component,
-                        }: {
-                            name: string;
-                            Component: React.FC<
-                                PluginRendererProps["localProps"]
-                            >;
-                        },
-                        idx: number
-                    ) => {
-                        return (
-                            <Component
-                                key={idx}
-                                localProps={localProps}
-                                name={name}
-                            />
-                        );
-                    }
-                )}
+            {plugins.map(
+                (
+                    {
+                        name,
+                        Component,
+                    }: {
+                        name: string;
+                        Component: React.FC<
+                            PluginRendererProps["localProps"]
+                        >;
+                    },
+                    idx: number
+                ) => (
+                    <Component
+                        key={idx}
+                        localProps={localProps}
+                        name={name}
+                    />
+                )
+            )}
         </div>
     );
 };

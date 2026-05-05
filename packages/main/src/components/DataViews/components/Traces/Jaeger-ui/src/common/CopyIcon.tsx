@@ -57,8 +57,3 @@ export default function CopyIcon(props: PropsType) {
     </Tooltip>
   );
 }
-
-CopyIcon.defaultProps = {
-  icon: 'copy',
-  className: undefined,
-};

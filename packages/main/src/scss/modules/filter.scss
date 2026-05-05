@@ -1,3 +1,6 @@
+@use "../variables/colors" as *;
+@use "../tools/mixins" as *;
+
 .filter {
     background: $grey-medium;
     margin-right: 15px;

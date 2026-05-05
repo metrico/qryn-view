@@ -1,15 +1,18 @@
 import styled from "@emotion/styled";
-import { buttonClasses } from "@mui/base/Button";
-import TabUnstyled, { tabClasses } from "@mui/base/Tab";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
 import HistoryIcon from "@mui/icons-material/History";
 import SearchIcon from "@mui/icons-material/Search";
-import TabsListUnstyled from "@mui/base/TabsList";
-import TabPanelUnstyled from "@mui/base/TabPanel";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import LinkIcon from "@mui/icons-material/Link";
 import { Drawer } from "@mui/material";
-import { Tabs } from "@mui/base";
+import {
+    QrynTab,
+    qrynButtonClasses,
+    qrynTabClasses,
+    QrynTabPanel,
+    QrynTabs,
+    QrynTabsList,
+} from "@ui/qrynui/Tabs";
 
 import { DatePickerButton } from "@ui/main/components/StatusBar/styled";
 export const StyledDrawer: any = styled((props: any) => (
@@ -25,11 +28,11 @@ export const StyledDrawer: any = styled((props: any) => (
     },
 }));
 
-export const TabsContainer: any = styled(Tabs)`
+export const TabsContainer: any = styled(QrynTabs)`
     height: "320px";
     background: ${({ theme }: any) => theme.deep};
 `;
-export const Tab: any = styled(TabUnstyled)`
+export const Tab: any = styled(QrynTab)`
     color: ${({ theme }: any) => theme.contrast};
     background: ${({ theme }: any) => theme.neutral};
     border: 1px solid ${(props: any) => props.theme.accentNeutral};
@@ -57,11 +60,11 @@ export const Tab: any = styled(TabUnstyled)`
         outline-offset: 2px;
     }
 
-    &.${tabClasses.selected} {
+    &.${qrynTabClasses.selected} {
         border-bottom: 1px solid ${({ theme }: any) => theme.primary};
     }
 
-    &.${buttonClasses.disabled} {
+    &.${qrynButtonClasses.disabled} {
         opacity: 0.5;
         cursor: not-allowed;
     }
@@ -115,12 +118,12 @@ export const TabHeaderContainer: any = styled.div`
     background: ${({ theme }: any) => theme.shadow};
     height: 37px;
 `;
-export const TabPanel: any = styled(TabPanelUnstyled)`
+export const TabPanel: any = styled(QrynTabPanel)`
     width: 100%;
     background: ${({ theme }: any) => theme.shadow};
 `;
 
-export const TabsList: any = styled(TabsListUnstyled)`
+export const TabsList: any = styled(QrynTabsList)`
     min-width: 320px;
     background: ${({ theme }: any) => theme.shadow};
     border-bottom: 4px solid ${({ theme }: any) => theme.bgNeutral};

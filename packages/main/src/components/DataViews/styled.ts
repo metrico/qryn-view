@@ -74,21 +74,12 @@ export const Loader = styled(CircularProgress)`
 `;
 
 export const DataviewsContainer = styled.div<{ theme: QrynTheme }>`
-    overflow-y: auto;
     margin: 2px;
     display: flex;
     flex-direction: column;
-    flex: 1;
-    max-height: 100vh;
-    &::-webkit-scrollbar {
-        background: ${({ theme }) => theme.background};
-    }
-    ::-webkit-scrollbar-corner {
-        background: transparent;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: ${({ theme }) => theme.accentNeutral};
-    }
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
 `;
 
 export const ViewHeaderStyled = styled.div`

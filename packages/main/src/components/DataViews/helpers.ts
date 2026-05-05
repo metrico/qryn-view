@@ -10,7 +10,7 @@ export function localTabsState({ id }: { id: string }) {
             localStorage.getItem("tabsState") || `{[${id}]:0}`
         );
         return fromStorage;
-    } catch (e) {
+    } catch {
         return { [id]: 0 };
     }
 }

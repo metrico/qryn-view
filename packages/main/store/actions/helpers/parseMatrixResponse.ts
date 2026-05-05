@@ -1,7 +1,7 @@
 import { QueryResult } from "../types";
 import { addNanoId } from "./addNanoId";
 import moment from "moment";
-import { sortBy } from "lodash";
+import sortBy from "lodash/sortBy";
 import { setLeftDataView } from "../setLeftDataView";
 import { setRightDataView } from "../setRightDataView";
 import { ColumnDef } from "@tanstack/react-table";

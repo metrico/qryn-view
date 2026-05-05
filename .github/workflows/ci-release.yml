@@ -19,20 +19,18 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node-version: [20.x]
+                node-version: [24.x]
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
               with:
                   fetch-depth: 2
-            - uses: pnpm/action-setup@v4.0.0
-              with:
-                  version: 8
+            - uses: pnpm/action-setup@v6
 
 
             - name: "Automated Version Bump"
               if: github.event_name != 'pull_request'
               id: version
-              uses: "phips28/gh-action-bump-version@master"
+              uses: "phips28/gh-action-bump-version@v11.0.7"
               with:
                   tag-prefix: "v"
                   skip-tag: true
@@ -42,22 +40,22 @@ jobs:
 
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              
+
             - name: "Main Package Version Bump"
               if: github.event_name != 'pull_request'
               id: main-version
-              uses: "phips28/gh-action-bump-version@master"
+              uses: "phips28/gh-action-bump-version@v11.0.7"
               with:
                   tag-prefix: "v"
                   skip-tag: true
                   minor-wording: 'feat,add,Adds,new'
                   major-wording: 'MAJOR,cut-major'
                   patch-wording: 'Fix,patch,fixes,fix,dependabot,deps-dev,deps,Bumps,chore'
-    
+
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   PACKAGEJSON_DIR:  'packages/main'
-            
+
             - name: "version check"
               if: github.event_name != 'pull_request'
               run: echo ${{steps.version.outputs.newTag}}
@@ -67,7 +65,7 @@ jobs:
               run: echo ${{steps.main-version.outputs.newTag}}
 
             - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v6
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "pnpm"
@@ -75,33 +73,36 @@ jobs:
             - name: Install dependencies
               run: pnpm install
 
-            - name: Build 
+            - name: Lint
+              run: pnpm -F @ui/main lint
+
+            - name: Build
               run: pnpm build
 
             - name: Test
               run: pnpm test
 
-            - uses: vimtor/action-zip@v1.1
+            - uses: vimtor/action-zip@v1.3
               if: github.event_name != 'pull_request'
               with:
                   files: packages/main/dist/ README.md
                   dest: dist.zip
+
             - name: Upload release binaries
               if: github.event_name != 'pull_request'
-              uses: boxpositron/upload-multiple-releases@1.0.7
+              uses: softprops/action-gh-release@v3
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                  release_config: |
-                      dist.zip
+                  files: dist.zip
                   tag_name: ${{steps.version.outputs.newTag}}
-                  release_name: qryn-view-${{steps.version.outputs.newTag}}
+                  name: qryn-view-${{steps.version.outputs.newTag}}
                   draft: false
                   prerelease: false
-                  overwrite: true
+
             - name: Deploy to gh-pages 🚀
               if: github.event_name != 'pull_request'
-              uses: JamesIves/github-pages-deploy-action@v4.2.3
+              uses: JamesIves/github-pages-deploy-action@v4.8.0
               with:
                   branch: gh-pages
                   folder: packages/main/dist

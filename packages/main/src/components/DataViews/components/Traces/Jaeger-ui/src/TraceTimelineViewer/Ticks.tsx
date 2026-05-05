@@ -51,7 +51,12 @@ type TicksProps = {
 };
 
 export default function Ticks(props: TicksProps) {
-    const { endTime, numTicks, showLabels, startTime } = props;
+    const {
+        endTime = null,
+        numTicks,
+        showLabels = null,
+        startTime = null,
+    } = props;
 
     let labels: undefined | string[];
     if (showLabels) {
@@ -89,9 +94,3 @@ export default function Ticks(props: TicksProps) {
     }
     return <TicksStyled>{ticks}</TicksStyled>;
 }
-
-Ticks.defaultProps = {
-    endTime: null,
-    showLabels: null,
-    startTime: null,
-};

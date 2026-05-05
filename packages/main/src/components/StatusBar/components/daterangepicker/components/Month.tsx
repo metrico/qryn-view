@@ -1,6 +1,5 @@
-import { Paper, Grid } from "@mui/material";
+import { Grid, Paper } from "@mui/material";
 import { withStyles } from "tss-react/mui";
-import {createStyles} from "@mui/styles";
 import { useState, useEffect } from "react";
 
 import {
@@ -27,7 +26,7 @@ import useTheme from "@ui/theme/useTheme"
 const NAVIGATION_ACTION = { Previous: -1, Next: 1 };
 
 const styles = (theme: any) =>
-    createStyles({
+    ({
         root: {
             width: 260,
             background: theme.background,
@@ -95,7 +94,6 @@ const Month = (props: any) => {
                     />
 
                     <Grid
-                        item
                         container
                         direction={"row"}
                         justifyContent={"space-between"}
@@ -116,7 +114,6 @@ const Month = (props: any) => {
                     </Grid>
 
                     <Grid
-                        item
                         container
                         direction={"column"}
                         justifyContent={"space-between"}
