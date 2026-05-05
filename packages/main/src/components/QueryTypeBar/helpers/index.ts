@@ -1,4 +1,4 @@
-import { map } from "lodash";
+import map from "lodash/map";
 
 function getTime(date:any) {
     return Math.ceil(date.valueOf() * 1e6);

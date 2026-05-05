@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { css } from "@emotion/css";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 import memoizeOne from "memoize-one";
 import React from 'react';
 import { createRef, RefObject } from "react";

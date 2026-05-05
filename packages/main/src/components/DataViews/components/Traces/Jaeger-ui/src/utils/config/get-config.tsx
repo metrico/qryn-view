@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { get as _get } from 'lodash';
+import _get from 'lodash/get';
 
 import defaultConfig from '../../constants/default-config';
 

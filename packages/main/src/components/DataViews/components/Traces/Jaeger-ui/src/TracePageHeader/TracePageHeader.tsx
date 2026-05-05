@@ -14,7 +14,9 @@
 
 import { css } from "@emotion/css";
 import cx from "classnames";
-import { get as _get, maxBy as _maxBy, values as _values } from "lodash";
+import _get from "lodash/get";
+import _maxBy from "lodash/maxBy";
+import _values from "lodash/values";
 import { useMemo } from "react";
 import MdKeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import React from "react";

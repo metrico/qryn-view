@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { isEqual as _isEqual } from "lodash";
+import _isEqual from "lodash/isEqual";
 import { getTraceSpanIdsAsTree } from "../selectors/trace";
 import {
     TraceKeyValuePair,

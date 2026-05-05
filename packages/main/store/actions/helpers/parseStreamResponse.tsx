@@ -1,4 +1,4 @@
-import { sortBy } from "lodash";
+import sortBy from "lodash/sortBy";
 import setIsEmptyView from "../setIsEmptyView";
 import setLogs from "../setLogs";
 import { setQueryTime } from "../setQueryTime";

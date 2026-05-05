@@ -16,42 +16,33 @@ export const ViewStyled: any = styled.div`
     border-radius: 3px;
     display: flex;
     flex-direction: column;
-    flex: ${({ size }: any) => (size === "min" ? 0 : 1)};
-
-    height: ${(props: any) =>
-        props.size === "regular"
-            ? props.vheight.regularCont
-            : props.size === "max"
-            ? props.vheight.maxCont
-            : "20px"};
+    flex: ${({ size }: any) => (size === "min" ? "0 0 auto" : "1 1 auto")};
+    min-height: 0;
+    height: ${({ size }: any) => (size === "min" ? "20px" : "auto")};
+    overflow: hidden;
     .view-content {
-        height: ${(props: any) =>
-            props.size === "regular"
-                ? props.vheight.regularView
-                : props.size === "max"
-                ? props.vheight.maxView
-                : "0px"};
-        display: ${(props: any) =>
-            props.size === "min"
-                ? "none"
-                : props.size === "regular"
-                ? "flex"
-                : "flex"};
-        flex-direction: ${(props: any) =>
-            props.size === "regular" ? "column" : "column"};
-        flex: 1;
+        display: ${({ size }: any) => (size === "min" ? "none" : "flex")};
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
     }
 `;
 
 export const TabPanelq = styled(QrynTabPanel)`
     width: 100%;
     background: ${({ theme }: any) => theme.shadow};
-    height: inherit;
-    flex: 1;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 `;
 export const TabsContainer = styled(QrynTabs)`
     display: flex;
-    height: 100%;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
 `;
 export const TabsListq: any = styled(QrynTabsList)`
     min-width: 320px;

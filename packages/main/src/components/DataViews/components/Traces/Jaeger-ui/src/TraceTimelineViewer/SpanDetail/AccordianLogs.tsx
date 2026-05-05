@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { css } from "@emotion/css";
-import { sortBy as _sortBy } from "lodash";
+import _sortBy from "lodash/sortBy";
 import React from 'react';
 import IoIosArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import IoIosArrowRight from "@mui/icons-material/ArrowForwardIos";
