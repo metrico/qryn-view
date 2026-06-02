@@ -1,4 +1,4 @@
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import { cx } from '@emotion/css'
 import { confirmSaveLoaderIcon, inputErrorCont } from "./header.styles";
 

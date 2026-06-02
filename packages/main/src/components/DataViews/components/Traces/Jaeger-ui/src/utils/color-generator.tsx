@@ -73,12 +73,12 @@ export const colors = [
 ];
 // TS needs the precise return type
 function strToRgb(s: string): [number, number, number] {
-    if (s.length !== 7) {
+    if (s?.length !== 7) {
         return [0, 0, 0];
     }
-    const r = s.slice(1, 3);
-    const g = s.slice(3, 5);
-    const b = s.slice(5);
+    const r = s?.slice(1, 3);
+    const g = s?.slice(3, 5);
+    const b = s?.slice(5);
     return [parseInt(r, 16), parseInt(g, 16), parseInt(b, 16)];
 }
 

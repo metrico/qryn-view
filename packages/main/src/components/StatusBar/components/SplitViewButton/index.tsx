@@ -4,7 +4,7 @@ import { setLeftPanel } from "@ui/store/actions/setLeftPanel";
 import { setRightPanel } from "@ui/store/actions/setRightPanel";
 import { setSplitView } from "./setSplitView";
 import { SplitButton } from "./styled";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 export type props = {
     panel?: string;

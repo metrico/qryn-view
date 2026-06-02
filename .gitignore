@@ -6,3 +6,4 @@ server
 packages/main/.env
 codeql-results
 codeqldb
+.turbo/*

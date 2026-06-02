@@ -88,7 +88,7 @@ const TextInput: FC<TextInputProps> = ({
     return (
         <Fragment>
             <datalist id={dataListId}>
-                {sortedUniqueValues.slice(0, 5000).map((value: any) => (
+                {sortedUniqueValues?.slice(0, 5000)?.map((value: any) => (
                     <option value={sanitizeWithSigns(value)} key={value} />
                 ))}
             </datalist>

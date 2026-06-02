@@ -157,7 +157,7 @@ const localUrl = () => {
                 toDate,
                 data: `${origin}/#/search/#${urlParams.toString()}` || "",
             };
-            let newStorage = [newItem].concat(previousData).slice(0, maxLength);
+            let newStorage = [newItem]?.concat(previousData)?.slice(0, maxLength);
             set(newStorage);
             return getAll();
         } catch (e) {

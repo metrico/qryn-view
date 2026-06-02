@@ -59,7 +59,7 @@ export function ViewHeader(props: any) {
     const labelsList = useMemo(() => {
         if (dataView?.labels?.length) {
             if (dataView?.labels.length > 4) {
-                const cropped = [...dataView.labels].slice(0, 4);
+                const cropped = [...dataView?.labels]?.slice(0, 4);
                 return (
                     <>
                         {cropped.map((name, index) => (

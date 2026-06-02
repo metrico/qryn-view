@@ -32,9 +32,9 @@ export default function filterSpans(textFilter: string, spans: TraceSpan[] | TNi
     .filter(Boolean)
     .forEach((w) => {
       if (w[0] === '-') {
-        excludeKeys.push(w.slice(1).toLowerCase());
+        excludeKeys?.push(w?.slice(1)?.toLowerCase());
       } else {
-        includeFilters.push(w.toLowerCase());
+        includeFilters?.push(w?.toLowerCase());
       }
     });
 
