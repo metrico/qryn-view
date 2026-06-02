@@ -62,7 +62,7 @@ export default function renderJsonMarkup(
     items.forEach((item, index) => {
       result += currentIndentation + renderItem(item) + (index < items.length - 1 ? ',' : '') + '\n'
     })
-    currentIndentation = currentIndentation.slice(0, -INDENTATION.length)
+    currentIndentation = currentIndentation?.slice(0, -INDENTATION.length)
 
     return result + currentIndentation + endDelimiter
   }

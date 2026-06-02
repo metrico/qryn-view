@@ -180,7 +180,6 @@ export function DataSourceSetting(props: any) {
         for (let ds of newDs) {
             let datasource = {};
             if (ds.type === obj.type && ds.name === obj.name) {
-                console.log(ds);
                 datasource = { ...ds, ...obj, id };
             } else {
                 datasource = ds;

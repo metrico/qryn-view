@@ -14,7 +14,7 @@ import getData from "@ui/store/actions/getData";
 import setHistoryOpen from "@ui/store/actions/setHistoryOpen";
 import { createAlert } from "@ui/store/actions";
 import { format } from "date-fns";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
