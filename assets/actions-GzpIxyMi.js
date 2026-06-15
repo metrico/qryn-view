@@ -1,0 +1,1 @@
+var e=e=>t=>t({type:`SET_CURRENT_USER`,currentUser:e});export{e as t};
