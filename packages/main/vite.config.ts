@@ -38,6 +38,7 @@ let configOpts = {
     test: {
         globals: true,
         environment: "happy-dom",
+        setupFiles: ["./test/setup.ts"],
         include: ["**/*.{test,spec}.{ts,tsx}"],
     },
     optimizeDeps: {
@@ -51,37 +52,44 @@ let configOpts = {
         rollupOptions: {
             output: {
                 minifyInternalExports: true,
-                manualChunks: {
-                    react: ["react", "react-dom"],
-                    lodash: ["lodash"],
-                    reactTable: [
-                        "@tanstack/react-table",
-                        "@tanstack/match-sorter-utils",
-                    ],
-                    slate: ["slate", "slate-history", "slate-react"],
-                    vendor: [
-                        "react-responsive",
-                        "react-cookie",
-                        "react-router-dom",
-                        "react-redux",
-                        "redux-thunk",
-                        "axios",
-                        "@microlink/react-json-view",
-                        "date-fns",
-                        "nanoid",
-                        "javascript-time-ago",
-                    ],
-                    prismJs: ["prismjs"],
-                    dayJs: ["dayjs"],
-                    reactDnd: ["react-dnd", "react-dnd-html5-backend"],
-                    memoize: [
-                        "memoize-one",
-                        "lru-memoize",
-                        "deep-freeze",
-                        "immutability-helper",
-                    ],
+                manualChunks(id) {
+                    const chunkGroups = {
+                        react: ["react", "react-dom"],
+                        lodash: ["lodash"],
+                        reactTable: [
+                            "@tanstack/react-table",
+                            "@tanstack/match-sorter-utils",
+                        ],
+                        slate: ["slate", "slate-history", "slate-react"],
+                        vendor: [
+                            "react-responsive",
+                            "react-cookie",
+                            "react-router-dom",
+                            "react-redux",
+                            "redux-thunk",
+                            "axios",
+                            "@microlink/react-json-view",
+                            "date-fns",
+                            "nanoid",
+                            "javascript-time-ago",
+                        ],
+                        prismJs: ["prismjs"],
+                        dayJs: ["dayjs"],
+                        reactDnd: ["react-dnd", "react-dnd-html5-backend"],
+                        memoize: [
+                            "memoize-one",
+                            "lru-memoize",
+                            "deep-freeze",
+                            "immutability-helper",
+                        ],
+                        reactSelect: ["react-select"],
+                    };
 
-                    reactSelect: ["react-select"],
+                    return Object.entries(chunkGroups).find(([, packages]) =>
+                        packages.some((packageName) =>
+                            id.includes(`/node_modules/${packageName}/`),
+                        ),
+                    )?.[0];
                 },
             },
         },
