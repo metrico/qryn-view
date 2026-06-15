@@ -1,0 +1,1 @@
+import{o as e}from"./rolldown-runtime-CMxvf4Kt.js";import{t}from"./react-I6BVr-8O.js";import{j as n}from"./emotion-css.esm-I8gSeA_p.js";var r=e=>t=>{t({type:`SET_DATA_SOURCES`,dataSources:e})},i=n((0,e(t()).jsx)(`path`,{d:`M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z`}),`AddOutlined`);export{r as n,i as t};
