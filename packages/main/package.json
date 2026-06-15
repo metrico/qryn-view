@@ -63,7 +63,7 @@
     "react-select": "^5.10.2",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "reselect": "^5.1.1",
+    "reselect": "^5.2.0",
     "slate": "0.124.1",
     "slate-history": "0.113.1",
     "slate-react": "^0.110.3",
