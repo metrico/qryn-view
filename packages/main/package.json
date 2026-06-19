@@ -21,7 +21,7 @@
     "@emotion/styled": "^11.14.1",
     "@fingerprintjs/fingerprintjs": "^5.2.0",
     "@microlink/react-json-view": "latest",
-    "@mui/icons-material": "7.3.10",
+    "@mui/icons-material": "9.1.1",
     "@mui/material": "^7.3.10",
     "@mui/x-charts": "9.0.4",
     "@szhsin/react-menu": "^4.5.1",
