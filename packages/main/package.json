@@ -68,7 +68,7 @@
     "slate-dom": "^0.124.1",
     "slate-history": "0.113.1",
     "slate-react": "^0.124.2",
-    "tss-react": "^4.9.20",
+    "tss-react": "^4.9.21",
     "uuid": "^14.0.0",
     "web-vitals": "^4.2.4",
     "zod": "^4.4.3",
