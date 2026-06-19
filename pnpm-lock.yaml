@@ -129,8 +129,8 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1
       isomorphic-dompurify:
-        specifier: ^3.15.0
-        version: 3.15.0
+        specifier: ^3.18.0
+        version: 3.18.0
       javascript-time-ago:
         specifier: ^2.6.4
         version: 2.6.4
@@ -2103,8 +2103,8 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  isomorphic-dompurify@3.15.0:
-    resolution: {integrity: sha512-9ZtkbQ8+SgNf6LuDAdu9bq23dVXMIGNM8ZYnyl2MufyZiSD5dqAUJcyjtYZz7B80HuPpEn/f0NCS6zKvavHtfA==}
+  isomorphic-dompurify@3.18.0:
+    resolution: {integrity: sha512-ajp0D8laIHeoYlhBTevpE2HUhqWaqLXFk6K/wV3Ok8kDraBZpZsifwVWaY8IfJntMRIo1VSksgKV+lXyet9Q7A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
 
   javascript-time-ago@2.6.4:
@@ -4821,7 +4821,7 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  isomorphic-dompurify@3.15.0:
+  isomorphic-dompurify@3.18.0:
     dependencies:
       dompurify: 3.4.11
       jsdom: 29.1.1
