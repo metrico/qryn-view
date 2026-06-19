@@ -452,7 +452,7 @@ export class UnthemedVirtualizedTraceView extends React.Component<VirtualizedTra
         // Check for direct child "server" span if the span is a "client" span.
         let rpc = null;
         if (isCollapsed) {
-            const rpcSpan = findServerChildSpan(trace.spans.slice(spanIndex));
+            const rpcSpan = findServerChildSpan(trace?.spans?.slice(spanIndex));
             if (rpcSpan) {
                 const rpcViewBounds = this.getViewedBounds()(
                     rpcSpan.startTime,

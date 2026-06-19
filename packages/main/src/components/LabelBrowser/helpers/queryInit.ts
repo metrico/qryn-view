@@ -1,7 +1,9 @@
 import DOMPurify from "isomorphic-dompurify";
 export default function queryInit(query: any) {
-    return query.split(/[  ]+/).map((m: any) => ({
-        
+    const queryText = typeof query === "string" ? query : String(query ?? "");
+
+    return queryText.split(/[  ]+/).map((m: any) => ({
+        type: "paragraph",
         children: [
             {
                 text: DOMPurify.sanitize(m),

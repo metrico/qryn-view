@@ -47,6 +47,7 @@ import MetricsSearch from "../../../DataViews/components/Metrics/MetricsSearch";
 import LogsSearch from "../../../DataViews/components/Logs/LogsSearch/LogsSearch";
 import useTheme from "@ui/theme/useTheme";
 import sanitizeWithSigns from "@ui/helpers/sanitizeWithSigns";
+import { createSlateValue } from "@ui/plugins/slateValue";
 
 export function panelAction(name: any, value: any) {
     if (name === "left") {
@@ -149,7 +150,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         const localDataSource = getLocalDataSources(dataSourceId);
 
         setQueryInput(expr);
-        setQueryValue([{ children: [{ text: expr }] }]);
+        setQueryValue(createSlateValue(expr));
 
         setLogsLevel(expr, isLogsVolume);
 
@@ -229,12 +230,12 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
     };
 
     const onMetricChange = (e: any) => {
-        const query = [{ children: [{ text: sanitizeWithSigns(e) }] }];
+        const query = createSlateValue(sanitizeWithSigns(e));
         handleQueryChange(query);
     };
 
     const onLogChange = (e: any) => {
-        const query = [{ children: [{ text: sanitizeWithSigns(e) }] }];
+        const query = createSlateValue(sanitizeWithSigns(e));
 
         handleQueryChange(query);
     };
@@ -397,7 +398,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         if (!isEmptyQuery) {
             query = addQueryInterval(queryInput);
             setQueryInput(query);
-            setQueryValue([{ children: [{ text: sanitizeWithSigns(query) }] }]);
+            setQueryValue(createSlateValue(sanitizeWithSigns(query)));
             setQueryValid(onQueryValid(query));
         }
 
@@ -699,7 +700,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
 
     useEffect(() => {
         setQueryInput(data.expr);
-        setQueryValue([{ children: [{ text: sanitizeWithSigns(data.expr) }] }]);
+        setQueryValue(createSlateValue(sanitizeWithSigns(data.expr)));
     }, [data.expr]);
 
     useEffect(() => {
@@ -717,7 +718,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
         let { expr } = getLocalQueryItem(dataSourceId, id);
         let actLocalDs = getLocalDataSources(dataSourceId);
         setQueryInput(expr);
-        setQueryValue([{ children: [{ text: sanitizeWithSigns(expr) }] }]);
+        setQueryValue(createSlateValue(sanitizeWithSigns(expr)));
 
         if (isLogsVolume && logsVolumeQuery) {
             setLogsLevel(expr, isLogsVolume);
@@ -805,9 +806,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
     useEffect(() => {
         if (typeof queryInput === "string") {
             setQueryInput(queryInput);
-            setQueryValue([
-                { children: [{ text: sanitizeWithSigns(queryInput) }] },
-            ]);
+            setQueryValue(createSlateValue(sanitizeWithSigns(queryInput)));
             saveQuery();
             if (isLogsVolume) {
                 setLogsLevel(queryInput, true);
@@ -818,9 +817,7 @@ const QueryBar: React.FC<QueryBarProps> = (props) => {
     useEffect(() => {
         if (typeof launchQuery === "string" && launchQuery !== "") {
             setQueryInput(launchQuery);
-            setQueryValue([
-                { children: [{ text: sanitizeWithSigns(launchQuery) }] },
-            ]);
+            setQueryValue(createSlateValue(sanitizeWithSigns(launchQuery)));
             saveQuery();
             if (isLogsVolume) {
                 setLogsLevel(launchQuery, true);
