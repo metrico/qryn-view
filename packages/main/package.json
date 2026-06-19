@@ -24,7 +24,7 @@
     "@mui/icons-material": "7.3.10",
     "@mui/material": "^7.3.10",
     "@mui/x-charts": "9.0.4",
-    "@szhsin/react-menu": "^4.5.1",
+    "@szhsin/react-menu": "^4.5.2",
     "@tanstack/match-sorter-utils": "^8.19.4",
     "@tanstack/react-table": "^8.21.3",
     "@testing-library/dom": "10.4.1",

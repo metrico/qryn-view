@@ -87,8 +87,8 @@ importers:
         specifier: 9.0.4
         version: 9.0.4(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@mui/material@7.3.10(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@mui/system@7.3.10(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@szhsin/react-menu':
-        specifier: ^4.5.1
-        version: 4.5.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: ^4.5.2
+        version: 4.5.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/match-sorter-utils':
         specifier: ^8.19.4
         version: 8.19.4
@@ -1142,8 +1142,8 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@szhsin/react-menu@4.5.1':
-    resolution: {integrity: sha512-kRTS7Pq0YdkucQexXVy5HkpzKsJdXbAhpmzve0wPokpsaG+4Ca3cphEn6WkRCWXfn1gZXosxcZCeb34ocmUPDw==}
+  '@szhsin/react-menu@4.5.2':
+    resolution: {integrity: sha512-VIfCFGq997iHhDBR5Wrgx5XqwzLQj0Lj1PQV9XSrT/ymvdI4GE/oAKx81dXWfeXiZgyXTicDCfeGrjlAzjoYlQ==}
     peerDependencies:
       react: '>=16.14.0'
       react-dom: '>=16.14.0'
@@ -2560,8 +2560,8 @@ packages:
       react: '>=16.6.0'
       react-dom: '>=16.6.0'
 
-  react-transition-state@2.3.3:
-    resolution: {integrity: sha512-wsIyg07ohlWEAYDZHvuXh/DY7mxlcLb0iqVv2aMXJ0gwgPVKNWKhOyNyzuJy/tt/6urSq0WT6BBZ/tdpybaAsQ==}
+  react-transition-state@2.4.0:
+    resolution: {integrity: sha512-d86g/nv4vsDBLBum8KSeb9S3aWDlptDQ4ydFvfCHk98ePFNILXq5Wu3tVgPXJrItxvMLtJ+XPjmGw0RmMyYMBg==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -3841,11 +3841,11 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@szhsin/react-menu@4.5.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
+  '@szhsin/react-menu@4.5.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
     dependencies:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
-      react-transition-state: 2.3.3(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react-transition-state: 2.4.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
 
   '@tabby_ai/hijri-converter@1.0.5': {}
 
@@ -5270,7 +5270,7 @@ snapshots:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
 
-  react-transition-state@2.3.3(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+  react-transition-state@2.4.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
