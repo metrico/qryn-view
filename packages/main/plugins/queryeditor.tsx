@@ -4,9 +4,8 @@ import { useCallback, useState, useMemo, useEffect, useRef } from "react";
 import { createEditor, Text } from "slate";
 import { Slate, Editable, withReact } from "slate-react";
 import { withHistory } from "slate-history";
-import Prism from "prismjs";
-import "prismjs/components/prism-promql";
-import "prismjs/components/prism-sql";
+import Prism from "./prism";
+import { normalizeSlateValue } from "./slateValue";
 import { ThemeProvider } from "@emotion/react";
 import useTheme from "@ui/theme/useTheme";
 const CustomEditor = styled(Editable)`
@@ -97,16 +96,29 @@ export function getTokenLength(token: any) {
         return token?.length;
     }
 
+    if (typeof token?.length === "number") {
+        return token.length;
+    }
+
     if (typeof token?.content === "string") {
         return token?.content.length;
     }
 
-    return token?.content?.reduce((l: any, t: any) => l + getTokenLength(t), 0);
+    if (Array.isArray(token?.content)) {
+        return token.content.reduce((l: any, t: any) => l + getTokenLength(t), 0);
+    }
+
+    if (token?.content) {
+        return getTokenLength(token.content);
+    }
+
+    return 0;
 }
 
 export default function QueryEditor({
     onQueryChange,
     value,
+    defaultValue,
     onKeyDown,
 }: // wrapperRef
 any) {
@@ -123,14 +135,31 @@ any) {
     const decorate = useCallback(
         ([node, path]: any) => {
             const ranges: any[] = [];
-            if (!Text.isText(node) || (node as any)?.length < 1) {
+            if (
+                !Text.isText(node) ||
+                typeof node.text !== "string" ||
+                node.text.length < 1
+            ) {
                 return ranges;
             }
-            const tokens = Prism.tokenize(node.text, Prism.languages[language]);
+            const grammar = Prism.languages[language];
+            if (!grammar) {
+                return ranges;
+            }
+
+            const tokens = Prism.tokenize(node.text, grammar);
             let start = 0;
             for (const token of tokens) {
                 const length = getTokenLength(token);
+                if (!Number.isFinite(length) || length <= 0) {
+                    continue;
+                }
+
                 const end = start + length;
+
+                if (end > node.text.length) {
+                    break;
+                }
 
                 if (typeof token !== "string") {
                     ranges.push({
@@ -146,16 +175,15 @@ any) {
         [language]
     );
 
-    const [editorValue, setEditorValue] = useState(value);
+    const [editorValue, setEditorValue] = useState(() =>
+        normalizeSlateValue(value ?? defaultValue)
+    );
 
     useEffect(() => {
-        setEditorValue(value);
-    }, []);
-
-    useEffect(() => {
-        setEditorValue(value);
-        editor.children = value;
-    }, [value, setEditorValue]);
+        const nextValue = normalizeSlateValue(value ?? defaultValue);
+        setEditorValue(nextValue);
+        editor.children = nextValue;
+    }, [defaultValue, editor, value]);
 
     return (
         <ThemeProvider theme={theme}>

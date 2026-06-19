@@ -1,7 +1,7 @@
 import { cx, css } from "@emotion/css";
 import  { useCallback, useEffect, useMemo, useState } from "react";
-import Prism from "prismjs";
-import "prismjs/components/prism-sql";
+import Prism from "./prism";
+import { createSlateValue, normalizeText } from "./slateValue";
 import { createEditor, Text } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, Editable, withReact } from "slate-react";
@@ -125,37 +125,64 @@ export function getTokenLength(token: any) {
         return token?.length;
     }
 
+    if (typeof token?.length === "number") {
+        return token.length;
+    }
+
     if (typeof token?.content === "string") {
         return token?.content.length;
     }
 
-    return token?.content?.reduce((l: any, t: any) => l + getTokenLength(t), 0);
+    if (Array.isArray(token?.content)) {
+        return token.content.reduce((l: any, t: any) => l + getTokenLength(t), 0);
+    }
+
+    if (token?.content) {
+        return getTokenLength(token.content);
+    }
+
+    return 0;
 }
 
 export default function QueryPreview(props: Props) {
     const theme = useTheme();
 
     const { queryText, searchButton, logsRateButton, queryInput } = props;
-    const [initialValue, setInitialValue] = useState([
-        {
-            type: "paragraph",
-            children: [{ text:  sanitizeWithSigns(queryText)}],
-        },
-    ]);
+    const safeQueryText = normalizeText(sanitizeWithSigns(queryText));
+    const [initialValue, setInitialValue] = useState(() =>
+        createSlateValue(safeQueryText)
+    );
 
     const [language] = useState("sql");
 
     const decorate = useCallback(
         ([node, path]: any) => {
             const ranges: any[] = [];
-            if (!Text.isText(node) || (node as any)?.length < 1) {
+            if (
+                !Text.isText(node) ||
+                typeof node.text !== "string" ||
+                node.text.length < 1
+            ) {
                 return ranges;
             }
-            const tokens = Prism.tokenize(node.text, Prism.languages[language]);
+            const grammar = Prism.languages[language];
+            if (!grammar) {
+                return ranges;
+            }
+
+            const tokens = Prism.tokenize(node.text, grammar);
             let start = 0;
             for (const token of tokens) {
                 const length = getTokenLength(token);
+                if (!Number.isFinite(length) || length <= 0) {
+                    continue;
+                }
+
                 const end = start + length;
+
+                if (end > node.text.length) {
+                    break;
+                }
 
                 if (typeof token !== "string") {
                     ranges.push({
@@ -178,33 +205,19 @@ export default function QueryPreview(props: Props) {
     );
 
     useEffect(() => {
-        setInitialValue([
-            {
-                type: "paragraph",
-                children: [{ text:  sanitizeWithSigns(props.queryText) }],
-            },
-        ]);
-        editor.children = [{ text:  sanitizeWithSigns(props.queryText) }];
+        const nextValue = createSlateValue(sanitizeWithSigns(props.queryText));
+        setInitialValue(nextValue);
+        editor.children = nextValue;
       
     }, [props.queryText]);
 
-    const onChange = useCallback(
-        (e:any) => {
-            setInitialValue(e);
-        },
-       
-        [initialValue]
-    );
+    const onChange = useCallback(() => {}, []);
 
     useEffect(() => {
         if (initialValue !== queryInput && queryInput !== "") {
-            setInitialValue([
-                {
-                    type: "paragraph",
-                    children: [{ text:  sanitizeWithSigns(queryInput) }],
-                },
-            ]);
-            editor.children = [{ text: sanitizeWithSigns(queryInput) }];
+            const nextValue = createSlateValue(sanitizeWithSigns(queryInput));
+            setInitialValue(nextValue);
+            editor.children = nextValue;
         }
       
     }, [queryInput]);
@@ -223,7 +236,7 @@ export default function QueryPreview(props: Props) {
                     decorate={decorate}
                     className={cx(CustomEditor(theme))}
                     readOnly
-                    placeholder={queryText}
+                    placeholder={safeQueryText}
                 />
             </Slate>
             <div className="action-buttons">

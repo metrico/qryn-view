@@ -53,6 +53,10 @@ let configOpts = {
             output: {
                 minifyInternalExports: true,
                 manualChunks(id) {
+                    if (id.includes("/node_modules/prismjs/components/")) {
+                        return;
+                    }
+
                     const chunkGroups = {
                         react: ["react", "react-dom"],
                         lodash: ["lodash"],
